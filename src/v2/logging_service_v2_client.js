@@ -361,7 +361,7 @@ LoggingServiceV2Client.prototype.writeLogEntries = function(request, options, ca
  *       "organizations/[ORGANIZATION_ID]"
  *
  *   Projects listed in the `project_ids` field are added to this list.
- * @param {string[]=} request.projectIds
+ * @param {string[]} [request.projectIds]
  *   Deprecated. Use `resource_names` instead.  One or more project identifiers
  *   or project numbers from which to retrieve log entries.  Example:
  *   `"my-project-1A"`. If present, these project identifiers are converted to
@@ -483,7 +483,7 @@ LoggingServiceV2Client.prototype.listLogEntries = function(request, options, cal
  *       "organizations/[ORGANIZATION_ID]"
  *
  *   Projects listed in the `project_ids` field are added to this list.
- * @param {string[]=} request.projectIds
+ * @param {string[]} [request.projectIds]
  *   Deprecated. Use `resource_names` instead.  One or more project identifiers
  *   or project numbers from which to retrieve log entries.  Example:
  *   `"my-project-1A"`. If present, these project identifiers are converted to
