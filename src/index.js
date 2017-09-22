@@ -133,6 +133,10 @@ function Logging(options) {
  *   var sink = data[0];
  *   var apiResponse = data[1];
  * });
+ *
+ * @example <caption>include:samples/sinks.js</caption>
+ * region_tag:logging_create_sink
+ * Another example:
  */
 Logging.prototype.createSink = function(name, config, callback) {
   // jscs:enable maximumLineLength
@@ -283,6 +287,14 @@ Logging.prototype.entry = function(resource, data) {
  * logging.getEntries().then(function(data) {
  *   var entries = data[0];
  * });
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_list_log_entries
+ * Another example:
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_list_log_entries_advanced
+ * Another example:
  */
 Logging.prototype.getEntries = function(options, callback) {
   if (is.fn(options)) {
@@ -420,6 +432,10 @@ Logging.prototype.getEntriesStream = function(options) {
  * logging.getSinks().then(function(data) {
  *   var sinks = data[0];
  * });
+ *
+ * @example <caption>include:samples/sinks.js</caption>
+ * region_tag:logging_list_sinks
+ * Another example:
  */
 Logging.prototype.getSinks = function(options, callback) {
   var self = this;

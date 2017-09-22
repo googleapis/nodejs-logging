@@ -211,6 +211,10 @@ Log.prototype.debug = function(entry, options, callback) {
  * log.delete().then(function(data) {
  *   var apiResponse = data[0];
  * });
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_delete_log
+ * Another example:
  */
 Log.prototype.delete = function(gaxOptions, callback) {
   if (is.fn(gaxOptions)) {
@@ -577,6 +581,14 @@ Log.prototype.warning = function(entry, options, callback) {
  * log.write(entries).then(function(data) {
  *   var apiResponse = data[0];
  * });
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_write_log_entry
+ * Another example:
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_write_log_entry_advanced
+ * Another example:
  */
 Log.prototype.write = function(entry, options, callback) {
   var self = this;
