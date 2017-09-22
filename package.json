@@ -83,6 +83,7 @@
     "uuid": "^3.0.1"
   },
   "scripts": {
+    "docs": "jsdoc -c .jsdoc.js",
     "publish-module": "node ../../scripts/publish.js logging",
     "test": "mocha test/*.js",
     "system-test": "mocha system-test/*.js --no-timeouts --bail",
