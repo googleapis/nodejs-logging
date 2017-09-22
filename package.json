@@ -30,13 +30,8 @@
     }
   ],
   "main": "./src/index.js",
-  "files": [
-    "src",
-    "AUTHORS",
-    "CONTRIBUTORS",
-    "LICENSE"
-  ],
-  "repository": "googlecloudplatform/google-cloud-node",
+  "files": ["src", "AUTHORS", "CONTRIBUTORS", "LICENSE"],
+  "repository": "googleapis/nodejs-logging",
   "keywords": [
     "google apis client",
     "google api client",
@@ -70,6 +65,7 @@
   },
   "devDependencies": {
     "@google-cloud/bigquery": "*",
+    "@google-cloud/nodejs-repo-tools": "^2.0.0-beta.12",
     "@google-cloud/pubsub": "*",
     "@google-cloud/storage": "*",
     "async": "^2.1.4",
@@ -82,7 +78,9 @@
   "scripts": {
     "publish-module": "node ../../scripts/publish.js logging",
     "test": "mocha test/*.js",
-    "system-test": "mocha system-test/*.js --no-timeouts --bail"
+    "system-test": "mocha system-test/*.js --no-timeouts --bail",
+    "samples-test": "cd samples/ && npm test && cd ../",
+    "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json"
   },
   "license": "Apache-2.0",
   "engines": {
