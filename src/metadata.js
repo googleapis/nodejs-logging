@@ -50,8 +50,8 @@ Metadata.getCloudFunctionDescriptor = function() {
     type: 'cloud_function',
     labels: {
       function_name: process.env.FUNCTION_NAME,
-      region: process.env.SUPERVISOR_REGION
-    }
+      region: process.env.SUPERVISOR_REGION,
+    },
   };
 };
 
@@ -65,8 +65,8 @@ Metadata.getGAEDescriptor = function() {
     type: 'gae_app',
     labels: {
       module_id: process.env.GAE_SERVICE || process.env.GAE_MODULE_NAME,
-      version_id: process.env.GAE_VERSION
-    }
+      version_id: process.env.GAE_VERSION,
+    },
   };
 };
 
@@ -88,8 +88,8 @@ Metadata.getGCEDescriptor = function(callback) {
     callback(null, {
       type: 'gce_instance',
       labels: {
-        instance_id: instanceId
-      }
+        instance_id: instanceId,
+      },
     });
   });
 };
@@ -112,10 +112,8 @@ Metadata.getGKEDescriptor = function(callback) {
     callback(null, {
       type: 'container',
       labels: {
-        // TODO(ofrobots): it would be good to include the namespace_id as
-        // well.
-        cluster_name: clusterName
-      }
+        cluster_name: clusterName,
+      },
     });
   });
 };
@@ -129,7 +127,7 @@ Metadata.getGKEDescriptor = function(callback) {
  */
 Metadata.getGlobalDescriptor = function() {
   return {
-    type: 'global'
+    type: 'global',
   };
 };
 

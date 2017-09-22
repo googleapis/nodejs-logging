@@ -34,42 +34,41 @@ test.after.always(async () => {
 test.beforeEach(tools.stubConsole);
 test.afterEach.always(tools.restoreConsole);
 
-test.cb(`should log an entry`, (t) => {
+test.cb(`should log an entry`, t => {
   const expectedlogName = `my-log`;
 
   const logMock = {
     entry: sinon.stub().returns({}),
-    write: (_entry) => {
+    write: _entry => {
       t.deepEqual(_entry, {});
 
       const log = logging.log(logName);
       const text = `Hello, world!`;
-      const entry = log.entry({ resource: { type: `global` } }, text);
+      const entry = log.entry({resource: {type: `global`}}, text);
 
-      return log.write(entry)
-        .then((results) => {
-          setTimeout(() => {
-            try {
-              t.true(console.log.calledOnce);
-              t.deepEqual(console.log.firstCall.args, [`Logged: ${text}`]);
-              t.end();
-            } catch (err) {
-              t.end(err);
-            }
-          }, 200);
+      return log.write(entry).then(results => {
+        setTimeout(() => {
+          try {
+            t.true(console.log.calledOnce);
+            t.deepEqual(console.log.firstCall.args, [`Logged: ${text}`]);
+            t.end();
+          } catch (err) {
+            t.end(err);
+          }
+        }, 200);
 
-          return results;
-        });
-    }
+        return results;
+      });
+    },
   };
   const loggingMock = {
-    log: (_logName) => {
+    log: _logName => {
       t.is(_logName, expectedlogName);
       return logMock;
-    }
+    },
   };
 
   proxyquire(`../quickstart`, {
-    '@google-cloud/logging': sinon.stub().returns(loggingMock)
+    '@google-cloud/logging': sinon.stub().returns(loggingMock),
   });
 });

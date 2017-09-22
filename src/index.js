@@ -72,11 +72,14 @@ function Logging(options) {
     return new Logging(options);
   }
 
-  var options_ = extend({
-    scopes: v2.ALL_SCOPES,
-    libName: 'gccl',
-    libVersion: PKG.version
-  }, options);
+  var options_ = extend(
+    {
+      scopes: v2.ALL_SCOPES,
+      libName: 'gccl',
+      libVersion: PKG.version,
+    },
+    options
+  );
 
   this.api = {};
   this.auth = googleAuth(options_);
@@ -167,27 +170,30 @@ Logging.prototype.createSink = function(name, config, callback) {
 
   var reqOpts = {
     parent: 'projects/' + this.projectId,
-    sink: extend({}, config, { name: name })
+    sink: extend({}, config, {name: name}),
   };
 
   delete reqOpts.sink.gaxOptions;
 
-  this.request({
-    client: 'configServiceV2Client',
-    method: 'createSink',
-    reqOpts: reqOpts,
-    gaxOpts: config.gaxOptions
-  }, function(err, resp) {
-    if (err) {
-      callback(err, null, resp);
-      return;
+  this.request(
+    {
+      client: 'configServiceV2Client',
+      method: 'createSink',
+      reqOpts: reqOpts,
+      gaxOpts: config.gaxOptions,
+    },
+    function(err, resp) {
+      if (err) {
+        callback(err, null, resp);
+        return;
+      }
+
+      var sink = self.sink(resp.name);
+      sink.metadata = resp;
+
+      callback(null, sink, resp);
     }
-
-    var sink = self.sink(resp.name);
-    sink.metadata = resp;
-
-    callback(null, sink, resp);
-  });
+  );
 };
 
 /**
@@ -302,9 +308,12 @@ Logging.prototype.getEntries = function(options, callback) {
     options = {};
   }
 
-  var reqOpts = extend({
-    orderBy: 'timestamp desc'
-  }, options);
+  var reqOpts = extend(
+    {
+      orderBy: 'timestamp desc',
+    },
+    options
+  );
 
   reqOpts.resourceNames = arrify(reqOpts.resourceNames);
   reqOpts.resourceNames.push('projects/' + this.projectId);
@@ -312,24 +321,30 @@ Logging.prototype.getEntries = function(options, callback) {
   delete reqOpts.autoPaginate;
   delete reqOpts.gaxOptions;
 
-  var gaxOptions = extend({
-    autoPaginate: options.autoPaginate
-  }, options.gaxOptions);
+  var gaxOptions = extend(
+    {
+      autoPaginate: options.autoPaginate,
+    },
+    options.gaxOptions
+  );
 
-  this.request({
-    client: 'loggingServiceV2Client',
-    method: 'listLogEntries',
-    reqOpts: reqOpts,
-    gaxOpts: gaxOptions
-  }, function() {
-    var entries = arguments[1];
+  this.request(
+    {
+      client: 'loggingServiceV2Client',
+      method: 'listLogEntries',
+      reqOpts: reqOpts,
+      gaxOpts: gaxOptions,
+    },
+    function() {
+      var entries = arguments[1];
 
-    if (entries) {
-      arguments[1] = entries.map(Entry.fromApiResponse_);
+      if (entries) {
+        arguments[1] = entries.map(Entry.fromApiResponse_);
+      }
+
+      callback.apply(null, arguments);
     }
-
-    callback.apply(null, arguments);
-  });
+  );
 };
 
 /**
@@ -380,24 +395,30 @@ Logging.prototype.getEntriesStream = function(options) {
   });
 
   userStream.once('reading', function() {
-    var reqOpts = extend({
-      orderBy: 'timestamp desc'
-    }, options);
+    var reqOpts = extend(
+      {
+        orderBy: 'timestamp desc',
+      },
+      options
+    );
     reqOpts.resourceNames = arrify(reqOpts.resourceNames);
     reqOpts.resourceNames.push('projects/' + self.projectId);
 
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
 
-    var gaxOptions = extend({
-      autoPaginate: options.autoPaginate
-    }, options.gaxOptions);
+    var gaxOptions = extend(
+      {
+        autoPaginate: options.autoPaginate,
+      },
+      options.gaxOptions
+    );
 
     requestStream = self.request({
       client: 'loggingServiceV2Client',
       method: 'listLogEntriesStream',
       reqOpts: reqOpts,
-      gaxOpts: gaxOptions
+      gaxOpts: gaxOptions,
     });
 
     userStream.setPipeline(requestStream, toEntryStream);
@@ -446,34 +467,40 @@ Logging.prototype.getSinks = function(options, callback) {
   }
 
   var reqOpts = extend({}, options, {
-    parent: 'projects/' + this.projectId
+    parent: 'projects/' + this.projectId,
   });
 
   delete reqOpts.autoPaginate;
   delete reqOpts.gaxOptions;
 
-  var gaxOptions = extend({
-    autoPaginate: options.autoPaginate
-  }, options.gaxOptions);
+  var gaxOptions = extend(
+    {
+      autoPaginate: options.autoPaginate,
+    },
+    options.gaxOptions
+  );
 
-  this.request({
-    client: 'configServiceV2Client',
-    method: 'listSinks',
-    reqOpts: reqOpts,
-    gaxOpts: gaxOptions
-  }, function() {
-    var sinks = arguments[1];
+  this.request(
+    {
+      client: 'configServiceV2Client',
+      method: 'listSinks',
+      reqOpts: reqOpts,
+      gaxOpts: gaxOptions,
+    },
+    function() {
+      var sinks = arguments[1];
 
-    if (sinks) {
-      arguments[1] = sinks.map(function(sink) {
-        var sinkInstance = self.sink(sink.name);
-        sinkInstance.metadata = sink;
-        return sinkInstance;
-      });
+      if (sinks) {
+        arguments[1] = sinks.map(function(sink) {
+          var sinkInstance = self.sink(sink.name);
+          sinkInstance.metadata = sink;
+          return sinkInstance;
+        });
+      }
+
+      callback.apply(null, arguments);
     }
-
-    callback.apply(null, arguments);
-  });
+  );
 };
 
 /**
@@ -525,20 +552,23 @@ Logging.prototype.getSinksStream = function(options) {
 
   userStream.once('reading', function() {
     var reqOpts = extend({}, options, {
-      parent: 'projects/' + self.projectId
+      parent: 'projects/' + self.projectId,
     });
 
     delete reqOpts.gaxOptions;
 
-    var gaxOptions = extend({
-      autoPaginate: options.autoPaginate
-    }, options.gaxOptions);
+    var gaxOptions = extend(
+      {
+        autoPaginate: options.autoPaginate,
+      },
+      options.gaxOptions
+    );
 
     requestStream = self.request({
       client: 'configServiceV2Client',
       method: 'listSinksStream',
       reqOpts: reqOpts,
-      gaxOpts: gaxOptions
+      gaxOpts: gaxOptions,
     });
 
     userStream.setPipeline(requestStream, toSinkStream);
@@ -724,25 +754,28 @@ Logging.prototype.setAclForDataset_ = function(name, config, callback) {
 
     access.push({
       role: 'WRITER',
-      groupByEmail: 'cloud-logs@google.com'
+      groupByEmail: 'cloud-logs@google.com',
     });
 
-    dataset.setMetadata({
-      access: access
-    }, function(err, apiResp) {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
+    dataset.setMetadata(
+      {
+        access: access,
+      },
+      function(err, apiResp) {
+        if (err) {
+          callback(err, null, apiResp);
+          return;
+        }
+
+        config.destination = format('{baseUrl}/projects/{pId}/datasets/{dId}', {
+          baseUrl: 'bigquery.googleapis.com',
+          pId: dataset.parent.projectId,
+          dId: dataset.id,
+        });
+
+        self.createSink(name, config, callback);
       }
-
-      config.destination = format('{baseUrl}/projects/{pId}/datasets/{dId}', {
-        baseUrl: 'bigquery.googleapis.com',
-        pId: dataset.parent.projectId,
-        dId: dataset.id
-      });
-
-      self.createSink(name, config, callback);
-    });
+    );
   });
 };
 
@@ -768,9 +801,7 @@ Logging.prototype.setAclForTopic_ = function(name, config, callback) {
 
     policy.bindings.push({
       role: 'roles/pubsub.publisher',
-      members: [
-        'serviceAccount:cloud-logs@system.gserviceaccount.com'
-      ]
+      members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
     });
 
     topic.iam.setPolicy(policy, function(err, policy, apiResp) {
@@ -781,7 +812,7 @@ Logging.prototype.setAclForTopic_ = function(name, config, callback) {
 
       config.destination = format('{baseUrl}/{topicName}', {
         baseUrl: 'pubsub.googleapis.com',
-        topicName: topic.name
+        topicName: topic.name,
       });
 
       self.createSink(name, config, callback);
@@ -801,12 +832,7 @@ common.paginator.extend(Logging, ['getEntries', 'getSinks']);
  * that a callback is omitted.
  */
 common.util.promisifyAll(Logging, {
-  exclude: [
-    'entry',
-    'log',
-    'request',
-    'sink'
-  ]
+  exclude: ['entry', 'log', 'request', 'sink'],
 });
 
 Logging.Entry = Entry;

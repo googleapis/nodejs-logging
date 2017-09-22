@@ -30,11 +30,11 @@ const sinkName = `nodejs-docs-samples-test-${uuid.v4()}`;
 const filter = `severity > WARNING`;
 
 test.before(tools.checkCredentials);
-test.before(async (t) => {
+test.before(async t => {
   await storage.createBucket(bucketName);
 });
 
-test.after.always(async (t) => {
+test.after.always(async t => {
   try {
     await logging.sink(sinkName).delete();
   } catch (err) {} // ignore error
@@ -43,8 +43,11 @@ test.after.always(async (t) => {
   } catch (err) {} // ignore error
 });
 
-test.serial(`should create a sink`, async (t) => {
-  const output = await tools.runAsync(`${cmd} create ${sinkName} ${bucketName} "${filter}"`, cwd);
+test.serial(`should create a sink`, async t => {
+  const output = await tools.runAsync(
+    `${cmd} create ${sinkName} ${bucketName} "${filter}"`,
+    cwd
+  );
   t.is(output, `Created sink ${sinkName} to ${bucketName}`);
   const [metadata] = await logging.sink(sinkName).getMetadata();
   t.is(metadata.name, sinkName);
@@ -52,23 +55,28 @@ test.serial(`should create a sink`, async (t) => {
   t.is(metadata.filter, filter);
 });
 
-test.serial(`should get a sink`, async (t) => {
+test.serial(`should get a sink`, async t => {
   const output = await tools.runAsync(`${cmd} get ${sinkName}`, cwd);
   t.is(output.includes(sinkName), true);
 });
 
-test.serial(`should list sinks`, async (t) => {
+test.serial(`should list sinks`, async t => {
   t.plan(0);
-  await tools.tryTest(async (assert) => {
-    const output = await tools.runAsync(`${cmd} list`, cwd);
-    assert(output.includes(`Sinks:`));
-    assert(output.includes(sinkName));
-  }).start();
+  await tools
+    .tryTest(async assert => {
+      const output = await tools.runAsync(`${cmd} list`, cwd);
+      assert(output.includes(`Sinks:`));
+      assert(output.includes(sinkName));
+    })
+    .start();
 });
 
-test.serial(`should update a sink`, async (t) => {
+test.serial(`should update a sink`, async t => {
   const newFilter = 'severity >= WARNING';
-  const output = await tools.runAsync(`${cmd} update ${sinkName} "${newFilter}"`, cwd);
+  const output = await tools.runAsync(
+    `${cmd} update ${sinkName} "${newFilter}"`,
+    cwd
+  );
   t.is(output, `Sink ${sinkName} updated.`);
   const [metadata] = await logging.sink(sinkName).getMetadata();
   t.is(metadata.name, sinkName);
@@ -76,7 +84,7 @@ test.serial(`should update a sink`, async (t) => {
   t.is(metadata.filter, newFilter);
 });
 
-test.serial(`should delete a sink`, async (t) => {
+test.serial(`should delete a sink`, async t => {
   const output = await tools.runAsync(`${cmd} delete ${sinkName}`, cwd);
   t.is(output, `Sink ${sinkName} deleted.`);
   await t.throws(logging.sink(sinkName).getMetadata());

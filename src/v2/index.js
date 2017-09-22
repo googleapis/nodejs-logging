@@ -22,15 +22,19 @@ var gax = require('google-gax');
 var extend = require('extend');
 
 function v2(options) {
-  options = extend({
-    scopes: v2.ALL_SCOPES
-  }, options);
+  options = extend(
+    {
+      scopes: v2.ALL_SCOPES,
+    },
+    options
+  );
   var gaxGrpc = gax.grpc(options);
   return extend(
-      {},
-      loggingServiceV2Client(gaxGrpc),
-      configServiceV2Client(gaxGrpc),
-      metricsServiceV2Client(gaxGrpc));
+    {},
+    loggingServiceV2Client(gaxGrpc),
+    configServiceV2Client(gaxGrpc),
+    metricsServiceV2Client(gaxGrpc)
+  );
 }
 
 v2.SERVICE_ADDRESS = loggingServiceV2Client.SERVICE_ADDRESS;

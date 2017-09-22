@@ -74,10 +74,15 @@
     "@google-cloud/pubsub": "*",
     "@google-cloud/storage": "*",
     "async": "^2.1.4",
+    "eslint": "^4.7.2",
+    "eslint-config-prettier": "^2.5.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-prettier": "^2.3.1",
     "ink-docstrap": "git+https://github.com/docstrap/docstrap.git",
     "jsdoc": "^3.5.5",
     "methmeth": "^1.0.0",
     "mocha": "^3.0.1",
+    "prettier": "^1.7.0",
     "propprop": "^0.3.0",
     "proxyquire": "^1.7.10",
     "uuid": "^3.0.1"
@@ -88,7 +93,8 @@
     "test": "mocha test/*.js",
     "system-test": "mocha system-test/*.js --no-timeouts --bail",
     "samples-test": "cd samples/ && npm test && cd ../",
-    "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json"
+    "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
+    "lint": "repo-tools lint --cmd eslint -- src/ samples/ system-test/ test/"
   },
   "license": "Apache-2.0",
   "engines": {

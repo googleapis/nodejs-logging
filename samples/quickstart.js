@@ -24,7 +24,7 @@ const projectId = 'YOUR_PROJECT_ID';
 
 // Instantiates a client
 const logging = Logging({
-  projectId: projectId
+  projectId: projectId,
 });
 
 // The name of the log to write to
@@ -35,16 +35,17 @@ const log = logging.log(logName);
 // The data to write to the log
 const text = 'Hello, world!';
 // The metadata associated with the entry
-const metadata = { resource: { type: 'global' } };
+const metadata = {resource: {type: 'global'}};
 // Prepares a log entry
 const entry = log.entry(metadata, text);
 
 // Writes the log entry
-log.write(entry)
+log
+  .write(entry)
   .then(() => {
     console.log(`Logged: ${text}`);
   })
-  .catch((err) => {
+  .catch(err => {
     console.error('ERROR:', err);
   });
 // [END logging_quickstart]
