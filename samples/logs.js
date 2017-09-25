@@ -333,7 +333,10 @@ const cli = require(`yargs`)
 
       try {
         opts.entry = JSON.parse(opts.entry);
-      } catch (err) {}
+      } catch (err) {
+        console.error('"entry" must be a valid JSON string!');
+        return;
+      }
 
       writeLogEntryAdvanced(opts.logName, opts);
     }

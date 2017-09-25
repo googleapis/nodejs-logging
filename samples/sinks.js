@@ -152,7 +152,8 @@ function updateSink(sinkName, filter) {
   sink
     .setMetadata(metadata)
     .then(results => {
-      console.log(`Sink ${sinkName} updated.`);
+      const metadata = results[0];
+      console.log(`Sink ${sinkName} updated:`, metadata);
     })
     .catch(err => {
       console.error('ERROR:', err);
@@ -176,7 +177,7 @@ function deleteSink(sinkName) {
   // See https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=delete
   sink
     .delete()
-    .then(results => {
+    .then(() => {
       console.log(`Sink ${sinkName} deleted.`);
     })
     .catch(err => {

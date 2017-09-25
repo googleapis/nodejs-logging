@@ -30,11 +30,11 @@ const sinkName = `nodejs-docs-samples-test-${uuid.v4()}`;
 const filter = `severity > WARNING`;
 
 test.before(tools.checkCredentials);
-test.before(async t => {
+test.before(async () => {
   await storage.createBucket(bucketName);
 });
 
-test.after.always(async t => {
+test.after.always(async () => {
   try {
     await logging.sink(sinkName).delete();
   } catch (err) {} // ignore error
