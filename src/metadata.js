@@ -112,6 +112,8 @@ Metadata.getGKEDescriptor = function(callback) {
     callback(null, {
       type: 'container',
       labels: {
+        // TODO(ofrobots): it would be good to include the namespace_id as
+        // well.
         cluster_name: clusterName,
       },
     });

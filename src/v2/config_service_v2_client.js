@@ -23,6 +23,7 @@
  * The only allowed edits are to method and file documentation. A 3-way
  * merge preserves those additions if the generated source changes.
  */
+/* TODO: introduce line-wrapping so that it never exceeds the limit. */
 /* jscs: disable maximumLineLength */
 'use strict';
 
