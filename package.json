@@ -30,7 +30,12 @@
     }
   ],
   "main": "./src/index.js",
-  "files": ["src", "AUTHORS", "CONTRIBUTORS", "LICENSE"],
+  "files": [
+    "src",
+    "AUTHORS",
+    "CONTRIBUTORS",
+    "LICENSE"
+  ],
   "repository": "googleapis/nodejs-logging",
   "keywords": [
     "google apis client",
@@ -69,6 +74,8 @@
     "@google-cloud/pubsub": "*",
     "@google-cloud/storage": "*",
     "async": "^2.1.4",
+    "ink-docstrap": "git+https://github.com/docstrap/docstrap.git",
+    "jsdoc": "^3.5.5",
     "methmeth": "^1.0.0",
     "mocha": "^3.0.1",
     "propprop": "^0.3.0",
@@ -76,6 +83,7 @@
     "uuid": "^3.0.1"
   },
   "scripts": {
+    "docs": "jsdoc -c .jsdoc.js",
     "publish-module": "node ../../scripts/publish.js logging",
     "test": "mocha test/*.js",
     "system-test": "mocha system-test/*.js --no-timeouts --bail",

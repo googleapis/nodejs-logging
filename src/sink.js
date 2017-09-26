@@ -76,6 +76,10 @@ function Sink(logging, name) {
  *   var sink = data[0];
  *   var apiResponse = data[1];
  * });
+ *
+ * @example <caption>include:samples/sinks.js</caption>
+ * region_tag:logging_create_sink
+ * Another example:
  */
 Sink.prototype.create = function(config, callback) {
   this.logging.createSink(this.name, config, callback);
@@ -106,6 +110,10 @@ Sink.prototype.create = function(config, callback) {
  * sink.delete().then(function(data) {
  *   var apiResponse = data[0];
  * });
+ *
+ * @example <caption>include:samples/sinks.js</caption>
+ * region_tag:logging_delete_sink
+ * Another example:
  */
 Sink.prototype.delete = function(gaxOptions, callback) {
   if (is.fn(gaxOptions)) {
@@ -149,6 +157,10 @@ Sink.prototype.delete = function(gaxOptions, callback) {
  *   var metadata = data[0];
  *   var apiResponse = data[1];
  * });
+ *
+ * @example <caption>include:samples/sinks.js</caption>
+ * region_tag:logging_get_sink
+ * Another example:
  */
 Sink.prototype.getMetadata = function(gaxOptions, callback) {
   var self = this;
@@ -235,6 +247,10 @@ Sink.prototype.setFilter = function(filter, callback) {
  * sink.setMetadata(metadata).then(function(data) {
  *   var apiResponse = data[0];
  * });
+ *
+ * @example <caption>include:samples/sinks.js</caption>
+ * region_tag:logging_update_sink
+ * Another example:
  */
 Sink.prototype.setMetadata = function(metadata, callback) {
   var self = this;
