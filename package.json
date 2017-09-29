@@ -92,10 +92,12 @@
     "uuid": "^3.0.1"
   },
   "scripts": {
+    "cover": "nyc --reporter=lcov mocha --require intelli-espower-loader test/*.js && nyc report",
+    "test-no-cover": "repo-tools test run --cmd mocha -- test/*.js --no-timeouts",
+    "test": "repo-tools test run --cmd npm -- run cover",
     "docs": "jsdoc -c .jsdoc.js",
     "publish-module": "node ../../scripts/publish.js logging",
-    "test": "mocha test/*.js",
-    "system-test": "mocha system-test/*.js --no-timeouts --bail",
+    "system-test": "repo-tools test run --cmd mocha -- system-test/*.js --no-timeouts",
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
     "lint": "repo-tools lint --cmd eslint -- src/ samples/ system-test/ test/"

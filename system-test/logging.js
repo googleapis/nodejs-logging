@@ -27,18 +27,18 @@ var pubsubLibrary = require('@google-cloud/pubsub');
 var storageLibrary = require('@google-cloud/storage');
 var uuid = require('uuid');
 
-var env = require('../../../system-test/env.js');
 var Logging = require('../');
 
 describe('Logging', function() {
+  var PROJECT_ID;
   var TESTS_PREFIX = 'gcloud-logging-test';
   var WRITE_CONSISTENCY_DELAY_MS = 120000;
 
-  var bigQuery = bigqueryLibrary(env);
-  var pubsub = pubsubLibrary(env);
-  var storage = storageLibrary(env);
+  var bigQuery = bigqueryLibrary();
+  var pubsub = pubsubLibrary();
+  var storage = storageLibrary();
 
-  var logging = new Logging(env);
+  var logging = new Logging();
 
   // Create the possible destinations for sinks that we will create.
   var bucket = storage.bucket(generateName());
@@ -48,9 +48,21 @@ describe('Logging', function() {
   before(function(done) {
     async.parallel(
       [
-        bucket.create.bind(bucket),
-        dataset.create.bind(dataset),
-        topic.create.bind(topic),
+        callback => {
+          bucket.create(callback);
+        },
+        callback => {
+          dataset.create(callback);
+        },
+        callback => {
+          topic.create(callback);
+        },
+        callback => {
+          topic.authClient.getProjectId((err, projectId) => {
+            PROJECT_ID = projectId;
+            callback();
+          });
+        },
       ],
       done
     );
