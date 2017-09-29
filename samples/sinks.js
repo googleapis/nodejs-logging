@@ -153,7 +153,7 @@ function updateSink(sinkName, filter) {
     .setMetadata(metadata)
     .then(results => {
       const metadata = results[0];
-      console.log(`Sink ${sinkName} updated:`, metadata);
+      console.log(`Sink ${sinkName} updated.`);
     })
     .catch(err => {
       console.error('ERROR:', err);
