@@ -50,7 +50,7 @@ var report = function(err, req) {
 };
 
 // Handle errors (the following uses the Express framework)
-app.use(function(err, req, res) {
+app.use(function(err, req, res, next) {
   report(err, req);
   res.status(500).send(err.response || 'Something broke!');
 });
