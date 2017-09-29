@@ -58,7 +58,11 @@ describe('Logging', function() {
           topic.create(callback);
         },
         callback => {
-          topic.authClient.getProjectId((err, projectId) => {
+          logging.auth.getProjectId((err, projectId) => {
+            if (err) {
+              callback(err);
+              return;
+            }
             PROJECT_ID = projectId;
             callback();
           });
@@ -555,7 +559,7 @@ describe('Logging', function() {
               assert.deepEqual(entry.metadata.resource, {
                 type: 'global',
                 labels: {
-                  project_id: env.projectId,
+                  project_id: PROJECT_ID,
                 },
               });
 
