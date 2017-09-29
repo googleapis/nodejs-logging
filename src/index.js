@@ -84,7 +84,7 @@ function Logging(options) {
   this.api = {};
   this.auth = googleAuth(options_);
   this.options = options_;
-  this.projectId = options.projectId || '{{projectId}}';
+  this.projectId = this.options.projectId || '{{projectId}}';
 }
 
 // jscs:disable maximumLineLength
