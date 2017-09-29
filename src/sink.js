@@ -122,15 +122,18 @@ Sink.prototype.delete = function(gaxOptions, callback) {
   }
 
   var reqOpts = {
-    sinkName: this.formattedName_
+    sinkName: this.formattedName_,
   };
 
-  this.logging.request({
-    client: 'configServiceV2Client',
-    method: 'deleteSink',
-    reqOpts: reqOpts,
-    gaxOpts: gaxOptions
-  }, callback);
+  this.logging.request(
+    {
+      client: 'configServiceV2Client',
+      method: 'deleteSink',
+      reqOpts: reqOpts,
+      gaxOpts: gaxOptions,
+    },
+    callback
+  );
 };
 
 /**
@@ -171,21 +174,24 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
   }
 
   var reqOpts = {
-    sinkName: this.formattedName_
+    sinkName: this.formattedName_,
   };
 
-  this.logging.request({
-    client: 'configServiceV2Client',
-    method: 'getSink',
-    reqOpts: reqOpts,
-    gaxOpts: gaxOptions
-  }, function() {
-    if (arguments[1]) {
-      self.metadata = arguments[1];
-    }
+  this.logging.request(
+    {
+      client: 'configServiceV2Client',
+      method: 'getSink',
+      reqOpts: reqOpts,
+      gaxOpts: gaxOptions,
+    },
+    function() {
+      if (arguments[1]) {
+        self.metadata = arguments[1];
+      }
 
-    callback.apply(null, arguments);
-  });
+      callback.apply(null, arguments);
+    }
+  );
 };
 
 /**
@@ -214,9 +220,12 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
  * });
  */
 Sink.prototype.setFilter = function(filter, callback) {
-  this.setMetadata({
-    filter: filter
-  }, callback);
+  this.setMetadata(
+    {
+      filter: filter,
+    },
+    callback
+  );
 };
 
 /**
@@ -265,23 +274,26 @@ Sink.prototype.setMetadata = function(metadata, callback) {
 
     var reqOpts = {
       sinkName: self.formattedName_,
-      sink: extend({}, currentMetadata, metadata)
+      sink: extend({}, currentMetadata, metadata),
     };
 
     delete reqOpts.sink.gaxOptions;
 
-    self.logging.request({
-      client: 'configServiceV2Client',
-      method: 'updateSink',
-      reqOpts: reqOpts,
-      gaxOpts: metadata.gaxOptions
-    }, function() {
-      if (arguments[1]) {
-        self.metadata = arguments[1];
-      }
+    self.logging.request(
+      {
+        client: 'configServiceV2Client',
+        method: 'updateSink',
+        reqOpts: reqOpts,
+        gaxOpts: metadata.gaxOptions,
+      },
+      function() {
+        if (arguments[1]) {
+          self.metadata = arguments[1];
+        }
 
-      callback.apply(null, arguments);
-    });
+        callback.apply(null, arguments);
+      }
+    );
   });
 };
 

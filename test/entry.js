@@ -41,9 +41,9 @@ describe('Entry', function() {
   before(function() {
     Entry = proxyquire('../src/entry.js', {
       '@google-cloud/common-grpc': {
-        Service: FakeGrpcService
+        Service: FakeGrpcService,
       },
-      eventid: FakeEventId
+      eventid: FakeEventId,
     });
   });
 
@@ -59,7 +59,7 @@ describe('Entry', function() {
 
       var expectedTimestampBoundaries = {
         start: new Date(now.getTime() - 1000),
-        end: new Date(now.getTime() + 1000)
+        end: new Date(now.getTime() + 1000),
       };
 
       assert(entry.metadata.timestamp >= expectedTimestampBoundaries.start);
@@ -70,7 +70,7 @@ describe('Entry', function() {
       var timestamp = new Date('2012');
 
       var entry = new Entry({
-        timestamp: timestamp
+        timestamp: timestamp,
       });
 
       assert.strictEqual(entry.metadata.timestamp, timestamp);
@@ -98,7 +98,7 @@ describe('Entry', function() {
       var userDefinedInsertId = 'user-defined-insert-id';
 
       var entry = new Entry({
-        insertId: userDefinedInsertId
+        insertId: userDefinedInsertId,
       });
 
       assert.strictEqual(entry.metadata.insertId, userDefinedInsertId);
@@ -129,8 +129,8 @@ describe('Entry', function() {
         extraProperty: true,
         timestamp: {
           seconds: secondsRounded,
-          nanos: Math.floor((seconds - secondsRounded) * 1e9)
-        }
+          nanos: Math.floor((seconds - secondsRounded) * 1e9),
+        },
       });
     });
 
@@ -147,7 +147,7 @@ describe('Entry', function() {
         resource: RESOURCE,
         payload: 'protoPayload',
         protoPayload: DATA,
-        extraProperty: true
+        extraProperty: true,
       });
 
       assert.strictEqual(entry.data, DATA);
@@ -162,7 +162,7 @@ describe('Entry', function() {
         resource: RESOURCE,
         payload: 'textPayload',
         textPayload: DATA,
-        extraProperty: true
+        extraProperty: true,
       });
 
       assert.strictEqual(entry.data, DATA);
@@ -189,7 +189,7 @@ describe('Entry', function() {
         assert.strictEqual(obj, input);
         assert.deepEqual(options, {
           removeCircular: false,
-          stringify: true
+          stringify: true,
         });
         return converted;
       };
@@ -206,7 +206,7 @@ describe('Entry', function() {
       };
 
       entry.data = {};
-      entry.toJSON({ removeCircular: true });
+      entry.toJSON({removeCircular: true});
     });
 
     it('should assign string data as textPayload', function() {
@@ -226,7 +226,7 @@ describe('Entry', function() {
 
       assert.deepEqual(json.timestamp, {
         seconds: secondsRounded,
-        nanos: Math.floor((seconds - secondsRounded) * 1e9)
+        nanos: Math.floor((seconds - secondsRounded) * 1e9),
       });
     });
   });

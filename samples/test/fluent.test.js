@@ -19,14 +19,14 @@ const proxyquire = require(`proxyquire`).noPreserveCache();
 const request = require(`supertest`);
 const test = require(`ava`);
 
-test.cb(`should log error`, (t) => {
+test.cb(`should log error`, t => {
   let loggerCalled = false;
 
   const structuredLogger = {
-    emit: (name) => {
+    emit: name => {
       loggerCalled = true;
       t.is(name, `errors`);
-    }
+    },
   };
 
   const app = proxyquire(`../fluent`, {
@@ -36,11 +36,11 @@ test.cb(`should log error`, (t) => {
         t.deepEqual(options, {
           host: `localhost`,
           port: 24224,
-          timeout: 3.0
+          timeout: 3.0,
         });
         return structuredLogger;
-      }
-    }
+      },
+    },
   });
 
   request(app)

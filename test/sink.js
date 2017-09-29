@@ -27,7 +27,7 @@ var fakeUtil = extend({}, util, {
     if (Class.name === 'Sink') {
       promisifed = true;
     }
-  }
+  },
 });
 
 describe('Sink', function() {
@@ -36,15 +36,15 @@ describe('Sink', function() {
 
   var LOGGING = {
     createSink: util.noop,
-    projectId: 'project-id'
+    projectId: 'project-id',
   };
   var SINK_NAME = 'sink-name';
 
   before(function() {
     Sink = proxyquire('../src/sink.js', {
       '@google-cloud/common': {
-        util: fakeUtil
-      }
+        util: fakeUtil,
+      },
     });
   });
 
@@ -94,7 +94,7 @@ describe('Sink', function() {
         assert.strictEqual(config.method, 'deleteSink');
 
         assert.deepEqual(config.reqOpts, {
-          sinkName: sink.formattedName_
+          sinkName: sink.formattedName_,
         });
 
         assert.deepEqual(config.gaxOpts, {});
@@ -124,7 +124,7 @@ describe('Sink', function() {
         assert.strictEqual(config.method, 'getSink');
 
         assert.deepEqual(config.reqOpts, {
-          sinkName: sink.formattedName_
+          sinkName: sink.formattedName_,
         });
 
         assert.deepEqual(config.gaxOpts, {});
@@ -187,7 +187,7 @@ describe('Sink', function() {
   });
 
   describe('setMetadata', function() {
-    var METADATA = { a: 'b', c: 'd' };
+    var METADATA = {a: 'b', c: 'd'};
 
     beforeEach(function() {
       sink.getMetadata = function(callback) {
@@ -219,7 +219,7 @@ describe('Sink', function() {
     });
 
     it('should make the correct request', function(done) {
-      var currentMetadata = { a: 'a', e: 'e' };
+      var currentMetadata = {a: 'a', e: 'e'};
 
       sink.getMetadata = function(callback) {
         callback(null, currentMetadata);
@@ -231,7 +231,7 @@ describe('Sink', function() {
 
         assert.deepEqual(config.reqOpts, {
           sinkName: sink.formattedName_,
-          sink: extend({}, currentMetadata, METADATA)
+          sink: extend({}, currentMetadata, METADATA),
         });
 
         assert.strictEqual(config.gaxOpts, undefined);
@@ -244,7 +244,7 @@ describe('Sink', function() {
 
     it('should accept gaxOptions', function(done) {
       var metadata = extend({}, METADATA, {
-        gaxOptions: {}
+        gaxOptions: {},
       });
 
       sink.logging.request = function(config) {

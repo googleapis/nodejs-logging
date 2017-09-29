@@ -39,17 +39,16 @@ var CODE_GEN_NAME_VERSION = 'gapic/0.1.0';
 
 var PAGE_DESCRIPTORS = {
   listLogEntries: new gax.PageDescriptor(
-      'pageToken',
-      'nextPageToken',
-      'entries'),
+    'pageToken',
+    'nextPageToken',
+    'entries'
+  ),
   listMonitoredResourceDescriptors: new gax.PageDescriptor(
-      'pageToken',
-      'nextPageToken',
-      'resourceDescriptors'),
-  listLogs: new gax.PageDescriptor(
-      'pageToken',
-      'nextPageToken',
-      'logNames')
+    'pageToken',
+    'nextPageToken',
+    'resourceDescriptors'
+  ),
+  listLogs: new gax.PageDescriptor('pageToken', 'nextPageToken', 'logNames'),
 };
 
 /**
@@ -61,7 +60,7 @@ var ALL_SCOPES = [
   'https://www.googleapis.com/auth/cloud-platform.read-only',
   'https://www.googleapis.com/auth/logging.admin',
   'https://www.googleapis.com/auth/logging.read',
-  'https://www.googleapis.com/auth/logging.write'
+  'https://www.googleapis.com/auth/logging.write',
 ];
 
 /**
@@ -80,15 +79,16 @@ var ALL_SCOPES = [
  * @class
  */
 function LoggingServiceV2Client(gaxGrpc, grpcClients, opts) {
-  opts = extend({
-    servicePath: SERVICE_ADDRESS,
-    port: DEFAULT_SERVICE_PORT,
-    clientConfig: {}
-  }, opts);
+  opts = extend(
+    {
+      servicePath: SERVICE_ADDRESS,
+      port: DEFAULT_SERVICE_PORT,
+      clientConfig: {},
+    },
+    opts
+  );
 
-  var googleApiClient = [
-    'gl-node/' + process.versions.node
-  ];
+  var googleApiClient = ['gl-node/' + process.versions.node];
   if (opts.libName && opts.libVersion) {
     googleApiClient.push(opts.libName + '/' + opts.libVersion);
   }
@@ -101,54 +101,55 @@ function LoggingServiceV2Client(gaxGrpc, grpcClients, opts) {
   var bundleDescriptors = {
     writeLogEntries: new gax.BundleDescriptor(
       'entries',
-      [
-        'logName',
-        'resource',
-        'labels'
-      ],
+      ['logName', 'resource', 'labels'],
       null,
-      gax.createByteLengthFunction(grpcClients.google.logging.v2.LogEntry))
+      gax.createByteLengthFunction(grpcClients.google.logging.v2.LogEntry)
+    ),
   };
 
   var defaults = gaxGrpc.constructSettings(
-      'google.logging.v2.LoggingServiceV2',
-      configData,
-      opts.clientConfig,
-      {'x-goog-api-client': googleApiClient.join(' ')});
+    'google.logging.v2.LoggingServiceV2',
+    configData,
+    opts.clientConfig,
+    {'x-goog-api-client': googleApiClient.join(' ')}
+  );
 
   var self = this;
 
   this.auth = gaxGrpc.auth;
   var loggingServiceV2Stub = gaxGrpc.createStub(
-      grpcClients.google.logging.v2.LoggingServiceV2,
-      opts);
+    grpcClients.google.logging.v2.LoggingServiceV2,
+    opts
+  );
   var loggingServiceV2StubMethods = [
     'deleteLog',
     'writeLogEntries',
     'listLogEntries',
     'listMonitoredResourceDescriptors',
-    'listLogs'
+    'listLogs',
   ];
   loggingServiceV2StubMethods.forEach(function(methodName) {
     self['_' + methodName] = gax.createApiCall(
       loggingServiceV2Stub.then(function(loggingServiceV2Stub) {
         return function() {
           var args = Array.prototype.slice.call(arguments, 0);
-          return loggingServiceV2Stub[methodName].apply(loggingServiceV2Stub, args);
+          return loggingServiceV2Stub[methodName].apply(
+            loggingServiceV2Stub,
+            args
+          );
         };
       }),
       defaults[methodName],
-      PAGE_DESCRIPTORS[methodName] || bundleDescriptors[methodName]);
+      PAGE_DESCRIPTORS[methodName] || bundleDescriptors[methodName]
+    );
   });
 }
 
 // Path templates
 
-var PROJECT_PATH_TEMPLATE = new gax.PathTemplate(
-    'projects/{project}');
+var PROJECT_PATH_TEMPLATE = new gax.PathTemplate('projects/{project}');
 
-var LOG_PATH_TEMPLATE = new gax.PathTemplate(
-    'projects/{project}/logs/{log}');
+var LOG_PATH_TEMPLATE = new gax.PathTemplate('projects/{project}/logs/{log}');
 
 /**
  * Returns a fully-qualified project resource name string.
@@ -157,7 +158,7 @@ var LOG_PATH_TEMPLATE = new gax.PathTemplate(
  */
 LoggingServiceV2Client.prototype.projectPath = function(project) {
   return PROJECT_PATH_TEMPLATE.render({
-    project: project
+    project: project,
   });
 };
 
@@ -167,7 +168,9 @@ LoggingServiceV2Client.prototype.projectPath = function(project) {
  *   A fully-qualified path representing a project resources.
  * @returns {String} - A string representing the project.
  */
-LoggingServiceV2Client.prototype.matchProjectFromProjectName = function(projectName) {
+LoggingServiceV2Client.prototype.matchProjectFromProjectName = function(
+  projectName
+) {
   return PROJECT_PATH_TEMPLATE.match(projectName).project;
 };
 
@@ -180,7 +183,7 @@ LoggingServiceV2Client.prototype.matchProjectFromProjectName = function(projectN
 LoggingServiceV2Client.prototype.logPath = function(project, log) {
   return LOG_PATH_TEMPLATE.render({
     project: project,
-    log: log
+    log: log,
   });
 };
 
@@ -248,7 +251,11 @@ LoggingServiceV2Client.prototype.getProjectId = function(callback) {
  *     console.error(err);
  * });
  */
-LoggingServiceV2Client.prototype.deleteLog = function(request, options, callback) {
+LoggingServiceV2Client.prototype.deleteLog = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -334,7 +341,11 @@ LoggingServiceV2Client.prototype.deleteLog = function(request, options, callback
  *     console.error(err);
  * });
  */
-LoggingServiceV2Client.prototype.writeLogEntries = function(request, options, callback) {
+LoggingServiceV2Client.prototype.writeLogEntries = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -448,7 +459,11 @@ LoggingServiceV2Client.prototype.writeLogEntries = function(request, options, ca
  *         console.error(err);
  *     });
  */
-LoggingServiceV2Client.prototype.listLogEntries = function(request, options, callback) {
+LoggingServiceV2Client.prototype.listLogEntries = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -526,12 +541,19 @@ LoggingServiceV2Client.prototype.listLogEntries = function(request, options, cal
  *     console.error(err);
  * });
  */
-LoggingServiceV2Client.prototype.listLogEntriesStream = function(request, options) {
+LoggingServiceV2Client.prototype.listLogEntriesStream = function(
+  request,
+  options
+) {
   if (options === undefined) {
     options = {};
   }
 
-  return PAGE_DESCRIPTORS.listLogEntries.createStream(this._listLogEntries, request, options);
+  return PAGE_DESCRIPTORS.listLogEntries.createStream(
+    this._listLogEntries,
+    request,
+    options
+  );
 };
 
 /**
@@ -606,7 +628,11 @@ LoggingServiceV2Client.prototype.listLogEntriesStream = function(request, option
  *         console.error(err);
  *     });
  */
-LoggingServiceV2Client.prototype.listMonitoredResourceDescriptors = function(request, options, callback) {
+LoggingServiceV2Client.prototype.listMonitoredResourceDescriptors = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -655,12 +681,19 @@ LoggingServiceV2Client.prototype.listMonitoredResourceDescriptors = function(req
  *     console.error(err);
  * });
  */
-LoggingServiceV2Client.prototype.listMonitoredResourceDescriptorsStream = function(request, options) {
+LoggingServiceV2Client.prototype.listMonitoredResourceDescriptorsStream = function(
+  request,
+  options
+) {
   if (options === undefined) {
     options = {};
   }
 
-  return PAGE_DESCRIPTORS.listMonitoredResourceDescriptors.createStream(this._listMonitoredResourceDescriptors, request, options);
+  return PAGE_DESCRIPTORS.listMonitoredResourceDescriptors.createStream(
+    this._listMonitoredResourceDescriptors,
+    request,
+    options
+  );
 };
 
 /**
@@ -740,7 +773,11 @@ LoggingServiceV2Client.prototype.listMonitoredResourceDescriptorsStream = functi
  *         console.error(err);
  *     });
  */
-LoggingServiceV2Client.prototype.listLogs = function(request, options, callback) {
+LoggingServiceV2Client.prototype.listLogs = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -799,7 +836,11 @@ LoggingServiceV2Client.prototype.listLogsStream = function(request, options) {
     options = {};
   }
 
-  return PAGE_DESCRIPTORS.listLogs.createStream(this._listLogs, request, options);
+  return PAGE_DESCRIPTORS.listLogs.createStream(
+    this._listLogs,
+    request,
+    options
+  );
 };
 
 function LoggingServiceV2ClientBuilder(gaxGrpc) {
@@ -807,12 +848,13 @@ function LoggingServiceV2ClientBuilder(gaxGrpc) {
     return new LoggingServiceV2ClientBuilder(gaxGrpc);
   }
 
-  var loggingServiceV2Client = gaxGrpc.load([{
-    root: require('google-proto-files')('..'),
-    file: 'google/logging/v2/logging.proto'
-  }]);
+  var loggingServiceV2Client = gaxGrpc.load([
+    {
+      root: require('google-proto-files')('..'),
+      file: 'google/logging/v2/logging.proto',
+    },
+  ]);
   extend(this, loggingServiceV2Client.google.logging.v2);
-
 
   /**
    * Build a new instance of {@link LoggingServiceV2Client}.

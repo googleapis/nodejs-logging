@@ -85,9 +85,12 @@ var eventId = new EventId();
  * });
  */
 function Entry(metadata, data) {
-  this.metadata = extend({
-    timestamp: new Date()
-  }, metadata);
+  this.metadata = extend(
+    {
+      timestamp: new Date(),
+    },
+    metadata
+  );
 
   // JavaScript date has a very coarse granularity (millisecond), which makes
   // it quite likely that multiple log entries would have the same timestamp.
@@ -146,7 +149,7 @@ Entry.prototype.toJSON = function(options) {
   if (is.object(this.data)) {
     entry.jsonPayload = commonGrpc.Service.objToStruct_(this.data, {
       removeCircular: !!options.removeCircular,
-      stringify: true
+      stringify: true,
     });
   } else if (is.string(this.data)) {
     entry.textPayload = this.data;
@@ -158,7 +161,7 @@ Entry.prototype.toJSON = function(options) {
 
     entry.timestamp = {
       seconds: secondsRounded,
-      nanos: Math.floor((seconds - secondsRounded) * 1e9)
+      nanos: Math.floor((seconds - secondsRounded) * 1e9),
     };
   }
 

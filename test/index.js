@@ -35,14 +35,11 @@ var fakePaginator = {
 
     extended = true;
     methods = arrify(methods);
-    assert.deepEqual(methods, [
-      'getEntries',
-      'getSinks'
-    ]);
+    assert.deepEqual(methods, ['getEntries', 'getSinks']);
   },
   streamify: function(methodName) {
     return methodName;
-  }
+  },
 };
 
 var googleAutoAuthOverride;
@@ -67,12 +64,7 @@ var fakeUtil = extend({}, util, {
     }
 
     promisifed = true;
-    assert.deepEqual(options.exclude, [
-      'entry',
-      'log',
-      'request',
-      'sink'
-    ]);
+    assert.deepEqual(options.exclude, ['entry', 'log', 'request', 'sink']);
   },
   replaceProjectIdToken: function(reqOpts) {
     if (replaceProjectIdTokenOverride) {
@@ -80,7 +72,7 @@ var fakeUtil = extend({}, util, {
     }
 
     return reqOpts;
-  }
+  },
 });
 
 var v2Override;
@@ -114,13 +106,13 @@ describe('Logging', function() {
     Logging = proxyquire('../', {
       '@google-cloud/common': {
         paginator: fakePaginator,
-        util: fakeUtil
+        util: fakeUtil,
       },
       'google-auto-auth': fakeGoogleAutoAuth,
       './log.js': FakeLog,
       './entry.js': FakeEntry,
       './sink.js': FakeSink,
-      './v2': fakeV2
+      './v2': fakeV2,
     });
   });
 
@@ -131,7 +123,7 @@ describe('Logging', function() {
     v2Override = null;
 
     logging = new Logging({
-      projectId: PROJECT_ID
+      projectId: PROJECT_ID,
     });
   });
 
@@ -149,7 +141,7 @@ describe('Logging', function() {
         projectId: PROJECT_ID,
         credentials: 'credentials',
         email: 'email',
-        keyFilename: 'keyFile'
+        keyFilename: 'keyFile',
       };
 
       var normalizeArguments = fakeUtil.normalizeArguments;
@@ -177,15 +169,21 @@ describe('Logging', function() {
       var fakeGoogleAutoAuthInstance = {};
       var options = {
         a: 'b',
-        c: 'd'
+        c: 'd',
       };
 
       googleAutoAuthOverride = function(options_) {
-        assert.deepEqual(options_, extend({
-          scopes: v2.ALL_SCOPES,
-          libName: 'gccl',
-          libVersion: PKG.version
-        }, options));
+        assert.deepEqual(
+          options_,
+          extend(
+            {
+              scopes: v2.ALL_SCOPES,
+              libName: 'gccl',
+              libVersion: PKG.version,
+            },
+            options
+          )
+        );
         return fakeGoogleAutoAuthInstance;
       };
 
@@ -196,18 +194,24 @@ describe('Logging', function() {
     it('should localize the options', function() {
       var options = {
         a: 'b',
-        c: 'd'
+        c: 'd',
       };
 
       var logging = new Logging(options);
 
       assert.notStrictEqual(logging.options, options);
 
-      assert.deepEqual(logging.options, extend({
-        scopes: v2.ALL_SCOPES,
-        libName: 'gccl',
-        libVersion: PKG.version
-      }, options));
+      assert.deepEqual(
+        logging.options,
+        extend(
+          {
+            scopes: v2.ALL_SCOPES,
+            libName: 'gccl',
+            libVersion: PKG.version,
+          },
+          options
+        )
+      );
     });
 
     it('should set the projectId', function() {
@@ -239,7 +243,7 @@ describe('Logging', function() {
       var dataset = {};
 
       var CONFIG = {
-        destination: dataset
+        destination: dataset,
       };
 
       isCustomTypeOverride = function(destination, type) {
@@ -260,7 +264,7 @@ describe('Logging', function() {
       var topic = {};
 
       var CONFIG = {
-        destination: topic
+        destination: topic,
       };
 
       isCustomTypeOverride = function(destination, type) {
@@ -281,7 +285,7 @@ describe('Logging', function() {
       var bucket = {};
 
       var CONFIG = {
-        destination: bucket
+        destination: bucket,
       };
 
       isCustomTypeOverride = function(destination, type) {
@@ -302,11 +306,11 @@ describe('Logging', function() {
       it('should make the correct API request', function(done) {
         var config = {
           a: 'b',
-          c: 'd'
+          c: 'd',
         };
 
         var expectedConfig = extend({}, config, {
-          name: SINK_NAME
+          name: SINK_NAME,
         });
 
         logging.request = function(config) {
@@ -329,7 +333,7 @@ describe('Logging', function() {
         var config = {
           a: 'b',
           c: 'd',
-          gaxOptions: {}
+          gaxOptions: {},
         };
 
         logging.request = function(config_) {
@@ -364,7 +368,7 @@ describe('Logging', function() {
 
       describe('success', function() {
         var apiResponse = {
-          name: SINK_NAME
+          name: SINK_NAME,
         };
 
         beforeEach(function() {
@@ -412,7 +416,7 @@ describe('Logging', function() {
       logging.request = function(config) {
         assert.deepEqual(config.reqOpts, {
           orderBy: 'timestamp desc',
-          resourceNames: ['projects/' + logging.projectId]
+          resourceNames: ['projects/' + logging.projectId],
         });
         done();
       };
@@ -427,13 +431,16 @@ describe('Logging', function() {
         assert.strictEqual(config.client, 'loggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntries');
 
-        assert.deepEqual(config.reqOpts, extend(options, {
-          orderBy: 'timestamp desc',
-          resourceNames: ['projects/' + logging.projectId]
-        }));
+        assert.deepEqual(
+          config.reqOpts,
+          extend(options, {
+            orderBy: 'timestamp desc',
+            resourceNames: ['projects/' + logging.projectId],
+          })
+        );
 
         assert.deepStrictEqual(config.gaxOpts, {
-          autoPaginate: undefined
+          autoPaginate: undefined,
         });
 
         done();
@@ -444,7 +451,7 @@ describe('Logging', function() {
 
     it('should allow overriding orderBy', function(done) {
       var options = {
-        orderBy: 'timestamp asc'
+        orderBy: 'timestamp asc',
       };
 
       logging.request = function(config) {
@@ -460,8 +467,8 @@ describe('Logging', function() {
         a: 'b',
         c: 'd',
         gaxOptions: {
-          autoPaginate: true
-        }
+          autoPaginate: true,
+        },
       };
 
       logging.request = function(config) {
@@ -474,11 +481,7 @@ describe('Logging', function() {
     });
 
     describe('error', function() {
-      var ARGS = [
-        new Error('Error.'),
-        [],
-        {}
-      ];
+      var ARGS = [new Error('Error.'), [], {}];
 
       beforeEach(function() {
         logging.request = function(config, callback) {
@@ -500,9 +503,9 @@ describe('Logging', function() {
         null,
         [
           {
-            logName: 'syslog'
-          }
-        ]
+            logName: 'syslog',
+          },
+        ],
       ];
 
       beforeEach(function() {
@@ -516,10 +519,7 @@ describe('Logging', function() {
           assert.ifError(err);
 
           var argsPassedToFromApiResponse_ = entries[0];
-          assert.strictEqual(
-            argsPassedToFromApiResponse_[0],
-            ARGS[1][0]
-          );
+          assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS[1][0]);
 
           done();
         });
@@ -533,8 +533,8 @@ describe('Logging', function() {
       c: 'd',
       gaxOptions: {
         a: 'b',
-        c: 'd'
-      }
+        c: 'd',
+      },
     };
 
     var REQUEST_STREAM;
@@ -555,18 +555,16 @@ describe('Logging', function() {
         assert.strictEqual(config.method, 'listLogEntriesStream');
 
         assert.deepEqual(config.reqOpts, {
-          resourceNames: [
-            'projects/' + logging.projectId
-          ],
+          resourceNames: ['projects/' + logging.projectId],
           orderBy: 'timestamp desc',
           a: 'b',
-          c: 'd'
+          c: 'd',
         });
 
         assert.deepEqual(config.gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
-          c: 'd'
+          c: 'd',
         });
 
         setImmediate(done);
@@ -583,10 +581,7 @@ describe('Logging', function() {
 
       stream.on('data', function(entry) {
         var argsPassedToFromApiResponse_ = entry[0];
-        assert.strictEqual(
-          argsPassedToFromApiResponse_,
-          RESULT
-        );
+        assert.strictEqual(argsPassedToFromApiResponse_, RESULT);
 
         done();
       });
@@ -618,8 +613,8 @@ describe('Logging', function() {
       c: 'd',
       gaxOptions: {
         a: 'b',
-        c: 'd'
-      }
+        c: 'd',
+      },
     };
 
     it('should accept only a callback', function(done) {
@@ -638,13 +633,13 @@ describe('Logging', function() {
         assert.deepEqual(config.reqOpts, {
           parent: 'projects/' + logging.projectId,
           a: 'b',
-          c: 'd'
+          c: 'd',
         });
 
         assert.deepEqual(config.gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
-          c: 'd'
+          c: 'd',
         });
 
         done();
@@ -654,11 +649,7 @@ describe('Logging', function() {
     });
 
     describe('error', function() {
-      var ARGS = [
-        new Error('Error.'),
-        [],
-        {}
-      ];
+      var ARGS = [new Error('Error.'), [], {}];
 
       beforeEach(function() {
         logging.request = function(config, callback) {
@@ -680,10 +671,10 @@ describe('Logging', function() {
         null,
         [
           {
-            name: 'sink-name'
-          }
+            name: 'sink-name',
+          },
         ],
-        {}
+        {},
       ];
 
       beforeEach(function() {
@@ -718,13 +709,13 @@ describe('Logging', function() {
       c: 'd',
       gaxOptions: {
         a: 'b',
-        c: 'd'
-      }
+        c: 'd',
+      },
     };
 
     var REQUEST_STREAM;
     var RESULT = {
-      name: 'sink-name'
+      name: 'sink-name',
     };
 
     beforeEach(function() {
@@ -744,13 +735,13 @@ describe('Logging', function() {
         assert.deepEqual(config.reqOpts, {
           parent: 'projects/' + logging.projectId,
           a: 'b',
-          c: 'd'
+          c: 'd',
         });
 
         assert.deepEqual(config.gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
-          c: 'd'
+          c: 'd',
         });
 
         setImmediate(done);
@@ -809,9 +800,9 @@ describe('Logging', function() {
       method: 'method',
       reqOpts: {
         a: 'b',
-        c: 'd'
+        c: 'd',
       },
-      gaxOpts: {}
+      gaxOpts: {},
     };
 
     var PROJECT_ID = 'project-id';
@@ -820,11 +811,11 @@ describe('Logging', function() {
       logging.auth = {
         getProjectId: function(callback) {
           callback(null, PROJECT_ID);
-        }
+        },
       };
 
       logging.api[CONFIG.client] = {
-        [CONFIG.method]: util.noop
+        [CONFIG.method]: util.noop,
       };
     });
 
@@ -852,7 +843,7 @@ describe('Logging', function() {
 
       it('should initiate and cache the client', function() {
         var fakeClient = {
-          [CONFIG.method]: util.noop
+          [CONFIG.method]: util.noop,
         };
 
         v2Override = function(options) {
@@ -862,7 +853,7 @@ describe('Logging', function() {
             [CONFIG.client]: function(options) {
               assert.strictEqual(options, logging.options);
               return fakeClient;
-            }
+            },
           };
         };
 
@@ -900,7 +891,7 @@ describe('Logging', function() {
             setImmediate(done);
 
             return util.noop;
-          }
+          },
         };
 
         logging.request(CONFIG, assert.ifError);
@@ -931,7 +922,7 @@ describe('Logging', function() {
             setImmediate(done);
 
             return util.noop;
-          }
+          },
         };
 
         logging.request(CONFIG, assert.ifError);
@@ -972,7 +963,7 @@ describe('Logging', function() {
             return function() {
               return GAX_STREAM;
             };
-          }
+          },
         };
       });
 
@@ -1010,7 +1001,7 @@ describe('Logging', function() {
             return function() {
               return GAX_STREAM;
             };
-          }
+          },
         };
 
         var requestStream = logging.request(CONFIG);
@@ -1071,13 +1062,13 @@ describe('Logging', function() {
         name: 'bucket-name',
         acl: {
           owners: {
-            addGroup: util.noop
-          }
-        }
+            addGroup: util.noop,
+          },
+        },
       };
 
       CONFIG = {
-        destination: bucket
+        destination: bucket,
       };
     });
 
@@ -1150,12 +1141,12 @@ describe('Logging', function() {
       dataset = {
         id: 'dataset-id',
         parent: {
-          projectId: PROJECT_ID
-        }
+          projectId: PROJECT_ID,
+        },
       };
 
       CONFIG = {
-        destination: dataset
+        destination: dataset,
       };
     });
 
@@ -1182,7 +1173,7 @@ describe('Logging', function() {
 
       describe('success', function() {
         var apiResponse = {
-          access: [{}, {}]
+          access: [{}, {}],
         };
 
         var originalAccess = [].slice.call(apiResponse.access);
@@ -1196,7 +1187,7 @@ describe('Logging', function() {
         it('should set the correct metadata', function(done) {
           var access = {
             role: 'WRITER',
-            groupByEmail: 'cloud-logs@google.com'
+            groupByEmail: 'cloud-logs@google.com',
           };
 
           var expectedAccess = [].slice.call(originalAccess).concat(access);
@@ -1246,7 +1237,7 @@ describe('Logging', function() {
                 'projects',
                 dataset.parent.projectId,
                 'datasets',
-                dataset.id
+                dataset.id,
               ].join('/');
 
               assert.strictEqual(name, SINK_NAME);
@@ -1272,12 +1263,12 @@ describe('Logging', function() {
         name: 'topic-name',
         iam: {
           getPolicy: util.noop,
-          setPolicy: util.noop
-        }
+          setPolicy: util.noop,
+        },
       };
 
       CONFIG = {
-        destination: topic
+        destination: topic,
       };
     });
 
@@ -1304,7 +1295,7 @@ describe('Logging', function() {
 
       describe('success', function() {
         var apiResponse = {
-          bindings: [{}, {}]
+          bindings: [{}, {}],
         };
 
         var originalBindings = [].slice.call(apiResponse.bindings);
@@ -1318,9 +1309,7 @@ describe('Logging', function() {
         it('should set the correct policy bindings', function(done) {
           var binding = {
             role: 'roles/pubsub.publisher',
-            members: [
-              'serviceAccount:cloud-logs@system.gserviceaccount.com'
-            ]
+            members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
           };
 
           var expectedBindings = [].slice.call(originalBindings);

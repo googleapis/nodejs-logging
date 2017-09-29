@@ -38,10 +38,7 @@ var DEFAULT_SERVICE_PORT = 443;
 var CODE_GEN_NAME_VERSION = 'gapic/0.1.0';
 
 var PAGE_DESCRIPTORS = {
-  listSinks: new gax.PageDescriptor(
-      'pageToken',
-      'nextPageToken',
-      'sinks')
+  listSinks: new gax.PageDescriptor('pageToken', 'nextPageToken', 'sinks'),
 };
 
 /**
@@ -53,7 +50,7 @@ var ALL_SCOPES = [
   'https://www.googleapis.com/auth/cloud-platform.read-only',
   'https://www.googleapis.com/auth/logging.admin',
   'https://www.googleapis.com/auth/logging.read',
-  'https://www.googleapis.com/auth/logging.write'
+  'https://www.googleapis.com/auth/logging.write',
 ];
 
 /**
@@ -73,15 +70,16 @@ var ALL_SCOPES = [
  * @class
  */
 function ConfigServiceV2Client(gaxGrpc, grpcClients, opts) {
-  opts = extend({
-    servicePath: SERVICE_ADDRESS,
-    port: DEFAULT_SERVICE_PORT,
-    clientConfig: {}
-  }, opts);
+  opts = extend(
+    {
+      servicePath: SERVICE_ADDRESS,
+      port: DEFAULT_SERVICE_PORT,
+      clientConfig: {},
+    },
+    opts
+  );
 
-  var googleApiClient = [
-    'gl-node/' + process.versions.node
-  ];
+  var googleApiClient = ['gl-node/' + process.versions.node];
   if (opts.libName && opts.libVersion) {
     googleApiClient.push(opts.libName + '/' + opts.libVersion);
   }
@@ -92,44 +90,50 @@ function ConfigServiceV2Client(gaxGrpc, grpcClients, opts) {
   );
 
   var defaults = gaxGrpc.constructSettings(
-      'google.logging.v2.ConfigServiceV2',
-      configData,
-      opts.clientConfig,
-      {'x-goog-api-client': googleApiClient.join(' ')});
+    'google.logging.v2.ConfigServiceV2',
+    configData,
+    opts.clientConfig,
+    {'x-goog-api-client': googleApiClient.join(' ')}
+  );
 
   var self = this;
 
   this.auth = gaxGrpc.auth;
   var configServiceV2Stub = gaxGrpc.createStub(
-      grpcClients.google.logging.v2.ConfigServiceV2,
-      opts);
+    grpcClients.google.logging.v2.ConfigServiceV2,
+    opts
+  );
   var configServiceV2StubMethods = [
     'listSinks',
     'getSink',
     'createSink',
     'updateSink',
-    'deleteSink'
+    'deleteSink',
   ];
   configServiceV2StubMethods.forEach(function(methodName) {
     self['_' + methodName] = gax.createApiCall(
       configServiceV2Stub.then(function(configServiceV2Stub) {
         return function() {
           var args = Array.prototype.slice.call(arguments, 0);
-          return configServiceV2Stub[methodName].apply(configServiceV2Stub, args);
+          return configServiceV2Stub[methodName].apply(
+            configServiceV2Stub,
+            args
+          );
         };
       }),
       defaults[methodName],
-      PAGE_DESCRIPTORS[methodName]);
+      PAGE_DESCRIPTORS[methodName]
+    );
   });
 }
 
 // Path templates
 
-var PROJECT_PATH_TEMPLATE = new gax.PathTemplate(
-    'projects/{project}');
+var PROJECT_PATH_TEMPLATE = new gax.PathTemplate('projects/{project}');
 
 var SINK_PATH_TEMPLATE = new gax.PathTemplate(
-    'projects/{project}/sinks/{sink}');
+  'projects/{project}/sinks/{sink}'
+);
 
 /**
  * Returns a fully-qualified project resource name string.
@@ -138,7 +142,7 @@ var SINK_PATH_TEMPLATE = new gax.PathTemplate(
  */
 ConfigServiceV2Client.prototype.projectPath = function(project) {
   return PROJECT_PATH_TEMPLATE.render({
-    project: project
+    project: project,
   });
 };
 
@@ -148,7 +152,9 @@ ConfigServiceV2Client.prototype.projectPath = function(project) {
  *   A fully-qualified path representing a project resources.
  * @returns {String} - A string representing the project.
  */
-ConfigServiceV2Client.prototype.matchProjectFromProjectName = function(projectName) {
+ConfigServiceV2Client.prototype.matchProjectFromProjectName = function(
+  projectName
+) {
   return PROJECT_PATH_TEMPLATE.match(projectName).project;
 };
 
@@ -161,7 +167,7 @@ ConfigServiceV2Client.prototype.matchProjectFromProjectName = function(projectNa
 ConfigServiceV2Client.prototype.sinkPath = function(project, sink) {
   return SINK_PATH_TEMPLATE.render({
     project: project,
-    sink: sink
+    sink: sink,
   });
 };
 
@@ -270,7 +276,11 @@ ConfigServiceV2Client.prototype.getProjectId = function(callback) {
  *         console.error(err);
  *     });
  */
-ConfigServiceV2Client.prototype.listSinks = function(request, options, callback) {
+ConfigServiceV2Client.prototype.listSinks = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -327,7 +337,11 @@ ConfigServiceV2Client.prototype.listSinksStream = function(request, options) {
     options = {};
   }
 
-  return PAGE_DESCRIPTORS.listSinks.createStream(this._listSinks, request, options);
+  return PAGE_DESCRIPTORS.listSinks.createStream(
+    this._listSinks,
+    request,
+    options
+  );
 };
 
 /**
@@ -436,7 +450,11 @@ ConfigServiceV2Client.prototype.getSink = function(request, options, callback) {
  *     console.error(err);
  * });
  */
-ConfigServiceV2Client.prototype.createSink = function(request, options, callback) {
+ConfigServiceV2Client.prototype.createSink = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -513,7 +531,11 @@ ConfigServiceV2Client.prototype.createSink = function(request, options, callback
  *     console.error(err);
  * });
  */
-ConfigServiceV2Client.prototype.updateSink = function(request, options, callback) {
+ConfigServiceV2Client.prototype.updateSink = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -557,7 +579,11 @@ ConfigServiceV2Client.prototype.updateSink = function(request, options, callback
  *     console.error(err);
  * });
  */
-ConfigServiceV2Client.prototype.deleteSink = function(request, options, callback) {
+ConfigServiceV2Client.prototype.deleteSink = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -574,12 +600,13 @@ function ConfigServiceV2ClientBuilder(gaxGrpc) {
     return new ConfigServiceV2ClientBuilder(gaxGrpc);
   }
 
-  var configServiceV2Client = gaxGrpc.load([{
-    root: require('google-proto-files')('..'),
-    file: 'google/logging/v2/logging_config.proto'
-  }]);
+  var configServiceV2Client = gaxGrpc.load([
+    {
+      root: require('google-proto-files')('..'),
+      file: 'google/logging/v2/logging_config.proto',
+    },
+  ]);
   extend(this, configServiceV2Client.google.logging.v2);
-
 
   /**
    * Build a new instance of {@link ConfigServiceV2Client}.

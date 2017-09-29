@@ -31,7 +31,7 @@ var fakeUtil = extend({}, util, {
 
     promisifed = true;
     assert.deepEqual(options.exclude, ['entry']);
-  }
+  },
 });
 
 var Entry = require('../src/entry.js');
@@ -51,8 +51,8 @@ describe('Log', function() {
     'projects',
     PROJECT_ID,
     'logs',
-    LOG_NAME_ENCODED
-   ].join('/');
+    LOG_NAME_ENCODED,
+  ].join('/');
 
   var LOGGING;
 
@@ -61,15 +61,15 @@ describe('Log', function() {
   before(function() {
     Log = proxyquire('../src/log.js', {
       '@google-cloud/common': {
-        util: fakeUtil
+        util: fakeUtil,
       },
       './entry.js': Entry,
-      './metadata.js': FakeMetadata
+      './metadata.js': FakeMetadata,
     });
     var assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = function() {
-      return (assignSeverityToEntriesOverride || assignSeverityToEntries_)
-        .apply(null, arguments);
+      return (assignSeverityToEntriesOverride || assignSeverityToEntries_
+      ).apply(null, arguments);
     };
   });
 
@@ -79,7 +79,7 @@ describe('Log', function() {
     LOGGING = {
       projectId: PROJECT_ID,
       entry: util.noop,
-      request: util.noop
+      request: util.noop,
     };
 
     log = new Log(LOGGING, LOG_NAME_FORMATTED);
@@ -118,7 +118,7 @@ describe('Log', function() {
     });
 
     it('should accept and localize options.removeCircular', function() {
-      var options = { removeCircular: true };
+      var options = {removeCircular: true};
       var log = new Log(LOGGING, LOG_NAME_FORMATTED, options);
       assert.strictEqual(log.removeCircular_, true);
     });
@@ -136,11 +136,7 @@ describe('Log', function() {
     var circular = {};
     circular.circular = circular;
 
-    var ENTRIES = [
-      { data: { a: 'b' } },
-      { data: { c: 'd' } },
-      { data: { e: circular }}
-    ];
+    var ENTRIES = [{data: {a: 'b'}}, {data: {c: 'd'}}, {data: {e: circular}}];
 
     var SEVERITY = 'severity';
 
@@ -149,7 +145,7 @@ describe('Log', function() {
         Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
           .map(prop('metadata'))
           .map(prop('severity')),
-        [ SEVERITY ]
+        [SEVERITY]
       );
     });
 
@@ -158,11 +154,7 @@ describe('Log', function() {
         Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
           .map(prop('metadata'))
           .map(prop('severity')),
-        [
-          SEVERITY,
-          SEVERITY,
-          SEVERITY
-        ]
+        [SEVERITY, SEVERITY, SEVERITY]
       );
     });
 
@@ -207,7 +199,7 @@ describe('Log', function() {
         assert.strictEqual(config.method, 'deleteLog');
 
         assert.deepEqual(config.reqOpts, {
-          logName: log.formattedName_
+          logName: log.formattedName_,
         });
 
         assert.deepEqual(config.gaxOpts, {});
@@ -233,7 +225,7 @@ describe('Log', function() {
   describe('entry', function() {
     it('should return an entry from Logging', function() {
       var metadata = {
-        val: true
+        val: true,
       };
       var data = {};
 
@@ -263,7 +255,7 @@ describe('Log', function() {
 
   describe('getEntries', function() {
     var EXPECTED_OPTIONS = {
-      filter: 'logName="' + LOG_NAME_FORMATTED + '"'
+      filter: 'logName="' + LOG_NAME_FORMATTED + '"',
     };
 
     it('should call Logging getEntries with defaults', function(done) {
@@ -278,7 +270,7 @@ describe('Log', function() {
     it('should allow overriding the options', function(done) {
       var options = {
         custom: true,
-        filter: 'custom filter'
+        filter: 'custom filter',
       };
 
       log.logging.getEntries = function(options_, callback) {
@@ -293,7 +285,7 @@ describe('Log', function() {
   describe('getEntriesStream', function() {
     var fakeStream = {};
     var EXPECTED_OPTIONS = {
-      filter: 'logName="' + LOG_NAME_FORMATTED + '"'
+      filter: 'logName="' + LOG_NAME_FORMATTED + '"',
     };
 
     it('should call Logging getEntriesStream with defaults', function(done) {
@@ -310,7 +302,7 @@ describe('Log', function() {
     it('should allow overriding the options', function(done) {
       var options = {
         custom: true,
-        filter: 'custom filter'
+        filter: 'custom filter',
       };
 
       log.logging.getEntriesStream = function(options_) {
@@ -341,7 +333,7 @@ describe('Log', function() {
     it('should forward options.resource to request', function(done) {
       var CUSTOM_RESOURCE = 'custom-resource';
       var optionsWithResource = extend({}, OPTIONS, {
-        resource: CUSTOM_RESOURCE
+        resource: CUSTOM_RESOURCE,
       });
 
       log.logging.request = function(config, callback) {
@@ -351,7 +343,7 @@ describe('Log', function() {
         assert.deepEqual(config.reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
-          resource: CUSTOM_RESOURCE
+          resource: CUSTOM_RESOURCE,
         });
 
         assert.strictEqual(config.gaxOpts, undefined);
@@ -365,16 +357,16 @@ describe('Log', function() {
     it('should transform camelcase label keys to snake case', function(done) {
       var CUSTOM_RESOURCE = {
         labels: {
-          camelCaseKey: 'camel-case-key-val'
-        }
+          camelCaseKey: 'camel-case-key-val',
+        },
       };
       var EXPECTED_RESOURCE = {
         labels: {
-          camel_case_key: 'camel-case-key-val'
-        }
+          camel_case_key: 'camel-case-key-val',
+        },
       };
       var optionsWithResource = extend({}, OPTIONS, {
-        resource: CUSTOM_RESOURCE
+        resource: CUSTOM_RESOURCE,
       });
 
       log.logging.request = function(config, callback) {
@@ -384,7 +376,7 @@ describe('Log', function() {
         assert.deepEqual(config.reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
-          resource: EXPECTED_RESOURCE
+          resource: EXPECTED_RESOURCE,
         });
 
         assert.strictEqual(config.gaxOpts, undefined);
@@ -403,7 +395,7 @@ describe('Log', function() {
         assert.deepEqual(config.reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
-          resource: FAKE_RESOURCE
+          resource: FAKE_RESOURCE,
         });
 
         assert.strictEqual(config.gaxOpts, undefined);
@@ -729,7 +721,7 @@ describe('Log', function() {
 
       var entry = new Entry();
       entry.toJSON = function(options_) {
-        assert.deepStrictEqual(options_, { removeCircular: true });
+        assert.deepStrictEqual(options_, {removeCircular: true});
         setImmediate(done);
         return {};
       };

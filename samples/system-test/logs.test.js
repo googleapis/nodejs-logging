@@ -28,22 +28,25 @@ const message = `Hello world!`;
 
 test.before(tools.checkCredentials);
 
-test.serial(`should write a log entry`, async (t) => {
-  const output = await tools.runAsync(`${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`, cwd);
+test.serial(`should write a log entry`, async t => {
+  const output = await tools.runAsync(
+    `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`,
+    cwd
+  );
   t.is(output, `Wrote to ${logName}`);
 });
 
-test.serial(`should write a simple log entry`, async (t) => {
+test.serial(`should write a simple log entry`, async t => {
   const output = await tools.runAsync(`${cmd} write-simple ${logName}`, cwd);
   t.is(output, `Wrote to ${logName}`);
 });
 
-test.serial(`should write using winston`, async (t) => {
+test.serial(`should write using winston`, async t => {
   const output = await tools.runAsync(`${cmd} winston`, cwd);
   t.is(output.includes('99%'), true);
 });
 
-test.serial(`should write using bunyan`, async (t) => {
+test.serial(`should write using bunyan`, async t => {
   const output = await tools.runAsync(`${cmd} bunyan`, cwd);
   t.is(output.includes('99%'), true);
 });

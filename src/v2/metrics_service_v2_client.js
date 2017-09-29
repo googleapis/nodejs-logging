@@ -39,9 +39,10 @@ var CODE_GEN_NAME_VERSION = 'gapic/0.1.0';
 
 var PAGE_DESCRIPTORS = {
   listLogMetrics: new gax.PageDescriptor(
-      'pageToken',
-      'nextPageToken',
-      'metrics')
+    'pageToken',
+    'nextPageToken',
+    'metrics'
+  ),
 };
 
 /**
@@ -53,7 +54,7 @@ var ALL_SCOPES = [
   'https://www.googleapis.com/auth/cloud-platform.read-only',
   'https://www.googleapis.com/auth/logging.admin',
   'https://www.googleapis.com/auth/logging.read',
-  'https://www.googleapis.com/auth/logging.write'
+  'https://www.googleapis.com/auth/logging.write',
 ];
 
 /**
@@ -72,15 +73,16 @@ var ALL_SCOPES = [
  * @class
  */
 function MetricsServiceV2Client(gaxGrpc, grpcClients, opts) {
-  opts = extend({
-    servicePath: SERVICE_ADDRESS,
-    port: DEFAULT_SERVICE_PORT,
-    clientConfig: {}
-  }, opts);
+  opts = extend(
+    {
+      servicePath: SERVICE_ADDRESS,
+      port: DEFAULT_SERVICE_PORT,
+      clientConfig: {},
+    },
+    opts
+  );
 
-  var googleApiClient = [
-    'gl-node/' + process.versions.node
-  ];
+  var googleApiClient = ['gl-node/' + process.versions.node];
   if (opts.libName && opts.libVersion) {
     googleApiClient.push(opts.libName + '/' + opts.libVersion);
   }
@@ -91,44 +93,50 @@ function MetricsServiceV2Client(gaxGrpc, grpcClients, opts) {
   );
 
   var defaults = gaxGrpc.constructSettings(
-      'google.logging.v2.MetricsServiceV2',
-      configData,
-      opts.clientConfig,
-      {'x-goog-api-client': googleApiClient.join(' ')});
+    'google.logging.v2.MetricsServiceV2',
+    configData,
+    opts.clientConfig,
+    {'x-goog-api-client': googleApiClient.join(' ')}
+  );
 
   var self = this;
 
   this.auth = gaxGrpc.auth;
   var metricsServiceV2Stub = gaxGrpc.createStub(
-      grpcClients.google.logging.v2.MetricsServiceV2,
-      opts);
+    grpcClients.google.logging.v2.MetricsServiceV2,
+    opts
+  );
   var metricsServiceV2StubMethods = [
     'listLogMetrics',
     'getLogMetric',
     'createLogMetric',
     'updateLogMetric',
-    'deleteLogMetric'
+    'deleteLogMetric',
   ];
   metricsServiceV2StubMethods.forEach(function(methodName) {
     self['_' + methodName] = gax.createApiCall(
       metricsServiceV2Stub.then(function(metricsServiceV2Stub) {
         return function() {
           var args = Array.prototype.slice.call(arguments, 0);
-          return metricsServiceV2Stub[methodName].apply(metricsServiceV2Stub, args);
+          return metricsServiceV2Stub[methodName].apply(
+            metricsServiceV2Stub,
+            args
+          );
         };
       }),
       defaults[methodName],
-      PAGE_DESCRIPTORS[methodName]);
+      PAGE_DESCRIPTORS[methodName]
+    );
   });
 }
 
 // Path templates
 
-var PROJECT_PATH_TEMPLATE = new gax.PathTemplate(
-    'projects/{project}');
+var PROJECT_PATH_TEMPLATE = new gax.PathTemplate('projects/{project}');
 
 var METRIC_PATH_TEMPLATE = new gax.PathTemplate(
-    'projects/{project}/metrics/{metric}');
+  'projects/{project}/metrics/{metric}'
+);
 
 /**
  * Returns a fully-qualified project resource name string.
@@ -137,7 +145,7 @@ var METRIC_PATH_TEMPLATE = new gax.PathTemplate(
  */
 MetricsServiceV2Client.prototype.projectPath = function(project) {
   return PROJECT_PATH_TEMPLATE.render({
-    project: project
+    project: project,
   });
 };
 
@@ -147,7 +155,9 @@ MetricsServiceV2Client.prototype.projectPath = function(project) {
  *   A fully-qualified path representing a project resources.
  * @returns {String} - A string representing the project.
  */
-MetricsServiceV2Client.prototype.matchProjectFromProjectName = function(projectName) {
+MetricsServiceV2Client.prototype.matchProjectFromProjectName = function(
+  projectName
+) {
   return PROJECT_PATH_TEMPLATE.match(projectName).project;
 };
 
@@ -160,7 +170,7 @@ MetricsServiceV2Client.prototype.matchProjectFromProjectName = function(projectN
 MetricsServiceV2Client.prototype.metricPath = function(project, metric) {
   return METRIC_PATH_TEMPLATE.render({
     project: project,
-    metric: metric
+    metric: metric,
   });
 };
 
@@ -170,7 +180,9 @@ MetricsServiceV2Client.prototype.metricPath = function(project, metric) {
  *   A fully-qualified path representing a metric resources.
  * @returns {String} - A string representing the project.
  */
-MetricsServiceV2Client.prototype.matchProjectFromMetricName = function(metricName) {
+MetricsServiceV2Client.prototype.matchProjectFromMetricName = function(
+  metricName
+) {
   return METRIC_PATH_TEMPLATE.match(metricName).project;
 };
 
@@ -180,7 +192,9 @@ MetricsServiceV2Client.prototype.matchProjectFromMetricName = function(metricNam
  *   A fully-qualified path representing a metric resources.
  * @returns {String} - A string representing the metric.
  */
-MetricsServiceV2Client.prototype.matchMetricFromMetricName = function(metricName) {
+MetricsServiceV2Client.prototype.matchMetricFromMetricName = function(
+  metricName
+) {
   return METRIC_PATH_TEMPLATE.match(metricName).metric;
 };
 
@@ -270,7 +284,11 @@ MetricsServiceV2Client.prototype.getProjectId = function(callback) {
  *         console.error(err);
  *     });
  */
-MetricsServiceV2Client.prototype.listLogMetrics = function(request, options, callback) {
+MetricsServiceV2Client.prototype.listLogMetrics = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -323,12 +341,19 @@ MetricsServiceV2Client.prototype.listLogMetrics = function(request, options, cal
  *     console.error(err);
  * });
  */
-MetricsServiceV2Client.prototype.listLogMetricsStream = function(request, options) {
+MetricsServiceV2Client.prototype.listLogMetricsStream = function(
+  request,
+  options
+) {
   if (options === undefined) {
     options = {};
   }
 
-  return PAGE_DESCRIPTORS.listLogMetrics.createStream(this._listLogMetrics, request, options);
+  return PAGE_DESCRIPTORS.listLogMetrics.createStream(
+    this._listLogMetrics,
+    request,
+    options
+  );
 };
 
 /**
@@ -362,7 +387,11 @@ MetricsServiceV2Client.prototype.listLogMetricsStream = function(request, option
  *     console.error(err);
  * });
  */
-MetricsServiceV2Client.prototype.getLogMetric = function(request, options, callback) {
+MetricsServiceV2Client.prototype.getLogMetric = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -417,7 +446,11 @@ MetricsServiceV2Client.prototype.getLogMetric = function(request, options, callb
  *     console.error(err);
  * });
  */
-MetricsServiceV2Client.prototype.createLogMetric = function(request, options, callback) {
+MetricsServiceV2Client.prototype.createLogMetric = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -473,7 +506,11 @@ MetricsServiceV2Client.prototype.createLogMetric = function(request, options, ca
  *     console.error(err);
  * });
  */
-MetricsServiceV2Client.prototype.updateLogMetric = function(request, options, callback) {
+MetricsServiceV2Client.prototype.updateLogMetric = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -510,7 +547,11 @@ MetricsServiceV2Client.prototype.updateLogMetric = function(request, options, ca
  *     console.error(err);
  * });
  */
-MetricsServiceV2Client.prototype.deleteLogMetric = function(request, options, callback) {
+MetricsServiceV2Client.prototype.deleteLogMetric = function(
+  request,
+  options,
+  callback
+) {
   if (options instanceof Function && callback === undefined) {
     callback = options;
     options = {};
@@ -527,12 +568,13 @@ function MetricsServiceV2ClientBuilder(gaxGrpc) {
     return new MetricsServiceV2ClientBuilder(gaxGrpc);
   }
 
-  var metricsServiceV2Client = gaxGrpc.load([{
-    root: require('google-proto-files')('..'),
-    file: 'google/logging/v2/logging_metrics.proto'
-  }]);
+  var metricsServiceV2Client = gaxGrpc.load([
+    {
+      root: require('google-proto-files')('..'),
+      file: 'google/logging/v2/logging_metrics.proto',
+    },
+  ]);
   extend(this, metricsServiceV2Client.google.logging.v2);
-
 
   /**
    * Build a new instance of {@link MetricsServiceV2Client}.
