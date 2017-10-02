@@ -14,7 +14,6 @@ unit_tests: &unit_tests
         command: node_modules/.bin/codecov
         when: always
 
-
 version: 2.0
 workflows:
   version: 2
