@@ -114,7 +114,7 @@ jobs:
           command: |
             cd samples/
             npm install
-            npm link @google-cloud/storage
+            npm link @google-cloud/logging
             cd ..
       - run:
           name: Run linting.
