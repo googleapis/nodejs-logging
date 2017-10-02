@@ -28,10 +28,10 @@ var fakeGcpMetadata = {
         assert.strictEqual(path, instanceOverride.path);
       }
       var args = (instanceOverride && instanceOverride.args) || [
-          null,
-          null,
-          'fake-instance-value',
-        ];
+        null,
+        null,
+        'fake-instance-value',
+      ];
       cb.apply(fakeGcpMetadata, args);
     });
   },
