@@ -8,7 +8,9 @@ unit_tests: &unit_tests
         command: npm install
     - run:
         name: Run unit tests.
-        command: npm test
+        command: |
+          npm rebuild
+          npm test
     - run:
         name: Submit coverage data to codecov.
         command: node_modules/.bin/codecov
