@@ -6,18 +6,16 @@
   "author": "Google Inc.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git"
+    "url": "https://github.com/googleapis/nodejs-logging.git"
   },
   "engines": {
     "node": ">=4.3.2"
   },
   "scripts": {
-    "lint": "samples lint",
-    "pretest": "npm run lint",
-    "unit-test": "ava -T 20s --verbose test/*.test.js",
-    "system-test": "ava -T 1m --verbose system-test/*.test.js",
-    "all-test": "npm run unit-test && npm run system-test",
-    "test": "samples test run --cmd npm -- run all-test"
+    "cleanup": "repo-tools exec -- node scripts/cleanup",
+    "ava": "ava -T 20s --verbose test/*.test.js system-test/*.test.js",
+    "cover": "nyc --reporter=lcov --cache ava -T 20s --verbose system-test/*.test.js && nyc report",
+    "test": "repo-tools test run --cmd npm -- run cover"
   },
   "dependencies": {
     "@google-cloud/logging": "1.0.5",
@@ -31,15 +29,12 @@
     "yargs": "8.0.2"
   },
   "devDependencies": {
-    "@google-cloud/nodejs-repo-tools": "1.4.17",
+    "@google-cloud/nodejs-repo-tools": "^2.0.0",
     "ava": "0.21.0",
+    "nyc": "^11.2.1",
     "proxyquire": "1.8.0",
     "sinon": "3.2.0",
     "supertest": "3.0.0",
     "uuid": "3.1.0"
-  },
-  "cloud-repo-tools": {
-    "requiresKeyFile": true,
-    "requiresProjectId": true
   }
 }

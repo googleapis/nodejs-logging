@@ -27,11 +27,14 @@ var fakeGcpMetadata = {
       if (instanceOverride && instanceOverride.path) {
         assert.strictEqual(path, instanceOverride.path);
       }
-      var args = (instanceOverride && instanceOverride.args) ||
-        [null, null, 'fake-instance-value'];
+      var args = (instanceOverride && instanceOverride.args) || [
+        null,
+        null,
+        'fake-instance-value',
+      ];
       cb.apply(fakeGcpMetadata, args);
     });
-  }
+  },
 };
 
 describe('metadata', function() {
@@ -45,7 +48,7 @@ describe('metadata', function() {
 
   before(function() {
     Metadata = proxyquire('../src/metadata.js', {
-      'gcp-metadata': fakeGcpMetadata
+      'gcp-metadata': fakeGcpMetadata,
     });
 
     MetadataCached = extend({}, Metadata);
@@ -53,7 +56,7 @@ describe('metadata', function() {
 
   beforeEach(function() {
     LOGGING = {
-      auth: {}
+      auth: {},
     };
     extend(Metadata, MetadataCached);
     metadata = new Metadata(LOGGING);
@@ -84,8 +87,8 @@ describe('metadata', function() {
         type: 'cloud_function',
         labels: {
           function_name: FUNCTION_NAME,
-          region: SUPERVISOR_REGION
-        }
+          region: SUPERVISOR_REGION,
+        },
       });
     });
   });
@@ -106,8 +109,8 @@ describe('metadata', function() {
         type: 'gae_app',
         labels: {
           module_id: GAE_SERVICE,
-          version_id: GAE_VERSION
-        }
+          version_id: GAE_VERSION,
+        },
       });
     });
 
@@ -125,7 +128,7 @@ describe('metadata', function() {
     it('should return the correct descriptor', function(done) {
       instanceOverride = {
         path: 'attributes/cluster-name',
-        args: [null, null, CLUSTER_NAME]
+        args: [null, null, CLUSTER_NAME],
       };
 
       Metadata.getGKEDescriptor(function(err, descriptor) {
@@ -133,8 +136,8 @@ describe('metadata', function() {
         assert.deepEqual(descriptor, {
           type: 'container',
           labels: {
-            cluster_name: CLUSTER_NAME
-          }
+            cluster_name: CLUSTER_NAME,
+          },
         });
         done();
       });
@@ -142,7 +145,7 @@ describe('metadata', function() {
 
     it('should return error on failure to acquire metadata', function(done) {
       var FAKE_ERROR = new Error();
-      instanceOverride = { args: [ FAKE_ERROR ] };
+      instanceOverride = {args: [FAKE_ERROR]};
 
       Metadata.getGKEDescriptor(function(err) {
         assert.strictEqual(err, FAKE_ERROR);
@@ -157,7 +160,7 @@ describe('metadata', function() {
     it('should return the correct descriptor', function(done) {
       instanceOverride = {
         path: 'id',
-        args: [null, null, INSTANCE_ID]
+        args: [null, null, INSTANCE_ID],
       };
 
       Metadata.getGCEDescriptor(function(err, descriptor) {
@@ -165,8 +168,8 @@ describe('metadata', function() {
         assert.deepEqual(descriptor, {
           type: 'gce_instance',
           labels: {
-            instance_id: INSTANCE_ID
-          }
+            instance_id: INSTANCE_ID,
+          },
         });
         done();
       });
@@ -174,7 +177,7 @@ describe('metadata', function() {
 
     it('should return error on failure to acquire metadata', function(done) {
       var FAKE_ERROR = new Error();
-      instanceOverride = { args: [ FAKE_ERROR ] };
+      instanceOverride = {args: [FAKE_ERROR]};
 
       Metadata.getGCEDescriptor(function(err) {
         assert.strictEqual(err, FAKE_ERROR);
@@ -186,7 +189,7 @@ describe('metadata', function() {
   describe('getGlobalDescriptor', function() {
     it('should return the correct descriptor', function() {
       assert.deepEqual(Metadata.getGlobalDescriptor(), {
-        type: 'global'
+        type: 'global',
       });
     });
   });
@@ -212,7 +215,7 @@ describe('metadata', function() {
           metadata.logging.auth.getEnvironment = function(callback) {
             callback(null, {
               IS_APP_ENGINE: true,
-              IS_COMPUTE_ENGINE: true
+              IS_COMPUTE_ENGINE: true,
             });
           };
 
@@ -235,7 +238,7 @@ describe('metadata', function() {
           metadata.logging.auth.getEnvironment = function(callback) {
             callback(null, {
               IS_CLOUD_FUNCTION: true,
-              IS_COMPUTE_ENGINE: true
+              IS_COMPUTE_ENGINE: true,
             });
           };
 
@@ -252,12 +255,12 @@ describe('metadata', function() {
           var INSTANCE_ID = 'overridden-value';
           instanceOverride = {
             path: 'id',
-            args: [null, null, INSTANCE_ID]
+            args: [null, null, INSTANCE_ID],
           };
 
           metadata.logging.auth.getEnvironment = function(callback) {
             callback(null, {
-              IS_COMPUTE_ENGINE: true
+              IS_COMPUTE_ENGINE: true,
             });
           };
 
@@ -266,8 +269,8 @@ describe('metadata', function() {
             assert.deepStrictEqual(defaultResource, {
               type: 'gce_instance',
               labels: {
-                instance_id: INSTANCE_ID
-              }
+                instance_id: INSTANCE_ID,
+              },
             });
             done();
           });
@@ -279,13 +282,13 @@ describe('metadata', function() {
           var CLUSTER_NAME = 'overridden-value';
           instanceOverride = {
             path: 'attributes/cluster-name',
-            args: [null, null, CLUSTER_NAME]
+            args: [null, null, CLUSTER_NAME],
           };
 
           metadata.logging.auth.getEnvironment = function(callback) {
             callback(null, {
               IS_COMPUTE_ENGINE: true,
-              IS_CONTAINER_ENGINE: true
+              IS_CONTAINER_ENGINE: true,
             });
           };
 
@@ -294,8 +297,8 @@ describe('metadata', function() {
             assert.deepStrictEqual(defaultResource, {
               type: 'container',
               labels: {
-                cluster_name: CLUSTER_NAME
-              }
+                cluster_name: CLUSTER_NAME,
+              },
             });
             done();
           });
@@ -315,7 +318,7 @@ describe('metadata', function() {
               IS_APP_ENGINE: false,
               IS_CLOUD_FUNCTION: false,
               IS_COMPUTE_ENGINE: false,
-              IS_CONTAINER_ENGINE: false
+              IS_CONTAINER_ENGINE: false,
             });
           };
 

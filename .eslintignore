@@ -1,0 +1,4 @@
+node_modules/*
+samples/node_modules/*
+**/doc/*.js
+src/v*/**/*.js

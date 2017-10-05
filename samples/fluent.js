@@ -18,7 +18,7 @@
 var express = require('express');
 var app = express();
 
-app.get('*', function (req, res, next) {
+app.get('*', function(req, res, next) {
   return next('oops');
 });
 
@@ -26,13 +26,13 @@ app.get('*', function (req, res, next) {
 var structuredLogger = require('fluent-logger').createFluentSender('myapp', {
   host: 'localhost',
   port: 24224,
-  timeout: 3.0
+  timeout: 3.0,
 });
 
-var report = function (err, req) {
+var report = function(err, req) {
   var payload = {
     serviceContext: {
-      service: 'myapp'
+      service: 'myapp',
     },
     message: err.stack,
     context: {
@@ -42,15 +42,15 @@ var report = function (err, req) {
         referrer: req.header('Referer'),
         userAgent: req.header('User-Agent'),
         remoteIp: req.ip,
-        responseStatusCode: 500
-      }
-    }
+        responseStatusCode: 500,
+      },
+    },
   };
   structuredLogger.emit('errors', payload);
 };
 
 // Handle errors (the following uses the Express framework)
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   report(err, req);
   res.status(500).send(err.response || 'Something broke!');
 });

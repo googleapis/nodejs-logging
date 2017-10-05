@@ -84,11 +84,11 @@ function Log(logging, name, options) {
 Log.assignSeverityToEntries_ = function(entries, severity) {
   return arrify(entries).map(function(entry) {
     var metadata = extend(true, {}, entry.metadata, {
-      severity: severity
+      severity: severity,
     });
 
     return extend(new Entry(), entry, {
-      metadata: metadata
+      metadata: metadata,
     });
   });
 };
@@ -211,6 +211,10 @@ Log.prototype.debug = function(entry, options, callback) {
  * log.delete().then(function(data) {
  *   var apiResponse = data[0];
  * });
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_delete_log
+ * Another example:
  */
 Log.prototype.delete = function(gaxOptions, callback) {
   if (is.fn(gaxOptions)) {
@@ -219,15 +223,18 @@ Log.prototype.delete = function(gaxOptions, callback) {
   }
 
   var reqOpts = {
-    logName: this.formattedName_
+    logName: this.formattedName_,
   };
 
-  this.logging.request({
-    client: 'loggingServiceV2Client',
-    method: 'deleteLog',
-    reqOpts: reqOpts,
-    gaxOpts: gaxOptions
-  }, callback);
+  this.logging.request(
+    {
+      client: 'loggingServiceV2Client',
+      method: 'deleteLog',
+      reqOpts: reqOpts,
+      gaxOpts: gaxOptions,
+    },
+    callback
+  );
 };
 
 /**
@@ -392,9 +399,12 @@ Log.prototype.getEntries = function(options, callback) {
     options = {};
   }
 
-  options = extend({
-    filter: 'logName="' + this.formattedName_ + '"'
-  }, options);
+  options = extend(
+    {
+      filter: 'logName="' + this.formattedName_ + '"',
+    },
+    options
+  );
 
   return this.logging.getEntries(options, callback);
 };
@@ -428,9 +438,12 @@ Log.prototype.getEntries = function(options, callback) {
  *   });
  */
 Log.prototype.getEntriesStream = function(options) {
-  options = extend({
-    filter: 'logName="' + this.formattedName_ + '"'
-  }, options);
+  options = extend(
+    {
+      filter: 'logName="' + this.formattedName_ + '"',
+    },
+    options
+  );
 
   return this.logging.getEntriesStream(options);
 };
@@ -577,6 +590,14 @@ Log.prototype.warning = function(entry, options, callback) {
  * log.write(entries).then(function(data) {
  *   var apiResponse = data[0];
  * });
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_write_log_entry
+ * Another example:
+ *
+ * @example <caption>include:samples/logs.js</caption>
+ * region_tag:logging_write_log_entry_advanced
+ * Another example:
  */
 Log.prototype.write = function(entry, options, callback) {
   var self = this;
@@ -606,20 +627,26 @@ Log.prototype.write = function(entry, options, callback) {
       // Ignore errors (the API will speak up if it has an issue).
     }
 
-    var reqOpts = extend({
-      logName: self.formattedName_,
-      entries: decoratedEntries,
-      resource: resource
-    }, options);
+    var reqOpts = extend(
+      {
+        logName: self.formattedName_,
+        entries: decoratedEntries,
+        resource: resource,
+      },
+      options
+    );
 
     delete reqOpts.gaxOptions;
 
-    self.logging.request({
-      client: 'loggingServiceV2Client',
-      method: 'writeLogEntries',
-      reqOpts: reqOpts,
-      gaxOpts: options.gaxOptions
-    }, callback);
+    self.logging.request(
+      {
+        client: 'loggingServiceV2Client',
+        method: 'writeLogEntries',
+        reqOpts: reqOpts,
+        gaxOpts: options.gaxOptions,
+      },
+      callback
+    );
   }
 };
 
@@ -641,7 +668,7 @@ Log.prototype.decorateEntries_ = function(entries) {
     }
 
     return entry.toJSON({
-      removeCircular: self.removeCircular_
+      removeCircular: self.removeCircular_,
     });
   });
 };
@@ -652,7 +679,7 @@ Log.prototype.decorateEntries_ = function(entries) {
  * that a callback is omitted.
  */
 common.util.promisifyAll(Log, {
-  exclude: ['entry']
+  exclude: ['entry'],
 });
 
 module.exports = Log;

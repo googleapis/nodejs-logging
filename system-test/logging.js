@@ -27,18 +27,18 @@ var pubsubLibrary = require('@google-cloud/pubsub');
 var storageLibrary = require('@google-cloud/storage');
 var uuid = require('uuid');
 
-var env = require('../../../system-test/env.js');
 var Logging = require('../');
 
 describe('Logging', function() {
+  var PROJECT_ID;
   var TESTS_PREFIX = 'gcloud-logging-test';
   var WRITE_CONSISTENCY_DELAY_MS = 120000;
 
-  var bigQuery = bigqueryLibrary(env);
-  var pubsub = pubsubLibrary(env);
-  var storage = storageLibrary(env);
+  var bigQuery = bigqueryLibrary();
+  var pubsub = pubsubLibrary();
+  var storage = storageLibrary();
 
-  var logging = new Logging(env);
+  var logging = new Logging();
 
   // Create the possible destinations for sinks that we will create.
   var bucket = storage.bucket(generateName());
@@ -46,43 +46,63 @@ describe('Logging', function() {
   var topic = pubsub.topic(generateName());
 
   before(function(done) {
-    async.parallel([
-      bucket.create.bind(bucket),
-      dataset.create.bind(dataset),
-      topic.create.bind(topic)
-    ], done);
-  });
-
-  after(function(done) {
-    async.parallel([
-      deleteBuckets,
-      deleteDatasets,
-      deleteTopics,
-      deleteSinks
-    ], done);
-
-    function deleteBuckets(callback) {
-      storage.getBuckets({
-        prefix: TESTS_PREFIX
-      }, function(err, buckets) {
-        if (err) {
-          done(err);
-          return;
-        }
-
-        function deleteBucket(bucket, callback) {
-          bucket.deleteFiles(function(err) {
+    async.parallel(
+      [
+        callback => {
+          bucket.create(callback);
+        },
+        callback => {
+          dataset.create(callback);
+        },
+        callback => {
+          topic.create(callback);
+        },
+        callback => {
+          logging.auth.getProjectId((err, projectId) => {
             if (err) {
               callback(err);
               return;
             }
-
-            bucket.delete(callback);
+            PROJECT_ID = projectId;
+            callback();
           });
-        }
+        },
+      ],
+      done
+    );
+  });
 
-        async.each(buckets, deleteBucket, callback);
-      });
+  after(function(done) {
+    async.parallel(
+      [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks],
+      done
+    );
+
+    function deleteBuckets(callback) {
+      storage.getBuckets(
+        {
+          prefix: TESTS_PREFIX,
+        },
+        function(err, buckets) {
+          if (err) {
+            done(err);
+            return;
+          }
+
+          function deleteBucket(bucket, callback) {
+            bucket.deleteFiles(function(err) {
+              if (err) {
+                callback(err);
+                return;
+              }
+
+              bucket.delete(callback);
+            });
+          }
+
+          async.each(buckets, deleteBucket, callback);
+        }
+      );
     }
 
     function deleteDatasets(callback) {
@@ -117,58 +137,69 @@ describe('Logging', function() {
     it('should create a sink with a Bucket destination', function(done) {
       var sink = logging.sink(generateName());
 
-      sink.create({
-        destination: bucket
-      }, function(err, sink, apiResponse) {
-        assert.ifError(err);
+      sink.create(
+        {
+          destination: bucket,
+        },
+        function(err, sink, apiResponse) {
+          assert.ifError(err);
 
-        var destination = 'storage.googleapis.com/' + bucket.name;
-        assert.strictEqual(apiResponse.destination, destination);
+          var destination = 'storage.googleapis.com/' + bucket.name;
+          assert.strictEqual(apiResponse.destination, destination);
 
-        done();
-      });
+          done();
+        }
+      );
     });
 
     it('should create a sink with a Dataset destination', function(done) {
       var sink = logging.sink(generateName());
 
-      sink.create({
-        destination: dataset
-      }, function(err, sink, apiResponse) {
-        assert.ifError(err);
+      sink.create(
+        {
+          destination: dataset,
+        },
+        function(err, sink, apiResponse) {
+          assert.ifError(err);
 
-        var destination = 'bigquery.googleapis.com/datasets/' + dataset.id;
+          var destination = 'bigquery.googleapis.com/datasets/' + dataset.id;
 
-        // The projectId may have been replaced depending on how the system
-        // tests are being run, so let's not care about that.
-        apiResponse.destination =
-          apiResponse.destination.replace(/projects\/[^/]*\//, '');
+          // The projectId may have been replaced depending on how the system
+          // tests are being run, so let's not care about that.
+          apiResponse.destination = apiResponse.destination.replace(
+            /projects\/[^/]*\//,
+            ''
+          );
 
-        assert.strictEqual(apiResponse.destination, destination);
+          assert.strictEqual(apiResponse.destination, destination);
 
-        done();
-      });
+          done();
+        }
+      );
     });
 
     it('should create a sink with a Topic destination', function(done) {
       var sink = logging.sink(generateName());
 
-      sink.create({
-        destination: topic
-      }, function(err, sink, apiResponse) {
-        assert.ifError(err);
+      sink.create(
+        {
+          destination: topic,
+        },
+        function(err, sink, apiResponse) {
+          assert.ifError(err);
 
-        var destination = 'pubsub.googleapis.com/' + topic.name;
+          var destination = 'pubsub.googleapis.com/' + topic.name;
 
-        // The projectId may have been replaced depending on how the system
-        // tests are being run, so let's not care about that.
-        assert.strictEqual(
-          apiResponse.destination.replace(/projects\/[^/]*\//, ''),
-          destination.replace(/projects\/[^/]*\//, '')
-        );
+          // The projectId may have been replaced depending on how the system
+          // tests are being run, so let's not care about that.
+          assert.strictEqual(
+            apiResponse.destination.replace(/projects\/[^/]*\//, ''),
+            destination.replace(/projects\/[^/]*\//, '')
+          );
 
-        done();
-      });
+          done();
+        }
+      );
     });
 
     describe('metadata', function() {
@@ -176,14 +207,17 @@ describe('Logging', function() {
       var FILTER = 'severity = ALERT';
 
       before(function(done) {
-        sink.create({
-          destination: topic
-        }, done);
+        sink.create(
+          {
+            destination: topic,
+          },
+          done
+        );
       });
 
       it('should set metadata', function(done) {
         var metadata = {
-          filter: FILTER
+          filter: FILTER,
         };
 
         sink.setMetadata(metadata, function(err, apiResponse) {
@@ -206,9 +240,12 @@ describe('Logging', function() {
       var sink = logging.sink(generateName());
 
       before(function(done) {
-        sink.create({
-          destination: topic
-        }, done);
+        sink.create(
+          {
+            destination: topic,
+          },
+          done
+        );
       });
 
       it('should list sinks', function(done) {
@@ -220,7 +257,8 @@ describe('Logging', function() {
       });
 
       it('should list sinks as a stream', function(done) {
-        logging.getSinksStream({ pageSize: 1 })
+        logging
+          .getSinksStream({pageSize: 1})
           .on('error', done)
           .once('data', function() {
             this.end();
@@ -229,7 +267,8 @@ describe('Logging', function() {
       });
 
       it('should get metadata', function(done) {
-        logging.getSinksStream({ pageSize: 1 })
+        logging
+          .getSinksStream({pageSize: 1})
           .on('error', done)
           .once('data', function(sink) {
             sink.getMetadata(function(err, metadata) {
@@ -250,21 +289,21 @@ describe('Logging', function() {
       log.entry('log entry 1'),
 
       // object data
-      log.entry({ delegate: 'my_username' }),
+      log.entry({delegate: 'my_username'}),
 
       // various data types
       log.entry({
         nonValue: null,
         boolValue: true,
-        arrayValue: [ 1, 2, 3 ]
+        arrayValue: [1, 2, 3],
       }),
 
       // nested object data
       log.entry({
         nested: {
-          delegate: 'my_username'
-        }
-      })
+          delegate: 'my_username',
+        },
+      }),
     ];
 
     var options = {
@@ -272,26 +311,30 @@ describe('Logging', function() {
         type: 'gce_instance',
         labels: {
           zone: 'global',
-          instance_id: '3'
-        }
-      }
+          instance_id: '3',
+        },
+      },
     };
 
     it('should list log entries', function(done) {
-      logging.getEntries({
-        autoPaginate: false,
-        pageSize: 1
-      }, function(err, entries) {
-        assert.ifError(err);
-        assert.strictEqual(entries.length, 1);
-        done();
-      });
+      logging.getEntries(
+        {
+          autoPaginate: false,
+          pageSize: 1,
+        },
+        function(err, entries) {
+          assert.ifError(err);
+          assert.strictEqual(entries.length, 1);
+          done();
+        }
+      );
     });
 
     it('should list log entries as a stream', function(done) {
-      logging.getEntriesStream({
+      logging
+        .getEntriesStream({
           autoPaginate: false,
-          pageSize: 1
+          pageSize: 1,
         })
         .on('error', done)
         .once('data', function() {
@@ -306,20 +349,24 @@ describe('Logging', function() {
       });
 
       it('should list log entries', function(done) {
-        log.getEntries({
-          autoPaginate: false,
-          pageSize: 1
-        }, function(err, entries) {
-          assert.ifError(err);
-          assert.strictEqual(entries.length, 1);
-          done();
-        });
+        log.getEntries(
+          {
+            autoPaginate: false,
+            pageSize: 1,
+          },
+          function(err, entries) {
+            assert.ifError(err);
+            assert.strictEqual(entries.length, 1);
+            done();
+          }
+        );
       });
 
       it('should list log entries as a stream', function(done) {
-        log.getEntriesStream({
+        log
+          .getEntriesStream({
             autoPaginate: false,
-            pageSize: 1
+            pageSize: 1,
           })
           .on('error', done)
           .once('data', function() {
@@ -338,31 +385,34 @@ describe('Logging', function() {
         assert.ifError(err);
 
         setTimeout(function() {
-          log.getEntries({
-            autoPaginate: false,
-            pageSize: logEntries.length
-          }, function(err, entries) {
-            assert.ifError(err);
+          log.getEntries(
+            {
+              autoPaginate: false,
+              pageSize: logEntries.length,
+            },
+            function(err, entries) {
+              assert.ifError(err);
 
-            assert.deepEqual(entries.map(prop('data')).reverse(), [
-              'log entry 1',
-              {
-                delegate: 'my_username'
-              },
-              {
-                nonValue: null,
-                boolValue: true,
-                arrayValue: [ 1, 2, 3 ]
-              },
-              {
-                nested: {
-                  delegate: 'my_username'
-                }
-              }
-            ]);
+              assert.deepEqual(entries.map(prop('data')).reverse(), [
+                'log entry 1',
+                {
+                  delegate: 'my_username',
+                },
+                {
+                  nonValue: null,
+                  boolValue: true,
+                  arrayValue: [1, 2, 3],
+                },
+                {
+                  nested: {
+                    delegate: 'my_username',
+                  },
+                },
+              ]);
 
-            done();
-          });
+              done();
+            }
+          );
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
@@ -372,42 +422,48 @@ describe('Logging', function() {
 
       setTimeout(function() {
         var entry2 = log.entry('2');
-        var entry3 = log.entry({ timestamp: entry2.metadata.timestamp }, '3');
+        var entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
 
         // Re-arrange to confirm the timestamp is sent and honored.
         log.write([entry2, entry3, entry1], options, function(err) {
           assert.ifError(err);
 
           setTimeout(function() {
-            log.getEntries({
-              autoPaginate: false,
-              pageSize: 3
-            }, function(err, entries) {
-              assert.ifError(err);
-              assert.deepEqual(entries.map(prop('data')), [ '3', '2', '1' ]);
-              done();
-            });
+            log.getEntries(
+              {
+                autoPaginate: false,
+                pageSize: 3,
+              },
+              function(err, entries) {
+                assert.ifError(err);
+                assert.deepEqual(entries.map(prop('data')), ['3', '2', '1']);
+                done();
+              }
+            );
           }, WRITE_CONSISTENCY_DELAY_MS);
         });
       }, 1000);
     });
 
     it('should preserve order for sequential write calls', function(done) {
-      var messages =  ['1', '2', '3', '4', '5'];
+      var messages = ['1', '2', '3', '4', '5'];
 
       messages.forEach(function(message) {
         log.write(log.entry(message));
       });
 
       setTimeout(function() {
-        log.getEntries({
-          autoPaginate: false,
-          pageSize: messages.length
-        }, function(err, entries) {
-          assert.ifError(err);
-          assert.deepEqual(entries.reverse().map(prop('data')), messages);
-          done();
-        });
+        log.getEntries(
+          {
+            autoPaginate: false,
+            pageSize: messages.length,
+          },
+          function(err, entries) {
+            assert.ifError(err);
+            assert.deepEqual(entries.reverse().map(prop('data')), messages);
+            done();
+          }
+        );
       }, WRITE_CONSISTENCY_DELAY_MS);
     });
 
@@ -416,40 +472,43 @@ describe('Logging', function() {
         when: new Date(),
         matchUser: /username: (.+)/,
         matchUserError: new Error('No user found.'),
-        shouldNotBeSaved: undefined
+        shouldNotBeSaved: undefined,
       });
 
       log.write(logEntry, options, function(err) {
         assert.ifError(err);
 
         setTimeout(function() {
-          log.getEntries({
-            autoPaginate: false,
-            pageSize: 1
-          }, function(err, entries) {
-            assert.ifError(err);
+          log.getEntries(
+            {
+              autoPaginate: false,
+              pageSize: 1,
+            },
+            function(err, entries) {
+              assert.ifError(err);
 
-            var entry = entries[0];
+              var entry = entries[0];
 
-            assert.deepEqual(entry.data, {
-              when: logEntry.data.when.toString(),
-              matchUser: logEntry.data.matchUser.toString(),
-              matchUserError: logEntry.data.matchUserError.toString()
-            });
+              assert.deepEqual(entry.data, {
+                when: logEntry.data.when.toString(),
+                matchUser: logEntry.data.matchUser.toString(),
+                matchUserError: logEntry.data.matchUserError.toString(),
+              });
 
-            done();
-          });
+              done();
+            }
+          );
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
 
     it('should write a log with metadata', function(done) {
       var metadata = extend({}, options, {
-        severity: 'DEBUG'
+        severity: 'DEBUG',
       });
 
       var data = {
-        embeddedData: true
+        embeddedData: true,
       };
 
       var logEntry = log.entry(metadata, data);
@@ -458,19 +517,22 @@ describe('Logging', function() {
         assert.ifError(err);
 
         setTimeout(function() {
-          log.getEntries({
-            autoPaginate: false,
-            pageSize: 1
-          }, function(err, entries) {
-            assert.ifError(err);
+          log.getEntries(
+            {
+              autoPaginate: false,
+              pageSize: 1,
+            },
+            function(err, entries) {
+              assert.ifError(err);
 
-            var entry = entries[0];
+              var entry = entries[0];
 
-            assert.strictEqual(entry.metadata.severity, metadata.severity);
-            assert.deepEqual(entry.data, data);
+              assert.strictEqual(entry.metadata.severity, metadata.severity);
+              assert.deepEqual(entry.data, data);
 
-            done();
-          });
+              done();
+            }
+          );
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
@@ -483,38 +545,45 @@ describe('Logging', function() {
         assert.ifError(err);
 
         setTimeout(function() {
-          log.getEntries({
-            autoPaginate: false,
-            pageSize: 1
-          }, function(err, entries) {
-            assert.ifError(err);
+          log.getEntries(
+            {
+              autoPaginate: false,
+              pageSize: 1,
+            },
+            function(err, entries) {
+              assert.ifError(err);
 
-            var entry = entries[0];
+              var entry = entries[0];
 
-            assert.strictEqual(entry.data, text);
-            assert.deepEqual(entry.metadata.resource, {
-              type: 'global',
-              labels: {
-                project_id: env.projectId
-              }
-            });
+              assert.strictEqual(entry.data, text);
+              assert.deepEqual(entry.metadata.resource, {
+                type: 'global',
+                labels: {
+                  project_id: PROJECT_ID,
+                },
+              });
 
-            done();
-          });
+              done();
+            }
+          );
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
 
     it('should write a log with camelcase resource label keys', function(done) {
-      log.write(logEntries, {
-        resource: {
-          type: 'gce_instance',
-          labels: {
-            zone: 'global',
-            instanceId: '3'
-          }
-        }
-      }, done);
+      log.write(
+        logEntries,
+        {
+          resource: {
+            type: 'gce_instance',
+            labels: {
+              zone: 'global',
+              instanceId: '3',
+            },
+          },
+        },
+        done
+      );
     });
 
     it('should write to a log with alert helper', function(done) {
