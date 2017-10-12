@@ -72,10 +72,27 @@ function Logging(options) {
     return new Logging(options);
   }
 
+  // Determine what scopes are needed.
+  // It is the union of the scopes on all three clients.
+  let scopes = [];
+  let clientClasses = [
+    v2.ConfigServiceV2Client,
+    v2.LoggingServiceV2Client,
+    v2.MetricsServiceV2Client,
+  ];
+  for (let clientClass of clientClasses) {
+    for (let scope of clientClass.scopes) {
+      if (!clientClasses.includes(scope)) {
+        scopes.push(scope);
+      }
+    }
+  }
+
   var options_ = extend(
     {
       libName: 'gccl',
       libVersion: PKG.version,
+      scopes: scopes,
     },
     options
   );
@@ -107,7 +124,7 @@ function Logging(options) {
  *     destination.
  * @param {string=} config.filter - An advanced logs filter. Only log entries
  *     matching the filter are written.
- * @param {function} callback - The callback function.
+ * @param {function} callback - The cLoggingallback function.
  * @param {?error} callback.err - An error returned while making this request.
  * @param {module:logging/sink} callback.sink - The created Sink object.
  * @param {object} callback.apiResponse - The full API response.
