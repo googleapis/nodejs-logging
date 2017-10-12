@@ -195,7 +195,7 @@ describe('Log', function() {
   describe('delete', function() {
     it('should accept gaxOptions', function(done) {
       log.logging.request = function(config, callback) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'deleteLog');
 
         assert.deepEqual(config.reqOpts, {
@@ -337,7 +337,7 @@ describe('Log', function() {
       });
 
       log.logging.request = function(config, callback) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
         assert.deepEqual(config.reqOpts, {
@@ -370,7 +370,7 @@ describe('Log', function() {
       });
 
       log.logging.request = function(config, callback) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
         assert.deepEqual(config.reqOpts, {
@@ -389,7 +389,7 @@ describe('Log', function() {
 
     it('should make the correct API request', function(done) {
       log.logging.request = function(config, callback) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
         assert.deepEqual(config.reqOpts, {

@@ -24,7 +24,6 @@ var through = require('through2');
 var util = require('@google-cloud/common').util;
 
 var PKG = require('../package.json');
-var v2 = require('../src/v2/index.js');
 
 var extended = false;
 var fakePaginator = {
@@ -177,7 +176,6 @@ describe('Logging', function() {
           options_,
           extend(
             {
-              scopes: v2.ALL_SCOPES,
               libName: 'gccl',
               libVersion: PKG.version,
             },
@@ -205,7 +203,6 @@ describe('Logging', function() {
         logging.options,
         extend(
           {
-            scopes: v2.ALL_SCOPES,
             libName: 'gccl',
             libVersion: PKG.version,
           },
@@ -314,7 +311,7 @@ describe('Logging', function() {
         });
 
         logging.request = function(config) {
-          assert.strictEqual(config.client, 'configServiceV2Client');
+          assert.strictEqual(config.client, 'ConfigServiceV2Client');
           assert.strictEqual(config.method, 'createSink');
 
           var expectedParent = 'projects/' + logging.projectId;
@@ -428,7 +425,7 @@ describe('Logging', function() {
       var options = {};
 
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntries');
 
         assert.deepEqual(
@@ -551,7 +548,7 @@ describe('Logging', function() {
 
     it('should make request once reading', function(done) {
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntriesStream');
 
         assert.deepEqual(config.reqOpts, {
@@ -627,7 +624,7 @@ describe('Logging', function() {
 
     it('should make the correct API request', function(done) {
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinks');
 
         assert.deepEqual(config.reqOpts, {
@@ -729,7 +726,7 @@ describe('Logging', function() {
 
     it('should make request once reading', function(done) {
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinksStream');
 
         assert.deepEqual(config.reqOpts, {
