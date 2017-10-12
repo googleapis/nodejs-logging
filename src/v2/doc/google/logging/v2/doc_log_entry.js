@@ -1,23 +1,19 @@
-/*
- * Copyright 2017, Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2017, Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-/*
- * Note: this file is purely for documentation. Any contents are not expected
- * to be loaded as the JS file.
- */
+// Note: this file is purely for documentation. Any contents are not expected
+// to be loaded as the JS file.
 
 /**
  * An individual entry in a log.
@@ -48,14 +44,14 @@
  *   associated with the monitored resource designating the particular
  *   database that reported the error.
  *
- *   This object should have the same structure as [google.api.MonitoredResource]{@link external:"google.api.MonitoredResource"}
+ *   This object should have the same structure as [MonitoredResource]{@link google.api.MonitoredResource}
  *
  * @property {Object} protoPayload
  *   The log entry payload, represented as a protocol buffer.  Some
  *   Google Cloud Platform services use this field for their log
  *   entry payloads.
  *
- *   This object should have the same structure as [google.protobuf.Any]{@link external:"google.protobuf.Any"}
+ *   This object should have the same structure as [Any]{@link google.protobuf.Any}
  *
  * @property {string} textPayload
  *   The log entry payload, represented as a Unicode string (UTF-8).
@@ -64,41 +60,45 @@
  *   The log entry payload, represented as a structure that is
  *   expressed as a JSON object.
  *
- *   This object should have the same structure as [google.protobuf.Struct]{@link external:"google.protobuf.Struct"}
+ *   This object should have the same structure as [Struct]{@link google.protobuf.Struct}
  *
  * @property {Object} timestamp
- *   Optional. The time the event described by the log entry occurred.  If
- *   omitted in a new log entry, Stackdriver Logging will insert the time the
- *   log entry is received.  Stackdriver Logging might reject log entries whose
- *   time stamps are more than a couple of hours in the future. Log entries
- *   with time stamps in the past are accepted.
+ *   Optional. The time the event described by the log entry occurred.
+ *   This time is used to compute the log entry's age and to enforce
+ *   the logs retention period. If this field is omitted in a new log
+ *   entry, then Stackdriver Logging assigns it the current time.
  *
- *   This object should have the same structure as [google.protobuf.Timestamp]{@link external:"google.protobuf.Timestamp"}
+ *   Incoming log entries should have timestamps that are no more than
+ *   the [logs retention period](https://cloud.google.com/logging/quota-policy) in the past,
+ *   and no more than 24 hours in the future.
+ *   See the `entries.write` API method for more information.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
  * @property {Object} receiveTimestamp
  *   Output only. The time the log entry was received by Stackdriver Logging.
  *
- *   This object should have the same structure as [google.protobuf.Timestamp]{@link external:"google.protobuf.Timestamp"}
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
  * @property {number} severity
  *   Optional. The severity of the log entry. The default value is
  *   `LogSeverity.DEFAULT`.
  *
- *   The number should be among the values of [google.logging.type.LogSeverity]{@link external:"google.logging.type.LogSeverity"}
+ *   The number should be among the values of [LogSeverity]{@link google.logging.type.LogSeverity}
  *
  * @property {string} insertId
  *   Optional. A unique identifier for the log entry. If you provide a value,
  *   then Stackdriver Logging considers other log entries in the same project,
  *   with the same `timestamp`, and with the same `insert_id` to be duplicates
  *   which can be removed.  If omitted in new log entries, then Stackdriver
- *   Logging will insert its own unique identifier. The `insert_id` is used
+ *   Logging assigns its own unique identifier. The `insert_id` is also used
  *   to order log entries that have the same `timestamp` value.
  *
  * @property {Object} httpRequest
  *   Optional. Information about the HTTP request associated with this
  *   log entry, if applicable.
  *
- *   This object should have the same structure as [google.logging.type.HttpRequest]{@link external:"google.logging.type.HttpRequest"}
+ *   This object should have the same structure as [HttpRequest]{@link google.logging.type.HttpRequest}
  *
  * @property {Object.<string, string>} labels
  *   Optional. A set of user-defined (key, value) data that provides additional
@@ -108,7 +108,7 @@
  *   Optional. Information about an operation associated with the log entry, if
  *   applicable.
  *
- *   This object should have the same structure as [LogEntryOperation]{@link LogEntryOperation}
+ *   This object should have the same structure as [LogEntryOperation]{@link google.logging.v2.LogEntryOperation}
  *
  * @property {string} trace
  *   Optional. Resource name of the trace associated with the log entry, if any.
@@ -120,9 +120,10 @@
  *   Optional. Source code location information associated with the log entry,
  *   if any.
  *
- *   This object should have the same structure as [LogEntrySourceLocation]{@link LogEntrySourceLocation}
+ *   This object should have the same structure as [LogEntrySourceLocation]{@link google.logging.v2.LogEntrySourceLocation}
  *
- * @class
+ * @typedef LogEntry
+ * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntry definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
 var LogEntry = {
@@ -148,7 +149,8 @@ var LogEntry = {
  * @property {boolean} last
  *   Optional. Set this to True if this is the last log entry in the operation.
  *
- * @class
+ * @typedef LogEntryOperation
+ * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntryOperation definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
 var LogEntryOperation = {
@@ -175,7 +177,8 @@ var LogEntryOperation = {
  *   `qual.if.ied.Class.method` (Java), `dir/package.func` (Go), `function`
  *   (Python).
  *
- * @class
+ * @typedef LogEntrySourceLocation
+ * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntrySourceLocation definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
 var LogEntrySourceLocation = {

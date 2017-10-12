@@ -1,30 +1,25 @@
-/*
- * Copyright 2017, Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2017, Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-/*
- * Note: this file is purely for documentation. Any contents are not expected
- * to be loaded as the JS file.
- */
+// Note: this file is purely for documentation. Any contents are not expected
+// to be loaded as the JS file.
 
 /**
  * A common proto for logging HTTP requests. Only contains semantics
  * defined by the HTTP specification. Product-specific logging
  * information MUST be defined in a separate message.
  *
- * @external "google.logging.type.HttpRequest"
  * @property {string} requestMethod
  *   The request method. Examples: `"GET"`, `"HEAD"`, `"PUT"`, `"POST"`.
  *
@@ -65,7 +60,7 @@
  *   The request processing latency on the server, from the time the request was
  *   received until the response was sent.
  *
- *   This object should have the same structure as [google.protobuf.Duration]{@link external:"google.protobuf.Duration"}
+ *   This object should have the same structure as [Duration]{@link google.protobuf.Duration}
  *
  * @property {boolean} cacheLookup
  *   Whether or not a cache lookup was attempted.
@@ -83,5 +78,13 @@
  *   The number of HTTP response bytes inserted into cache. Set only when a
  *   cache fill was attempted.
  *
+ * @property {string} protocol
+ *   Protocol used for the request. Examples: "HTTP/1.1", "HTTP/2", "websocket"
+ *
+ * @typedef HttpRequest
+ * @memberof google.logging.type
  * @see [google.logging.type.HttpRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/type/http_request.proto}
  */
+var HttpRequest = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
