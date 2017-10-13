@@ -148,7 +148,6 @@ var MetricDescriptor = {
    * @memberof google.api
    */
   MetricKind: {
-
     /**
      * Do not use this default value.
      */
@@ -171,7 +170,7 @@ var MetricDescriptor = {
      * value to zero and sets a new start time for the following
      * points.
      */
-    CUMULATIVE: 3
+    CUMULATIVE: 3,
   },
 
   /**
@@ -181,7 +180,6 @@ var MetricDescriptor = {
    * @memberof google.api
    */
   ValueType: {
-
     /**
      * Do not use this default value.
      */
@@ -217,8 +215,8 @@ var MetricDescriptor = {
     /**
      * The value is money.
      */
-    MONEY: 6
-  }
+    MONEY: 6,
+  },
 };
 
 /**

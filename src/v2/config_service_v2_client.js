@@ -101,23 +101,15 @@ class ConfigServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate(
-        'projects/{project}'
-      ),
-      sinkPathTemplate: new gax.PathTemplate(
-        'projects/{project}/sinks/{sink}'
-      ),
+      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      sinkPathTemplate: new gax.PathTemplate('projects/{project}/sinks/{sink}'),
     };
 
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
-      listSinks: new gax.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'sinks'
-      ),
+      listSinks: new gax.PageDescriptor('pageToken', 'nextPageToken', 'sinks'),
       listExclusions: new gax.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -372,7 +364,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   /**
    * Gets a sink.
@@ -791,7 +783,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   /**
    * Gets the description of an exclusion.
@@ -1094,6 +1086,5 @@ class ConfigServiceV2Client {
     return sinkPathTemplate.match(sinkName).sink;
   }
 }
-
 
 module.exports = ConfigServiceV2Client;

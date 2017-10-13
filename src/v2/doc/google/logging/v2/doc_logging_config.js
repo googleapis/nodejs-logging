@@ -120,7 +120,6 @@ var LogSink = {
    * @memberof google.logging.v2
    */
   VersionFormat: {
-
     /**
      * An unspecified format version that will default to V2.
      */
@@ -134,8 +133,8 @@ var LogSink = {
     /**
      * `LogEntry` version 1 format.
      */
-    V1: 2
-  }
+    V1: 2,
+  },
 };
 
 /**

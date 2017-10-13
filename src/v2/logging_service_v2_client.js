@@ -100,12 +100,8 @@ class LoggingServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate(
-        'projects/{project}'
-      ),
-      logPathTemplate: new gax.PathTemplate(
-        'projects/{project}/logs/{log}'
-      ),
+      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      logPathTemplate: new gax.PathTemplate('projects/{project}/logs/{log}'),
     };
 
     // Some of the methods on this service return "paged" results,
@@ -134,13 +130,9 @@ class LoggingServiceV2Client {
     this._descriptors.batching = {
       writeLogEntries: new gax.BundleDescriptor(
         'entries',
-        [
-          'logName',
-          'resource',
-          'labels',
-        ],
+        ['logName', 'resource', 'labels'],
         null,
-        gax.createByteLengthFunction(protos.google.logging.v2.LogEntry),
+        gax.createByteLengthFunction(protos.google.logging.v2.LogEntry)
       ),
     };
 
@@ -183,7 +175,8 @@ class LoggingServiceV2Client {
             }
         ),
         defaults[methodName],
-        this._descriptors.page[methodName] || this._descriptors.batching[methodName]
+        this._descriptors.page[methodName] ||
+          this._descriptors.batching[methodName]
       );
     }
   }
@@ -598,7 +591,7 @@ class LoggingServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   /**
    * Lists the descriptors for monitored resource types used by Stackdriver
@@ -686,7 +679,11 @@ class LoggingServiceV2Client {
     }
     options = options || {};
 
-    return this._innerApiCalls.listMonitoredResourceDescriptors(request, options, callback);
+    return this._innerApiCalls.listMonitoredResourceDescriptors(
+      request,
+      options,
+      callback
+    );
   }
 
   /**
@@ -740,7 +737,7 @@ class LoggingServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   /**
    * Lists the logs in projects, organizations, folders, or billing accounts.
@@ -900,7 +897,7 @@ class LoggingServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   // --------------------
   // -- Path templates --
@@ -965,6 +962,5 @@ class LoggingServiceV2Client {
     return logPathTemplate.match(logName).log;
   }
 }
-
 
 module.exports = LoggingServiceV2Client;
