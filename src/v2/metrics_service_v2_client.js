@@ -348,7 +348,7 @@ class MetricsServiceV2Client {
   listLogMetricsStream(request, options) {
     options = options || {};
 
-    return this._pageDescriptors.listLogMetrics.createStream(
+    return this._descriptors.page.listLogMetrics.createStream(
       this._innerApiCalls.listLogMetrics,
       request,
       options

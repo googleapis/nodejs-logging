@@ -586,7 +586,7 @@ class LoggingServiceV2Client {
   listLogEntriesStream(request, options) {
     options = options || {};
 
-    return this._pageDescriptors.listLogEntries.createStream(
+    return this._descriptors.page.listLogEntries.createStream(
       this._innerApiCalls.listLogEntries,
       request,
       options
@@ -732,7 +732,7 @@ class LoggingServiceV2Client {
   listMonitoredResourceDescriptorsStream(request, options) {
     options = options || {};
 
-    return this._pageDescriptors.listMonitoredResourceDescriptors.createStream(
+    return this._descriptors.page.listMonitoredResourceDescriptors.createStream(
       this._innerApiCalls.listMonitoredResourceDescriptors,
       request,
       options
@@ -892,7 +892,7 @@ class LoggingServiceV2Client {
   listLogsStream(request, options) {
     options = options || {};
 
-    return this._pageDescriptors.listLogs.createStream(
+    return this._descriptors.page.listLogs.createStream(
       this._innerApiCalls.listLogs,
       request,
       options

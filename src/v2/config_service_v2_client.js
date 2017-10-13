@@ -359,7 +359,7 @@ class ConfigServiceV2Client {
   listSinksStream(request, options) {
     options = options || {};
 
-    return this._pageDescriptors.listSinks.createStream(
+    return this._descriptors.page.listSinks.createStream(
       this._innerApiCalls.listSinks,
       request,
       options
@@ -778,7 +778,7 @@ class ConfigServiceV2Client {
   listExclusionsStream(request, options) {
     options = options || {};
 
-    return this._pageDescriptors.listExclusions.createStream(
+    return this._descriptors.page.listExclusions.createStream(
       this._innerApiCalls.listExclusions,
       request,
       options
