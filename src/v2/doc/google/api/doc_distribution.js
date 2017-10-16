@@ -224,6 +224,6 @@ var Distribution = {
      */
     Explicit: {
       // This is for documentation. Actual contents will be loaded by gRPC.
-    },
-  },
+    }
+  }
 };

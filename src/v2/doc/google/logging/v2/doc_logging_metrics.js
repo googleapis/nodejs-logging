@@ -142,6 +142,7 @@ var LogMetric = {
    * @memberof google.logging.v2
    */
   ApiVersion: {
+
     /**
      * Stackdriver Logging API v2.
      */
@@ -150,8 +151,8 @@ var LogMetric = {
     /**
      * Stackdriver Logging API v1.
      */
-    V1: 1,
-  },
+    V1: 1
+  }
 };
 
 /**

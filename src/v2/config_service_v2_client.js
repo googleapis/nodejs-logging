@@ -257,7 +257,7 @@ class ConfigServiceV2Client {
    * });
    *
    * // Iterate over all elements.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    * client.listSinks({parent: formattedParent})
    *   .then(responses => {
@@ -271,7 +271,7 @@ class ConfigServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    *
    * var options = {autoPaginate: false};
@@ -348,7 +348,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * client.listSinksStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)
@@ -399,7 +399,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedSinkName = client.sinkPath("[PROJECT]", "[SINK]");
+   * var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
    * client.getSink({sinkName: formattedSinkName})
    *   .then(responses => {
    *     var response = responses[0];
@@ -473,7 +473,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * var sink = {};
    * var request = {
    *   parent: formattedParent,
@@ -554,7 +554,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedSinkName = client.sinkPath("[PROJECT]", "[SINK]");
+   * var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
    * var sink = {};
    * var request = {
    *   sinkName: formattedSinkName,
@@ -611,7 +611,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedSinkName = client.sinkPath("[PROJECT]", "[SINK]");
+   * var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
    * client.deleteSink({sinkName: formattedSinkName}).catch(err => {
    *   console.error(err);
    * });
@@ -676,7 +676,7 @@ class ConfigServiceV2Client {
    * });
    *
    * // Iterate over all elements.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    * client.listExclusions({parent: formattedParent})
    *   .then(responses => {
@@ -690,7 +690,7 @@ class ConfigServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    *
    * var options = {autoPaginate: false};
@@ -767,7 +767,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * client.listExclusionsStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)
@@ -818,7 +818,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedName = client.exclusionPath("[PROJECT]", "[EXCLUSION]");
+   * var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
    * client.getExclusion({name: formattedName})
    *   .then(responses => {
    *     var response = responses[0];
@@ -878,7 +878,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * var exclusion = {};
    * var request = {
    *   parent: formattedParent,
@@ -951,7 +951,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedName = client.exclusionPath("[PROJECT]", "[EXCLUSION]");
+   * var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
    * var exclusion = {};
    * var updateMask = {};
    * var request = {
@@ -1008,7 +1008,7 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedName = client.exclusionPath("[PROJECT]", "[EXCLUSION]");
+   * var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
    * client.deleteExclusion({name: formattedName}).catch(err => {
    *   console.error(err);
    * });

@@ -18,6 +18,7 @@ const gapicConfig = require('./logging_service_v2_client_config');
 const gax = require('google-gax');
 const merge = require('lodash.merge');
 const path = require('path');
+const protobuf = require('protobufjs');
 
 const VERSION = require('../../package.json').version;
 
@@ -124,6 +125,17 @@ class LoggingServiceV2Client {
         'logNames'
       ),
     };
+    var protoFilesRoot = new gax.grpc.GoogleProtoFilesRoot();
+    protoFilesRoot = protobuf.loadSync(
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        'protos',
+        'google/logging/v2/logging.proto'
+      ),
+      protoFilesRoot
+    );
 
     // Some methods on this API support automatically batching
     // requests; denote this.
@@ -132,7 +144,9 @@ class LoggingServiceV2Client {
         'entries',
         ['logName', 'resource', 'labels'],
         null,
-        gax.createByteLengthFunction(protos.google.logging.v2.LogEntry)
+        gax.createByteLengthFunction(
+          protoFilesRoot.lookup('google.logging.v2.LogEntry')
+        )
       ),
     };
 
@@ -259,7 +273,7 @@ class LoggingServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedLogName = client.logPath("[PROJECT]", "[LOG]");
+   * var formattedLogName = client.logPath('[PROJECT]', '[LOG]');
    * client.deleteLog({logName: formattedLogName}).catch(err => {
    *   console.error(err);
    * });
@@ -790,7 +804,7 @@ class LoggingServiceV2Client {
    * });
    *
    * // Iterate over all elements.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    * client.listLogs({parent: formattedParent})
    *   .then(responses => {
@@ -804,7 +818,7 @@ class LoggingServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    *
    * var options = {autoPaginate: false};
@@ -881,7 +895,7 @@ class LoggingServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * client.listLogsStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)

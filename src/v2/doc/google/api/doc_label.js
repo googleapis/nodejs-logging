@@ -43,6 +43,7 @@ var LabelDescriptor = {
    * @memberof google.api
    */
   ValueType: {
+
     /**
      * A variable-length string. This is the default.
      */
@@ -56,6 +57,6 @@ var LabelDescriptor = {
     /**
      * A 64-bit signed integer.
      */
-    INT64: 2,
-  },
+    INT64: 2
+  }
 };

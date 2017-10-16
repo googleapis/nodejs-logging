@@ -249,7 +249,7 @@ class MetricsServiceV2Client {
    * });
    *
    * // Iterate over all elements.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    * client.listLogMetrics({parent: formattedParent})
    *   .then(responses => {
@@ -263,7 +263,7 @@ class MetricsServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    *
    *
    * var options = {autoPaginate: false};
@@ -337,7 +337,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * client.listLogMetricsStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)
@@ -383,7 +383,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedMetricName = client.metricPath("[PROJECT]", "[METRIC]");
+   * var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
    * client.getLogMetric({metricName: formattedMetricName})
    *   .then(responses => {
    *     var response = responses[0];
@@ -438,7 +438,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath("[PROJECT]");
+   * var formattedParent = client.projectPath('[PROJECT]');
    * var metric = {};
    * var request = {
    *   parent: formattedParent,
@@ -499,7 +499,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedMetricName = client.metricPath("[PROJECT]", "[METRIC]");
+   * var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
    * var metric = {};
    * var request = {
    *   metricName: formattedMetricName,
@@ -549,7 +549,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var formattedMetricName = client.metricPath("[PROJECT]", "[METRIC]");
+   * var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
    * client.deleteLogMetric({metricName: formattedMetricName}).catch(err => {
    *   console.error(err);
    * });
