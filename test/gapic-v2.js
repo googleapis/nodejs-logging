@@ -137,11 +137,7 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogEntries = (
-        actualRequest,
-        options,
-        callback
-      ) => {
+      client._innerApiCalls.listLogEntries = (actualRequest, options, callback) => {
         assert.deepStrictEqual(actualRequest, request);
         callback(null, expectedResponse.entries);
       };
@@ -195,11 +191,7 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors = (
-        actualRequest,
-        options,
-        callback
-      ) => {
+      client._innerApiCalls.listMonitoredResourceDescriptors = (actualRequest, options, callback) => {
         assert.deepStrictEqual(actualRequest, request);
         callback(null, expectedResponse.resourceDescriptors);
       };
@@ -289,6 +281,7 @@ describe('LoggingServiceV2Client', () => {
       });
     });
   });
+
 });
 describe('ConfigServiceV2Client', () => {
   describe('listSinks', () => {
@@ -605,11 +598,7 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listExclusions = (
-        actualRequest,
-        options,
-        callback
-      ) => {
+      client._innerApiCalls.listExclusions = (actualRequest, options, callback) => {
         assert.deepStrictEqual(actualRequest, request);
         callback(null, expectedResponse.exclusions);
       };
@@ -880,6 +869,7 @@ describe('ConfigServiceV2Client', () => {
       });
     });
   });
+
 });
 describe('MetricsServiceV2Client', () => {
   describe('listLogMetrics', () => {
@@ -902,11 +892,7 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogMetrics = (
-        actualRequest,
-        options,
-        callback
-      ) => {
+      client._innerApiCalls.listLogMetrics = (actualRequest, options, callback) => {
         assert.deepStrictEqual(actualRequest, request);
         callback(null, expectedResponse.metrics);
       };
@@ -1173,6 +1159,7 @@ describe('MetricsServiceV2Client', () => {
       });
     });
   });
+
 });
 
 function mockSimpleGrpcMethod(expectedRequest, response, error) {

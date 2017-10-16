@@ -101,15 +101,26 @@ class ConfigServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
-      sinkPathTemplate: new gax.PathTemplate('projects/{project}/sinks/{sink}'),
+      projectPathTemplate: new gax.PathTemplate(
+        'projects/{project}'
+      ),
+      sinkPathTemplate: new gax.PathTemplate(
+        'projects/{project}/sinks/{sink}'
+      ),
+      exclusionPathTemplate: new gax.PathTemplate(
+        'projects/{project}/exclusions/{exclusion}'
+      ),
     };
 
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
-      listSinks: new gax.PageDescriptor('pageToken', 'nextPageToken', 'sinks'),
+      listSinks: new gax.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'sinks'
+      ),
       listExclusions: new gax.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -364,7 +375,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Gets a sink.
@@ -783,7 +794,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Gets the description of an exclusion.
@@ -1054,6 +1065,20 @@ class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified exclusion resource name string.
+   *
+   * @param {String} project
+   * @param {String} exclusion
+   * @returns {String}
+   */
+  exclusionPath(project, exclusion) {
+    return this._pathTemplates.exclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
+    });
+  }
+
+  /**
    * Parse the projectName from a project resource.
    *
    * @param {String} projectName
@@ -1085,6 +1110,29 @@ class ConfigServiceV2Client {
   matchSinkFromSinkName(sinkName) {
     return sinkPathTemplate.match(sinkName).sink;
   }
+
+  /**
+   * Parse the exclusionName from a exclusion resource.
+   *
+   * @param {String} exclusionName
+   *   A fully-qualified path representing a exclusion resources.
+   * @returns {String} - A string representing the project.
+   */
+  matchProjectFromExclusionName(exclusionName) {
+    return exclusionPathTemplate.match(exclusionName).project;
+  }
+
+  /**
+   * Parse the exclusionName from a exclusion resource.
+   *
+   * @param {String} exclusionName
+   *   A fully-qualified path representing a exclusion resources.
+   * @returns {String} - A string representing the exclusion.
+   */
+  matchExclusionFromExclusionName(exclusionName) {
+    return exclusionPathTemplate.match(exclusionName).exclusion;
+  }
 }
+
 
 module.exports = ConfigServiceV2Client;
