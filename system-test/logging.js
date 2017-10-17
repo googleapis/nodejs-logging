@@ -32,7 +32,7 @@ var Logging = require('../');
 describe('Logging', function() {
   var PROJECT_ID;
   var TESTS_PREFIX = 'gcloud-logging-test';
-  var WRITE_CONSISTENCY_DELAY_MS = 120000;
+  var WRITE_CONSISTENCY_DELAY_MS = 3000;
 
   var bigQuery = bigqueryLibrary();
   var pubsub = pubsubLibrary();
@@ -440,7 +440,7 @@ describe('Logging', function() {
                 done();
               }
             );
-          }, WRITE_CONSISTENCY_DELAY_MS);
+          }, WRITE_CONSISTENCY_DELAY_MS * 4);
         });
       }, 1000);
     });
@@ -464,7 +464,7 @@ describe('Logging', function() {
             done();
           }
         );
-      }, WRITE_CONSISTENCY_DELAY_MS);
+      }, WRITE_CONSISTENCY_DELAY_MS * 4);
     });
 
     it('should write an entry with primitive values', function(done) {
