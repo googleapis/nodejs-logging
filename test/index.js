@@ -134,7 +134,7 @@ describe('Logging', function() {
 
     for (let clientClass of clientClasses) {
       for (let scope of clientClass.scopes) {
-        if (!clientClasses.includes(scope)) {
+        if (clientClasses.indexOf(scope) === -1) {
           EXPECTED_SCOPES.push(scope);
         }
       }

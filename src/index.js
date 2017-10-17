@@ -82,7 +82,7 @@ function Logging(options) {
   ];
   for (let clientClass of clientClasses) {
     for (let scope of clientClass.scopes) {
-      if (!clientClasses.includes(scope)) {
+      if (clientClasses.indexOf(scope) === -1) {
         scopes.push(scope);
       }
     }
