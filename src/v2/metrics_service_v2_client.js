@@ -604,7 +604,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 
   /**
@@ -615,7 +617,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromMetricName(metricName) {
-    return metricPathTemplate.match(metricName).project;
+    return this._pathTemplates.metricPathTemplate
+      .match(metricName)
+      .project;
   }
 
   /**
@@ -626,7 +630,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the metric.
    */
   matchMetricFromMetricName(metricName) {
-    return metricPathTemplate.match(metricName).metric;
+    return this._pathTemplates.metricPathTemplate
+      .match(metricName)
+      .metric;
   }
 }
 

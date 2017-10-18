@@ -25,7 +25,10 @@ error.code = FAKE_STATUS_CODE;
 describe('LoggingServiceV2Client', () => {
   describe('deleteLog', () => {
     it('invokes deleteLog without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedLogName = client.logPath('[PROJECT]', '[LOG]');
@@ -43,7 +46,10 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes deleteLog with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedLogName = client.logPath('[PROJECT]', '[LOG]');
@@ -68,7 +74,10 @@ describe('LoggingServiceV2Client', () => {
 
   describe('writeLogEntries', () => {
     it('invokes writeLogEntries without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var entries = [];
@@ -93,7 +102,10 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes writeLogEntries with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var entries = [];
@@ -119,7 +131,10 @@ describe('LoggingServiceV2Client', () => {
 
   describe('listLogEntries', () => {
     it('invokes listLogEntries without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var resourceNames = [];
@@ -150,7 +165,10 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes listLogEntries with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var resourceNames = [];
@@ -176,7 +194,10 @@ describe('LoggingServiceV2Client', () => {
 
   describe('listMonitoredResourceDescriptors', () => {
     it('invokes listMonitoredResourceDescriptors without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var request = {};
@@ -204,7 +225,10 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes listMonitoredResourceDescriptors with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var request = {};
@@ -227,7 +251,10 @@ describe('LoggingServiceV2Client', () => {
 
   describe('listLogs', () => {
     it('invokes listLogs without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -258,7 +285,10 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes listLogs with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client();
+      var client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -286,7 +316,10 @@ describe('LoggingServiceV2Client', () => {
 describe('ConfigServiceV2Client', () => {
   describe('listSinks', () => {
     it('invokes listSinks without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -317,7 +350,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes listSinks with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -343,7 +379,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('getSink', () => {
     it('invokes getSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
@@ -379,7 +418,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes getSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
@@ -405,7 +447,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('createSink', () => {
     it('invokes createSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -443,7 +488,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes createSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -471,7 +519,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('updateSink', () => {
     it('invokes updateSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
@@ -509,7 +560,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes updateSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
@@ -537,7 +591,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('deleteSink', () => {
     it('invokes deleteSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
@@ -555,7 +612,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes deleteSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
@@ -580,7 +640,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('listExclusions', () => {
     it('invokes listExclusions without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -611,7 +674,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes listExclusions with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -637,7 +703,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('getExclusion', () => {
     it('invokes getExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
@@ -671,7 +740,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes getExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
@@ -697,7 +769,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('createExclusion', () => {
     it('invokes createExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -733,7 +808,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes createExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -761,7 +839,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('updateExclusion', () => {
     it('invokes updateExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
@@ -799,7 +880,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes updateExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
@@ -829,7 +913,10 @@ describe('ConfigServiceV2Client', () => {
 
   describe('deleteExclusion', () => {
     it('invokes deleteExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
@@ -847,7 +934,10 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes deleteExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client();
+      var client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
@@ -874,7 +964,10 @@ describe('ConfigServiceV2Client', () => {
 describe('MetricsServiceV2Client', () => {
   describe('listLogMetrics', () => {
     it('invokes listLogMetrics without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -905,7 +998,10 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes listLogMetrics with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -931,7 +1027,10 @@ describe('MetricsServiceV2Client', () => {
 
   describe('getLogMetric', () => {
     it('invokes getLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
@@ -965,7 +1064,10 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes getLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
@@ -991,7 +1093,10 @@ describe('MetricsServiceV2Client', () => {
 
   describe('createLogMetric', () => {
     it('invokes createLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -1027,7 +1132,10 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes createLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedParent = client.projectPath('[PROJECT]');
@@ -1055,7 +1163,10 @@ describe('MetricsServiceV2Client', () => {
 
   describe('updateLogMetric', () => {
     it('invokes updateLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
@@ -1091,7 +1202,10 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes updateLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
@@ -1119,7 +1233,10 @@ describe('MetricsServiceV2Client', () => {
 
   describe('deleteLogMetric', () => {
     it('invokes deleteLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
@@ -1137,7 +1254,10 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes deleteLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client();
+      var client = new loggingModule.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
 
       // Mock request
       var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');

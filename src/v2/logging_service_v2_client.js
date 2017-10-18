@@ -947,7 +947,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 
   /**
@@ -958,7 +960,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromLogName(logName) {
-    return logPathTemplate.match(logName).project;
+    return this._pathTemplates.logPathTemplate
+      .match(logName)
+      .project;
   }
 
   /**
@@ -969,7 +973,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the log.
    */
   matchLogFromLogName(logName) {
-    return logPathTemplate.match(logName).log;
+    return this._pathTemplates.logPathTemplate
+      .match(logName)
+      .log;
   }
 }
 

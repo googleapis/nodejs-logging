@@ -1086,7 +1086,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 
   /**
@@ -1097,7 +1099,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromSinkName(sinkName) {
-    return sinkPathTemplate.match(sinkName).project;
+    return this._pathTemplates.sinkPathTemplate
+      .match(sinkName)
+      .project;
   }
 
   /**
@@ -1108,7 +1112,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the sink.
    */
   matchSinkFromSinkName(sinkName) {
-    return sinkPathTemplate.match(sinkName).sink;
+    return this._pathTemplates.sinkPathTemplate
+      .match(sinkName)
+      .sink;
   }
 
   /**
@@ -1119,7 +1125,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromExclusionName(exclusionName) {
-    return exclusionPathTemplate.match(exclusionName).project;
+    return this._pathTemplates.exclusionPathTemplate
+      .match(exclusionName)
+      .project;
   }
 
   /**
@@ -1130,7 +1138,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the exclusion.
    */
   matchExclusionFromExclusionName(exclusionName) {
-    return exclusionPathTemplate.match(exclusionName).exclusion;
+    return this._pathTemplates.exclusionPathTemplate
+      .match(exclusionName)
+      .exclusion;
   }
 }
 
