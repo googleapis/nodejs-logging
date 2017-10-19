@@ -228,7 +228,7 @@ Log.prototype.delete = function(gaxOptions, callback) {
 
   this.logging.request(
     {
-      client: 'loggingServiceV2Client',
+      client: 'LoggingServiceV2Client',
       method: 'deleteLog',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -640,7 +640,7 @@ Log.prototype.write = function(entry, options, callback) {
 
     self.logging.request(
       {
-        client: 'loggingServiceV2Client',
+        client: 'LoggingServiceV2Client',
         method: 'writeLogEntries',
         reqOpts: reqOpts,
         gaxOpts: options.gaxOptions,

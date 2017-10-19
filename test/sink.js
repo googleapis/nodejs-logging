@@ -90,7 +90,7 @@ describe('Sink', function() {
   describe('delete', function() {
     it('should accept gaxOptions', function(done) {
       sink.logging.request = function(config, callback) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'deleteSink');
 
         assert.deepEqual(config.reqOpts, {
@@ -120,7 +120,7 @@ describe('Sink', function() {
   describe('getMetadata', function() {
     it('should make correct request', function(done) {
       sink.logging.request = function(config) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'getSink');
 
         assert.deepEqual(config.reqOpts, {
@@ -226,7 +226,7 @@ describe('Sink', function() {
       };
 
       sink.logging.request = function(config) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'updateSink');
 
         assert.deepEqual(config.reqOpts, {
