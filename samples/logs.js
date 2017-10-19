@@ -20,11 +20,13 @@ function writeLogEntry(logName) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The log to write to, e.g. "my-log"
-  // const logName = "my-log";
+  /**
+   * TODO(developer): Uncomment the following line to run the code.
+   */
+  // const logName = "Name of the log to write to, e.g. my-log";
 
   const log = logging.log(logName);
 
@@ -68,8 +70,8 @@ function loggingBunyan() {
   // Imports the Google Cloud client library for Bunyan
   const LoggingBunyan = require('@google-cloud/logging-bunyan');
 
-  // Instantiates a Bunyan Stackdriver Logging client
-  const loggingBunyan = LoggingBunyan();
+  // Creates a Bunyan Stackdriver Logging client
+  const loggingBunyan = new LoggingBunyan();
 
   // Create a Bunyan logger that streams to Stackdriver Logging
   // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/bunyan_log"
@@ -102,8 +104,8 @@ function loggingWinston() {
   // Imports the Google Cloud client library for Winston
   const LoggingWinston = require('@google-cloud/logging-winston');
 
-  // Instantiates a Winston Stackdriver Logging client
-  const loggingWinston = LoggingWinston();
+  // Creates a Winston Stackdriver Logging client
+  const loggingWinston = new LoggingWinston();
 
   // Create a Winston logger that streams to Stackdriver Logging
   // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"
@@ -128,8 +130,8 @@ function bunyanSetupExplicit() {
   // Imports the Google Cloud client library for Bunyan
   const LoggingBunyan = require('@google-cloud/logging-bunyan');
 
-  // Instantiates a client
-  const loggingBunyan = LoggingBunyan({
+  // Creates a client
+  const loggingBunyan = new LoggingBunyan({
     projectId: 'your-project-id',
     keyFilename: '/path/to/key.json',
   });
@@ -142,8 +144,8 @@ function winstonSetupExplicit() {
   // Imports the Google Cloud client library for Winston
   const LoggingWinston = require('@google-cloud/logging-winston');
 
-  // Instantiates a client
-  const loggingWinston = LoggingWinston({
+  // Creates a client
+  const loggingWinston = new LoggingWinston({
     projectId: 'your-project-id',
     keyFilename: '/path/to/key.json',
   });
@@ -157,15 +159,15 @@ function writeLogEntryAdvanced(logName, options) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The log to write to, e.g. "my-log"
-  // const logName = "my-log";
-
-  // The request options
+  /**
+   * TODO(developer): Uncomment the following lines to run the code.
+   */
+  // const logName = "Name of the log to write to, e.g. my-log";
   // const options = {
-  //   resource: {...},
+  //   resource: {...}, // TODO(developer): Fill this in
   //   entry: 'Hello, world!'
   // };
 
@@ -191,11 +193,13 @@ function listLogEntries(logName) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The log from which to list entries, e.g. "my-log"
-  // const logName = "my-log";
+  /**
+   * TODO(developer): Uncomment the following line to run the code.
+   */
+  // const logName = "Name of the log from which to list entries, e.g. my-log";
 
   const log = logging.log(logName);
 
@@ -223,16 +227,17 @@ function listLogEntriesAdvanced(filter, pageSize, orderBy) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // Filter results, e.g. "severity=ERROR"
-  // See https://cloud.google.com/logging/docs/view/advanced_filters for more filter information.
+  /**
+   * TODO(developer): Uncomment the following lines to run the code.
+   *
+   * Filter results, e.g. "severity=ERROR"
+   * See https://cloud.google.com/logging/docs/view/advanced_filters for more filter information.
+   */
   // const filter = 'severity=ERROR';
-
   // const pageSize = 5;
-
-  // Sort results
   // const orderBy = 'timestamp';
 
   const options = {
@@ -264,11 +269,13 @@ function deleteLog(logName) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The log to delete, e.g. "my-log"
-  // const logName = "my-log";
+  /**
+   * TODO(developer): Uncomment the following line to run the code.
+   */
+  // const logName = "Name of the log to delete, e.g. my-log";
 
   const log = logging.log(logName);
 
@@ -286,8 +293,7 @@ function deleteLog(logName) {
   // [END logging_delete_log]
 }
 
-// The command-line program
-const cli = require(`yargs`)
+require(`yargs`)
   .demand(1)
   .command(
     'list',
@@ -398,8 +404,4 @@ const cli = require(`yargs`)
   .recommendCommands()
   .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
   .help()
-  .strict();
-
-if (module === require.main) {
-  cli.parse(process.argv.slice(2));
-}
+  .strict().argv;

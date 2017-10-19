@@ -68,7 +68,7 @@ const Logging = require('@google-cloud/logging');
 const projectId = 'YOUR_PROJECT_ID';
 
 // Instantiates a client
-const logging = Logging({
+const logging = new Logging({
   projectId: projectId,
 });
 

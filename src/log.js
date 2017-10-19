@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*!
- * @module logging/log
- */
-
 'use strict';
 
 var arrify = require('arrify');
@@ -26,22 +22,9 @@ var extend = require('extend');
 var is = require('is');
 var snakeCaseKeys = require('snakecase-keys');
 
-/**
- * @type {module:logging/entry}
- * @private
- */
 var Entry = require('./entry.js');
-
-/**
- * @type {module:logging/metadata}
- * @private
- */
 var Metadata = require('./metadata.js');
 
-/*! Developer Documentation
- *
- * @param {module:logging} logging - Parent Logging instance.
- */
 /**
  * A log is a named collection of entries, each entry representing a timestamped
  * event. Logs can be produced by Google Cloud Platform services, by third-party
@@ -49,17 +32,19 @@ var Metadata = require('./metadata.js');
  * produced by the Apache Web Server, but the log
  * `compute.googleapis.com/activity_log` is produced by Google Compute Engine.
  *
- * @resource [Introduction to Logs]{@link https://cloud.google.com/logging/docs/basic-concepts#logs}
+ * @see [Introduction to Logs]{@link https://cloud.google.com/logging/docs/basic-concepts#logs}
  *
- * @alias module:logging/log
- * @constructor
+ * @class
  *
- * @param {string} name - Name of the log.
- * @param {object=} options - Configuration object.
- * @param {boolean} options.removeCircular - Replace circular references in
+ * @param {Logging} logging {@link Logging} instance.
+ * @param {string} name Name of the log.
+ * @param {object} [options] Configuration object.
+ * @param {boolean} [options.removeCircular] Replace circular references in
  *     logged objects with a string value, `[Circular]`. (Default: false)
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
  * var log = logging.log('syslog');
  */
 function Log(logging, name, options) {
@@ -70,6 +55,10 @@ function Log(logging, name, options) {
   this.metadata_ = new Metadata(logging);
 
   this.logging = logging;
+  /**
+   * @name Log#name
+   * @type {string}
+   */
   this.name = this.formattedName_.split('/').pop();
 }
 
@@ -99,7 +88,7 @@ Log.assignSeverityToEntries_ = function(entries, severity) {
  *
  * @private
  *
- * @return {string}
+ * @returns {string}
  */
 Log.formatName_ = function(projectId, name) {
   var path = 'projects/' + projectId + '/logs/';
@@ -116,10 +105,18 @@ Log.formatName_ = function(projectId, name) {
 /**
  * Write a log entry with a severity of "ALERT".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -140,10 +137,18 @@ Log.prototype.alert = function(entry, options, callback) {
 /**
  * Write a log entry with a severity of "CRITICAL".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -165,10 +170,18 @@ Log.prototype.critical = function(entry, options, callback) {
 /**
  * Write a log entry with a severity of "DEBUG".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -187,18 +200,29 @@ Log.prototype.debug = function(entry, options, callback) {
 };
 
 /**
+ * @typedef {array} DeleteLogResponse
+ * @property {object} 0 The full API response.
+ */
+/**
+ * @callback DeleteLogCallback
+ * @param {?Error} err Request error, if any.
+ * @param {object} apiResponse The full API response.
+ */
+/**
  * Delete the log.
  *
- * @resource [projects.logs.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete}
+ * @see [projects.logs.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete}
  *
- * @param {object=} gaxOptions - Request configuration options, outlined
+ * @param {object} [gaxOptions] Request configuration options, outlined
  *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {function=} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this
- *     request.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {DeleteLogCallback} [callback] Callback function.
+ * @returns {Promise<DeleteLogResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * log.delete(function(err, apiResponse) {
  *   if (!err) {
  *     // The log was deleted.
@@ -240,10 +264,18 @@ Log.prototype.delete = function(gaxOptions, callback) {
 /**
  * Write a log entry with a severity of "EMERGENCY".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -267,17 +299,21 @@ Log.prototype.emergency = function(entry, options, callback) {
  *
  * Note that using this method will not itself make any API requests. You will
  * use the object returned in other API calls, such as
- * {module:logging/log#write}.
+ * {@link Log#write}.
  *
- * @resource [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+ * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
  *
- * @param {object=} metadata - See a
+ * @param {?object} metadata See a
  *     [LogEntry Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
- * @param {object|string} data - The data to use as the value for this log
+ * @param {object|string} data The data to use as the value for this log
  *     entry.
- * @return {module:logging/entry}
+ * @returns {Entry}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var metadata = {
  *   resource: {
  *     type: 'gce_instance',
@@ -319,10 +355,18 @@ Log.prototype.entry = function(metadata, data) {
 /**
  * Write a log entry with a severity of "ERROR".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -344,28 +388,17 @@ Log.prototype.error = function(entry, options, callback) {
  * This method is a wrapper around {module:logging#getEntries}, but with a
  * filter specified to only return entries from this log.
  *
- * @resource [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
+ * @see [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
  *
- * @param {object=} options - Filtering options.
- * @param {boolean} options.autoPaginate - Have pagination handled
- *     automatically. Default: true.
- * @param {string} options.filter - An
- *     [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters).
- *     An empty filter matches all log entries.
- * @param {number} options.maxApiCalls - Maximum number of API calls to make.
- * @param {number} options.maxResults - Maximum number of results to return.
- * @param {string} options.orderBy - How the results should be sorted,
- *     `timestamp` (oldest first) and `timestamp desc` (newest first,
- *     **default**).
- * @param {number} options.pageSize - Maximum number of logs to return.
- * @param {string} options.pageToken - A previously-returned page token
- *     representing part of the larger set of results to view.
- * @param {function} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this request.
- * @param {module:logging/entry[]} callback.entries - Entries from this log.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {GetEntriesRequest} [query] Query object for listing entries.
+ * @param {GetEntriesCallback} [callback] Callback function.
+ * @returns {Promise<GetEntriesResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * log.getEntries(function(err, entries) {
  *   // `entries` is an array of Stackdriver Logging entry objects.
  *   // See the `data` property to read the data from the entry.
@@ -413,11 +446,16 @@ Log.prototype.getEntries = function(options, callback) {
  * This method is a wrapper around {module:logging#getEntriesStream}, but with a
  * filter specified to only return {module:logging/entry} objects from this log.
  *
- * @param {object=} options - Configuration object. See
- *     {module:logging/log#getEntries} for a complete list of options.
- * @return {stream}
+ * @method Log#getEntriesStream
+ * @param {GetEntriesRequest} [query] Query object for listing entries.
+ * @returns {ReadableStream} A readable stream that emits {@link Entry}
+ *     instances.
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * log.getEntriesStream()
  *   .on('error', console.error)
  *   .on('data', function(entry) {
@@ -451,10 +489,18 @@ Log.prototype.getEntriesStream = function(options) {
 /**
  * Write a log entry with a severity of "INFO".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -475,10 +521,18 @@ Log.prototype.info = function(entry, options, callback) {
 /**
  * Write a log entry with a severity of "NOTICE".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -499,10 +553,18 @@ Log.prototype.notice = function(entry, options, callback) {
 /**
  * Write a log entry with a severity of "WARNING".
  *
- * This is a simple wrapper around {module:logging/log#write}. All arguments are
+ * This is a simple wrapper around {@link Log#write}. All arguments are
  * the same as documented there.
  *
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var log = logging.log('my-log');
+ *
  * var entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
@@ -521,21 +583,33 @@ Log.prototype.warning = function(entry, options, callback) {
 };
 
 /**
+ * @typedef {array} LogWriteResponse
+ * @property {object} 0 The full API response.
+ */
+/**
+ * @callback LogWriteCallback
+ * @param {?Error} err Request error, if any.
+ * @param {object} apiResponse The full API response.
+ */
+/**
+ * Write options.
+ *
+ * @typedef {object} WriteOptions
+ * @property {object} gaxOptions Request configuration options, outlined here:
+ *     https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+ * @property {object[]} labels Labels to set on the log.
+ * @property {object} resource A default monitored resource for entries where
+ *     one isn't specified.
+ */
+/**
  * Write log entries to Stackdriver Logging.
  *
- * @resource [entries.write API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write}
+ * @see [entries.write API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write}
  *
- * @param {module:logging/entry|module:logging/entry[]} entry - A log entry, or
- *     array of entries, to write.
- * @param {object=} options - Configuration object.
- * @param {object} options.gaxOptions - Request configuration options, outlined
- *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {object[]} options.labels - Labels to set on the log.
- * @param {object} options.resource - A default monitored resource for entries
- *     where one isn't specified.
- * @param {function} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this request.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
+ * @param {?WriteOptions} [options] Write options
+ * @param {LogWriteCallback} [callback] Callback function.
+ * @returns {Promise<LogWriteResponse>}
  *
  * @example
  * var entry = log.entry('gce_instance', {
@@ -656,7 +730,7 @@ Log.prototype.write = function(entry, options, callback) {
  * @private
  *
  * @param {object[]} entries - Entry objects.
- * @return {object[]} Serialized entries.
+ * @returns {object[]} Serialized entries.
  * @throws if there is an error during serialization.
  */
 Log.prototype.decorateEntries_ = function(entries) {
@@ -682,4 +756,9 @@ common.util.promisifyAll(Log, {
   exclude: ['entry'],
 });
 
+/**
+ * Reference to the {@link Log} class.
+ * @name module:@google-cloud/logging.Log
+ * @see Log
+ */
 module.exports = Log;

@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*!
- * @module logging
- */
-
 'use strict';
 
 var arrify = require('arrify');
@@ -33,38 +29,83 @@ var through = require('through2');
 var PKG = require('../package.json');
 var v2 = require('./v2');
 
-/**
- * @type {module:logging/entry}
- * @private
- */
 var Entry = require('./entry.js');
-
-/**
- * @type {module:logging/log}
- * @private
- */
 var Log = require('./log.js');
+var Sink = require('./sink.js');
 
 /**
- * @type {module:logging/sink}
- * @private
+ * @namespace google
  */
-var Sink = require('./sink.js');
+/**
+ * @namespace google.api
+ */
+/**
+ * @namespace google.logging
+ */
+/**
+ * @namespace google.logging.type
+ */
+/**
+ * @namespace google.logging.v2
+ */
+/**
+ * @namespace google.protobuf
+ */
+
+/**
+ * @typedef {object} ClientConfig
+ * @property {string} [projectId] The project ID from the Google Developer's
+ *     Console, e.g. 'grape-spaceship-123'. We will also check the environment
+ *     variable `GCLOUD_PROJECT` for your project ID. If your app is running in
+ *     an environment which supports {@link https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application Application Default Credentials},
+ *     your project ID will be detected automatically.
+ * @property {string} [keyFilename] Full path to the a .json, .pem, or .p12 key
+ *     downloaded from the Google Developers Console. If you provide a path to a
+ *     JSON file, the `projectId` option above is not necessary. NOTE: .pem and
+ *     .p12 require you to specify the `email` option as well.
+ * @property {string} [email] Account email address. Required when using a .pem
+ *     or .p12 keyFilename.
+ * @property {object} [credentials] Credentials object.
+ * @property {string} [credentials.client_email]
+ * @property {string} [credentials.private_key]
+ * @property {boolean} [autoRetry=true] Automatically retry requests if the
+ *     response is related to rate limits or certain intermittent server errors.
+ *     We will exponentially backoff subsequent requests by default.
+ * @property {number} [maxRetries=3] Maximum number of automatic retries
+ *     attempted before returning the error.
+ * @property {Constructor} [promise] Custom promise module to use instead of
+ *     native Promises.
+ */
 
 /**
  * [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to
  * store, search, analyze, monitor, and alert on log data and events from Google
  * Cloud Platform and Amazon Web Services (AWS).
  *
- * @constructor
- * @alias module:logging
-
- * @resource [What is Stackdriver Logging?]{@link https://cloud.google.com/logging/docs}
- * @resource [Introduction to the Stackdriver Logging API]{@link https://cloud.google.com/logging/docs/api}
- * @resource [Logging to Stackdriver from Bunyan]{@link https://www.npmjs.com/package/@google-cloud/logging-bunyan}
- * @resource [Logging to Stackdriver from Winston]{@link https://www.npmjs.com/package/@google-cloud/logging-winston}
+ * @class
  *
- * @param {object} options - [Configuration object](#/docs).
+ * @see [What is Stackdriver Logging?]{@link https://cloud.google.com/logging/docs}
+ * @see [Introduction to the Stackdriver Logging API]{@link https://cloud.google.com/logging/docs/api}
+ * @see [Logging to Stackdriver from Bunyan]{@link https://www.npmjs.com/package/@google-cloud/logging-bunyan}
+ * @see [Logging to Stackdriver from Winston]{@link https://www.npmjs.com/package/@google-cloud/logging-winston}
+ *
+ * @param {ClientConfig} [options] Configuration options.
+ *
+ * @example <caption>Import the client library</caption>
+ * const Logging = require('@google-cloud/logging');
+ *
+ * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
+ * const logging = new Logging();
+ *
+ * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:</caption>
+ * const logging = new Logging({
+ *   projectId: 'your-project-id',
+ *   keyFilename: '/path/to/keyfile.json'
+ * });
+ *
+ * @example <caption>include:samples/quickstart.js</caption>
+ * region_tag:logging_quickstart
+ * Full quickstart example:
  */
 function Logging(options) {
   if (!(this instanceof Logging)) {
@@ -103,39 +144,59 @@ function Logging(options) {
   this.projectId = this.options.projectId || '{{projectId}}';
 }
 
+/**
+ * Config to set for the sink. Not all available options are listed here, see
+ * the [Sink resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink)
+ * definition for full details.
+ *
+ * @typedef {object} CreateSinkRequest
+ * @property {object} [gaxOptions] Request configuration options, outlined
+ *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+ * @property {Bucket|Dataset|Topic} [destination] The destination. The proper ACL
+ *     scopes will be granted to the provided destination. Can be one of:
+ *     {@link https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket Bucket},
+ *     {@link https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset Dataset},
+ *     or {@link https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
+ * @property {string} [filter] An advanced logs filter. Only log entries
+ *     matching the filter are written.
+ */
+/**
+ * @typedef {array} CreateSinkResponse
+ * @property {Sink} 0 The new {@link Sink}.
+ * @property {object} 1 The full API response.
+ */
+/**
+ * @callback CreateSinkCallback
+ * @param {?Error} err Request error, if any.
+ * @param {Sink} sink The new {@link Sink}.
+ * @param {object} apiResponse The full API response.
+ */
 // jscs:disable maximumLineLength
 /**
  * Create a sink.
  *
- * @resource [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
- * @resource [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
- * @resource [projects.sinks.create API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create}
+ * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
+ * @see [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
+ * @see [projects.sinks.create API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create}
  *
- * @throws {Error} if a name is not provided.
+ * @param {string} name Name of the sink.
+ * @param {CreateSinkRequest} config Config to set for the sink.
+ * @param {CreateSinkCallback} [callback] Callback function.
+ * @returns {Promise<CreateSinkResponse>}
+ * @throws {Error} If a name is not provided.
  * @throws {Error} if a config object is not provided.
- *
- * @param {string} name - Name of the sink.
- * @param {object} config - See a
- *     [Sink resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink).
- * @param {object} config.gaxOptions - Request configuration options, outlined
- *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {module:storage/bucket|module:bigquery/dataset|module:pubsub/topic} config.destination -
- *     The destination. The proper ACL scopes will be granted to the provided
- *     destination.
- * @param {string=} config.filter - An advanced logs filter. Only log entries
- *     matching the filter are written.
- * @param {function} callback - The cLoggingallback function.
- * @param {?error} callback.err - An error returned while making this request.
- * @param {module:logging/sink} callback.sink - The created Sink object.
- * @param {object} callback.apiResponse - The full API response.
+ * @see Sink#create
  *
  * @example
- * var gcs = require('@google-cloud/storage')({
+ * var Storage = require('@google-cloud/storage');
+ * var storage = new Storage({
  *   projectId: 'grape-spaceship-123'
  * });
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
  *
  * var config = {
- *   destination: gcs.bucket('logging-bucket'),
+ *   destination: storage.bucket('logging-bucket'),
  *   filter: 'severity = ALERT'
  * };
  *
@@ -217,17 +278,20 @@ Logging.prototype.createSink = function(name, config, callback) {
  *
  * Note that using this method will not itself make any API requests. You will
  * use the object returned in other API calls, such as
- * {module:logging/log#write}.
+ * {@link Log#write}.
  *
- * @resource [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+ * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
  *
- * @param {object=|string=} resource - See a
+ * @param {?object|?string} [resource] See a
  *     [Monitored Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/MonitoredResource).
- * @param {object|string} data - The data to use as the value for this log
+ * @param {object|string} data The data to use as the value for this log
  *     entry.
- * @return {module:logging/entry}
+ * @returns {Entry}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ *
  * var resource = {
  *   type: 'gce_instance',
  *   labels: {
@@ -259,30 +323,50 @@ Logging.prototype.entry = function(resource, data) {
 };
 
 /**
- * List the entries in your logs.
+ * Query object for listing entries.
  *
- * @resource [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
- *
- * @param {object=} options - Filtering options.
- * @param {boolean} options.autoPaginate - Have pagination handled
- *     automatically. Default: true.
- * @param {string} options.filter - An
+ * @typedef {object} GetEntriesRequest
+ * @property {boolean} [autoPaginate=true] Have pagination handled
+ *     automatically.
+ * @property {string} [filter] An
  *     [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters).
  *     An empty filter matches all log entries.
- * @param {object} options.gaxOptions - Request configuration options, outlined
+ * @property {object} [gaxOptions] Request configuration options, outlined
  *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {string} options.orderBy - How the results should be sorted,
+ * @property {number} [maxApiCalls] Maximum number of API calls to make.
+ * @property {number} [maxResults] Maximum number of items plus prefixes to
+ *     return.
+ * @property {string} [orderBy] How the results should be sorted,
  *     `timestamp` (oldest first) and `timestamp desc` (newest first,
  *     **default**).
- * @param {number} options.pageSize - Maximum number of logs to return.
- * @param {string} options.pageToken - A previously-returned page token
+ * @property {number} [pageSize] Maximum number of logs to return.
+ * @property {string} [pageToken] A previously-returned page token
  *     representing part of the larger set of results to view.
- * @param {function} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this request.
- * @param {module:logging/entry[]} callback.entries - Entries from your logs.
- * @param {object} callback.apiResponse - The full API response.
+ */
+/**
+ * @typedef {array} GetEntriesResponse
+ * @property {Entry[]} 0 Array of {@link Entry} instances.
+ * @property {object} 1 The full API response.
+ */
+/**
+ * @callback GetEntriesCallback
+ * @param {?Error} err Request error, if any.
+ * @param {Entry[]} entries Array of {@link Entry} instances.
+ * @param {object} apiResponse The full API response.
+ */
+/**
+ * List the entries in your logs.
+ *
+ * @see [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
+ *
+ * @param {GetEntriesRequest} [query] Query object for listing entries.
+ * @param {GetEntriesCallback} [callback] Callback function.
+ * @returns {Promise<GetEntriesResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ *
  * logging.getEntries(function(err, entries) {
  *   // `entries` is an array of Stackdriver Logging entry objects.
  *   // See the `data` property to read the data from the entry.
@@ -364,14 +448,18 @@ Logging.prototype.getEntries = function(options, callback) {
 };
 
 /**
- * List the {module:logging/entry} objects in your logs as a readable object
+ * List the {@link Entry} objects in your logs as a readable object
  * stream.
  *
- * @param {object=} options - Configuration object. See
- *     {module:logging#getEntries} for a complete list of options.
- * @return {stream}
+ * @method Logging#getEntriesStream
+ * @param {GetEntriesRequest} [query] Query object for listing entries.
+ * @returns {ReadableStream} A readable stream that emits {@link Entry}
+ *     instances.
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ *
  * logging.getEntriesStream()
  *   .on('error', console.error)
  *   .on('data', function(entry) {
@@ -444,21 +532,44 @@ Logging.prototype.getEntriesStream = function(options) {
 };
 
 /**
+ * Query object for listing sinks.
+ *
+ * @typedef {object} GetSinksRequest
+ * @property {boolean} [autoPaginate=true] Have pagination handled
+ *     automatically.
+ * @property {object} [gaxOptions] Request configuration options, outlined
+ *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+ * @property {number} [maxApiCalls] Maximum number of API calls to make.
+ * @property {number} [maxResults] Maximum number of items plus prefixes to
+ *     return.
+ * @property {number} [pageSize] Maximum number of logs to return.
+ * @property {string} [pageToken] A previously-returned page token
+ *     representing part of the larger set of results to view.
+ */
+/**
+ * @typedef {array} GetSinksResponse
+ * @property {Sink[]} 0 Array of {@link Sink} instances.
+ * @property {object} 1 The full API response.
+ */
+/**
+ * @callback GetSinksCallback
+ * @param {?Error} err Request error, if any.
+ * @param {Sink[]} sinks Array of {@link Sink} instances.
+ * @param {object} apiResponse The full API response.
+ */
+/**
  * Get the sinks associated with this project.
  *
- * @resource [projects.sinks.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list}
+ * @see [projects.sinks.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list}
  *
- * @param {object=} options - Configuration object.
- * @param {boolean} options.autoPaginate - Have pagination handled
- *     automatically. Default: true.
- * @param {object} options.gaxOptions - Request configuration options, outlined
- *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {function} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this request.
- * @param {module:logging/sink[]} callback.sinks - Sink objects.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {GetSinksRequest} [query] Query object for listing sinks.
+ * @param {GetSinksCallback} [callback] Callback function.
+ * @returns {Promise<GetSinksResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ *
  * logging.getSinks(function(err, sinks) {
  *   // sinks is an array of Sink objects.
  * });
@@ -520,14 +631,18 @@ Logging.prototype.getSinks = function(options, callback) {
 };
 
 /**
- * Get the {module:logging/sink} objects associated with this project as a
+ * Get the {@link Sink} objects associated with this project as a
  * readable object stream.
  *
- * @param {object=} options - Configuration object. See
- *     {module:logging#getSinks} for a complete list of options.
- * @return {stream}
+ * @method Logging#getSinksStream
+ * @param {GetSinksRequest} [query] Query object for listing sinks.
+ * @returns {ReadableStream} A readable stream that emits {@link Sink}
+ *     instances.
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ *
  * logging.getSinksStream()
  *   .on('error', console.error)
  *   .on('data', function(sink) {
@@ -596,15 +711,17 @@ Logging.prototype.getSinksStream = function(options) {
 /**
  * Get a reference to a Stackdriver Logging log.
  *
- * @resource [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
+ * @see [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
  *
- * @param {string} name - Name of the existing log.
- * @param {object=} options - Configuration object.
- * @param {boolean} options.removeCircular - Replace circular references in
+ * @param {string} name Name of the existing log.
+ * @param {object} [options] Configuration object.
+ * @param {boolean} [options.removeCircular] Replace circular references in
  *     logged objects with a string value, `[Circular]`. (Default: false)
- * @return {module:logging/log}
+ * @returns {Log}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
  * var log = logging.log('my-log');
  */
 Logging.prototype.log = function(name, options) {
@@ -614,12 +731,14 @@ Logging.prototype.log = function(name, options) {
 /**
  * Get a reference to a Stackdriver Logging sink.
  *
- * @resource [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
+ * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
  *
- * @param {string} name - Name of the existing sink.
- * @return {module:logging/sink}
+ * @param {string} name Name of the existing sink.
+ * @returns {Sink}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
  * var sink = logging.sink('my-sink');
  */
 Logging.prototype.sink = function(name) {
@@ -629,11 +748,11 @@ Logging.prototype.sink = function(name) {
 /**
  * Funnel all API requests through this method, to be sure we have a project ID.
  *
- * @param {object} config - Configuration object.
- * @param {object} config.gaxOpts - GAX options.
- * @param {function} config.method - The gax method to call.
- * @param {object} config.reqOpts - Request options.
- * @param {function=} callback - The callback function.
+ * @param {object} config Configuration object.
+ * @param {object} config.gaxOpts GAX options.
+ * @param {function} config.method The gax method to call.
+ * @param {object} config.reqOpts Request options.
+ * @param {function} [callback] Callback function.
  */
 Logging.prototype.request = function(config, callback) {
   var self = this;
@@ -727,7 +846,7 @@ Logging.prototype.request = function(config, callback) {
  * This method is called when creating a sink with a Bucket destination. The
  * bucket must first grant proper ACL access to the Stackdriver Logging account.
  *
- * The parameters are the same as what {module:logging#createSink} accepts.
+ * The parameters are the same as what {@link Logging#createSink} accepts.
  *
  * @private
  */
@@ -752,7 +871,7 @@ Logging.prototype.setAclForBucket_ = function(name, config, callback) {
  * dataset must first grant proper ACL access to the Stackdriver Logging
  * account.
  *
- * The parameters are the same as what {module:logging#createSink} accepts.
+ * The parameters are the same as what {@link Logging#createSink} accepts.
  *
  * @private
  */
@@ -799,7 +918,7 @@ Logging.prototype.setAclForDataset_ = function(name, config, callback) {
  * This method is called when creating a sink with a Topic destination. The
  * topic must first grant proper ACL access to the Stackdriver Logging account.
  *
- * The parameters are the same as what {module:logging#createSink} accepts.
+ * The parameters are the same as what {@link Logging#createSink} accepts.
  *
  * @private
  */
@@ -851,10 +970,87 @@ common.util.promisifyAll(Logging, {
   exclude: ['entry', 'log', 'request', 'sink'],
 });
 
+/**
+ * {@link Entry} class.
+ *
+ * @name Logging.Entry
+ * @see Entry
+ * @type {Constructor}
+ */
 Logging.Entry = Entry;
+
+/**
+ * {@link Log} class.
+ *
+ * @name Logging.Log
+ * @see Log
+ * @type {Constructor}
+ */
 Logging.Log = Log;
+
+/**
+ * Reference to the {@link Logging} class.
+ * @name module:@google-cloud/logging.Logging
+ * @see Logging
+ */
+/**
+ * {@link Logging} class.
+ *
+ * @name Logging.Logging
+ * @see Logging
+ * @type {Constructor}
+ */
 Logging.Logging = Logging;
+
+/**
+ * {@link Sink} class.
+ *
+ * @name Logging.Sink
+ * @see Sink
+ * @type {Constructor}
+ */
 Logging.Sink = Sink;
 
+/**
+ * The default export of the `@google-cloud/logging` package is the
+ * {@link Logging} class.
+ *
+ * See {@link Logging} and {@link ClientConfig} for client methods and
+ * configuration options.
+ *
+ * @module {Constructor} @google-cloud/logging
+ * @alias nodejs-logging
+ *
+ * @example <caption>Install the client library with <a href="https://www.npmjs.com/">npm</a>:</caption>
+ * npm install --save @google-cloud/logging
+ *
+ * @example <caption>Import the client library</caption>
+ * const Logging = require('@google-cloud/logging');
+ *
+ * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
+ * const logging = new Logging();
+ *
+ * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:</caption>
+ * const logging = new Logging({
+ *   projectId: 'your-project-id',
+ *   keyFilename: '/path/to/keyfile.json'
+ * });
+ *
+ * @example <caption>include:samples/quickstart.js</caption>
+ * region_tag:logging_quickstart
+ * Full quickstart example:
+ */
 module.exports = Logging;
+
+/**
+ * Reference to the low-level auto-generated clients for the V2 Logging service.
+ *
+ * @type {object}
+ * @property {constructor} LoggingServiceV2Client
+ *   Reference to {@link v2.LoggingServiceV2Client}
+ * @property {constructor} ConfigServiceV2Client
+ *   Reference to {@link v2.ConfigServiceV2Client}
+ * @property {constructor} MetricsServiceV2Client
+ *   Reference to {@link v2.MetricsServiceV2Client}
+ */
 module.exports.v2 = v2;
