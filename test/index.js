@@ -23,8 +23,9 @@ var proxyquire = require('proxyquire');
 var through = require('through2');
 var util = require('@google-cloud/common').util;
 
+var v2 = require('../src/v2');
+
 var PKG = require('../package.json');
-var v2 = require('../src/v2/index.js');
 
 var extended = false;
 var fakePaginator = {
@@ -75,10 +76,7 @@ var fakeUtil = extend({}, util, {
   },
 });
 
-var v2Override;
-function fakeV2() {
-  return (v2Override || util.noop).apply(null, arguments);
-}
+function fakeV2() {}
 
 function FakeEntry() {
   this.calledWith_ = arguments;
@@ -120,7 +118,6 @@ describe('Logging', function() {
     googleAutoAuthOverride = null;
     isCustomTypeOverride = null;
     replaceProjectIdTokenOverride = null;
-    v2Override = null;
 
     logging = new Logging({
       projectId: PROJECT_ID,
@@ -128,6 +125,21 @@ describe('Logging', function() {
   });
 
   describe('instantiation', function() {
+    let EXPECTED_SCOPES = [];
+    let clientClasses = [
+      v2.ConfigServiceV2Client,
+      v2.LoggingServiceV2Client,
+      v2.MetricsServiceV2Client,
+    ];
+
+    for (let clientClass of clientClasses) {
+      for (let scope of clientClass.scopes) {
+        if (clientClasses.indexOf(scope) === -1) {
+          EXPECTED_SCOPES.push(scope);
+        }
+      }
+    }
+
     it('should extend the correct methods', function() {
       assert(extended); // See `fakePaginator.extend`
     });
@@ -177,9 +189,9 @@ describe('Logging', function() {
           options_,
           extend(
             {
-              scopes: v2.ALL_SCOPES,
               libName: 'gccl',
               libVersion: PKG.version,
+              scopes: EXPECTED_SCOPES,
             },
             options
           )
@@ -205,9 +217,9 @@ describe('Logging', function() {
         logging.options,
         extend(
           {
-            scopes: v2.ALL_SCOPES,
             libName: 'gccl',
             libVersion: PKG.version,
+            scopes: EXPECTED_SCOPES,
           },
           options
         )
@@ -314,7 +326,7 @@ describe('Logging', function() {
         });
 
         logging.request = function(config) {
-          assert.strictEqual(config.client, 'configServiceV2Client');
+          assert.strictEqual(config.client, 'ConfigServiceV2Client');
           assert.strictEqual(config.method, 'createSink');
 
           var expectedParent = 'projects/' + logging.projectId;
@@ -428,7 +440,7 @@ describe('Logging', function() {
       var options = {};
 
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntries');
 
         assert.deepEqual(
@@ -551,7 +563,7 @@ describe('Logging', function() {
 
     it('should make request once reading', function(done) {
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'loggingServiceV2Client');
+        assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntriesStream');
 
         assert.deepEqual(config.reqOpts, {
@@ -627,7 +639,7 @@ describe('Logging', function() {
 
     it('should make the correct API request', function(done) {
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinks');
 
         assert.deepEqual(config.reqOpts, {
@@ -729,7 +741,7 @@ describe('Logging', function() {
 
     it('should make request once reading', function(done) {
       logging.request = function(config) {
-        assert.strictEqual(config.client, 'configServiceV2Client');
+        assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinksStream');
 
         assert.deepEqual(config.reqOpts, {
@@ -846,15 +858,9 @@ describe('Logging', function() {
           [CONFIG.method]: util.noop,
         };
 
-        v2Override = function(options) {
+        fakeV2[CONFIG.client] = function(options) {
           assert.strictEqual(options, logging.options);
-
-          return {
-            [CONFIG.client]: function(options) {
-              assert.strictEqual(options, logging.options);
-              return fakeClient;
-            },
-          };
+          return fakeClient;
         };
 
         logging.api = {};
@@ -865,7 +871,7 @@ describe('Logging', function() {
       });
 
       it('should use the cached client', function(done) {
-        v2Override = function() {
+        fakeV2[CONFIG.client] = function() {
           done(new Error('Should not re-instantiate a GAX client.'));
         };
 

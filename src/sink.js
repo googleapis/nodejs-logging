@@ -127,7 +127,7 @@ Sink.prototype.delete = function(gaxOptions, callback) {
 
   this.logging.request(
     {
-      client: 'configServiceV2Client',
+      client: 'ConfigServiceV2Client',
       method: 'deleteSink',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -179,7 +179,7 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
 
   this.logging.request(
     {
-      client: 'configServiceV2Client',
+      client: 'ConfigServiceV2Client',
       method: 'getSink',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -281,7 +281,7 @@ Sink.prototype.setMetadata = function(metadata, callback) {
 
     self.logging.request(
       {
-        client: 'configServiceV2Client',
+        client: 'ConfigServiceV2Client',
         method: 'updateSink',
         reqOpts: reqOpts,
         gaxOpts: metadata.gaxOptions,

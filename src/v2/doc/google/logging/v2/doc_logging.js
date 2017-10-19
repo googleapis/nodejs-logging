@@ -1,23 +1,19 @@
-/*
- * Copyright 2017, Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2017, Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-/*
- * Note: this file is purely for documentation. Any contents are not expected
- * to be loaded as the JS file.
- */
+// Note: this file is purely for documentation. Any contents are not expected
+// to be loaded as the JS file.
 
 /**
  * The parameters to DeleteLog.
@@ -34,9 +30,10 @@
  *   `"projects/my-project-id/logs/syslog"`,
  *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
  *   For more information about log names, see
- *   {@link LogEntry}.
+ *   LogEntry.
  *
- * @class
+ * @typedef DeleteLogRequest
+ * @memberof google.logging.v2
  * @see [google.logging.v2.DeleteLogRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var DeleteLogRequest = {
@@ -59,7 +56,7 @@ var DeleteLogRequest = {
  *   `"projects/my-project-id/logs/syslog"` or
  *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
  *   For more information about log names, see
- *   {@link LogEntry}.
+ *   LogEntry.
  *
  * @property {Object} resource
  *   Optional. A default monitored resource object that is assigned to all log
@@ -69,34 +66,40 @@ var DeleteLogRequest = {
  *         "labels": {
  *           "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
  *
- *   See {@link LogEntry}.
+ *   See LogEntry.
  *
- *   This object should have the same structure as [google.api.MonitoredResource]{@link external:"google.api.MonitoredResource"}
+ *   This object should have the same structure as [MonitoredResource]{@link google.api.MonitoredResource}
  *
  * @property {Object.<string, string>} labels
  *   Optional. Default labels that are added to the `labels` field of all log
  *   entries in `entries`. If a log entry already has a label with the same key
  *   as a label in this parameter, then the log entry's label is not changed.
- *   See {@link LogEntry}.
+ *   See LogEntry.
  *
  * @property {Object[]} entries
- *   Required.  The log entries to write. Values supplied for the fields
- *   `log_name`, `resource`, and `labels` in this `entries.write` request are
- *   inserted into those log entries in this list that do not provide their own
- *   values.
+ *   Required. The log entries to send to Stackdriver Logging. The order of log
+ *   entries in this list does not matter. Values supplied in this method's
+ *   `log_name`, `resource`, and `labels` fields are copied into those log
+ *   entries in this list that do not include values for their corresponding
+ *   fields. For more information, see the LogEntry type.
  *
- *   Stackdriver Logging also creates and inserts values for `timestamp` and
- *   `insert_id` if the entries do not provide them. The created `insert_id` for
- *   the N'th entry in this list will be greater than earlier entries and less
- *   than later entries.  Otherwise, the order of log entries in this list does
- *   not matter.
+ *   If the `timestamp` or `insert_id` fields are missing in log entries, then
+ *   this method supplies the current time or a unique identifier, respectively.
+ *   The supplied values are chosen so that, among the log entries that did not
+ *   supply their own values, the entries earlier in the list will sort before
+ *   the entries later in the list. See the `entries.list` method.
+ *
+ *   Log entries with timestamps that are more than the
+ *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
+ *   24 hours in the future might be discarded. Discarding does not return
+ *   an error.
  *
  *   To improve throughput and to avoid exceeding the
  *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
- *   you should write multiple log entries at once rather than
- *   calling this method for each individual log entry.
+ *   you should try to include several log entries in this list,
+ *   rather than calling this method for each individual log entry.
  *
- *   This object should have the same structure as [LogEntry]{@link LogEntry}
+ *   This object should have the same structure as [LogEntry]{@link google.logging.v2.LogEntry}
  *
  * @property {boolean} partialSuccess
  *   Optional. Whether valid entries should be written even if some other
@@ -105,7 +108,8 @@ var DeleteLogRequest = {
  *   with one of the failed entries and the response includes error details
  *   keyed by the entries' zero-based index in the `entries.write` method.
  *
- * @class
+ * @typedef WriteLogEntriesRequest
+ * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var WriteLogEntriesRequest = {
@@ -115,7 +119,8 @@ var WriteLogEntriesRequest = {
 /**
  * Result returned from WriteLogEntries.
  * empty
- * @class
+ * @typedef WriteLogEntriesResponse
+ * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var WriteLogEntriesResponse = {
@@ -133,7 +138,8 @@ var WriteLogEntriesResponse = {
  *   Failed requests for which no entries are written will not include
  *   per-entry errors.
  *
- * @class
+ * @typedef WriteLogEntriesPartialErrors
+ * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesPartialErrors definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var WriteLogEntriesPartialErrors = {
@@ -189,7 +195,8 @@ var WriteLogEntriesPartialErrors = {
  *   `next_page_token` from the previous response.  The values of other method
  *   parameters should be identical to those in the previous call.
  *
- * @class
+ * @typedef ListLogEntriesRequest
+ * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogEntriesRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var ListLogEntriesRequest = {
@@ -200,9 +207,11 @@ var ListLogEntriesRequest = {
  * Result returned from `ListLogEntries`.
  *
  * @property {Object[]} entries
- *   A list of log entries.
+ *   A list of log entries.  If `entries` is empty, `nextPageToken` may still be
+ *   returned, indicating that more entries may exist.  See `nextPageToken` for
+ *   more information.
  *
- *   This object should have the same structure as [LogEntry]{@link LogEntry}
+ *   This object should have the same structure as [LogEntry]{@link google.logging.v2.LogEntry}
  *
  * @property {string} nextPageToken
  *   If there might be more results than those appearing in this response, then
@@ -216,7 +225,8 @@ var ListLogEntriesRequest = {
  *   speeding up the search by changing your filter to specify a single log name
  *   or resource type, or to narrow the time range of the search.
  *
- * @class
+ * @typedef ListLogEntriesResponse
+ * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var ListLogEntriesResponse = {
@@ -237,7 +247,8 @@ var ListLogEntriesResponse = {
  *   `nextPageToken` from the previous response.  The values of other method
  *   parameters should be identical to those in the previous call.
  *
- * @class
+ * @typedef ListMonitoredResourceDescriptorsRequest
+ * @memberof google.logging.v2
  * @see [google.logging.v2.ListMonitoredResourceDescriptorsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var ListMonitoredResourceDescriptorsRequest = {
@@ -250,14 +261,15 @@ var ListMonitoredResourceDescriptorsRequest = {
  * @property {Object[]} resourceDescriptors
  *   A list of resource descriptors.
  *
- *   This object should have the same structure as [google.api.MonitoredResourceDescriptor]{@link external:"google.api.MonitoredResourceDescriptor"}
+ *   This object should have the same structure as [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}
  *
  * @property {string} nextPageToken
  *   If there might be more results than those appearing in this response, then
  *   `nextPageToken` is included.  To get the next set of results, call this
  *   method again using the value of `nextPageToken` as `pageToken`.
  *
- * @class
+ * @typedef ListMonitoredResourceDescriptorsResponse
+ * @memberof google.logging.v2
  * @see [google.logging.v2.ListMonitoredResourceDescriptorsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var ListMonitoredResourceDescriptorsResponse = {
@@ -286,7 +298,8 @@ var ListMonitoredResourceDescriptorsResponse = {
  *   `nextPageToken` from the previous response.  The values of other method
  *   parameters should be identical to those in the previous call.
  *
- * @class
+ * @typedef ListLogsRequest
+ * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var ListLogsRequest = {
@@ -306,7 +319,8 @@ var ListLogsRequest = {
  *   `nextPageToken` is included.  To get the next set of results, call this
  *   method again using the value of `nextPageToken` as `pageToken`.
  *
- * @class
+ * @typedef ListLogsResponse
+ * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 var ListLogsResponse = {

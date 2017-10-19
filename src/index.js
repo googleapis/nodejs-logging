@@ -72,11 +72,27 @@ function Logging(options) {
     return new Logging(options);
   }
 
+  // Determine what scopes are needed.
+  // It is the union of the scopes on all three clients.
+  let scopes = [];
+  let clientClasses = [
+    v2.ConfigServiceV2Client,
+    v2.LoggingServiceV2Client,
+    v2.MetricsServiceV2Client,
+  ];
+  for (let clientClass of clientClasses) {
+    for (let scope of clientClass.scopes) {
+      if (clientClasses.indexOf(scope) === -1) {
+        scopes.push(scope);
+      }
+    }
+  }
+
   var options_ = extend(
     {
-      scopes: v2.ALL_SCOPES,
       libName: 'gccl',
       libVersion: PKG.version,
+      scopes: scopes,
     },
     options
   );
@@ -108,7 +124,7 @@ function Logging(options) {
  *     destination.
  * @param {string=} config.filter - An advanced logs filter. Only log entries
  *     matching the filter are written.
- * @param {function} callback - The callback function.
+ * @param {function} callback - The cLoggingallback function.
  * @param {?error} callback.err - An error returned while making this request.
  * @param {module:logging/sink} callback.sink - The created Sink object.
  * @param {object} callback.apiResponse - The full API response.
@@ -177,7 +193,7 @@ Logging.prototype.createSink = function(name, config, callback) {
 
   this.request(
     {
-      client: 'configServiceV2Client',
+      client: 'ConfigServiceV2Client',
       method: 'createSink',
       reqOpts: reqOpts,
       gaxOpts: config.gaxOptions,
@@ -330,7 +346,7 @@ Logging.prototype.getEntries = function(options, callback) {
 
   this.request(
     {
-      client: 'loggingServiceV2Client',
+      client: 'LoggingServiceV2Client',
       method: 'listLogEntries',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -415,7 +431,7 @@ Logging.prototype.getEntriesStream = function(options) {
     );
 
     requestStream = self.request({
-      client: 'loggingServiceV2Client',
+      client: 'LoggingServiceV2Client',
       method: 'listLogEntriesStream',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -482,7 +498,7 @@ Logging.prototype.getSinks = function(options, callback) {
 
   this.request(
     {
-      client: 'configServiceV2Client',
+      client: 'ConfigServiceV2Client',
       method: 'listSinks',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -565,7 +581,7 @@ Logging.prototype.getSinksStream = function(options) {
     );
 
     requestStream = self.request({
-      client: 'configServiceV2Client',
+      client: 'ConfigServiceV2Client',
       method: 'listSinksStream',
       reqOpts: reqOpts,
       gaxOpts: gaxOptions,
@@ -651,7 +667,7 @@ Logging.prototype.request = function(config, callback) {
 
       if (!gaxClient) {
         // Lazily instantiate client.
-        gaxClient = v2(self.options)[config.client](self.options);
+        gaxClient = new v2[config.client](self.options);
         self.api[config.client] = gaxClient;
       }
 
