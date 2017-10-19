@@ -162,19 +162,19 @@ jobs:
           command: |
             cd samples/
             npm install
-            npm link @google-cloud/storage
+            npm link @google-cloud/logging
             cd ..
       - run:
           name: Run sample tests.
           command: npm run samples-test
           environment:
             GCLOUD_PROJECT: long-door-651
-            GOOGLE_APPLICATION_CREDENTIALS: /var/storage/.circleci/key.json
+            GOOGLE_APPLICATION_CREDENTIALS: /var/logging/.circleci/key.json
       - run:
           name: Remove unencrypted key.
           command: rm .circleci/key.json
           when: always
-    working_directory: /var/storage/
+    working_directory: /var/logging/
 
   system_tests:
     docker:
@@ -188,20 +188,12 @@ jobs:
                 -out .circleci/key.json \
                 -k "${SYSTEM_TESTS_ENCRYPTION_KEY}"
       - run:
-          name: Decrypt second account credentials (storage-specific).
-          command: |
-            openssl aes-256-cbc -d -in .circleci/no-whitelist-key.json.enc \
-                -out .circleci/no-whitelist-key.json \
-                -k "${SYSTEM_TESTS_ENCRYPTION_KEY}"
-      - run:
           name: Install modules and dependencies.
           command: npm install
       - run:
           name: Run system tests.
           command: npm run system-test
           environment:
-            GCN_STORAGE_2ND_PROJECT_ID: gcloud-node-whitelist-ci-tests
-            GCN_STORAGE_2ND_PROJECT_KEY: .circleci/no-whitelist-key.json
             GOOGLE_APPLICATION_CREDENTIALS: .circleci/key.json
       - run:
           name: Remove unencrypted key.
