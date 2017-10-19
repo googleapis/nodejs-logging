@@ -415,7 +415,7 @@ class LoggingServiceV2Client {
    *       "folders/[FOLDER_ID]"
    *
    *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string[]=} request.projectIds
+   * @param {string[]} request.projectIds
    *   Deprecated. Use `resource_names` instead.  One or more project identifiers
    *   or project numbers from which to retrieve log entries.  Example:
    *   `"my-project-1A"`. If present, these project identifiers are converted to
@@ -548,7 +548,7 @@ class LoggingServiceV2Client {
    *       "folders/[FOLDER_ID]"
    *
    *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string[]=} request.projectIds
+   * @param {string[]} request.projectIds
    *   Deprecated. Use `resource_names` instead.  One or more project identifiers
    *   or project numbers from which to retrieve log entries.  Example:
    *   `"my-project-1A"`. If present, these project identifiers are converted to
