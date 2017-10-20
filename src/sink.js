@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-/*!
- * @module logging/sink
- */
-
 'use strict';
 
 var common = require('@google-cloud/common');
 var extend = require('extend');
 var is = require('is');
 
-/*! Developer Documentation
- *
- * @param {module:logging} logging - The Logging instance.
- */
 /**
  * A sink is an object that lets you to specify a set of log entries to export
  * to a particular destination. Stackdriver Logging lets you export log entries
@@ -35,18 +27,24 @@ var is = require('is');
  * storage), Google BigQuery datasets (for log analysis), Google Pub/Sub (for
  * streaming to other applications).
  *
- * @resource [Introduction to Sinks]{@link https://cloud.google.com/logging/docs/basic-concepts#sinks}
+ * @see [Introduction to Sinks]{@link https://cloud.google.com/logging/docs/basic-concepts#sinks}
  *
- * @alias module:logging/sink
- * @constructor
+ * @class
  *
- * @param {object} options - [Configuration object](#/docs).
+ * @param {Logging} logging {@link Logging} instance.
+ * @param {string} name Name of the sink.
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
  * var sink = logging.sink('my-sink');
  */
 function Sink(logging, name) {
   this.logging = logging;
+  /**
+   * @name Sink#name
+   * @type {string}
+   */
   this.name = name;
   this.formattedName_ = 'projects/' + logging.projectId + '/sinks/' + name;
 }
@@ -54,9 +52,17 @@ function Sink(logging, name) {
 /**
  * Create a sink.
  *
- * @param {object} config - See {module:logging#createSink}.
+ * @param {CreateSinkRequest} config Config to set for the sink.
+ * @param {CreateSinkCallback} [callback] Callback function.
+ * @returns {Promise<CreateSinkResponse>}
+ * @throws {Error} if a config object is not provided.
+ * @see Logging#createSink
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var sink = logging.sink('my-sink');
+ *
  * var config = {
  *   destination: {
  *     // ...
@@ -86,18 +92,29 @@ Sink.prototype.create = function(config, callback) {
 };
 
 /**
+ * @typedef {array} DeleteSinkResponse
+ * @property {object} 0 The full API response.
+ */
+/**
+ * @callback DeleteSinkCallback
+ * @param {?Error} err Request error, if any.
+ * @param {object} apiResponse The full API response.
+ */
+/**
  * Delete the sink.
  *
- * @resource [projects.sink.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/delete}
+ * @see [projects.sink.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/delete}
  *
- * @param {object=} gaxOptions - Request configuration options, outlined
+ * @param {object} [gaxOptions] Request configuration options, outlined
  *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {function=} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this
- *     request.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {DeleteSinkCallback} [callback] Callback function.
+ * @returns {Promise<DeleteSinkResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var sink = logging.sink('my-sink');
+ *
  * sink.delete(function(err, apiResponse) {
  *   if (!err) {
  *     // The log was deleted.
@@ -137,20 +154,32 @@ Sink.prototype.delete = function(gaxOptions, callback) {
 };
 
 /**
+ * @typedef {array} GetSinkMetadataResponse
+ * @property {object} 0 The {@link Sink} metadata.
+ * @property {object} 1 The full API response.
+ */
+/**
+ * @callback GetSinkMetadataCallback
+ * @param {?Error} err Request error, if any.
+ * @param {object} metadata The {@link Sink} metadata.
+ * @param {object} apiResponse The full API response.
+ */
+/**
  * Get the sink's metadata.
  *
- * @resource [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
- * @resource [projects.sink.get API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get}
+ * @see [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
+ * @see [projects.sink.get API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get}
  *
- * @param {object=} gaxOptions - Request configuration options, outlined
+ * @param {object} [gaxOptions] Request configuration options, outlined
  *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {function=} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this
- *     request.
- * @param {object} callback.metadata - The sink's metadata.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {GetSinkMetadataCallback} [callback] Callback function.
+ * @returns {Promise<GetSinkMetadataResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var sink = logging.sink('my-sink');
+ *
  * sink.getMetadata(function(err, metadata, apiResponse) {});
  *
  * //-
@@ -195,19 +224,30 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
 };
 
 /**
+ * @typedef {array} SetSinkFilterResponse
+ * @property {object} 0 The full API response.
+ */
+/**
+ * @callback SetSinkFilterCallback
+ * @param {?Error} err Request error, if any.
+ * @param {object} apiResponse The full API response.
+ */
+/**
  * Set the sink's filter.
  *
  * This will override any filter that was previously set.
  *
- * @resource [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
+ * @see [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
  *
- * @param {string} filter - The new filter.
- * @param {function=} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this
- *     request.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {string} filter The new filter.
+ * @param {SetSinkFilterCallback} [callback] Callback function.
+ * @returns {Promise<SetSinkFilterResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var sink = logging.sink('my-sink');
+ *
  * var filter = 'metadata.severity = ALERT';
  *
  * sink.setFilter(filter, function(err, apiResponse) {});
@@ -229,21 +269,32 @@ Sink.prototype.setFilter = function(filter, callback) {
 };
 
 /**
+ * @typedef {array} SetSinkMetadataResponse
+ * @property {object} 0 The full API response.
+ */
+/**
+ * @callback SetSinkMetadataCallback
+ * @param {?Error} err Request error, if any.
+ * @param {object} apiResponse The full API response.
+ */
+/**
  * Set the sink's metadata.
  *
- * @resource [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
- * @resource [projects.sink.update API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update}
+ * @see [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
+ * @see [projects.sink.update API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update}
  *
- * @param {object} metadata - See a
+ * @param {object} metadata See a
  *     [Sink resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink).
- * @param {object=} metadata.gaxOptions - Request configuration options,
+ * @param {object} [metadata.gaxOptions] Request configuration options,
  *     outlined here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
- * @param {function=} callback - The callback function.
- * @param {?error} callback.err - An error returned while making this
- *     request.
- * @param {object} callback.apiResponse - The full API response.
+ * @param {SetSinkMetadataCallback} [callback] Callback function.
+ * @returns {Promise<SetSinkMetadataResponse>}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
+ * var sink = logging.sink('my-sink');
+ *
  * var metadata = {
  *   filter: 'metadata.severity = ALERT'
  * };
@@ -304,4 +355,9 @@ Sink.prototype.setMetadata = function(metadata, callback) {
  */
 common.util.promisifyAll(Sink);
 
+/**
+ * Reference to the {@link Sink} class.
+ * @name module:@google-cloud/logging.Sink
+ * @see Sink
+ */
 module.exports = Sink;

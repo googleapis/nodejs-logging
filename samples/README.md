@@ -23,7 +23,7 @@ library's README.
 
 ### Logs
 
-View the [documentation][logs_0_docs] or the [source code][logs_0_code].
+View the [source code][logs_0_code].
 
 __Usage:__ `node logs --help`
 
@@ -63,7 +63,7 @@ For more information, see https://cloud.google.com/logging/docs
 
 ### Sinks
 
-View the [documentation][sinks_1_docs] or the [source code][sinks_1_code].
+View the [source code][sinks_1_code].
 
 __Usage:__ `node sinks --help`
 

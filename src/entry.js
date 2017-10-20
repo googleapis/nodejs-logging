@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*!
- * @module logging/entry
- */
-
 'use strict';
 
 var commonGrpc = require('@google-cloud/common-grpc');
@@ -30,14 +26,13 @@ var eventId = new EventId();
 /**
  * Create an entry object to define new data to insert into a log.
  *
- * @resource [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+ * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
  *
- * @alias module:logging/entry
- * @constructor
+ * @class
  *
- * @param {object=} metadata - See a
+ * @param {?object} [metadata] See a
  *     [LogEntry Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
- * @param {object|string} data - The data to use as the value for this log
+ * @param {object|string} data The data to use as the value for this log
  *     entry.
  *
  *     If providing an object, these value types are supported:
@@ -49,9 +44,10 @@ var eventId = new EventId();
  *     - `Array`
  *
  *     Any other types are stringified with `String(value)`.
- * @return {module:logging/entry}
  *
  * @example
+ * var Logging = require('@google-cloud/logging');
+ * var logging = new Logging();
  * var syslog = logging.log('syslog');
  *
  * var metadata = {
@@ -76,7 +72,7 @@ var eventId = new EventId();
  *
  * //-
  * // You will also receive `Entry` objects when using
- * // {module:logging#getEntries} and {module:logging/log#getEntries}.
+ * // Logging#getEntries() and Log#getEntries().
  * //-
  * logging.getEntries(function(err, entries) {
  *   if (!err) {
@@ -85,6 +81,12 @@ var eventId = new EventId();
  * });
  */
 function Entry(metadata, data) {
+  /**
+   * @name Entry#metadata
+   * @type {object}
+   * @property {Date} timestamp
+   * @property {number} insertId
+   */
   this.metadata = extend(
     {
       timestamp: new Date(),
@@ -101,8 +103,13 @@ function Entry(metadata, data) {
   //
   // We use a globally unique monotonically increasing EventId as the
   // insertId.
+
   this.metadata.insertId = this.metadata.insertId || eventId.new();
 
+  /**
+   * @name Entry#data
+   * @type {object}
+   */
   this.data = data;
 }
 
@@ -111,9 +118,9 @@ function Entry(metadata, data) {
  *
  * @private
  *
- * @param {object} entry - An API representation of an entry. See a
+ * @param {object} entry An API representation of an entry. See a
  *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
- * @return {module:logging/entry}
+ * @returns {Entry}
  */
 Entry.fromApiResponse_ = function(entry) {
   var data = entry[entry.payload];
@@ -136,10 +143,9 @@ Entry.fromApiResponse_ = function(entry) {
 /**
  * Serialize an entry to the format the API expects.
  *
- * @param {object=} options - Configuration object.
- * @param {boolean} options.removeCircular - Replace circular references in an
+ * @param {object} [options] Configuration object.
+ * @param {boolean} [options.removeCircular] Replace circular references in an
  *     object with a string value, `[Circular]`.
- * @private
  */
 Entry.prototype.toJSON = function(options) {
   options = options || {};
@@ -168,4 +174,9 @@ Entry.prototype.toJSON = function(options) {
   return entry;
 };
 
+/**
+ * Reference to the {@link Entry} class.
+ * @name module:@google-cloud/logging.Entry
+ * @see Entry
+ */
 module.exports = Entry;

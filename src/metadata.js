@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-/*!
- * @module logging/metadata
- */
-
 'use strict';
 
 var gcpMetadata = require('gcp-metadata');
@@ -27,14 +23,12 @@ var gcpMetadata = require('gcp-metadata');
  * based on request success and environment variables, what type of resource
  * the library is operating on.
  *
- * @constructor
- * @alias module:logging/metadata
- *
+ * @class
  * @private
  *
- * @resource [Logs Resource API Documentation]{@link https://cloud.google.com/logging/docs/api/reference/rest/v2/MonitoredResource}
+ * @see [Logs Resource API Documentation]{@link https://cloud.google.com/logging/docs/api/reference/rest/v2/MonitoredResource}
  *
- * @param {module:logging} logging - The parent Logging instance.
+ * @param {Logging} logging The parent Logging instance.
  */
 function Metadata(logging) {
   this.logging = logging;
@@ -73,9 +67,7 @@ Metadata.getGAEDescriptor = function() {
 /**
  * Create a descriptor for Google Compute Engine.
  *
- * @private
- *
- * @param {function} callback - The callback function.
+ * @param {function} callback Callback function.
  * @return {object}
  */
 Metadata.getGCEDescriptor = function(callback) {
@@ -97,9 +89,7 @@ Metadata.getGCEDescriptor = function(callback) {
 /**
  * Create a descriptor for Google Container Engine.
  *
- * @private
- *
- * @param {function} callback - The callback function.
+ * @param {function} callback Callback function.
  * @return {object}
  */
 Metadata.getGKEDescriptor = function(callback) {
@@ -123,8 +113,6 @@ Metadata.getGKEDescriptor = function(callback) {
 /**
  * Create a global descriptor.
  *
- * @private
- *
  * @returns {object}
  */
 Metadata.getGlobalDescriptor = function() {
@@ -136,7 +124,7 @@ Metadata.getGlobalDescriptor = function() {
 /**
  * Retrieve a resource object describing the current environment.
  *
- * @param {function} callback - The callback function.
+ * @param {function} callback Callback function.
  */
 Metadata.prototype.getDefaultResource = function(callback) {
   this.logging.auth.getEnvironment(function(err, env) {

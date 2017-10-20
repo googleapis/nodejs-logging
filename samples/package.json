@@ -4,12 +4,9 @@
   "private": true,
   "license": "Apache-2.0",
   "author": "Google Inc.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/googleapis/nodejs-logging.git"
-  },
+  "repository": "googleapis/nodejs-logging",
   "engines": {
-    "node": ">=4.3.2"
+    "node": ">=4.0.0"
   },
   "scripts": {
     "cleanup": "repo-tools exec -- node scripts/cleanup",
@@ -18,22 +15,22 @@
     "test": "repo-tools test run --cmd npm -- run cover"
   },
   "dependencies": {
-    "@google-cloud/logging": "1.0.5",
-    "@google-cloud/logging-bunyan": "0.5.0",
-    "@google-cloud/logging-winston": "0.5.0",
-    "@google-cloud/storage": "1.2.1",
+    "@google-cloud/logging": "1.0.6",
+    "@google-cloud/logging-bunyan": "0.6.0",
+    "@google-cloud/logging-winston": "0.6.0",
+    "@google-cloud/storage": "1.4.0",
     "bunyan": "1.8.12",
-    "express": "4.15.4",
-    "fluent-logger": "2.4.1",
-    "winston": "2.3.1",
-    "yargs": "8.0.2"
+    "express": "4.16.2",
+    "fluent-logger": "2.5.0",
+    "winston": "2.4.0",
+    "yargs": "9.0.1"
   },
   "devDependencies": {
-    "@google-cloud/nodejs-repo-tools": "^2.0.0",
-    "ava": "0.21.0",
+    "@google-cloud/nodejs-repo-tools": "^2.0.10",
+    "ava": "0.22.0",
     "nyc": "^11.2.1",
     "proxyquire": "1.8.0",
-    "sinon": "3.2.0",
+    "sinon": "4.0.1",
     "supertest": "3.0.0",
     "uuid": "3.1.0"
   }
