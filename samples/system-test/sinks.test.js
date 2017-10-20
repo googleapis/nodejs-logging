@@ -77,7 +77,7 @@ test.serial(`should update a sink`, async t => {
     `${cmd} update ${sinkName} "${newFilter}"`,
     cwd
   );
-  t.is(output, `Sink ${sinkName} updated.`);
+  t.regex(output, new RegExp(`Sink ${sinkName} updated.`));
   const [metadata] = await logging.sink(sinkName).getMetadata();
   t.is(metadata.name, sinkName);
   t.is(metadata.destination.includes(bucketName), true);
