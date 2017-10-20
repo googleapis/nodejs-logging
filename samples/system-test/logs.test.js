@@ -23,7 +23,7 @@ const uuid = require(`uuid`);
 const cwd = path.join(__dirname, `..`);
 const cmd = `node logs.js`;
 
-const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
+const logName = `nodejs-logging-logs-test-${uuid.v4()}`;
 const message = `Hello world!`;
 
 test.before(tools.checkCredentials);

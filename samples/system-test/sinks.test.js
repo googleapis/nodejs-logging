@@ -15,9 +15,9 @@
 
 'use strict';
 
-const logging = require('@google-cloud/logging')();
+const logging = new (require('@google-cloud/logging'))();
 const path = require(`path`);
-const storage = require('@google-cloud/storage')();
+const storage = new (require('@google-cloud/storage'))();
 const test = require(`ava`);
 const tools = require(`@google-cloud/nodejs-repo-tools`);
 const uuid = require(`uuid`);
@@ -25,8 +25,8 @@ const uuid = require(`uuid`);
 const cwd = path.join(__dirname, `..`);
 const cmd = `node sinks.js`;
 
-const bucketName = `nodejs-docs-samples-test-${uuid.v4()}`;
-const sinkName = `nodejs-docs-samples-test-${uuid.v4()}`;
+const bucketName = `nodejs-logging-sinks-test-${uuid.v4()}`;
+const sinkName = `nodejs-logging-sinks-test-${uuid.v4()}`;
 const filter = `severity > WARNING`;
 
 test.before(tools.checkCredentials);

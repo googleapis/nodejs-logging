@@ -21,18 +21,16 @@ function createSink(sinkName, bucketName, filter) {
   const Logging = require('@google-cloud/logging');
   const Storage = require('@google-cloud/storage');
 
-  // Instantiates clients
-  const logging = Logging();
-  const storage = Storage();
+  // Creates clients
+  const logging = new Logging();
+  const storage = new Storage();
 
-  // The name of the sink, e.g. "my-sink"
-  // const sinkName = "my-sink";
-
-  // The destination bucket, e.g. "my-bucket"
-  // const bucketName = "my-bucket";
-
-  // An option log filter, e.g. "severity=ERROR"
-  // const filter = "severity=ERROR";
+  /**
+   * TODO(developer): Uncomment the following lines to run the code.
+   */
+  // const sinkName = "Name of your sink, e.g. my-sink";
+  // const bucketName = "Desination bucket, e.g. my-bucket";
+  // const filter = "Optional log filer, e.g. severity=ERROR";
 
   // The destination can be a Cloud Storage bucket, a Cloud Pub/Sub topic,
   // or a BigQuery dataset. In this case, it is a Cloud Storage Bucket.
@@ -70,11 +68,13 @@ function getSinkMetadata(sinkName) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The sink to retrieve, e.g. "my-sink"
-  // const sinkName = "my-sink";
+  /**
+   * TODO(developer): Uncomment the following line to run the code.
+   */
+  // const sinkName = "Name of your sink, e.g. my-sink";
 
   const sink = logging.sink(sinkName);
 
@@ -99,8 +99,8 @@ function listSinks() {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
   // See https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getSinks
   logging
@@ -126,14 +126,14 @@ function updateSink(sinkName, filter) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The sink to update, e.g. "my-sink"
-  // const sinkName = "my-sink";
-
-  // The the filter for the sink, e.g. "severity >= WARNING"
-  // const filter = "severity >= WARNING";
+  /**
+   * TODO(developer): Uncomment the following lines to run the code.
+   */
+  // const sinkName = "Name of sink to update, e.g. my-sink";
+  // const filter = "New filter for the sink, e.g. severity >= WARNING";
 
   const sink = logging.sink(sinkName);
 
@@ -153,7 +153,7 @@ function updateSink(sinkName, filter) {
     .setMetadata(metadata)
     .then(results => {
       const metadata = results[0];
-      console.log(`Sink ${sinkName} updated.`);
+      console.log(`Sink ${sinkName} updated.`, metadata);
     })
     .catch(err => {
       console.error('ERROR:', err);
@@ -166,11 +166,13 @@ function deleteSink(sinkName) {
   // Imports the Google Cloud client library
   const Logging = require('@google-cloud/logging');
 
-  // Instantiates a client
-  const logging = Logging();
+  // Creates a client
+  const logging = new Logging();
 
-  // The sink to delete, e.g. "my-sink"
-  // const sinkName = "my-sink";
+  /**
+   * TODO(developer): Uncomment the following line to run the code.
+   */
+  // const sinkName = "Name of sink to delete, e.g. my-sink";
 
   const sink = logging.sink(sinkName);
 
@@ -186,8 +188,7 @@ function deleteSink(sinkName) {
   // [END logging_delete_sink]
 }
 
-// The command-line program
-const cli = require(`yargs`)
+require(`yargs`)
   .demand(1)
   .command(
     'create <sinkName> <bucketName> [filter]',
@@ -238,8 +239,4 @@ const cli = require(`yargs`)
   .recommendCommands()
   .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
   .help()
-  .strict();
-
-if (module === require.main) {
-  cli.parse(process.argv.slice(2));
-}
+  .strict().argv;
