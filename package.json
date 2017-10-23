@@ -84,7 +84,7 @@
     "@google-cloud/pubsub": "*",
     "@google-cloud/storage": "*",
     "async": "^2.5.0",
-    "codecov": "^2.3.0",
+    "codecov": "^3.0.0",
     "eslint": "^4.7.2",
     "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-node": "^5.2.0",
