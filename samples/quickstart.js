@@ -22,7 +22,7 @@ const Logging = require('@google-cloud/logging');
 // Your Google Cloud Platform project ID
 const projectId = 'YOUR_PROJECT_ID';
 
-// Instantiates a client
+// Creates a client
 const logging = new Logging({
   projectId: projectId,
 });

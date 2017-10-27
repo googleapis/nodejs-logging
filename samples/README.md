@@ -2,7 +2,7 @@
 
 # Stackdriver Logging: Node.js Samples
 
-[![Build](https://storage.googleapis.com/.svg)]()
+[![Open in Cloud Shell][shell_img]][shell_link]
 
 [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
 
@@ -24,6 +24,8 @@ library's README.
 ### Logs
 
 View the [source code][logs_0_code].
+
+[![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/logs.js,samples/README.md)
 
 __Usage:__ `node logs --help`
 
@@ -65,6 +67,8 @@ For more information, see https://cloud.google.com/logging/docs
 
 View the [source code][sinks_1_code].
 
+[![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/sinks.js,samples/README.md)
+
 __Usage:__ `node sinks --help`
 
 ```
@@ -93,3 +97,6 @@ For more information, see https://cloud.google.com/logging/docs
 
 [sinks_1_docs]: https://cloud.google.com/logging/docs
 [sinks_1_code]: sinks.js
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/README.md
