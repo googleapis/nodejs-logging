@@ -28,9 +28,9 @@ function createSink(sinkName, bucketName, filter) {
   /**
    * TODO(developer): Uncomment the following lines to run the code.
    */
-  // const sinkName = "Name of your sink, e.g. my-sink";
-  // const bucketName = "Desination bucket, e.g. my-bucket";
-  // const filter = "Optional log filer, e.g. severity=ERROR";
+  // const sinkName = 'Name of your sink, e.g. my-sink';
+  // const bucketName = 'Desination bucket, e.g. my-bucket';
+  // const filter = 'Optional log filer, e.g. severity=ERROR';
 
   // The destination can be a Cloud Storage bucket, a Cloud Pub/Sub topic,
   // or a BigQuery dataset. In this case, it is a Cloud Storage Bucket.
@@ -74,7 +74,7 @@ function getSinkMetadata(sinkName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-  // const sinkName = "Name of your sink, e.g. my-sink";
+  // const sinkName = 'Name of your sink, e.g. my-sink';
 
   const sink = logging.sink(sinkName);
 
@@ -132,8 +132,8 @@ function updateSink(sinkName, filter) {
   /**
    * TODO(developer): Uncomment the following lines to run the code.
    */
-  // const sinkName = "Name of sink to update, e.g. my-sink";
-  // const filter = "New filter for the sink, e.g. severity >= WARNING";
+  // const sinkName = 'Name of sink to update, e.g. my-sink';
+  // const filter = 'New filter for the sink, e.g. severity >= WARNING';
 
   const sink = logging.sink(sinkName);
 
@@ -172,7 +172,7 @@ function deleteSink(sinkName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-  // const sinkName = "Name of sink to delete, e.g. my-sink";
+  // const sinkName = 'Name of sink to delete, e.g. my-sink';
 
   const sink = logging.sink(sinkName);
 

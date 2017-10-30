@@ -1,6 +1,6 @@
 <img src="https://avatars2.githubusercontent.com/u/2810941?v=3&s=96" alt="Google Cloud Platform logo" title="Google Cloud Platform" align="right" height="96" width="96"/>
 
-# Stackdriver Logging: Node.js Client
+# [Stackdriver Logging: Node.js Client](https://github.com/googleapis/nodejs-logging)
 
 [![release level](https://img.shields.io/badge/release%20level-general%20availability%20%28GA%29-brightgreen.svg?style&#x3D;flat)](https://cloud.google.com/terms/launch-stages)
 [![CircleCI](https://img.shields.io/circleci/project/github/googleapis/nodejs-logging.svg?style=flat)](https://circleci.com/gh/googleapis/nodejs-logging)
@@ -11,7 +11,9 @@
 
 [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
 
+
 * [Logging Node.js Client API Reference][client-docs]
+* [github.com/googleapis/nodejs-logging](https://github.com/googleapis/nodejs-logging)
 * [Logging Documentation][product-docs]
 
 Read more about the client libraries for Cloud APIs, including the older
@@ -67,7 +69,7 @@ const Logging = require('@google-cloud/logging');
 // Your Google Cloud Platform project ID
 const projectId = 'YOUR_PROJECT_ID';
 
-// Instantiates a client
+// Creates a client
 const logging = new Logging({
   projectId: projectId,
 });
@@ -97,13 +99,13 @@ log
 
 ## Samples
 
-Samples are in the [`samples/`](https://github.com/googleapis/nodejs-logging/blob/master/samples) directory. The samples' `README.md`
+Samples are in the [`samples/`](https://github.com/googleapis/nodejs-logging/tree/master/samples) directory. The samples' `README.md`
 has instructions for running the samples.
 
-| Sample                      | Source Code                       |
-| --------------------------- | --------------------------------- |
-| Logs | [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/logs.js) |
-| Sinks | [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/sinks.js) |
+| Sample                      | Source Code                       | Try it |
+| --------------------------- | --------------------------------- | ------ |
+| Logs | [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/logs.js) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/logs.js,samples/README.md) |
+| Sinks | [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/sinks.js) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/sinks.js,samples/README.md) |
 
 The [Logging Node.js Client API Reference][client-docs] documentation
 also contains samples.
@@ -124,13 +126,14 @@ More Information: [Google Cloud Platform Launch Stages][launch_stages]
 
 ## Contributing
 
-Contributions welcome! See the [Contributing Guide](.github/CONTRIBUTING.md).
+Contributions welcome! See the [Contributing Guide](https://github.com/googleapis/nodejs-logging/blob/master/.github/CONTRIBUTING.md).
 
 ## License
 
 Apache Version 2.0
 
-See [LICENSE](LICENSE)
+See [LICENSE](https://github.com/googleapis/nodejs-logging/blob/master/LICENSE)
 
 [client-docs]: https://cloud.google.com/nodejs/docs/reference/logging/latest/
 [product-docs]: https://cloud.google.com/logging/docs
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png

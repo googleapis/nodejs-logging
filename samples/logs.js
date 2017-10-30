@@ -26,7 +26,7 @@ function writeLogEntry(logName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-  // const logName = "Name of the log to write to, e.g. my-log";
+  // const logName = 'Name of the log to write to, e.g. my-log';
 
   const log = logging.log(logName);
 
@@ -165,7 +165,7 @@ function writeLogEntryAdvanced(logName, options) {
   /**
    * TODO(developer): Uncomment the following lines to run the code.
    */
-  // const logName = "Name of the log to write to, e.g. my-log";
+  // const logName = 'Name of the log to write to, e.g. my-log';
   // const options = {
   //   resource: {...}, // TODO(developer): Fill this in
   //   entry: 'Hello, world!'
@@ -199,7 +199,7 @@ function listLogEntries(logName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-  // const logName = "Name of the log from which to list entries, e.g. my-log";
+  // const logName = 'Name of the log from which to list entries, e.g. my-log';
 
   const log = logging.log(logName);
 
@@ -275,7 +275,7 @@ function deleteLog(logName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-  // const logName = "Name of the log to delete, e.g. my-log";
+  // const logName = 'Name of the log to delete, e.g. my-log';
 
   const log = logging.log(logName);
 
