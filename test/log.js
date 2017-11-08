@@ -68,7 +68,8 @@ describe('Log', function() {
     });
     var assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = function() {
-      return (assignSeverityToEntriesOverride || assignSeverityToEntries_
+      return (
+        assignSeverityToEntriesOverride || assignSeverityToEntries_
       ).apply(null, arguments);
     };
   });
