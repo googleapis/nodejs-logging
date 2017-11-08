@@ -63,97 +63,6 @@ function writeLogEntry(logName) {
   // [END logging_write_log_entry]
 }
 
-function loggingBunyan() {
-  // [START logging_bunyan]
-  const bunyan = require('bunyan');
-
-  // Imports the Google Cloud client library for Bunyan
-  const LoggingBunyan = require('@google-cloud/logging-bunyan');
-
-  // Creates a Bunyan Stackdriver Logging client
-  const loggingBunyan = new LoggingBunyan();
-
-  // Create a Bunyan logger that streams to Stackdriver Logging
-  // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/bunyan_log"
-  const logger = bunyan.createLogger({
-    // The JSON payload of the log as it appears in Stackdriver Logging
-    // will contain "name": "my-service"
-    name: 'my-service',
-    // log at 'info' and above
-    level: 'info',
-    streams: [
-      // Log to the console
-      {stream: process.stdout},
-      // And log to Stackdriver Logging
-      loggingBunyan.stream(),
-    ],
-  });
-
-  // Writes some log entries
-  logger.error('warp nacelles offline');
-  logger.info('shields at 99%');
-  // [END logging_bunyan]
-}
-
-function loggingWinston() {
-  // [START logging_winston]
-  const winston = require('winston');
-  const Logger = winston.Logger;
-  const Console = winston.transports.Console;
-
-  // Imports the Google Cloud client library for Winston
-  const LoggingWinston = require('@google-cloud/logging-winston');
-
-  // Creates a Winston Stackdriver Logging client
-  const loggingWinston = new LoggingWinston();
-
-  // Create a Winston logger that streams to Stackdriver Logging
-  // Logs will be written to: "projects/YOUR_PROJECT_ID/logs/winston_log"
-  const logger = new Logger({
-    level: 'info', // log at 'info' and above
-    transports: [
-      // Log to the console
-      new Console(),
-      // And log to Stackdriver Logging
-      loggingWinston,
-    ],
-  });
-
-  // Writes some log entries
-  logger.error('warp nacelles offline');
-  logger.info('shields at 99%');
-  // [END logging_winston]
-}
-
-function bunyanSetupExplicit() {
-  // [START logging_bunyan_setup_explicit]
-  // Imports the Google Cloud client library for Bunyan
-  const LoggingBunyan = require('@google-cloud/logging-bunyan');
-
-  // Creates a client
-  const loggingBunyan = new LoggingBunyan({
-    projectId: 'your-project-id',
-    keyFilename: '/path/to/key.json',
-  });
-  // [END logging_bunyan_setup_explicit]
-  console.log(loggingBunyan);
-}
-
-function winstonSetupExplicit() {
-  // [START logging_winston_setup_explicit]
-  // Imports the Google Cloud client library for Winston
-  const LoggingWinston = require('@google-cloud/logging-winston');
-
-  // Creates a client
-  const loggingWinston = new LoggingWinston({
-    projectId: 'your-project-id',
-    keyFilename: '/path/to/key.json',
-  });
-
-  // [END logging_winston_setup_explicit]
-  console.log(loggingWinston);
-}
-
 function writeLogEntryAdvanced(logName, options) {
   // [START logging_write_log_entry_advanced]
   // Imports the Google Cloud client library
@@ -354,30 +263,6 @@ require(`yargs`)
     opts => {
       writeLogEntry(opts.logName);
     }
-  )
-  .command(
-    'bunyan',
-    'Writes some logs entries to Stackdriver Logging via Winston.',
-    {},
-    loggingBunyan
-  )
-  .command(
-    'bunyan-setup',
-    'Setup up the Bunyan logger with explicit credentianls.',
-    {},
-    bunyanSetupExplicit
-  )
-  .command(
-    'winston',
-    'Writes some logs entries to Stackdriver Logging via Winston.',
-    {},
-    loggingWinston
-  )
-  .command(
-    'winston-setup',
-    'Setup up the Winston logger with explicit credentianls.',
-    {},
-    winstonSetupExplicit
   )
   .command('delete <logName>', 'Deletes the specified Log.', {}, opts => {
     deleteLog(opts.logName);
