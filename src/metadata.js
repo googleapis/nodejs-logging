@@ -44,7 +44,7 @@ Metadata.getCloudFunctionDescriptor = function() {
     type: 'cloud_function',
     labels: {
       function_name: process.env.FUNCTION_NAME,
-      region: process.env.SUPERVISOR_REGION,
+      region: process.env.FUNCTION_REGION,
     },
   };
 };
