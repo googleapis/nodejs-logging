@@ -75,11 +75,11 @@ describe('metadata', function() {
 
   describe('getCloudFunctionDescriptor', function() {
     var FUNCTION_NAME = 'function-name';
-    var SUPERVISOR_REGION = 'supervisor-region';
+    var FUNCTION_REGION = 'function-region';
 
     beforeEach(function() {
       process.env.FUNCTION_NAME = FUNCTION_NAME;
-      process.env.SUPERVISOR_REGION = SUPERVISOR_REGION;
+      process.env.FUNCTION_REGION = FUNCTION_REGION;
     });
 
     it('should return the correct descriptor', function() {
@@ -87,13 +87,13 @@ describe('metadata', function() {
         type: 'cloud_function',
         labels: {
           function_name: FUNCTION_NAME,
-          region: SUPERVISOR_REGION,
+          region: FUNCTION_REGION,
         },
       });
     });
   });
 
-  describe('getCloudFunctionDescriptor', function() {
+  describe('getGAEDescriptor', function() {
     var GAE_MODULE_NAME = 'gae-module-name';
     var GAE_SERVICE = 'gae-service';
     var GAE_VERSION = 'gae-version';
