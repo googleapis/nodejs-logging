@@ -75,6 +75,7 @@ var fakeUtil = extend({}, util, {
     return reqOpts;
   },
 });
+var originalFakeUtil = extend(true, {}, fakeUtil);
 
 function fakeV2() {}
 
@@ -115,6 +116,8 @@ describe('Logging', function() {
   });
 
   beforeEach(function() {
+    extend(fakeUtil, originalFakeUtil);
+
     googleAutoAuthOverride = null;
     isCustomTypeOverride = null;
     replaceProjectIdTokenOverride = null;
@@ -148,29 +151,24 @@ describe('Logging', function() {
       assert(promisifed);
     });
 
-    it('should normalize the arguments', function() {
-      var options = {
-        projectId: PROJECT_ID,
-        credentials: 'credentials',
-        email: 'email',
-        keyFilename: 'keyFile',
-      };
+    it('should work without new', function() {
+      assert.doesNotThrow(function() {
+        Logging({projectId: PROJECT_ID});
+      });
+    });
 
-      var normalizeArguments = fakeUtil.normalizeArguments;
+    it('should normalize the arguments', function() {
       var normalizeArgumentsCalled = false;
-      var fakeContext = {};
+      var options = {};
 
       fakeUtil.normalizeArguments = function(context, options_) {
         normalizeArgumentsCalled = true;
-        assert.strictEqual(context, fakeContext);
-        assert.strictEqual(options, options_);
+        assert.strictEqual(options_, options);
         return options_;
       };
 
-      Logging.call(fakeContext, options);
-      assert(normalizeArgumentsCalled);
-
-      fakeUtil.normalizeArguments = normalizeArguments;
+      new Logging(options);
+      assert.strictEqual(normalizeArgumentsCalled, true);
     });
 
     it('should initialize the API object', function() {

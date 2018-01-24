@@ -109,9 +109,10 @@ var Sink = require('./sink.js');
  */
 function Logging(options) {
   if (!(this instanceof Logging)) {
-    options = common.util.normalizeArguments(this, options);
     return new Logging(options);
   }
+
+  options = common.util.normalizeArguments(this, options);
 
   // Determine what scopes are needed.
   // It is the union of the scopes on all three clients.
