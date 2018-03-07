@@ -71,19 +71,17 @@ Metadata.getGAEDescriptor = function() {
  * @return {object}
  */
 Metadata.getGCEDescriptor = function(callback) {
-  gcpMetadata.instance('id', function(err, _, instanceId) {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    callback(null, {
-      type: 'gce_instance',
-      labels: {
-        instance_id: instanceId,
-      },
-    });
-  });
+  gcpMetadata
+    .instance('id')
+    .then(function(instanceId) {
+      callback(null, {
+        type: 'gce_instance',
+        labels: {
+          instance_id: instanceId,
+        },
+      });
+    })
+    .catch(callback);
 };
 
 /**
@@ -93,21 +91,19 @@ Metadata.getGCEDescriptor = function(callback) {
  * @return {object}
  */
 Metadata.getGKEDescriptor = function(callback) {
-  gcpMetadata.instance('attributes/cluster-name', function(e, _, clusterName) {
-    if (e) {
-      callback(e);
-      return;
-    }
-
-    callback(null, {
-      type: 'container',
-      labels: {
-        // TODO(ofrobots): it would be good to include the namespace_id as
-        // well.
-        cluster_name: clusterName,
-      },
-    });
-  });
+  gcpMetadata
+    .instance('attributes/cluster-name')
+    .then(function(clusterName) {
+      callback(null, {
+        type: 'container',
+        labels: {
+          // TODO(ofrobots): it would be good to include the namespace_id as
+          // well.
+          cluster_name: clusterName,
+        },
+      });
+    })
+    .catch(callback);
 };
 
 /**
