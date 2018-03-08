@@ -15,7 +15,7 @@
     "test": "repo-tools test run --cmd npm -- run cover"
   },
   "dependencies": {
-    "@google-cloud/logging": "1.1.5",
+    "@google-cloud/logging": "1.1.6",
     "@google-cloud/logging-bunyan": "0.6.0",
     "@google-cloud/logging-winston": "0.6.0",
     "@google-cloud/storage": "1.4.0",
