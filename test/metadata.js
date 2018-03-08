@@ -132,7 +132,7 @@ describe('metadata', function() {
     it('should return the correct descriptor', function(done) {
       instanceOverride = {
         path: 'attributes/cluster-name',
-        successArg: CLUSTER_NAME,
+        successArg: { data: CLUSTER_NAME },
       };
 
       Metadata.getGKEDescriptor(function(err, descriptor) {
@@ -166,7 +166,7 @@ describe('metadata', function() {
     it('should return the correct descriptor', function(done) {
       instanceOverride = {
         path: 'id',
-        successArg: INSTANCE_ID,
+        successArg: { data: INSTANCE_ID },
       };
 
       Metadata.getGCEDescriptor(function(err, descriptor) {
@@ -263,7 +263,7 @@ describe('metadata', function() {
           var INSTANCE_ID = 'overridden-value';
           instanceOverride = {
             path: 'id',
-            successArg: INSTANCE_ID,
+            successArg: { data: INSTANCE_ID },
           };
 
           metadata.logging.auth.getEnvironment = function(callback) {
@@ -290,7 +290,7 @@ describe('metadata', function() {
           var CLUSTER_NAME = 'overridden-value';
           instanceOverride = {
             path: 'attributes/cluster-name',
-            successArg: CLUSTER_NAME,
+            successArg: { data: CLUSTER_NAME },
           };
 
           metadata.logging.auth.getEnvironment = function(callback) {
