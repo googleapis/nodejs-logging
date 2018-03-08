@@ -73,11 +73,11 @@ Metadata.getGAEDescriptor = function() {
 Metadata.getGCEDescriptor = function(callback) {
   gcpMetadata
     .instance('id')
-    .then(function(instanceId) {
+    .then(function(resp) {
       callback(null, {
         type: 'gce_instance',
         labels: {
-          instance_id: instanceId,
+          instance_id: resp.data,
         },
       });
     })
@@ -93,13 +93,13 @@ Metadata.getGCEDescriptor = function(callback) {
 Metadata.getGKEDescriptor = function(callback) {
   gcpMetadata
     .instance('attributes/cluster-name')
-    .then(function(clusterName) {
+    .then(function(resp) {
       callback(null, {
         type: 'container',
         labels: {
           // TODO(ofrobots): it would be good to include the namespace_id as
           // well.
-          cluster_name: clusterName,
+          cluster_name: resp.data,
         },
       });
     })
