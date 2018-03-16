@@ -32,6 +32,7 @@
   ],
   "contributors": [
     "Ace Nassri <anassri@google.com>",
+    "Alexander Fenster <github@fenster.name>",
     "Ali Ijaz Sheikh <ofrobots@google.com>",
     "Bill Prin <waprin@google.com>",
     "Cristian Cavalli <cristiancavall@google.com>",
@@ -81,7 +82,7 @@
   },
   "devDependencies": {
     "@google-cloud/bigquery": "*",
-    "@google-cloud/nodejs-repo-tools": "^2.1.0",
+    "@google-cloud/nodejs-repo-tools": "^2.2.3",
     "@google-cloud/pubsub": "*",
     "@google-cloud/storage": "*",
     "async": "^2.5.0",
