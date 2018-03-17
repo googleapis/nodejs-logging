@@ -30,16 +30,14 @@ View the [source code][logs_0_code].
 __Usage:__ `node logs --help`
 
 ```
+logs <command>
+
 Commands:
-  list                                Lists log entries, optionally filtering, limiting, and sorting results.
-  list-simple <logName>               Lists log entries.
-  write <logName> <resource> <entry>  Writes a log entry to the specified log.
-  write-simple <logName>              Writes a basic log entry to the specified log.
-  bunyan                              Writes some logs entries to Stackdriver Logging via Winston.
-  bunyan-setup                        Setup up the Bunyan logger with explicit credentianls.
-  winston                             Writes some logs entries to Stackdriver Logging via Winston.
-  winston-setup                       Setup up the Winston logger with explicit credentianls.
-  delete <logName>                    Deletes the specified Log.
+  logs list                                Lists log entries, optionally filtering, limiting, and sorting results.
+  logs list-simple <logName>               Lists log entries.
+  logs write <logName> <resource> <entry>  Writes a log entry to the specified log.
+  logs write-simple <logName>              Writes a basic log entry to the specified log.
+  logs delete <logName>                    Deletes the specified Log.
 
 Options:
   --version  Show version number                                                                               [boolean]
@@ -72,13 +70,15 @@ View the [source code][sinks_1_code].
 __Usage:__ `node sinks --help`
 
 ```
+sinks <command>
+
 Commands:
-  create <sinkName> <bucketName> [filter]  Creates a new sink with the given name to the specified bucket with an
-                                           optional filter.
-  get <sinkName>                           Gets the metadata for the specified sink.
-  list                                     Lists all sinks.
-  update <sinkName> <filter>               Updates the filter for the specified sink.
-  delete <sinkName>                        Deletes the specified sink.
+  sinks create <sinkName> <bucketName> [filter]  Creates a new sink with the given name to the specified bucket with an
+                                                 optional filter.
+  sinks get <sinkName>                           Gets the metadata for the specified sink.
+  sinks list                                     Lists all sinks.
+  sinks update <sinkName> <filter>               Updates the filter for the specified sink.
+  sinks delete <sinkName>                        Deletes the specified sink.
 
 Options:
   --version  Show version number                                                                               [boolean]
@@ -98,5 +98,5 @@ For more information, see https://cloud.google.com/logging/docs
 [sinks_1_docs]: https://cloud.google.com/logging/docs
 [sinks_1_code]: sinks.js
 
-[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_img]: //gstatic.com/cloudssh/images/open-btn.png
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/README.md
