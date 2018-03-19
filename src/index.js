@@ -417,7 +417,12 @@ Logging.prototype.getEntries = function(options, callback) {
   );
 
   reqOpts.resourceNames = arrify(reqOpts.resourceNames);
-  reqOpts.resourceNames.push('projects/' + this.projectId);
+
+  var resourceName = 'projects/' + this.projectId;
+
+  if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
+    reqOpts.resourceNames.push(resourceName);
+  }
 
   delete reqOpts.autoPaginate;
   delete reqOpts.gaxOptions;
@@ -782,6 +787,8 @@ Logging.prototype.request = function(config, callback) {
         callback(err);
         return;
       }
+
+      self.projectId = projectId;
 
       var gaxClient = self.api[config.client];
 
