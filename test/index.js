@@ -459,6 +459,21 @@ describe('Logging', function() {
       logging.getEntries(options, assert.ifError);
     });
 
+    it('should not push the same resourceName again', function(done) {
+      var options = {
+        resourceNames: ['projects/' + logging.projectId],
+      };
+
+      logging.request = function(config) {
+        assert.deepEqual(config.reqOpts.resourceNames, [
+          'projects/' + logging.projectId,
+        ]);
+        done();
+      };
+
+      logging.getEntries(options, assert.ifError);
+    });
+
     it('should allow overriding orderBy', function(done) {
       var options = {
         orderBy: 'timestamp asc',
@@ -833,6 +848,17 @@ describe('Logging', function() {
       it('should get the project ID', function(done) {
         logging.auth.getProjectId = function() {
           done();
+        };
+
+        logging.request(CONFIG, assert.ifError);
+      });
+
+      it('should cache the project ID', function(done) {
+        logging.auth.getProjectId = function() {
+          setImmediate(function() {
+            assert.strictEqual(logging.projectId, PROJECT_ID);
+            done();
+          });
         };
 
         logging.request(CONFIG, assert.ifError);
