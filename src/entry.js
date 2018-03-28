@@ -106,6 +106,18 @@ function Entry(metadata, data) {
 
   this.metadata.insertId = this.metadata.insertId || eventId.new();
 
+  if (!this.metadata.trace && global._google_trace_agent) {
+    // Get the current fully qualified trace ID when available from the
+    // @google-cloud/trace-agent library in the LogEntry.trace field format of:
+    // "projects/[PROJECT-ID]/traces/[TRACE-ID]"
+    var traceProjectId = global._google_trace_agent.getWriterProjectId();
+    var traceId = global._google_trace_agent.getCurrentContextId();
+
+    if (traceProjectId && traceId) {
+      this.metadata.trace = `projects/${traceProjectId}/traces/${traceId}`;
+    }
+  }
+
   /**
    * @name Entry#data
    * @type {object}
