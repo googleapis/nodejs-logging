@@ -24,14 +24,14 @@ var googleAuth = require('google-auto-auth');
 var is = require('is');
 var pumpify = require('pumpify');
 var streamEvents = require('stream-events');
-var through = require('through2');
+import * as through from 'through2';
 
-var PKG = require('../package.json');
+var PKG = require('../../package.json');
 var v2 = require('./v2');
 
-var Entry = require('./entry.js');
-var Log = require('./log.js');
-var Sink = require('./sink.js');
+import {Entry} from './entry';
+import {Log} from './log';
+import {Sink} from './sink';
 
 /**
  * @namespace google
@@ -77,6 +77,55 @@ var Sink = require('./sink.js');
  *     native Promises.
  */
 
+export class Logging {
+
+  api;
+  auth;
+  options;
+  projectId;
+
+/**
+ * {@link Entry} class.
+ *
+ * @name Logging.Entry
+ * @see Entry
+ * @type {Constructor}
+ */
+Entry = Entry;
+
+/**
+ * {@link Log} class.
+ *
+ * @name Logging.Log
+ * @see Log
+ * @type {Constructor}
+ */
+Log = Log;
+
+
+/**
+ * Reference to the {@link Logging} class.
+ * @name module:@google-cloud/logging.Logging
+ * @see Logging
+ */
+/**
+ * {@link Logging} class.
+ *
+ * @name Logging.Logging
+ * @see Logging
+ * @type {Constructor}
+ */
+Logging = Logging;
+
+/**
+ * {@link Sink} class.
+ *
+ * @name Logging.Sink
+ * @see Sink
+ * @type {Constructor}
+ */
+Sink = Sink;
+
 /**
  * [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to
  * store, search, analyze, monitor, and alert on log data and events from Google
@@ -107,16 +156,16 @@ var Sink = require('./sink.js');
  * region_tag:logging_quickstart
  * Full quickstart example:
  */
-function Logging(options) {
-  if (!(this instanceof Logging)) {
-    return new Logging(options);
-  }
+constructor(options) {
+  // if (!(this instanceof Logging)) {
+  //   return new Logging(options);
+  // }
 
   options = common.util.normalizeArguments(this, options);
 
   // Determine what scopes are needed.
   // It is the union of the scopes on all three clients.
-  let scopes = [];
+  let scopes: {}[] = [];
   let clientClasses = [
     v2.ConfigServiceV2Client,
     v2.LoggingServiceV2Client,
@@ -143,6 +192,22 @@ function Logging(options) {
   this.auth = googleAuth(options_);
   this.options = options_;
   this.projectId = this.options.projectId || '{{projectId}}';
+
+
+/*! Developer Documentation
+ *
+ * These methods can be auto-paginated.
+ */
+common.paginator.extend(this, ['getEntries', 'getSinks']);
+
+/*! Developer Documentation
+ *
+ * All async methods (except for streams) will return a Promise in the event
+ * that a callback is omitted.
+ */
+common.util.promisifyAll(this, {
+  exclude: ['entry', 'log', 'request', 'sink'],
+});
 }
 
 /**
@@ -219,7 +284,7 @@ function Logging(options) {
  * region_tag:logging_create_sink
  * Another example:
  */
-Logging.prototype.createSink = function(name, config, callback) {
+createSink(name, config, callback) {
   // jscs:enable maximumLineLength
   var self = this;
 
@@ -319,7 +384,7 @@ Logging.prototype.createSink = function(name, config, callback) {
  * //   }
  * // }
  */
-Logging.prototype.entry = function(resource, data) {
+entry(resource, data) {
   return new Entry(resource, data);
 };
 
@@ -403,7 +468,7 @@ Logging.prototype.entry = function(resource, data) {
  * region_tag:logging_list_log_entries_advanced
  * Another example:
  */
-Logging.prototype.getEntries = function(options, callback) {
+getEntries(options, callback) {
   if (is.fn(options)) {
     callback = options;
     options = {};
@@ -485,7 +550,7 @@ Logging.prototype.getEntries = function(options, callback) {
  *     this.end();
  *   });
  */
-Logging.prototype.getEntriesStream = function(options) {
+getEntriesStream(options) {
   var self = this;
 
   options = options || {};
@@ -591,7 +656,7 @@ Logging.prototype.getEntriesStream = function(options) {
  * region_tag:logging_list_sinks
  * Another example:
  */
-Logging.prototype.getSinks = function(options, callback) {
+getSinks(options, callback) {
   var self = this;
 
   if (is.fn(options)) {
@@ -667,7 +732,7 @@ Logging.prototype.getSinks = function(options, callback) {
  *     this.end();
  *   });
  */
-Logging.prototype.getSinksStream = function(options) {
+getSinksStream(options) {
   var self = this;
 
   options = options || {};
@@ -730,7 +795,7 @@ Logging.prototype.getSinksStream = function(options) {
  * var logging = new Logging();
  * var log = logging.log('my-log');
  */
-Logging.prototype.log = function(name, options) {
+log(name, options) {
   return new Log(this, name, options);
 };
 
@@ -747,7 +812,7 @@ Logging.prototype.log = function(name, options) {
  * var logging = new Logging();
  * var sink = logging.sink('my-sink');
  */
-Logging.prototype.sink = function(name) {
+sink(name) {
   return new Sink(this, name);
 };
 
@@ -760,7 +825,7 @@ Logging.prototype.sink = function(name) {
  * @param {object} config.reqOpts Request options.
  * @param {function} [callback] Callback function.
  */
-Logging.prototype.request = function(config, callback) {
+request(config, callback?) {
   var self = this;
   var isStreamMode = !callback;
 
@@ -812,7 +877,7 @@ Logging.prototype.request = function(config, callback) {
   }
 
   function makeRequestCallback() {
-    if (global.GCLOUD_SANDBOX_ENV) {
+    if ((global as any).GCLOUD_SANDBOX_ENV) {
       return;
     }
 
@@ -827,7 +892,7 @@ Logging.prototype.request = function(config, callback) {
   }
 
   function makeRequestStream() {
-    if (global.GCLOUD_SANDBOX_ENV) {
+    if ((global as any).GCLOUD_SANDBOX_ENV) {
       return through.obj();
     }
 
@@ -845,6 +910,7 @@ Logging.prototype.request = function(config, callback) {
         })
         .pipe(stream);
     });
+    return;
   }
 
   return stream;
@@ -858,7 +924,7 @@ Logging.prototype.request = function(config, callback) {
  *
  * @private
  */
-Logging.prototype.setAclForBucket_ = function(name, config, callback) {
+setAclForBucket_(name, config, callback) {
   var self = this;
   var bucket = config.destination;
 
@@ -883,7 +949,7 @@ Logging.prototype.setAclForBucket_ = function(name, config, callback) {
  *
  * @private
  */
-Logging.prototype.setAclForDataset_ = function(name, config, callback) {
+setAclForDataset_(name, config, callback) {
   var self = this;
   var dataset = config.destination;
 
@@ -930,7 +996,7 @@ Logging.prototype.setAclForDataset_ = function(name, config, callback) {
  *
  * @private
  */
-Logging.prototype.setAclForTopic_ = function(name, config, callback) {
+setAclForTopic_(name, config, callback) {
   var self = this;
   var topic = config.destination;
 
@@ -962,62 +1028,7 @@ Logging.prototype.setAclForTopic_ = function(name, config, callback) {
     });
   });
 };
-
-/*! Developer Documentation
- *
- * These methods can be auto-paginated.
- */
-common.paginator.extend(Logging, ['getEntries', 'getSinks']);
-
-/*! Developer Documentation
- *
- * All async methods (except for streams) will return a Promise in the event
- * that a callback is omitted.
- */
-common.util.promisifyAll(Logging, {
-  exclude: ['entry', 'log', 'request', 'sink'],
-});
-
-/**
- * {@link Entry} class.
- *
- * @name Logging.Entry
- * @see Entry
- * @type {Constructor}
- */
-Logging.Entry = Entry;
-
-/**
- * {@link Log} class.
- *
- * @name Logging.Log
- * @see Log
- * @type {Constructor}
- */
-Logging.Log = Log;
-
-/**
- * Reference to the {@link Logging} class.
- * @name module:@google-cloud/logging.Logging
- * @see Logging
- */
-/**
- * {@link Logging} class.
- *
- * @name Logging.Logging
- * @see Logging
- * @type {Constructor}
- */
-Logging.Logging = Logging;
-
-/**
- * {@link Sink} class.
- *
- * @name Logging.Sink
- * @see Sink
- * @type {Constructor}
- */
-Logging.Sink = Sink;
+}
 
 /**
  * The default export of the `@google-cloud/logging` package is the
@@ -1048,7 +1059,6 @@ Logging.Sink = Sink;
  * region_tag:logging_quickstart
  * Full quickstart example:
  */
-module.exports = Logging;
 
 /**
  * Reference to the low-level auto-generated clients for the V2 Logging service.
@@ -1061,4 +1071,4 @@ module.exports = Logging;
  * @property {constructor} MetricsServiceV2Client
  *   Reference to {@link v2.MetricsServiceV2Client}
  */
-module.exports.v2 = v2;
+export {v2};

@@ -16,9 +16,9 @@
 
 'use strict';
 
-var assert = require('assert');
-var extend = require('extend');
-var proxyquire = require('proxyquire');
+import * as assert from 'assert';
+import * as extend from 'extend';
+import * as proxyquire from 'proxyquire';
 
 var instanceOverride;
 var fakeGcpMetadata = {
@@ -51,9 +51,9 @@ describe('metadata', function() {
   var ENV_CACHED = extend({}, process.env);
 
   before(function() {
-    Metadata = proxyquire('../src/metadata.js', {
+    Metadata = proxyquire('../src/metadata', {
       'gcp-metadata': fakeGcpMetadata,
-    });
+    }).Metadata;
 
     MetadataCached = extend({}, Metadata);
   });

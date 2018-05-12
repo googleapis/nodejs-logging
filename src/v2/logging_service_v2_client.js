@@ -20,7 +20,7 @@ const merge = require('lodash.merge');
 const path = require('path');
 const protobuf = require('protobufjs');
 
-const VERSION = require('../../package.json').version;
+const VERSION = require('../../../package.json').version;
 
 /**
  * Service for ingesting and querying logs.
@@ -92,7 +92,7 @@ class LoggingServiceV2Client {
     var protos = merge(
       {},
       gaxGrpc.loadProto(
-        path.join(__dirname, '..', '..', 'protos'),
+        path.join(__dirname, '..', '..', '..', 'protos'),
         'google/logging/v2/logging.proto'
       )
     );
@@ -129,6 +129,7 @@ class LoggingServiceV2Client {
     protoFilesRoot = protobuf.loadSync(
       path.join(
         __dirname,
+        '..',
         '..',
         '..',
         'protos',
