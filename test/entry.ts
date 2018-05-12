@@ -16,7 +16,7 @@
 
 'use strict';
 
-var assert = require('assert');
+import * as assert from 'assert';
 var extend = require('extend');
 var GrpcService = require('@google-cloud/common').GrpcService;
 var proxyquire = require('proxyquire');
@@ -39,12 +39,12 @@ describe('Entry', function() {
   var DATA = {};
 
   before(function() {
-    Entry = proxyquire('../src/entry.js', {
+    Entry = proxyquire('../src/entry', {
       '@google-cloud/common-grpc': {
         Service: FakeGrpcService,
       },
       eventid: FakeEventId,
-    });
+    }).Entry;
   });
 
   beforeEach(function() {
@@ -118,7 +118,7 @@ describe('Entry', function() {
       var seconds = date.getTime() / 1000;
       var secondsRounded = Math.floor(seconds);
 
-      FakeGrpcService.structToObj_ = function(data) {
+      (FakeGrpcService as any).structToObj_ = function(data) {
         return data;
       };
 
@@ -171,7 +171,7 @@ describe('Entry', function() {
 
   describe('toJSON', function() {
     beforeEach(function() {
-      FakeGrpcService.objToStruct_ = util.noop;
+      (FakeGrpcService as any).objToStruct_ = util.noop;
     });
 
     it('should not modify the original instance', function() {
@@ -185,7 +185,7 @@ describe('Entry', function() {
       var input = {};
       var converted = {};
 
-      FakeGrpcService.objToStruct_ = function(obj, options) {
+      (FakeGrpcService as any).objToStruct_ = function(obj, options) {
         assert.strictEqual(obj, input);
         assert.deepEqual(options, {
           removeCircular: false,
@@ -200,7 +200,7 @@ describe('Entry', function() {
     });
 
     it('should pass removeCircular to objToStruct_', function(done) {
-      FakeGrpcService.objToStruct_ = function(obj, options) {
+      (FakeGrpcService as any).objToStruct_ = function(obj, options) {
         assert.strictEqual(options.removeCircular, true);
         done();
       };

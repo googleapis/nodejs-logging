@@ -16,16 +16,16 @@
 
 'use strict';
 
-var arrify = require('arrify');
-var assert = require('assert');
-var extend = require('extend');
-var proxyquire = require('proxyquire');
-var through = require('through2');
-var util = require('@google-cloud/common').util;
+import * as arrify from 'arrify';
+import * as assert from 'assert';
+import * as extend from 'extend';
+import * as proxyquire from 'proxyquire';
+import * as through from 'through2';
+import {util} from '@google-cloud/common';
 
 var v2 = require('../src/v2');
 
-var PKG = require('../package.json');
+var PKG = require('../../package.json');
 
 var extended = false;
 var fakePaginator = {
@@ -83,7 +83,7 @@ function FakeEntry() {
   this.calledWith_ = arguments;
 }
 
-FakeEntry.fromApiResponse_ = function() {
+(FakeEntry as any).fromApiResponse_ = function() {
   return arguments;
 };
 
@@ -102,17 +102,17 @@ describe('Logging', function() {
   var PROJECT_ID = 'project-id';
 
   before(function() {
-    Logging = proxyquire('../', {
+    Logging = proxyquire('../src', {
       '@google-cloud/common': {
         paginator: fakePaginator,
         util: fakeUtil,
       },
       'google-auto-auth': fakeGoogleAutoAuth,
-      './log.js': FakeLog,
-      './entry.js': FakeEntry,
-      './sink.js': FakeSink,
+      './log': { Log: FakeLog },
+      './entry': { Entry: FakeEntry },
+      './sink': { Sink: FakeSink },
       './v2': fakeV2,
-    });
+    }).Logging;
   });
 
   beforeEach(function() {
@@ -128,7 +128,7 @@ describe('Logging', function() {
   });
 
   describe('instantiation', function() {
-    let EXPECTED_SCOPES = [];
+    let EXPECTED_SCOPES: {}[] = [];
     let clientClasses = [
       v2.ConfigServiceV2Client,
       v2.LoggingServiceV2Client,
@@ -544,7 +544,7 @@ describe('Logging', function() {
           assert.ifError(err);
 
           var argsPassedToFromApiResponse_ = entries[0];
-          assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS[1][0]);
+          assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS![1]![0]);
 
           done();
         });
@@ -712,7 +712,7 @@ describe('Logging', function() {
         var sinkInstance = {};
 
         logging.sink = function(name) {
-          assert.strictEqual(name, ARGS[1][0].name);
+          assert.strictEqual(name, ARGS[1]![0].name);
           return sinkInstance;
         };
 
@@ -720,7 +720,7 @@ describe('Logging', function() {
           assert.ifError(err);
 
           assert.strictEqual(sinks[0], sinkInstance);
-          assert.strictEqual(sinks[0].metadata, ARGS[1][0]);
+          assert.strictEqual(sinks[0].metadata, ARGS[1]![0]);
 
           done();
         });
@@ -934,9 +934,9 @@ describe('Logging', function() {
           done(new Error('Should not have gotten project ID.'));
         };
 
-        global.GCLOUD_SANDBOX_ENV = true;
+        (global as any).GCLOUD_SANDBOX_ENV = true;
         var returnValue = logging.request(CONFIG, assert.ifError);
-        delete global.GCLOUD_SANDBOX_ENV;
+        delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert.strictEqual(returnValue, undefined);
         done();
@@ -1002,10 +1002,10 @@ describe('Logging', function() {
           done(new Error('Should not have gotten project ID.'));
         };
 
-        global.GCLOUD_SANDBOX_ENV = true;
+        (global as any).GCLOUD_SANDBOX_ENV = true;
         var returnValue = logging.request(CONFIG);
         returnValue.emit('reading');
-        delete global.GCLOUD_SANDBOX_ENV;
+        delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert(returnValue instanceof require('stream'));
         done();

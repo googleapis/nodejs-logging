@@ -16,7 +16,11 @@
 
 'use strict';
 
-var gcpMetadata = require('gcp-metadata');
+import * as gcpMetadata from 'gcp-metadata';
+
+export class Metadata {
+
+  logging;
 
 /**
  * The Metadata class attempts to contact the metadata service and determine,
@@ -30,7 +34,7 @@ var gcpMetadata = require('gcp-metadata');
  *
  * @param {Logging} logging The parent Logging instance.
  */
-function Metadata(logging) {
+constructor(logging) {
   this.logging = logging;
 }
 
@@ -39,7 +43,7 @@ function Metadata(logging) {
  *
  * @returns {object}
  */
-Metadata.getCloudFunctionDescriptor = function() {
+static getCloudFunctionDescriptor() {
   return {
     type: 'cloud_function',
     labels: {
@@ -54,7 +58,7 @@ Metadata.getCloudFunctionDescriptor = function() {
  *
  * @returns {object}
  */
-Metadata.getGAEDescriptor = function() {
+static getGAEDescriptor() {
   return {
     type: 'gae_app',
     labels: {
@@ -70,7 +74,7 @@ Metadata.getGAEDescriptor = function() {
  * @param {function} callback Callback function.
  * @return {object}
  */
-Metadata.getGCEDescriptor = function(callback) {
+static getGCEDescriptor(callback) {
   gcpMetadata
     .instance('id')
     .then(function(resp) {
@@ -90,7 +94,7 @@ Metadata.getGCEDescriptor = function(callback) {
  * @param {function} callback Callback function.
  * @return {object}
  */
-Metadata.getGKEDescriptor = function(callback) {
+static getGKEDescriptor(callback) {
   gcpMetadata
     .instance('attributes/cluster-name')
     .then(function(resp) {
@@ -111,7 +115,7 @@ Metadata.getGKEDescriptor = function(callback) {
  *
  * @returns {object}
  */
-Metadata.getGlobalDescriptor = function() {
+static getGlobalDescriptor() {
   return {
     type: 'global',
   };
@@ -122,7 +126,7 @@ Metadata.getGlobalDescriptor = function() {
  *
  * @param {function} callback Callback function.
  */
-Metadata.prototype.getDefaultResource = function(callback) {
+getDefaultResource(callback) {
   this.logging.auth.getEnvironment(function(err, env) {
     if (env.IS_CONTAINER_ENGINE) {
       Metadata.getGKEDescriptor(callback);
@@ -138,6 +142,5 @@ Metadata.prototype.getDefaultResource = function(callback) {
       callback(null, Metadata.getGlobalDescriptor());
     }
   });
-};
-
-module.exports = Metadata;
+}
+}
