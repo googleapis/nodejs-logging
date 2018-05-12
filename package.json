@@ -50,16 +50,23 @@
     "greenkeeper[bot] <greenkeeper[bot]@users.noreply.github.com>"
   ],
   "scripts": {
-    "cover": "nyc --reporter=lcov mocha --require intelli-espower-loader test/*.js && nyc report",
-    "test-no-cover": "repo-tools test run --cmd mocha -- test/*.js --no-timeouts",
+    "cover": "nyc --reporter=lcov mocha --require intelli-espower-loader --require source-map-support/register build/test && nyc report",
+    "test-no-cover": "repo-tools test run --cmd mocha -- build/test",
     "test": "repo-tools test run --cmd npm -- run cover",
     "docs": "repo-tools exec -- jsdoc -c .jsdoc.js",
     "prettier": "repo-tools exec -- prettier --write src/*.js src/**/*.js test/*.js test/**/*.js samples/*.js samples/**/*.js system-test/*.js system-test/**/*.js",
     "publish-module": "node ../../scripts/publish.js logging",
-    "system-test": "repo-tools test run --cmd mocha -- system-test/*.js --no-timeouts",
+    "system-test": "repo-tools test run --cmd mocha -- build/system-test --no-timeouts",
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
-    "lint": "repo-tools lint --cmd eslint -- src/ samples/ system-test/ test/"
+    "lint": "repo-tools lint --cmd eslint -- src/ samples/ system-test/ test/",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p . && cp src/v2/*.json build/src/v2",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
   },
   "dependencies": {
     "@google-cloud/common": "^0.17.0",
@@ -85,12 +92,21 @@
     "@google-cloud/nodejs-repo-tools": "^2.2.3",
     "@google-cloud/pubsub": "*",
     "@google-cloud/storage": "*",
+    "@types/arrify": "^1.0.4",
+    "@types/extend": "^3.0.0",
+    "@types/is": "0.0.20",
+    "@types/mocha": "^5.2.0",
+    "@types/node": "^6.0.110",
+    "@types/proxyquire": "^1.3.28",
+    "@types/pumpify": "^1.4.1",
+    "@types/through2": "^2.0.33",
     "async": "^2.5.0",
     "codecov": "^3.0.0",
     "eslint": "^4.7.2",
     "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-node": "^6.0.0",
     "eslint-plugin-prettier": "^2.3.1",
+    "gts": "^0.5.4",
     "ink-docstrap": "git+https://github.com/docstrap/docstrap.git",
     "intelli-espower-loader": "^1.0.1",
     "jsdoc": "^3.5.5",
@@ -101,6 +117,8 @@
     "prettier": "^1.7.2",
     "propprop": "^0.3.0",
     "proxyquire": "^2.0.0",
+    "source-map-support": "^0.5.5",
+    "typescript": "^2.8.3",
     "uuid": "^3.0.1"
   }
 }

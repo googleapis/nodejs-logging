@@ -17,8 +17,14 @@
 'use strict';
 
 var common = require('@google-cloud/common');
-var extend = require('extend');
+import * as extend from 'extend';
 var is = require('is');
+
+export class Sink {
+  logging;
+  name;
+  formattedName_;
+  metadata;
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
@@ -39,7 +45,7 @@ var is = require('is');
  * var logging = new Logging();
  * var sink = logging.sink('my-sink');
  */
-function Sink(logging, name) {
+constructor(logging, name) {
   this.logging = logging;
   /**
    * @name Sink#name
@@ -87,7 +93,7 @@ function Sink(logging, name) {
  * region_tag:logging_create_sink
  * Another example:
  */
-Sink.prototype.create = function(config, callback) {
+create(config, callback) {
   this.logging.createSink(this.name, config, callback);
 };
 
@@ -132,7 +138,7 @@ Sink.prototype.create = function(config, callback) {
  * region_tag:logging_delete_sink
  * Another example:
  */
-Sink.prototype.delete = function(gaxOptions, callback) {
+delete(gaxOptions, callback) {
   if (is.fn(gaxOptions)) {
     callback = gaxOptions;
     gaxOptions = {};
@@ -194,7 +200,7 @@ Sink.prototype.delete = function(gaxOptions, callback) {
  * region_tag:logging_get_sink
  * Another example:
  */
-Sink.prototype.getMetadata = function(gaxOptions, callback) {
+getMetadata(gaxOptions, callback?) {
   var self = this;
 
   if (is.fn(gaxOptions)) {
@@ -259,7 +265,7 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
  *   var apiResponse = data[0];
  * });
  */
-Sink.prototype.setFilter = function(filter, callback) {
+setFilter(filter, callback) {
   this.setMetadata(
     {
       filter: filter,
@@ -312,7 +318,7 @@ Sink.prototype.setFilter = function(filter, callback) {
  * region_tag:logging_update_sink
  * Another example:
  */
-Sink.prototype.setMetadata = function(metadata, callback) {
+setMetadata(metadata, callback) {
   var self = this;
 
   callback = callback || common.util.noop;
@@ -347,6 +353,7 @@ Sink.prototype.setMetadata = function(metadata, callback) {
     );
   });
 };
+}
 
 /*! Developer Documentation
  *
@@ -354,10 +361,3 @@ Sink.prototype.setMetadata = function(metadata, callback) {
  * that a callback is omitted.
  */
 common.util.promisifyAll(Sink);
-
-/**
- * Reference to the {@link Sink} class.
- * @name module:@google-cloud/logging.Sink
- * @see Sink
- */
-module.exports = Sink;

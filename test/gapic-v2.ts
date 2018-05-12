@@ -14,13 +14,13 @@
 
 'use strict';
 
-const assert = require('assert');
+import * as assert from 'assert';
 
 const loggingModule = require('../src');
 
 var FAKE_STATUS_CODE = 1;
 var error = new Error();
-error.code = FAKE_STATUS_CODE;
+(error as any).code = FAKE_STATUS_CODE;
 
 describe('LoggingServiceV2Client', () => {
   describe('deleteLog', () => {
@@ -1295,7 +1295,7 @@ describe('MetricsServiceV2Client', () => {
   });
 });
 
-function mockSimpleGrpcMethod(expectedRequest, response, error) {
+function mockSimpleGrpcMethod(expectedRequest, response?, error?) {
   return function(actualRequest, options, callback) {
     assert.deepStrictEqual(actualRequest, expectedRequest);
     if (error) {

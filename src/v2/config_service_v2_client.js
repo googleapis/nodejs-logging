@@ -19,7 +19,7 @@ const gax = require('google-gax');
 const merge = require('lodash.merge');
 const path = require('path');
 
-const VERSION = require('../../package.json').version;
+const VERSION = require('../../../package.json').version;
 
 /**
  * Service for configuring sinks used to export log entries outside of
@@ -92,7 +92,7 @@ class ConfigServiceV2Client {
     var protos = merge(
       {},
       gaxGrpc.loadProto(
-        path.join(__dirname, '..', '..', 'protos'),
+        path.join(__dirname, '..', '..', '..', 'protos'),
         'google/logging/v2/logging_config.proto'
       )
     );

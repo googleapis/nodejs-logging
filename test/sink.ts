@@ -16,7 +16,7 @@
 
 'use strict';
 
-var assert = require('assert');
+import * as assert from 'assert';
 var extend = require('extend');
 var proxyquire = require('proxyquire');
 var util = require('@google-cloud/common').util;
@@ -41,11 +41,11 @@ describe('Sink', function() {
   var SINK_NAME = 'sink-name';
 
   before(function() {
-    Sink = proxyquire('../src/sink.js', {
+    Sink = proxyquire('../src/sink', {
       '@google-cloud/common': {
         util: fakeUtil,
       },
-    });
+    }).Sink;
   });
 
   beforeEach(function() {
