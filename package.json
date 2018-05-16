@@ -56,7 +56,7 @@
     "docs": "repo-tools exec -- jsdoc -c .jsdoc.js",
     "prettier": "repo-tools exec -- prettier --write src/*.js src/**/*.js test/*.js test/**/*.js samples/*.js samples/**/*.js system-test/*.js system-test/**/*.js",
     "publish-module": "node ../../scripts/publish.js logging",
-    "system-test": "repo-tools test run --cmd mocha -- system-test/*.js --no-timeouts",
+    "system-test": "repo-tools test run --cmd mocha -- system-test/*.js --timeout 600000",
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
     "lint": "repo-tools lint --cmd eslint -- src/ samples/ system-test/ test/"
