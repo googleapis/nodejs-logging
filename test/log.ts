@@ -34,7 +34,7 @@ var fakeUtil = extend({}, util, {
   },
 });
 
-var Entry = require('../src/entry.js');
+import {Entry} from '../src/entry';
 
 function FakeMetadata() {
   this.calledWith_ = arguments;
@@ -56,16 +56,16 @@ describe('Log', function() {
 
   var LOGGING;
 
-  var assignSeverityToEntriesOverride = null;
+  var assignSeverityToEntriesOverride: any = null;
 
   before(function() {
-    Log = proxyquire('../src/log.js', {
+    Log = proxyquire('../src/log', {
       '@google-cloud/common': {
         util: fakeUtil,
       },
-      './entry.js': Entry,
-      './metadata.js': FakeMetadata,
-    });
+      './entry': Entry,
+      './metadata': FakeMetadata,
+    }).Log;
     var assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = function() {
       return (
@@ -134,7 +134,7 @@ describe('Log', function() {
   });
 
   describe('assignSeverityToEntries_', function() {
-    var circular = {};
+    var circular: any = {};
     circular.circular = circular;
 
     var ENTRIES = [{data: {a: 'b'}}, {data: {c: 'd'}}, {data: {e: circular}}];

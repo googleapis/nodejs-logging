@@ -16,7 +16,7 @@
 
 'use strict';
 
-var assert = require('assert');
+import * as assert from 'assert';
 var async = require('async');
 var bigqueryLibrary = require('@google-cloud/bigquery');
 var exec = require('methmeth');
