@@ -19,7 +19,6 @@
 var arrify = require('arrify');
 var common = require('@google-cloud/common');
 var extend = require('extend');
-var format = require('string-format-obj');
 var googleAuth = require('google-auto-auth');
 var is = require('is');
 var pumpify = require('pumpify');
@@ -910,12 +909,10 @@ Logging.prototype.setAclForDataset_ = function(name, config, callback) {
           return;
         }
 
-        config.destination = format('{baseUrl}/projects/{pId}/datasets/{dId}', {
-          baseUrl: 'bigquery.googleapis.com',
-          pId: dataset.parent.projectId,
-          dId: dataset.id,
-        });
-
+        const baseUrl = 'bigquery.googleapis.com';
+        const pId = dataset.parent.projectId;
+        const dId = dataset.id;
+        config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
         self.createSink(name, config, callback);
       }
     );
@@ -953,11 +950,9 @@ Logging.prototype.setAclForTopic_ = function(name, config, callback) {
         return;
       }
 
-      config.destination = format('{baseUrl}/{topicName}', {
-        baseUrl: 'pubsub.googleapis.com',
-        topicName: topic.name,
-      });
-
+      const baseUrl = 'pubsub.googleapis.com';
+      const topicName = topic.name;
+      config.destination = `${baseUrl}/${topicName}`;
       self.createSink(name, config, callback);
     });
   });

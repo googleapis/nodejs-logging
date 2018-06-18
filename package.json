@@ -77,7 +77,6 @@
     "pumpify": "^1.5.1",
     "snakecase-keys": "^1.1.1",
     "stream-events": "^1.0.4",
-    "string-format-obj": "^1.1.1",
     "through2": "^2.0.3"
   },
   "devDependencies": {
