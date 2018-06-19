@@ -1,10 +1,10 @@
-// Copyright 2017, Google Inc. All rights reserved.
+// Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,28 +32,28 @@ class ConfigServiceV2Client {
   /**
    * Construct an instance of ConfigServiceV2Client.
    *
-   * @param {object=} options - The configuration object. See the subsequent
+   * @param {object} [options] - The configuration object. See the subsequent
    *   parameters for more details.
-   * @param {object=} options.credentials - Credentials object.
-   * @param {string=} options.credentials.client_email
-   * @param {string=} options.credentials.private_key
-   * @param {string=} options.email - Account email address. Required when
-   *   usaing a .pem or .p12 keyFilename.
-   * @param {string=} options.keyFilename - Full path to the a .json, .pem, or
+   * @param {object} [options.credentials] - Credentials object.
+   * @param {string} [options.credentials.client_email]
+   * @param {string} [options.credentials.private_key]
+   * @param {string} [options.email] - Account email address. Required when
+   *     using a .pem or .p12 keyFilename.
+   * @param {string} [options.keyFilename] - Full path to the a .json, .pem, or
    *     .p12 key downloaded from the Google Developers Console. If you provide
-   *     a path to a JSON file, the projectId option above is not necessary.
+   *     a path to a JSON file, the projectId option below is not necessary.
    *     NOTE: .pem and .p12 require you to specify options.email as well.
-   * @param {number=} options.port - The port on which to connect to
+   * @param {number} [options.port] - The port on which to connect to
    *     the remote host.
-   * @param {string=} options.projectId - The project ID from the Google
+   * @param {string} [options.projectId] - The project ID from the Google
    *     Developer's Console, e.g. 'grape-spaceship-123'. We will also check
    *     the environment variable GCLOUD_PROJECT for your project ID. If your
    *     app is running in an environment which supports
    *     {@link https://developers.google.com/identity/protocols/application-default-credentials Application Default Credentials},
    *     your project ID will be detected automatically.
-   * @param {function=} options.promise - Custom promise module to use instead
+   * @param {function} [options.promise] - Custom promise module to use instead
    *     of native Promises.
-   * @param {string=} options.servicePath - The domain name of the
+   * @param {string} [options.servicePath] - The domain name of the
    *     API remote host.
    */
   constructor(opts) {
@@ -79,7 +79,7 @@ class ConfigServiceV2Client {
 
     // Determine the client header string.
     var clientHeader = [
-      `gl-node/${process.version.node}`,
+      `gl-node/${process.version}`,
       `grpc/${gaxGrpc.grpcVersion}`,
       `gax/${gax.version}`,
       `gapic/${VERSION}`,
@@ -222,16 +222,16 @@ class ConfigServiceV2Client {
    *       "organizations/[ORGANIZATION_ID]"
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Array, ?Object, ?Object)=} callback
+   * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [LogSink]{@link google.logging.v2.LogSink}.
@@ -331,13 +331,13 @@ class ConfigServiceV2Client {
    *       "organizations/[ORGANIZATION_ID]"
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
@@ -383,10 +383,10 @@ class ConfigServiceV2Client {
    *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
    *
    *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [LogSink]{@link google.logging.v2.LogSink}.
@@ -424,8 +424,7 @@ class ConfigServiceV2Client {
 
   /**
    * Creates a sink that exports specified log entries to a destination.  The
-   * export of newly-ingested log entries begins immediately, unless the current
-   * time is outside the sink's start and end times or the sink's
+   * export of newly-ingested log entries begins immediately, unless the sink's
    * `writer_identity` is not permitted to write to the destination.  A sink can
    * export log entries only from the resource owning the sink.
    *
@@ -445,7 +444,7 @@ class ConfigServiceV2Client {
    *   is not already in use.
    *
    *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
-   * @param {boolean=} request.uniqueWriterIdentity
+   * @param {boolean} [request.uniqueWriterIdentity]
    *   Optional. Determines the kind of IAM identity returned as `writer_identity`
    *   in the new sink.  If this value is omitted or set to false, and if the
    *   sink's parent is a project, then the value returned as `writer_identity` is
@@ -457,10 +456,10 @@ class ConfigServiceV2Client {
    *   resource such as an organization, then the value of `writer_identity` will
    *   be a unique service account used only for exports from the new sink.  For
    *   more information, see `writer_identity` in LogSink.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [LogSink]{@link google.logging.v2.LogSink}.
@@ -503,8 +502,7 @@ class ConfigServiceV2Client {
 
   /**
    * Updates a sink.  This method replaces the following fields in the existing
-   * sink with values from the new sink: `destination`, `filter`,
-   * `output_version_format`, `start_time`, and `end_time`.
+   * sink with values from the new sink: `destination`, and `filter`.
    * The updated sink might also have a new `writer_identity`; see the
    * `unique_writer_identity` field.
    *
@@ -525,7 +523,7 @@ class ConfigServiceV2Client {
    *   as part of `sink_name`.
    *
    *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
-   * @param {boolean=} request.uniqueWriterIdentity
+   * @param {boolean} [request.uniqueWriterIdentity]
    *   Optional. See
    *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
    *   for a description of this field.  When updating a sink, the effect of this
@@ -538,10 +536,27 @@ class ConfigServiceV2Client {
    *       `writer_identity` is changed to a unique service account.
    *   +   It is an error if the old value is true and the new value is
    *       set to false or defaulted to false.
-   * @param {Object=} options
+   * @param {Object} [request.updateMask]
+   *   Optional. Field mask that specifies the fields in `sink` that need
+   *   an update. A sink field will be overwritten if, and only if, it is
+   *   in the update mask.  `name` and output only fields cannot be updated.
+   *
+   *   An empty updateMask is temporarily treated as using the following mask
+   *   for backwards compatibility purposes:
+   *     destination,filter,includeChildren
+   *   At some point in the future, behavior will be removed and specifying an
+   *   empty updateMask will be an error.
+   *
+   *   For a detailed `FieldMask` definition, see
+   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
+   *
+   *   Example: `updateMask=filter`.
+   *
+   *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [LogSink]{@link google.logging.v2.LogSink}.
@@ -598,10 +613,10 @@ class ConfigServiceV2Client {
    *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
    *
    *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error)=} callback
+   * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
    *   The promise has a method named "cancel" which cancels the ongoing API call.
@@ -641,16 +656,16 @@ class ConfigServiceV2Client {
    *       "organizations/[ORGANIZATION_ID]"
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Array, ?Object, ?Object)=} callback
+   * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [LogExclusion]{@link google.logging.v2.LogExclusion}.
@@ -750,13 +765,13 @@ class ConfigServiceV2Client {
    *       "organizations/[ORGANIZATION_ID]"
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
@@ -802,10 +817,10 @@ class ConfigServiceV2Client {
    *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
    *
    *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
@@ -862,10 +877,10 @@ class ConfigServiceV2Client {
    *   that is not already used in the parent resource.
    *
    *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
@@ -935,10 +950,10 @@ class ConfigServiceV2Client {
    *   specify an `update_mask` of `"filter,description"`.
    *
    *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
@@ -995,10 +1010,10 @@ class ConfigServiceV2Client {
    *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
    *
    *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error)=} callback
+   * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
    *   The promise has a method named "cancel" which cancels the ongoing API call.
