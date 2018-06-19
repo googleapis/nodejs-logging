@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@google-cloud/common": "^0.17.0",
-    "@google-cloud/common-grpc": "^0.6.1",
+    "@google-cloud/common-grpc": "^0.7.1",
     "arrify": "^1.0.1",
     "eventid": "^0.1.2",
     "extend": "^3.0.1",
