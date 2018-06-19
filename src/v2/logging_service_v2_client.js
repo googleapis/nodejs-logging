@@ -1,10 +1,10 @@
-// Copyright 2017, Google Inc. All rights reserved.
+// Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,28 +32,28 @@ class LoggingServiceV2Client {
   /**
    * Construct an instance of LoggingServiceV2Client.
    *
-   * @param {object=} options - The configuration object. See the subsequent
+   * @param {object} [options] - The configuration object. See the subsequent
    *   parameters for more details.
-   * @param {object=} options.credentials - Credentials object.
-   * @param {string=} options.credentials.client_email
-   * @param {string=} options.credentials.private_key
-   * @param {string=} options.email - Account email address. Required when
-   *   usaing a .pem or .p12 keyFilename.
-   * @param {string=} options.keyFilename - Full path to the a .json, .pem, or
+   * @param {object} [options.credentials] - Credentials object.
+   * @param {string} [options.credentials.client_email]
+   * @param {string} [options.credentials.private_key]
+   * @param {string} [options.email] - Account email address. Required when
+   *     using a .pem or .p12 keyFilename.
+   * @param {string} [options.keyFilename] - Full path to the a .json, .pem, or
    *     .p12 key downloaded from the Google Developers Console. If you provide
-   *     a path to a JSON file, the projectId option above is not necessary.
+   *     a path to a JSON file, the projectId option below is not necessary.
    *     NOTE: .pem and .p12 require you to specify options.email as well.
-   * @param {number=} options.port - The port on which to connect to
+   * @param {number} [options.port] - The port on which to connect to
    *     the remote host.
-   * @param {string=} options.projectId - The project ID from the Google
+   * @param {string} [options.projectId] - The project ID from the Google
    *     Developer's Console, e.g. 'grape-spaceship-123'. We will also check
    *     the environment variable GCLOUD_PROJECT for your project ID. If your
    *     app is running in an environment which supports
    *     {@link https://developers.google.com/identity/protocols/application-default-credentials Application Default Credentials},
    *     your project ID will be detected automatically.
-   * @param {function=} options.promise - Custom promise module to use instead
+   * @param {function} [options.promise] - Custom promise module to use instead
    *     of native Promises.
-   * @param {string=} options.servicePath - The domain name of the
+   * @param {string} [options.servicePath] - The domain name of the
    *     API remote host.
    */
   constructor(opts) {
@@ -79,7 +79,7 @@ class LoggingServiceV2Client {
 
     // Determine the client header string.
     var clientHeader = [
-      `gl-node/${process.version.node}`,
+      `gl-node/${process.version}`,
       `grpc/${gaxGrpc.grpcVersion}`,
       `gax/${gax.version}`,
       `gapic/${VERSION}`,
@@ -257,10 +257,10 @@ class LoggingServiceV2Client {
    *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
    *   For more information about log names, see
    *   LogEntry.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error)=} callback
+   * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
    *   The promise has a method named "cancel" which cancels the ongoing API call.
@@ -323,7 +323,7 @@ class LoggingServiceV2Client {
    *   rather than calling this method for each individual log entry.
    *
    *   This object should have the same structure as [LogEntry]{@link google.logging.v2.LogEntry}
-   * @param {string=} request.logName
+   * @param {string} [request.logName]
    *   Optional. A default log resource name that is assigned to all log entries
    *   in `entries` that do not specify a value for `log_name`:
    *
@@ -337,7 +337,7 @@ class LoggingServiceV2Client {
    *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
    *   For more information about log names, see
    *   LogEntry.
-   * @param {Object=} request.resource
+   * @param {Object} [request.resource]
    *   Optional. A default monitored resource object that is assigned to all log
    *   entries in `entries` that do not specify a value for `resource`. Example:
    *
@@ -348,21 +348,21 @@ class LoggingServiceV2Client {
    *   See LogEntry.
    *
    *   This object should have the same structure as [MonitoredResource]{@link google.api.MonitoredResource}
-   * @param {Object.<string, string>=} request.labels
+   * @param {Object.<string, string>} [request.labels]
    *   Optional. Default labels that are added to the `labels` field of all log
    *   entries in `entries`. If a log entry already has a label with the same key
    *   as a label in this parameter, then the log entry's label is not changed.
    *   See LogEntry.
-   * @param {boolean=} request.partialSuccess
+   * @param {boolean} [request.partialSuccess]
    *   Optional. Whether valid entries should be written even if some other
    *   entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
    *   entry is not written, then the response status is the error associated
    *   with one of the failed entries and the response includes error details
    *   keyed by the entries' zero-based index in the `entries.write` method.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Object)=} callback
+   * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
@@ -415,13 +415,13 @@ class LoggingServiceV2Client {
    *       "folders/[FOLDER_ID]"
    *
    *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string[]} request.projectIds
+   * @param {string[]} [request.projectIds]
    *   Deprecated. Use `resource_names` instead.  One or more project identifiers
    *   or project numbers from which to retrieve log entries.  Example:
    *   `"my-project-1A"`. If present, these project identifiers are converted to
    *   resource name format and added to the list of resources in
    *   `resource_names`.
-   * @param {string=} request.filter
+   * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
    *   Logs Filters](https://cloud.google.com/logging/docs/view/advanced_filters).  Only log entries that
    *   match the filter are returned.  An empty filter matches all log entries in
@@ -429,23 +429,23 @@ class LoggingServiceV2Client {
    *   that is not listed in `resource_names` will cause the filter to return no
    *   results.
    *   The maximum length of the filter is 20000 characters.
-   * @param {string=} request.orderBy
+   * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
    *   option returns entries in order of increasing values of
    *   `LogEntry.timestamp` (oldest first), and the second option returns entries
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Array, ?Object, ?Object)=} callback
+   * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [LogEntry]{@link google.logging.v2.LogEntry}.
@@ -548,13 +548,13 @@ class LoggingServiceV2Client {
    *       "folders/[FOLDER_ID]"
    *
    *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string[]} request.projectIds
+   * @param {string[]} [request.projectIds]
    *   Deprecated. Use `resource_names` instead.  One or more project identifiers
    *   or project numbers from which to retrieve log entries.  Example:
    *   `"my-project-1A"`. If present, these project identifiers are converted to
    *   resource name format and added to the list of resources in
    *   `resource_names`.
-   * @param {string=} request.filter
+   * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
    *   Logs Filters](https://cloud.google.com/logging/docs/view/advanced_filters).  Only log entries that
    *   match the filter are returned.  An empty filter matches all log entries in
@@ -562,20 +562,20 @@ class LoggingServiceV2Client {
    *   that is not listed in `resource_names` will cause the filter to return no
    *   results.
    *   The maximum length of the filter is 20000 characters.
-   * @param {string=} request.orderBy
+   * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
    *   option returns entries in order of increasing values of
    *   `LogEntry.timestamp` (oldest first), and the second option returns entries
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
@@ -613,16 +613,16 @@ class LoggingServiceV2Client {
    *
    * @param {Object} request
    *   The request object that will be sent.
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Array, ?Object, ?Object)=} callback
+   * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}.
@@ -715,13 +715,13 @@ class LoggingServiceV2Client {
    *
    * @param {Object} request
    *   The request object that will be sent.
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
@@ -766,16 +766,16 @@ class LoggingServiceV2Client {
    *       "organizations/[ORGANIZATION_ID]"
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
-   * @param {function(?Error, ?Array, ?Object, ?Object)=} callback
+   * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of string.
@@ -875,13 +875,13 @@ class LoggingServiceV2Client {
    *       "organizations/[ORGANIZATION_ID]"
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
-   * @param {number=} request.pageSize
+   * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
    *   parameter does not affect the return value. If page streaming is
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
-   * @param {Object=} options
+   * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}

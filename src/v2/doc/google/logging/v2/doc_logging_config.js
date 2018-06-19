@@ -1,10 +1,10 @@
-// Copyright 2017, Google Inc. All rights reserved.
+// Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,8 +45,7 @@
  *   Optional.
  *   An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters).  The only
  *   exported log entries are those that are in the resource owning the sink and
- *   that match the filter. The filter must use the log entry format specified
- *   by the `output_version_format` parameter.  For example, in the v2 format:
+ *   that match the filter.  For example:
  *
  *       logName="projects/[PROJECT_ID]/logs/[LOG_ID]" AND severity>=ERROR
  *
@@ -88,19 +87,12 @@
  *       resource.type=gce_instance
  *
  * @property {Object} startTime
- *   Optional. The time at which this sink will begin exporting log entries.
- *   Log entries are exported only if their timestamp is not earlier than the
- *   start time.  The default value of this field is the time the sink is
- *   created or updated.
+ *   Deprecated. This field is ignored when creating or updating sinks.
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
  * @property {Object} endTime
- *   Optional. The time at which this sink will stop exporting log entries.  Log
- *   entries are exported only if their timestamp is earlier than the end time.
- *   If this field is not supplied, there is no end time.  If both a start time
- *   and an end time are provided, then the end time must be later than the
- *   start time.
+ *   Deprecated. This field is ignored when creating or updating sinks.
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
@@ -283,6 +275,24 @@ var CreateSinkRequest = {
  *       `writer_identity` is changed to a unique service account.
  *   +   It is an error if the old value is true and the new value is
  *       set to false or defaulted to false.
+ *
+ * @property {Object} updateMask
+ *   Optional. Field mask that specifies the fields in `sink` that need
+ *   an update. A sink field will be overwritten if, and only if, it is
+ *   in the update mask.  `name` and output only fields cannot be updated.
+ *
+ *   An empty updateMask is temporarily treated as using the following mask
+ *   for backwards compatibility purposes:
+ *     destination,filter,includeChildren
+ *   At some point in the future, behavior will be removed and specifying an
+ *   empty updateMask will be an error.
+ *
+ *   For a detailed `FieldMask` definition, see
+ *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
+ *
+ *   Example: `updateMask=filter`.
+ *
+ *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
  *
  * @typedef UpdateSinkRequest
  * @memberof google.logging.v2
