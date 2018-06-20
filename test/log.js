@@ -20,7 +20,7 @@ var assert = require('assert');
 var extend = require('extend');
 var prop = require('propprop');
 var proxyquire = require('proxyquire');
-var util = require('@google-cloud/common').util;
+var util = require('@google-cloud/common-grpc').util;
 
 var promisifed = false;
 var fakeUtil = extend({}, util, {
@@ -60,7 +60,7 @@ describe('Log', function() {
 
   before(function() {
     Log = proxyquire('../src/log.js', {
-      '@google-cloud/common': {
+      '@google-cloud/common-grpc': {
         util: fakeUtil,
       },
       './entry.js': Entry,

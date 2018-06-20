@@ -123,21 +123,24 @@ Metadata.getGlobalDescriptor = function() {
  * @param {function} callback Callback function.
  */
 Metadata.prototype.getDefaultResource = function(callback) {
-  this.logging.auth.getEnvironment(function(err, env) {
-    if (env.IS_CONTAINER_ENGINE) {
-      Metadata.getGKEDescriptor(callback);
-    } else if (env.IS_APP_ENGINE) {
-      callback(null, Metadata.getGAEDescriptor());
-    } else if (env.IS_CLOUD_FUNCTION) {
-      callback(null, Metadata.getCloudFunctionDescriptor());
-    } else if (env.IS_COMPUTE_ENGINE) {
-      // Test for compute engine should be done after all the rest - everything
-      // runs on top of compute engine.
-      Metadata.getGCEDescriptor(callback);
-    } else {
-      callback(null, Metadata.getGlobalDescriptor());
-    }
-  });
+  this.logging.auth
+    .getEnv()
+    .then(env => {
+      if (env === 'CONTAINER_ENGINE') {
+        Metadata.getGKEDescriptor(callback);
+      } else if (env === 'APP_ENGINE') {
+        callback(null, Metadata.getGAEDescriptor());
+      } else if (env === 'CLOUD_FUNCTIONS') {
+        callback(null, Metadata.getCloudFunctionDescriptor());
+      } else if (env === 'COMPUTE_ENGINE') {
+        // Test for compute engine should be done after all the rest - everything
+        // runs on top of compute engine.
+        Metadata.getGCEDescriptor(callback);
+      } else {
+        callback(null, Metadata.getGlobalDescriptor());
+      }
+    })
+    .catch(callback);
 };
 
 module.exports = Metadata;

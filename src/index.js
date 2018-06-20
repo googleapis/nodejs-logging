@@ -17,9 +17,9 @@
 'use strict';
 
 var arrify = require('arrify');
-var common = require('@google-cloud/common');
+var common = require('@google-cloud/common-grpc');
 var extend = require('extend');
-var googleAuth = require('google-auto-auth');
+var {GoogleAuth} = require('google-auth-library');
 var is = require('is');
 var pumpify = require('pumpify');
 var streamEvents = require('stream-events');
@@ -139,7 +139,7 @@ function Logging(options) {
   );
 
   this.api = {};
-  this.auth = googleAuth(options_);
+  this.auth = new GoogleAuth(options_);
   this.options = options_;
   this.projectId = this.options.projectId || '{{projectId}}';
 }

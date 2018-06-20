@@ -17,7 +17,7 @@
 'use strict';
 
 var arrify = require('arrify');
-var common = require('@google-cloud/common');
+var common = require('@google-cloud/common-grpc');
 var extend = require('extend');
 var is = require('is');
 var snakeCaseKeys = require('snakecase-keys');
