@@ -21,7 +21,7 @@ var assert = require('assert');
 var extend = require('extend');
 var proxyquire = require('proxyquire');
 var through = require('through2');
-var util = require('@google-cloud/common').util;
+var util = require('@google-cloud/common-grpc').util;
 
 var v2 = require('../src/v2');
 
@@ -43,9 +43,9 @@ var fakePaginator = {
   },
 };
 
-var googleAutoAuthOverride;
-function fakeGoogleAutoAuth() {
-  return (googleAutoAuthOverride || util.noop).apply(null, arguments);
+var googleAuthOverride;
+function fakeGoogleAuth() {
+  return (googleAuthOverride || util.noop).apply(null, arguments);
 }
 
 var isCustomTypeOverride;
@@ -103,11 +103,13 @@ describe('Logging', function() {
 
   before(function() {
     Logging = proxyquire('../', {
-      '@google-cloud/common': {
+      '@google-cloud/common-grpc': {
         paginator: fakePaginator,
         util: fakeUtil,
       },
-      'google-auto-auth': fakeGoogleAutoAuth,
+      'google-auth-library': {
+        GoogleAuth: fakeGoogleAuth,
+      },
       './log.js': FakeLog,
       './entry.js': FakeEntry,
       './sink.js': FakeSink,
@@ -118,7 +120,7 @@ describe('Logging', function() {
   beforeEach(function() {
     extend(fakeUtil, originalFakeUtil);
 
-    googleAutoAuthOverride = null;
+    googleAuthOverride = null;
     isCustomTypeOverride = null;
     replaceProjectIdTokenOverride = null;
 
@@ -175,14 +177,14 @@ describe('Logging', function() {
       assert.deepEqual(logging.api, {});
     });
 
-    it('should cache a local google-auto-auth instance', function() {
-      var fakeGoogleAutoAuthInstance = {};
+    it('should cache a local GoogleAuth instance', function() {
+      var fakeGoogleAuthInstance = {};
       var options = {
         a: 'b',
         c: 'd',
       };
 
-      googleAutoAuthOverride = function(options_) {
+      googleAuthOverride = function(options_) {
         assert.deepEqual(
           options_,
           extend(
@@ -194,11 +196,11 @@ describe('Logging', function() {
             options
           )
         );
-        return fakeGoogleAutoAuthInstance;
+        return fakeGoogleAuthInstance;
       };
 
       var logging = new Logging(options);
-      assert.strictEqual(logging.auth, fakeGoogleAutoAuthInstance);
+      assert.strictEqual(logging.auth, fakeGoogleAuthInstance);
     });
 
     it('should localize the options', function() {

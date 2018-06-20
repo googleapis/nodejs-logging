@@ -204,7 +204,7 @@ describe('metadata', function() {
 
   describe('getDefaultResource', function() {
     it('should get the environment from auth client', function(done) {
-      metadata.logging.auth.getEnvironment = function() {
+      metadata.logging.auth.getEnv = function() {
         done();
       };
 
@@ -220,11 +220,8 @@ describe('metadata', function() {
             return DESCRIPTOR;
           };
 
-          metadata.logging.auth.getEnvironment = function(callback) {
-            callback(null, {
-              IS_APP_ENGINE: true,
-              IS_COMPUTE_ENGINE: true,
-            });
+          metadata.logging.auth.getEnv = function() {
+            return Promise.resolve('APP_ENGINE');
           };
 
           metadata.getDefaultResource(function(err, defaultResource) {
@@ -243,11 +240,8 @@ describe('metadata', function() {
             return DESCRIPTOR;
           };
 
-          metadata.logging.auth.getEnvironment = function(callback) {
-            callback(null, {
-              IS_CLOUD_FUNCTION: true,
-              IS_COMPUTE_ENGINE: true,
-            });
+          metadata.logging.auth.getEnv = function() {
+            return Promise.resolve('CLOUD_FUNCTIONS');
           };
 
           metadata.getDefaultResource(function(err, defaultResource) {
@@ -266,10 +260,8 @@ describe('metadata', function() {
             successArg: {data: INSTANCE_ID},
           };
 
-          metadata.logging.auth.getEnvironment = function(callback) {
-            callback(null, {
-              IS_COMPUTE_ENGINE: true,
-            });
+          metadata.logging.auth.getEnv = function() {
+            return Promise.resolve('COMPUTE_ENGINE');
           };
 
           metadata.getDefaultResource(function(err, defaultResource) {
@@ -293,11 +285,8 @@ describe('metadata', function() {
             successArg: {data: CLUSTER_NAME},
           };
 
-          metadata.logging.auth.getEnvironment = function(callback) {
-            callback(null, {
-              IS_COMPUTE_ENGINE: true,
-              IS_CONTAINER_ENGINE: true,
-            });
+          metadata.logging.auth.getEnv = function() {
+            return Promise.resolve('CONTAINER_ENGINE');
           };
 
           metadata.getDefaultResource(function(err, defaultResource) {
@@ -321,13 +310,8 @@ describe('metadata', function() {
             return DESCRIPTOR;
           };
 
-          metadata.logging.auth.getEnvironment = function(callback) {
-            callback(null, {
-              IS_APP_ENGINE: false,
-              IS_CLOUD_FUNCTION: false,
-              IS_COMPUTE_ENGINE: false,
-              IS_CONTAINER_ENGINE: false,
-            });
+          metadata.logging.auth.getEnv = function() {
+            return Promise.resolve('NONE');
           };
 
           metadata.getDefaultResource(function(err, defaultResource) {

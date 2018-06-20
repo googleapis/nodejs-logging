@@ -19,7 +19,7 @@
 var assert = require('assert');
 var extend = require('extend');
 var proxyquire = require('proxyquire');
-var util = require('@google-cloud/common').util;
+var {util} = require('@google-cloud/common-grpc');
 
 var promisifed = false;
 var fakeUtil = extend({}, util, {
@@ -42,7 +42,7 @@ describe('Sink', function() {
 
   before(function() {
     Sink = proxyquire('../src/sink.js', {
-      '@google-cloud/common': {
+      '@google-cloud/common-grpc': {
         util: fakeUtil,
       },
     });
