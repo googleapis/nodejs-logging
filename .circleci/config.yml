@@ -76,8 +76,6 @@ jobs:
           command: |-
             mkdir -p /home/node/.npm-global
             npm install
-            npm link
-            chmod +x node_modules/@google-cloud/nodejs-repo-tools/bin/tools
           environment:
             NPM_CONFIG_PREFIX: /home/node/.npm-global
       - run:
@@ -85,7 +83,7 @@ jobs:
           command: npm test
       - run:
           name: Submit coverage data to codecov.
-          command: node_modules/.bin/codecov
+          command: npm run codecov
           when: always
   node8:
     docker:
@@ -109,7 +107,7 @@ jobs:
           name: Link the module being tested to the samples.
           command: |
             cd samples/
-            npm link @google-cloud/logging
+            npm link ../
             npm install
             cd ..
           environment:
