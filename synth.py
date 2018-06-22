@@ -48,9 +48,6 @@ subprocess.run(
 subprocess.run('bash', input=b'npm install && npm link')
 subprocess.run('bash', input=b'cd samples && npm link ../ && npm install')
 
-# Generates scaffolding, enters contributors names
-subprocess.run(['npm', 'run', 'generate-scaffolding'])
-
 # prettify and lint
 subprocess.run(['npm', 'run', 'prettier'])
 subprocess.run(['npm', 'run', 'lint'])
