@@ -18,9 +18,9 @@
 const logging = new (require('@google-cloud/logging'))();
 const path = require(`path`);
 const storage = new (require('@google-cloud/storage'))();
-const test = require(`ava`);
 const tools = require(`@google-cloud/nodejs-repo-tools`);
 const uuid = require(`uuid`);
+const assert = require('assert');
 
 const cwd = path.join(__dirname, `..`);
 const cmd = `node sinks.js`;
@@ -29,12 +29,12 @@ const bucketName = `nodejs-logging-sinks-test-${uuid.v4()}`;
 const sinkName = `nodejs-logging-sinks-test-${uuid.v4()}`;
 const filter = `severity > WARNING`;
 
-test.before(tools.checkCredentials);
-test.before(async () => {
+before(async () => {
+  tools.checkCredentials();
   await storage.createBucket(bucketName);
 });
 
-test.after.always(async () => {
+after(async () => {
   try {
     await logging.sink(sinkName).delete();
   } catch (err) {} // ignore error
@@ -43,25 +43,24 @@ test.after.always(async () => {
   } catch (err) {} // ignore error
 });
 
-test.serial(`should create a sink`, async t => {
+it(`should create a sink`, async () => {
   const output = await tools.runAsync(
     `${cmd} create ${sinkName} ${bucketName} "${filter}"`,
     cwd
   );
-  t.is(output, `Created sink ${sinkName} to ${bucketName}`);
+  assert.equal(output, `Created sink ${sinkName} to ${bucketName}`);
   const [metadata] = await logging.sink(sinkName).getMetadata();
-  t.is(metadata.name, sinkName);
-  t.is(metadata.destination.includes(bucketName), true);
-  t.is(metadata.filter, filter);
+  assert.equal(metadata.name, sinkName);
+  assert.equal(metadata.destination.includes(bucketName), true);
+  assert.equal(metadata.filter, filter);
 });
 
-test.serial(`should get a sink`, async t => {
+it(`should get a sink`, async () => {
   const output = await tools.runAsync(`${cmd} get ${sinkName}`, cwd);
-  t.is(output.includes(sinkName), true);
+  assert.equal(output.includes(sinkName), true);
 });
 
-test.serial(`should list sinks`, async t => {
-  t.plan(0);
+it(`should list sinks`, async () => {
   await tools
     .tryTest(async assert => {
       const output = await tools.runAsync(`${cmd} list`, cwd);
@@ -71,21 +70,26 @@ test.serial(`should list sinks`, async t => {
     .start();
 });
 
-test.serial(`should update a sink`, async t => {
+it(`should update a sink`, async () => {
   const newFilter = 'severity >= WARNING';
   const output = await tools.runAsync(
     `${cmd} update ${sinkName} "${newFilter}"`,
     cwd
   );
-  t.regex(output, new RegExp(`Sink ${sinkName} updated.`));
+  assert(output.indexOf(`Sink ${sinkName} updated.`) > -1);
   const [metadata] = await logging.sink(sinkName).getMetadata();
-  t.is(metadata.name, sinkName);
-  t.is(metadata.destination.includes(bucketName), true);
-  t.is(metadata.filter, newFilter);
+  assert.equal(metadata.name, sinkName);
+  assert.equal(metadata.destination.includes(bucketName), true);
+  assert.equal(metadata.filter, newFilter);
 });
 
-test.serial(`should delete a sink`, async t => {
+it(`should delete a sink`, async () => {
   const output = await tools.runAsync(`${cmd} delete ${sinkName}`, cwd);
-  t.is(output, `Sink ${sinkName} deleted.`);
-  await t.throws(logging.sink(sinkName).getMetadata());
+  assert.equal(output, `Sink ${sinkName} deleted.`);
+  try {
+    await logging.sink(sinkName).getMetadata();
+  } catch (e) {
+    return;
+  }
+  throw new Error('expected to throw');
 });

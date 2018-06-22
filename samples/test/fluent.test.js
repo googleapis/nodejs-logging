@@ -17,23 +17,23 @@
 
 const proxyquire = require(`proxyquire`).noPreserveCache();
 const request = require(`supertest`);
-const test = require(`ava`);
+const assert = require('assert');
 
-test.cb(`should log error`, t => {
+it(`should log error`, done => {
   let loggerCalled = false;
 
   const structuredLogger = {
     emit: name => {
       loggerCalled = true;
-      t.is(name, `errors`);
+      assert.equal(name, `errors`);
     },
   };
 
   const app = proxyquire(`../fluent`, {
     'fluent-logger': {
       createFluentSender: (name, options) => {
-        t.is(name, `myapp`);
-        t.deepEqual(options, {
+        assert.equal(name, `myapp`);
+        assert.deepEqual(options, {
           host: `localhost`,
           port: 24224,
           timeout: 3.0,
@@ -47,7 +47,7 @@ test.cb(`should log error`, t => {
     .get(`/`)
     .expect(500)
     .expect(() => {
-      t.true(loggerCalled, `structuredLogger.emit should have been called`);
+      assert(loggerCalled, `structuredLogger.emit should have been called`);
     })
-    .end(t.end);
+    .end(done);
 });

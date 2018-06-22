@@ -16,27 +16,26 @@
 'use strict';
 
 const path = require(`path`);
-const test = require(`ava`);
 const tools = require(`@google-cloud/nodejs-repo-tools`);
 const uuid = require(`uuid`);
-
+const assert = require('assert');
 const cwd = path.join(__dirname, `..`);
 const cmd = `node logs.js`;
 
 const logName = `nodejs-logging-logs-test-${uuid.v4()}`;
 const message = `Hello world!`;
 
-test.before(tools.checkCredentials);
+before(() => tools.checkCredentials());
 
-test.serial(`should write a log entry`, async t => {
+it(`should write a log entry`, async () => {
   const output = await tools.runAsync(
     `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`,
     cwd
   );
-  t.is(output, `Wrote to ${logName}`);
+  assert.equal(output, `Wrote to ${logName}`);
 });
 
-test.serial(`should write a simple log entry`, async t => {
+it(`should write a simple log entry`, async () => {
   const output = await tools.runAsync(`${cmd} write-simple ${logName}`, cwd);
-  t.is(output, `Wrote to ${logName}`);
+  assert(output, `Wrote to ${logName}`);
 });
