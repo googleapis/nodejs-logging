@@ -349,12 +349,12 @@ var DeleteSinkRequest = {
  *   For example, the following filter matches 99% of low-severity log
  *   entries from load balancers:
  *
- *       "resource.type=http_load_balancer severity<ERROR sample(insertId, 0.99)"
+ *   `"resource.type=http_load_balancer severity<ERROR sample(insertId, 0.99)"`
  *
  * @property {boolean} disabled
  *   Optional. If set to True, then this exclusion is disabled and it does not
  *   exclude any log entries. You can use
- *   [exclusions.patch](https://cloud.google.com/logging/docs/alpha-exclusion/docs/reference/v2/rest/v2/projects.exclusions/patch)
+ *   [exclusions.patch](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.exclusions/patch)
  *   to change the value of this field.
  *
  * @typedef LogExclusion
