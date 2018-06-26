@@ -43,7 +43,7 @@
  *   any results.
  *
  * @property {Object} resource
- *   Required. The monitored resource associated with this log entry.
+ *   Required. The primary monitored resource associated with this log entry.
  *   Example: a log entry that reports a database error would be
  *   associated with the monitored resource designating the particular
  *   database that reported the error.
@@ -71,11 +71,15 @@
  *   This time is used to compute the log entry's age and to enforce
  *   the logs retention period. If this field is omitted in a new log
  *   entry, then Stackdriver Logging assigns it the current time.
+ *   Timestamps have nanosecond accuracy, but trailing zeros in the fractional
+ *   seconds might be omitted when the timestamp is displayed.
  *
  *   Incoming log entries should have timestamps that are no more than
- *   the [logs retention period](https://cloud.google.com/logging/quota-policy) in the past,
- *   and no more than 24 hours in the future.
- *   See the `entries.write` API method for more information.
+ *   the [logs retention period](https://cloud.google.com/logging/quotas) in the past,
+ *   and no more than 24 hours in the future. Log entries outside those time
+ *   boundaries will not be available when calling `entries.list`, but
+ *   those log entries can still be exported with
+ *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
@@ -108,6 +112,13 @@
  *   Optional. A set of user-defined (key, value) data that provides additional
  *   information about the log entry.
  *
+ * @property {Object} metadata
+ *   Output only. Additional metadata about the monitored resource.
+ *   Only `k8s_container`, `k8s_pod`, and `k8s_node` MonitoredResources have
+ *   this field populated.
+ *
+ *   This object should have the same structure as [MonitoredResourceMetadata]{@link google.api.MonitoredResourceMetadata}
+ *
  * @property {Object} operation
  *   Optional. Information about an operation associated with the log entry, if
  *   applicable.
@@ -121,11 +132,10 @@
  *   `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
  *
  * @property {string} spanId
- *   Optional. Id of the span within the trace associated with the log entry.
- *   e.g. "0000000000000042"
- *   For Stackdriver trace spans, this is the same format that the Stackdriver
- *   trace API uses.
- *   The ID is a 16-character hexadecimal encoding of an 8-byte array.
+ *   Optional. The span ID within the trace associated with the log entry. For
+ *   Stackdriver Trace spans, this is the same format that the Stackdriver Trace
+ *   API v2 uses: a 16-character hexadecimal encoding of an 8-byte array, such
+ *   as <code>"000000000000004a"</code>.
  *
  * @property {Object} sourceLocation
  *   Optional. Source code location information associated with the log entry,

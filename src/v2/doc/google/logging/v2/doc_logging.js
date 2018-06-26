@@ -81,7 +81,8 @@ var DeleteLogRequest = {
  *   entries in this list does not matter. Values supplied in this method's
  *   `log_name`, `resource`, and `labels` fields are copied into those log
  *   entries in this list that do not include values for their corresponding
- *   fields. For more information, see the LogEntry type.
+ *   fields. For more information, see the
+ *   LogEntry type.
  *
  *   If the `timestamp` or `insert_id` fields are missing in log entries, then
  *   this method supplies the current time or a unique identifier, respectively.
@@ -91,8 +92,9 @@ var DeleteLogRequest = {
  *
  *   Log entries with timestamps that are more than the
  *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
- *   24 hours in the future might be discarded. Discarding does not return
- *   an error.
+ *   24 hours in the future will not be available when calling `entries.list`.
+ *   However, those log entries can still be exported with
+ *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
  *   To improve throughput and to avoid exceeding the
  *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
@@ -107,6 +109,11 @@ var DeleteLogRequest = {
  *   entry is not written, then the response status is the error associated
  *   with one of the failed entries and the response includes error details
  *   keyed by the entries' zero-based index in the `entries.write` method.
+ *
+ * @property {boolean} dryRun
+ *   Optional. If true, the request should expect normal response, but the
+ *   entries won't be persisted nor exported. Useful for checking whether the
+ *   logging API endpoints are working properly before sending valuable data.
  *
  * @typedef WriteLogEntriesRequest
  * @memberof google.logging.v2

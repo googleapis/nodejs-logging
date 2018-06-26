@@ -101,8 +101,8 @@ class LoggingServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
       logPathTemplate: new gax.PathTemplate('projects/{project}/logs/{log}'),
+      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
     };
 
     // Some of the methods on this service return "paged" results,
@@ -289,13 +289,14 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * ## Log entry resources
-   *
    * Writes log entries to Stackdriver Logging. This API method is the
    * only way to send log entries to Stackdriver Logging. This method
    * is used, directly or indirectly, by the Stackdriver Logging agent
    * (fluentd) and all logging libraries configured to use Stackdriver
    * Logging.
+   * A single request may contain log entries for a maximum of 1000
+   * different resources (projects, organizations, billing accounts or
+   * folders)
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -304,7 +305,8 @@ class LoggingServiceV2Client {
    *   entries in this list does not matter. Values supplied in this method's
    *   `log_name`, `resource`, and `labels` fields are copied into those log
    *   entries in this list that do not include values for their corresponding
-   *   fields. For more information, see the LogEntry type.
+   *   fields. For more information, see the
+   *   LogEntry type.
    *
    *   If the `timestamp` or `insert_id` fields are missing in log entries, then
    *   this method supplies the current time or a unique identifier, respectively.
@@ -314,8 +316,9 @@ class LoggingServiceV2Client {
    *
    *   Log entries with timestamps that are more than the
    *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
-   *   24 hours in the future might be discarded. Discarding does not return
-   *   an error.
+   *   24 hours in the future will not be available when calling `entries.list`.
+   *   However, those log entries can still be exported with
+   *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
    *
    *   To improve throughput and to avoid exceeding the
    *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
@@ -359,6 +362,10 @@ class LoggingServiceV2Client {
    *   entry is not written, then the response status is the error associated
    *   with one of the failed entries and the response includes error details
    *   keyed by the entries' zero-based index in the `entries.write` method.
+   * @param {boolean} [request.dryRun]
+   *   Optional. If true, the request should expect normal response, but the
+   *   entries won't be persisted nor exported. Useful for checking whether the
+   *   logging API endpoints are working properly before sending valuable data.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
@@ -474,9 +481,9 @@ class LoggingServiceV2Client {
    * });
    *
    * // Iterate over all elements.
-   * var resourceNames = [];
+   * var formattedResourceNames = [];
    *
-   * client.listLogEntries({resourceNames: resourceNames})
+   * client.listLogEntries({resourceNames: formattedResourceNames})
    *   .then(responses => {
    *     var resources = responses[0];
    *     for (let i = 0; i < resources.length; i += 1) {
@@ -488,7 +495,7 @@ class LoggingServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var resourceNames = [];
+   * var formattedResourceNames = [];
    *
    *
    * var options = {autoPaginate: false};
@@ -507,7 +514,7 @@ class LoggingServiceV2Client {
    *     return client.listLogEntries(nextRequest, options).then(callback);
    *   }
    * }
-   * client.listLogEntries({resourceNames: resourceNames}, options)
+   * client.listLogEntries({resourceNames: formattedResourceNames}, options)
    *   .then(callback)
    *   .catch(err => {
    *     console.error(err);
@@ -589,8 +596,8 @@ class LoggingServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * var resourceNames = [];
-   * client.listLogEntriesStream({resourceNames: resourceNames})
+   * var formattedResourceNames = [];
+   * client.listLogEntriesStream({resourceNames: formattedResourceNames})
    *   .on('data', element => {
    *     // doThingsWith(element)
    *   }).on('error', err => {
@@ -918,18 +925,6 @@ class LoggingServiceV2Client {
   // --------------------
 
   /**
-   * Return a fully-qualified project resource name string.
-   *
-   * @param {String} project
-   * @returns {String}
-   */
-  projectPath(project) {
-    return this._pathTemplates.projectPathTemplate.render({
-      project: project,
-    });
-  }
-
-  /**
    * Return a fully-qualified log resource name string.
    *
    * @param {String} project
@@ -944,14 +939,15 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * Parse the projectName from a project resource.
+   * Return a fully-qualified project resource name string.
    *
-   * @param {String} projectName
-   *   A fully-qualified path representing a project resources.
-   * @returns {String} - A string representing the project.
+   * @param {String} project
+   * @returns {String}
    */
-  matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+  projectPath(project) {
+    return this._pathTemplates.projectPathTemplate.render({
+      project: project,
+    });
   }
 
   /**
@@ -974,6 +970,17 @@ class LoggingServiceV2Client {
    */
   matchLogFromLogName(logName) {
     return this._pathTemplates.logPathTemplate.match(logName).log;
+  }
+
+  /**
+   * Parse the projectName from a project resource.
+   *
+   * @param {String} projectName
+   *   A fully-qualified path representing a project resources.
+   * @returns {String} - A string representing the project.
+   */
+  matchProjectFromProjectName(projectName) {
+    return this._pathTemplates.projectPathTemplate.match(projectName).project;
   }
 }
 
