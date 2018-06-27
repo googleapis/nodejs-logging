@@ -137,9 +137,9 @@ describe('LoggingServiceV2Client', () => {
       });
 
       // Mock request
-      var resourceNames = [];
+      var formattedResourceNames = [];
       var request = {
-        resourceNames: resourceNames,
+        resourceNames: formattedResourceNames,
       };
 
       // Mock response
@@ -175,9 +175,9 @@ describe('LoggingServiceV2Client', () => {
       });
 
       // Mock request
-      var resourceNames = [];
+      var formattedResourceNames = [];
       var request = {
-        resourceNames: resourceNames,
+        resourceNames: formattedResourceNames,
       };
 
       // Mock Grpc layer
@@ -534,9 +534,11 @@ describe('ConfigServiceV2Client', () => {
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
       var sink = {};
+      var updateMask = {};
       var request = {
         sinkName: formattedSinkName,
         sink: sink,
+        updateMask: updateMask,
       };
 
       // Mock response
@@ -575,9 +577,11 @@ describe('ConfigServiceV2Client', () => {
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
       var sink = {};
+      var updateMask = {};
       var request = {
         sinkName: formattedSinkName,
         sink: sink,
+        updateMask: updateMask,
       };
 
       // Mock Grpc layer
