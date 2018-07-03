@@ -534,11 +534,9 @@ describe('ConfigServiceV2Client', () => {
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
       var sink = {};
-      var updateMask = {};
       var request = {
         sinkName: formattedSinkName,
         sink: sink,
-        updateMask: updateMask,
       };
 
       // Mock response
@@ -577,11 +575,9 @@ describe('ConfigServiceV2Client', () => {
       // Mock request
       var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
       var sink = {};
-      var updateMask = {};
       var request = {
         sinkName: formattedSinkName,
         sink: sink,
-        updateMask: updateMask,
       };
 
       // Mock Grpc layer
