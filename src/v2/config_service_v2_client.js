@@ -523,7 +523,20 @@ class ConfigServiceV2Client {
    *   as part of `sink_name`.
    *
    *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
-   * @param {Object} request.updateMask
+   * @param {boolean} [request.uniqueWriterIdentity]
+   *   Optional. See
+   *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
+   *   for a description of this field.  When updating a sink, the effect of this
+   *   field on the value of `writer_identity` in the updated sink depends on both
+   *   the old and new values of this field:
+   *
+   *   +   If the old and new values of this field are both false or both true,
+   *       then there is no change to the sink's `writer_identity`.
+   *   +   If the old value is false and the new value is true, then
+   *       `writer_identity` is changed to a unique service account.
+   *   +   It is an error if the old value is true and the new value is
+   *       set to false or defaulted to false.
+   * @param {Object} [request.updateMask]
    *   Optional. Field mask that specifies the fields in `sink` that need
    *   an update. A sink field will be overwritten if, and only if, it is
    *   in the update mask.  `name` and output only fields cannot be updated.
@@ -540,19 +553,6 @@ class ConfigServiceV2Client {
    *   Example: `updateMask=filter`.
    *
    *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
-   * @param {boolean} [request.uniqueWriterIdentity]
-   *   Optional. See
-   *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
-   *   for a description of this field.  When updating a sink, the effect of this
-   *   field on the value of `writer_identity` in the updated sink depends on both
-   *   the old and new values of this field:
-   *
-   *   +   If the old and new values of this field are both false or both true,
-   *       then there is no change to the sink's `writer_identity`.
-   *   +   If the old value is false and the new value is true, then
-   *       `writer_identity` is changed to a unique service account.
-   *   +   It is an error if the old value is true and the new value is
-   *       set to false or defaulted to false.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call, e.g, timeout,
    *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
@@ -574,11 +574,9 @@ class ConfigServiceV2Client {
    *
    * var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
    * var sink = {};
-   * var updateMask = {};
    * var request = {
    *   sinkName: formattedSinkName,
    *   sink: sink,
-   *   updateMask: updateMask,
    * };
    * client.updateSink(request)
    *   .then(responses => {
