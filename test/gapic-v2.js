@@ -66,7 +66,7 @@ describe('LoggingServiceV2Client', () => {
 
       client.deleteLog(request, err => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         done();
       });
     });
@@ -122,7 +122,7 @@ describe('LoggingServiceV2Client', () => {
 
       client.writeLogEntries(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -189,7 +189,7 @@ describe('LoggingServiceV2Client', () => {
 
       client.listLogEntries(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -250,7 +250,7 @@ describe('LoggingServiceV2Client', () => {
 
       client.listMonitoredResourceDescriptors(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -313,7 +313,7 @@ describe('LoggingServiceV2Client', () => {
 
       client.listLogs(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -377,7 +377,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.listSinks(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -445,7 +445,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.getSink(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -517,7 +517,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.createSink(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -589,7 +589,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.updateSink(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -639,7 +639,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.deleteSink(request, err => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         done();
       });
     });
@@ -705,7 +705,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.listExclusions(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -771,7 +771,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.getExclusion(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -841,7 +841,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.createExclusion(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -915,7 +915,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.updateExclusion(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -965,7 +965,7 @@ describe('ConfigServiceV2Client', () => {
 
       client.deleteExclusion(request, err => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         done();
       });
     });
@@ -1032,7 +1032,7 @@ describe('MetricsServiceV2Client', () => {
 
       client.listLogMetrics(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -1098,7 +1098,7 @@ describe('MetricsServiceV2Client', () => {
 
       client.getLogMetric(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -1168,7 +1168,7 @@ describe('MetricsServiceV2Client', () => {
 
       client.createLogMetric(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -1238,7 +1238,7 @@ describe('MetricsServiceV2Client', () => {
 
       client.updateLogMetric(request, (err, response) => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         assert(typeof response === 'undefined');
         done();
       });
@@ -1288,7 +1288,7 @@ describe('MetricsServiceV2Client', () => {
 
       client.deleteLogMetric(request, err => {
         assert(err instanceof Error);
-        assert.equal(err.code, FAKE_STATUS_CODE);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
         done();
       });
     });
