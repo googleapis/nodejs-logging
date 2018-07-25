@@ -393,7 +393,7 @@ describe('Logging', function() {
             function(err, entries) {
               assert.ifError(err);
 
-              assert.deepEqual(entries.map(prop('data')).reverse(), [
+              assert.deepStrictEqual(entries.map(prop('data')).reverse(), [
                 'log entry 1',
                 {
                   delegate: 'my_username',
@@ -436,7 +436,11 @@ describe('Logging', function() {
               },
               function(err, entries) {
                 assert.ifError(err);
-                assert.deepEqual(entries.map(prop('data')), ['3', '2', '1']);
+                assert.deepStrictEqual(entries.map(prop('data')), [
+                  '3',
+                  '2',
+                  '1',
+                ]);
                 done();
               }
             );
@@ -460,7 +464,10 @@ describe('Logging', function() {
           },
           function(err, entries) {
             assert.ifError(err);
-            assert.deepEqual(entries.reverse().map(prop('data')), messages);
+            assert.deepStrictEqual(
+              entries.reverse().map(prop('data')),
+              messages
+            );
             done();
           }
         );
@@ -489,7 +496,7 @@ describe('Logging', function() {
 
               var entry = entries[0];
 
-              assert.deepEqual(entry.data, {
+              assert.deepStrictEqual(entry.data, {
                 when: logEntry.data.when.toString(),
                 matchUser: logEntry.data.matchUser.toString(),
                 matchUserError: logEntry.data.matchUserError.toString(),
@@ -528,7 +535,7 @@ describe('Logging', function() {
               var entry = entries[0];
 
               assert.strictEqual(entry.metadata.severity, metadata.severity);
-              assert.deepEqual(entry.data, data);
+              assert.deepStrictEqual(entry.data, data);
 
               done();
             }
@@ -556,7 +563,7 @@ describe('Logging', function() {
               var entry = entries[0];
 
               assert.strictEqual(entry.data, text);
-              assert.deepEqual(entry.metadata.resource, {
+              assert.deepStrictEqual(entry.metadata.resource, {
                 type: 'global',
                 labels: {
                   project_id: PROJECT_ID,
