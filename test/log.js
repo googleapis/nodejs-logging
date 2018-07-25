@@ -30,7 +30,7 @@ var fakeUtil = extend({}, util, {
     }
 
     promisifed = true;
-    assert.deepEqual(options.exclude, ['entry']);
+    assert.deepStrictEqual(options.exclude, ['entry']);
   },
 });
 
@@ -142,7 +142,7 @@ describe('Log', function() {
     var SEVERITY = 'severity';
 
     it('should assign severity to a single entry', function() {
-      assert.deepEqual(
+      assert.deepStrictEqual(
         Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
           .map(prop('metadata'))
           .map(prop('severity')),
@@ -151,7 +151,7 @@ describe('Log', function() {
     });
 
     it('should assign severity property to multiple entries', function() {
-      assert.deepEqual(
+      assert.deepStrictEqual(
         Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
           .map(prop('metadata'))
           .map(prop('severity')),
@@ -164,7 +164,7 @@ describe('Log', function() {
 
       Log.assignSeverityToEntries_(originalEntries, SEVERITY);
 
-      assert.deepEqual(originalEntries, ENTRIES);
+      assert.deepStrictEqual(originalEntries, ENTRIES);
     });
   });
 
@@ -199,11 +199,11 @@ describe('Log', function() {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'deleteLog');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           logName: log.formattedName_,
         });
 
-        assert.deepEqual(config.gaxOpts, {});
+        assert.deepStrictEqual(config.gaxOpts, {});
 
         callback(); // done()
       };
@@ -233,7 +233,7 @@ describe('Log', function() {
       var entryObject = {};
 
       log.logging.entry = function(metadata_, data_) {
-        assert.deepEqual(metadata_, metadata);
+        assert.deepStrictEqual(metadata_, metadata);
         assert.strictEqual(data_, data);
         return entryObject;
       };
@@ -261,7 +261,7 @@ describe('Log', function() {
 
     it('should call Logging getEntries with defaults', function(done) {
       log.logging.getEntries = function(options, callback) {
-        assert.deepEqual(options, EXPECTED_OPTIONS);
+        assert.deepStrictEqual(options, EXPECTED_OPTIONS);
         callback(); // done()
       };
 
@@ -275,7 +275,7 @@ describe('Log', function() {
       };
 
       log.logging.getEntries = function(options_, callback) {
-        assert.deepEqual(options_, extend({}, EXPECTED_OPTIONS, options));
+        assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
         callback(); // done()
       };
 
@@ -291,7 +291,7 @@ describe('Log', function() {
 
     it('should call Logging getEntriesStream with defaults', function(done) {
       log.logging.getEntriesStream = function(options) {
-        assert.deepEqual(options, EXPECTED_OPTIONS);
+        assert.deepStrictEqual(options, EXPECTED_OPTIONS);
         setImmediate(done);
         return fakeStream;
       };
@@ -307,7 +307,7 @@ describe('Log', function() {
       };
 
       log.logging.getEntriesStream = function(options_) {
-        assert.deepEqual(options_, extend({}, EXPECTED_OPTIONS, options));
+        assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
         setImmediate(done);
         return fakeStream;
       };
@@ -341,7 +341,7 @@ describe('Log', function() {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
           resource: CUSTOM_RESOURCE,
@@ -374,7 +374,7 @@ describe('Log', function() {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
           resource: EXPECTED_RESOURCE,
@@ -393,7 +393,7 @@ describe('Log', function() {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
           resource: FAKE_RESOURCE,
