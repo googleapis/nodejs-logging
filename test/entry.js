@@ -139,7 +139,7 @@ describe('Entry', function() {
       assert.strictEqual(entry.metadata.resource, RESOURCE);
       assert.strictEqual(entry.data, DATA);
       assert.strictEqual(entry.metadata.extraProperty, true);
-      assert.deepEqual(entry.metadata.timestamp, date);
+      assert.deepStrictEqual(entry.metadata.timestamp, date);
     });
 
     it('should extend the entry with proto data', function() {
@@ -178,7 +178,7 @@ describe('Entry', function() {
       var entryBefore = extend(true, {}, entry);
       entry.toJSON();
       var entryAfter = extend(true, {}, entry);
-      assert.deepEqual(entryBefore, entryAfter);
+      assert.deepStrictEqual(entryBefore, entryAfter);
     });
 
     it('should convert data as a struct and assign to jsonPayload', function() {
@@ -187,7 +187,7 @@ describe('Entry', function() {
 
       FakeGrpcService.objToStruct_ = function(obj, options) {
         assert.strictEqual(obj, input);
-        assert.deepEqual(options, {
+        assert.deepStrictEqual(options, {
           removeCircular: false,
           stringify: true,
         });
@@ -224,7 +224,7 @@ describe('Entry', function() {
       var seconds = date.getTime() / 1000;
       var secondsRounded = Math.floor(seconds);
 
-      assert.deepEqual(json.timestamp, {
+      assert.deepStrictEqual(json.timestamp, {
         seconds: secondsRounded,
         nanos: Math.floor((seconds - secondsRounded) * 1e9),
       });

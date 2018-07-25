@@ -36,7 +36,7 @@ var fakePaginator = {
 
     extended = true;
     methods = arrify(methods);
-    assert.deepEqual(methods, ['getEntries', 'getSinks']);
+    assert.deepStrictEqual(methods, ['getEntries', 'getSinks']);
   },
   streamify: function(methodName) {
     return methodName;
@@ -65,7 +65,12 @@ var fakeUtil = extend({}, util, {
     }
 
     promisifed = true;
-    assert.deepEqual(options.exclude, ['entry', 'log', 'request', 'sink']);
+    assert.deepStrictEqual(options.exclude, [
+      'entry',
+      'log',
+      'request',
+      'sink',
+    ]);
   },
   replaceProjectIdToken: function(reqOpts) {
     if (replaceProjectIdTokenOverride) {
@@ -174,7 +179,7 @@ describe('Logging', function() {
     });
 
     it('should initialize the API object', function() {
-      assert.deepEqual(logging.api, {});
+      assert.deepStrictEqual(logging.api, {});
     });
 
     it('should cache a local GoogleAuth instance', function() {
@@ -185,7 +190,7 @@ describe('Logging', function() {
       };
 
       googleAuthOverride = function(options_) {
-        assert.deepEqual(
+        assert.deepStrictEqual(
           options_,
           extend(
             {
@@ -213,7 +218,7 @@ describe('Logging', function() {
 
       assert.notStrictEqual(logging.options, options);
 
-      assert.deepEqual(
+      assert.deepStrictEqual(
         logging.options,
         extend(
           {
@@ -331,7 +336,7 @@ describe('Logging', function() {
 
           var expectedParent = 'projects/' + logging.projectId;
           assert.strictEqual(config.reqOpts.parent, expectedParent);
-          assert.deepEqual(config.reqOpts.sink, expectedConfig);
+          assert.deepStrictEqual(config.reqOpts.sink, expectedConfig);
 
           assert.strictEqual(config.gaxOpts, undefined);
 
@@ -426,7 +431,7 @@ describe('Logging', function() {
   describe('getEntries', function() {
     it('should accept only a callback', function(done) {
       logging.request = function(config) {
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
@@ -443,7 +448,7 @@ describe('Logging', function() {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntries');
 
-        assert.deepEqual(
+        assert.deepStrictEqual(
           config.reqOpts,
           extend(options, {
             orderBy: 'timestamp desc',
@@ -467,7 +472,7 @@ describe('Logging', function() {
       };
 
       logging.request = function(config) {
-        assert.deepEqual(config.reqOpts.resourceNames, [
+        assert.deepStrictEqual(config.reqOpts.resourceNames, [
           'projects/' + logging.projectId,
         ]);
         done();
@@ -482,7 +487,7 @@ describe('Logging', function() {
       };
 
       logging.request = function(config) {
-        assert.deepEqual(config.reqOpts.orderBy, options.orderBy);
+        assert.deepStrictEqual(config.reqOpts.orderBy, options.orderBy);
         done();
       };
 
@@ -581,14 +586,14 @@ describe('Logging', function() {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntriesStream');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           resourceNames: ['projects/' + logging.projectId],
           orderBy: 'timestamp desc',
           a: 'b',
           c: 'd',
         });
 
-        assert.deepEqual(config.gaxOpts, {
+        assert.deepStrictEqual(config.gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
           c: 'd',
@@ -657,13 +662,13 @@ describe('Logging', function() {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinks');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           parent: 'projects/' + logging.projectId,
           a: 'b',
           c: 'd',
         });
 
-        assert.deepEqual(config.gaxOpts, {
+        assert.deepStrictEqual(config.gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
           c: 'd',
@@ -759,13 +764,13 @@ describe('Logging', function() {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinksStream');
 
-        assert.deepEqual(config.reqOpts, {
+        assert.deepStrictEqual(config.reqOpts, {
           parent: 'projects/' + logging.projectId,
           a: 'b',
           c: 'd',
         });
 
-        assert.deepEqual(config.gaxOpts, {
+        assert.deepStrictEqual(config.gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
           c: 'd',
@@ -910,7 +915,7 @@ describe('Logging', function() {
 
         replaceProjectIdTokenOverride = function(reqOpts, projectId) {
           assert.notStrictEqual(reqOpts, CONFIG.reqOpts);
-          assert.deepEqual(reqOpts, CONFIG.reqOpts);
+          assert.deepStrictEqual(reqOpts, CONFIG.reqOpts);
           assert.strictEqual(projectId, PROJECT_ID);
 
           return replacedReqOpts;
@@ -948,7 +953,7 @@ describe('Logging', function() {
         logging.api[CONFIG.client][CONFIG.method] = {
           bind: function(gaxClient, reqOpts, gaxOpts) {
             assert.strictEqual(gaxClient, logging.api[CONFIG.client]);
-            assert.deepEqual(reqOpts, CONFIG.reqOpts);
+            assert.deepStrictEqual(reqOpts, CONFIG.reqOpts);
             assert.strictEqual(gaxOpts, CONFIG.gaxOpts);
 
             setImmediate(done);
@@ -1025,7 +1030,7 @@ describe('Logging', function() {
         logging.api[CONFIG.client][CONFIG.method] = {
           bind: function(gaxClient, reqOpts, gaxOpts) {
             assert.strictEqual(gaxClient, logging.api[CONFIG.client]);
-            assert.deepEqual(reqOpts, CONFIG.reqOpts);
+            assert.deepStrictEqual(reqOpts, CONFIG.reqOpts);
             assert.strictEqual(gaxOpts, CONFIG.gaxOpts);
 
             setImmediate(done);
@@ -1225,8 +1230,8 @@ describe('Logging', function() {
           var expectedAccess = [].slice.call(originalAccess).concat(access);
 
           dataset.setMetadata = function(metadata) {
-            assert.deepEqual(apiResponse.access, originalAccess);
-            assert.deepEqual(metadata.access, expectedAccess);
+            assert.deepStrictEqual(apiResponse.access, originalAccess);
+            assert.deepStrictEqual(metadata.access, expectedAccess);
             done();
           };
 
@@ -1349,7 +1354,7 @@ describe('Logging', function() {
 
           topic.iam.setPolicy = function(policy) {
             assert.strictEqual(policy, apiResponse);
-            assert.deepEqual(policy.bindings, expectedBindings);
+            assert.deepStrictEqual(policy.bindings, expectedBindings);
             done();
           };
 

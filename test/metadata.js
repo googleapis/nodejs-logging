@@ -87,7 +87,7 @@ describe('metadata', function() {
     });
 
     it('should return the correct descriptor', function() {
-      assert.deepEqual(Metadata.getCloudFunctionDescriptor(), {
+      assert.deepStrictEqual(Metadata.getCloudFunctionDescriptor(), {
         type: 'cloud_function',
         labels: {
           function_name: FUNCTION_NAME,
@@ -109,7 +109,7 @@ describe('metadata', function() {
     });
 
     it('should return the correct descriptor', function() {
-      assert.deepEqual(Metadata.getGAEDescriptor(), {
+      assert.deepStrictEqual(Metadata.getGAEDescriptor(), {
         type: 'gae_app',
         labels: {
           module_id: GAE_SERVICE,
@@ -137,7 +137,7 @@ describe('metadata', function() {
 
       Metadata.getGKEDescriptor(function(err, descriptor) {
         assert.ifError(err);
-        assert.deepEqual(descriptor, {
+        assert.deepStrictEqual(descriptor, {
           type: 'container',
           labels: {
             cluster_name: CLUSTER_NAME,
@@ -171,7 +171,7 @@ describe('metadata', function() {
 
       Metadata.getGCEDescriptor(function(err, descriptor) {
         assert.ifError(err);
-        assert.deepEqual(descriptor, {
+        assert.deepStrictEqual(descriptor, {
           type: 'gce_instance',
           labels: {
             instance_id: INSTANCE_ID,
@@ -196,7 +196,7 @@ describe('metadata', function() {
 
   describe('getGlobalDescriptor', function() {
     it('should return the correct descriptor', function() {
-      assert.deepEqual(Metadata.getGlobalDescriptor(), {
+      assert.deepStrictEqual(Metadata.getGlobalDescriptor(), {
         type: 'global',
       });
     });
