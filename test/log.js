@@ -160,10 +160,8 @@ describe('Log', function() {
     });
 
     it('should not affect original array', function() {
-      var originalEntries = extend({}, ENTRIES);
-
+      var originalEntries = ENTRIES.map(x => extend({}, x));
       Log.assignSeverityToEntries_(originalEntries, SEVERITY);
-
       assert.deepStrictEqual(originalEntries, ENTRIES);
     });
   });
