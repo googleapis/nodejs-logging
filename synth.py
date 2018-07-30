@@ -40,14 +40,6 @@ s.copy(v2_library / 'smoke-test')
 '''
 Node.js specific cleanup
 '''
-# Repo Cleanup/Setup
-# Install and Link (for linting mostly)
-subprocess.run('bash', input=b'rm -rf node_modules package-lock.json')
-subprocess.run(
-    'bash', input=b'cd samples && rm -rf node_modules/ package-lock.json')
-subprocess.run('bash', input=b'npm install && npm link')
-subprocess.run('bash', input=b'cd samples && npm link ../ && npm install')
-
-# prettify and lint
+subprocess.run(['npm', 'ci'])
 subprocess.run(['npm', 'run', 'prettier'])
 subprocess.run(['npm', 'run', 'lint'])
