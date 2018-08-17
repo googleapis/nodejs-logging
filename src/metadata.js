@@ -16,6 +16,7 @@
 
 'use strict';
 
+var fs = require('fs');
 var gcpMetadata = require('gcp-metadata');
 
 /**
@@ -33,6 +34,9 @@ var gcpMetadata = require('gcp-metadata');
 function Metadata(logging) {
   this.logging = logging;
 }
+
+Metadata.KUBERNETES_NAMESPACE_ID_PATH =
+  '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
 
 /**
  * Create a descriptor for Cloud Functions.
@@ -91,19 +95,38 @@ Metadata.getGCEDescriptor = function(callback) {
  * @return {object}
  */
 Metadata.getGKEDescriptor = function(callback) {
-  gcpMetadata
-    .instance('attributes/cluster-name')
-    .then(function(resp) {
-      callback(null, {
-        type: 'container',
-        labels: {
-          // note(ofrobots): it would be good to include the namespace_id as
-          // well.
-          cluster_name: resp.data,
-        },
-      });
-    })
-    .catch(callback);
+  // Stackdriver Logging Monitored Resource for 'container' requires
+  // cluster_name and namespace_id fields. Note that these *need* to be
+  // snake_case. The namespace_id is not easily available from inside the
+  // container, but we can get the namespace_name. Logging has been using the
+  // namespace_name in place of namespace_id for a while now. Log correlation
+  // with metrics may not necessarily work however.
+  //
+  gcpMetadata.instance('attributes/cluster-name').then(function(resp) {
+    fs.readFile(
+      Metadata.KUBERNETES_NAMESPACE_ID_PATH,
+      'utf8',
+      (err, namespace) => {
+        if (err) {
+          callback(
+            new Error(
+              `Error reading ` +
+                `${Metadata.KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
+            )
+          );
+          return;
+        }
+
+        callback(null, {
+          type: 'container',
+          labels: {
+            cluster_name: resp.data,
+            namespace_id: namespace,
+          },
+        });
+      }
+    );
+  }, callback);
 };
 
 /**

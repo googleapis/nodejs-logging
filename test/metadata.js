@@ -41,6 +41,18 @@ var fakeGcpMetadata = {
   },
 };
 
+var FAKE_READFILE_ERROR_MESSAGE = 'fake readFile error';
+var FAKE_READFILE_CONTENTS = 'fake readFile contents';
+var readFileShouldError;
+var fakeFS = {
+  readFile: (filename, encoding, callback) => {
+    setImmediate(() => {
+      if (readFileShouldError) callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
+      else callback(null, FAKE_READFILE_CONTENTS);
+    });
+  },
+};
+
 describe('metadata', function() {
   var MetadataCached;
   var Metadata;
@@ -53,6 +65,7 @@ describe('metadata', function() {
   before(function() {
     Metadata = proxyquire('../src/metadata.js', {
       'gcp-metadata': fakeGcpMetadata,
+      fs: fakeFS,
     });
 
     MetadataCached = extend({}, Metadata);
@@ -65,6 +78,7 @@ describe('metadata', function() {
     extend(Metadata, MetadataCached);
     metadata = new Metadata(LOGGING);
     instanceOverride = null;
+    readFileShouldError = false;
   });
 
   afterEach(function() {
@@ -141,6 +155,7 @@ describe('metadata', function() {
           type: 'container',
           labels: {
             cluster_name: CLUSTER_NAME,
+            namespace_id: FAKE_READFILE_CONTENTS,
           },
         });
         done();
@@ -155,6 +170,15 @@ describe('metadata', function() {
 
       Metadata.getGKEDescriptor(function(err) {
         assert.strictEqual(err, FAKE_ERROR);
+        done();
+      });
+    });
+
+    it('should return error when read of namespace file fails', function(done) {
+      readFileShouldError = true;
+      Metadata.getGKEDescriptor(function(err) {
+        assert.ok(err);
+        assert.ok(err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
         done();
       });
     });
@@ -295,6 +319,7 @@ describe('metadata', function() {
               type: 'container',
               labels: {
                 cluster_name: CLUSTER_NAME,
+                namespace_id: FAKE_READFILE_CONTENTS,
               },
             });
             done();
