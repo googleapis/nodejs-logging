@@ -47,13 +47,11 @@ var readFileShouldError;
 var fakeFS = {
   readFile: (filename, encoding, callback) => {
     setImmediate(() => {
-      if (readFileShouldError)
-        callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
-      else
-        callback(null, FAKE_READFILE_CONTENTS);
+      if (readFileShouldError) callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
+      else callback(null, FAKE_READFILE_CONTENTS);
     });
-  }
-}
+  },
+};
 
 describe('metadata', function() {
   var MetadataCached;
@@ -67,7 +65,7 @@ describe('metadata', function() {
   before(function() {
     Metadata = proxyquire('../src/metadata.js', {
       'gcp-metadata': fakeGcpMetadata,
-      'fs': fakeFS
+      fs: fakeFS,
     });
 
     MetadataCached = extend({}, Metadata);
@@ -157,7 +155,7 @@ describe('metadata', function() {
           type: 'container',
           labels: {
             cluster_name: CLUSTER_NAME,
-            namespace_id: FAKE_READFILE_CONTENTS
+            namespace_id: FAKE_READFILE_CONTENTS,
           },
         });
         done();
@@ -321,7 +319,7 @@ describe('metadata', function() {
               type: 'container',
               labels: {
                 cluster_name: CLUSTER_NAME,
-                namespace_id: FAKE_READFILE_CONTENTS
+                namespace_id: FAKE_READFILE_CONTENTS,
               },
             });
             done();
