@@ -26,8 +26,8 @@ const cmd = `node logs.js`;
 const logName = `nodejs-logging-logs-test-${uuid.v4()}`;
 const message = `Hello world!`;
 
-before(async() => {
-  await tools.checkCredentials()
+before(async () => {
+  await tools.checkCredentials();
 });
 
 it(`should write a log entry`, async () => {
