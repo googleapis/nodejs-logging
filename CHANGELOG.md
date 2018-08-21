@@ -12,7 +12,7 @@
 
 ## v3.0.0
 
-**This release has breaking changes**.  Support for Node.js 4.x and 9.x has been dropped for this release.
+**This should not have been a semver major release.  There are no breaking changes.**
 
 ### Bug fixes
 - fix(gke): include namespace_id in resource (#191)
