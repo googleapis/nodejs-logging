@@ -17,7 +17,7 @@
 
 const proxyquire = require(`proxyquire`).noPreserveCache();
 const sinon = require(`sinon`);
-const test = require(`ava`);
+const assert = require('assert');
 const tools = require(`@google-cloud/nodejs-repo-tools`);
 const uuid = require(`uuid`);
 
@@ -25,22 +25,22 @@ const logging = proxyquire(`@google-cloud/logging`, {})();
 
 const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
 
-test.after.always(async () => {
+after(async () => {
   try {
     await logging.log(logName).delete();
   } catch (err) {} // ignore error
 });
 
-test.beforeEach(tools.stubConsole);
-test.afterEach.always(tools.restoreConsole);
+beforeEach(tools.stubConsole);
+afterEach(tools.restoreConsole);
 
-test.cb(`should log an entry`, t => {
+it(`should log an entry`, done => {
   const expectedlogName = `my-log`;
 
   const logMock = {
     entry: sinon.stub().returns({}),
     write: _entry => {
-      t.deepEqual(_entry, {});
+      assert.deepStrictEqual(_entry, {});
 
       const log = logging.log(logName);
       const text = `Hello, world!`;
@@ -49,11 +49,13 @@ test.cb(`should log an entry`, t => {
       return log.write(entry).then(results => {
         setTimeout(() => {
           try {
-            t.true(console.log.calledOnce);
-            t.deepEqual(console.log.firstCall.args, [`Logged: ${text}`]);
-            t.end();
+            assert(console.log.calledOnce);
+            assert.deepStrictEqual(console.log.firstCall.args, [
+              `Logged: ${text}`,
+            ]);
+            done();
           } catch (err) {
-            t.end(err);
+            done(err);
           }
         }, 200);
 
@@ -63,11 +65,10 @@ test.cb(`should log an entry`, t => {
   };
   const loggingMock = {
     log: _logName => {
-      t.is(_logName, expectedlogName);
+      assert.strictEqual(_logName, expectedlogName);
       return logMock;
     },
   };
-
   proxyquire(`../quickstart`, {
     '@google-cloud/logging': sinon.stub().returns(loggingMock),
   });

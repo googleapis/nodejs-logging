@@ -9,10 +9,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "cleanup": "node scripts/cleanup",
-    "ava": "ava -T 20s --verbose test/*.test.js system-test/*.test.js",
-    "cover": "nyc --reporter=lcov --cache ava -T 20s --verbose system-test/*.test.js && nyc report",
-    "test": "npm run cover"
+    "test": "nyc mocha system-test/ test/"
   },
   "dependencies": {
     "@google-cloud/logging": "^3.0.0",
@@ -27,7 +24,8 @@
   },
   "devDependencies": {
     "@google-cloud/nodejs-repo-tools": "^2.3.0",
-    "ava": "^0.25.0",
+    "assert-rejects": "^1.0.0",
+    "mocha": "^5.2.0",
     "nyc": "^12.0.2",
     "proxyquire": "^2.0.1",
     "sinon": "^6.0.1",
