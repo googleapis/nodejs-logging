@@ -149,7 +149,7 @@ Metadata.prototype.getDefaultResource = function(callback) {
   this.logging.auth
     .getEnv()
     .then(env => {
-      if (env === 'CONTAINER_ENGINE') {
+      if (env === 'KUBERNETES_ENGINE') {
         Metadata.getGKEDescriptor(callback);
       } else if (env === 'APP_ENGINE') {
         callback(null, Metadata.getGAEDescriptor());

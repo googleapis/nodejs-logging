@@ -310,7 +310,7 @@ describe('metadata', function() {
           };
 
           metadata.logging.auth.getEnv = function() {
-            return Promise.resolve('CONTAINER_ENGINE');
+            return Promise.resolve('KUBERNETES_ENGINE');
           };
 
           metadata.getDefaultResource(function(err, defaultResource) {
