@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@google-cloud/logging": "^3.0.0",
-    "@google-cloud/logging-bunyan": "^0.8.2",
+    "@google-cloud/logging-bunyan": "^0.9.0",
     "@google-cloud/logging-winston": "^0.9.0",
     "@google-cloud/storage": "^1.7.0",
     "bunyan": "^1.8.12",
