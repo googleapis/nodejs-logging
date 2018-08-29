@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v3.0.2
+
+This release contains a variety of minor internal changes.
+
+### Internal / Testing Changes
+- chore: upgrade to the latest common-grpc (#203)
+- Re-generate library using /synth.py (#202)
+- chore(deps): update dependency nyc to v13 (#200)
+- chore(deps): update samples dependency @google-cloud/logging-bunyan to ^0.9.0 (#199)
+- fix(deps): update dependency google-gax to ^0.19.0 (#198)
+- chore: use mocha for sample tests (#197)
+
 ## v3.0.1
 
 ### Fixes
