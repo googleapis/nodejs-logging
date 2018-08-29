@@ -20,15 +20,15 @@ var assert = require('assert');
 var extend = require('extend');
 var prop = require('propprop');
 var proxyquire = require('proxyquire');
-var util = require('@google-cloud/common-grpc').util;
+var {util} = require('@google-cloud/common-grpc');
+const promisify = require('@google-cloud/promisify');
 
 var promisifed = false;
-var fakeUtil = extend({}, util, {
+var fakePromisify = extend({}, promisify, {
   promisifyAll: function(Class, options) {
     if (Class.name !== 'Log') {
       return;
     }
-
     promisifed = true;
     assert.deepStrictEqual(options.exclude, ['entry']);
   },
@@ -60,9 +60,7 @@ describe('Log', function() {
 
   before(function() {
     Log = proxyquire('../src/log.js', {
-      '@google-cloud/common-grpc': {
-        util: fakeUtil,
-      },
+      '@google-cloud/promisify': fakePromisify,
       './entry.js': Entry,
       './metadata.js': FakeMetadata,
     });

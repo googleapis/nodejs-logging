@@ -17,6 +17,7 @@
 'use strict';
 
 var common = require('@google-cloud/common-grpc');
+const {promisifyAll} = require('@google-cloud/promisify');
 var extend = require('extend');
 var is = require('is');
 
@@ -353,7 +354,7 @@ Sink.prototype.setMetadata = function(metadata, callback) {
  * All async methods (except for streams) will return a Promise in the event
  * that a callback is omitted.
  */
-common.util.promisifyAll(Sink);
+promisifyAll(Sink);
 
 /**
  * Reference to the {@link Sink} class.
