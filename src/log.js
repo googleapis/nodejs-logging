@@ -17,7 +17,7 @@
 'use strict';
 
 var arrify = require('arrify');
-var common = require('@google-cloud/common-grpc');
+const {promisifyAll} = require('@google-cloud/promisify');
 var extend = require('extend');
 var is = require('is');
 var snakeCaseKeys = require('snakecase-keys');
@@ -752,7 +752,7 @@ Log.prototype.decorateEntries_ = function(entries) {
  * All async methods (except for streams) will return a Promise in the event
  * that a callback is omitted.
  */
-common.util.promisifyAll(Log, {
+promisifyAll(Log, {
   exclude: ['entry'],
 });
 

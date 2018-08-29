@@ -18,6 +18,9 @@
 
 var arrify = require('arrify');
 var common = require('@google-cloud/common-grpc');
+const {promisifyAll} = require('@google-cloud/promisify');
+const {paginator} = require('@google-cloud/paginator');
+const {replaceProjectIdToken} = require('@google-cloud/projectify');
 var extend = require('extend');
 var {GoogleAuth} = require('google-auth-library');
 var is = require('is');
@@ -110,8 +113,6 @@ function Logging(options) {
   if (!(this instanceof Logging)) {
     return new Logging(options);
   }
-
-  options = common.util.normalizeArguments(this, options);
 
   // Determine what scopes are needed.
   // It is the union of the scopes on all three clients.
@@ -798,7 +799,7 @@ Logging.prototype.request = function(config, callback) {
       }
 
       var reqOpts = extend(true, {}, config.reqOpts);
-      reqOpts = common.util.replaceProjectIdToken(reqOpts, projectId);
+      reqOpts = replaceProjectIdToken(reqOpts, projectId);
 
       var requestFn = gaxClient[config.method].bind(
         gaxClient,
@@ -962,14 +963,14 @@ Logging.prototype.setAclForTopic_ = function(name, config, callback) {
  *
  * These methods can be auto-paginated.
  */
-common.paginator.extend(Logging, ['getEntries', 'getSinks']);
+paginator.extend(Logging, ['getEntries', 'getSinks']);
 
 /*! Developer Documentation
  *
  * All async methods (except for streams) will return a Promise in the event
  * that a callback is omitted.
  */
-common.util.promisifyAll(Logging, {
+promisifyAll(Logging, {
   exclude: ['entry', 'log', 'request', 'sink'],
 });
 

@@ -18,9 +18,8 @@
 
 var assert = require('assert');
 var extend = require('extend');
-var GrpcService = require('@google-cloud/common-grpc').GrpcService;
+var {GrpcService, util} = require('@google-cloud/common-grpc');
 var proxyquire = require('proxyquire');
-var util = require('@google-cloud/common-grpc').util;
 
 function FakeGrpcService() {}
 

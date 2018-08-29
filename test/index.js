@@ -21,7 +21,7 @@ var assert = require('assert');
 var extend = require('extend');
 var proxyquire = require('proxyquire');
 var through = require('through2');
-var util = require('@google-cloud/common-grpc').util;
+var {util} = require('@google-cloud/common-grpc');
 
 var v2 = require('../src/v2');
 
@@ -29,17 +29,18 @@ var PKG = require('../package.json');
 
 var extended = false;
 var fakePaginator = {
-  extend: function(Class, methods) {
-    if (Class.name !== 'Logging') {
-      return;
-    }
-
-    extended = true;
-    methods = arrify(methods);
-    assert.deepStrictEqual(methods, ['getEntries', 'getSinks']);
-  },
-  streamify: function(methodName) {
-    return methodName;
+  paginator: {
+    extend: function(Class, methods) {
+      if (Class.name !== 'Logging') {
+        return;
+      }
+      extended = true;
+      methods = arrify(methods);
+      assert.deepStrictEqual(methods, ['getEntries', 'getSinks']);
+    },
+    streamify: function(methodName) {
+      return methodName;
+    },
   },
 };
 
@@ -56,14 +57,14 @@ var fakeUtil = extend({}, util, {
     if (isCustomTypeOverride) {
       return isCustomTypeOverride.apply(null, arguments);
     }
-
     return false;
   },
+});
+const fakePromisify = {
   promisifyAll: function(Class, options) {
     if (Class.name !== 'Logging') {
       return;
     }
-
     promisifed = true;
     assert.deepStrictEqual(options.exclude, [
       'entry',
@@ -72,14 +73,16 @@ var fakeUtil = extend({}, util, {
       'sink',
     ]);
   },
+};
+const fakeProjectify = {
   replaceProjectIdToken: function(reqOpts) {
     if (replaceProjectIdTokenOverride) {
       return replaceProjectIdTokenOverride.apply(null, arguments);
     }
-
     return reqOpts;
   },
-});
+};
+
 var originalFakeUtil = extend(true, {}, fakeUtil);
 
 function fakeV2() {}
@@ -109,9 +112,11 @@ describe('Logging', function() {
   before(function() {
     Logging = proxyquire('../', {
       '@google-cloud/common-grpc': {
-        paginator: fakePaginator,
         util: fakeUtil,
       },
+      '@google-cloud/promisify': fakePromisify,
+      '@google-cloud/paginator': fakePaginator,
+      '@google-cloud/projectify': fakeProjectify,
       'google-auth-library': {
         GoogleAuth: fakeGoogleAuth,
       },
@@ -162,20 +167,6 @@ describe('Logging', function() {
       assert.doesNotThrow(function() {
         Logging({projectId: PROJECT_ID});
       });
-    });
-
-    it('should normalize the arguments', function() {
-      var normalizeArgumentsCalled = false;
-      var options = {};
-
-      fakeUtil.normalizeArguments = function(context, options_) {
-        normalizeArgumentsCalled = true;
-        assert.strictEqual(options_, options);
-        return options_;
-      };
-
-      new Logging(options);
-      assert.strictEqual(normalizeArgumentsCalled, true);
     });
 
     it('should initialize the API object', function() {
