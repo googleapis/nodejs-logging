@@ -17,29 +17,29 @@
 import synthtool as s
 import synthtool.gcp as gcp
 import logging
-from pathlib import Path
 import subprocess
 
 logging.basicConfig(level=logging.DEBUG)
 
 gapic = gcp.GAPICGenerator()
+common_templates = gcp.CommonTemplates()
 
 # tasks has two product names, and a poorly named artman yaml
 v2_library = gapic.node_library(
-    'logging', 'v2',
-    config_path='/google/logging/artman_logging.yaml',
-    artman_output_name='logging-v2')
+    "logging",
+    "v2",
+    config_path="/google/logging/artman_logging.yaml",
+    artman_output_name="logging-v2",
+)
 
+s.copy(v2_library, excludes=["src/index.js", "README.md", "package.json"])
 
-# Copy all files except for 'README.md', 'package.json', and 'src/index.js'
-s.copy(v2_library / 'protos')
-s.copy(v2_library / 'src/v2')
-s.copy(v2_library / 'test')
-s.copy(v2_library / 'smoke-test')
+templates = common_templates.node_library()
+s.copy(templates)
 
-'''
+"""
 Node.js specific cleanup
-'''
-subprocess.run(['npm', 'install'])
-subprocess.run(['npm', 'run', 'prettier'])
-subprocess.run(['npm', 'run', 'lint'])
+"""
+subprocess.run(["npm", "install"])
+subprocess.run(["npm", "run", "prettier"])
+subprocess.run(["npm", "run", "lint"])
