@@ -100,7 +100,9 @@ class MetricsServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      projectPathTemplate: new gax.PathTemplate(
+        'projects/{project}'
+      ),
       metricPathTemplate: new gax.PathTemplate(
         'projects/{project}/metrics/{metric}'
       ),
@@ -353,7 +355,7 @@ class MetricsServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Gets a logs-based metric.
@@ -602,7 +604,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 
   /**
@@ -613,7 +617,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromMetricName(metricName) {
-    return this._pathTemplates.metricPathTemplate.match(metricName).project;
+    return this._pathTemplates.metricPathTemplate
+      .match(metricName)
+      .project;
   }
 
   /**
@@ -624,8 +630,11 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the metric.
    */
   matchMetricFromMetricName(metricName) {
-    return this._pathTemplates.metricPathTemplate.match(metricName).metric;
+    return this._pathTemplates.metricPathTemplate
+      .match(metricName)
+      .metric;
   }
 }
+
 
 module.exports = MetricsServiceV2Client;
