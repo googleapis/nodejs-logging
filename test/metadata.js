@@ -24,16 +24,20 @@ var instanceOverride;
 var fakeGcpMetadata = {
   instance: function(path) {
     if (instanceOverride) {
-      if (instanceOverride.path) {
-        assert.strictEqual(path, instanceOverride.path);
+      var override = Array.isArray(instanceOverride)
+        ? instanceOverride.find(entry => entry.path === path)
+        : instanceOverride;
+
+      if (override.path) {
+        assert.strictEqual(path, override.path);
       }
 
-      if (instanceOverride.errorArg) {
-        return Promise.reject(instanceOverride.errorArg);
+      if (override.errorArg) {
+        return Promise.reject(override.errorArg);
       }
 
-      if (instanceOverride.successArg) {
-        return Promise.resolve(instanceOverride.successArg);
+      if (override.successArg) {
+        return Promise.resolve(override.successArg);
       }
     }
 
@@ -186,12 +190,20 @@ describe('metadata', function() {
 
   describe('getGCEDescriptor', function() {
     var INSTANCE_ID = 'fake-instance-id';
+    var ZONE_ID = 'morrowind-vivec-1';
+    var ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
 
     it('should return the correct descriptor', function(done) {
-      instanceOverride = {
-        path: 'id',
-        successArg: {data: INSTANCE_ID},
-      };
+      instanceOverride = [
+        {
+          path: 'id',
+          successArg: {data: INSTANCE_ID},
+        },
+        {
+          path: 'zone',
+          successArg: {data: ZONE_FULL},
+        },
+      ];
 
       Metadata.getGCEDescriptor(function(err, descriptor) {
         assert.ifError(err);
@@ -199,6 +211,7 @@ describe('metadata', function() {
           type: 'gce_instance',
           labels: {
             instance_id: INSTANCE_ID,
+            zone: ZONE_ID,
           },
         });
         done();
@@ -279,10 +292,18 @@ describe('metadata', function() {
       describe('compute engine', function() {
         it('should return correct descriptor', function(done) {
           var INSTANCE_ID = 'overridden-value';
-          instanceOverride = {
-            path: 'id',
-            successArg: {data: INSTANCE_ID},
-          };
+          var ZONE_ID = 'cyrodiil-anvil-2';
+          var ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+          instanceOverride = [
+            {
+              path: 'id',
+              successArg: {data: INSTANCE_ID},
+            },
+            {
+              path: 'zone',
+              successArg: {data: ZONE_FULL},
+            },
+          ];
 
           metadata.logging.auth.getEnv = function() {
             return Promise.resolve('COMPUTE_ENGINE');
@@ -294,6 +315,7 @@ describe('metadata', function() {
               type: 'gce_instance',
               labels: {
                 instance_id: INSTANCE_ID,
+                zone: ZONE_ID,
               },
             });
             done();
