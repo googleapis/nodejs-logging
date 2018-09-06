@@ -24,20 +24,20 @@ var instanceOverride;
 var fakeGcpMetadata = {
   instance: function(path) {
     if (instanceOverride) {
-      var override = Array.isArray(instanceOverride) ?
-          instanceOverride.find(entry => entry.path === path) :
-          instanceOverride;
+      var override = Array.isArray(instanceOverride)
+        ? instanceOverride.find(entry => entry.path === path)
+        : instanceOverride;
 
       if (override.path) {
-          assert.strictEqual(path, override.path);
+        assert.strictEqual(path, override.path);
       }
 
       if (override.errorArg) {
-          return Promise.reject(override.errorArg);
+        return Promise.reject(override.errorArg);
       }
 
       if (override.successArg) {
-          return Promise.resolve(override.successArg);
+        return Promise.resolve(override.successArg);
       }
     }
 
@@ -190,7 +190,7 @@ describe('metadata', function() {
 
   describe('getGCEDescriptor', function() {
     var INSTANCE_ID = 'fake-instance-id';
-    var ZONE_ID = 'morrowind-vivec-1'
+    var ZONE_ID = 'morrowind-vivec-1';
     var ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
 
     it('should return the correct descriptor', function(done) {
@@ -201,8 +201,8 @@ describe('metadata', function() {
         },
         {
           path: 'zone',
-          successArg: {data: ZONE_FULL}
-        }
+          successArg: {data: ZONE_FULL},
+        },
       ];
 
       Metadata.getGCEDescriptor(function(err, descriptor) {
@@ -211,7 +211,7 @@ describe('metadata', function() {
           type: 'gce_instance',
           labels: {
             instance_id: INSTANCE_ID,
-            zone: ZONE_ID
+            zone: ZONE_ID,
           },
         });
         done();
@@ -301,8 +301,8 @@ describe('metadata', function() {
             },
             {
               path: 'zone',
-              successArg: {data: ZONE_FULL}
-            }
+              successArg: {data: ZONE_FULL},
+            },
           ];
 
           metadata.logging.auth.getEnv = function() {
@@ -315,7 +315,7 @@ describe('metadata', function() {
               type: 'gce_instance',
               labels: {
                 instance_id: INSTANCE_ID,
-                zone: ZONE_ID
+                zone: ZONE_ID,
               },
             });
             done();
