@@ -77,15 +77,25 @@ Metadata.getGAEDescriptor = function() {
 Metadata.getGCEDescriptor = function(callback) {
   gcpMetadata
     .instance('id')
-    .then(function(resp) {
-      callback(null, {
-        type: 'gce_instance',
-        labels: {
-          instance_id: resp.data,
-        },
-      });
-    })
-    .catch(callback);
+    .then(function(idResponse) {
+      gcpMetadata
+        .instance('zone')
+        .then(function(zoneResponse) {
+          // Some parsing is necessary. Metadata service returns a fully
+          // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
+          // wants just the zone part.
+          //
+          const [_, zone] =
+            zoneResponse.data.match(/projects\/.*\/zones\/(.*)/) || [];
+          callback(null, {
+            type: 'gce_instance',
+            labels: {
+              instance_id: idResponse.data,
+              zone: zone
+            }
+          });
+        }, callback);
+    }, callback);
 };
 
 /**
