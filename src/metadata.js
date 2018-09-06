@@ -81,6 +81,7 @@ Metadata.getGCEDescriptor = function(callback) {
       // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
       // wants just the zone part.
       //
+      // eslint-disable-next-line no-unused-vars
       const [_, zone] =
         zoneResponse.data.match(/projects\/.*\/zones\/(.*)/) || [];
       callback(null, {
