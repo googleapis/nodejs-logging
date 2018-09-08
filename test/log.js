@@ -16,15 +16,15 @@
 
 'use strict';
 
-var assert = require('assert');
-var extend = require('extend');
-var prop = require('propprop');
-var proxyquire = require('proxyquire');
-var {util} = require('@google-cloud/common-grpc');
+const assert = require('assert');
+const extend = require('extend');
+const prop = require('propprop');
+const proxyquire = require('proxyquire');
+const {util} = require('@google-cloud/common-grpc');
 const promisify = require('@google-cloud/promisify');
 
-var promisifed = false;
-var fakePromisify = extend({}, promisify, {
+let promisifed = false;
+const fakePromisify = extend({}, promisify, {
   promisifyAll: function(Class, options) {
     if (Class.name !== 'Log') {
       return;
@@ -34,29 +34,29 @@ var fakePromisify = extend({}, promisify, {
   },
 });
 
-var Entry = require('../src/entry.js');
+const Entry = require('../src/entry.js');
 
 function FakeMetadata() {
   this.calledWith_ = arguments;
 }
 
 describe('Log', function() {
-  var Log;
-  var log;
+  let Log;
+  let log;
 
-  var PROJECT_ID = 'project-id';
-  var LOG_NAME = 'escaping/required/for/this/log-name';
-  var LOG_NAME_ENCODED = encodeURIComponent(LOG_NAME);
-  var LOG_NAME_FORMATTED = [
+  const PROJECT_ID = 'project-id';
+  const LOG_NAME = 'escaping/required/for/this/log-name';
+  const LOG_NAME_ENCODED = encodeURIComponent(LOG_NAME);
+  const LOG_NAME_FORMATTED = [
     'projects',
     PROJECT_ID,
     'logs',
     LOG_NAME_ENCODED,
   ].join('/');
 
-  var LOGGING;
+  let LOGGING;
 
-  var assignSeverityToEntriesOverride = null;
+  let assignSeverityToEntriesOverride = null;
 
   before(function() {
     Log = proxyquire('../src/log.js', {
@@ -64,7 +64,7 @@ describe('Log', function() {
       './entry.js': Entry,
       './metadata.js': FakeMetadata,
     });
-    var assignSeverityToEntries_ = Log.assignSeverityToEntries_;
+    const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = function() {
       return (
         assignSeverityToEntriesOverride || assignSeverityToEntries_
@@ -98,15 +98,15 @@ describe('Log', function() {
     });
 
     it('should localize the formatted name', function() {
-      var formattedName = 'formatted-name';
+      const formattedName = 'formatted-name';
 
-      var formatName_ = Log.formatName_;
+      const formatName_ = Log.formatName_;
       Log.formatName_ = function() {
         Log.formatName_ = formatName_;
         return formattedName;
       };
 
-      var log = new Log(LOGGING, LOG_NAME_FORMATTED);
+      const log = new Log(LOGGING, LOG_NAME_FORMATTED);
 
       assert.strictEqual(log.formattedName_, formattedName);
     });
@@ -117,8 +117,8 @@ describe('Log', function() {
     });
 
     it('should accept and localize options.removeCircular', function() {
-      var options = {removeCircular: true};
-      var log = new Log(LOGGING, LOG_NAME_FORMATTED, options);
+      const options = {removeCircular: true};
+      const log = new Log(LOGGING, LOG_NAME_FORMATTED, options);
       assert.strictEqual(log.removeCircular_, true);
     });
 
@@ -132,12 +132,12 @@ describe('Log', function() {
   });
 
   describe('assignSeverityToEntries_', function() {
-    var circular = {};
+    const circular = {};
     circular.circular = circular;
 
-    var ENTRIES = [{data: {a: 'b'}}, {data: {c: 'd'}}, {data: {e: circular}}];
+    const ENTRIES = [{data: {a: 'b'}}, {data: {c: 'd'}}, {data: {e: circular}}];
 
-    var SEVERITY = 'severity';
+    const SEVERITY = 'severity';
 
     it('should assign severity to a single entry', function() {
       assert.deepStrictEqual(
@@ -158,32 +158,32 @@ describe('Log', function() {
     });
 
     it('should not affect original array', function() {
-      var originalEntries = ENTRIES.map(x => extend({}, x));
+      const originalEntries = ENTRIES.map(x => extend({}, x));
       Log.assignSeverityToEntries_(originalEntries, SEVERITY);
       assert.deepStrictEqual(originalEntries, ENTRIES);
     });
   });
 
   describe('formatName_', function() {
-    var PROJECT_ID = 'project-id';
-    var NAME = 'log-name';
+    const PROJECT_ID = 'project-id';
+    const NAME = 'log-name';
 
-    var EXPECTED = 'projects/' + PROJECT_ID + '/logs/' + NAME;
+    const EXPECTED = 'projects/' + PROJECT_ID + '/logs/' + NAME;
 
     it('should properly format the name', function() {
       assert.strictEqual(Log.formatName_(PROJECT_ID, NAME), EXPECTED);
     });
 
     it('should encode a name that requires it', function() {
-      var name = 'appengine/logs';
-      var expectedName = 'projects/' + PROJECT_ID + '/logs/appengine%2Flogs';
+      const name = 'appengine/logs';
+      const expectedName = 'projects/' + PROJECT_ID + '/logs/appengine%2Flogs';
 
       assert.strictEqual(Log.formatName_(PROJECT_ID, name), expectedName);
     });
 
     it('should not encode a name that does not require it', function() {
-      var name = 'appengine%2Flogs';
-      var expectedName = 'projects/' + PROJECT_ID + '/logs/' + name;
+      const name = 'appengine%2Flogs';
+      const expectedName = 'projects/' + PROJECT_ID + '/logs/' + name;
 
       assert.strictEqual(Log.formatName_(PROJECT_ID, name), expectedName);
     });
@@ -208,7 +208,7 @@ describe('Log', function() {
     });
 
     it('should accept gaxOptions', function(done) {
-      var gaxOptions = {};
+      const gaxOptions = {};
 
       log.logging.request = function(config) {
         assert.strictEqual(config.gaxOpts, gaxOptions);
@@ -221,12 +221,12 @@ describe('Log', function() {
 
   describe('entry', function() {
     it('should return an entry from Logging', function() {
-      var metadata = {
+      const metadata = {
         val: true,
       };
-      var data = {};
+      const data = {};
 
-      var entryObject = {};
+      const entryObject = {};
 
       log.logging.entry = function(metadata_, data_) {
         assert.deepStrictEqual(metadata_, metadata);
@@ -234,12 +234,12 @@ describe('Log', function() {
         return entryObject;
       };
 
-      var entry = log.entry(metadata, data);
+      const entry = log.entry(metadata, data);
       assert.strictEqual(entry, entryObject);
     });
 
     it('should assume one argument means data', function(done) {
-      var data = {};
+      const data = {};
 
       log.logging.entry = function(metadata, data_) {
         assert.strictEqual(data_, data);
@@ -251,7 +251,7 @@ describe('Log', function() {
   });
 
   describe('getEntries', function() {
-    var EXPECTED_OPTIONS = {
+    const EXPECTED_OPTIONS = {
       filter: 'logName="' + LOG_NAME_FORMATTED + '"',
     };
 
@@ -265,7 +265,7 @@ describe('Log', function() {
     });
 
     it('should allow overriding the options', function(done) {
-      var options = {
+      const options = {
         custom: true,
         filter: 'custom filter',
       };
@@ -280,8 +280,8 @@ describe('Log', function() {
   });
 
   describe('getEntriesStream', function() {
-    var fakeStream = {};
-    var EXPECTED_OPTIONS = {
+    const fakeStream = {};
+    const EXPECTED_OPTIONS = {
       filter: 'logName="' + LOG_NAME_FORMATTED + '"',
     };
 
@@ -292,12 +292,12 @@ describe('Log', function() {
         return fakeStream;
       };
 
-      var stream = log.getEntriesStream();
+      const stream = log.getEntriesStream();
       assert.strictEqual(stream, fakeStream);
     });
 
     it('should allow overriding the options', function(done) {
-      var options = {
+      const options = {
         custom: true,
         filter: 'custom filter',
       };
@@ -308,15 +308,15 @@ describe('Log', function() {
         return fakeStream;
       };
 
-      var stream = log.getEntriesStream(options);
+      const stream = log.getEntriesStream(options);
       assert.strictEqual(stream, fakeStream);
     });
   });
 
   describe('write', function() {
-    var ENTRY = {};
-    var OPTIONS = {};
-    var FAKE_RESOURCE = 'fake-resource';
+    const ENTRY = {};
+    const OPTIONS = {};
+    const FAKE_RESOURCE = 'fake-resource';
 
     beforeEach(function() {
       log.decorateEntries_ = function(entries) {
@@ -328,8 +328,8 @@ describe('Log', function() {
     });
 
     it('should forward options.resource to request', function(done) {
-      var CUSTOM_RESOURCE = 'custom-resource';
-      var optionsWithResource = extend({}, OPTIONS, {
+      const CUSTOM_RESOURCE = 'custom-resource';
+      const optionsWithResource = extend({}, OPTIONS, {
         resource: CUSTOM_RESOURCE,
       });
 
@@ -352,17 +352,17 @@ describe('Log', function() {
     });
 
     it('should transform camelcase label keys to snake case', function(done) {
-      var CUSTOM_RESOURCE = {
+      const CUSTOM_RESOURCE = {
         labels: {
           camelCaseKey: 'camel-case-key-val',
         },
       };
-      var EXPECTED_RESOURCE = {
+      const EXPECTED_RESOURCE = {
         labels: {
           camel_case_key: 'camel-case-key-val',
         },
       };
-      var optionsWithResource = extend({}, OPTIONS, {
+      const optionsWithResource = extend({}, OPTIONS, {
         resource: CUSTOM_RESOURCE,
       });
 
@@ -404,7 +404,7 @@ describe('Log', function() {
     });
 
     it('should arrify & decorate the entries', function(done) {
-      var decoratedEntries = [];
+      const decoratedEntries = [];
 
       log.decorateEntries_ = function(entries) {
         assert.strictEqual(entries[0], ENTRY);
@@ -429,8 +429,8 @@ describe('Log', function() {
   });
 
   describe('severity shortcuts', function() {
-    var ENTRY = {};
-    var LABELS = [];
+    const ENTRY = {};
+    const LABELS = [];
 
     beforeEach(function() {
       log.write = util.noop;
@@ -449,7 +449,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -478,7 +478,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -507,7 +507,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -536,7 +536,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -565,7 +565,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -594,7 +594,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -623,7 +623,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -652,7 +652,7 @@ describe('Log', function() {
       });
 
       it('should pass correct arguments to write', function(done) {
-        var assignedEntries = [];
+        const assignedEntries = [];
 
         assignSeverityToEntriesOverride = function() {
           return assignedEntries;
@@ -670,7 +670,7 @@ describe('Log', function() {
   });
 
   describe('decorateEntries_', function() {
-    var toJSONResponse = {};
+    const toJSONResponse = {};
 
     function FakeEntry() {}
     FakeEntry.prototype.toJSON = function() {
@@ -688,14 +688,14 @@ describe('Log', function() {
     });
 
     it('should create an Entry object if one is not provided', function() {
-      var entry = {};
+      const entry = {};
 
       log.entry = function(entry_) {
         assert.strictEqual(entry_, entry);
         return new FakeEntry();
       };
 
-      var decoratedEntries = log.decorateEntries_([entry]);
+      const decoratedEntries = log.decorateEntries_([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
     });
 
@@ -704,19 +704,19 @@ describe('Log', function() {
         throw new Error('should not be called');
       };
 
-      var entry = new Entry();
+      const entry = new Entry();
       entry.toJSON = function() {
         return toJSONResponse;
       };
 
-      var decoratedEntries = log.decorateEntries_([entry]);
+      const decoratedEntries = log.decorateEntries_([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
     });
 
     it('should pass log.removeCircular to toJSON', function(done) {
       log.removeCircular_ = true;
 
-      var entry = new Entry();
+      const entry = new Entry();
       entry.toJSON = function(options_) {
         assert.deepStrictEqual(options_, {removeCircular: true});
         setImmediate(done);
@@ -727,9 +727,9 @@ describe('Log', function() {
     });
 
     it('should throw error from serialization', function() {
-      var error = new Error('Error.');
+      const error = new Error('Error.');
 
-      var entry = new Entry();
+      const entry = new Entry();
       entry.toJSON = function() {
         throw error;
       };

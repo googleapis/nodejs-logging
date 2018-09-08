@@ -16,8 +16,8 @@
 
 'use strict';
 
-var fs = require('fs');
-var gcpMetadata = require('gcp-metadata');
+const fs = require('fs');
+const gcpMetadata = require('gcp-metadata');
 
 /**
  * The Metadata class attempts to contact the metadata service and determine,

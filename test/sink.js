@@ -16,14 +16,14 @@
 
 'use strict';
 
-var assert = require('assert');
-var extend = require('extend');
-var proxyquire = require('proxyquire');
-var {util} = require('@google-cloud/common-grpc');
+const assert = require('assert');
+const extend = require('extend');
+const proxyquire = require('proxyquire');
+const {util} = require('@google-cloud/common-grpc');
 const promisify = require('@google-cloud/promisify');
 
-var promisifed = false;
-var fakePromisify = extend({}, promisify, {
+let promisifed = false;
+const fakePromisify = extend({}, promisify, {
   promisifyAll: function(Class) {
     if (Class.name === 'Sink') {
       promisifed = true;
@@ -32,14 +32,14 @@ var fakePromisify = extend({}, promisify, {
 });
 
 describe('Sink', function() {
-  var Sink;
-  var sink;
+  let Sink;
+  let sink;
 
-  var LOGGING = {
+  const LOGGING = {
     createSink: util.noop,
     projectId: 'project-id',
   };
-  var SINK_NAME = 'sink-name';
+  const SINK_NAME = 'sink-name';
 
   before(function() {
     Sink = proxyquire('../src/sink.js', {
@@ -74,7 +74,7 @@ describe('Sink', function() {
 
   describe('create', function() {
     it('should call parent createSink', function(done) {
-      var config = {};
+      const config = {};
 
       sink.logging.createSink = function(name, config_, callback) {
         assert.strictEqual(name, sink.name);
@@ -105,7 +105,7 @@ describe('Sink', function() {
     });
 
     it('should accept gaxOptions', function(done) {
-      var gaxOptions = {};
+      const gaxOptions = {};
 
       sink.logging.request = function(config) {
         assert.strictEqual(config.gaxOpts, gaxOptions);
@@ -135,7 +135,7 @@ describe('Sink', function() {
     });
 
     it('should accept gaxOptions', function(done) {
-      var gaxOptions = {};
+      const gaxOptions = {};
 
       sink.logging.request = function(config) {
         assert.strictEqual(config.gaxOpts, gaxOptions);
@@ -146,7 +146,7 @@ describe('Sink', function() {
     });
 
     it('should update metadata', function(done) {
-      var metadata = {};
+      const metadata = {};
 
       sink.logging.request = function(config, callback) {
         callback(null, metadata);
@@ -159,7 +159,7 @@ describe('Sink', function() {
     });
 
     it('should execute callback with original arguments', function(done) {
-      var args = [{}, {}, {}];
+      const args = [{}, {}, {}];
 
       sink.logging.request = function(config, callback) {
         callback.apply(null, args);
@@ -173,7 +173,7 @@ describe('Sink', function() {
   });
 
   describe('setFilter', function() {
-    var FILTER = 'filter';
+    const FILTER = 'filter';
 
     it('should call set metadata', function(done) {
       sink.setMetadata = function(metadata, callback) {
@@ -186,7 +186,7 @@ describe('Sink', function() {
   });
 
   describe('setMetadata', function() {
-    var METADATA = {a: 'b', c: 'd'};
+    const METADATA = {a: 'b', c: 'd'};
 
     beforeEach(function() {
       sink.getMetadata = function(callback) {
@@ -203,8 +203,8 @@ describe('Sink', function() {
     });
 
     it('should exec callback with error from refresh', function(done) {
-      var error = new Error('Error.');
-      var apiResponse = {};
+      const error = new Error('Error.');
+      const apiResponse = {};
 
       sink.getMetadata = function(callback) {
         callback(error, null, apiResponse);
@@ -218,7 +218,7 @@ describe('Sink', function() {
     });
 
     it('should make the correct request', function(done) {
-      var currentMetadata = {a: 'a', e: 'e'};
+      const currentMetadata = {a: 'a', e: 'e'};
 
       sink.getMetadata = function(callback) {
         callback(null, currentMetadata);
@@ -242,7 +242,7 @@ describe('Sink', function() {
     });
 
     it('should accept gaxOptions', function(done) {
-      var metadata = extend({}, METADATA, {
+      const metadata = extend({}, METADATA, {
         gaxOptions: {},
       });
 
@@ -256,7 +256,7 @@ describe('Sink', function() {
     });
 
     it('should update metadata', function(done) {
-      var metadata = {};
+      const metadata = {};
 
       sink.logging.request = function(config, callback) {
         callback(null, metadata);
@@ -269,7 +269,7 @@ describe('Sink', function() {
     });
 
     it('should execute callback with original arguments', function(done) {
-      var args = [{}, {}, {}];
+      const args = [{}, {}, {}];
 
       sink.logging.request = function(config, callback) {
         callback.apply(null, args);

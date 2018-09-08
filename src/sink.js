@@ -16,10 +16,10 @@
 
 'use strict';
 
-var common = require('@google-cloud/common-grpc');
+const common = require('@google-cloud/common-grpc');
 const {promisifyAll} = require('@google-cloud/promisify');
-var extend = require('extend');
-var is = require('is');
+const extend = require('extend');
+const is = require('is');
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
@@ -36,9 +36,9 @@ var is = require('is');
  * @param {string} name Name of the sink.
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  */
 function Sink(logging, name) {
   this.logging = logging;
@@ -60,11 +60,11 @@ function Sink(logging, name) {
  * @see Logging#createSink
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  *
- * var config = {
+ * const config = {
  *   destination: {
  *     // ...
  *   }
@@ -80,8 +80,8 @@ function Sink(logging, name) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * sink.create(config).then(function(data) {
- *   var sink = data[0];
- *   var apiResponse = data[1];
+ *   const sink = data[0];
+ *   const apiResponse = data[1];
  * });
  *
  * @example <caption>include:samples/sinks.js</caption>
@@ -112,9 +112,9 @@ Sink.prototype.create = function(config, callback) {
  * @returns {Promise<DeleteSinkResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  *
  * sink.delete(function(err, apiResponse) {
  *   if (!err) {
@@ -126,7 +126,7 @@ Sink.prototype.create = function(config, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * sink.delete().then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  *
  * @example <caption>include:samples/sinks.js</caption>
@@ -139,7 +139,7 @@ Sink.prototype.delete = function(gaxOptions, callback) {
     gaxOptions = {};
   }
 
-  var reqOpts = {
+  const reqOpts = {
     sinkName: this.formattedName_,
   };
 
@@ -177,9 +177,9 @@ Sink.prototype.delete = function(gaxOptions, callback) {
  * @returns {Promise<GetSinkMetadataResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  *
  * sink.getMetadata(function(err, metadata, apiResponse) {});
  *
@@ -187,8 +187,8 @@ Sink.prototype.delete = function(gaxOptions, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * sink.getMetadata().then(function(data) {
- *   var metadata = data[0];
- *   var apiResponse = data[1];
+ *   const metadata = data[0];
+ *   const apiResponse = data[1];
  * });
  *
  * @example <caption>include:samples/sinks.js</caption>
@@ -196,14 +196,14 @@ Sink.prototype.delete = function(gaxOptions, callback) {
  * Another example:
  */
 Sink.prototype.getMetadata = function(gaxOptions, callback) {
-  var self = this;
+  const self = this;
 
   if (is.fn(gaxOptions)) {
     callback = gaxOptions;
     gaxOptions = {};
   }
 
-  var reqOpts = {
+  const reqOpts = {
     sinkName: this.formattedName_,
   };
 
@@ -245,11 +245,11 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
  * @returns {Promise<SetSinkFilterResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  *
- * var filter = 'metadata.severity = ALERT';
+ * const filter = 'metadata.severity = ALERT';
  *
  * sink.setFilter(filter, function(err, apiResponse) {});
  *
@@ -257,7 +257,7 @@ Sink.prototype.getMetadata = function(gaxOptions, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * sink.setFilter(filter).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Sink.prototype.setFilter = function(filter, callback) {
@@ -292,11 +292,11 @@ Sink.prototype.setFilter = function(filter, callback) {
  * @returns {Promise<SetSinkMetadataResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  *
- * var metadata = {
+ * const metadata = {
  *   filter: 'metadata.severity = ALERT'
  * };
  *
@@ -306,7 +306,7 @@ Sink.prototype.setFilter = function(filter, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * sink.setMetadata(metadata).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  *
  * @example <caption>include:samples/sinks.js</caption>
@@ -314,7 +314,7 @@ Sink.prototype.setFilter = function(filter, callback) {
  * Another example:
  */
 Sink.prototype.setMetadata = function(metadata, callback) {
-  var self = this;
+  const self = this;
 
   callback = callback || common.util.noop;
 
@@ -324,7 +324,7 @@ Sink.prototype.setMetadata = function(metadata, callback) {
       return;
     }
 
-    var reqOpts = {
+    const reqOpts = {
       sinkName: self.formattedName_,
       sink: extend({}, currentMetadata, metadata),
     };

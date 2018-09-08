@@ -16,14 +16,14 @@
 
 'use strict';
 
-var arrify = require('arrify');
+const arrify = require('arrify');
 const {promisifyAll} = require('@google-cloud/promisify');
-var extend = require('extend');
-var is = require('is');
-var snakeCaseKeys = require('snakecase-keys');
+const extend = require('extend');
+const is = require('is');
+const snakeCaseKeys = require('snakecase-keys');
 
-var Entry = require('./entry.js');
-var Metadata = require('./metadata.js');
+const Entry = require('./entry.js');
+const Metadata = require('./metadata.js');
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -43,9 +43,9 @@ var Metadata = require('./metadata.js');
  *     logged objects with a string value, `[Circular]`. (Default: false)
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('syslog');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('syslog');
  */
 function Log(logging, name, options) {
   options = options || {};
@@ -72,7 +72,7 @@ function Log(logging, name, options) {
  */
 Log.assignSeverityToEntries_ = function(entries, severity) {
   return arrify(entries).map(function(entry) {
-    var metadata = extend(true, {}, entry.metadata, {
+    const metadata = extend(true, {}, entry.metadata, {
       severity: severity,
     });
 
@@ -91,7 +91,7 @@ Log.assignSeverityToEntries_ = function(entries, severity) {
  * @returns {string}
  */
 Log.formatName_ = function(projectId, name) {
-  var path = 'projects/' + projectId + '/logs/';
+  const path = 'projects/' + projectId + '/logs/';
   name = name.replace(path, '');
 
   if (decodeURIComponent(name) === name) {
@@ -113,11 +113,11 @@ Log.formatName_ = function(projectId, name) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -127,7 +127,7 @@ Log.formatName_ = function(projectId, name) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.alert(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.alert = function(entry, options, callback) {
@@ -145,11 +145,11 @@ Log.prototype.alert = function(entry, options, callback) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -159,11 +159,11 @@ Log.prototype.alert = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.critical(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.critical = function(entry, options, callback) {
-  var entries = Log.assignSeverityToEntries_(entry, 'CRITICAL');
+  const entries = Log.assignSeverityToEntries_(entry, 'CRITICAL');
   this.write(entries, options, callback);
 };
 
@@ -178,11 +178,11 @@ Log.prototype.critical = function(entry, options, callback) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -192,7 +192,7 @@ Log.prototype.critical = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.debug(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.debug = function(entry, options, callback) {
@@ -219,9 +219,9 @@ Log.prototype.debug = function(entry, options, callback) {
  * @returns {Promise<DeleteLogResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
  * log.delete(function(err, apiResponse) {
  *   if (!err) {
@@ -233,7 +233,7 @@ Log.prototype.debug = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.delete().then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  *
  * @example <caption>include:samples/logs.js</caption>
@@ -246,7 +246,7 @@ Log.prototype.delete = function(gaxOptions, callback) {
     gaxOptions = {};
   }
 
-  var reqOpts = {
+  const reqOpts = {
     logName: this.formattedName_,
   };
 
@@ -272,11 +272,11 @@ Log.prototype.delete = function(gaxOptions, callback) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -286,11 +286,11 @@ Log.prototype.delete = function(gaxOptions, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.emergency(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.emergency = function(entry, options, callback) {
-  var entries = Log.assignSeverityToEntries_(entry, 'EMERGENCY');
+  const entries = Log.assignSeverityToEntries_(entry, 'EMERGENCY');
   this.write(entries, options, callback);
 };
 
@@ -310,11 +310,11 @@ Log.prototype.emergency = function(entry, options, callback) {
  * @returns {Entry}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var metadata = {
+ * const metadata = {
  *   resource: {
  *     type: 'gce_instance',
  *     labels: {
@@ -324,7 +324,7 @@ Log.prototype.emergency = function(entry, options, callback) {
  *   }
  * };
  *
- * var entry = log.entry(metadata, {
+ * const entry = log.entry(metadata, {
  *   delegate: 'my_username'
  * });
  *
@@ -363,11 +363,11 @@ Log.prototype.entry = function(metadata, data) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -377,7 +377,7 @@ Log.prototype.entry = function(metadata, data) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.error(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.error = function(entry, options, callback) {
@@ -395,9 +395,9 @@ Log.prototype.error = function(entry, options, callback) {
  * @returns {Promise<GetEntriesResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
  * log.getEntries(function(err, entries) {
  *   // `entries` is an array of Stackdriver Logging entry objects.
@@ -423,7 +423,7 @@ Log.prototype.error = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.getEntries().then(function(data) {
- *   var entries = data[0];
+ *   const entries = data[0];
  * });
  */
 Log.prototype.getEntries = function(options, callback) {
@@ -452,9 +452,9 @@ Log.prototype.getEntries = function(options, callback) {
  *     instances.
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
  * log.getEntriesStream()
  *   .on('error', console.error)
@@ -497,11 +497,11 @@ Log.prototype.getEntriesStream = function(options) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -511,7 +511,7 @@ Log.prototype.getEntriesStream = function(options) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.info(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.info = function(entry, options, callback) {
@@ -529,11 +529,11 @@ Log.prototype.info = function(entry, options, callback) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -543,7 +543,7 @@ Log.prototype.info = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.notice(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.notice = function(entry, options, callback) {
@@ -561,11 +561,11 @@ Log.prototype.notice = function(entry, options, callback) {
  * @param {LogWriteCallback} [callback] Callback function.
  * @returns {Promise<LogWriteResponse>}
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  *
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -575,7 +575,7 @@ Log.prototype.notice = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.warning(entry).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  */
 Log.prototype.warning = function(entry, options, callback) {
@@ -612,7 +612,7 @@ Log.prototype.warning = function(entry, options, callback) {
  * @returns {Promise<LogWriteResponse>}
  *
  * @example
- * var entry = log.entry('gce_instance', {
+ * const entry = log.entry('gce_instance', {
  *   instance: 'my_instance'
  * });
  *
@@ -625,7 +625,7 @@ Log.prototype.warning = function(entry, options, callback) {
  * //-
  * // You may also pass multiple log entries to write.
  * //-
- * var secondEntry = log.entry('compute.googleapis.com', {
+ * const secondEntry = log.entry('compute.googleapis.com', {
  *   user: 'my_username'
  * });
  *
@@ -643,7 +643,7 @@ Log.prototype.warning = function(entry, options, callback) {
  * // Note, however, that you must provide a configuration object to specify the
  * // resource.
  * //-
- * var entries = [
+ * const entries = [
  *   {
  *     user: 'my_username'
  *   },
@@ -652,7 +652,7 @@ Log.prototype.warning = function(entry, options, callback) {
  *   }
  * ];
  *
- * var options = {
+ * const options = {
  *   resource: 'compute.googleapis.com'
  * };
  *
@@ -662,7 +662,7 @@ Log.prototype.warning = function(entry, options, callback) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * log.write(entries).then(function(data) {
- *   var apiResponse = data[0];
+ *   const apiResponse = data[0];
  * });
  *
  * @example <caption>include:samples/logs.js</caption>
@@ -674,7 +674,7 @@ Log.prototype.warning = function(entry, options, callback) {
  * Another example:
  */
 Log.prototype.write = function(entry, options, callback) {
-  var self = this;
+  const self = this;
 
   if (is.fn(options)) {
     callback = options;
@@ -694,14 +694,14 @@ Log.prototype.write = function(entry, options, callback) {
   }
 
   function writeWithResource(resource) {
-    var decoratedEntries;
+    let decoratedEntries;
     try {
       decoratedEntries = self.decorateEntries_(arrify(entry));
     } catch (err) {
       // Ignore errors (the API will speak up if it has an issue).
     }
 
-    var reqOpts = extend(
+    const reqOpts = extend(
       {
         logName: self.formattedName_,
         entries: decoratedEntries,
@@ -734,7 +734,7 @@ Log.prototype.write = function(entry, options, callback) {
  * @throws if there is an error during serialization.
  */
 Log.prototype.decorateEntries_ = function(entries) {
-  var self = this;
+  const self = this;
 
   return entries.map(function(entry) {
     if (!(entry instanceof Entry)) {

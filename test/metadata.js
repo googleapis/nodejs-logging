@@ -16,15 +16,15 @@
 
 'use strict';
 
-var assert = require('assert');
-var extend = require('extend');
-var proxyquire = require('proxyquire');
+const assert = require('assert');
+const extend = require('extend');
+const proxyquire = require('proxyquire');
 
-var instanceOverride;
-var fakeGcpMetadata = {
+let instanceOverride;
+const fakeGcpMetadata = {
   instance: function(path) {
     if (instanceOverride) {
-      var override = Array.isArray(instanceOverride)
+      const override = Array.isArray(instanceOverride)
         ? instanceOverride.find(entry => entry.path === path)
         : instanceOverride;
 
@@ -45,10 +45,10 @@ var fakeGcpMetadata = {
   },
 };
 
-var FAKE_READFILE_ERROR_MESSAGE = 'fake readFile error';
-var FAKE_READFILE_CONTENTS = 'fake readFile contents';
-var readFileShouldError;
-var fakeFS = {
+const FAKE_READFILE_ERROR_MESSAGE = 'fake readFile error';
+const FAKE_READFILE_CONTENTS = 'fake readFile contents';
+let readFileShouldError;
+const fakeFS = {
   readFile: (filename, encoding, callback) => {
     setImmediate(() => {
       if (readFileShouldError) callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
@@ -58,13 +58,13 @@ var fakeFS = {
 };
 
 describe('metadata', function() {
-  var MetadataCached;
-  var Metadata;
-  var metadata;
+  let MetadataCached;
+  let Metadata;
+  let metadata;
 
-  var LOGGING;
+  let LOGGING;
 
-  var ENV_CACHED = extend({}, process.env);
+  const ENV_CACHED = extend({}, process.env);
 
   before(function() {
     Metadata = proxyquire('../src/metadata.js', {
@@ -96,8 +96,8 @@ describe('metadata', function() {
   });
 
   describe('getCloudFunctionDescriptor', function() {
-    var FUNCTION_NAME = 'function-name';
-    var FUNCTION_REGION = 'function-region';
+    const FUNCTION_NAME = 'function-name';
+    const FUNCTION_REGION = 'function-region';
 
     beforeEach(function() {
       process.env.FUNCTION_NAME = FUNCTION_NAME;
@@ -116,9 +116,9 @@ describe('metadata', function() {
   });
 
   describe('getGAEDescriptor', function() {
-    var GAE_MODULE_NAME = 'gae-module-name';
-    var GAE_SERVICE = 'gae-service';
-    var GAE_VERSION = 'gae-version';
+    const GAE_MODULE_NAME = 'gae-module-name';
+    const GAE_SERVICE = 'gae-service';
+    const GAE_VERSION = 'gae-version';
 
     beforeEach(function() {
       process.env.GAE_MODULE_NAME = GAE_MODULE_NAME;
@@ -139,13 +139,13 @@ describe('metadata', function() {
     it('should use GAE_MODULE_NAME for module_id', function() {
       delete process.env.GAE_SERVICE;
 
-      var moduleId = Metadata.getGAEDescriptor().labels.module_id;
+      const moduleId = Metadata.getGAEDescriptor().labels.module_id;
       assert.strictEqual(moduleId, GAE_MODULE_NAME);
     });
   });
 
   describe('getGKEDescriptor', function() {
-    var CLUSTER_NAME = 'gke-cluster-name';
+    const CLUSTER_NAME = 'gke-cluster-name';
 
     it('should return the correct descriptor', function(done) {
       instanceOverride = {
@@ -167,7 +167,7 @@ describe('metadata', function() {
     });
 
     it('should return error on failure to acquire metadata', function(done) {
-      var FAKE_ERROR = new Error();
+      const FAKE_ERROR = new Error();
       instanceOverride = {
         errorArg: FAKE_ERROR,
       };
@@ -189,9 +189,9 @@ describe('metadata', function() {
   });
 
   describe('getGCEDescriptor', function() {
-    var INSTANCE_ID = 'fake-instance-id';
-    var ZONE_ID = 'morrowind-vivec-1';
-    var ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+    const INSTANCE_ID = 'fake-instance-id';
+    const ZONE_ID = 'morrowind-vivec-1';
+    const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
 
     it('should return the correct descriptor', function(done) {
       instanceOverride = [
@@ -219,7 +219,7 @@ describe('metadata', function() {
     });
 
     it('should return error on failure to acquire metadata', function(done) {
-      var FAKE_ERROR = new Error();
+      const FAKE_ERROR = new Error();
       instanceOverride = {
         errorArg: FAKE_ERROR,
       };
@@ -251,7 +251,7 @@ describe('metadata', function() {
     describe('environments', function() {
       describe('app engine', function() {
         it('should return correct descriptor', function(done) {
-          var DESCRIPTOR = {};
+          const DESCRIPTOR = {};
 
           Metadata.getGAEDescriptor = function() {
             return DESCRIPTOR;
@@ -271,7 +271,7 @@ describe('metadata', function() {
 
       describe('cloud function', function() {
         it('should return correct descriptor', function(done) {
-          var DESCRIPTOR = {};
+          const DESCRIPTOR = {};
 
           Metadata.getCloudFunctionDescriptor = function() {
             return DESCRIPTOR;
@@ -291,9 +291,9 @@ describe('metadata', function() {
 
       describe('compute engine', function() {
         it('should return correct descriptor', function(done) {
-          var INSTANCE_ID = 'overridden-value';
-          var ZONE_ID = 'cyrodiil-anvil-2';
-          var ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+          const INSTANCE_ID = 'overridden-value';
+          const ZONE_ID = 'cyrodiil-anvil-2';
+          const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
           instanceOverride = [
             {
               path: 'id',
@@ -325,7 +325,7 @@ describe('metadata', function() {
 
       describe('container engine', function() {
         it('should return correct descriptor', function(done) {
-          var CLUSTER_NAME = 'overridden-value';
+          const CLUSTER_NAME = 'overridden-value';
           instanceOverride = {
             path: 'attributes/cluster-name',
             successArg: {data: CLUSTER_NAME},
@@ -351,7 +351,7 @@ describe('metadata', function() {
 
       describe('global', function() {
         it('should return correct descriptor', function(done) {
-          var DESCRIPTOR = {};
+          const DESCRIPTOR = {};
 
           Metadata.getGlobalDescriptor = function() {
             return DESCRIPTOR;
