@@ -15,7 +15,7 @@
     "@google-cloud/logging": "^3.0.0",
     "@google-cloud/logging-bunyan": "^0.9.0",
     "@google-cloud/logging-winston": "^0.9.0",
-    "@google-cloud/storage": "^1.7.0",
+    "@google-cloud/storage": "^2.0.0",
     "bunyan": "^1.8.12",
     "express": "^4.16.3",
     "fluent-logger": "^3.0.0",
