@@ -15,22 +15,22 @@
 
 'use strict';
 
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
 app.get('*', function(req, res, next) {
   return next('oops');
 });
 
 // [START fluent]
-var structuredLogger = require('fluent-logger').createFluentSender('myapp', {
+const structuredLogger = require('fluent-logger').createFluentSender('myapp', {
   host: 'localhost',
   port: 24224,
   timeout: 3.0,
 });
 
-var report = function(err, req) {
-  var payload = {
+const report = function(err, req) {
+  const payload = {
     serviceContext: {
       service: 'myapp',
     },

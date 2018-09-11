@@ -16,12 +16,12 @@
 
 'use strict';
 
-var {Service} = require('@google-cloud/common-grpc');
-var EventId = require('eventid');
-var extend = require('extend');
-var is = require('is');
+const {Service} = require('@google-cloud/common-grpc');
+const EventId = require('eventid');
+const extend = require('extend');
+const is = require('is');
 
-var eventId = new EventId();
+const eventId = new EventId();
 
 /**
  * Create an entry object to define new data to insert into a log.
@@ -46,11 +46,11 @@ var eventId = new EventId();
  *     Any other types are stringified with `String(value)`.
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var syslog = logging.log('syslog');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const syslog = logging.log('syslog');
  *
- * var metadata = {
+ * const metadata = {
  *   resource: {
  *     type: 'gce_instance',
  *     labels: {
@@ -60,7 +60,7 @@ var eventId = new EventId();
  *   }
  * };
  *
- * var entry = syslog.entry(metadata, {
+ * const entry = syslog.entry(metadata, {
  *   delegate: 'my_username'
  * });
  *
@@ -123,16 +123,16 @@ function Entry(metadata, data) {
  * @returns {Entry}
  */
 Entry.fromApiResponse_ = function(entry) {
-  var data = entry[entry.payload];
+  let data = entry[entry.payload];
 
   if (entry.payload === 'jsonPayload') {
     data = Service.structToObj_(data);
   }
 
-  var serializedEntry = new Entry(entry, data);
+  const serializedEntry = new Entry(entry, data);
 
   if (serializedEntry.metadata.timestamp) {
-    var ms = serializedEntry.metadata.timestamp.seconds * 1000;
+    let ms = serializedEntry.metadata.timestamp.seconds * 1000;
     ms += serializedEntry.metadata.timestamp.nanos / 1e6;
     serializedEntry.metadata.timestamp = new Date(ms);
   }
@@ -150,7 +150,7 @@ Entry.fromApiResponse_ = function(entry) {
 Entry.prototype.toJSON = function(options) {
   options = options || {};
 
-  var entry = extend(true, {}, this.metadata);
+  const entry = extend(true, {}, this.metadata);
 
   if (is.object(this.data)) {
     entry.jsonPayload = Service.objToStruct_(this.data, {
@@ -162,8 +162,8 @@ Entry.prototype.toJSON = function(options) {
   }
 
   if (is.date(entry.timestamp)) {
-    var seconds = entry.timestamp.getTime() / 1000;
-    var secondsRounded = Math.floor(seconds);
+    const seconds = entry.timestamp.getTime() / 1000;
+    const secondsRounded = Math.floor(seconds);
 
     entry.timestamp = {
       seconds: secondsRounded,

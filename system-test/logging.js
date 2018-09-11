@@ -16,34 +16,34 @@
 
 'use strict';
 
-var assert = require('assert');
-var async = require('async');
-var bigqueryLibrary = require('@google-cloud/bigquery');
-var exec = require('methmeth');
-var extend = require('extend');
-var is = require('is');
-var prop = require('propprop');
-var pubsubLibrary = require('@google-cloud/pubsub');
-var storageLibrary = require('@google-cloud/storage');
-var uuid = require('uuid');
+const assert = require('assert');
+const async = require('async');
+const bigqueryLibrary = require('@google-cloud/bigquery');
+const exec = require('methmeth');
+const extend = require('extend');
+const is = require('is');
+const prop = require('propprop');
+const pubsubLibrary = require('@google-cloud/pubsub');
+const {Storage} = require('@google-cloud/storage');
+const uuid = require('uuid');
 
-var Logging = require('../');
+const Logging = require('../');
 
 describe('Logging', function() {
-  var PROJECT_ID;
-  var TESTS_PREFIX = 'gcloud-logging-test';
-  var WRITE_CONSISTENCY_DELAY_MS = 10000;
+  let PROJECT_ID;
+  const TESTS_PREFIX = 'gcloud-logging-test';
+  const WRITE_CONSISTENCY_DELAY_MS = 10000;
 
-  var bigQuery = bigqueryLibrary();
-  var pubsub = pubsubLibrary();
-  var storage = storageLibrary();
+  const bigQuery = bigqueryLibrary();
+  const pubsub = pubsubLibrary();
+  const storage = new Storage();
 
-  var logging = new Logging();
+  const logging = new Logging();
 
   // Create the possible destinations for sinks that we will create.
-  var bucket = storage.bucket(generateName());
-  var dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
-  var topic = pubsub.topic(generateName());
+  const bucket = storage.bucket(generateName());
+  const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
+  const topic = pubsub.topic(generateName());
 
   before(function(done) {
     async.parallel(
@@ -135,7 +135,7 @@ describe('Logging', function() {
 
   describe('sinks', function() {
     it('should create a sink with a Bucket destination', function(done) {
-      var sink = logging.sink(generateName());
+      const sink = logging.sink(generateName());
 
       sink.create(
         {
@@ -144,7 +144,7 @@ describe('Logging', function() {
         function(err, sink, apiResponse) {
           assert.ifError(err);
 
-          var destination = 'storage.googleapis.com/' + bucket.name;
+          const destination = 'storage.googleapis.com/' + bucket.name;
           assert.strictEqual(apiResponse.destination, destination);
 
           done();
@@ -153,7 +153,7 @@ describe('Logging', function() {
     });
 
     it('should create a sink with a Dataset destination', function(done) {
-      var sink = logging.sink(generateName());
+      const sink = logging.sink(generateName());
 
       sink.create(
         {
@@ -162,7 +162,7 @@ describe('Logging', function() {
         function(err, sink, apiResponse) {
           assert.ifError(err);
 
-          var destination = 'bigquery.googleapis.com/datasets/' + dataset.id;
+          const destination = 'bigquery.googleapis.com/datasets/' + dataset.id;
 
           // The projectId may have been replaced depending on how the system
           // tests are being run, so let's not care about that.
@@ -179,7 +179,7 @@ describe('Logging', function() {
     });
 
     it('should create a sink with a Topic destination', function(done) {
-      var sink = logging.sink(generateName());
+      const sink = logging.sink(generateName());
 
       sink.create(
         {
@@ -188,7 +188,7 @@ describe('Logging', function() {
         function(err, sink, apiResponse) {
           assert.ifError(err);
 
-          var destination = 'pubsub.googleapis.com/' + topic.name;
+          const destination = 'pubsub.googleapis.com/' + topic.name;
 
           // The projectId may have been replaced depending on how the system
           // tests are being run, so let's not care about that.
@@ -203,8 +203,8 @@ describe('Logging', function() {
     });
 
     describe('metadata', function() {
-      var sink = logging.sink(generateName());
-      var FILTER = 'severity = ALERT';
+      const sink = logging.sink(generateName());
+      const FILTER = 'severity = ALERT';
 
       before(function(done) {
         sink.create(
@@ -216,7 +216,7 @@ describe('Logging', function() {
       });
 
       it('should set metadata', function(done) {
-        var metadata = {
+        const metadata = {
           filter: FILTER,
         };
 
@@ -237,7 +237,7 @@ describe('Logging', function() {
     });
 
     describe('listing sinks', function() {
-      var sink = logging.sink(generateName());
+      const sink = logging.sink(generateName());
 
       before(function(done) {
         sink.create(
@@ -282,9 +282,9 @@ describe('Logging', function() {
   });
 
   describe('logs', function() {
-    var log = logging.log('syslog');
+    const log = logging.log('syslog');
 
-    var logEntries = [
+    const logEntries = [
       // string data
       log.entry('log entry 1'),
 
@@ -306,7 +306,7 @@ describe('Logging', function() {
       }),
     ];
 
-    var options = {
+    const options = {
       resource: {
         type: 'gce_instance',
         labels: {
@@ -418,11 +418,11 @@ describe('Logging', function() {
     });
 
     it('should preserve order of entries', function(done) {
-      var entry1 = log.entry('1');
+      const entry1 = log.entry('1');
 
       setTimeout(function() {
-        var entry2 = log.entry('2');
-        var entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
+        const entry2 = log.entry('2');
+        const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
 
         // Re-arrange to confirm the timestamp is sent and honored.
         log.write([entry2, entry3, entry1], options, function(err) {
@@ -450,7 +450,7 @@ describe('Logging', function() {
     });
 
     it('should preserve order for sequential write calls', function(done) {
-      var messages = ['1', '2', '3', '4', '5'];
+      const messages = ['1', '2', '3', '4', '5'];
 
       messages.forEach(function(message) {
         log.write(log.entry(message));
@@ -475,7 +475,7 @@ describe('Logging', function() {
     });
 
     it('should write an entry with primitive values', function(done) {
-      var logEntry = log.entry({
+      const logEntry = log.entry({
         when: new Date(),
         matchUser: /username: (.+)/,
         matchUserError: new Error('No user found.'),
@@ -494,7 +494,7 @@ describe('Logging', function() {
             function(err, entries) {
               assert.ifError(err);
 
-              var entry = entries[0];
+              const entry = entries[0];
 
               assert.deepStrictEqual(entry.data, {
                 when: logEntry.data.when.toString(),
@@ -510,15 +510,15 @@ describe('Logging', function() {
     });
 
     it('should write a log with metadata', function(done) {
-      var metadata = extend({}, options, {
+      const metadata = extend({}, options, {
         severity: 'DEBUG',
       });
 
-      var data = {
+      const data = {
         embeddedData: true,
       };
 
-      var logEntry = log.entry(metadata, data);
+      const logEntry = log.entry(metadata, data);
 
       log.write(logEntry, function(err) {
         assert.ifError(err);
@@ -532,7 +532,7 @@ describe('Logging', function() {
             function(err, entries) {
               assert.ifError(err);
 
-              var entry = entries[0];
+              const entry = entries[0];
 
               assert.strictEqual(entry.metadata.severity, metadata.severity);
               assert.deepStrictEqual(entry.data, data);
@@ -545,8 +545,8 @@ describe('Logging', function() {
     });
 
     it('should set the default resource', function(done) {
-      var text = 'entry-text';
-      var entry = log.entry(text);
+      const text = 'entry-text';
+      const entry = log.entry(text);
 
       log.write(entry, function(err) {
         assert.ifError(err);
@@ -560,7 +560,7 @@ describe('Logging', function() {
             function(err, entries) {
               assert.ifError(err);
 
-              var entry = entries[0];
+              const entry = entries[0];
 
               assert.strictEqual(entry.data, text);
               assert.deepStrictEqual(entry.metadata.resource, {

@@ -16,24 +16,24 @@
 
 'use strict';
 
-var arrify = require('arrify');
-var common = require('@google-cloud/common-grpc');
+const arrify = require('arrify');
+const common = require('@google-cloud/common-grpc');
 const {promisifyAll} = require('@google-cloud/promisify');
 const {paginator} = require('@google-cloud/paginator');
 const {replaceProjectIdToken} = require('@google-cloud/projectify');
-var extend = require('extend');
-var {GoogleAuth} = require('google-auth-library');
-var is = require('is');
-var pumpify = require('pumpify');
-var streamEvents = require('stream-events');
-var through = require('through2');
+const extend = require('extend');
+const {GoogleAuth} = require('google-auth-library');
+const is = require('is');
+const pumpify = require('pumpify');
+const streamEvents = require('stream-events');
+const through = require('through2');
 
-var PKG = require('../package.json');
-var v2 = require('./v2');
+const PKG = require('../package.json');
+const v2 = require('./v2');
 
-var Entry = require('./entry.js');
-var Log = require('./log.js');
-var Sink = require('./sink.js');
+const Entry = require('./entry.js');
+const Log = require('./log.js');
+const Sink = require('./sink.js');
 
 /**
  * @namespace google
@@ -130,7 +130,7 @@ function Logging(options) {
     }
   }
 
-  var options_ = extend(
+  const options_ = extend(
     {
       libName: 'gccl',
       libVersion: PKG.version,
@@ -189,14 +189,14 @@ function Logging(options) {
  * @see Sink#create
  *
  * @example
- * var Storage = require('@google-cloud/storage');
- * var storage = new Storage({
+ * const Storage = require('@google-cloud/storage');
+ * const storage = new Storage({
  *   projectId: 'grape-spaceship-123'
  * });
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
  *
- * var config = {
+ * const config = {
  *   destination: storage.bucket('logging-bucket'),
  *   filter: 'severity = ALERT'
  * };
@@ -211,8 +211,8 @@ function Logging(options) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * logging.createSink('new-sink-name', config).then(function(data) {
- *   var sink = data[0];
- *   var apiResponse = data[1];
+ *   const sink = data[0];
+ *   const apiResponse = data[1];
  * });
  *
  * @example <caption>include:samples/sinks.js</caption>
@@ -221,7 +221,7 @@ function Logging(options) {
  */
 Logging.prototype.createSink = function(name, config, callback) {
   // jscs:enable maximumLineLength
-  var self = this;
+  const self = this;
 
   if (!is.string(name)) {
     throw new Error('A sink name must be provided.');
@@ -246,7 +246,7 @@ Logging.prototype.createSink = function(name, config, callback) {
     return;
   }
 
-  var reqOpts = {
+  const reqOpts = {
     parent: 'projects/' + this.projectId,
     sink: extend({}, config, {name: name}),
   };
@@ -266,7 +266,7 @@ Logging.prototype.createSink = function(name, config, callback) {
         return;
       }
 
-      var sink = self.sink(resp.name);
+      const sink = self.sink(resp.name);
       sink.metadata = resp;
 
       callback(null, sink, resp);
@@ -290,10 +290,10 @@ Logging.prototype.createSink = function(name, config, callback) {
  * @returns {Entry}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
  *
- * var resource = {
+ * const resource = {
  *   type: 'gce_instance',
  *   labels: {
  *     zone: 'global',
@@ -301,7 +301,7 @@ Logging.prototype.createSink = function(name, config, callback) {
  *   }
  * };
  *
- * var entry = logging.entry(resource, {
+ * const entry = logging.entry(resource, {
  *   delegate: 'my_username'
  * });
  *
@@ -365,8 +365,8 @@ Logging.prototype.entry = function(resource, data) {
  * @returns {Promise<GetEntriesResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
  *
  * logging.getEntries(function(err, entries) {
  *   // `entries` is an array of Stackdriver Logging entry objects.
@@ -392,7 +392,7 @@ Logging.prototype.entry = function(resource, data) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * logging.getEntries().then(function(data) {
- *   var entries = data[0];
+ *   const entries = data[0];
  * });
  *
  * @example <caption>include:samples/logs.js</caption>
@@ -409,7 +409,7 @@ Logging.prototype.getEntries = function(options, callback) {
     options = {};
   }
 
-  var reqOpts = extend(
+  const reqOpts = extend(
     {
       orderBy: 'timestamp desc',
     },
@@ -418,7 +418,7 @@ Logging.prototype.getEntries = function(options, callback) {
 
   reqOpts.resourceNames = arrify(reqOpts.resourceNames);
 
-  var resourceName = 'projects/' + this.projectId;
+  const resourceName = 'projects/' + this.projectId;
 
   if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
     reqOpts.resourceNames.push(resourceName);
@@ -427,7 +427,7 @@ Logging.prototype.getEntries = function(options, callback) {
   delete reqOpts.autoPaginate;
   delete reqOpts.gaxOptions;
 
-  var gaxOptions = extend(
+  const gaxOptions = extend(
     {
       autoPaginate: options.autoPaginate,
     },
@@ -442,7 +442,7 @@ Logging.prototype.getEntries = function(options, callback) {
       gaxOpts: gaxOptions,
     },
     function() {
-      var entries = arguments[1];
+      const entries = arguments[1];
 
       if (entries) {
         arguments[1] = entries.map(Entry.fromApiResponse_);
@@ -463,8 +463,8 @@ Logging.prototype.getEntries = function(options, callback) {
  *     instances.
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
  *
  * logging.getEntriesStream()
  *   .on('error', console.error)
@@ -486,13 +486,11 @@ Logging.prototype.getEntries = function(options, callback) {
  *   });
  */
 Logging.prototype.getEntriesStream = function(options) {
-  var self = this;
-
+  const self = this;
   options = options || {};
 
-  var requestStream;
-
-  var userStream = streamEvents(pumpify.obj());
+  let requestStream;
+  const userStream = streamEvents(pumpify.obj());
 
   userStream.abort = function() {
     if (requestStream) {
@@ -500,12 +498,12 @@ Logging.prototype.getEntriesStream = function(options) {
     }
   };
 
-  var toEntryStream = through.obj(function(entry, _, next) {
+  const toEntryStream = through.obj(function(entry, _, next) {
     next(null, Entry.fromApiResponse_(entry));
   });
 
   userStream.once('reading', function() {
-    var reqOpts = extend(
+    const reqOpts = extend(
       {
         orderBy: 'timestamp desc',
       },
@@ -517,7 +515,7 @@ Logging.prototype.getEntriesStream = function(options) {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
 
-    var gaxOptions = extend(
+    const gaxOptions = extend(
       {
         autoPaginate: options.autoPaginate,
       },
@@ -573,8 +571,8 @@ Logging.prototype.getEntriesStream = function(options) {
  * @returns {Promise<GetSinksResponse>}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
  *
  * logging.getSinks(function(err, sinks) {
  *   // sinks is an array of Sink objects.
@@ -584,7 +582,7 @@ Logging.prototype.getEntriesStream = function(options) {
  * // If the callback is omitted, we'll return a Promise.
  * //-
  * logging.getSinks().then(function(data) {
- *   var sinks = data[0];
+ *   const sinks = data[0];
  * });
  *
  * @example <caption>include:samples/sinks.js</caption>
@@ -592,21 +590,21 @@ Logging.prototype.getEntriesStream = function(options) {
  * Another example:
  */
 Logging.prototype.getSinks = function(options, callback) {
-  var self = this;
+  const self = this;
 
   if (is.fn(options)) {
     callback = options;
     options = {};
   }
 
-  var reqOpts = extend({}, options, {
+  const reqOpts = extend({}, options, {
     parent: 'projects/' + this.projectId,
   });
 
   delete reqOpts.autoPaginate;
   delete reqOpts.gaxOptions;
 
-  var gaxOptions = extend(
+  const gaxOptions = extend(
     {
       autoPaginate: options.autoPaginate,
     },
@@ -621,11 +619,11 @@ Logging.prototype.getSinks = function(options, callback) {
       gaxOpts: gaxOptions,
     },
     function() {
-      var sinks = arguments[1];
+      const sinks = arguments[1];
 
       if (sinks) {
         arguments[1] = sinks.map(function(sink) {
-          var sinkInstance = self.sink(sink.name);
+          const sinkInstance = self.sink(sink.name);
           sinkInstance.metadata = sink;
           return sinkInstance;
         });
@@ -646,8 +644,8 @@ Logging.prototype.getSinks = function(options, callback) {
  *     instances.
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
  *
  * logging.getSinksStream()
  *   .on('error', console.error)
@@ -668,12 +666,12 @@ Logging.prototype.getSinks = function(options, callback) {
  *   });
  */
 Logging.prototype.getSinksStream = function(options) {
-  var self = this;
+  const self = this;
 
   options = options || {};
 
-  var requestStream;
-  var userStream = streamEvents(pumpify.obj());
+  let requestStream;
+  const userStream = streamEvents(pumpify.obj());
 
   userStream.abort = function() {
     if (requestStream) {
@@ -681,20 +679,20 @@ Logging.prototype.getSinksStream = function(options) {
     }
   };
 
-  var toSinkStream = through.obj(function(sink, _, next) {
-    var sinkInstance = self.sink(sink.name);
+  const toSinkStream = through.obj(function(sink, _, next) {
+    const sinkInstance = self.sink(sink.name);
     sinkInstance.metadata = sink;
     next(null, sinkInstance);
   });
 
   userStream.once('reading', function() {
-    var reqOpts = extend({}, options, {
+    const reqOpts = extend({}, options, {
       parent: 'projects/' + self.projectId,
     });
 
     delete reqOpts.gaxOptions;
 
-    var gaxOptions = extend(
+    const gaxOptions = extend(
       {
         autoPaginate: options.autoPaginate,
       },
@@ -726,9 +724,9 @@ Logging.prototype.getSinksStream = function(options) {
  * @returns {Log}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var log = logging.log('my-log');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const log = logging.log('my-log');
  */
 Logging.prototype.log = function(name, options) {
   return new Log(this, name, options);
@@ -743,9 +741,9 @@ Logging.prototype.log = function(name, options) {
  * @returns {Sink}
  *
  * @example
- * var Logging = require('@google-cloud/logging');
- * var logging = new Logging();
- * var sink = logging.sink('my-sink');
+ * const Logging = require('@google-cloud/logging');
+ * const logging = new Logging();
+ * const sink = logging.sink('my-sink');
  */
 Logging.prototype.sink = function(name) {
   return new Sink(this, name);
@@ -761,11 +759,11 @@ Logging.prototype.sink = function(name) {
  * @param {function} [callback] Callback function.
  */
 Logging.prototype.request = function(config, callback) {
-  var self = this;
-  var isStreamMode = !callback;
+  const self = this;
+  const isStreamMode = !callback;
 
-  var gaxStream;
-  var stream;
+  let gaxStream;
+  let stream;
 
   if (isStreamMode) {
     stream = streamEvents(through.obj());
@@ -790,7 +788,7 @@ Logging.prototype.request = function(config, callback) {
 
       self.projectId = projectId;
 
-      var gaxClient = self.api[config.client];
+      let gaxClient = self.api[config.client];
 
       if (!gaxClient) {
         // Lazily instantiate client.
@@ -798,10 +796,10 @@ Logging.prototype.request = function(config, callback) {
         self.api[config.client] = gaxClient;
       }
 
-      var reqOpts = extend(true, {}, config.reqOpts);
+      let reqOpts = extend(true, {}, config.reqOpts);
       reqOpts = replaceProjectIdToken(reqOpts, projectId);
 
-      var requestFn = gaxClient[config.method].bind(
+      const requestFn = gaxClient[config.method].bind(
         gaxClient,
         reqOpts,
         config.gaxOpts
@@ -859,8 +857,8 @@ Logging.prototype.request = function(config, callback) {
  * @private
  */
 Logging.prototype.setAclForBucket_ = function(name, config, callback) {
-  var self = this;
-  var bucket = config.destination;
+  const self = this;
+  const bucket = config.destination;
 
   bucket.acl.owners.addGroup('cloud-logs@google.com', function(err, apiResp) {
     if (err) {
@@ -884,8 +882,8 @@ Logging.prototype.setAclForBucket_ = function(name, config, callback) {
  * @private
  */
 Logging.prototype.setAclForDataset_ = function(name, config, callback) {
-  var self = this;
-  var dataset = config.destination;
+  const self = this;
+  const dataset = config.destination;
 
   dataset.getMetadata(function(err, metadata, apiResp) {
     if (err) {
@@ -893,7 +891,7 @@ Logging.prototype.setAclForDataset_ = function(name, config, callback) {
       return;
     }
 
-    var access = [].slice.call(arrify(metadata.access));
+    const access = [].slice.call(arrify(metadata.access));
 
     access.push({
       role: 'WRITER',
@@ -929,8 +927,8 @@ Logging.prototype.setAclForDataset_ = function(name, config, callback) {
  * @private
  */
 Logging.prototype.setAclForTopic_ = function(name, config, callback) {
-  var self = this;
-  var topic = config.destination;
+  const self = this;
+  const topic = config.destination;
 
   topic.iam.getPolicy(function(err, policy, apiResp) {
     if (err) {

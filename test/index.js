@@ -16,19 +16,19 @@
 
 'use strict';
 
-var arrify = require('arrify');
-var assert = require('assert');
-var extend = require('extend');
-var proxyquire = require('proxyquire');
-var through = require('through2');
-var {util} = require('@google-cloud/common-grpc');
+const arrify = require('arrify');
+const assert = require('assert');
+const extend = require('extend');
+const proxyquire = require('proxyquire');
+const through = require('through2');
+const {util} = require('@google-cloud/common-grpc');
 
-var v2 = require('../src/v2');
+const v2 = require('../src/v2');
 
-var PKG = require('../package.json');
+const PKG = require('../package.json');
 
-var extended = false;
-var fakePaginator = {
+let extended = false;
+const fakePaginator = {
   paginator: {
     extend: function(Class, methods) {
       if (Class.name !== 'Logging') {
@@ -44,15 +44,15 @@ var fakePaginator = {
   },
 };
 
-var googleAuthOverride;
+let googleAuthOverride;
 function fakeGoogleAuth() {
   return (googleAuthOverride || util.noop).apply(null, arguments);
 }
 
-var isCustomTypeOverride;
-var promisifed = false;
-var replaceProjectIdTokenOverride;
-var fakeUtil = extend({}, util, {
+let isCustomTypeOverride;
+let promisifed = false;
+let replaceProjectIdTokenOverride;
+const fakeUtil = extend({}, util, {
   isCustomType: function() {
     if (isCustomTypeOverride) {
       return isCustomTypeOverride.apply(null, arguments);
@@ -83,7 +83,7 @@ const fakeProjectify = {
   },
 };
 
-var originalFakeUtil = extend(true, {}, fakeUtil);
+const originalFakeUtil = extend(true, {}, fakeUtil);
 
 function fakeV2() {}
 
@@ -104,10 +104,10 @@ function FakeSink() {
 }
 
 describe('Logging', function() {
-  var Logging;
-  var logging;
+  let Logging;
+  let logging;
 
-  var PROJECT_ID = 'project-id';
+  const PROJECT_ID = 'project-id';
 
   before(function() {
     Logging = proxyquire('../', {
@@ -174,8 +174,8 @@ describe('Logging', function() {
     });
 
     it('should cache a local GoogleAuth instance', function() {
-      var fakeGoogleAuthInstance = {};
-      var options = {
+      const fakeGoogleAuthInstance = {};
+      const options = {
         a: 'b',
         c: 'd',
       };
@@ -195,17 +195,17 @@ describe('Logging', function() {
         return fakeGoogleAuthInstance;
       };
 
-      var logging = new Logging(options);
+      const logging = new Logging(options);
       assert.strictEqual(logging.auth, fakeGoogleAuthInstance);
     });
 
     it('should localize the options', function() {
-      var options = {
+      const options = {
         a: 'b',
         c: 'd',
       };
 
-      var logging = new Logging(options);
+      const logging = new Logging(options);
 
       assert.notStrictEqual(logging.options, options);
 
@@ -227,13 +227,13 @@ describe('Logging', function() {
     });
 
     it('should default the projectId to the token', function() {
-      var logging = new Logging({});
+      const logging = new Logging({});
       assert.strictEqual(logging.projectId, '{{projectId}}');
     });
   });
 
   describe('createSink', function() {
-    var SINK_NAME = 'name';
+    const SINK_NAME = 'name';
 
     it('should throw if a name is not provided', function() {
       assert.throws(function() {
@@ -248,9 +248,9 @@ describe('Logging', function() {
     });
 
     it('should set acls for a Dataset destination', function(done) {
-      var dataset = {};
+      const dataset = {};
 
-      var CONFIG = {
+      const CONFIG = {
         destination: dataset,
       };
 
@@ -269,9 +269,9 @@ describe('Logging', function() {
     });
 
     it('should set acls for a Topic destination', function(done) {
-      var topic = {};
+      const topic = {};
 
-      var CONFIG = {
+      const CONFIG = {
         destination: topic,
       };
 
@@ -290,9 +290,9 @@ describe('Logging', function() {
     });
 
     it('should set acls for a Bucket destination', function(done) {
-      var bucket = {};
+      const bucket = {};
 
-      var CONFIG = {
+      const CONFIG = {
         destination: bucket,
       };
 
@@ -312,12 +312,12 @@ describe('Logging', function() {
 
     describe('API request', function() {
       it('should make the correct API request', function(done) {
-        var config = {
+        const config = {
           a: 'b',
           c: 'd',
         };
 
-        var expectedConfig = extend({}, config, {
+        const expectedConfig = extend({}, config, {
           name: SINK_NAME,
         });
 
@@ -325,7 +325,7 @@ describe('Logging', function() {
           assert.strictEqual(config.client, 'ConfigServiceV2Client');
           assert.strictEqual(config.method, 'createSink');
 
-          var expectedParent = 'projects/' + logging.projectId;
+          const expectedParent = 'projects/' + logging.projectId;
           assert.strictEqual(config.reqOpts.parent, expectedParent);
           assert.deepStrictEqual(config.reqOpts.sink, expectedConfig);
 
@@ -338,7 +338,7 @@ describe('Logging', function() {
       });
 
       it('should accept GAX options', function(done) {
-        var config = {
+        const config = {
           a: 'b',
           c: 'd',
           gaxOptions: {},
@@ -354,8 +354,8 @@ describe('Logging', function() {
       });
 
       describe('error', function() {
-        var error = new Error('Error.');
-        var apiResponse = {};
+        const error = new Error('Error.');
+        const apiResponse = {};
 
         beforeEach(function() {
           logging.request = function(config, callback) {
@@ -375,7 +375,7 @@ describe('Logging', function() {
       });
 
       describe('success', function() {
-        var apiResponse = {
+        const apiResponse = {
           name: SINK_NAME,
         };
 
@@ -386,7 +386,7 @@ describe('Logging', function() {
         });
 
         it('should exec callback with Sink & API response', function(done) {
-          var sink = {};
+          const sink = {};
 
           logging.sink = function(name_) {
             assert.strictEqual(name_, SINK_NAME);
@@ -408,11 +408,11 @@ describe('Logging', function() {
   });
 
   describe('entry', function() {
-    var RESOURCE = {};
-    var DATA = {};
+    const RESOURCE = {};
+    const DATA = {};
 
     it('should return an Entry object', function() {
-      var entry = logging.entry(RESOURCE, DATA);
+      const entry = logging.entry(RESOURCE, DATA);
       assert(entry instanceof FakeEntry);
       assert.strictEqual(entry.calledWith_[0], RESOURCE);
       assert.strictEqual(entry.calledWith_[1], DATA);
@@ -433,7 +433,7 @@ describe('Logging', function() {
     });
 
     it('should make the correct API request', function(done) {
-      var options = {};
+      const options = {};
 
       logging.request = function(config) {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
@@ -458,7 +458,7 @@ describe('Logging', function() {
     });
 
     it('should not push the same resourceName again', function(done) {
-      var options = {
+      const options = {
         resourceNames: ['projects/' + logging.projectId],
       };
 
@@ -473,7 +473,7 @@ describe('Logging', function() {
     });
 
     it('should allow overriding orderBy', function(done) {
-      var options = {
+      const options = {
         orderBy: 'timestamp asc',
       };
 
@@ -486,7 +486,7 @@ describe('Logging', function() {
     });
 
     it('should accept GAX options', function(done) {
-      var options = {
+      const options = {
         a: 'b',
         c: 'd',
         gaxOptions: {
@@ -504,7 +504,7 @@ describe('Logging', function() {
     });
 
     describe('error', function() {
-      var ARGS = [new Error('Error.'), [], {}];
+      const ARGS = [new Error('Error.'), [], {}];
 
       beforeEach(function() {
         logging.request = function(config, callback) {
@@ -514,7 +514,7 @@ describe('Logging', function() {
 
       it('should execute callback with error & API response', function(done) {
         logging.getEntries({}, function() {
-          var args = [].slice.call(arguments);
+          const args = [].slice.call(arguments);
           assert.deepStrictEqual(args, ARGS);
           done();
         });
@@ -522,7 +522,7 @@ describe('Logging', function() {
     });
 
     describe('success', function() {
-      var ARGS = [
+      const ARGS = [
         null,
         [
           {
@@ -541,7 +541,7 @@ describe('Logging', function() {
         logging.getEntries({}, function(err, entries) {
           assert.ifError(err);
 
-          var argsPassedToFromApiResponse_ = entries[0];
+          const argsPassedToFromApiResponse_ = entries[0];
           assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS[1][0]);
 
           done();
@@ -551,7 +551,7 @@ describe('Logging', function() {
   });
 
   describe('getEntriesStream', function() {
-    var OPTIONS = {
+    const OPTIONS = {
       a: 'b',
       c: 'd',
       gaxOptions: {
@@ -560,8 +560,8 @@ describe('Logging', function() {
       },
     };
 
-    var REQUEST_STREAM;
-    var RESULT = {};
+    let REQUEST_STREAM;
+    const RESULT = {};
 
     beforeEach(function() {
       REQUEST_STREAM = through.obj();
@@ -595,15 +595,15 @@ describe('Logging', function() {
         return REQUEST_STREAM;
       };
 
-      var stream = logging.getEntriesStream(OPTIONS);
+      const stream = logging.getEntriesStream(OPTIONS);
       stream.emit('reading');
     });
 
     it('should convert results from request to Entry', function(done) {
-      var stream = logging.getEntriesStream(OPTIONS);
+      const stream = logging.getEntriesStream(OPTIONS);
 
       stream.on('data', function(entry) {
-        var argsPassedToFromApiResponse_ = entry[0];
+        const argsPassedToFromApiResponse_ = entry[0];
         assert.strictEqual(argsPassedToFromApiResponse_, RESULT);
 
         done();
@@ -615,7 +615,7 @@ describe('Logging', function() {
     it('should expose abort function', function(done) {
       REQUEST_STREAM.abort = done;
 
-      var stream = logging.getEntriesStream(OPTIONS);
+      const stream = logging.getEntriesStream(OPTIONS);
 
       stream.emit('reading');
 
@@ -624,14 +624,14 @@ describe('Logging', function() {
 
     it('should not require an options object', function() {
       assert.doesNotThrow(function() {
-        var stream = logging.getEntriesStream();
+        const stream = logging.getEntriesStream();
         stream.emit('reading');
       });
     });
   });
 
   describe('getSinks', function() {
-    var OPTIONS = {
+    const OPTIONS = {
       a: 'b',
       c: 'd',
       gaxOptions: {
@@ -672,7 +672,7 @@ describe('Logging', function() {
     });
 
     describe('error', function() {
-      var ARGS = [new Error('Error.'), [], {}];
+      const ARGS = [new Error('Error.'), [], {}];
 
       beforeEach(function() {
         logging.request = function(config, callback) {
@@ -682,7 +682,7 @@ describe('Logging', function() {
 
       it('should execute callback with error & API response', function(done) {
         logging.getEntries(OPTIONS, function() {
-          var args = [].slice.call(arguments);
+          const args = [].slice.call(arguments);
           assert.deepStrictEqual(args, ARGS);
           done();
         });
@@ -690,7 +690,7 @@ describe('Logging', function() {
     });
 
     describe('success', function() {
-      var ARGS = [
+      const ARGS = [
         null,
         [
           {
@@ -707,7 +707,7 @@ describe('Logging', function() {
       });
 
       it('should execute callback with Logs & API resp', function(done) {
-        var sinkInstance = {};
+        const sinkInstance = {};
 
         logging.sink = function(name) {
           assert.strictEqual(name, ARGS[1][0].name);
@@ -727,7 +727,7 @@ describe('Logging', function() {
   });
 
   describe('getSinksStream', function() {
-    var OPTIONS = {
+    const OPTIONS = {
       a: 'b',
       c: 'd',
       gaxOptions: {
@@ -736,8 +736,8 @@ describe('Logging', function() {
       },
     };
 
-    var REQUEST_STREAM;
-    var RESULT = {
+    let REQUEST_STREAM;
+    const RESULT = {
       name: 'sink-name',
     };
 
@@ -772,14 +772,14 @@ describe('Logging', function() {
         return REQUEST_STREAM;
       };
 
-      var stream = logging.getSinksStream(OPTIONS);
+      const stream = logging.getSinksStream(OPTIONS);
       stream.emit('reading');
     });
 
     it('should convert results from request to Sink', function(done) {
-      var stream = logging.getSinksStream(OPTIONS);
+      const stream = logging.getSinksStream(OPTIONS);
 
-      var sinkInstance = {};
+      const sinkInstance = {};
 
       logging.sink = function(name) {
         assert.strictEqual(name, RESULT.name);
@@ -798,7 +798,7 @@ describe('Logging', function() {
     it('should expose abort function', function(done) {
       REQUEST_STREAM.abort = done;
 
-      var stream = logging.getSinksStream(OPTIONS);
+      const stream = logging.getSinksStream(OPTIONS);
 
       stream.emit('reading');
 
@@ -807,10 +807,10 @@ describe('Logging', function() {
   });
 
   describe('log', function() {
-    var NAME = 'log-name';
+    const NAME = 'log-name';
 
     it('should return a Log object', function() {
-      var log = logging.log(NAME);
+      const log = logging.log(NAME);
       assert(log instanceof FakeLog);
       assert.strictEqual(log.calledWith_[0], logging);
       assert.strictEqual(log.calledWith_[1], NAME);
@@ -818,7 +818,7 @@ describe('Logging', function() {
   });
 
   describe('request', function() {
-    var CONFIG = {
+    const CONFIG = {
       client: 'client',
       method: 'method',
       reqOpts: {
@@ -828,7 +828,7 @@ describe('Logging', function() {
       gaxOpts: {},
     };
 
-    var PROJECT_ID = 'project-id';
+    const PROJECT_ID = 'project-id';
 
     beforeEach(function() {
       logging.auth = {
@@ -863,7 +863,7 @@ describe('Logging', function() {
       });
 
       it('should return error if getting project ID failed', function(done) {
-        var error = new Error('Error.');
+        const error = new Error('Error.');
 
         logging.auth.getProjectId = function(callback) {
           callback(error);
@@ -876,7 +876,7 @@ describe('Logging', function() {
       });
 
       it('should initiate and cache the client', function() {
-        var fakeClient = {
+        const fakeClient = {
           [CONFIG.method]: util.noop,
         };
 
@@ -902,7 +902,7 @@ describe('Logging', function() {
       });
 
       it('should replace the project ID token', function(done) {
-        var replacedReqOpts = {};
+        const replacedReqOpts = {};
 
         replaceProjectIdTokenOverride = function(reqOpts, projectId) {
           assert.notStrictEqual(reqOpts, CONFIG.reqOpts);
@@ -933,7 +933,7 @@ describe('Logging', function() {
         };
 
         global.GCLOUD_SANDBOX_ENV = true;
-        var returnValue = logging.request(CONFIG, assert.ifError);
+        const returnValue = logging.request(CONFIG, assert.ifError);
         delete global.GCLOUD_SANDBOX_ENV;
 
         assert.strictEqual(returnValue, undefined);
@@ -957,10 +957,10 @@ describe('Logging', function() {
       });
 
       it('should execute callback with error', function(done) {
-        var error = new Error('Error.');
+        const error = new Error('Error.');
 
         logging.api[CONFIG.client][CONFIG.method] = function() {
-          var callback = [].slice.call(arguments).pop();
+          const callback = [].slice.call(arguments).pop();
           callback(error);
         };
 
@@ -972,7 +972,7 @@ describe('Logging', function() {
 
       it('should execute the request function', function() {
         logging.api[CONFIG.client][CONFIG.method] = function(done) {
-          var callback = [].slice.call(arguments).pop();
+          const callback = [].slice.call(arguments).pop();
           callback(null, done); // so it ends the test
         };
 
@@ -981,7 +981,7 @@ describe('Logging', function() {
     });
 
     describe('makeRequestStream', function() {
-      var GAX_STREAM;
+      let GAX_STREAM;
 
       beforeEach(function() {
         GAX_STREAM = through();
@@ -1001,7 +1001,7 @@ describe('Logging', function() {
         };
 
         global.GCLOUD_SANDBOX_ENV = true;
-        var returnValue = logging.request(CONFIG);
+        const returnValue = logging.request(CONFIG);
         returnValue.emit('reading');
         delete global.GCLOUD_SANDBOX_ENV;
 
@@ -1012,7 +1012,7 @@ describe('Logging', function() {
       it('should expose an abort function', function(done) {
         GAX_STREAM.cancel = done;
 
-        var requestStream = logging.request(CONFIG);
+        const requestStream = logging.request(CONFIG);
         requestStream.emit('reading');
         requestStream.abort();
       });
@@ -1032,18 +1032,18 @@ describe('Logging', function() {
           },
         };
 
-        var requestStream = logging.request(CONFIG);
+        const requestStream = logging.request(CONFIG);
         requestStream.emit('reading');
       });
 
       it('should destroy the stream with prepare error', function(done) {
-        var error = new Error('Error.');
+        const error = new Error('Error.');
 
         logging.auth.getProjectId = function(callback) {
           callback(error);
         };
 
-        var requestStream = logging.request(CONFIG);
+        const requestStream = logging.request(CONFIG);
         requestStream.emit('reading');
 
         requestStream.on('error', function(err) {
@@ -1053,9 +1053,9 @@ describe('Logging', function() {
       });
 
       it('should destroy the stream with GAX error', function(done) {
-        var error = new Error('Error.');
+        const error = new Error('Error.');
 
-        var requestStream = logging.request(CONFIG);
+        const requestStream = logging.request(CONFIG);
         requestStream.emit('reading');
 
         requestStream.on('error', function(err) {
@@ -1069,10 +1069,10 @@ describe('Logging', function() {
   });
 
   describe('sink', function() {
-    var NAME = 'sink-name';
+    const NAME = 'sink-name';
 
     it('should return a Log object', function() {
-      var sink = logging.sink(NAME);
+      const sink = logging.sink(NAME);
       assert(sink instanceof FakeSink);
       assert.strictEqual(sink.calledWith_[0], logging);
       assert.strictEqual(sink.calledWith_[1], NAME);
@@ -1080,10 +1080,10 @@ describe('Logging', function() {
   });
 
   describe('setAclForBucket_', function() {
-    var SINK_NAME = 'name';
-    var CONFIG;
+    const SINK_NAME = 'name';
+    let CONFIG;
 
-    var bucket;
+    let bucket;
 
     beforeEach(function() {
       bucket = {
@@ -1110,8 +1110,8 @@ describe('Logging', function() {
     });
 
     describe('error', function() {
-      var error = new Error('Error.');
-      var apiResponse = {};
+      const error = new Error('Error.');
+      const apiResponse = {};
 
       beforeEach(function() {
         bucket.acl.owners.addGroup = function(entity, callback) {
@@ -1131,7 +1131,7 @@ describe('Logging', function() {
     });
 
     describe('success', function() {
-      var apiResponse = {};
+      const apiResponse = {};
 
       beforeEach(function() {
         bucket.acl.owners.addGroup = function(entity, callback) {
@@ -1146,7 +1146,7 @@ describe('Logging', function() {
 
             assert.strictEqual(config, CONFIG);
 
-            var expectedDestination = 'storage.googleapis.com/' + bucket.name;
+            const expectedDestination = 'storage.googleapis.com/' + bucket.name;
             assert.strictEqual(config.destination, expectedDestination);
 
             callback(); // done()
@@ -1161,9 +1161,9 @@ describe('Logging', function() {
   });
 
   describe('setAclForDataset_', function() {
-    var SINK_NAME = 'name';
-    var CONFIG;
-    var dataset;
+    const SINK_NAME = 'name';
+    let CONFIG;
+    let dataset;
 
     beforeEach(function() {
       dataset = {
@@ -1180,8 +1180,8 @@ describe('Logging', function() {
 
     describe('metadata refresh', function() {
       describe('error', function() {
-        var error = new Error('Error.');
-        var apiResponse = {};
+        const error = new Error('Error.');
+        const apiResponse = {};
 
         beforeEach(function() {
           dataset.getMetadata = function(callback) {
@@ -1200,11 +1200,11 @@ describe('Logging', function() {
       });
 
       describe('success', function() {
-        var apiResponse = {
+        const apiResponse = {
           access: [{}, {}],
         };
 
-        var originalAccess = [].slice.call(apiResponse.access);
+        const originalAccess = [].slice.call(apiResponse.access);
 
         beforeEach(function() {
           dataset.getMetadata = function(callback) {
@@ -1213,12 +1213,12 @@ describe('Logging', function() {
         });
 
         it('should set the correct metadata', function(done) {
-          var access = {
+          const access = {
             role: 'WRITER',
             groupByEmail: 'cloud-logs@google.com',
           };
 
-          var expectedAccess = [].slice.call(originalAccess).concat(access);
+          const expectedAccess = [].slice.call(originalAccess).concat(access);
 
           dataset.setMetadata = function(metadata) {
             assert.deepStrictEqual(apiResponse.access, originalAccess);
@@ -1230,8 +1230,8 @@ describe('Logging', function() {
         });
 
         describe('updating metadata error', function() {
-          var error = new Error('Error.');
-          var apiResponse = {};
+          const error = new Error('Error.');
+          const apiResponse = {};
 
           beforeEach(function() {
             dataset.setMetadata = function(metadata, callback) {
@@ -1250,7 +1250,7 @@ describe('Logging', function() {
         });
 
         describe('updating metadata success', function() {
-          var apiResponse = {};
+          const apiResponse = {};
 
           beforeEach(function() {
             dataset.setMetadata = function(metadata, callback) {
@@ -1260,7 +1260,7 @@ describe('Logging', function() {
 
           it('should call createSink with string destination', function(done) {
             logging.createSink = function(name, config, callback) {
-              var expectedDestination = [
+              const expectedDestination = [
                 'bigquery.googleapis.com',
                 'projects',
                 dataset.parent.projectId,
@@ -1282,9 +1282,9 @@ describe('Logging', function() {
   });
 
   describe('setAclForTopic_', function() {
-    var SINK_NAME = 'name';
-    var CONFIG;
-    var topic;
+    const SINK_NAME = 'name';
+    let CONFIG;
+    let topic;
 
     beforeEach(function() {
       topic = {
@@ -1302,8 +1302,8 @@ describe('Logging', function() {
 
     describe('get policy', function() {
       describe('error', function() {
-        var error = new Error('Error.');
-        var apiResponse = {};
+        const error = new Error('Error.');
+        const apiResponse = {};
 
         beforeEach(function() {
           topic.iam.getPolicy = function(callback) {
@@ -1322,11 +1322,11 @@ describe('Logging', function() {
       });
 
       describe('success', function() {
-        var apiResponse = {
+        const apiResponse = {
           bindings: [{}, {}],
         };
 
-        var originalBindings = [].slice.call(apiResponse.bindings);
+        const originalBindings = [].slice.call(apiResponse.bindings);
 
         beforeEach(function() {
           topic.iam.getPolicy = function(callback) {
@@ -1335,12 +1335,12 @@ describe('Logging', function() {
         });
 
         it('should set the correct policy bindings', function(done) {
-          var binding = {
+          const binding = {
             role: 'roles/pubsub.publisher',
             members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
           };
 
-          var expectedBindings = [].slice.call(originalBindings);
+          const expectedBindings = [].slice.call(originalBindings);
           expectedBindings.push(binding);
 
           topic.iam.setPolicy = function(policy) {
@@ -1353,8 +1353,8 @@ describe('Logging', function() {
         });
 
         describe('updating policy error', function() {
-          var error = new Error('Error.');
-          var apiResponse = {};
+          const error = new Error('Error.');
+          const apiResponse = {};
 
           beforeEach(function() {
             topic.iam.setPolicy = function(policy, callback) {
@@ -1373,7 +1373,7 @@ describe('Logging', function() {
         });
 
         describe('updating policy success', function() {
-          var apiResponse = {};
+          const apiResponse = {};
 
           beforeEach(function() {
             topic.iam.setPolicy = function(policy, callback) {
@@ -1383,7 +1383,7 @@ describe('Logging', function() {
 
           it('should call createSink with string destination', function(done) {
             logging.createSink = function(name, config, callback) {
-              var expectedDestination = 'pubsub.googleapis.com/' + topic.name;
+              const expectedDestination = 'pubsub.googleapis.com/' + topic.name;
               assert.strictEqual(name, SINK_NAME);
               assert.strictEqual(config, CONFIG);
               assert.strictEqual(config.destination, expectedDestination);
