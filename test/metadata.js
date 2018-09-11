@@ -67,10 +67,10 @@ describe('metadata', function() {
   const ENV_CACHED = extend({}, process.env);
 
   before(function() {
-    Metadata = proxyquire('../src/metadata.js', {
+    Metadata = proxyquire('../src/metadata', {
       'gcp-metadata': fakeGcpMetadata,
       fs: fakeFS,
-    });
+    }).Metadata;
 
     MetadataCached = extend({}, Metadata);
   });

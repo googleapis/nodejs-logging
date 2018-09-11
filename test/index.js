@@ -22,9 +22,7 @@ const extend = require('extend');
 const proxyquire = require('proxyquire');
 const through = require('through2');
 const {util} = require('@google-cloud/common-grpc');
-
-const v2 = require('../src/v2');
-
+const {v2} = require('../src');
 const PKG = require('../package.json');
 
 let extended = false;
@@ -120,20 +118,18 @@ describe('Logging', function() {
       'google-auth-library': {
         GoogleAuth: fakeGoogleAuth,
       },
-      './log.js': FakeLog,
-      './entry.js': FakeEntry,
-      './sink.js': FakeSink,
+      './log': {Log: FakeLog},
+      './entry': {Entry: FakeEntry},
+      './sink': {Sink: FakeSink},
       './v2': fakeV2,
-    });
+    }).Logging;
   });
 
   beforeEach(function() {
     extend(fakeUtil, originalFakeUtil);
-
     googleAuthOverride = null;
     isCustomTypeOverride = null;
     replaceProjectIdTokenOverride = null;
-
     logging = new Logging({
       projectId: PROJECT_ID,
     });
@@ -161,12 +157,6 @@ describe('Logging', function() {
 
     it('should promisify all the things', function() {
       assert(promisifed);
-    });
-
-    it('should work without new', function() {
-      assert.doesNotThrow(function() {
-        Logging({projectId: PROJECT_ID});
-      });
     });
 
     it('should initialize the API object', function() {
@@ -879,16 +869,12 @@ describe('Logging', function() {
         const fakeClient = {
           [CONFIG.method]: util.noop,
         };
-
         fakeV2[CONFIG.client] = function(options) {
           assert.strictEqual(options, logging.options);
           return fakeClient;
         };
-
         logging.api = {};
-
         logging.request(CONFIG, assert.ifError);
-
         assert.strictEqual(logging.api[CONFIG.client], fakeClient);
       });
 

@@ -85,8 +85,8 @@
   "devDependencies": {
     "@google-cloud/bigquery": "*",
     "@google-cloud/nodejs-repo-tools": "^2.3.3",
-    "@google-cloud/pubsub": "*",
-    "@google-cloud/storage": "*",
+    "@google-cloud/pubsub": "0.20.0",
+    "@google-cloud/storage": "^2.0.2",
     "async": "^2.6.1",
     "codecov": "^3.0.4",
     "eslint": "^5.4.0",

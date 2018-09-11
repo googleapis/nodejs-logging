@@ -18,7 +18,7 @@
 function writeLogEntry(logName) {
   // [START logging_write_log_entry]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -66,7 +66,7 @@ function writeLogEntry(logName) {
 function writeLogEntryAdvanced(logName, options) {
   // [START logging_write_log_entry_advanced]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -100,7 +100,7 @@ function writeLogEntryAdvanced(logName, options) {
 function listLogEntries(logName) {
   // [START logging_list_log_entries]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -134,7 +134,7 @@ function listLogEntries(logName) {
 function listLogEntriesAdvanced(filter, pageSize, orderBy) {
   // [START logging_list_log_entries_advanced]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -176,7 +176,7 @@ function listLogEntriesAdvanced(filter, pageSize, orderBy) {
 function deleteLog(logName) {
   // [START logging_delete_log]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();

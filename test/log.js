@@ -34,7 +34,7 @@ const fakePromisify = extend({}, promisify, {
   },
 });
 
-const Entry = require('../src/entry.js');
+const {Entry} = require('../src');
 
 function FakeMetadata() {
   this.calledWith_ = arguments;
@@ -59,11 +59,11 @@ describe('Log', function() {
   let assignSeverityToEntriesOverride = null;
 
   before(function() {
-    Log = proxyquire('../src/log.js', {
+    Log = proxyquire('../src/log', {
       '@google-cloud/promisify': fakePromisify,
-      './entry.js': Entry,
-      './metadata.js': FakeMetadata,
-    });
+      './entry': {Entry: Entry},
+      './metadata': {Metadata: FakeMetadata},
+    }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = function() {
       return (

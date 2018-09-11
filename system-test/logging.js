@@ -18,24 +18,23 @@
 
 const assert = require('assert');
 const async = require('async');
-const bigqueryLibrary = require('@google-cloud/bigquery');
+const BigQuery = require('@google-cloud/bigquery');
 const exec = require('methmeth');
 const extend = require('extend');
 const is = require('is');
-const prop = require('propprop');
-const pubsubLibrary = require('@google-cloud/pubsub');
+const PubSub = require('@google-cloud/pubsub');
 const {Storage} = require('@google-cloud/storage');
 const uuid = require('uuid');
 
-const Logging = require('../');
+const {Logging} = require('../');
 
 describe('Logging', function() {
   let PROJECT_ID;
   const TESTS_PREFIX = 'gcloud-logging-test';
   const WRITE_CONSISTENCY_DELAY_MS = 10000;
 
-  const bigQuery = bigqueryLibrary();
-  const pubsub = pubsubLibrary();
+  const bigQuery = new BigQuery();
+  const pubsub = new PubSub();
   const storage = new Storage();
 
   const logging = new Logging();
@@ -393,7 +392,7 @@ describe('Logging', function() {
             function(err, entries) {
               assert.ifError(err);
 
-              assert.deepStrictEqual(entries.map(prop('data')).reverse(), [
+              assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
                 'log entry 1',
                 {
                   delegate: 'my_username',
@@ -436,7 +435,7 @@ describe('Logging', function() {
               },
               function(err, entries) {
                 assert.ifError(err);
-                assert.deepStrictEqual(entries.map(prop('data')), [
+                assert.deepStrictEqual(entries.map(x => x.data), [
                   '3',
                   '2',
                   '1',
@@ -465,7 +464,7 @@ describe('Logging', function() {
           function(err, entries) {
             assert.ifError(err);
             assert.deepStrictEqual(
-              entries.reverse().map(prop('data')),
+              entries.reverse().map(x => x.data),
               messages
             );
             done();
