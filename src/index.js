@@ -109,9 +109,6 @@ const {Sink} = require('./sink');
  */
 class Logging {
   constructor(options) {
-    if (!(this instanceof Logging)) {
-      return new Logging(options);
-    }
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
     let scopes = [];
