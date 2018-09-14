@@ -18,21 +18,21 @@ const assert = require('assert');
 
 const loggingModule = require('../src');
 
-var FAKE_STATUS_CODE = 1;
-var error = new Error();
+const FAKE_STATUS_CODE = 1;
+const error = new Error();
 error.code = FAKE_STATUS_CODE;
 
 describe('LoggingServiceV2Client', () => {
   describe('deleteLog', () => {
     it('invokes deleteLog without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedLogName = client.logPath('[PROJECT]', '[LOG]');
-      var request = {
+      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+      const request = {
         logName: formattedLogName,
       };
 
@@ -46,14 +46,14 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes deleteLog with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedLogName = client.logPath('[PROJECT]', '[LOG]');
-      var request = {
+      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+      const request = {
         logName: formattedLogName,
       };
 
@@ -74,19 +74,19 @@ describe('LoggingServiceV2Client', () => {
 
   describe('writeLogEntries', () => {
     it('invokes writeLogEntries without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var entries = [];
-      var request = {
+      const entries = [];
+      const request = {
         entries: entries,
       };
 
       // Mock response
-      var expectedResponse = {};
+      const expectedResponse = {};
 
       // Mock Grpc layer
       client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
@@ -102,14 +102,14 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes writeLogEntries with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var entries = [];
-      var request = {
+      const entries = [];
+      const request = {
         entries: entries,
       };
 
@@ -131,22 +131,22 @@ describe('LoggingServiceV2Client', () => {
 
   describe('listLogEntries', () => {
     it('invokes listLogEntries without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedResourceNames = [];
-      var request = {
+      const formattedResourceNames = [];
+      const request = {
         resourceNames: formattedResourceNames,
       };
 
       // Mock response
-      var nextPageToken = '';
-      var entriesElement = {};
-      var entries = [entriesElement];
-      var expectedResponse = {
+      const nextPageToken = '';
+      const entriesElement = {};
+      const entries = [entriesElement];
+      const expectedResponse = {
         nextPageToken: nextPageToken,
         entries: entries,
       };
@@ -169,14 +169,14 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes listLogEntries with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedResourceNames = [];
-      var request = {
+      const formattedResourceNames = [];
+      const request = {
         resourceNames: formattedResourceNames,
       };
 
@@ -198,19 +198,19 @@ describe('LoggingServiceV2Client', () => {
 
   describe('listMonitoredResourceDescriptors', () => {
     it('invokes listMonitoredResourceDescriptors without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var request = {};
+      const request = {};
 
       // Mock response
-      var nextPageToken = '';
-      var resourceDescriptorsElement = {};
-      var resourceDescriptors = [resourceDescriptorsElement];
-      var expectedResponse = {
+      const nextPageToken = '';
+      const resourceDescriptorsElement = {};
+      const resourceDescriptors = [resourceDescriptorsElement];
+      const expectedResponse = {
         nextPageToken: nextPageToken,
         resourceDescriptors: resourceDescriptors,
       };
@@ -233,13 +233,13 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes listMonitoredResourceDescriptors with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var request = {};
+      const request = {};
 
       // Mock Grpc layer
       client._innerApiCalls.listMonitoredResourceDescriptors = mockSimpleGrpcMethod(
@@ -259,22 +259,22 @@ describe('LoggingServiceV2Client', () => {
 
   describe('listLogs', () => {
     it('invokes listLogs without error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
       // Mock response
-      var nextPageToken = '';
-      var logNamesElement = 'logNamesElement-1079688374';
-      var logNames = [logNamesElement];
-      var expectedResponse = {
+      const nextPageToken = '';
+      const logNamesElement = 'logNamesElement-1079688374';
+      const logNames = [logNamesElement];
+      const expectedResponse = {
         nextPageToken: nextPageToken,
         logNames: logNames,
       };
@@ -293,14 +293,14 @@ describe('LoggingServiceV2Client', () => {
     });
 
     it('invokes listLogs with error', done => {
-      var client = new loggingModule.v2.LoggingServiceV2Client({
+      const client = new loggingModule.v2.LoggingServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
@@ -323,22 +323,22 @@ describe('LoggingServiceV2Client', () => {
 describe('ConfigServiceV2Client', () => {
   describe('listSinks', () => {
     it('invokes listSinks without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
       // Mock response
-      var nextPageToken = '';
-      var sinksElement = {};
-      var sinks = [sinksElement];
-      var expectedResponse = {
+      const nextPageToken = '';
+      const sinksElement = {};
+      const sinks = [sinksElement];
+      const expectedResponse = {
         nextPageToken: nextPageToken,
         sinks: sinks,
       };
@@ -357,14 +357,14 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes listSinks with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
@@ -386,24 +386,24 @@ describe('ConfigServiceV2Client', () => {
 
   describe('getSink', () => {
     it('invokes getSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-      var request = {
+      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const request = {
         sinkName: formattedSinkName,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var destination = 'destination-1429847026';
-      var filter = 'filter-1274492040';
-      var writerIdentity = 'writerIdentity775638794';
-      var includeChildren = true;
-      var expectedResponse = {
+      const name = 'name3373707';
+      const destination = 'destination-1429847026';
+      const filter = 'filter-1274492040';
+      const writerIdentity = 'writerIdentity775638794';
+      const includeChildren = true;
+      const expectedResponse = {
         name: name,
         destination: destination,
         filter: filter,
@@ -425,14 +425,14 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes getSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-      var request = {
+      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const request = {
         sinkName: formattedSinkName,
       };
 
@@ -454,26 +454,26 @@ describe('ConfigServiceV2Client', () => {
 
   describe('createSink', () => {
     it('invokes createSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var sink = {};
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const sink = {};
+      const request = {
         parent: formattedParent,
         sink: sink,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var destination = 'destination-1429847026';
-      var filter = 'filter-1274492040';
-      var writerIdentity = 'writerIdentity775638794';
-      var includeChildren = true;
-      var expectedResponse = {
+      const name = 'name3373707';
+      const destination = 'destination-1429847026';
+      const filter = 'filter-1274492040';
+      const writerIdentity = 'writerIdentity775638794';
+      const includeChildren = true;
+      const expectedResponse = {
         name: name,
         destination: destination,
         filter: filter,
@@ -495,15 +495,15 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes createSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var sink = {};
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const sink = {};
+      const request = {
         parent: formattedParent,
         sink: sink,
       };
@@ -526,26 +526,26 @@ describe('ConfigServiceV2Client', () => {
 
   describe('updateSink', () => {
     it('invokes updateSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-      var sink = {};
-      var request = {
+      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sink = {};
+      const request = {
         sinkName: formattedSinkName,
         sink: sink,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var destination = 'destination-1429847026';
-      var filter = 'filter-1274492040';
-      var writerIdentity = 'writerIdentity775638794';
-      var includeChildren = true;
-      var expectedResponse = {
+      const name = 'name3373707';
+      const destination = 'destination-1429847026';
+      const filter = 'filter-1274492040';
+      const writerIdentity = 'writerIdentity775638794';
+      const includeChildren = true;
+      const expectedResponse = {
         name: name,
         destination: destination,
         filter: filter,
@@ -567,15 +567,15 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes updateSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-      var sink = {};
-      var request = {
+      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sink = {};
+      const request = {
         sinkName: formattedSinkName,
         sink: sink,
       };
@@ -598,14 +598,14 @@ describe('ConfigServiceV2Client', () => {
 
   describe('deleteSink', () => {
     it('invokes deleteSink without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-      var request = {
+      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const request = {
         sinkName: formattedSinkName,
       };
 
@@ -619,14 +619,14 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes deleteSink with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-      var request = {
+      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const request = {
         sinkName: formattedSinkName,
       };
 
@@ -647,22 +647,22 @@ describe('ConfigServiceV2Client', () => {
 
   describe('listExclusions', () => {
     it('invokes listExclusions without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
       // Mock response
-      var nextPageToken = '';
-      var exclusionsElement = {};
-      var exclusions = [exclusionsElement];
-      var expectedResponse = {
+      const nextPageToken = '';
+      const exclusionsElement = {};
+      const exclusions = [exclusionsElement];
+      const expectedResponse = {
         nextPageToken: nextPageToken,
         exclusions: exclusions,
       };
@@ -685,14 +685,14 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes listExclusions with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
@@ -714,23 +714,23 @@ describe('ConfigServiceV2Client', () => {
 
   describe('getExclusion', () => {
     it('invokes getExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-      var request = {
+      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const request = {
         name: formattedName,
       };
 
       // Mock response
-      var name2 = 'name2-1052831874';
-      var description = 'description-1724546052';
-      var filter = 'filter-1274492040';
-      var disabled = true;
-      var expectedResponse = {
+      const name2 = 'name2-1052831874';
+      const description = 'description-1724546052';
+      const filter = 'filter-1274492040';
+      const disabled = true;
+      const expectedResponse = {
         name: name2,
         description: description,
         filter: filter,
@@ -751,14 +751,14 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes getExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-      var request = {
+      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const request = {
         name: formattedName,
       };
 
@@ -780,25 +780,25 @@ describe('ConfigServiceV2Client', () => {
 
   describe('createExclusion', () => {
     it('invokes createExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var exclusion = {};
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const exclusion = {};
+      const request = {
         parent: formattedParent,
         exclusion: exclusion,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var description = 'description-1724546052';
-      var filter = 'filter-1274492040';
-      var disabled = true;
-      var expectedResponse = {
+      const name = 'name3373707';
+      const description = 'description-1724546052';
+      const filter = 'filter-1274492040';
+      const disabled = true;
+      const expectedResponse = {
         name: name,
         description: description,
         filter: filter,
@@ -819,15 +819,15 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes createExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var exclusion = {};
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const exclusion = {};
+      const request = {
         parent: formattedParent,
         exclusion: exclusion,
       };
@@ -850,27 +850,27 @@ describe('ConfigServiceV2Client', () => {
 
   describe('updateExclusion', () => {
     it('invokes updateExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-      var exclusion = {};
-      var updateMask = {};
-      var request = {
+      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const exclusion = {};
+      const updateMask = {};
+      const request = {
         name: formattedName,
         exclusion: exclusion,
         updateMask: updateMask,
       };
 
       // Mock response
-      var name2 = 'name2-1052831874';
-      var description = 'description-1724546052';
-      var filter = 'filter-1274492040';
-      var disabled = true;
-      var expectedResponse = {
+      const name2 = 'name2-1052831874';
+      const description = 'description-1724546052';
+      const filter = 'filter-1274492040';
+      const disabled = true;
+      const expectedResponse = {
         name: name2,
         description: description,
         filter: filter,
@@ -891,16 +891,16 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes updateExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-      var exclusion = {};
-      var updateMask = {};
-      var request = {
+      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const exclusion = {};
+      const updateMask = {};
+      const request = {
         name: formattedName,
         exclusion: exclusion,
         updateMask: updateMask,
@@ -924,14 +924,14 @@ describe('ConfigServiceV2Client', () => {
 
   describe('deleteExclusion', () => {
     it('invokes deleteExclusion without error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-      var request = {
+      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const request = {
         name: formattedName,
       };
 
@@ -945,14 +945,14 @@ describe('ConfigServiceV2Client', () => {
     });
 
     it('invokes deleteExclusion with error', done => {
-      var client = new loggingModule.v2.ConfigServiceV2Client({
+      const client = new loggingModule.v2.ConfigServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-      var request = {
+      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const request = {
         name: formattedName,
       };
 
@@ -974,22 +974,22 @@ describe('ConfigServiceV2Client', () => {
 describe('MetricsServiceV2Client', () => {
   describe('listLogMetrics', () => {
     it('invokes listLogMetrics without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
       // Mock response
-      var nextPageToken = '';
-      var metricsElement = {};
-      var metrics = [metricsElement];
-      var expectedResponse = {
+      const nextPageToken = '';
+      const metricsElement = {};
+      const metrics = [metricsElement];
+      const expectedResponse = {
         nextPageToken: nextPageToken,
         metrics: metrics,
       };
@@ -1012,14 +1012,14 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes listLogMetrics with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
         parent: formattedParent,
       };
 
@@ -1041,23 +1041,23 @@ describe('MetricsServiceV2Client', () => {
 
   describe('getLogMetric', () => {
     it('invokes getLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-      var request = {
+      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const request = {
         metricName: formattedMetricName,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var description = 'description-1724546052';
-      var filter = 'filter-1274492040';
-      var valueExtractor = 'valueExtractor2047672534';
-      var expectedResponse = {
+      const name = 'name3373707';
+      const description = 'description-1724546052';
+      const filter = 'filter-1274492040';
+      const valueExtractor = 'valueExtractor2047672534';
+      const expectedResponse = {
         name: name,
         description: description,
         filter: filter,
@@ -1078,14 +1078,14 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes getLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-      var request = {
+      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const request = {
         metricName: formattedMetricName,
       };
 
@@ -1107,25 +1107,25 @@ describe('MetricsServiceV2Client', () => {
 
   describe('createLogMetric', () => {
     it('invokes createLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var metric = {};
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const metric = {};
+      const request = {
         parent: formattedParent,
         metric: metric,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var description = 'description-1724546052';
-      var filter = 'filter-1274492040';
-      var valueExtractor = 'valueExtractor2047672534';
-      var expectedResponse = {
+      const name = 'name3373707';
+      const description = 'description-1724546052';
+      const filter = 'filter-1274492040';
+      const valueExtractor = 'valueExtractor2047672534';
+      const expectedResponse = {
         name: name,
         description: description,
         filter: filter,
@@ -1146,15 +1146,15 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes createLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedParent = client.projectPath('[PROJECT]');
-      var metric = {};
-      var request = {
+      const formattedParent = client.projectPath('[PROJECT]');
+      const metric = {};
+      const request = {
         parent: formattedParent,
         metric: metric,
       };
@@ -1177,25 +1177,25 @@ describe('MetricsServiceV2Client', () => {
 
   describe('updateLogMetric', () => {
     it('invokes updateLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-      var metric = {};
-      var request = {
+      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const metric = {};
+      const request = {
         metricName: formattedMetricName,
         metric: metric,
       };
 
       // Mock response
-      var name = 'name3373707';
-      var description = 'description-1724546052';
-      var filter = 'filter-1274492040';
-      var valueExtractor = 'valueExtractor2047672534';
-      var expectedResponse = {
+      const name = 'name3373707';
+      const description = 'description-1724546052';
+      const filter = 'filter-1274492040';
+      const valueExtractor = 'valueExtractor2047672534';
+      const expectedResponse = {
         name: name,
         description: description,
         filter: filter,
@@ -1216,15 +1216,15 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes updateLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-      var metric = {};
-      var request = {
+      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const metric = {};
+      const request = {
         metricName: formattedMetricName,
         metric: metric,
       };
@@ -1247,14 +1247,14 @@ describe('MetricsServiceV2Client', () => {
 
   describe('deleteLogMetric', () => {
     it('invokes deleteLogMetric without error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-      var request = {
+      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const request = {
         metricName: formattedMetricName,
       };
 
@@ -1268,14 +1268,14 @@ describe('MetricsServiceV2Client', () => {
     });
 
     it('invokes deleteLogMetric with error', done => {
-      var client = new loggingModule.v2.MetricsServiceV2Client({
+      const client = new loggingModule.v2.MetricsServiceV2Client({
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
 
       // Mock request
-      var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-      var request = {
+      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const request = {
         metricName: formattedMetricName,
       };
 

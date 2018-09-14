@@ -79,7 +79,7 @@
  * @memberof google.api
  * @see [google.api.Distribution definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
  */
-var Distribution = {
+const Distribution = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**

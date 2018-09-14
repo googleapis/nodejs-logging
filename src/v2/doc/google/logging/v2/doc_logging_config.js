@@ -100,7 +100,7 @@
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogSink definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var LogSink = {
+const LogSink = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
@@ -156,7 +156,7 @@ var LogSink = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListSinksRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var ListSinksRequest = {
+const ListSinksRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -177,7 +177,7 @@ var ListSinksRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListSinksResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var ListSinksResponse = {
+const ListSinksResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -198,7 +198,7 @@ var ListSinksResponse = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.GetSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var GetSinkRequest = {
+const GetSinkRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -238,7 +238,7 @@ var GetSinkRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.CreateSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var CreateSinkRequest = {
+const CreateSinkRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -298,7 +298,7 @@ var CreateSinkRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.UpdateSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var UpdateSinkRequest = {
+const UpdateSinkRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -320,7 +320,7 @@ var UpdateSinkRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.DeleteSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var DeleteSinkRequest = {
+const DeleteSinkRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -361,7 +361,7 @@ var DeleteSinkRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogExclusion definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var LogExclusion = {
+const LogExclusion = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -391,7 +391,7 @@ var LogExclusion = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListExclusionsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var ListExclusionsRequest = {
+const ListExclusionsRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -412,7 +412,7 @@ var ListExclusionsRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListExclusionsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var ListExclusionsResponse = {
+const ListExclusionsResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -433,7 +433,7 @@ var ListExclusionsResponse = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.GetExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var GetExclusionRequest = {
+const GetExclusionRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -460,7 +460,7 @@ var GetExclusionRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.CreateExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var CreateExclusionRequest = {
+const CreateExclusionRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -498,7 +498,7 @@ var CreateExclusionRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.UpdateExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var UpdateExclusionRequest = {
+const UpdateExclusionRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -519,6 +519,6 @@ var UpdateExclusionRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.DeleteExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
-var DeleteExclusionRequest = {
+const DeleteExclusionRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
