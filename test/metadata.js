@@ -17,6 +17,7 @@
 'use strict';
 
 const assert = require('assert');
+const BigNumber = require('bignumber.js');
 const extend = require('extend');
 const proxyquire = require('proxyquire');
 
@@ -291,7 +292,7 @@ describe('metadata', function() {
 
       describe('compute engine', function() {
         it('should return correct descriptor', function(done) {
-          const INSTANCE_ID = 'overridden-value';
+          const INSTANCE_ID = 1234567;
           const ZONE_ID = 'cyrodiil-anvil-2';
           const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
           instanceOverride = [
@@ -314,7 +315,40 @@ describe('metadata', function() {
             assert.deepStrictEqual(defaultResource, {
               type: 'gce_instance',
               labels: {
-                instance_id: INSTANCE_ID,
+                instance_id: INSTANCE_ID.toString(),
+                zone: ZONE_ID,
+              },
+            });
+            done();
+          });
+        });
+
+        it('should deal with instance id being a BigNumber', (done) => {
+          const INSTANCE_ID_STRING = `3279739563200103600`;
+          const INSTANCE_ID = new BigNumber(INSTANCE_ID_STRING);
+          const ZONE_ID = 'cyrodiil-anvil-2';
+          const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+          instanceOverride = [
+            {
+              path: 'id',
+              successArg: {data: INSTANCE_ID},
+            },
+            {
+              path: 'zone',
+              successArg: {data: ZONE_FULL},
+            },
+          ];
+
+          metadata.logging.auth.getEnv = function() {
+            return Promise.resolve('COMPUTE_ENGINE');
+          };
+
+          metadata.getDefaultResource(function(err, defaultResource) {
+            assert.ifError(err);
+            assert.deepStrictEqual(defaultResource, {
+              type: 'gce_instance',
+              labels: {
+                instance_id: INSTANCE_ID_STRING,
                 zone: ZONE_ID,
               },
             });
