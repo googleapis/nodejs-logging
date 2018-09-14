@@ -46,7 +46,7 @@ const eventId = new EventId();
  *     Any other types are stringified with `String(value)`.
  *
  * @example
- * const Logging = require('@google-cloud/logging');
+ * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
  * const syslog = logging.log('syslog');
  *
@@ -80,103 +80,93 @@ const eventId = new EventId();
  *   }
  * });
  */
-function Entry(metadata, data) {
+class Entry {
+  constructor(metadata, data) {
+    /**
+     * @name Entry#metadata
+     * @type {object}
+     * @property {Date} timestamp
+     * @property {number} insertId
+     */
+    this.metadata = extend(
+      {
+        timestamp: new Date(),
+      },
+      metadata
+    );
+    // JavaScript date has a very coarse granularity (millisecond), which makes
+    // it quite likely that multiple log entries would have the same timestamp.
+    // The Logging API doesn't guarantee to preserve insertion order for entries
+    // with the same timestamp. The service does use `insertId` as a secondary
+    // ordering for entries with the same timestamp. `insertId` needs to be
+    // globally unique (within the project) however.
+    //
+    // We use a globally unique monotonically increasing EventId as the
+    // insertId.
+    this.metadata.insertId = this.metadata.insertId || eventId.new();
+    /**
+     * @name Entry#data
+     * @type {object}
+     */
+    this.data = data;
+  }
+
   /**
-   * @name Entry#metadata
-   * @type {object}
-   * @property {Date} timestamp
-   * @property {number} insertId
+   * Serialize an entry to the format the API expects.
+   *
+   * @param {object} [options] Configuration object.
+   * @param {boolean} [options.removeCircular] Replace circular references in an
+   *     object with a string value, `[Circular]`.
    */
-  this.metadata = extend(
-    {
-      timestamp: new Date(),
-    },
-    metadata
-  );
-
-  // JavaScript date has a very coarse granularity (millisecond), which makes
-  // it quite likely that multiple log entries would have the same timestamp.
-  // The Logging API doesn't guarantee to preserve insertion order for entries
-  // with the same timestamp. The service does use `insertId` as a secondary
-  // ordering for entries with the same timestamp. `insertId` needs to be
-  // globally unique (within the project) however.
-  //
-  // We use a globally unique monotonically increasing EventId as the
-  // insertId.
-
-  this.metadata.insertId = this.metadata.insertId || eventId.new();
+  toJSON(options) {
+    options = options || {};
+    const entry = extend(true, {}, this.metadata);
+    if (is.object(this.data)) {
+      entry.jsonPayload = Service.objToStruct_(this.data, {
+        removeCircular: !!options.removeCircular,
+        stringify: true,
+      });
+    } else if (is.string(this.data)) {
+      entry.textPayload = this.data;
+    }
+    if (is.date(entry.timestamp)) {
+      const seconds = entry.timestamp.getTime() / 1000;
+      const secondsRounded = Math.floor(seconds);
+      entry.timestamp = {
+        seconds: secondsRounded,
+        nanos: Math.floor((seconds - secondsRounded) * 1e9),
+      };
+    }
+    return entry;
+  }
 
   /**
-   * @name Entry#data
-   * @type {object}
+   * Create an Entry object from an API response, such as `entries:list`.
+   *
+   * @private
+   *
+   * @param {object} entry An API representation of an entry. See a
+   *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
+   * @returns {Entry}
    */
-  this.data = data;
+  static fromApiResponse_(entry) {
+    let data = entry[entry.payload];
+    if (entry.payload === 'jsonPayload') {
+      data = Service.structToObj_(data);
+    }
+    const serializedEntry = new Entry(entry, data);
+    if (serializedEntry.metadata.timestamp) {
+      let ms = serializedEntry.metadata.timestamp.seconds * 1000;
+      ms += serializedEntry.metadata.timestamp.nanos / 1e6;
+      serializedEntry.metadata.timestamp = new Date(ms);
+    }
+    return serializedEntry;
+  }
 }
-
-/**
- * Create an Entry object from an API response, such as `entries:list`.
- *
- * @private
- *
- * @param {object} entry An API representation of an entry. See a
- *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
- * @returns {Entry}
- */
-Entry.fromApiResponse_ = function(entry) {
-  let data = entry[entry.payload];
-
-  if (entry.payload === 'jsonPayload') {
-    data = Service.structToObj_(data);
-  }
-
-  const serializedEntry = new Entry(entry, data);
-
-  if (serializedEntry.metadata.timestamp) {
-    let ms = serializedEntry.metadata.timestamp.seconds * 1000;
-    ms += serializedEntry.metadata.timestamp.nanos / 1e6;
-    serializedEntry.metadata.timestamp = new Date(ms);
-  }
-
-  return serializedEntry;
-};
-
-/**
- * Serialize an entry to the format the API expects.
- *
- * @param {object} [options] Configuration object.
- * @param {boolean} [options.removeCircular] Replace circular references in an
- *     object with a string value, `[Circular]`.
- */
-Entry.prototype.toJSON = function(options) {
-  options = options || {};
-
-  const entry = extend(true, {}, this.metadata);
-
-  if (is.object(this.data)) {
-    entry.jsonPayload = Service.objToStruct_(this.data, {
-      removeCircular: !!options.removeCircular,
-      stringify: true,
-    });
-  } else if (is.string(this.data)) {
-    entry.textPayload = this.data;
-  }
-
-  if (is.date(entry.timestamp)) {
-    const seconds = entry.timestamp.getTime() / 1000;
-    const secondsRounded = Math.floor(seconds);
-
-    entry.timestamp = {
-      seconds: secondsRounded,
-      nanos: Math.floor((seconds - secondsRounded) * 1e9),
-    };
-  }
-
-  return entry;
-};
 
 /**
  * Reference to the {@link Entry} class.
  * @name module:@google-cloud/logging.Entry
  * @see Entry
  */
-module.exports = Entry;
+module.exports.Entry = Entry;

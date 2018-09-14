@@ -42,9 +42,9 @@ describe('Sink', function() {
   const SINK_NAME = 'sink-name';
 
   before(function() {
-    Sink = proxyquire('../src/sink.js', {
+    Sink = proxyquire('../src/sink', {
       '@google-cloud/promisify': fakePromisify,
-    });
+    }).Sink;
   });
 
   beforeEach(function() {

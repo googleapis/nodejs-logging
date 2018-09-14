@@ -21,7 +21,8 @@ const assert = require('assert');
 const tools = require(`@google-cloud/nodejs-repo-tools`);
 const uuid = require(`uuid`);
 
-const logging = proxyquire(`@google-cloud/logging`, {})();
+const {Logging} = proxyquire(`@google-cloud/logging`, {});
+const logging = new Logging();
 
 const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
 
@@ -70,6 +71,8 @@ it(`should log an entry`, done => {
     },
   };
   proxyquire(`../quickstart`, {
-    '@google-cloud/logging': sinon.stub().returns(loggingMock),
+    '@google-cloud/logging': {
+      Logging: sinon.stub().returns(loggingMock),
+    },
   });
 });

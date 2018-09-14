@@ -18,8 +18,8 @@
 function createSink(sinkName, bucketName, filter) {
   // [START logging_create_sink]
   // Imports the Google Cloud client libraries
-  const Logging = require('@google-cloud/logging');
-  const Storage = require('@google-cloud/storage');
+  const {Logging} = require('@google-cloud/logging');
+  const {Storage} = require('@google-cloud/storage');
 
   // Creates clients
   const logging = new Logging();
@@ -66,7 +66,7 @@ function createSink(sinkName, bucketName, filter) {
 function getSinkMetadata(sinkName) {
   // [START logging_get_sink]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -97,7 +97,7 @@ function getSinkMetadata(sinkName) {
 function listSinks() {
   // [START logging_list_sinks]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -124,7 +124,7 @@ function listSinks() {
 function updateSink(sinkName, filter) {
   // [START logging_update_sink]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();
@@ -164,7 +164,7 @@ function updateSink(sinkName, filter) {
 function deleteSink(sinkName) {
   // [START logging_delete_sink]
   // Imports the Google Cloud client library
-  const Logging = require('@google-cloud/logging');
+  const {Logging} = require('@google-cloud/logging');
 
   // Creates a client
   const logging = new Logging();

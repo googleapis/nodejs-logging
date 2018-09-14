@@ -17,7 +17,7 @@
 
 // [START logging_quickstart]
 // Imports the Google Cloud client library
-const Logging = require('@google-cloud/logging');
+const {Logging} = require('@google-cloud/logging');
 
 // Your Google Cloud Platform project ID
 const projectId = 'YOUR_PROJECT_ID';

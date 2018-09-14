@@ -242,7 +242,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const logging = require('@google-cloud/logging');
+   * const {Logging} = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -331,7 +331,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const logging = require('@google-cloud/logging');
+   * const {Logging} = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -377,7 +377,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const logging = require('@google-cloud/logging');
+   * const {Logging} = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -432,7 +432,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const logging = require('@google-cloud/logging');
+   * const {Logging} = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -493,7 +493,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const logging = require('@google-cloud/logging');
+   * const {Logging} = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -543,7 +543,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const logging = require('@google-cloud/logging');
+   * const {Logging} = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.

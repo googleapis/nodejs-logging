@@ -31,144 +31,144 @@ const gcpMetadata = require('gcp-metadata');
  *
  * @param {Logging} logging The parent Logging instance.
  */
-function Metadata(logging) {
-  this.logging = logging;
+class Metadata {
+  constructor(logging) {
+    this.logging = logging;
+  }
+  /**
+   * Retrieve a resource object describing the current environment.
+   *
+   * @param {function} callback Callback function.
+   */
+  getDefaultResource(callback) {
+    this.logging.auth
+      .getEnv()
+      .then(env => {
+        if (env === 'KUBERNETES_ENGINE') {
+          Metadata.getGKEDescriptor(callback);
+        } else if (env === 'APP_ENGINE') {
+          callback(null, Metadata.getGAEDescriptor());
+        } else if (env === 'CLOUD_FUNCTIONS') {
+          callback(null, Metadata.getCloudFunctionDescriptor());
+        } else if (env === 'COMPUTE_ENGINE') {
+          // Test for compute engine should be done after all the rest - everything
+          // runs on top of compute engine.
+          Metadata.getGCEDescriptor(callback);
+        } else {
+          callback(null, Metadata.getGlobalDescriptor());
+        }
+      })
+      .catch(callback);
+  }
+
+  /**
+   * Create a descriptor for Cloud Functions.
+   *
+   * @returns {object}
+   */
+  static getCloudFunctionDescriptor() {
+    return {
+      type: 'cloud_function',
+      labels: {
+        function_name: process.env.FUNCTION_NAME,
+        region: process.env.FUNCTION_REGION,
+      },
+    };
+  }
+
+  /**
+   * Create a descriptor for Google App Engine.
+   *
+   * @returns {object}
+   */
+  static getGAEDescriptor() {
+    return {
+      type: 'gae_app',
+      labels: {
+        module_id: process.env.GAE_SERVICE || process.env.GAE_MODULE_NAME,
+        version_id: process.env.GAE_VERSION,
+      },
+    };
+  }
+
+  /**
+   * Create a descriptor for Google Compute Engine.
+   *
+   * @param {function} callback Callback function.
+   * @return {object}
+   */
+  static getGCEDescriptor(callback) {
+    gcpMetadata.instance('id').then(function(idResponse) {
+      gcpMetadata.instance('zone').then(function(zoneResponse) {
+        // Some parsing is necessary. Metadata service returns a fully
+        // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
+        // wants just the zone part.
+        //
+        const zone = zoneResponse.data.split('/').pop();
+        callback(null, {
+          type: 'gce_instance',
+          labels: {
+            instance_id: idResponse.data,
+            zone: zone,
+          },
+        });
+      }, callback);
+    }, callback);
+  }
+
+  /**
+   * Create a descriptor for Google Container Engine.
+   *
+   * @param {function} callback Callback function.
+   * @return {object}
+   */
+  static getGKEDescriptor(callback) {
+    // Stackdriver Logging Monitored Resource for 'container' requires
+    // cluster_name and namespace_id fields. Note that these *need* to be
+    // snake_case. The namespace_id is not easily available from inside the
+    // container, but we can get the namespace_name. Logging has been using the
+    // namespace_name in place of namespace_id for a while now. Log correlation
+    // with metrics may not necessarily work however.
+    //
+    gcpMetadata.instance('attributes/cluster-name').then(function(resp) {
+      fs.readFile(
+        Metadata.KUBERNETES_NAMESPACE_ID_PATH,
+        'utf8',
+        (err, namespace) => {
+          if (err) {
+            callback(
+              new Error(
+                `Error reading ` +
+                  `${Metadata.KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
+              )
+            );
+            return;
+          }
+          callback(null, {
+            type: 'container',
+            labels: {
+              cluster_name: resp.data,
+              namespace_id: namespace,
+            },
+          });
+        }
+      );
+    }, callback);
+  }
+
+  /**
+   * Create a global descriptor.
+   *
+   * @returns {object}
+   */
+  static getGlobalDescriptor() {
+    return {
+      type: 'global',
+    };
+  }
 }
 
 Metadata.KUBERNETES_NAMESPACE_ID_PATH =
   '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
 
-/**
- * Create a descriptor for Cloud Functions.
- *
- * @returns {object}
- */
-Metadata.getCloudFunctionDescriptor = function() {
-  return {
-    type: 'cloud_function',
-    labels: {
-      function_name: process.env.FUNCTION_NAME,
-      region: process.env.FUNCTION_REGION,
-    },
-  };
-};
-
-/**
- * Create a descriptor for Google App Engine.
- *
- * @returns {object}
- */
-Metadata.getGAEDescriptor = function() {
-  return {
-    type: 'gae_app',
-    labels: {
-      module_id: process.env.GAE_SERVICE || process.env.GAE_MODULE_NAME,
-      version_id: process.env.GAE_VERSION,
-    },
-  };
-};
-
-/**
- * Create a descriptor for Google Compute Engine.
- *
- * @param {function} callback Callback function.
- * @return {object}
- */
-Metadata.getGCEDescriptor = function(callback) {
-  gcpMetadata.instance('id').then(function(idResponse) {
-    gcpMetadata.instance('zone').then(function(zoneResponse) {
-      // Some parsing is necessary. Metadata service returns a fully
-      // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
-      // wants just the zone part.
-      //
-      const zone = zoneResponse.data.split('/').pop();
-      callback(null, {
-        type: 'gce_instance',
-        labels: {
-          instance_id: idResponse.data,
-          zone: zone,
-        },
-      });
-    }, callback);
-  }, callback);
-};
-
-/**
- * Create a descriptor for Google Container Engine.
- *
- * @param {function} callback Callback function.
- * @return {object}
- */
-Metadata.getGKEDescriptor = function(callback) {
-  // Stackdriver Logging Monitored Resource for 'container' requires
-  // cluster_name and namespace_id fields. Note that these *need* to be
-  // snake_case. The namespace_id is not easily available from inside the
-  // container, but we can get the namespace_name. Logging has been using the
-  // namespace_name in place of namespace_id for a while now. Log correlation
-  // with metrics may not necessarily work however.
-  //
-  gcpMetadata.instance('attributes/cluster-name').then(function(resp) {
-    fs.readFile(
-      Metadata.KUBERNETES_NAMESPACE_ID_PATH,
-      'utf8',
-      (err, namespace) => {
-        if (err) {
-          callback(
-            new Error(
-              `Error reading ` +
-                `${Metadata.KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
-            )
-          );
-          return;
-        }
-
-        callback(null, {
-          type: 'container',
-          labels: {
-            cluster_name: resp.data,
-            namespace_id: namespace,
-          },
-        });
-      }
-    );
-  }, callback);
-};
-
-/**
- * Create a global descriptor.
- *
- * @returns {object}
- */
-Metadata.getGlobalDescriptor = function() {
-  return {
-    type: 'global',
-  };
-};
-
-/**
- * Retrieve a resource object describing the current environment.
- *
- * @param {function} callback Callback function.
- */
-Metadata.prototype.getDefaultResource = function(callback) {
-  this.logging.auth
-    .getEnv()
-    .then(env => {
-      if (env === 'KUBERNETES_ENGINE') {
-        Metadata.getGKEDescriptor(callback);
-      } else if (env === 'APP_ENGINE') {
-        callback(null, Metadata.getGAEDescriptor());
-      } else if (env === 'CLOUD_FUNCTIONS') {
-        callback(null, Metadata.getCloudFunctionDescriptor());
-      } else if (env === 'COMPUTE_ENGINE') {
-        // Test for compute engine should be done after all the rest - everything
-        // runs on top of compute engine.
-        Metadata.getGCEDescriptor(callback);
-      } else {
-        callback(null, Metadata.getGlobalDescriptor());
-      }
-    })
-    .catch(callback);
-};
-
-module.exports = Metadata;
+module.exports.Metadata = Metadata;

@@ -43,7 +43,7 @@ describe('Entry', function() {
         Service: FakeGrpcService,
       },
       eventid: FakeEventId,
-    });
+    }).Entry;
   });
 
   beforeEach(function() {
