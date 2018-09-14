@@ -134,7 +134,7 @@
  * @memberof google.api
  * @see [google.api.MetricDescriptor definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
  */
-var MetricDescriptor = {
+const MetricDescriptor = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
@@ -233,6 +233,6 @@ var MetricDescriptor = {
  * @memberof google.api
  * @see [google.api.Metric definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
  */
-var Metric = {
+const Metric = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };

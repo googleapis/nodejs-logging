@@ -85,6 +85,6 @@
  * @memberof google.logging.type
  * @see [google.logging.type.HttpRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/type/http_request.proto}
  */
-var HttpRequest = {
+const HttpRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };

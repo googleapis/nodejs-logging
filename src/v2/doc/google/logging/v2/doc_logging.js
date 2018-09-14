@@ -36,7 +36,7 @@
  * @memberof google.logging.v2
  * @see [google.logging.v2.DeleteLogRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var DeleteLogRequest = {
+const DeleteLogRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -119,7 +119,7 @@ var DeleteLogRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var WriteLogEntriesRequest = {
+const WriteLogEntriesRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -130,7 +130,7 @@ var WriteLogEntriesRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var WriteLogEntriesResponse = {
+const WriteLogEntriesResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -149,7 +149,7 @@ var WriteLogEntriesResponse = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesPartialErrors definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var WriteLogEntriesPartialErrors = {
+const WriteLogEntriesPartialErrors = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -206,7 +206,7 @@ var WriteLogEntriesPartialErrors = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogEntriesRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var ListLogEntriesRequest = {
+const ListLogEntriesRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -236,7 +236,7 @@ var ListLogEntriesRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var ListLogEntriesResponse = {
+const ListLogEntriesResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -258,7 +258,7 @@ var ListLogEntriesResponse = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListMonitoredResourceDescriptorsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var ListMonitoredResourceDescriptorsRequest = {
+const ListMonitoredResourceDescriptorsRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -279,7 +279,7 @@ var ListMonitoredResourceDescriptorsRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListMonitoredResourceDescriptorsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var ListMonitoredResourceDescriptorsResponse = {
+const ListMonitoredResourceDescriptorsResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -309,7 +309,7 @@ var ListMonitoredResourceDescriptorsResponse = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var ListLogsRequest = {
+const ListLogsRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -330,6 +330,6 @@ var ListLogsRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
-var ListLogsResponse = {
+const ListLogsResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };

@@ -132,7 +132,7 @@
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogMetric definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var LogMetric = {
+const LogMetric = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
@@ -178,7 +178,7 @@ var LogMetric = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogMetricsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var ListLogMetricsRequest = {
+const ListLogMetricsRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -199,7 +199,7 @@ var ListLogMetricsRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.ListLogMetricsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var ListLogMetricsResponse = {
+const ListLogMetricsResponse = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -215,7 +215,7 @@ var ListLogMetricsResponse = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.GetLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var GetLogMetricRequest = {
+const GetLogMetricRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -239,7 +239,7 @@ var GetLogMetricRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.CreateLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var CreateLogMetricRequest = {
+const CreateLogMetricRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -264,7 +264,7 @@ var CreateLogMetricRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.UpdateLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var UpdateLogMetricRequest = {
+const UpdateLogMetricRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -280,6 +280,6 @@ var UpdateLogMetricRequest = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.DeleteLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
-var DeleteLogMetricRequest = {
+const DeleteLogMetricRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
