@@ -60,7 +60,7 @@
  * @memberof google.api
  * @see [google.api.MonitoredResourceDescriptor definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
-var MonitoredResourceDescriptor = {
+const MonitoredResourceDescriptor = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -93,7 +93,7 @@ var MonitoredResourceDescriptor = {
  * @memberof google.api
  * @see [google.api.MonitoredResource definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
-var MonitoredResource = {
+const MonitoredResource = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -127,6 +127,6 @@ var MonitoredResource = {
  * @memberof google.api
  * @see [google.api.MonitoredResourceMetadata definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
-var MonitoredResourceMetadata = {
+const MonitoredResourceMetadata = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };

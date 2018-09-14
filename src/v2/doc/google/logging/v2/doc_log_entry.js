@@ -147,7 +147,7 @@
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntry definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
-var LogEntry = {
+const LogEntry = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -174,7 +174,7 @@ var LogEntry = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntryOperation definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
-var LogEntryOperation = {
+const LogEntryOperation = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -202,6 +202,6 @@ var LogEntryOperation = {
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntrySourceLocation definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
-var LogEntrySourceLocation = {
+const LogEntrySourceLocation = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };

@@ -71,13 +71,13 @@ class MetricsServiceV2Client {
     // Create a `gaxGrpc` object, with any grpc-specific options
     // sent to the client.
     opts.scopes = this.constructor.scopes;
-    var gaxGrpc = new gax.GrpcClient(opts);
+    const gaxGrpc = new gax.GrpcClient(opts);
 
     // Save the auth object to the client, for use by other methods.
     this.auth = gaxGrpc.auth;
 
     // Determine the client header string.
-    var clientHeader = [
+    const clientHeader = [
       `gl-node/${process.version}`,
       `grpc/${gaxGrpc.grpcVersion}`,
       `gax/${gax.version}`,
@@ -88,7 +88,7 @@ class MetricsServiceV2Client {
     }
 
     // Load the applicable protos.
-    var protos = merge(
+    const protos = merge(
       {},
       gaxGrpc.loadProto(
         path.join(__dirname, '..', '..', 'protos'),
@@ -118,7 +118,7 @@ class MetricsServiceV2Client {
     };
 
     // Put together the default options sent with requests.
-    var defaults = gaxGrpc.constructSettings(
+    const defaults = gaxGrpc.constructSettings(
       'google.logging.v2.MetricsServiceV2',
       gapicConfig,
       opts.clientConfig,
@@ -132,14 +132,14 @@ class MetricsServiceV2Client {
 
     // Put together the "service stub" for
     // google.logging.v2.MetricsServiceV2.
-    var metricsServiceV2Stub = gaxGrpc.createStub(
+    const metricsServiceV2Stub = gaxGrpc.createStub(
       protos.google.logging.v2.MetricsServiceV2,
       opts
     );
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    var metricsServiceV2StubMethods = [
+    const metricsServiceV2StubMethods = [
       'listLogMetrics',
       'getLogMetric',
       'createLogMetric',
@@ -151,7 +151,7 @@ class MetricsServiceV2Client {
         metricsServiceV2Stub.then(
           stub =>
             function() {
-              var args = Array.prototype.slice.call(arguments, 0);
+              const args = Array.prototype.slice.call(arguments, 0);
               return stub[methodName].apply(stub, args);
             }
         ),
@@ -244,16 +244,16 @@ class MetricsServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.MetricsServiceV2Client({
+   * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
    * });
    *
    * // Iterate over all elements.
-   * var formattedParent = client.projectPath('[PROJECT]');
+   * const formattedParent = client.projectPath('[PROJECT]');
    *
    * client.listLogMetrics({parent: formattedParent})
    *   .then(responses => {
-   *     var resources = responses[0];
+   *     const resources = responses[0];
    *     for (let i = 0; i < resources.length; i += 1) {
    *       // doThingsWith(resources[i])
    *     }
@@ -263,17 +263,17 @@ class MetricsServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedParent = client.projectPath('[PROJECT]');
+   * const formattedParent = client.projectPath('[PROJECT]');
    *
    *
-   * var options = {autoPaginate: false};
-   * var callback = responses => {
+   * const options = {autoPaginate: false};
+   * const callback = responses => {
    *   // The actual resources in a response.
-   *   var resources = responses[0];
+   *   const resources = responses[0];
    *   // The next request if the response shows that there are more responses.
-   *   var nextRequest = responses[1];
+   *   const nextRequest = responses[1];
    *   // The actual response object, if necessary.
-   *   // var rawResponse = responses[2];
+   *   // const rawResponse = responses[2];
    *   for (let i = 0; i < resources.length; i += 1) {
    *     // doThingsWith(resources[i]);
    *   }
@@ -333,11 +333,11 @@ class MetricsServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.MetricsServiceV2Client({
+   * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath('[PROJECT]');
+   * const formattedParent = client.projectPath('[PROJECT]');
    * client.listLogMetricsStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)
@@ -379,14 +379,14 @@ class MetricsServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.MetricsServiceV2Client({
+   * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+   * const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
    * client.getLogMetric({metricName: formattedMetricName})
    *   .then(responses => {
-   *     var response = responses[0];
+   *     const response = responses[0];
    *     // doThingsWith(response)
    *   })
    *   .catch(err => {
@@ -434,19 +434,19 @@ class MetricsServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.MetricsServiceV2Client({
+   * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath('[PROJECT]');
-   * var metric = {};
-   * var request = {
+   * const formattedParent = client.projectPath('[PROJECT]');
+   * const metric = {};
+   * const request = {
    *   parent: formattedParent,
    *   metric: metric,
    * };
    * client.createLogMetric(request)
    *   .then(responses => {
-   *     var response = responses[0];
+   *     const response = responses[0];
    *     // doThingsWith(response)
    *   })
    *   .catch(err => {
@@ -495,19 +495,19 @@ class MetricsServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.MetricsServiceV2Client({
+   * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
-   * var metric = {};
-   * var request = {
+   * const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+   * const metric = {};
+   * const request = {
    *   metricName: formattedMetricName,
    *   metric: metric,
    * };
    * client.updateLogMetric(request)
    *   .then(responses => {
-   *     var response = responses[0];
+   *     const response = responses[0];
    *     // doThingsWith(response)
    *   })
    *   .catch(err => {
@@ -545,11 +545,11 @@ class MetricsServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.MetricsServiceV2Client({
+   * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+   * const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
    * client.deleteLogMetric({metricName: formattedMetricName}).catch(err => {
    *   console.error(err);
    * });

@@ -72,13 +72,13 @@ class LoggingServiceV2Client {
     // Create a `gaxGrpc` object, with any grpc-specific options
     // sent to the client.
     opts.scopes = this.constructor.scopes;
-    var gaxGrpc = new gax.GrpcClient(opts);
+    const gaxGrpc = new gax.GrpcClient(opts);
 
     // Save the auth object to the client, for use by other methods.
     this.auth = gaxGrpc.auth;
 
     // Determine the client header string.
-    var clientHeader = [
+    const clientHeader = [
       `gl-node/${process.version}`,
       `grpc/${gaxGrpc.grpcVersion}`,
       `gax/${gax.version}`,
@@ -89,7 +89,7 @@ class LoggingServiceV2Client {
     }
 
     // Load the applicable protos.
-    var protos = merge(
+    const protos = merge(
       {},
       gaxGrpc.loadProto(
         path.join(__dirname, '..', '..', 'protos'),
@@ -125,7 +125,7 @@ class LoggingServiceV2Client {
         'logNames'
       ),
     };
-    var protoFilesRoot = new gax.GoogleProtoFilesRoot();
+    let protoFilesRoot = new gax.GoogleProtoFilesRoot();
     protoFilesRoot = protobuf.loadSync(
       path.join(
         __dirname,
@@ -151,7 +151,7 @@ class LoggingServiceV2Client {
     };
 
     // Put together the default options sent with requests.
-    var defaults = gaxGrpc.constructSettings(
+    const defaults = gaxGrpc.constructSettings(
       'google.logging.v2.LoggingServiceV2',
       gapicConfig,
       opts.clientConfig,
@@ -165,14 +165,14 @@ class LoggingServiceV2Client {
 
     // Put together the "service stub" for
     // google.logging.v2.LoggingServiceV2.
-    var loggingServiceV2Stub = gaxGrpc.createStub(
+    const loggingServiceV2Stub = gaxGrpc.createStub(
       protos.google.logging.v2.LoggingServiceV2,
       opts
     );
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    var loggingServiceV2StubMethods = [
+    const loggingServiceV2StubMethods = [
       'deleteLog',
       'writeLogEntries',
       'listLogEntries',
@@ -184,7 +184,7 @@ class LoggingServiceV2Client {
         loggingServiceV2Stub.then(
           stub =>
             function() {
-              var args = Array.prototype.slice.call(arguments, 0);
+              const args = Array.prototype.slice.call(arguments, 0);
               return stub[methodName].apply(stub, args);
             }
         ),
@@ -269,11 +269,11 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+   * const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
    * client.deleteLog({logName: formattedLogName}).catch(err => {
    *   console.error(err);
    * });
@@ -381,14 +381,14 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var entries = [];
+   * const entries = [];
    * client.writeLogEntries({entries: entries})
    *   .then(responses => {
-   *     var response = responses[0];
+   *     const response = responses[0];
    *     // doThingsWith(response)
    *   })
    *   .catch(err => {
@@ -476,16 +476,16 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
    * // Iterate over all elements.
-   * var formattedResourceNames = [];
+   * const formattedResourceNames = [];
    *
    * client.listLogEntries({resourceNames: formattedResourceNames})
    *   .then(responses => {
-   *     var resources = responses[0];
+   *     const resources = responses[0];
    *     for (let i = 0; i < resources.length; i += 1) {
    *       // doThingsWith(resources[i])
    *     }
@@ -495,17 +495,17 @@ class LoggingServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedResourceNames = [];
+   * const formattedResourceNames = [];
    *
    *
-   * var options = {autoPaginate: false};
-   * var callback = responses => {
+   * const options = {autoPaginate: false};
+   * const callback = responses => {
    *   // The actual resources in a response.
-   *   var resources = responses[0];
+   *   const resources = responses[0];
    *   // The next request if the response shows that there are more responses.
-   *   var nextRequest = responses[1];
+   *   const nextRequest = responses[1];
    *   // The actual response object, if necessary.
-   *   // var rawResponse = responses[2];
+   *   // const rawResponse = responses[2];
    *   for (let i = 0; i < resources.length; i += 1) {
    *     // doThingsWith(resources[i]);
    *   }
@@ -592,11 +592,11 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedResourceNames = [];
+   * const formattedResourceNames = [];
    * client.listLogEntriesStream({resourceNames: formattedResourceNames})
    *   .on('data', element => {
    *     // doThingsWith(element)
@@ -653,14 +653,14 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
    * // Iterate over all elements.
    * client.listMonitoredResourceDescriptors({})
    *   .then(responses => {
-   *     var resources = responses[0];
+   *     const resources = responses[0];
    *     for (let i = 0; i < resources.length; i += 1) {
    *       // doThingsWith(resources[i])
    *     }
@@ -671,14 +671,14 @@ class LoggingServiceV2Client {
    *
    * // Or obtain the paged response.
    *
-   * var options = {autoPaginate: false};
-   * var callback = responses => {
+   * const options = {autoPaginate: false};
+   * const callback = responses => {
    *   // The actual resources in a response.
-   *   var resources = responses[0];
+   *   const resources = responses[0];
    *   // The next request if the response shows that there are more responses.
-   *   var nextRequest = responses[1];
+   *   const nextRequest = responses[1];
    *   // The actual response object, if necessary.
-   *   // var rawResponse = responses[2];
+   *   // const rawResponse = responses[2];
    *   for (let i = 0; i < resources.length; i += 1) {
    *     // doThingsWith(resources[i]);
    *   }
@@ -738,7 +738,7 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
@@ -806,16 +806,16 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
    * // Iterate over all elements.
-   * var formattedParent = client.projectPath('[PROJECT]');
+   * const formattedParent = client.projectPath('[PROJECT]');
    *
    * client.listLogs({parent: formattedParent})
    *   .then(responses => {
-   *     var resources = responses[0];
+   *     const resources = responses[0];
    *     for (let i = 0; i < resources.length; i += 1) {
    *       // doThingsWith(resources[i])
    *     }
@@ -825,17 +825,17 @@ class LoggingServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * var formattedParent = client.projectPath('[PROJECT]');
+   * const formattedParent = client.projectPath('[PROJECT]');
    *
    *
-   * var options = {autoPaginate: false};
-   * var callback = responses => {
+   * const options = {autoPaginate: false};
+   * const callback = responses => {
    *   // The actual resources in a response.
-   *   var resources = responses[0];
+   *   const resources = responses[0];
    *   // The next request if the response shows that there are more responses.
-   *   var nextRequest = responses[1];
+   *   const nextRequest = responses[1];
    *   // The actual response object, if necessary.
-   *   // var rawResponse = responses[2];
+   *   // const rawResponse = responses[2];
    *   for (let i = 0; i < resources.length; i += 1) {
    *     // doThingsWith(resources[i]);
    *   }
@@ -898,11 +898,11 @@ class LoggingServiceV2Client {
    *
    * const {Logging} = require('@google-cloud/logging');
    *
-   * var client = new logging.v2.LoggingServiceV2Client({
+   * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
    * });
    *
-   * var formattedParent = client.projectPath('[PROJECT]');
+   * const formattedParent = client.projectPath('[PROJECT]');
    * client.listLogsStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)

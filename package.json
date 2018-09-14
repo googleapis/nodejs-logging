@@ -72,7 +72,7 @@
     "extend": "^3.0.2",
     "gcp-metadata": "^0.7.0",
     "google-auth-library": "^2.0.0",
-    "google-gax": "^0.19.0",
+    "google-gax": "^0.20.0",
     "google-proto-files": "^0.16.1",
     "is": "^3.2.1",
     "lodash.merge": "^4.6.1",
