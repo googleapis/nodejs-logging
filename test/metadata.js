@@ -151,7 +151,7 @@ describe('metadata', function() {
     it('should return the correct descriptor', function(done) {
       instanceOverride = {
         path: 'attributes/cluster-name',
-        successArg: {data: CLUSTER_NAME},
+        successArg: CLUSTER_NAME,
       };
 
       Metadata.getGKEDescriptor(function(err, descriptor) {
@@ -198,11 +198,11 @@ describe('metadata', function() {
       instanceOverride = [
         {
           path: 'id',
-          successArg: {data: INSTANCE_ID},
+          successArg: INSTANCE_ID,
         },
         {
           path: 'zone',
-          successArg: {data: ZONE_FULL},
+          successArg: ZONE_FULL,
         },
       ];
 
@@ -298,11 +298,11 @@ describe('metadata', function() {
           instanceOverride = [
             {
               path: 'id',
-              successArg: {data: INSTANCE_ID},
+              successArg: INSTANCE_ID,
             },
             {
               path: 'zone',
-              successArg: {data: ZONE_FULL},
+              successArg: ZONE_FULL,
             },
           ];
 
@@ -323,7 +323,7 @@ describe('metadata', function() {
           });
         });
 
-        it('should deal with instance id being a BigNumber', (done) => {
+        it('should deal with instance id being a BigNumber', done => {
           const INSTANCE_ID_STRING = `3279739563200103600`;
           const INSTANCE_ID = new BigNumber(INSTANCE_ID_STRING);
           const ZONE_ID = 'cyrodiil-anvil-2';
@@ -331,11 +331,11 @@ describe('metadata', function() {
           instanceOverride = [
             {
               path: 'id',
-              successArg: {data: INSTANCE_ID},
+              successArg: INSTANCE_ID,
             },
             {
               path: 'zone',
-              successArg: {data: ZONE_FULL},
+              successArg: ZONE_FULL,
             },
           ];
 
@@ -362,7 +362,7 @@ describe('metadata', function() {
           const CLUSTER_NAME = 'overridden-value';
           instanceOverride = {
             path: 'attributes/cluster-name',
-            successArg: {data: CLUSTER_NAME},
+            successArg: CLUSTER_NAME,
           };
 
           metadata.logging.auth.getEnv = function() {
