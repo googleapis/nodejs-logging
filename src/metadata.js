@@ -108,8 +108,8 @@ class Metadata {
         callback(null, {
           type: 'gce_instance',
           labels: {
-            // // idResponse can be BigNumber when the id too large for JavaScript
-            // // numbers. Use a toString() to uniformly convert to a string.
+            // idResponse can be BigNumber when the id too large for JavaScript
+            // numbers. Use a toString() to uniformly convert to a string.
             instance_id: idResponse.toString(),
             zone: zone,
           },
