@@ -4,6 +4,23 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v3.0.3
+
+### Implementation Changes
+- fix(gce): instance id can be a big number ([#222](https://github.com/googleapis/nodejs-logging/pull/222))
+- fix(deps): update dependency google-gax to ^0.20.0 ([#220](https://github.com/googleapis/nodejs-logging/pull/220))
+- fix(GCE): add zone label in GCE descriptor ([#215](https://github.com/googleapis/nodejs-logging/pull/215))
+- fix(deps): update dependency google-auth-library to v2 ([#210](https://github.com/googleapis/nodejs-logging/pull/210))
+
+### Internal / Testing Changes
+- Use es classes ([#219](https://github.com/googleapis/nodejs-logging/pull/219))
+- Switch to let/const ([#221](https://github.com/googleapis/nodejs-logging/pull/221))
+- Use let and const ([#217](https://github.com/googleapis/nodejs-logging/pull/217))
+- Update CI config ([#218](https://github.com/googleapis/nodejs-logging/pull/218))
+- fix(deps): update dependency @google-cloud/storage to v2 ([#213](https://github.com/googleapis/nodejs-logging/pull/213))
+- Retry npm install in CI ([#214](https://github.com/googleapis/nodejs-logging/pull/214))
+- add templates to synth.py and run it ([#211](https://github.com/googleapis/nodejs-logging/pull/211))
+
 ## v3.0.2
 
 This release contains a variety of minor internal changes.
