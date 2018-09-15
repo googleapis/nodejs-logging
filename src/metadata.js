@@ -104,11 +104,13 @@ class Metadata {
         // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
         // wants just the zone part.
         //
-        const zone = zoneResponse.data.split('/').pop();
+        const zone = zoneResponse.split('/').pop();
         callback(null, {
           type: 'gce_instance',
           labels: {
-            instance_id: idResponse.data,
+            // idResponse can be BigNumber when the id too large for JavaScript
+            // numbers. Use a toString() to uniformly convert to a string.
+            instance_id: idResponse.toString(),
             zone: zone,
           },
         });
@@ -147,7 +149,7 @@ class Metadata {
           callback(null, {
             type: 'container',
             labels: {
-              cluster_name: resp.data,
+              cluster_name: resp,
               namespace_id: namespace,
             },
           });
