@@ -30,14 +30,14 @@ FakeEventId.prototype.new = function() {
   return (fakeEventIdNewOverride || util.noop).apply(null, arguments);
 };
 
-describe('Entry', function() {
+describe('Entry', () => {
   let Entry;
   let entry;
 
   const METADATA = {};
   const DATA = {};
 
-  before(function() {
+  before(() => {
     Entry = proxyquire('../src/entry.js', {
       '@google-cloud/common-grpc': {
         Service: FakeGrpcService,
@@ -46,14 +46,14 @@ describe('Entry', function() {
     }).Entry;
   });
 
-  beforeEach(function() {
+  beforeEach(() => {
     fakeEventIdNewOverride = null;
     extend(FakeGrpcService, GrpcService);
     entry = new Entry(METADATA, DATA);
   });
 
-  describe('instantiation', function() {
-    it('should assign timestamp to metadata', function() {
+  describe('instantiation', () => {
+    it('should assign timestamp to metadata', () => {
       const now = new Date();
 
       const expectedTimestampBoundaries = {
@@ -65,7 +65,7 @@ describe('Entry', function() {
       assert(entry.metadata.timestamp <= expectedTimestampBoundaries.end);
     });
 
-    it('should not assign timestamp if one is already set', function() {
+    it('should not assign timestamp if one is already set', () => {
       const timestamp = new Date('2012');
 
       const entry = new Entry({
@@ -75,10 +75,10 @@ describe('Entry', function() {
       assert.strictEqual(entry.metadata.timestamp, timestamp);
     });
 
-    it('should assign insertId to metadata', function() {
+    it('should assign insertId to metadata', () => {
       const eventId = 'event-id';
 
-      fakeEventIdNewOverride = function() {
+      fakeEventIdNewOverride = () => {
         return eventId;
       };
 
@@ -87,10 +87,10 @@ describe('Entry', function() {
       assert.strictEqual(entry.metadata.insertId, eventId);
     });
 
-    it('should not assign insertId if one is already set', function() {
+    it('should not assign insertId if one is already set', () => {
       const eventId = 'event-id';
 
-      fakeEventIdNewOverride = function() {
+      fakeEventIdNewOverride = () => {
         return eventId;
       };
 
@@ -103,21 +103,21 @@ describe('Entry', function() {
       assert.strictEqual(entry.metadata.insertId, userDefinedInsertId);
     });
 
-    it('should localize data', function() {
+    it('should localize data', () => {
       assert.strictEqual(entry.data, DATA);
     });
   });
 
-  describe('fromApiResponse_', function() {
+  describe('fromApiResponse_', () => {
     const RESOURCE = {};
     let entry;
     const date = new Date();
 
-    beforeEach(function() {
+    beforeEach(() => {
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
 
-      FakeGrpcService.structToObj_ = function(data) {
+      FakeGrpcService.structToObj_ = data => {
         return data;
       };
 
@@ -133,7 +133,7 @@ describe('Entry', function() {
       });
     });
 
-    it('should create an Entry', function() {
+    it('should create an Entry', () => {
       assert(entry instanceof Entry);
       assert.strictEqual(entry.metadata.resource, RESOURCE);
       assert.strictEqual(entry.data, DATA);
@@ -141,7 +141,7 @@ describe('Entry', function() {
       assert.deepStrictEqual(entry.metadata.timestamp, date);
     });
 
-    it('should extend the entry with proto data', function() {
+    it('should extend the entry with proto data', () => {
       const entry = Entry.fromApiResponse_({
         resource: RESOURCE,
         payload: 'protoPayload',
@@ -152,11 +152,11 @@ describe('Entry', function() {
       assert.strictEqual(entry.data, DATA);
     });
 
-    it('should extend the entry with json data', function() {
+    it('should extend the entry with json data', () => {
       assert.strictEqual(entry.data, DATA);
     });
 
-    it('should extend the entry with text data', function() {
+    it('should extend the entry with text data', () => {
       const entry = Entry.fromApiResponse_({
         resource: RESOURCE,
         payload: 'textPayload',
@@ -168,23 +168,23 @@ describe('Entry', function() {
     });
   });
 
-  describe('toJSON', function() {
-    beforeEach(function() {
+  describe('toJSON', () => {
+    beforeEach(() => {
       FakeGrpcService.objToStruct_ = util.noop;
     });
 
-    it('should not modify the original instance', function() {
+    it('should not modify the original instance', () => {
       const entryBefore = extend(true, {}, entry);
       entry.toJSON();
       const entryAfter = extend(true, {}, entry);
       assert.deepStrictEqual(entryBefore, entryAfter);
     });
 
-    it('should convert data as a struct and assign to jsonPayload', function() {
+    it('should convert data as a struct and assign to jsonPayload', () => {
       const input = {};
       const converted = {};
 
-      FakeGrpcService.objToStruct_ = function(obj, options) {
+      FakeGrpcService.objToStruct_ = (obj, options) => {
         assert.strictEqual(obj, input);
         assert.deepStrictEqual(options, {
           removeCircular: false,
@@ -198,8 +198,8 @@ describe('Entry', function() {
       assert.strictEqual(json.jsonPayload, converted);
     });
 
-    it('should pass removeCircular to objToStruct_', function(done) {
-      FakeGrpcService.objToStruct_ = function(obj, options) {
+    it('should pass removeCircular to objToStruct_', done => {
+      FakeGrpcService.objToStruct_ = (obj, options) => {
         assert.strictEqual(options.removeCircular, true);
         done();
       };
@@ -208,13 +208,13 @@ describe('Entry', function() {
       entry.toJSON({removeCircular: true});
     });
 
-    it('should assign string data as textPayload', function() {
+    it('should assign string data as textPayload', () => {
       entry.data = 'string';
       const json = entry.toJSON();
       assert.strictEqual(json.textPayload, entry.data);
     });
 
-    it('should convert a date', function() {
+    it('should convert a date', () => {
       const date = new Date();
       entry.metadata.timestamp = date;
 

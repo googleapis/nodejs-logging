@@ -28,7 +28,7 @@ const uuid = require('uuid');
 
 const {Logging} = require('../');
 
-describe('Logging', function() {
+describe('Logging', () => {
   let PROJECT_ID;
   const TESTS_PREFIX = 'gcloud-logging-test';
   const WRITE_CONSISTENCY_DELAY_MS = 10000;
@@ -44,7 +44,7 @@ describe('Logging', function() {
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
   const topic = pubsub.topic(generateName());
 
-  before(function(done) {
+  before(done => {
     async.parallel(
       [
         callback => {
@@ -71,7 +71,7 @@ describe('Logging', function() {
     );
   });
 
-  after(function(done) {
+  after(done => {
     async.parallel(
       [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks],
       done
@@ -82,14 +82,14 @@ describe('Logging', function() {
         {
           prefix: TESTS_PREFIX,
         },
-        function(err, buckets) {
+        (err, buckets) => {
           if (err) {
             done(err);
             return;
           }
 
           function deleteBucket(bucket, callback) {
-            bucket.deleteFiles(function(err) {
+            bucket.deleteFiles(err => {
               if (err) {
                 callback(err);
                 return;
@@ -117,13 +117,13 @@ describe('Logging', function() {
     }
 
     function getAndDelete(method, callback) {
-      method(function(err, objects) {
+      method((err, objects) => {
         if (err) {
           callback(err);
           return;
         }
 
-        objects = objects.filter(function(object) {
+        objects = objects.filter(object => {
           return (object.name || object.id).indexOf(TESTS_PREFIX) === 0;
         });
 
@@ -132,15 +132,15 @@ describe('Logging', function() {
     }
   });
 
-  describe('sinks', function() {
-    it('should create a sink with a Bucket destination', function(done) {
+  describe('sinks', () => {
+    it('should create a sink with a Bucket destination', done => {
       const sink = logging.sink(generateName());
 
       sink.create(
         {
           destination: bucket,
         },
-        function(err, sink, apiResponse) {
+        (err, sink, apiResponse) => {
           assert.ifError(err);
 
           const destination = 'storage.googleapis.com/' + bucket.name;
@@ -151,14 +151,14 @@ describe('Logging', function() {
       );
     });
 
-    it('should create a sink with a Dataset destination', function(done) {
+    it('should create a sink with a Dataset destination', done => {
       const sink = logging.sink(generateName());
 
       sink.create(
         {
           destination: dataset,
         },
-        function(err, sink, apiResponse) {
+        (err, sink, apiResponse) => {
           assert.ifError(err);
 
           const destination = 'bigquery.googleapis.com/datasets/' + dataset.id;
@@ -177,14 +177,14 @@ describe('Logging', function() {
       );
     });
 
-    it('should create a sink with a Topic destination', function(done) {
+    it('should create a sink with a Topic destination', done => {
       const sink = logging.sink(generateName());
 
       sink.create(
         {
           destination: topic,
         },
-        function(err, sink, apiResponse) {
+        (err, sink, apiResponse) => {
           assert.ifError(err);
 
           const destination = 'pubsub.googleapis.com/' + topic.name;
@@ -201,11 +201,11 @@ describe('Logging', function() {
       );
     });
 
-    describe('metadata', function() {
+    describe('metadata', () => {
       const sink = logging.sink(generateName());
       const FILTER = 'severity = ALERT';
 
-      before(function(done) {
+      before(done => {
         sink.create(
           {
             destination: topic,
@@ -214,20 +214,20 @@ describe('Logging', function() {
         );
       });
 
-      it('should set metadata', function(done) {
+      it('should set metadata', done => {
         const metadata = {
           filter: FILTER,
         };
 
-        sink.setMetadata(metadata, function(err, apiResponse) {
+        sink.setMetadata(metadata, (err, apiResponse) => {
           assert.ifError(err);
           assert.strictEqual(apiResponse.filter, FILTER);
           done();
         });
       });
 
-      it('should set a filter', function(done) {
-        sink.setFilter(FILTER, function(err, apiResponse) {
+      it('should set a filter', done => {
+        sink.setFilter(FILTER, (err, apiResponse) => {
           assert.ifError(err);
           assert.strictEqual(apiResponse.filter, FILTER);
           done();
@@ -235,10 +235,10 @@ describe('Logging', function() {
       });
     });
 
-    describe('listing sinks', function() {
+    describe('listing sinks', () => {
       const sink = logging.sink(generateName());
 
-      before(function(done) {
+      before(done => {
         sink.create(
           {
             destination: topic,
@@ -247,30 +247,30 @@ describe('Logging', function() {
         );
       });
 
-      it('should list sinks', function(done) {
-        logging.getSinks(function(err, sinks) {
+      it('should list sinks', done => {
+        logging.getSinks((err, sinks) => {
           assert.ifError(err);
           assert(sinks.length > 0);
           done();
         });
       });
 
-      it('should list sinks as a stream', function(done) {
-        logging
+      it('should list sinks as a stream', done => {
+        const logstream = logging
           .getSinksStream({pageSize: 1})
           .on('error', done)
-          .once('data', function() {
-            this.end();
+          .once('data', () => {
+            logstream.end();
             done();
           });
       });
 
-      it('should get metadata', function(done) {
+      it('should get metadata', done => {
         logging
           .getSinksStream({pageSize: 1})
           .on('error', done)
-          .once('data', function(sink) {
-            sink.getMetadata(function(err, metadata) {
+          .once('data', sink => {
+            sink.getMetadata((err, metadata) => {
               assert.ifError(err);
               assert.strictEqual(is.object(metadata), true);
               done();
@@ -280,7 +280,7 @@ describe('Logging', function() {
     });
   });
 
-  describe('logs', function() {
+  describe('logs', () => {
     const log = logging.log('syslog');
 
     const logEntries = [
@@ -315,13 +315,13 @@ describe('Logging', function() {
       },
     };
 
-    it('should list log entries', function(done) {
+    it('should list log entries', done => {
       logging.getEntries(
         {
           autoPaginate: false,
           pageSize: 1,
         },
-        function(err, entries) {
+        (err, entries) => {
           assert.ifError(err);
           assert.strictEqual(entries.length, 1);
           done();
@@ -329,31 +329,29 @@ describe('Logging', function() {
       );
     });
 
-    it('should list log entries as a stream', function(done) {
-      logging
+    it('should list log entries as a stream', done => {
+      const logstream = logging
         .getEntriesStream({
           autoPaginate: false,
           pageSize: 1,
         })
         .on('error', done)
-        .once('data', function() {
-          this.end();
-        })
+        .once('data', () => logstream.end())
         .on('end', done);
     });
 
-    describe('log-specific entries', function() {
-      before(function(done) {
+    describe('log-specific entries', () => {
+      before(done => {
         log.write(logEntries, options, done);
       });
 
-      it('should list log entries', function(done) {
+      it('should list log entries', done => {
         log.getEntries(
           {
             autoPaginate: false,
             pageSize: 1,
           },
-          function(err, entries) {
+          (err, entries) => {
             assert.ifError(err);
             assert.strictEqual(entries.length, 1);
             done();
@@ -361,35 +359,35 @@ describe('Logging', function() {
         );
       });
 
-      it('should list log entries as a stream', function(done) {
-        log
+      it('should list log entries as a stream', done => {
+        const logstream = log
           .getEntriesStream({
             autoPaginate: false,
             pageSize: 1,
           })
           .on('error', done)
-          .once('data', function() {
-            this.end();
+          .once('data', () => {
+            logstream.end();
             done();
           });
       });
     });
 
-    it('should write a single entry to a log', function(done) {
+    it('should write a single entry to a log', done => {
       log.write(logEntries[0], options, done);
     });
 
-    it('should write multiple entries to a log', function(done) {
-      log.write(logEntries, options, function(err) {
+    it('should write multiple entries to a log', done => {
+      log.write(logEntries, options, err => {
         assert.ifError(err);
 
-        setTimeout(function() {
+        setTimeout(() => {
           log.getEntries(
             {
               autoPaginate: false,
               pageSize: logEntries.length,
             },
-            function(err, entries) {
+            (err, entries) => {
               assert.ifError(err);
 
               assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
@@ -416,24 +414,24 @@ describe('Logging', function() {
       });
     });
 
-    it('should preserve order of entries', function(done) {
+    it('should preserve order of entries', done => {
       const entry1 = log.entry('1');
 
-      setTimeout(function() {
+      setTimeout(() => {
         const entry2 = log.entry('2');
         const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
 
         // Re-arrange to confirm the timestamp is sent and honored.
-        log.write([entry2, entry3, entry1], options, function(err) {
+        log.write([entry2, entry3, entry1], options, err => {
           assert.ifError(err);
 
-          setTimeout(function() {
+          setTimeout(() => {
             log.getEntries(
               {
                 autoPaginate: false,
                 pageSize: 3,
               },
-              function(err, entries) {
+              (err, entries) => {
                 assert.ifError(err);
                 assert.deepStrictEqual(entries.map(x => x.data), [
                   '3',
@@ -448,20 +446,20 @@ describe('Logging', function() {
       }, 1000);
     });
 
-    it('should preserve order for sequential write calls', function(done) {
+    it('should preserve order for sequential write calls', done => {
       const messages = ['1', '2', '3', '4', '5'];
 
-      messages.forEach(function(message) {
+      messages.forEach(message => {
         log.write(log.entry(message));
       });
 
-      setTimeout(function() {
+      setTimeout(() => {
         log.getEntries(
           {
             autoPaginate: false,
             pageSize: messages.length,
           },
-          function(err, entries) {
+          (err, entries) => {
             assert.ifError(err);
             assert.deepStrictEqual(
               entries.reverse().map(x => x.data),
@@ -473,7 +471,7 @@ describe('Logging', function() {
       }, WRITE_CONSISTENCY_DELAY_MS * 4);
     });
 
-    it('should write an entry with primitive values', function(done) {
+    it('should write an entry with primitive values', done => {
       const logEntry = log.entry({
         when: new Date(),
         matchUser: /username: (.+)/,
@@ -481,16 +479,16 @@ describe('Logging', function() {
         shouldNotBeSaved: undefined,
       });
 
-      log.write(logEntry, options, function(err) {
+      log.write(logEntry, options, err => {
         assert.ifError(err);
 
-        setTimeout(function() {
+        setTimeout(() => {
           log.getEntries(
             {
               autoPaginate: false,
               pageSize: 1,
             },
-            function(err, entries) {
+            (err, entries) => {
               assert.ifError(err);
 
               const entry = entries[0];
@@ -508,7 +506,7 @@ describe('Logging', function() {
       });
     });
 
-    it('should write a log with metadata', function(done) {
+    it('should write a log with metadata', done => {
       const metadata = extend({}, options, {
         severity: 'DEBUG',
       });
@@ -519,16 +517,16 @@ describe('Logging', function() {
 
       const logEntry = log.entry(metadata, data);
 
-      log.write(logEntry, function(err) {
+      log.write(logEntry, err => {
         assert.ifError(err);
 
-        setTimeout(function() {
+        setTimeout(() => {
           log.getEntries(
             {
               autoPaginate: false,
               pageSize: 1,
             },
-            function(err, entries) {
+            (err, entries) => {
               assert.ifError(err);
 
               const entry = entries[0];
@@ -543,20 +541,20 @@ describe('Logging', function() {
       });
     });
 
-    it('should set the default resource', function(done) {
+    it('should set the default resource', done => {
       const text = 'entry-text';
       const entry = log.entry(text);
 
-      log.write(entry, function(err) {
+      log.write(entry, err => {
         assert.ifError(err);
 
-        setTimeout(function() {
+        setTimeout(() => {
           log.getEntries(
             {
               autoPaginate: false,
               pageSize: 1,
             },
-            function(err, entries) {
+            (err, entries) => {
               assert.ifError(err);
 
               const entry = entries[0];
@@ -576,7 +574,7 @@ describe('Logging', function() {
       });
     });
 
-    it('should write a log with camelcase resource label keys', function(done) {
+    it('should write a log with camelcase resource label keys', done => {
       log.write(
         logEntries,
         {
@@ -592,35 +590,35 @@ describe('Logging', function() {
       );
     });
 
-    it('should write to a log with alert helper', function(done) {
+    it('should write to a log with alert helper', done => {
       log.alert(logEntries, options, done);
     });
 
-    it('should write to a log with critical helper', function(done) {
+    it('should write to a log with critical helper', done => {
       log.critical(logEntries, options, done);
     });
 
-    it('should write to a log with debug helper', function(done) {
+    it('should write to a log with debug helper', done => {
       log.debug(logEntries, options, done);
     });
 
-    it('should write to a log with emergency helper', function(done) {
+    it('should write to a log with emergency helper', done => {
       log.emergency(logEntries, options, done);
     });
 
-    it('should write to a log with error helper', function(done) {
+    it('should write to a log with error helper', done => {
       log.error(logEntries, options, done);
     });
 
-    it('should write to a log with info helper', function(done) {
+    it('should write to a log with info helper', done => {
       log.info(logEntries, options, done);
     });
 
-    it('should write to a log with notice helper', function(done) {
+    it('should write to a log with notice helper', done => {
       log.notice(logEntries, options, done);
     });
 
-    it('should write to a log with warning helper', function(done) {
+    it('should write to a log with warning helper', done => {
       log.warning(logEntries, options, done);
     });
   });
