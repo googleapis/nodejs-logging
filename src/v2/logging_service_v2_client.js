@@ -267,7 +267,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -379,7 +379,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -474,7 +474,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -590,7 +590,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -651,7 +651,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -736,7 +736,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -804,7 +804,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -896,7 +896,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
