@@ -98,8 +98,8 @@ class Metadata {
    * @return {object}
    */
   static getGCEDescriptor(callback) {
-    gcpMetadata.instance('id').then(function(idResponse) {
-      gcpMetadata.instance('zone').then(function(zoneResponse) {
+    gcpMetadata.instance('id').then(idResponse => {
+      gcpMetadata.instance('zone').then(zoneResponse => {
         // Some parsing is necessary. Metadata service returns a fully
         // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
         // wants just the zone part.
@@ -132,7 +132,7 @@ class Metadata {
     // namespace_name in place of namespace_id for a while now. Log correlation
     // with metrics may not necessarily work however.
     //
-    gcpMetadata.instance('attributes/cluster-name').then(function(resp) {
+    gcpMetadata.instance('attributes/cluster-name').then(resp => {
       fs.readFile(
         Metadata.KUBERNETES_NAMESPACE_ID_PATH,
         'utf8',

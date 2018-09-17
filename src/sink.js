@@ -71,7 +71,7 @@ class Sink {
    *   }
    * };
    *
-   * sink.create(config, function(err, sink, apiResponse) {
+   * sink.create(config, (err, sink, apiResponse) => {
    *   if (!err) {
    *     // The sink was created successfully.
    *   }
@@ -80,7 +80,7 @@ class Sink {
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * sink.create(config).then(function(data) {
+   * sink.create(config).then(data => {
    *   const sink = data[0];
    *   const apiResponse = data[1];
    * });
@@ -117,7 +117,7 @@ class Sink {
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
    *
-   * sink.delete(function(err, apiResponse) {
+   * sink.delete((err, apiResponse) => {
    *   if (!err) {
    *     // The log was deleted.
    *   }
@@ -126,7 +126,7 @@ class Sink {
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * sink.delete().then(function(data) {
+   * sink.delete().then(data => {
    *   const apiResponse = data[0];
    * });
    *
@@ -180,12 +180,12 @@ class Sink {
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
    *
-   * sink.getMetadata(function(err, metadata, apiResponse) {});
+   * sink.getMetadata((err, metadata, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * sink.getMetadata().then(function(data) {
+   * sink.getMetadata().then(data => {
    *   const metadata = data[0];
    *   const apiResponse = data[1];
    * });
@@ -246,12 +246,12 @@ class Sink {
    *
    * const filter = 'metadata.severity = ALERT';
    *
-   * sink.setFilter(filter, function(err, apiResponse) {});
+   * sink.setFilter(filter, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * sink.setFilter(filter).then(function(data) {
+   * sink.setFilter(filter).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -295,12 +295,12 @@ class Sink {
    *   filter: 'metadata.severity = ALERT'
    * };
    *
-   * sink.setMetadata(metadata, function(err, apiResponse) {});
+   * sink.setMetadata(metadata, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * sink.setMetadata(metadata).then(function(data) {
+   * sink.setMetadata(metadata).then(data => {
    *   const apiResponse = data[0];
    * });
    *
@@ -311,7 +311,7 @@ class Sink {
   setMetadata(metadata, callback) {
     const self = this;
     callback = callback || common.util.noop;
-    this.getMetadata(function(err, currentMetadata, apiResponse) {
+    this.getMetadata((err, currentMetadata, apiResponse) => {
       if (err) {
         callback(err, apiResponse);
         return;

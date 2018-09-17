@@ -64,7 +64,7 @@ const eventId = new EventId();
  *   delegate: 'my_username'
  * });
  *
- * syslog.alert(entry, function(err, apiResponse) {
+ * syslog.alert(entry, (err, apiResponse) => {
  *   if (!err) {
  *     // Log entry inserted successfully.
  *   }
@@ -74,7 +74,7 @@ const eventId = new EventId();
  * // You will also receive `Entry` objects when using
  * // Logging#getEntries() and Log#getEntries().
  * //-
- * logging.getEntries(function(err, entries) {
+ * logging.getEntries((err, entries) => {
  *   if (!err) {
  *     // entries[0].data = The data value from the log entry.
  *   }

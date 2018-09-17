@@ -18,7 +18,7 @@
 const express = require('express');
 const app = express();
 
-app.get('*', function(req, res, next) {
+app.get('*', (req, res, next) => {
   return next('oops');
 });
 
@@ -29,7 +29,7 @@ const structuredLogger = require('fluent-logger').createFluentSender('myapp', {
   timeout: 3.0,
 });
 
-const report = function(err, req) {
+const report = (err, req) => {
   const payload = {
     serviceContext: {
       service: 'myapp',
@@ -51,7 +51,7 @@ const report = function(err, req) {
 
 // Handle errors (the following uses the Express framework)
 // eslint-disable-next-line no-unused-vars
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   report(err, req);
   res.status(500).send(err.response || 'Something broke!');
 });
