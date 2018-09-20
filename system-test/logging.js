@@ -281,7 +281,7 @@ describe('Logging', () => {
   });
 
   describe('logs', () => {
-    const log = logging.log('syslog');
+    const log = logging.log('systestlog');
 
     const logEntries = [
       // string data
