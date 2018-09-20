@@ -146,7 +146,7 @@ class MetricsServiceV2Client {
       'updateLogMetric',
       'deleteLogMetric',
     ];
-    for (let methodName of metricsServiceV2StubMethods) {
+    for (const methodName of metricsServiceV2StubMethods) {
       this._innerApiCalls[methodName] = gax.createApiCall(
         metricsServiceV2Stub.then(
           stub =>

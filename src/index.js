@@ -111,14 +111,14 @@ class Logging {
   constructor(options) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
-    let scopes = [];
-    let clientClasses = [
+    const scopes = [];
+    const clientClasses = [
       v2.ConfigServiceV2Client,
       v2.LoggingServiceV2Client,
       v2.MetricsServiceV2Client,
     ];
-    for (let clientClass of clientClasses) {
-      for (let scope of clientClass.scopes) {
+    for (const clientClass of clientClasses) {
+      for (const scope of clientClass.scopes) {
         if (clientClasses.indexOf(scope) === -1) {
           scopes.push(scope);
         }
@@ -202,7 +202,7 @@ class Logging {
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * logging.createSink('new-sink-name', config).then(function(data) {
+   * logging.createSink('new-sink-name', config).then(data => {
    *   const sink = data[0];
    *   const apiResponse = data[1];
    * });
@@ -244,7 +244,7 @@ class Logging {
         reqOpts: reqOpts,
         gaxOpts: config.gaxOptions,
       },
-      function(err, resp) {
+      (err, resp) => {
         if (err) {
           callback(err, null, resp);
           return;
@@ -350,7 +350,7 @@ class Logging {
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
-   * logging.getEntries(function(err, entries) {
+   * logging.getEntries((err, entries) => {
    *   // `entries` is an array of Stackdriver Logging entry objects.
    *   // See the `data` property to read the data from the entry.
    * });
@@ -373,7 +373,7 @@ class Logging {
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * logging.getEntries().then(function(data) {
+   * logging.getEntries().then(data => {
    *   const entries = data[0];
    * });
    *
@@ -441,7 +441,7 @@ class Logging {
    *
    * logging.getEntriesStream()
    *   .on('error', console.error)
-   *   .on('data', function(entry) {
+   *   .on('data', entry => {
    *     // `entry` is a Stackdriver Logging entry object.
    *     // See the `data` property to read the data from the entry.
    *   })
@@ -463,15 +463,15 @@ class Logging {
     options = options || {};
     let requestStream;
     const userStream = streamEvents(pumpify.obj());
-    userStream.abort = function() {
+    userStream.abort = () => {
       if (requestStream) {
         requestStream.abort();
       }
     };
-    const toEntryStream = through.obj(function(entry, _, next) {
+    const toEntryStream = through.obj((entry, _, next) => {
       next(null, Entry.fromApiResponse_(entry));
     });
-    userStream.once('reading', function() {
+    userStream.once('reading', () => {
       const reqOpts = extend(
         {
           orderBy: 'timestamp desc',
@@ -537,14 +537,14 @@ class Logging {
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
-   * logging.getSinks(function(err, sinks) {
+   * logging.getSinks((err, sinks) => {
    *   // sinks is an array of Sink objects.
    * });
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * logging.getSinks().then(function(data) {
+   * logging.getSinks().then(data => {
    *   const sinks = data[0];
    * });
    *
@@ -579,7 +579,7 @@ class Logging {
       function() {
         const sinks = arguments[1];
         if (sinks) {
-          arguments[1] = sinks.map(function(sink) {
+          arguments[1] = sinks.map(sink => {
             const sinkInstance = self.sink(sink.name);
             sinkInstance.metadata = sink;
             return sinkInstance;
@@ -605,7 +605,7 @@ class Logging {
    *
    * logging.getSinksStream()
    *   .on('error', console.error)
-   *   .on('data', function(sink) {
+   *   .on('data', sink => {
    *     // `sink` is a Sink object.
    *   })
    *   .on('end', function() {
@@ -626,17 +626,17 @@ class Logging {
     options = options || {};
     let requestStream;
     const userStream = streamEvents(pumpify.obj());
-    userStream.abort = function() {
+    userStream.abort = () => {
       if (requestStream) {
         requestStream.abort();
       }
     };
-    const toSinkStream = through.obj(function(sink, _, next) {
+    const toSinkStream = through.obj((sink, _, next) => {
       const sinkInstance = self.sink(sink.name);
       sinkInstance.metadata = sink;
       next(null, sinkInstance);
     });
-    userStream.once('reading', function() {
+    userStream.once('reading', () => {
       const reqOpts = extend({}, options, {
         parent: 'projects/' + self.projectId,
       });
@@ -711,7 +711,7 @@ class Logging {
     let stream;
     if (isStreamMode) {
       stream = streamEvents(through.obj());
-      stream.abort = function() {
+      stream.abort = () => {
         if (gaxStream && gaxStream.cancel) {
           gaxStream.cancel();
         }
@@ -721,7 +721,7 @@ class Logging {
       makeRequestCallback();
     }
     function prepareGaxRequest(callback) {
-      self.auth.getProjectId(function(err, projectId) {
+      self.auth.getProjectId((err, projectId) => {
         if (err) {
           callback(err);
           return;
@@ -747,7 +747,7 @@ class Logging {
       if (global.GCLOUD_SANDBOX_ENV) {
         return;
       }
-      prepareGaxRequest(function(err, requestFn) {
+      prepareGaxRequest((err, requestFn) => {
         if (err) {
           callback(err);
           return;
@@ -759,14 +759,14 @@ class Logging {
       if (global.GCLOUD_SANDBOX_ENV) {
         return through.obj();
       }
-      prepareGaxRequest(function(err, requestFn) {
+      prepareGaxRequest((err, requestFn) => {
         if (err) {
           stream.destroy(err);
           return;
         }
         gaxStream = requestFn();
         gaxStream
-          .on('error', function(err) {
+          .on('error', err => {
             stream.destroy(err);
           })
           .pipe(stream);
@@ -786,7 +786,7 @@ class Logging {
   setAclForBucket_(name, config, callback) {
     const self = this;
     const bucket = config.destination;
-    bucket.acl.owners.addGroup('cloud-logs@google.com', function(err, apiResp) {
+    bucket.acl.owners.addGroup('cloud-logs@google.com', (err, apiResp) => {
       if (err) {
         callback(err, null, apiResp);
         return;
@@ -808,7 +808,7 @@ class Logging {
   setAclForDataset_(name, config, callback) {
     const self = this;
     const dataset = config.destination;
-    dataset.getMetadata(function(err, metadata, apiResp) {
+    dataset.getMetadata((err, metadata, apiResp) => {
       if (err) {
         callback(err, null, apiResp);
         return;
@@ -822,7 +822,7 @@ class Logging {
         {
           access: access,
         },
-        function(err, apiResp) {
+        (err, apiResp) => {
           if (err) {
             callback(err, null, apiResp);
             return;
@@ -848,7 +848,7 @@ class Logging {
   setAclForTopic_(name, config, callback) {
     const self = this;
     const topic = config.destination;
-    topic.iam.getPolicy(function(err, policy, apiResp) {
+    topic.iam.getPolicy((err, policy, apiResp) => {
       if (err) {
         callback(err, null, apiResp);
         return;
@@ -858,7 +858,7 @@ class Logging {
         role: 'roles/pubsub.publisher',
         members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
       });
-      topic.iam.setPolicy(policy, function(err, policy, apiResp) {
+      topic.iam.setPolicy(policy, (err, policy, apiResp) => {
         if (err) {
           callback(err, null, apiResp);
           return;

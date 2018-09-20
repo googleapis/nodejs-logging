@@ -80,12 +80,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.alert(entry, function(err, apiResponse) {});
+   * log.alert(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.alert(entry).then(function(data) {
+   * log.alert(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -112,12 +112,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.critical(entry, function(err, apiResponse) {});
+   * log.critical(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.critical(entry).then(function(data) {
+   * log.critical(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -145,12 +145,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.debug(entry, function(err, apiResponse) {});
+   * log.debug(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.debug(entry).then(function(data) {
+   * log.debug(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -182,7 +182,7 @@ class Log {
    * const logging = new Logging();
    * const log = logging.log('my-log');
    *
-   * log.delete(function(err, apiResponse) {
+   * log.delete((err, apiResponse) => {
    *   if (!err) {
    *     // The log was deleted.
    *   }
@@ -191,7 +191,7 @@ class Log {
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.delete().then(function(data) {
+   * log.delete().then(data => {
    *   const apiResponse = data[0];
    * });
    *
@@ -237,12 +237,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.emergency(entry, function(err, apiResponse) {});
+   * log.emergency(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.emergency(entry).then(function(data) {
+   * log.emergency(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -327,12 +327,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.error(entry, function(err, apiResponse) {});
+   * log.error(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.error(entry).then(function(data) {
+   * log.error(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -355,7 +355,7 @@ class Log {
    * const logging = new Logging();
    * const log = logging.log('my-log');
    *
-   * log.getEntries(function(err, entries) {
+   * log.getEntries((err, entries) => {
    *   // `entries` is an array of Stackdriver Logging entry objects.
    *   // See the `data` property to read the data from the entry.
    * });
@@ -378,7 +378,7 @@ class Log {
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.getEntries().then(function(data) {
+   * log.getEntries().then(data => {
    *   const entries = data[0];
    * });
    */
@@ -412,7 +412,7 @@ class Log {
    *
    * log.getEntriesStream()
    *   .on('error', console.error)
-   *   .on('data', function(entry) {
+   *   .on('data', entry => {
    *     // `entry` is a Stackdriver Logging entry object.
    *     // See the `data` property to read the data from the entry.
    *   })
@@ -458,12 +458,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.info(entry, function(err, apiResponse) {});
+   * log.info(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.info(entry).then(function(data) {
+   * log.info(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -490,12 +490,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.notice(entry, function(err, apiResponse) {});
+   * log.notice(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.notice(entry).then(function(data) {
+   * log.notice(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -526,12 +526,12 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.warning(entry, function(err, apiResponse) {});
+   * log.warning(entry, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.warning(entry).then(function(data) {
+   * log.warning(entry).then(data => {
    *   const apiResponse = data[0];
    * });
    */
@@ -577,7 +577,7 @@ class Log {
    *   instance: 'my_instance'
    * });
    *
-   * log.write(entry, function(err, apiResponse) {
+   * log.write(entry, (err, apiResponse) => {
    *   if (!err) {
    *     // The log entry was written.
    *   }
@@ -593,7 +593,7 @@ class Log {
    * log.write([
    *   entry,
    *   secondEntry
-   * ], function(err, apiResponse) {
+   * ], (err, apiResponse) => {
    *   if (!err) {
    *     // The log entries were written.
    *   }
@@ -617,12 +617,12 @@ class Log {
    *   resource: 'compute.googleapis.com'
    * };
    *
-   * log.write(entries, options, function(err, apiResponse) {});
+   * log.write(entries, options, (err, apiResponse) => {});
    *
    * //-
    * // If the callback is omitted, we'll return a Promise.
    * //-
-   * log.write(entries).then(function(data) {
+   * log.write(entries).then(data => {
    *   const apiResponse = data[0];
    * });
    *
@@ -641,7 +641,7 @@ class Log {
       options = {};
     }
     if (!options.resource) {
-      this.metadata_.getDefaultResource(function(err, resource) {
+      this.metadata_.getDefaultResource((err, resource) => {
         // Ignore errors (the API will speak up if it has an issue).
         writeWithResource(resource);
       });
@@ -689,13 +689,12 @@ class Log {
    * @throws if there is an error during serialization.
    */
   decorateEntries_(entries) {
-    const self = this;
-    return entries.map(function(entry) {
+    return entries.map(entry => {
       if (!(entry instanceof Entry)) {
-        entry = self.entry(entry);
+        entry = this.entry(entry);
       }
       return entry.toJSON({
-        removeCircular: self.removeCircular_,
+        removeCircular: this.removeCircular_,
       });
     });
   }
@@ -709,7 +708,7 @@ class Log {
    * @param {string} severity - The desired severity level.
    */
   static assignSeverityToEntries_(entries, severity) {
-    return arrify(entries).map(function(entry) {
+    return arrify(entries).map(entry => {
       const metadata = extend(true, {}, entry.metadata, {
         severity: severity,
       });

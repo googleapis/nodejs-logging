@@ -179,7 +179,7 @@ class LoggingServiceV2Client {
       'listMonitoredResourceDescriptors',
       'listLogs',
     ];
-    for (let methodName of loggingServiceV2StubMethods) {
+    for (const methodName of loggingServiceV2StubMethods) {
       this._innerApiCalls[methodName] = gax.createApiCall(
         loggingServiceV2Stub.then(
           stub =>
