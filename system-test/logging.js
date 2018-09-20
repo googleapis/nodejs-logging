@@ -281,7 +281,7 @@ describe('Logging', () => {
   });
 
   describe('logs', () => {
-    const log = logging.log('syslog');
+    const log = logging.log(`system-test-logs-${uuid.v4()}`);
 
     const logEntries = [
       // string data
@@ -314,6 +314,8 @@ describe('Logging', () => {
         },
       },
     };
+
+    after(done => log.delete(done));
 
     it('should list log entries', done => {
       logging.getEntries(
