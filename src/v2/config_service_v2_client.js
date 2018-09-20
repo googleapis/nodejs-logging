@@ -154,7 +154,7 @@ class ConfigServiceV2Client {
       'updateExclusion',
       'deleteExclusion',
     ];
-    for (let methodName of configServiceV2StubMethods) {
+    for (const methodName of configServiceV2StubMethods) {
       this._innerApiCalls[methodName] = gax.createApiCall(
         configServiceV2Stub.then(
           stub =>

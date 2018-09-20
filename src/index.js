@@ -111,14 +111,14 @@ class Logging {
   constructor(options) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
-    let scopes = [];
-    let clientClasses = [
+    const scopes = [];
+    const clientClasses = [
       v2.ConfigServiceV2Client,
       v2.LoggingServiceV2Client,
       v2.MetricsServiceV2Client,
     ];
-    for (let clientClass of clientClasses) {
-      for (let scope of clientClass.scopes) {
+    for (const clientClass of clientClasses) {
+      for (const scope of clientClass.scopes) {
         if (clientClasses.indexOf(scope) === -1) {
           scopes.push(scope);
         }
