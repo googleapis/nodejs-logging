@@ -16,30 +16,34 @@
 
 describe('LoggingServiceV2SmokeTest', () => {
   if (!process.env.GCLOUD_PROJECT) {
-    throw new Error("Usage: GCLOUD_PROJECT=<project_id> node #{$0}");
+    throw new Error('Usage: GCLOUD_PROJECT=<project_id> node #{$0}');
   }
-  var projectId = process.env.GCLOUD_PROJECT;
+  const projectId = process.env.GCLOUD_PROJECT;
 
   it('successfully makes a call to the service', done => {
     const logging = require('../src');
 
-    var client = new logging.v2.LoggingServiceV2Client({
+    const client = new logging.v2.LoggingServiceV2Client({
       // optional auth parameters.
     });
 
-    var formattedLogName = client.logPath(projectId, "test-" + Date.now().toString());
-    var resource = {};
-    var labels = {};
-    var entries = [];
-    var request = {
+    const formattedLogName = client.logPath(
+      projectId,
+      'test-' + Date.now().toString()
+    );
+    const resource = {};
+    const labels = {};
+    const entries = [];
+    const request = {
       logName: formattedLogName,
       resource: resource,
       labels: labels,
       entries: entries,
     };
-    client.writeLogEntries(request)
+    client
+      .writeLogEntries(request)
       .then(responses => {
-        var response = responses[0];
+        const response = responses[0];
         console.log(response);
       })
       .then(done)

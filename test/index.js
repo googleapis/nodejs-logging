@@ -136,15 +136,15 @@ describe('Logging', () => {
   });
 
   describe('instantiation', () => {
-    let EXPECTED_SCOPES = [];
-    let clientClasses = [
+    const EXPECTED_SCOPES = [];
+    const clientClasses = [
       v2.ConfigServiceV2Client,
       v2.LoggingServiceV2Client,
       v2.MetricsServiceV2Client,
     ];
 
-    for (let clientClass of clientClasses) {
-      for (let scope of clientClass.scopes) {
+    for (const clientClass of clientClasses) {
+      for (const scope of clientClass.scopes) {
         if (clientClasses.indexOf(scope) === -1) {
           EXPECTED_SCOPES.push(scope);
         }
