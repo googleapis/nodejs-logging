@@ -4,6 +4,11 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.0.1
+
+### Implementation Changes
+- fix(deps): Upgrade to @google-cloud/common-grpc 0.9.0 ([#232](https://github.com/googleapis/nodejs-logging/pull/232))
+
 ## v4.0.0
 
 **This release has breaking changes**. This library is now compatible with es module import syntax.
