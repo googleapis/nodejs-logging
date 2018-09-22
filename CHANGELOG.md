@@ -4,20 +4,48 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
-## v3.0.3
+## v4.0.1
 
 ### Implementation Changes
+- fix(deps): Upgrade to @google-cloud/common-grpc 0.9.0 ([#232](https://github.com/googleapis/nodejs-logging/pull/232))
+
+## v4.0.0
+
+**This release has breaking changes**. This library is now compatible with es module import syntax.
+
+#### Old Code
+```js
+const logging = require('@google-cloud/logging')();
+// or...
+const Logging = require('@google-cloud/logging');
+const logging = new Logging();
+```
+
+#### New Code
+```js
+const {Logging} = require('@google-cloud/logging');
+const logging = new Logging();
+```
+
+### Breaking changes
+- Use es classes ([#219](https://github.com/googleapis/nodejs-logging/pull/219))
+
+### Bug Fixes
 - fix(gce): instance id can be a big number ([#222](https://github.com/googleapis/nodejs-logging/pull/222))
-- fix(deps): update dependency google-gax to ^0.20.0 ([#220](https://github.com/googleapis/nodejs-logging/pull/220))
+- fix(deps): update dependency @google-cloud/storage to v2 ([#213](https://github.com/googleapis/nodejs-logging/pull/213))
 - fix(GCE): add zone label in GCE descriptor ([#215](https://github.com/googleapis/nodejs-logging/pull/215))
 - fix(deps): update dependency google-auth-library to v2 ([#210](https://github.com/googleapis/nodejs-logging/pull/210))
 
 ### Internal / Testing Changes
-- Use es classes ([#219](https://github.com/googleapis/nodejs-logging/pull/219))
+- build: write logs to separate file ([#230](https://github.com/googleapis/nodejs-logging/pull/230))
+- Enable prefer-const in the eslint config ([#229](https://github.com/googleapis/nodejs-logging/pull/229))
+- fix(deps): roll back dependency @google-cloud/logging to ^3.0.2 ([#224](https://github.com/googleapis/nodejs-logging/pull/224))
+- Enable no-var in eslint ([#228](https://github.com/googleapis/nodejs-logging/pull/228))
+- Use arrow functions ([#227](https://github.com/googleapis/nodejs-logging/pull/227))
 - Switch to let/const ([#221](https://github.com/googleapis/nodejs-logging/pull/221))
+- fix(deps): update dependency google-gax to ^0.20.0 ([#220](https://github.com/googleapis/nodejs-logging/pull/220))
 - Use let and const ([#217](https://github.com/googleapis/nodejs-logging/pull/217))
 - Update CI config ([#218](https://github.com/googleapis/nodejs-logging/pull/218))
-- fix(deps): update dependency @google-cloud/storage to v2 ([#213](https://github.com/googleapis/nodejs-logging/pull/213))
 - Retry npm install in CI ([#214](https://github.com/googleapis/nodejs-logging/pull/214))
 - add templates to synth.py and run it ([#211](https://github.com/googleapis/nodejs-logging/pull/211))
 
