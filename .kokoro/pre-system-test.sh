@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,27 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -xeo pipefail
-
-export NPM_CONFIG_PREFIX=/home/node/.npm-global
-
-# Setup service account credentials.
-export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/service-account.json
-export GCLOUD_PROJECT=long-door-651
-
-cd $(dirname $0)/..
-
-# Run a pre-test hook, if a pre-samples-test.sh is in the project
-if [ -f .kokoro/pre-samples-test.sh ]; then
-    . .kokoro/pre-samples-test.sh
-fi
-
-npm install
-
-# Install and link samples
-cd samples/
-npm link ../
-npm install
-cd ..
-
-npm run samples-test
+export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/logging-key.json
