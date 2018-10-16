@@ -136,7 +136,7 @@ const LogMetric = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
-   * Stackdriver Logging API version.
+   * Logging API version.
    *
    * @enum {number}
    * @memberof google.logging.v2
@@ -144,12 +144,12 @@ const LogMetric = {
   ApiVersion: {
 
     /**
-     * Stackdriver Logging API v2.
+     * Logging API v2.
      */
     V2: 0,
 
     /**
-     * Stackdriver Logging API v1.
+     * Logging API v1.
      */
     V1: 1
   }
