@@ -27,7 +27,7 @@ const PubSub = require('@google-cloud/pubsub');
 const {Storage} = require('@google-cloud/storage');
 const uuid = require('uuid');
 
-const {Logging} = require('../');
+const {Logging} = require('../src/index');
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')

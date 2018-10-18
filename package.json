@@ -8,10 +8,9 @@
     "node": ">=6.0.0"
   },
   "repository": "googleapis/nodejs-logging",
-  "main": "./src/index.js",
+  "main": "./build/src/index.js",
   "files": [
-    "protos",
-    "src",
+    "build",
     "AUTHORS",
     "CONTRIBUTORS",
     "LICENSE"
@@ -51,16 +50,23 @@
     "greenkeeper[bot] <greenkeeper[bot]@users.noreply.github.com>"
   ],
   "scripts": {
-    "cover": "nyc --reporter=lcov mocha test/*.js && nyc report",
-    "test-no-cover": "mocha test/*.js",
+    "cover": "nyc --reporter=lcov mocha build/test/*.js && nyc report",
+    "test-no-cover": "mocha build/test/*.js",
     "test": "npm run cover",
     "docs": "jsdoc -c .jsdoc.js",
     "prettier": "prettier --write src/*.js src/**/*.js test/*.js test/**/*.js samples/*.js samples/**/*.js system-test/*.js system-test/**/*.js",
     "publish-module": "node ../../scripts/publish.js logging",
-    "system-test": "mocha system-test/*.js --timeout 600000",
+    "system-test": "mocha build/system-test/*.js --timeout 600000",
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
-    "lint": "eslint src/ samples/ system-test/ test/"
+    "lint": "eslint samples/",
+    "check": "echo \"gts check disabled until ts migration is complete\"",
+    "clean": "gts clean",
+    "compile": "tsc -p . && cp src/v2/*.json build/src/v2 && cp -r protos build",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run check"
   },
   "dependencies": {
     "@google-cloud/common-grpc": "^0.9.0",
@@ -105,6 +111,8 @@
     "prettier": "^1.14.2",
     "propprop": "^0.3.1",
     "proxyquire": "^2.1.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "gts": "^0.8.0",
+    "typescript": "~3.1.0"
   }
 }
