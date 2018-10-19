@@ -31,7 +31,7 @@ const {Logging} = require('../');
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')
-  .get(url => true)
+  .get(() => true)
   .replyWithError({code: 'ENOTFOUND'})
   .persist();
 
