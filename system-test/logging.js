@@ -22,11 +22,18 @@ const BigQuery = require('@google-cloud/bigquery');
 const exec = require('methmeth');
 const extend = require('extend');
 const is = require('is');
+const nock = require('nock');
 const PubSub = require('@google-cloud/pubsub');
 const {Storage} = require('@google-cloud/storage');
 const uuid = require('uuid');
 
 const {Logging} = require('../');
+
+// block all attempts to chat with the metadata server (kokoro runs on GCE)
+nock('http://metadata.google.internal')
+  .get(() => true)
+  .replyWithError({code: 'ENOTFOUND'})
+  .persist();
 
 describe('Logging', () => {
   let PROJECT_ID;
