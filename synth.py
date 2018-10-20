@@ -34,6 +34,17 @@ v2_library = gapic.node_library(
 
 s.copy(v2_library, excludes=["src/index.js", "README.md", "package.json"])
 
+s.replace(
+    "src/v2/config_service_v2_client.js", "../../package.json", "../../../package.json"
+)
+s.replace(
+    "src/v2/logging_service_v2_client.js", "../../package.json", "../../../package.json"
+)
+s.replace(
+    "src/v2/metrics_service_v2_client.js", "../../package.json", "../../../package.json"
+)
+
+
 templates = common_templates.node_library()
 s.copy(templates)
 

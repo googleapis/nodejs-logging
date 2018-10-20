@@ -23,7 +23,7 @@ const proxyquire = require('proxyquire');
 const through = require('through2');
 const {util} = require('@google-cloud/common-grpc');
 const {v2} = require('../src');
-const PKG = require('../package.json');
+const PKG = require('../../package.json');
 
 let extended = false;
 const fakePaginator = {
@@ -108,7 +108,7 @@ describe('Logging', () => {
   const PROJECT_ID = 'project-id';
 
   before(() => {
-    Logging = proxyquire('../', {
+    Logging = proxyquire('../../', {
       '@google-cloud/common-grpc': {
         util: fakeUtil,
       },

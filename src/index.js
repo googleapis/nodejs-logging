@@ -28,7 +28,7 @@ const pumpify = require('pumpify');
 const streamEvents = require('stream-events');
 const through = require('through2');
 
-const PKG = require('../package.json');
+const PKG = require('../../package.json');
 const v2 = require('./v2');
 
 const {Entry} = require('./entry');
