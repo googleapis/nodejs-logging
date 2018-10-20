@@ -37,7 +37,7 @@
  * @see [google.logging.v2.DeleteLogRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const DeleteLogRequest = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -68,7 +68,8 @@ const DeleteLogRequest = {
  *
  *   See LogEntry.
  *
- *   This object should have the same structure as [MonitoredResource]{@link google.api.MonitoredResource}
+ *   This object should have the same structure as [MonitoredResource]{@link
+ * google.api.MonitoredResource}
  *
  * @property {Object.<string, string>} labels
  *   Optional. Default labels that are added to the `labels` field of all log
@@ -91,17 +92,18 @@ const DeleteLogRequest = {
  *   the entries later in the list. See the `entries.list` method.
  *
  *   Log entries with timestamps that are more than the
- *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
- *   24 hours in the future will not be available when calling `entries.list`.
- *   However, those log entries can still be exported with
+ *   [logs retention period](https://cloud.google.com/logging/quota-policy) in
+ * the past or more than 24 hours in the future will not be available when
+ * calling `entries.list`. However, those log entries can still be exported with
  *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
  *   To improve throughput and to avoid exceeding the
- *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
- *   you should try to include several log entries in this list,
+ *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to
+ * `entries.write`, you should try to include several log entries in this list,
  *   rather than calling this method for each individual log entry.
  *
- *   This object should have the same structure as [LogEntry]{@link google.logging.v2.LogEntry}
+ *   This object should have the same structure as [LogEntry]{@link
+ * google.logging.v2.LogEntry}
  *
  * @property {boolean} partialSuccess
  *   Optional. Whether valid entries should be written even if some other
@@ -120,7 +122,7 @@ const DeleteLogRequest = {
  * @see [google.logging.v2.WriteLogEntriesRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const WriteLogEntriesRequest = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -131,7 +133,7 @@ const WriteLogEntriesRequest = {
  * @see [google.logging.v2.WriteLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const WriteLogEntriesResponse = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -150,7 +152,7 @@ const WriteLogEntriesResponse = {
  * @see [google.logging.v2.WriteLogEntriesPartialErrors definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const WriteLogEntriesPartialErrors = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -176,12 +178,11 @@ const WriteLogEntriesPartialErrors = {
  *
  * @property {string} filter
  *   Optional. A filter that chooses which log entries to return.  See [Advanced
- *   Logs Filters](https://cloud.google.com/logging/docs/view/advanced_filters).  Only log entries that
- *   match the filter are returned.  An empty filter matches all log entries in
- *   the resources listed in `resource_names`. Referencing a parent resource
- *   that is not listed in `resource_names` will cause the filter to return no
- *   results.
- *   The maximum length of the filter is 20000 characters.
+ *   Logs Filters](https://cloud.google.com/logging/docs/view/advanced_filters).
+ * Only log entries that match the filter are returned.  An empty filter matches
+ * all log entries in the resources listed in `resource_names`. Referencing a
+ * parent resource that is not listed in `resource_names` will cause the filter
+ * to return no results. The maximum length of the filter is 20000 characters.
  *
  * @property {string} orderBy
  *   Optional. How the results should be sorted.  Presently, the only permitted
@@ -207,7 +208,7 @@ const WriteLogEntriesPartialErrors = {
  * @see [google.logging.v2.ListLogEntriesRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const ListLogEntriesRequest = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -218,7 +219,8 @@ const ListLogEntriesRequest = {
  *   returned, indicating that more entries may exist.  See `nextPageToken` for
  *   more information.
  *
- *   This object should have the same structure as [LogEntry]{@link google.logging.v2.LogEntry}
+ *   This object should have the same structure as [LogEntry]{@link
+ * google.logging.v2.LogEntry}
  *
  * @property {string} nextPageToken
  *   If there might be more results than those appearing in this response, then
@@ -237,7 +239,7 @@ const ListLogEntriesRequest = {
  * @see [google.logging.v2.ListLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const ListLogEntriesResponse = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -259,7 +261,7 @@ const ListLogEntriesResponse = {
  * @see [google.logging.v2.ListMonitoredResourceDescriptorsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const ListMonitoredResourceDescriptorsRequest = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -268,7 +270,8 @@ const ListMonitoredResourceDescriptorsRequest = {
  * @property {Object[]} resourceDescriptors
  *   A list of resource descriptors.
  *
- *   This object should have the same structure as [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}
+ *   This object should have the same structure as
+ * [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}
  *
  * @property {string} nextPageToken
  *   If there might be more results than those appearing in this response, then
@@ -280,7 +283,7 @@ const ListMonitoredResourceDescriptorsRequest = {
  * @see [google.logging.v2.ListMonitoredResourceDescriptorsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const ListMonitoredResourceDescriptorsResponse = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -310,7 +313,7 @@ const ListMonitoredResourceDescriptorsResponse = {
  * @see [google.logging.v2.ListLogsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const ListLogsRequest = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -331,5 +334,5 @@ const ListLogsRequest = {
  * @see [google.logging.v2.ListLogsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
  */
 const ListLogsResponse = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };

@@ -60,15 +60,14 @@ describe('Log', () => {
 
   before(() => {
     Log = proxyquire('../src/log', {
-      '@google-cloud/promisify': fakePromisify,
-      './entry': {Entry: Entry},
-      './metadata': {Metadata: FakeMetadata},
-    }).Log;
+            '@google-cloud/promisify': fakePromisify,
+            './entry': {Entry: Entry},
+            './metadata': {Metadata: FakeMetadata},
+          }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = function() {
-      return (
-        assignSeverityToEntriesOverride || assignSeverityToEntries_
-      ).apply(null, arguments);
+      return (assignSeverityToEntriesOverride || assignSeverityToEntries_)
+          .apply(null, arguments);
     };
   });
 
@@ -141,20 +140,18 @@ describe('Log', () => {
 
     it('should assign severity to a single entry', () => {
       assert.deepStrictEqual(
-        Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
-          .map(prop('metadata'))
-          .map(prop('severity')),
-        [SEVERITY]
-      );
+          Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
+              .map(prop('metadata'))
+              .map(prop('severity')),
+          [SEVERITY]);
     });
 
     it('should assign severity property to multiple entries', () => {
       assert.deepStrictEqual(
-        Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
-          .map(prop('metadata'))
-          .map(prop('severity')),
-        [SEVERITY, SEVERITY, SEVERITY]
-      );
+          Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
+              .map(prop('metadata'))
+              .map(prop('severity')),
+          [SEVERITY, SEVERITY, SEVERITY]);
     });
 
     it('should not affect original array', () => {
@@ -201,7 +198,7 @@ describe('Log', () => {
 
         assert.deepStrictEqual(config.gaxOpts, {});
 
-        callback(); // done()
+        callback();  // done()
       };
 
       log.delete(done);
@@ -258,7 +255,7 @@ describe('Log', () => {
     it('should call Logging getEntries with defaults', done => {
       log.logging.getEntries = (options, callback) => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
-        callback(); // done()
+        callback();  // done()
       };
 
       log.getEntries(done);
@@ -272,7 +269,7 @@ describe('Log', () => {
 
       log.logging.getEntries = (options_, callback) => {
         assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
-        callback(); // done()
+        callback();  // done()
       };
 
       log.getEntries(options, done);
@@ -421,7 +418,7 @@ describe('Log', () => {
 
     it('should not require options', done => {
       log.logging.request = (config, callback) => {
-        callback(); // done()
+        callback();  // done()
       };
 
       log.write(ENTRY, done);
@@ -452,7 +449,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
         log.alert(ENTRY, LABELS, done);
       });
@@ -476,7 +473,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
         log.critical(ENTRY, LABELS, done);
       });
@@ -500,7 +497,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
         log.debug(ENTRY, LABELS, done);
       });
@@ -524,7 +521,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
         log.emergency(ENTRY, LABELS, done);
       });
@@ -550,7 +547,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
 
         log.error(ENTRY, LABELS, done);
@@ -579,7 +576,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
 
         log.info(ENTRY, LABELS, done);
@@ -608,7 +605,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
 
         log.notice(ENTRY, LABELS, done);
@@ -633,7 +630,7 @@ describe('Log', () => {
         log.write = (entry, labels, callback) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
-          callback(); // done()
+          callback();  // done()
         };
         log.warning(ENTRY, LABELS, done);
       });

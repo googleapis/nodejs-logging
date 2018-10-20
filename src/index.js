@@ -58,8 +58,10 @@ const {Sink} = require('./sink');
  * @property {string} [projectId] The project ID from the Google Developer's
  *     Console, e.g. 'grape-spaceship-123'. We will also check the environment
  *     variable `GCLOUD_PROJECT` for your project ID. If your app is running in
- *     an environment which supports {@link https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application Application Default Credentials},
- *     your project ID will be detected automatically.
+ *     an environment which supports {@link
+ * https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application
+ * Application Default Credentials}, your project ID will be detected
+ * automatically.
  * @property {string} [keyFilename] Full path to the a .json, .pem, or .p12 key
  *     downloaded from the Google Developers Console. If you provide a path to a
  *     JSON file, the `projectId` option above is not necessary. NOTE: .pem and
@@ -94,13 +96,14 @@ const {Sink} = require('./sink');
  * @example <caption>Import the client library</caption>
  * const {Logging} = require('@google-cloud/logging');
  *
- * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
- * const logging = new Logging();
+ * @example <caption>Create a client that uses <a
+ * href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application
+ * Default Credentials (ADC)</a>:</caption> const logging = new Logging();
  *
- * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:</caption>
- * const logging = new Logging({
- *   projectId: 'your-project-id',
- *   keyFilename: '/path/to/keyfile.json'
+ * @example <caption>Create a client with <a
+ * href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit
+ * credentials</a>:</caption> const logging = new Logging({ projectId:
+ * 'your-project-id', keyFilename: '/path/to/keyfile.json'
  * });
  *
  * @example <caption>include:samples/quickstart.js</caption>
@@ -125,13 +128,12 @@ class Logging {
       }
     }
     const options_ = extend(
-      {
-        libName: 'gccl',
-        libVersion: PKG.version,
-        scopes: scopes,
-      },
-      options
-    );
+        {
+          libName: 'gccl',
+          libVersion: PKG.version,
+          scopes: scopes,
+        },
+        options);
     this.api = {};
     this.auth = new GoogleAuth(options_);
     this.options = options_;
@@ -139,7 +141,8 @@ class Logging {
   }
   /**
    * Config to set for the sink. Not all available options are listed here, see
-   * the [Sink resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink)
+   * the [Sink
+   * resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink)
    * definition for full details.
    *
    * @typedef {object} CreateSinkRequest
@@ -147,9 +150,13 @@ class Logging {
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
    * @property {Bucket|Dataset|Topic} [destination] The destination. The proper ACL
    *     scopes will be granted to the provided destination. Can be one of:
-   *     {@link https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket Bucket},
-   *     {@link https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset Dataset},
-   *     or {@link https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
+   *     {@link
+   * https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket
+   * Bucket},
+   *     {@link
+   * https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset
+   * Dataset}, or {@link
+   * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
    * @property {string} [filter] An advanced logs filter. Only log entries
    *     matching the filter are written.
    */
@@ -238,22 +245,21 @@ class Logging {
     };
     delete reqOpts.sink.gaxOptions;
     this.request(
-      {
-        client: 'ConfigServiceV2Client',
-        method: 'createSink',
-        reqOpts: reqOpts,
-        gaxOpts: config.gaxOptions,
-      },
-      (err, resp) => {
-        if (err) {
-          callback(err, null, resp);
-          return;
-        }
-        const sink = self.sink(resp.name);
-        sink.metadata = resp;
-        callback(null, sink, resp);
-      }
-    );
+        {
+          client: 'ConfigServiceV2Client',
+          method: 'createSink',
+          reqOpts: reqOpts,
+          gaxOpts: config.gaxOptions,
+        },
+        (err, resp) => {
+          if (err) {
+            callback(err, null, resp);
+            return;
+          }
+          const sink = self.sink(resp.name);
+          sink.metadata = resp;
+          callback(null, sink, resp);
+        });
   }
 
   /**
@@ -266,7 +272,8 @@ class Logging {
    * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
    *
    * @param {?object|?string} [resource] See a
-   *     [Monitored Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/MonitoredResource).
+   *     [Monitored
+   * Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/MonitoredResource).
    * @param {object|string} data The data to use as the value for this log
    *     entry.
    * @returns {Entry}
@@ -312,8 +319,9 @@ class Logging {
    * @property {boolean} [autoPaginate=true] Have pagination handled
    *     automatically.
    * @property {string} [filter] An
-   *     [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters).
-   *     An empty filter matches all log entries.
+   *     [advanced logs
+   * filter](https://cloud.google.com/logging/docs/view/advanced_filters). An
+   * empty filter matches all log entries.
    * @property {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
    * @property {number} [maxApiCalls] Maximum number of API calls to make.
@@ -391,11 +399,10 @@ class Logging {
       options = {};
     }
     const reqOpts = extend(
-      {
-        orderBy: 'timestamp desc',
-      },
-      options
-    );
+        {
+          orderBy: 'timestamp desc',
+        },
+        options);
     reqOpts.resourceNames = arrify(reqOpts.resourceNames);
     const resourceName = 'projects/' + this.projectId;
     if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
@@ -404,26 +411,24 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-      {
-        autoPaginate: options.autoPaginate,
-      },
-      options.gaxOptions
-    );
+        {
+          autoPaginate: options.autoPaginate,
+        },
+        options.gaxOptions);
     this.request(
-      {
-        client: 'LoggingServiceV2Client',
-        method: 'listLogEntries',
-        reqOpts: reqOpts,
-        gaxOpts: gaxOptions,
-      },
-      function() {
-        const entries = arguments[1];
-        if (entries) {
-          arguments[1] = entries.map(Entry.fromApiResponse_);
-        }
-        callback.apply(null, arguments);
-      }
-    );
+        {
+          client: 'LoggingServiceV2Client',
+          method: 'listLogEntries',
+          reqOpts: reqOpts,
+          gaxOpts: gaxOptions,
+        },
+        function() {
+          const entries = arguments[1];
+          if (entries) {
+            arguments[1] = entries.map(Entry.fromApiResponse_);
+          }
+          callback.apply(null, arguments);
+        });
   }
 
   /**
@@ -473,21 +478,19 @@ class Logging {
     });
     userStream.once('reading', () => {
       const reqOpts = extend(
-        {
-          orderBy: 'timestamp desc',
-        },
-        options
-      );
+          {
+            orderBy: 'timestamp desc',
+          },
+          options);
       reqOpts.resourceNames = arrify(reqOpts.resourceNames);
       reqOpts.resourceNames.push('projects/' + self.projectId);
       delete reqOpts.autoPaginate;
       delete reqOpts.gaxOptions;
       const gaxOptions = extend(
-        {
-          autoPaginate: options.autoPaginate,
-        },
-        options.gaxOptions
-      );
+          {
+            autoPaginate: options.autoPaginate,
+          },
+          options.gaxOptions);
       requestStream = self.request({
         client: 'LoggingServiceV2Client',
         method: 'listLogEntriesStream',
@@ -564,30 +567,28 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-      {
-        autoPaginate: options.autoPaginate,
-      },
-      options.gaxOptions
-    );
+        {
+          autoPaginate: options.autoPaginate,
+        },
+        options.gaxOptions);
     this.request(
-      {
-        client: 'ConfigServiceV2Client',
-        method: 'listSinks',
-        reqOpts: reqOpts,
-        gaxOpts: gaxOptions,
-      },
-      function() {
-        const sinks = arguments[1];
-        if (sinks) {
-          arguments[1] = sinks.map(sink => {
-            const sinkInstance = self.sink(sink.name);
-            sinkInstance.metadata = sink;
-            return sinkInstance;
-          });
-        }
-        callback.apply(null, arguments);
-      }
-    );
+        {
+          client: 'ConfigServiceV2Client',
+          method: 'listSinks',
+          reqOpts: reqOpts,
+          gaxOpts: gaxOptions,
+        },
+        function() {
+          const sinks = arguments[1];
+          if (sinks) {
+            arguments[1] = sinks.map(sink => {
+              const sinkInstance = self.sink(sink.name);
+              sinkInstance.metadata = sink;
+              return sinkInstance;
+            });
+          }
+          callback.apply(null, arguments);
+        });
   }
 
   /**
@@ -642,11 +643,10 @@ class Logging {
       });
       delete reqOpts.gaxOptions;
       const gaxOptions = extend(
-        {
-          autoPaginate: options.autoPaginate,
-        },
-        options.gaxOptions
-      );
+          {
+            autoPaginate: options.autoPaginate,
+          },
+          options.gaxOptions);
       requestStream = self.request({
         client: 'ConfigServiceV2Client',
         method: 'listSinksStream',
@@ -696,7 +696,8 @@ class Logging {
   }
 
   /**
-   * Funnel all API requests through this method, to be sure we have a project ID.
+   * Funnel all API requests through this method, to be sure we have a project
+   * ID.
    *
    * @param {object} config Configuration object.
    * @param {object} config.gaxOpts GAX options.
@@ -735,11 +736,8 @@ class Logging {
         }
         let reqOpts = extend(true, {}, config.reqOpts);
         reqOpts = replaceProjectIdToken(reqOpts, projectId);
-        const requestFn = gaxClient[config.method].bind(
-          gaxClient,
-          reqOpts,
-          config.gaxOpts
-        );
+        const requestFn =
+            gaxClient[config.method].bind(gaxClient, reqOpts, config.gaxOpts);
         callback(null, requestFn);
       });
     }
@@ -766,10 +764,11 @@ class Logging {
         }
         gaxStream = requestFn();
         gaxStream
-          .on('error', err => {
-            stream.destroy(err);
-          })
-          .pipe(stream);
+            .on('error',
+                err => {
+                  stream.destroy(err);
+                })
+            .pipe(stream);
       });
     }
     return stream;
@@ -777,7 +776,8 @@ class Logging {
 
   /**
    * This method is called when creating a sink with a Bucket destination. The
-   * bucket must first grant proper ACL access to the Stackdriver Logging account.
+   * bucket must first grant proper ACL access to the Stackdriver Logging
+   * account.
    *
    * The parameters are the same as what {@link Logging#createSink} accepts.
    *
@@ -819,27 +819,27 @@ class Logging {
         groupByEmail: 'cloud-logs@google.com',
       });
       dataset.setMetadata(
-        {
-          access: access,
-        },
-        (err, apiResp) => {
-          if (err) {
-            callback(err, null, apiResp);
-            return;
-          }
-          const baseUrl = 'bigquery.googleapis.com';
-          const pId = dataset.parent.projectId;
-          const dId = dataset.id;
-          config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
-          self.createSink(name, config, callback);
-        }
-      );
+          {
+            access: access,
+          },
+          (err, apiResp) => {
+            if (err) {
+              callback(err, null, apiResp);
+              return;
+            }
+            const baseUrl = 'bigquery.googleapis.com';
+            const pId = dataset.parent.projectId;
+            const dId = dataset.id;
+            config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
+            self.createSink(name, config, callback);
+          });
     });
   }
 
   /**
    * This method is called when creating a sink with a Topic destination. The
-   * topic must first grant proper ACL access to the Stackdriver Logging account.
+   * topic must first grant proper ACL access to the Stackdriver Logging
+   * account.
    *
    * The parameters are the same as what {@link Logging#createSink} accepts.
    *
@@ -924,19 +924,21 @@ module.exports.Sink = Sink;
  * @module {Constructor} @google-cloud/logging
  * @alias nodejs-logging
  *
- * @example <caption>Install the client library with <a href="https://www.npmjs.com/">npm</a>:</caption>
- * npm install --save @google-cloud/logging
+ * @example <caption>Install the client library with <a
+ * href="https://www.npmjs.com/">npm</a>:</caption> npm install --save
+ * @google-cloud/logging
  *
  * @example <caption>Import the client library</caption>
  * const {Logging} = require('@google-cloud/logging');
  *
- * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
- * const logging = new Logging();
+ * @example <caption>Create a client that uses <a
+ * href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application
+ * Default Credentials (ADC)</a>:</caption> const logging = new Logging();
  *
- * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:</caption>
- * const logging = new Logging({
- *   projectId: 'your-project-id',
- *   keyFilename: '/path/to/keyfile.json'
+ * @example <caption>Create a client with <a
+ * href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit
+ * credentials</a>:</caption> const logging = new Logging({ projectId:
+ * 'your-project-id', keyFilename: '/path/to/keyfile.json'
  * });
  *
  * @example <caption>include:samples/quickstart.js</caption>

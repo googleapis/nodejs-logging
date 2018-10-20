@@ -109,20 +109,20 @@ describe('Logging', () => {
 
   before(() => {
     Logging = proxyquire('../../', {
-      '@google-cloud/common-grpc': {
-        util: fakeUtil,
-      },
-      '@google-cloud/promisify': fakePromisify,
-      '@google-cloud/paginator': fakePaginator,
-      '@google-cloud/projectify': fakeProjectify,
-      'google-auth-library': {
-        GoogleAuth: fakeGoogleAuth,
-      },
-      './log': {Log: FakeLog},
-      './entry': {Entry: FakeEntry},
-      './sink': {Sink: FakeSink},
-      './v2': fakeV2,
-    }).Logging;
+                '@google-cloud/common-grpc': {
+                  util: fakeUtil,
+                },
+                '@google-cloud/promisify': fakePromisify,
+                '@google-cloud/paginator': fakePaginator,
+                '@google-cloud/projectify': fakeProjectify,
+                'google-auth-library': {
+                  GoogleAuth: fakeGoogleAuth,
+                },
+                './log': {Log: FakeLog},
+                './entry': {Entry: FakeEntry},
+                './sink': {Sink: FakeSink},
+                './v2': fakeV2,
+              }).Logging;
   });
 
   beforeEach(() => {
@@ -152,7 +152,7 @@ describe('Logging', () => {
     }
 
     it('should extend the correct methods', () => {
-      assert(extended); // See `fakePaginator.extend`
+      assert(extended);  // See `fakePaginator.extend`
     });
 
     it('should promisify all the things', () => {
@@ -172,16 +172,14 @@ describe('Logging', () => {
 
       googleAuthOverride = options_ => {
         assert.deepStrictEqual(
-          options_,
-          extend(
-            {
-              libName: 'gccl',
-              libVersion: PKG.version,
-              scopes: EXPECTED_SCOPES,
-            },
-            options
-          )
-        );
+            options_,
+            extend(
+                {
+                  libName: 'gccl',
+                  libVersion: PKG.version,
+                  scopes: EXPECTED_SCOPES,
+                },
+                options));
         return fakeGoogleAuthInstance;
       };
 
@@ -200,16 +198,14 @@ describe('Logging', () => {
       assert.notStrictEqual(logging.options, options);
 
       assert.deepStrictEqual(
-        logging.options,
-        extend(
-          {
-            libName: 'gccl',
-            libVersion: PKG.version,
-            scopes: EXPECTED_SCOPES,
-          },
-          options
-        )
-      );
+          logging.options,
+          extend(
+              {
+                libName: 'gccl',
+                libVersion: PKG.version,
+                scopes: EXPECTED_SCOPES,
+              },
+              options));
     });
 
     it('should set the projectId', () => {
@@ -252,7 +248,7 @@ describe('Logging', () => {
       logging.setAclForDataset_ = (name, config, callback) => {
         assert.strictEqual(name, SINK_NAME);
         assert.strictEqual(config, CONFIG);
-        callback(); // done()
+        callback();  // done()
       };
 
       logging.createSink(SINK_NAME, CONFIG, done);
@@ -273,7 +269,7 @@ describe('Logging', () => {
       logging.setAclForTopic_ = (name, config, callback) => {
         assert.strictEqual(name, SINK_NAME);
         assert.strictEqual(config, CONFIG);
-        callback(); // done()
+        callback();  // done()
       };
 
       logging.createSink(SINK_NAME, CONFIG, done);
@@ -294,7 +290,7 @@ describe('Logging', () => {
       logging.setAclForBucket_ = (name, config, callback) => {
         assert.strictEqual(name, SINK_NAME);
         assert.strictEqual(config, CONFIG);
-        callback(); // done()
+        callback();  // done()
       };
 
       logging.createSink(SINK_NAME, CONFIG, done);
@@ -427,12 +423,10 @@ describe('Logging', () => {
         assert.strictEqual(config.method, 'listLogEntries');
 
         assert.deepStrictEqual(
-          config.reqOpts,
-          extend(options, {
-            orderBy: 'timestamp desc',
-            resourceNames: ['projects/' + logging.projectId],
-          })
-        );
+            config.reqOpts, extend(options, {
+              orderBy: 'timestamp desc',
+              resourceNames: ['projects/' + logging.projectId],
+            }));
 
         assert.deepStrictEqual(config.gaxOpts, {
           autoPaginate: undefined,
@@ -932,7 +926,7 @@ describe('Logging', () => {
       it('should execute the request function', () => {
         logging.api[CONFIG.client][CONFIG.method] = function(done) {
           const callback = [].slice.call(arguments).pop();
-          callback(null, done); // so it ends the test
+          callback(null, done);  // so it ends the test
         };
 
         logging.request(CONFIG, assert.ifError);
@@ -1108,7 +1102,7 @@ describe('Logging', () => {
             const expectedDestination = 'storage.googleapis.com/' + bucket.name;
             assert.strictEqual(config.destination, expectedDestination);
 
-            callback(); // done()
+            callback();  // done()
           };
 
           callback(null, apiResponse);
@@ -1230,7 +1224,7 @@ describe('Logging', () => {
               assert.strictEqual(name, SINK_NAME);
               assert.strictEqual(config, CONFIG);
               assert.strictEqual(config.destination, expectedDestination);
-              callback(); // done()
+              callback();  // done()
             };
 
             logging.setAclForDataset_(SINK_NAME, CONFIG, done);
@@ -1346,7 +1340,7 @@ describe('Logging', () => {
               assert.strictEqual(name, SINK_NAME);
               assert.strictEqual(config, CONFIG);
               assert.strictEqual(config.destination, expectedDestination);
-              callback(); // done()
+              callback();  // done()
             };
             logging.setAclForTopic_(SINK_NAME, CONFIG, done);
           });

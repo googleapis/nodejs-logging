@@ -208,14 +208,13 @@ class Log {
       logName: this.formattedName_,
     };
     this.logging.request(
-      {
-        client: 'LoggingServiceV2Client',
-        method: 'deleteLog',
-        reqOpts: reqOpts,
-        gaxOpts: gaxOptions,
-      },
-      callback
-    );
+        {
+          client: 'LoggingServiceV2Client',
+          method: 'deleteLog',
+          reqOpts: reqOpts,
+          gaxOpts: gaxOptions,
+        },
+        callback);
   }
 
   /**
@@ -261,7 +260,8 @@ class Log {
    * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
    *
    * @param {?object} metadata See a
-   *     [LogEntry Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
+   *     [LogEntry
+   * Resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
    * @param {object|string} data The data to use as the value for this log
    *     entry.
    * @returns {Entry}
@@ -383,17 +383,17 @@ class Log {
    * });
    */
   getEntries(options, callback) {
-    if (is.function(options)) {
-      callback = options;
-      options = {};
-    }
-    options = extend(
+    if (is.function(options))
       {
-        filter: 'logName="' + this.formattedName_ + '"',
-      },
-      options
-    );
-    return this.logging.getEntries(options, callback);
+        callback = options;
+        options = {};
+      }
+      options = extend(
+          {
+            filter: 'logName="' + this.formattedName_ + '"',
+          },
+          options);
+      return this.logging.getEntries(options, callback);
   }
 
   /**
@@ -430,13 +430,12 @@ class Log {
    *   });
    */
   getEntriesStream(options) {
-    options = extend(
-      {
-        filter: 'logName="' + this.formattedName_ + '"',
-      },
-      options
-    );
-    return this.logging.getEntriesStream(options);
+      options = extend(
+          {
+            filter: 'logName="' + this.formattedName_ + '"',
+          },
+          options);
+      return this.logging.getEntriesStream(options);
   }
 
   /**
@@ -468,7 +467,8 @@ class Log {
    * });
    */
   info(entry, options, callback) {
-    this.write(Log.assignSeverityToEntries_(entry, 'INFO'), options, callback);
+      this.write(
+          Log.assignSeverityToEntries_(entry, 'INFO'), options, callback);
   }
 
   /**
@@ -500,11 +500,8 @@ class Log {
    * });
    */
   notice(entry, options, callback) {
-    this.write(
-      Log.assignSeverityToEntries_(entry, 'NOTICE'),
-      options,
-      callback
-    );
+      this.write(
+          Log.assignSeverityToEntries_(entry, 'NOTICE'), options, callback);
   }
 
   /**
@@ -536,11 +533,8 @@ class Log {
    * });
    */
   warning(entry, options, callback) {
-    this.write(
-      Log.assignSeverityToEntries_(entry, 'WARNING'),
-      options,
-      callback
-    );
+      this.write(
+          Log.assignSeverityToEntries_(entry, 'WARNING'), options, callback);
   }
 
   /**
@@ -635,48 +629,46 @@ class Log {
    * Another example:
    */
   write(entry, options, callback) {
-    const self = this;
-    if (is.fn(options)) {
-      callback = options;
-      options = {};
-    }
-    if (!options.resource) {
-      this.metadata_.getDefaultResource((err, resource) => {
-        // Ignore errors (the API will speak up if it has an issue).
-        writeWithResource(resource);
-      });
-    } else {
-      if (options.resource.labels) {
-        options.resource.labels = snakeCaseKeys(options.resource.labels);
+      const self = this;
+      if (is.fn(options)) {
+        callback = options;
+        options = {};
       }
-      writeWithResource(options.resource);
-    }
-    function writeWithResource(resource) {
-      let decoratedEntries;
-      try {
-        decoratedEntries = self.decorateEntries_(arrify(entry));
-      } catch (err) {
-        // Ignore errors (the API will speak up if it has an issue).
+      if (!options.resource) {
+        this.metadata_.getDefaultResource((err, resource) => {
+          // Ignore errors (the API will speak up if it has an issue).
+          writeWithResource(resource);
+        });
+      } else {
+        if (options.resource.labels) {
+          options.resource.labels = snakeCaseKeys(options.resource.labels);
+        }
+        writeWithResource(options.resource);
       }
-      const reqOpts = extend(
-        {
-          logName: self.formattedName_,
-          entries: decoratedEntries,
-          resource: resource,
-        },
-        options
-      );
-      delete reqOpts.gaxOptions;
-      self.logging.request(
-        {
-          client: 'LoggingServiceV2Client',
-          method: 'writeLogEntries',
-          reqOpts: reqOpts,
-          gaxOpts: options.gaxOptions,
-        },
-        callback
-      );
-    }
+      function writeWithResource(resource) {
+        let decoratedEntries;
+        try {
+          decoratedEntries = self.decorateEntries_(arrify(entry));
+        } catch (err) {
+          // Ignore errors (the API will speak up if it has an issue).
+        }
+        const reqOpts = extend(
+            {
+              logName: self.formattedName_,
+              entries: decoratedEntries,
+              resource: resource,
+            },
+            options);
+        delete reqOpts.gaxOptions;
+        self.logging.request(
+            {
+              client: 'LoggingServiceV2Client',
+              method: 'writeLogEntries',
+              reqOpts: reqOpts,
+              gaxOpts: options.gaxOptions,
+            },
+            callback);
+      }
   }
 
   /**
@@ -689,14 +681,14 @@ class Log {
    * @throws if there is an error during serialization.
    */
   decorateEntries_(entries) {
-    return entries.map(entry => {
-      if (!(entry instanceof Entry)) {
-        entry = this.entry(entry);
-      }
-      return entry.toJSON({
-        removeCircular: this.removeCircular_,
+      return entries.map(entry => {
+        if (!(entry instanceof Entry)) {
+          entry = this.entry(entry);
+        }
+        return entry.toJSON({
+          removeCircular: this.removeCircular_,
+        });
       });
-    });
   }
 
   /**
@@ -708,14 +700,14 @@ class Log {
    * @param {string} severity - The desired severity level.
    */
   static assignSeverityToEntries_(entries, severity) {
-    return arrify(entries).map(entry => {
-      const metadata = extend(true, {}, entry.metadata, {
-        severity: severity,
+      return arrify(entries).map(entry => {
+        const metadata = extend(true, {}, entry.metadata, {
+          severity: severity,
+        });
+        return extend(new Entry(), entry, {
+          metadata: metadata,
+        });
       });
-      return extend(new Entry(), entry, {
-        metadata: metadata,
-      });
-    });
   }
 
   /**
@@ -727,28 +719,28 @@ class Log {
    * @returns {string}
    */
   static formatName_(projectId, name) {
-    const path = 'projects/' + projectId + '/logs/';
-    name = name.replace(path, '');
-    if (decodeURIComponent(name) === name) {
-      // The name has not been encoded yet.
-      name = encodeURIComponent(name);
-    }
-    return path + name;
+      const path = 'projects/' + projectId + '/logs/';
+      name = name.replace(path, '');
+      if (decodeURIComponent(name) === name) {
+        // The name has not been encoded yet.
+        name = encodeURIComponent(name);
+      }
+      return path + name;
   }
-}
+  }
 
-/*! Developer Documentation
- *
- * All async methods (except for streams) will return a Promise in the event
- * that a callback is omitted.
- */
-promisifyAll(Log, {
-  exclude: ['entry'],
-});
+  /*! Developer Documentation
+   *
+   * All async methods (except for streams) will return a Promise in the event
+   * that a callback is omitted.
+   */
+  promisifyAll(Log, {
+    exclude: ['entry'],
+  });
 
-/**
- * Reference to the {@link Log} class.
- * @name module:@google-cloud/logging.Log
- * @see Log
- */
-module.exports.Log = Log;
+  /**
+   * Reference to the {@link Log} class.
+   * @name module:@google-cloud/logging.Log
+   * @see Log
+   */
+  module.exports.Log = Log;

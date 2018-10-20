@@ -60,7 +60,7 @@
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
     "lint": "eslint samples/",
-    "check": "echo \"gts check disabled until ts migration is complete\"",
+    "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p . && cp src/v2/*.json build/src/v2 && cp -r protos build",
     "fix": "gts fix",

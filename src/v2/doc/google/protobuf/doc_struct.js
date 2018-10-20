@@ -33,7 +33,7 @@
  * @see [google.protobuf.Struct definition in proto format]{@link https://github.com/google/protobuf/blob/master/src/google/protobuf/struct.proto}
  */
 const Struct = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -47,7 +47,8 @@ const Struct = {
  * @property {number} nullValue
  *   Represents a null value.
  *
- *   The number should be among the values of [NullValue]{@link google.protobuf.NullValue}
+ *   The number should be among the values of [NullValue]{@link
+ * google.protobuf.NullValue}
  *
  * @property {number} numberValue
  *   Represents a double value.
@@ -61,19 +62,21 @@ const Struct = {
  * @property {Object} structValue
  *   Represents a structured value.
  *
- *   This object should have the same structure as [Struct]{@link google.protobuf.Struct}
+ *   This object should have the same structure as [Struct]{@link
+ * google.protobuf.Struct}
  *
  * @property {Object} listValue
  *   Represents a repeated `Value`.
  *
- *   This object should have the same structure as [ListValue]{@link google.protobuf.ListValue}
+ *   This object should have the same structure as [ListValue]{@link
+ * google.protobuf.ListValue}
  *
  * @typedef Value
  * @memberof google.protobuf
  * @see [google.protobuf.Value definition in proto format]{@link https://github.com/google/protobuf/blob/master/src/google/protobuf/struct.proto}
  */
 const Value = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -84,14 +87,15 @@ const Value = {
  * @property {Object[]} values
  *   Repeated field of dynamically typed values.
  *
- *   This object should have the same structure as [Value]{@link google.protobuf.Value}
+ *   This object should have the same structure as [Value]{@link
+ * google.protobuf.Value}
  *
  * @typedef ListValue
  * @memberof google.protobuf
  * @see [google.protobuf.ListValue definition in proto format]{@link https://github.com/google/protobuf/blob/master/src/google/protobuf/struct.proto}
  */
 const ListValue = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**

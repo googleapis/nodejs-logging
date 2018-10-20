@@ -143,14 +143,13 @@ class Sink {
       sinkName: this.formattedName_,
     };
     this.logging.request(
-      {
-        client: 'ConfigServiceV2Client',
-        method: 'deleteSink',
-        reqOpts: reqOpts,
-        gaxOpts: gaxOptions,
-      },
-      callback
-    );
+        {
+          client: 'ConfigServiceV2Client',
+          method: 'deleteSink',
+          reqOpts: reqOpts,
+          gaxOpts: gaxOptions,
+        },
+        callback);
   }
 
   /**
@@ -204,19 +203,18 @@ class Sink {
       sinkName: this.formattedName_,
     };
     this.logging.request(
-      {
-        client: 'ConfigServiceV2Client',
-        method: 'getSink',
-        reqOpts: reqOpts,
-        gaxOpts: gaxOptions,
-      },
-      function() {
-        if (arguments[1]) {
-          self.metadata = arguments[1];
-        }
-        callback.apply(null, arguments);
-      }
-    );
+        {
+          client: 'ConfigServiceV2Client',
+          method: 'getSink',
+          reqOpts: reqOpts,
+          gaxOpts: gaxOptions,
+        },
+        function() {
+          if (arguments[1]) {
+            self.metadata = arguments[1];
+          }
+          callback.apply(null, arguments);
+        });
   }
 
   /**
@@ -257,11 +255,10 @@ class Sink {
    */
   setFilter(filter, callback) {
     this.setMetadata(
-      {
-        filter: filter,
-      },
-      callback
-    );
+        {
+          filter: filter,
+        },
+        callback);
   }
 
   /**
@@ -280,9 +277,11 @@ class Sink {
    * @see [projects.sink.update API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update}
    *
    * @param {object} metadata See a
-   *     [Sink resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink).
+   *     [Sink
+   * resource](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink).
    * @param {object} [metadata.gaxOptions] Request configuration options,
-   *     outlined here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+   *     outlined here:
+   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
    * @param {SetSinkMetadataCallback} [callback] Callback function.
    * @returns {Promise<SetSinkMetadataResponse>}
    *
@@ -322,19 +321,18 @@ class Sink {
       };
       delete reqOpts.sink.gaxOptions;
       self.logging.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'updateSink',
-          reqOpts: reqOpts,
-          gaxOpts: metadata.gaxOptions,
-        },
-        function() {
-          if (arguments[1]) {
-            self.metadata = arguments[1];
-          }
-          callback.apply(null, arguments);
-        }
-      );
+          {
+            client: 'ConfigServiceV2Client',
+            method: 'updateSink',
+            reqOpts: reqOpts,
+            gaxOpts: metadata.gaxOptions,
+          },
+          function() {
+            if (arguments[1]) {
+              self.metadata = arguments[1];
+            }
+            callback.apply(null, arguments);
+          });
     });
   }
 }

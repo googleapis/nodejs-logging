@@ -31,9 +31,9 @@ const {Logging} = require('../src/index');
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')
-  .get(() => true)
-  .replyWithError({code: 'ENOTFOUND'})
-  .persist();
+    .get(() => true)
+    .replyWithError({code: 'ENOTFOUND'})
+    .persist();
 
 describe('Logging', () => {
   let PROJECT_ID;
@@ -53,62 +53,58 @@ describe('Logging', () => {
 
   before(done => {
     async.parallel(
-      [
-        callback => {
-          bucket.create(callback);
-        },
-        callback => {
-          dataset.create(callback);
-        },
-        callback => {
-          topic.create(callback);
-        },
-        callback => {
-          logging.auth.getProjectId((err, projectId) => {
-            if (err) {
-              callback(err);
-              return;
-            }
-            PROJECT_ID = projectId;
-            callback();
-          });
-        },
-      ],
-      done
-    );
-  });
-
-  after(done => {
-    async.parallel(
-      [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks],
-      done
-    );
-
-    function deleteBuckets(callback) {
-      storage.getBuckets(
-        {
-          prefix: TESTS_PREFIX,
-        },
-        (err, buckets) => {
-          if (err) {
-            done(err);
-            return;
-          }
-
-          function deleteBucket(bucket, callback) {
-            bucket.deleteFiles(err => {
+        [
+          callback => {
+            bucket.create(callback);
+          },
+          callback => {
+            dataset.create(callback);
+          },
+          callback => {
+            topic.create(callback);
+          },
+          callback => {
+            logging.auth.getProjectId((err, projectId) => {
               if (err) {
                 callback(err);
                 return;
               }
-
-              bucket.delete(callback);
+              PROJECT_ID = projectId;
+              callback();
             });
-          }
+          },
+        ],
+        done);
+  });
 
-          async.each(buckets, deleteBucket, callback);
-        }
-      );
+  after(done => {
+    async.parallel(
+        [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks], done);
+
+    function deleteBuckets(callback) {
+      storage.getBuckets(
+          {
+            prefix: TESTS_PREFIX,
+          },
+          (err, buckets) => {
+            if (err) {
+              done(err);
+              return;
+            }
+
+            function deleteBucket(bucket, callback) {
+              bucket.deleteFiles(err => {
+                if (err) {
+                  callback(err);
+                  return;
+                }
+
+                bucket.delete(callback);
+              });
+            }
+
+            async.each(buckets, deleteBucket, callback);
+          });
     }
 
     function deleteDatasets(callback) {
@@ -144,68 +140,63 @@ describe('Logging', () => {
       const sink = logging.sink(generateName());
 
       sink.create(
-        {
-          destination: bucket,
-        },
-        (err, sink, apiResponse) => {
-          assert.ifError(err);
+          {
+            destination: bucket,
+          },
+          (err, sink, apiResponse) => {
+            assert.ifError(err);
 
-          const destination = 'storage.googleapis.com/' + bucket.name;
-          assert.strictEqual(apiResponse.destination, destination);
+            const destination = 'storage.googleapis.com/' + bucket.name;
+            assert.strictEqual(apiResponse.destination, destination);
 
-          done();
-        }
-      );
+            done();
+          });
     });
 
     it('should create a sink with a Dataset destination', done => {
       const sink = logging.sink(generateName());
 
       sink.create(
-        {
-          destination: dataset,
-        },
-        (err, sink, apiResponse) => {
-          assert.ifError(err);
+          {
+            destination: dataset,
+          },
+          (err, sink, apiResponse) => {
+            assert.ifError(err);
 
-          const destination = 'bigquery.googleapis.com/datasets/' + dataset.id;
+            const destination =
+                'bigquery.googleapis.com/datasets/' + dataset.id;
 
-          // The projectId may have been replaced depending on how the system
-          // tests are being run, so let's not care about that.
-          apiResponse.destination = apiResponse.destination.replace(
-            /projects\/[^/]*\//,
-            ''
-          );
+            // The projectId may have been replaced depending on how the system
+            // tests are being run, so let's not care about that.
+            apiResponse.destination =
+                apiResponse.destination.replace(/projects\/[^/]*\//, '');
 
-          assert.strictEqual(apiResponse.destination, destination);
+            assert.strictEqual(apiResponse.destination, destination);
 
-          done();
-        }
-      );
+            done();
+          });
     });
 
     it('should create a sink with a Topic destination', done => {
       const sink = logging.sink(generateName());
 
       sink.create(
-        {
-          destination: topic,
-        },
-        (err, sink, apiResponse) => {
-          assert.ifError(err);
+          {
+            destination: topic,
+          },
+          (err, sink, apiResponse) => {
+            assert.ifError(err);
 
-          const destination = 'pubsub.googleapis.com/' + topic.name;
+            const destination = 'pubsub.googleapis.com/' + topic.name;
 
-          // The projectId may have been replaced depending on how the system
-          // tests are being run, so let's not care about that.
-          assert.strictEqual(
-            apiResponse.destination.replace(/projects\/[^/]*\//, ''),
-            destination.replace(/projects\/[^/]*\//, '')
-          );
+            // The projectId may have been replaced depending on how the system
+            // tests are being run, so let's not care about that.
+            assert.strictEqual(
+                apiResponse.destination.replace(/projects\/[^/]*\//, ''),
+                destination.replace(/projects\/[^/]*\//, ''));
 
-          done();
-        }
-      );
+            done();
+          });
     });
 
     describe('metadata', () => {
@@ -214,11 +205,10 @@ describe('Logging', () => {
 
       before(done => {
         sink.create(
-          {
-            destination: topic,
-          },
-          done
-        );
+            {
+              destination: topic,
+            },
+            done);
       });
 
       it('should set metadata', done => {
@@ -247,11 +237,10 @@ describe('Logging', () => {
 
       before(done => {
         sink.create(
-          {
-            destination: topic,
-          },
-          done
-        );
+            {
+              destination: topic,
+            },
+            done);
       });
 
       it('should list sinks', done => {
@@ -263,26 +252,24 @@ describe('Logging', () => {
       });
 
       it('should list sinks as a stream', done => {
-        const logstream = logging
-          .getSinksStream({pageSize: 1})
-          .on('error', done)
-          .once('data', () => {
-            logstream.end();
-            done();
-          });
+        const logstream = logging.getSinksStream({pageSize: 1})
+                              .on('error', done)
+                              .once('data', () => {
+                                logstream.end();
+                                done();
+                              });
       });
 
       it('should get metadata', done => {
-        logging
-          .getSinksStream({pageSize: 1})
-          .on('error', done)
-          .once('data', sink => {
-            sink.getMetadata((err, metadata) => {
-              assert.ifError(err);
-              assert.strictEqual(is.object(metadata), true);
-              done();
+        logging.getSinksStream({pageSize: 1})
+            .on('error', done)
+            .once('data', sink => {
+              sink.getMetadata((err, metadata) => {
+                assert.ifError(err);
+                assert.strictEqual(is.object(metadata), true);
+                done();
+              });
             });
-          });
       });
     });
   });
@@ -326,27 +313,26 @@ describe('Logging', () => {
 
     it('should list log entries', done => {
       logging.getEntries(
-        {
-          autoPaginate: false,
-          pageSize: 1,
-        },
-        (err, entries) => {
-          assert.ifError(err);
-          assert.strictEqual(entries.length, 1);
-          done();
-        }
-      );
+          {
+            autoPaginate: false,
+            pageSize: 1,
+          },
+          (err, entries) => {
+            assert.ifError(err);
+            assert.strictEqual(entries.length, 1);
+            done();
+          });
     });
 
     it('should list log entries as a stream', done => {
       const logstream = logging
-        .getEntriesStream({
-          autoPaginate: false,
-          pageSize: 1,
-        })
-        .on('error', done)
-        .once('data', () => logstream.end())
-        .on('end', done);
+                            .getEntriesStream({
+                              autoPaginate: false,
+                              pageSize: 1,
+                            })
+                            .on('error', done)
+                            .once('data', () => logstream.end())
+                            .on('end', done);
     });
 
     describe('log-specific entries', () => {
@@ -356,29 +342,27 @@ describe('Logging', () => {
 
       it('should list log entries', done => {
         log.getEntries(
-          {
-            autoPaginate: false,
-            pageSize: 1,
-          },
-          (err, entries) => {
-            assert.ifError(err);
-            assert.strictEqual(entries.length, 1);
-            done();
-          }
-        );
+            {
+              autoPaginate: false,
+              pageSize: 1,
+            },
+            (err, entries) => {
+              assert.ifError(err);
+              assert.strictEqual(entries.length, 1);
+              done();
+            });
       });
 
       it('should list log entries as a stream', done => {
-        const logstream = log
-          .getEntriesStream({
-            autoPaginate: false,
-            pageSize: 1,
-          })
-          .on('error', done)
-          .once('data', () => {
-            logstream.end();
-            done();
-          });
+        const logstream = log.getEntriesStream({
+                               autoPaginate: false,
+                               pageSize: 1,
+                             })
+                              .on('error', done)
+                              .once('data', () => {
+                                logstream.end();
+                                done();
+                              });
       });
     });
 
@@ -392,33 +376,32 @@ describe('Logging', () => {
 
         setTimeout(() => {
           log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: logEntries.length,
-            },
-            (err, entries) => {
-              assert.ifError(err);
+              {
+                autoPaginate: false,
+                pageSize: logEntries.length,
+              },
+              (err, entries) => {
+                assert.ifError(err);
 
-              assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
-                'log entry 1',
-                {
-                  delegate: 'my_username',
-                },
-                {
-                  nonValue: null,
-                  boolValue: true,
-                  arrayValue: [1, 2, 3],
-                },
-                {
-                  nested: {
+                assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
+                  'log entry 1',
+                  {
                     delegate: 'my_username',
                   },
-                },
-              ]);
+                  {
+                    nonValue: null,
+                    boolValue: true,
+                    arrayValue: [1, 2, 3],
+                  },
+                  {
+                    nested: {
+                      delegate: 'my_username',
+                    },
+                  },
+                ]);
 
-              done();
-            }
-          );
+                done();
+              });
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
@@ -436,20 +419,19 @@ describe('Logging', () => {
 
           setTimeout(() => {
             log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 3,
-              },
-              (err, entries) => {
-                assert.ifError(err);
-                assert.deepStrictEqual(entries.map(x => x.data), [
-                  '3',
-                  '2',
-                  '1',
-                ]);
-                done();
-              }
-            );
+                {
+                  autoPaginate: false,
+                  pageSize: 3,
+                },
+                (err, entries) => {
+                  assert.ifError(err);
+                  assert.deepStrictEqual(entries.map(x => x.data), [
+                    '3',
+                    '2',
+                    '1',
+                  ]);
+                  done();
+                });
           }, WRITE_CONSISTENCY_DELAY_MS * 4);
         });
       }, 1000);
@@ -464,19 +446,16 @@ describe('Logging', () => {
 
       setTimeout(() => {
         log.getEntries(
-          {
-            autoPaginate: false,
-            pageSize: messages.length,
-          },
-          (err, entries) => {
-            assert.ifError(err);
-            assert.deepStrictEqual(
-              entries.reverse().map(x => x.data),
-              messages
-            );
-            done();
-          }
-        );
+            {
+              autoPaginate: false,
+              pageSize: messages.length,
+            },
+            (err, entries) => {
+              assert.ifError(err);
+              assert.deepStrictEqual(
+                  entries.reverse().map(x => x.data), messages);
+              done();
+            });
       }, WRITE_CONSISTENCY_DELAY_MS * 4);
     });
 
@@ -493,24 +472,23 @@ describe('Logging', () => {
 
         setTimeout(() => {
           log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: 1,
-            },
-            (err, entries) => {
-              assert.ifError(err);
+              {
+                autoPaginate: false,
+                pageSize: 1,
+              },
+              (err, entries) => {
+                assert.ifError(err);
 
-              const entry = entries[0];
+                const entry = entries[0];
 
-              assert.deepStrictEqual(entry.data, {
-                when: logEntry.data.when.toString(),
-                matchUser: logEntry.data.matchUser.toString(),
-                matchUserError: logEntry.data.matchUserError.toString(),
+                assert.deepStrictEqual(entry.data, {
+                  when: logEntry.data.when.toString(),
+                  matchUser: logEntry.data.matchUser.toString(),
+                  matchUserError: logEntry.data.matchUserError.toString(),
+                });
+
+                done();
               });
-
-              done();
-            }
-          );
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
@@ -531,21 +509,20 @@ describe('Logging', () => {
 
         setTimeout(() => {
           log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: 1,
-            },
-            (err, entries) => {
-              assert.ifError(err);
+              {
+                autoPaginate: false,
+                pageSize: 1,
+              },
+              (err, entries) => {
+                assert.ifError(err);
 
-              const entry = entries[0];
+                const entry = entries[0];
 
-              assert.strictEqual(entry.metadata.severity, metadata.severity);
-              assert.deepStrictEqual(entry.data, data);
+                assert.strictEqual(entry.metadata.severity, metadata.severity);
+                assert.deepStrictEqual(entry.data, data);
 
-              done();
-            }
-          );
+                done();
+              });
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
@@ -559,44 +536,41 @@ describe('Logging', () => {
 
         setTimeout(() => {
           log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: 1,
-            },
-            (err, entries) => {
-              assert.ifError(err);
+              {
+                autoPaginate: false,
+                pageSize: 1,
+              },
+              (err, entries) => {
+                assert.ifError(err);
 
-              const entry = entries[0];
+                const entry = entries[0];
 
-              assert.strictEqual(entry.data, text);
-              assert.deepStrictEqual(entry.metadata.resource, {
-                type: 'global',
-                labels: {
-                  project_id: PROJECT_ID,
-                },
+                assert.strictEqual(entry.data, text);
+                assert.deepStrictEqual(entry.metadata.resource, {
+                  type: 'global',
+                  labels: {
+                    project_id: PROJECT_ID,
+                  },
+                });
+
+                done();
               });
-
-              done();
-            }
-          );
         }, WRITE_CONSISTENCY_DELAY_MS);
       });
     });
 
     it('should write a log with camelcase resource label keys', done => {
       log.write(
-        logEntries,
-        {
-          resource: {
-            type: 'gce_instance',
-            labels: {
-              zone: 'global',
-              instanceId: '3',
+          logEntries, {
+            resource: {
+              type: 'gce_instance',
+              labels: {
+                zone: 'global',
+                instanceId: '3',
+              },
             },
           },
-        },
-        done
-      );
+          done);
     });
 
     it('should write to a log with alert helper', done => {
