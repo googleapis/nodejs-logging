@@ -18,7 +18,6 @@
 
 const assert = require('assert');
 const extend = require('extend');
-const prop = require('propprop');
 const proxyquire = require('proxyquire');
 const {util} = require('@google-cloud/common-grpc');
 const promisify = require('@google-cloud/promisify');
@@ -141,16 +140,16 @@ describe('Log', () => {
     it('should assign severity to a single entry', () => {
       assert.deepStrictEqual(
           Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
-              .map(prop('metadata'))
-              .map(prop('severity')),
+              .map(x => x.metadata)
+              .map(x => x.severity),
           [SEVERITY]);
     });
 
     it('should assign severity property to multiple entries', () => {
       assert.deepStrictEqual(
           Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
-              .map(prop('metadata'))
-              .map(prop('severity')),
+              .map(x => x.metadata)
+              .map(x => x.severity),
           [SEVERITY, SEVERITY, SEVERITY]);
     });
 

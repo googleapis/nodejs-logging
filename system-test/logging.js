@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-'use strict';
-
 const assert = require('assert');
-const async = require('async');
 const BigQuery = require('@google-cloud/bigquery');
-const exec = require('methmeth');
 const extend = require('extend');
 const is = require('is');
 const nock = require('nock');
 const PubSub = require('@google-cloud/pubsub');
 const {Storage} = require('@google-cloud/storage');
 const uuid = require('uuid');
-
-const {Logging} = require('../src/index');
+const {Logging} = require('../src');
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')
@@ -43,7 +38,6 @@ describe('Logging', () => {
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
   const storage = new Storage();
-
   const logging = new Logging();
 
   // Create the possible destinations for sinks that we will create.
@@ -51,204 +45,118 @@ describe('Logging', () => {
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
   const topic = pubsub.topic(generateName());
 
-  before(done => {
-    async.parallel(
-        [
-          callback => {
-            bucket.create(callback);
-          },
-          callback => {
-            dataset.create(callback);
-          },
-          callback => {
-            topic.create(callback);
-          },
-          callback => {
-            logging.auth.getProjectId((err, projectId) => {
-              if (err) {
-                callback(err);
-                return;
-              }
-              PROJECT_ID = projectId;
-              callback();
-            });
-          },
-        ],
-        done);
+  before(async () => {
+    await Promise.all([
+      bucket.create(), dataset.create(), topic.create(),
+      logging.auth.getProjectId().then(projectId => {
+        PROJECT_ID = projectId;
+      })
+    ]);
   });
 
-  after(done => {
-    async.parallel(
-        [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks], done);
+  after(async () => {
+    await Promise.all(
+        [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks]);
 
-    function deleteBuckets(callback) {
-      storage.getBuckets(
-          {
-            prefix: TESTS_PREFIX,
-          },
-          (err, buckets) => {
-            if (err) {
-              done(err);
-              return;
-            }
-
-            function deleteBucket(bucket, callback) {
-              bucket.deleteFiles(err => {
-                if (err) {
-                  callback(err);
-                  return;
-                }
-
-                bucket.delete(callback);
-              });
-            }
-
-            async.each(buckets, deleteBucket, callback);
-          });
-    }
-
-    function deleteDatasets(callback) {
-      getAndDelete(bigQuery.getDatasets.bind(bigQuery), callback);
-    }
-
-    function deleteTopics(callback) {
-      getAndDelete(pubsub.getTopics.bind(pubsub), callback);
-    }
-
-    function deleteSinks(callback) {
-      getAndDelete(logging.getSinks.bind(logging), callback);
-    }
-
-    function getAndDelete(method, callback) {
-      method((err, objects) => {
-        if (err) {
-          callback(err);
-          return;
-        }
-
-        objects = objects.filter(object => {
-          return (object.name || object.id).indexOf(TESTS_PREFIX) === 0;
-        });
-
-        async.each(objects, exec('delete'), callback);
+    async function deleteBuckets() {
+      const [buckets] = await storage.getBuckets({
+        prefix: TESTS_PREFIX,
       });
+      return Promise.all(buckets.map(async bucket => {
+        await bucket.deleteFiles();
+        await bucket.delete();
+      }));
+    }
+
+    async function deleteDatasets() {
+      return getAndDelete(bigQuery.getDatasets.bind(bigQuery));
+    }
+
+    async function deleteTopics() {
+      return getAndDelete(pubsub.getTopics.bind(pubsub));
+    }
+
+    async function deleteSinks() {
+      return getAndDelete(logging.getSinks.bind(logging));
+    }
+
+    async function getAndDelete(method) {
+      let [objects] = await method();
+      return Promise.all(
+          objects.filter(o => (o.name || o.id).indexOf(TESTS_PREFIX) === 0)
+              .map(o => o.delete()));
     }
   });
 
   describe('sinks', () => {
-    it('should create a sink with a Bucket destination', done => {
+    it('should create a sink with a Bucket destination', async () => {
       const sink = logging.sink(generateName());
-
-      sink.create(
-          {
-            destination: bucket,
-          },
-          (err, sink, apiResponse) => {
-            assert.ifError(err);
-
-            const destination = 'storage.googleapis.com/' + bucket.name;
-            assert.strictEqual(apiResponse.destination, destination);
-
-            done();
-          });
+      const [_, apiResponse] = await sink.create({
+        destination: bucket,
+      });
+      const destination = 'storage.googleapis.com/' + bucket.name;
+      assert.strictEqual(apiResponse.destination, destination);
     });
 
-    it('should create a sink with a Dataset destination', done => {
+    it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());
-
-      sink.create(
+      const [_, apiResponse] = await sink.create(
           {
             destination: dataset,
           },
-          (err, sink, apiResponse) => {
-            assert.ifError(err);
+      );
 
-            const destination =
-                'bigquery.googleapis.com/datasets/' + dataset.id;
+      const destination = `bigquery.googleapis.com/datasets/${dataset.id}`;
 
-            // The projectId may have been replaced depending on how the system
-            // tests are being run, so let's not care about that.
-            apiResponse.destination =
-                apiResponse.destination.replace(/projects\/[^/]*\//, '');
-
-            assert.strictEqual(apiResponse.destination, destination);
-
-            done();
-          });
+      // The projectId may have been replaced depending on how the system
+      // tests are being run, so let's not care about that.
+      apiResponse.destination =
+          apiResponse.destination.replace(/projects\/[^/]*\//, '');
+      assert.strictEqual(apiResponse.destination, destination);
     });
 
-    it('should create a sink with a Topic destination', done => {
+    it('should create a sink with a Topic destination', async () => {
       const sink = logging.sink(generateName());
+      const [_, apiResponse] = await sink.create({destination: topic});
+      const destination = 'pubsub.googleapis.com/' + topic.name;
 
-      sink.create(
-          {
-            destination: topic,
-          },
-          (err, sink, apiResponse) => {
-            assert.ifError(err);
-
-            const destination = 'pubsub.googleapis.com/' + topic.name;
-
-            // The projectId may have been replaced depending on how the system
-            // tests are being run, so let's not care about that.
-            assert.strictEqual(
-                apiResponse.destination.replace(/projects\/[^/]*\//, ''),
-                destination.replace(/projects\/[^/]*\//, ''));
-
-            done();
-          });
+      // The projectId may have been replaced depending on how the system
+      // tests are being run, so let's not care about that.
+      assert.strictEqual(
+          apiResponse.destination.replace(/projects\/[^/]*\//, ''),
+          destination.replace(/projects\/[^/]*\//, ''));
     });
 
     describe('metadata', () => {
       const sink = logging.sink(generateName());
       const FILTER = 'severity = ALERT';
 
-      before(done => {
-        sink.create(
-            {
-              destination: topic,
-            },
-            done);
+      before(async () => {
+        await sink.create({destination: topic});
       });
 
-      it('should set metadata', done => {
-        const metadata = {
-          filter: FILTER,
-        };
-
-        sink.setMetadata(metadata, (err, apiResponse) => {
-          assert.ifError(err);
-          assert.strictEqual(apiResponse.filter, FILTER);
-          done();
-        });
+      it('should set metadata', async () => {
+        const metadata = {filter: FILTER};
+        const [apiResponse] = await sink.setMetadata(metadata);
+        assert.strictEqual(apiResponse.filter, FILTER);
       });
 
-      it('should set a filter', done => {
-        sink.setFilter(FILTER, (err, apiResponse) => {
-          assert.ifError(err);
-          assert.strictEqual(apiResponse.filter, FILTER);
-          done();
-        });
+      it('should set a filter', async () => {
+        const [apiResponse] = await sink.setFilter(FILTER);
+        assert.strictEqual(apiResponse.filter, FILTER);
       });
     });
 
     describe('listing sinks', () => {
       const sink = logging.sink(generateName());
 
-      before(done => {
-        sink.create(
-            {
-              destination: topic,
-            },
-            done);
+      before(async () => {
+        await sink.create({destination: topic});
       });
 
-      it('should list sinks', done => {
-        logging.getSinks((err, sinks) => {
-          assert.ifError(err);
-          assert(sinks.length > 0);
-          done();
-        });
+      it('should list sinks', async () => {
+        const [sinks] = await logging.getSinks();
+        assert(sinks.length > 0);
       });
 
       it('should list sinks as a stream', done => {
@@ -311,17 +219,12 @@ describe('Logging', () => {
 
     after(done => log.delete(done));
 
-    it('should list log entries', done => {
-      logging.getEntries(
-          {
-            autoPaginate: false,
-            pageSize: 1,
-          },
-          (err, entries) => {
-            assert.ifError(err);
-            assert.strictEqual(entries.length, 1);
-            done();
-          });
+    it('should list log entries', async () => {
+      const [entries] = await logging.getEntries({
+        autoPaginate: false,
+        pageSize: 1,
+      });
+      assert.strictEqual(entries.length, 1);
     });
 
     it('should list log entries as a stream', done => {
@@ -340,17 +243,12 @@ describe('Logging', () => {
         log.write(logEntries, options, done);
       });
 
-      it('should list log entries', done => {
-        log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: 1,
-            },
-            (err, entries) => {
-              assert.ifError(err);
-              assert.strictEqual(entries.length, 1);
-              done();
-            });
+      it('should list log entries', async () => {
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: 1,
+        });
+        assert.strictEqual(entries.length, 1);
       });
 
       it('should list log entries as a stream', done => {
@@ -370,40 +268,27 @@ describe('Logging', () => {
       log.write(logEntries[0], options, done);
     });
 
-    it('should write multiple entries to a log', done => {
-      log.write(logEntries, options, err => {
-        assert.ifError(err);
-
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: logEntries.length,
-              },
-              (err, entries) => {
-                assert.ifError(err);
-
-                assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
-                  'log entry 1',
-                  {
-                    delegate: 'my_username',
-                  },
-                  {
-                    nonValue: null,
-                    boolValue: true,
-                    arrayValue: [1, 2, 3],
-                  },
-                  {
-                    nested: {
-                      delegate: 'my_username',
-                    },
-                  },
-                ]);
-
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
+    it('should write multiple entries to a log', async () => {
+      await log.write(logEntries, options);
+      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+      const [entries] = await log.getEntries({
+        autoPaginate: false,
+        pageSize: logEntries.length,
       });
+      assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
+        'log entry 1',
+        {delegate: 'my_username'},
+        {
+          nonValue: null,
+          boolValue: true,
+          arrayValue: [1, 2, 3],
+        },
+        {
+          nested: {
+            delegate: 'my_username',
+          },
+        },
+      ]);
     });
 
     it('should preserve order of entries', done => {
