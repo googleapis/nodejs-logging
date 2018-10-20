@@ -40,19 +40,22 @@
  *   you can look at latencies for successful responses or just
  *   for responses that failed.
  *
- *   This object should have the same structure as [LabelDescriptor]{@link google.api.LabelDescriptor}
+ *   This object should have the same structure as [LabelDescriptor]{@link
+ * google.api.LabelDescriptor}
  *
  * @property {number} metricKind
  *   Whether the metric records instantaneous values, changes to a value, etc.
  *   Some combinations of `metric_kind` and `value_type` might not be supported.
  *
- *   The number should be among the values of [MetricKind]{@link google.api.MetricKind}
+ *   The number should be among the values of [MetricKind]{@link
+ * google.api.MetricKind}
  *
  * @property {number} valueType
  *   Whether the measurement is an integer, a floating-point number, etc.
  *   Some combinations of `metric_kind` and `value_type` might not be supported.
  *
- *   The number should be among the values of [ValueType]{@link google.api.ValueType}
+ *   The number should be among the values of [ValueType]{@link
+ * google.api.ValueType}
  *
  * @property {string} unit
  *   The unit in which the metric value is reported. It is only applicable
@@ -234,5 +237,5 @@ const MetricDescriptor = {
  * @see [google.api.Metric definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
  */
 const Metric = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };

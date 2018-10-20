@@ -39,11 +39,11 @@ describe('Entry', () => {
 
   before(() => {
     Entry = proxyquire('../src/entry.js', {
-      '@google-cloud/common-grpc': {
-        Service: FakeGrpcService,
-      },
-      eventid: FakeEventId,
-    }).Entry;
+              '@google-cloud/common-grpc': {
+                Service: FakeGrpcService,
+              },
+              eventid: FakeEventId,
+            }).Entry;
   });
 
   beforeEach(() => {

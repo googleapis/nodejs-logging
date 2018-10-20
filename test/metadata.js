@@ -25,9 +25,9 @@ let instanceOverride;
 const fakeGcpMetadata = {
   instance: function(path) {
     if (instanceOverride) {
-      const override = Array.isArray(instanceOverride)
-        ? instanceOverride.find(entry => entry.path === path)
-        : instanceOverride;
+      const override = Array.isArray(instanceOverride) ?
+          instanceOverride.find(entry => entry.path === path) :
+          instanceOverride;
 
       if (override.path) {
         assert.strictEqual(path, override.path);
@@ -52,8 +52,10 @@ let readFileShouldError;
 const fakeFS = {
   readFile: (filename, encoding, callback) => {
     setImmediate(() => {
-      if (readFileShouldError) callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
-      else callback(null, FAKE_READFILE_CONTENTS);
+      if (readFileShouldError)
+        callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
+      else
+        callback(null, FAKE_READFILE_CONTENTS);
     });
   },
 };
@@ -69,9 +71,9 @@ describe('metadata', () => {
 
   before(() => {
     Metadata = proxyquire('../src/metadata', {
-      'gcp-metadata': fakeGcpMetadata,
-      fs: fakeFS,
-    }).Metadata;
+                 'gcp-metadata': fakeGcpMetadata,
+                 fs: fakeFS,
+               }).Metadata;
 
     MetadataCached = extend({}, Metadata);
   });
