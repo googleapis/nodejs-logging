@@ -41,23 +41,24 @@ class Metadata {
    * @param {function} callback Callback function.
    */
   getDefaultResource(callback) {
-    this.logging.auth.getEnv()
-        .then(env => {
-          if (env === 'KUBERNETES_ENGINE') {
-            Metadata.getGKEDescriptor(callback);
-          } else if (env === 'APP_ENGINE') {
-            callback(null, Metadata.getGAEDescriptor());
-          } else if (env === 'CLOUD_FUNCTIONS') {
-            callback(null, Metadata.getCloudFunctionDescriptor());
-          } else if (env === 'COMPUTE_ENGINE') {
-            // Test for compute engine should be done after all the rest -
-            // everything runs on top of compute engine.
-            Metadata.getGCEDescriptor(callback);
-          } else {
-            callback(null, Metadata.getGlobalDescriptor());
-          }
-        })
-        .catch(callback);
+    this.logging.auth
+      .getEnv()
+      .then(env => {
+        if (env === 'KUBERNETES_ENGINE') {
+          Metadata.getGKEDescriptor(callback);
+        } else if (env === 'APP_ENGINE') {
+          callback(null, Metadata.getGAEDescriptor());
+        } else if (env === 'CLOUD_FUNCTIONS') {
+          callback(null, Metadata.getCloudFunctionDescriptor());
+        } else if (env === 'COMPUTE_ENGINE') {
+          // Test for compute engine should be done after all the rest -
+          // everything runs on top of compute engine.
+          Metadata.getGCEDescriptor(callback);
+        } else {
+          callback(null, Metadata.getGlobalDescriptor());
+        }
+      })
+      .catch(callback);
   }
 
   /**
@@ -133,21 +134,27 @@ class Metadata {
     //
     gcpMetadata.instance('attributes/cluster-name').then(resp => {
       fs.readFile(
-          Metadata.KUBERNETES_NAMESPACE_ID_PATH, 'utf8', (err, namespace) => {
-            if (err) {
-              callback(new Error(
-                  `Error reading ` +
-                  `${Metadata.KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`));
-              return;
-            }
-            callback(null, {
-              type: 'container',
-              labels: {
-                cluster_name: resp,
-                namespace_id: namespace,
-              },
-            });
+        Metadata.KUBERNETES_NAMESPACE_ID_PATH,
+        'utf8',
+        (err, namespace) => {
+          if (err) {
+            callback(
+              new Error(
+                `Error reading ` +
+                  `${Metadata.KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
+              )
+            );
+            return;
+          }
+          callback(null, {
+            type: 'container',
+            labels: {
+              cluster_name: resp,
+              namespace_id: namespace,
+            },
           });
+        }
+      );
     }, callback);
   }
 
@@ -164,6 +171,6 @@ class Metadata {
 }
 
 Metadata.KUBERNETES_NAMESPACE_ID_PATH =
-    '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
+  '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
 
 module.exports.Metadata = Metadata;

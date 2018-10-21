@@ -43,8 +43,8 @@ describe('Sink', function() {
 
   before(function() {
     Sink = proxyquire('../src/sink', {
-             '@google-cloud/promisify': fakePromisify,
-           }).Sink;
+      '@google-cloud/promisify': fakePromisify,
+    }).Sink;
   });
 
   beforeEach(function() {
@@ -66,8 +66,9 @@ describe('Sink', function() {
 
     it('should localize the formatted name', function() {
       assert.strictEqual(
-          sink.formattedName_,
-          'projects/' + LOGGING.projectId + '/sinks/' + SINK_NAME);
+        sink.formattedName_,
+        'projects/' + LOGGING.projectId + '/sinks/' + SINK_NAME
+      );
     });
   });
 
@@ -78,7 +79,7 @@ describe('Sink', function() {
       sink.logging.createSink = function(name, config_, callback) {
         assert.strictEqual(name, sink.name);
         assert.strictEqual(config_, config);
-        callback();  // done()
+        callback(); // done()
       };
 
       sink.create(config, done);
@@ -97,7 +98,7 @@ describe('Sink', function() {
 
         assert.deepStrictEqual(config.gaxOpts, {});
 
-        callback();  // done()
+        callback(); // done()
       };
 
       sink.delete(done);
@@ -177,7 +178,7 @@ describe('Sink', function() {
     it('should call set metadata', function(done) {
       sink.setMetadata = function(metadata, callback) {
         assert.strictEqual(metadata.filter, FILTER);
-        callback();  // done()
+        callback(); // done()
       };
 
       sink.setFilter(FILTER, done);

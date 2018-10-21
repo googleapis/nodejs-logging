@@ -54,15 +54,14 @@
  *   resource type. For example, an individual Google Cloud SQL database is
  *   identified by values for the labels `"database_id"` and `"zone"`.
  *
- *   This object should have the same structure as [LabelDescriptor]{@link
- * google.api.LabelDescriptor}
+ *   This object should have the same structure as [LabelDescriptor]{@link google.api.LabelDescriptor}
  *
  * @typedef MonitoredResourceDescriptor
  * @memberof google.api
  * @see [google.api.MonitoredResourceDescriptor definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
 const MonitoredResourceDescriptor = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -95,22 +94,21 @@ const MonitoredResourceDescriptor = {
  * @see [google.api.MonitoredResource definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
 const MonitoredResource = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
  * Auxiliary metadata for a MonitoredResource object.
  * MonitoredResource objects contain the minimum set of information to
  * uniquely identify a monitored resource instance. There is some other useful
- * auxiliary metadata. Google Stackdriver Monitoring & Logging uses an ingestion
- * pipeline to extract metadata for cloud resources of all types , and stores
+ * auxiliary metadata. Monitoring and Logging use an ingestion
+ * pipeline to extract metadata for cloud resources of all types, and store
  * the metadata in this message.
  *
  * @property {Object} systemLabels
  *   Output only. Values for predefined system metadata labels.
- *   System labels are a kind of metadata extracted by Google Stackdriver.
- *   Stackdriver determines what system labels are useful and how to obtain
- *   their values. Some examples: "machine_image", "vpc", "subnet_id",
+ *   System labels are a kind of metadata extracted by Google, including
+ *   "machine_image", "vpc", "subnet_id",
  *   "security_group", "name", etc.
  *   System label values can be only strings, Boolean values, or a list of
  *   strings. For example:
@@ -119,8 +117,7 @@ const MonitoredResource = {
  *         "security_group": ["a", "b", "c"],
  *         "spot_instance": false }
  *
- *   This object should have the same structure as [Struct]{@link
- * google.protobuf.Struct}
+ *   This object should have the same structure as [Struct]{@link google.protobuf.Struct}
  *
  * @property {Object.<string, string>} userLabels
  *   Output only. A map of user-defined metadata labels.
@@ -130,5 +127,5 @@ const MonitoredResource = {
  * @see [google.api.MonitoredResourceMetadata definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
 const MonitoredResourceMetadata = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };

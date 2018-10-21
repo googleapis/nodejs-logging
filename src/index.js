@@ -128,12 +128,13 @@ class Logging {
       }
     }
     const options_ = extend(
-        {
-          libName: 'gccl',
-          libVersion: PKG.version,
-          scopes: scopes,
-        },
-        options);
+      {
+        libName: 'gccl',
+        libVersion: PKG.version,
+        scopes: scopes,
+      },
+      options
+    );
     this.api = {};
     this.auth = new GoogleAuth(options_);
     this.options = options_;
@@ -245,21 +246,22 @@ class Logging {
     };
     delete reqOpts.sink.gaxOptions;
     this.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'createSink',
-          reqOpts: reqOpts,
-          gaxOpts: config.gaxOptions,
-        },
-        (err, resp) => {
-          if (err) {
-            callback(err, null, resp);
-            return;
-          }
-          const sink = self.sink(resp.name);
-          sink.metadata = resp;
-          callback(null, sink, resp);
-        });
+      {
+        client: 'ConfigServiceV2Client',
+        method: 'createSink',
+        reqOpts: reqOpts,
+        gaxOpts: config.gaxOptions,
+      },
+      (err, resp) => {
+        if (err) {
+          callback(err, null, resp);
+          return;
+        }
+        const sink = self.sink(resp.name);
+        sink.metadata = resp;
+        callback(null, sink, resp);
+      }
+    );
   }
 
   /**
@@ -399,10 +401,11 @@ class Logging {
       options = {};
     }
     const reqOpts = extend(
-        {
-          orderBy: 'timestamp desc',
-        },
-        options);
+      {
+        orderBy: 'timestamp desc',
+      },
+      options
+    );
     reqOpts.resourceNames = arrify(reqOpts.resourceNames);
     const resourceName = 'projects/' + this.projectId;
     if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
@@ -411,24 +414,26 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-        {
-          autoPaginate: options.autoPaginate,
-        },
-        options.gaxOptions);
+      {
+        autoPaginate: options.autoPaginate,
+      },
+      options.gaxOptions
+    );
     this.request(
-        {
-          client: 'LoggingServiceV2Client',
-          method: 'listLogEntries',
-          reqOpts: reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        function() {
-          const entries = arguments[1];
-          if (entries) {
-            arguments[1] = entries.map(Entry.fromApiResponse_);
-          }
-          callback.apply(null, arguments);
-        });
+      {
+        client: 'LoggingServiceV2Client',
+        method: 'listLogEntries',
+        reqOpts: reqOpts,
+        gaxOpts: gaxOptions,
+      },
+      function() {
+        const entries = arguments[1];
+        if (entries) {
+          arguments[1] = entries.map(Entry.fromApiResponse_);
+        }
+        callback.apply(null, arguments);
+      }
+    );
   }
 
   /**
@@ -478,19 +483,21 @@ class Logging {
     });
     userStream.once('reading', () => {
       const reqOpts = extend(
-          {
-            orderBy: 'timestamp desc',
-          },
-          options);
+        {
+          orderBy: 'timestamp desc',
+        },
+        options
+      );
       reqOpts.resourceNames = arrify(reqOpts.resourceNames);
       reqOpts.resourceNames.push('projects/' + self.projectId);
       delete reqOpts.autoPaginate;
       delete reqOpts.gaxOptions;
       const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions);
+        {
+          autoPaginate: options.autoPaginate,
+        },
+        options.gaxOptions
+      );
       requestStream = self.request({
         client: 'LoggingServiceV2Client',
         method: 'listLogEntriesStream',
@@ -567,28 +574,30 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-        {
-          autoPaginate: options.autoPaginate,
-        },
-        options.gaxOptions);
+      {
+        autoPaginate: options.autoPaginate,
+      },
+      options.gaxOptions
+    );
     this.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'listSinks',
-          reqOpts: reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        function() {
-          const sinks = arguments[1];
-          if (sinks) {
-            arguments[1] = sinks.map(sink => {
-              const sinkInstance = self.sink(sink.name);
-              sinkInstance.metadata = sink;
-              return sinkInstance;
-            });
-          }
-          callback.apply(null, arguments);
-        });
+      {
+        client: 'ConfigServiceV2Client',
+        method: 'listSinks',
+        reqOpts: reqOpts,
+        gaxOpts: gaxOptions,
+      },
+      function() {
+        const sinks = arguments[1];
+        if (sinks) {
+          arguments[1] = sinks.map(sink => {
+            const sinkInstance = self.sink(sink.name);
+            sinkInstance.metadata = sink;
+            return sinkInstance;
+          });
+        }
+        callback.apply(null, arguments);
+      }
+    );
   }
 
   /**
@@ -643,10 +652,11 @@ class Logging {
       });
       delete reqOpts.gaxOptions;
       const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions);
+        {
+          autoPaginate: options.autoPaginate,
+        },
+        options.gaxOptions
+      );
       requestStream = self.request({
         client: 'ConfigServiceV2Client',
         method: 'listSinksStream',
@@ -736,8 +746,11 @@ class Logging {
         }
         let reqOpts = extend(true, {}, config.reqOpts);
         reqOpts = replaceProjectIdToken(reqOpts, projectId);
-        const requestFn =
-            gaxClient[config.method].bind(gaxClient, reqOpts, config.gaxOpts);
+        const requestFn = gaxClient[config.method].bind(
+          gaxClient,
+          reqOpts,
+          config.gaxOpts
+        );
         callback(null, requestFn);
       });
     }
@@ -764,11 +777,10 @@ class Logging {
         }
         gaxStream = requestFn();
         gaxStream
-            .on('error',
-                err => {
-                  stream.destroy(err);
-                })
-            .pipe(stream);
+          .on('error', err => {
+            stream.destroy(err);
+          })
+          .pipe(stream);
       });
     }
     return stream;
@@ -819,20 +831,21 @@ class Logging {
         groupByEmail: 'cloud-logs@google.com',
       });
       dataset.setMetadata(
-          {
-            access: access,
-          },
-          (err, apiResp) => {
-            if (err) {
-              callback(err, null, apiResp);
-              return;
-            }
-            const baseUrl = 'bigquery.googleapis.com';
-            const pId = dataset.parent.projectId;
-            const dId = dataset.id;
-            config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
-            self.createSink(name, config, callback);
-          });
+        {
+          access: access,
+        },
+        (err, apiResp) => {
+          if (err) {
+            callback(err, null, apiResp);
+            return;
+          }
+          const baseUrl = 'bigquery.googleapis.com';
+          const pId = dataset.parent.projectId;
+          const dId = dataset.id;
+          config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
+          self.createSink(name, config, callback);
+        }
+      );
     });
   }
 

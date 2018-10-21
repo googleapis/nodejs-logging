@@ -39,15 +39,13 @@
  *   The sink's `writer_identity`, set when the sink is created, must
  *   have permission to write to the destination or else the log
  *   entries are not exported.  For more information, see
- *   [Exporting Logs With
- * Sinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
+ *   [Exporting Logs With Sinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
  * @property {string} filter
  *   Optional.
- *   An [advanced logs
- * filter](https://cloud.google.com/logging/docs/view/advanced_filters).  The
- * only exported log entries are those that are in the resource owning the sink
- * and that match the filter.  For example:
+ *   An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters).  The only
+ *   exported log entries are those that are in the resource owning the sink and
+ *   that match the filter.  For example:
  *
  *       logName="projects/[PROJECT_ID]/logs/[LOG_ID]" AND severity>=ERROR
  *
@@ -55,12 +53,11 @@
  *   Deprecated. The log entry format to use for this sink's exported log
  *   entries.  The v2 format is used by default and cannot be changed.
  *
- *   The number should be among the values of [VersionFormat]{@link
- * google.logging.v2.VersionFormat}
+ *   The number should be among the values of [VersionFormat]{@link google.logging.v2.VersionFormat}
  *
  * @property {string} writerIdentity
  *   Output only. An IAM identity&mdash;a service account or group&mdash;under
- *   which Stackdriver Logging writes the exported log entries to the sink's
+ *   which Logging writes the exported log entries to the sink's
  *   destination.  This field is set by
  *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
  *   and
@@ -92,14 +89,12 @@
  * @property {Object} startTime
  *   Deprecated. This field is ignored when creating or updating sinks.
  *
- *   This object should have the same structure as [Timestamp]{@link
- * google.protobuf.Timestamp}
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
  * @property {Object} endTime
  *   Deprecated. This field is ignored when creating or updating sinks.
  *
- *   This object should have the same structure as [Timestamp]{@link
- * google.protobuf.Timestamp}
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
  * @typedef LogSink
  * @memberof google.logging.v2
@@ -109,7 +104,7 @@ const LogSink = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
-   * Available log entry formats. Log entries can be written to Stackdriver
+   * Available log entry formats. Log entries can be written to
    * Logging in either format and can be exported in either format.
    * Version 2 is the preferred format.
    *
@@ -162,7 +157,7 @@ const LogSink = {
  * @see [google.logging.v2.ListSinksRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const ListSinksRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -171,8 +166,7 @@ const ListSinksRequest = {
  * @property {Object[]} sinks
  *   A list of sinks.
  *
- *   This object should have the same structure as [LogSink]{@link
- * google.logging.v2.LogSink}
+ *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
  *
  * @property {string} nextPageToken
  *   If there might be more results than appear in this response, then
@@ -184,7 +178,7 @@ const ListSinksRequest = {
  * @see [google.logging.v2.ListSinksResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const ListSinksResponse = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -205,7 +199,7 @@ const ListSinksResponse = {
  * @see [google.logging.v2.GetSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const GetSinkRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -225,14 +219,13 @@ const GetSinkRequest = {
  *   Required. The new sink, whose `name` parameter is a sink identifier that
  *   is not already in use.
  *
- *   This object should have the same structure as [LogSink]{@link
- * google.logging.v2.LogSink}
+ *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
  *
  * @property {boolean} uniqueWriterIdentity
  *   Optional. Determines the kind of IAM identity returned as `writer_identity`
  *   in the new sink.  If this value is omitted or set to false, and if the
  *   sink's parent is a project, then the value returned as `writer_identity` is
- *   the same group or service account used by Stackdriver Logging before the
+ *   the same group or service account used by Logging before the
  *   addition of writer identities to this API. The sink's destination must be
  *   in the same project as the sink itself.
  *
@@ -246,7 +239,7 @@ const GetSinkRequest = {
  * @see [google.logging.v2.CreateSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const CreateSinkRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -267,8 +260,7 @@ const CreateSinkRequest = {
  *   Required. The updated sink, whose name is the same identifier that appears
  *   as part of `sink_name`.
  *
- *   This object should have the same structure as [LogSink]{@link
- * google.logging.v2.LogSink}
+ *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
  *
  * @property {boolean} uniqueWriterIdentity
  *   Optional. See
@@ -296,19 +288,18 @@ const CreateSinkRequest = {
  *   empty updateMask will be an error.
  *
  *   For a detailed `FieldMask` definition, see
- *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
+ *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
  *
  *   Example: `updateMask=filter`.
  *
- *   This object should have the same structure as [FieldMask]{@link
- * google.protobuf.FieldMask}
+ *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
  *
  * @typedef UpdateSinkRequest
  * @memberof google.logging.v2
  * @see [google.logging.v2.UpdateSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const UpdateSinkRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -330,11 +321,11 @@ const UpdateSinkRequest = {
  * @see [google.logging.v2.DeleteSinkRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const DeleteSinkRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
- * Specifies a set of log entries that are not to be stored in Stackdriver
+ * Specifies a set of log entries that are not to be stored in
  * Logging. If your project receives a large volume of logs, you might be able
  * to use exclusions to reduce your chargeable logs. Exclusions are processed
  * after log sinks, so you can export log entries before they are excluded.
@@ -351,10 +342,9 @@ const DeleteSinkRequest = {
  *
  * @property {string} filter
  *   Required.
- *   An [advanced logs
- * filter](https://cloud.google.com/logging/docs/view/advanced_filters) that
- * matches the log entries to be excluded. By using the [sample
- * function](https://cloud.google.com/logging/docs/view/advanced_filters#sample),
+ *   An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters)
+ *   that matches the log entries to be excluded. By using the
+ *   [sample function](https://cloud.google.com/logging/docs/view/advanced_filters#sample),
  *   you can exclude less than 100% of the matching log entries.
  *   For example, the following filter matches 99% of low-severity log
  *   entries from load balancers:
@@ -372,7 +362,7 @@ const DeleteSinkRequest = {
  * @see [google.logging.v2.LogExclusion definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const LogExclusion = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -402,7 +392,7 @@ const LogExclusion = {
  * @see [google.logging.v2.ListExclusionsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const ListExclusionsRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -411,8 +401,7 @@ const ListExclusionsRequest = {
  * @property {Object[]} exclusions
  *   A list of exclusions.
  *
- *   This object should have the same structure as [LogExclusion]{@link
- * google.logging.v2.LogExclusion}
+ *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
  *
  * @property {string} nextPageToken
  *   If there might be more results than appear in this response, then
@@ -424,7 +413,7 @@ const ListExclusionsRequest = {
  * @see [google.logging.v2.ListExclusionsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const ListExclusionsResponse = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -445,7 +434,7 @@ const ListExclusionsResponse = {
  * @see [google.logging.v2.GetExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const GetExclusionRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -465,15 +454,14 @@ const GetExclusionRequest = {
  *   Required. The new exclusion, whose `name` parameter is an exclusion name
  *   that is not already used in the parent resource.
  *
- *   This object should have the same structure as [LogExclusion]{@link
- * google.logging.v2.LogExclusion}
+ *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
  *
  * @typedef CreateExclusionRequest
  * @memberof google.logging.v2
  * @see [google.logging.v2.CreateExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const CreateExclusionRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -493,8 +481,7 @@ const CreateExclusionRequest = {
  *   Required. New values for the existing exclusion. Only the fields specified
  *   in `update_mask` are relevant.
  *
- *   This object should have the same structure as [LogExclusion]{@link
- * google.logging.v2.LogExclusion}
+ *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
  *
  * @property {Object} updateMask
  *   Required. A nonempty list of fields to change in the existing exclusion.
@@ -505,15 +492,14 @@ const CreateExclusionRequest = {
  *   For example, to change the filter and description of an exclusion,
  *   specify an `update_mask` of `"filter,description"`.
  *
- *   This object should have the same structure as [FieldMask]{@link
- * google.protobuf.FieldMask}
+ *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
  *
  * @typedef UpdateExclusionRequest
  * @memberof google.logging.v2
  * @see [google.logging.v2.UpdateExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const UpdateExclusionRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -534,5 +520,5 @@ const UpdateExclusionRequest = {
  * @see [google.logging.v2.DeleteExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const DeleteExclusionRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };

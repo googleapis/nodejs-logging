@@ -90,10 +90,11 @@ class Entry {
      * @property {number} insertId
      */
     this.metadata = extend(
-        {
-          timestamp: new Date(),
-        },
-        metadata);
+      {
+        timestamp: new Date(),
+      },
+      metadata
+    );
     // JavaScript date has a very coarse granularity (millisecond), which makes
     // it quite likely that multiple log entries would have the same timestamp.
     // The Logging API doesn't guarantee to preserve insertion order for entries

@@ -58,8 +58,11 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.deleteLog =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.deleteLog(request, err => {
         assert(err instanceof Error);
@@ -86,8 +89,10 @@ describe('LoggingServiceV2Client', () => {
       const expectedResponse = {};
 
       // Mock Grpc layer
-      client._innerApiCalls.writeLogEntries =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.writeLogEntries(request, (err, response) => {
         assert.ifError(err);
@@ -109,8 +114,11 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.writeLogEntries =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.writeLogEntries(request, (err, response) => {
         assert(err instanceof Error);
@@ -144,11 +152,14 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogEntries =
-          (actualRequest, options, callback) => {
-            assert.deepStrictEqual(actualRequest, request);
-            callback(null, expectedResponse.entries);
-          };
+      client._innerApiCalls.listLogEntries = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.entries);
+      };
 
       client.listLogEntries(request, (err, response) => {
         assert.ifError(err);
@@ -170,8 +181,11 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogEntries =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.listLogEntries = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.listLogEntries(request, (err, response) => {
         assert(err instanceof Error);
@@ -202,11 +216,14 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors =
-          (actualRequest, options, callback) => {
-            assert.deepStrictEqual(actualRequest, request);
-            callback(null, expectedResponse.resourceDescriptors);
-          };
+      client._innerApiCalls.listMonitoredResourceDescriptors = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.resourceDescriptors);
+      };
 
       client.listMonitoredResourceDescriptors(request, (err, response) => {
         assert.ifError(err);
@@ -225,8 +242,11 @@ describe('LoggingServiceV2Client', () => {
       const request = {};
 
       // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.listMonitoredResourceDescriptors = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.listMonitoredResourceDescriptors(request, (err, response) => {
         assert(err instanceof Error);
@@ -285,8 +305,11 @@ describe('LoggingServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogs =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.listLogs = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.listLogs(request, (err, response) => {
         assert(err instanceof Error);
@@ -346,8 +369,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listSinks =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.listSinks = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.listSinks(request, (err, response) => {
         assert(err instanceof Error);
@@ -386,8 +412,10 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.getSink =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.getSink = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.getSink(request, (err, response) => {
         assert.ifError(err);
@@ -409,8 +437,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.getSink =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.getSink = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.getSink(request, (err, response) => {
         assert(err instanceof Error);
@@ -451,8 +482,10 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.createSink =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.createSink = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.createSink(request, (err, response) => {
         assert.ifError(err);
@@ -476,8 +509,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.createSink =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.createSink = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.createSink(request, (err, response) => {
         assert(err instanceof Error);
@@ -518,8 +554,10 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.updateSink =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.updateSink = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.updateSink(request, (err, response) => {
         assert.ifError(err);
@@ -543,8 +581,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.updateSink =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.updateSink = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.updateSink(request, (err, response) => {
         assert(err instanceof Error);
@@ -590,8 +631,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.deleteSink =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.deleteSink = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.deleteSink(request, err => {
         assert(err instanceof Error);
@@ -624,11 +668,14 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listExclusions =
-          (actualRequest, options, callback) => {
-            assert.deepStrictEqual(actualRequest, request);
-            callback(null, expectedResponse.exclusions);
-          };
+      client._innerApiCalls.listExclusions = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.exclusions);
+      };
 
       client.listExclusions(request, (err, response) => {
         assert.ifError(err);
@@ -650,8 +697,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listExclusions =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.listExclusions = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.listExclusions(request, (err, response) => {
         assert(err instanceof Error);
@@ -688,8 +738,10 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.getExclusion =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.getExclusion = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.getExclusion(request, (err, response) => {
         assert.ifError(err);
@@ -711,8 +763,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.getExclusion =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.getExclusion = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.getExclusion(request, (err, response) => {
         assert(err instanceof Error);
@@ -751,8 +806,10 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.createExclusion =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.createExclusion = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.createExclusion(request, (err, response) => {
         assert.ifError(err);
@@ -776,8 +833,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.createExclusion =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.createExclusion = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.createExclusion(request, (err, response) => {
         assert(err instanceof Error);
@@ -818,8 +878,10 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.updateExclusion =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.updateExclusion = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.updateExclusion(request, (err, response) => {
         assert.ifError(err);
@@ -845,8 +907,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.updateExclusion =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.updateExclusion = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.updateExclusion(request, (err, response) => {
         assert(err instanceof Error);
@@ -892,8 +957,11 @@ describe('ConfigServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.deleteExclusion =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.deleteExclusion = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.deleteExclusion(request, err => {
         assert(err instanceof Error);
@@ -927,11 +995,14 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogMetrics =
-          (actualRequest, options, callback) => {
-            assert.deepStrictEqual(actualRequest, request);
-            callback(null, expectedResponse.metrics);
-          };
+      client._innerApiCalls.listLogMetrics = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.metrics);
+      };
 
       client.listLogMetrics(request, (err, response) => {
         assert.ifError(err);
@@ -953,8 +1024,11 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.listLogMetrics =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.listLogMetrics = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.listLogMetrics(request, (err, response) => {
         assert(err instanceof Error);
@@ -991,8 +1065,10 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.getLogMetric =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.getLogMetric = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.getLogMetric(request, (err, response) => {
         assert.ifError(err);
@@ -1014,8 +1090,11 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.getLogMetric =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.getLogMetric = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.getLogMetric(request, (err, response) => {
         assert(err instanceof Error);
@@ -1054,8 +1133,10 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.createLogMetric =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.createLogMetric = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.createLogMetric(request, (err, response) => {
         assert.ifError(err);
@@ -1079,8 +1160,11 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.createLogMetric =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.createLogMetric = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.createLogMetric(request, (err, response) => {
         assert(err instanceof Error);
@@ -1119,8 +1203,10 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.updateLogMetric =
-          mockSimpleGrpcMethod(request, expectedResponse);
+      client._innerApiCalls.updateLogMetric = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
 
       client.updateLogMetric(request, (err, response) => {
         assert.ifError(err);
@@ -1144,8 +1230,11 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.updateLogMetric =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.updateLogMetric = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.updateLogMetric(request, (err, response) => {
         assert(err instanceof Error);
@@ -1191,8 +1280,11 @@ describe('MetricsServiceV2Client', () => {
       };
 
       // Mock Grpc layer
-      client._innerApiCalls.deleteLogMetric =
-          mockSimpleGrpcMethod(request, null, error);
+      client._innerApiCalls.deleteLogMetric = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
 
       client.deleteLogMetric(request, err => {
         assert(err instanceof Error);

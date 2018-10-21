@@ -54,14 +54,12 @@
  *   If specified, contains the range of the population values. The field
  *   must not be present if the `count` is zero.
  *
- *   This object should have the same structure as [Range]{@link
- * google.api.Range}
+ *   This object should have the same structure as [Range]{@link google.api.Range}
  *
  * @property {Object} bucketOptions
  *   Defines the histogram bucket boundaries.
  *
- *   This object should have the same structure as [BucketOptions]{@link
- * google.api.BucketOptions}
+ *   This object should have the same structure as [BucketOptions]{@link google.api.BucketOptions}
  *
  * @property {number[]} bucketCounts
  *   If `bucket_options` is given, then the sum of the values in `bucket_counts`
@@ -98,7 +96,7 @@ const Distribution = {
    * @see [google.api.Distribution.Range definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
    */
   Range: {
-      // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
   },
 
   /**
@@ -129,20 +127,17 @@ const Distribution = {
    * @property {Object} linearBuckets
    *   The linear bucket.
    *
-   *   This object should have the same structure as [Linear]{@link
-   * google.api.Linear}
+   *   This object should have the same structure as [Linear]{@link google.api.Linear}
    *
    * @property {Object} exponentialBuckets
    *   The exponential buckets.
    *
-   *   This object should have the same structure as [Exponential]{@link
-   * google.api.Exponential}
+   *   This object should have the same structure as [Exponential]{@link google.api.Exponential}
    *
    * @property {Object} explicitBuckets
    *   The explicit buckets.
    *
-   *   This object should have the same structure as [Explicit]{@link
-   * google.api.Explicit}
+   *   This object should have the same structure as [Explicit]{@link google.api.Explicit}
    *
    * @typedef BucketOptions
    * @memberof google.api
@@ -176,7 +171,7 @@ const Distribution = {
      * @see [google.api.Distribution.BucketOptions.Linear definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
      */
     Linear: {
-        // This is for documentation. Actual contents will be loaded by gRPC.
+      // This is for documentation. Actual contents will be loaded by gRPC.
     },
 
     /**
@@ -204,7 +199,7 @@ const Distribution = {
      * @see [google.api.Distribution.BucketOptions.Exponential definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
      */
     Exponential: {
-        // This is for documentation. Actual contents will be loaded by gRPC.
+      // This is for documentation. Actual contents will be loaded by gRPC.
     },
 
     /**
@@ -228,7 +223,7 @@ const Distribution = {
      * @see [google.api.Distribution.BucketOptions.Explicit definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
      */
     Explicit: {
-        // This is for documentation. Actual contents will be loaded by gRPC.
+      // This is for documentation. Actual contents will be loaded by gRPC.
     }
   }
 };
