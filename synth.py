@@ -35,13 +35,23 @@ v2_library = gapic.node_library(
 s.copy(v2_library, excludes=["src/index.js", "README.md", "package.json"])
 
 s.replace(
-    "src/v2/config_service_v2_client.js", "../../package.json", "../../../package.json"
+    [
+        "src/v2/config_service_v2_client.js",
+        "src/v2/logging_service_v2_client.js",
+        "src/v2/metrics_service_v2_client.js",
+    ],
+    "../../package.json",
+    "../../../package.json",
 )
+
 s.replace(
-    "src/v2/logging_service_v2_client.js", "../../package.json", "../../../package.json"
-)
-s.replace(
-    "src/v2/metrics_service_v2_client.js", "../../package.json", "../../../package.json"
+    [
+        "src/v2/config_service_v2_client.js",
+        "src/v2/logging_service_v2_client.js",
+        "src/v2/metrics_service_v2_client.js",
+    ],
+    "(\*\s*)const logging = require\('@google-cloud/logging'\);",
+    "\1const logging = require('@google-cloud/logging');",
 )
 
 
