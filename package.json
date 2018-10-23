@@ -84,7 +84,7 @@
     "nock": "^10.0.1",
     "protobufjs": "^6.8.8",
     "pumpify": "^1.5.1",
-    "snakecase-keys": "^1.2.0",
+    "snakecase-keys": "^2.0.0",
     "stream-events": "^1.0.4",
     "through2": "^2.0.3"
   },
