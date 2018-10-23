@@ -44,10 +44,10 @@ it(`should log error`, done => {
   });
 
   request(app)
-    .get(`/`)
-    .expect(500)
-    .expect(() => {
-      assert(loggerCalled, `structuredLogger.emit should have been called`);
-    })
-    .end(done);
+      .get(`/`)
+      .expect(500)
+      .expect(() => {
+        assert(loggerCalled, `structuredLogger.emit should have been called`);
+      })
+      .end(done);
 });
