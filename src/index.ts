@@ -16,17 +16,17 @@
 
 'use strict';
 
-const arrify = require('arrify');
-const common = require('@google-cloud/common-grpc');
-const {promisifyAll} = require('@google-cloud/promisify');
-const {paginator} = require('@google-cloud/paginator');
-const {replaceProjectIdToken} = require('@google-cloud/projectify');
-const extend = require('extend');
-const {GoogleAuth} = require('google-auth-library');
-const is = require('is');
+import * as arrify from 'arrify';
+import * as common from '@google-cloud/common-grpc';
+import {promisifyAll} from '@google-cloud/promisify';
+import {paginator} from '@google-cloud/paginator';
+import {replaceProjectIdToken} from '@google-cloud/projectify';
+import * as extend from 'extend';
+import {GoogleAuth} from 'google-auth-library';
+import * as is from 'is';
 const pumpify = require('pumpify');
-const streamEvents = require('stream-events');
-const through = require('through2');
+import * as streamEvents from 'stream-events';
+import * as through from 'through2';
 
 const PKG = require('../../package.json');
 const v2 = require('./v2');
@@ -111,10 +111,15 @@ const {Sink} = require('./sink');
  * Full quickstart example:
  */
 class Logging {
+  api;
+  auth: GoogleAuth;
+  options;
+  projectId: string;
+
   constructor(options) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
-    const scopes = [];
+    const scopes: Array<{}> = [];
     const clientClasses = [
       v2.ConfigServiceV2Client,
       v2.LoggingServiceV2Client,
@@ -131,7 +136,7 @@ class Logging {
         {
           libName: 'gccl',
           libVersion: PKG.version,
-          scopes: scopes,
+          scopes,
         },
         options);
     this.api = {};
@@ -241,14 +246,14 @@ class Logging {
     }
     const reqOpts = {
       parent: 'projects/' + this.projectId,
-      sink: extend({}, config, {name: name}),
+      sink: extend({}, config, {name}),
     };
     delete reqOpts.sink.gaxOptions;
     this.request(
         {
           client: 'ConfigServiceV2Client',
           method: 'createSink',
-          reqOpts: reqOpts,
+          reqOpts,
           gaxOpts: config.gaxOptions,
         },
         (err, resp) => {
@@ -419,15 +424,15 @@ class Logging {
         {
           client: 'LoggingServiceV2Client',
           method: 'listLogEntries',
-          reqOpts: reqOpts,
+          reqOpts,
           gaxOpts: gaxOptions,
         },
-        function() {
-          const entries = arguments[1];
+        (...args) => {
+          const entries = args[1];
           if (entries) {
-            arguments[1] = entries.map(Entry.fromApiResponse_);
+            args[1] = entries.map(Entry.fromApiResponse_);
           }
-          callback.apply(null, arguments);
+          callback.apply(null, args);
         });
   }
 
@@ -468,7 +473,8 @@ class Logging {
     options = options || {};
     let requestStream;
     const userStream = streamEvents(pumpify.obj());
-    userStream.abort = () => {
+    // tslint:disable-next-line no-any
+    (userStream as any).abort = () => {
       if (requestStream) {
         requestStream.abort();
       }
@@ -494,10 +500,11 @@ class Logging {
       requestStream = self.request({
         client: 'LoggingServiceV2Client',
         method: 'listLogEntriesStream',
-        reqOpts: reqOpts,
+        reqOpts,
         gaxOpts: gaxOptions,
       });
-      userStream.setPipeline(requestStream, toEntryStream);
+      // tslint:disable-next-line no-any
+      (userStream as any).setPipeline(requestStream, toEntryStream);
     });
     return userStream;
   }
@@ -575,19 +582,19 @@ class Logging {
         {
           client: 'ConfigServiceV2Client',
           method: 'listSinks',
-          reqOpts: reqOpts,
+          reqOpts,
           gaxOpts: gaxOptions,
         },
-        function() {
-          const sinks = arguments[1];
+        (...args) => {
+          const sinks = args[1];
           if (sinks) {
-            arguments[1] = sinks.map(sink => {
+            args[1] = sinks.map(sink => {
               const sinkInstance = self.sink(sink.name);
               sinkInstance.metadata = sink;
               return sinkInstance;
             });
           }
-          callback.apply(null, arguments);
+          callback.apply(null, args);
         });
   }
 
@@ -627,7 +634,8 @@ class Logging {
     options = options || {};
     let requestStream;
     const userStream = streamEvents(pumpify.obj());
-    userStream.abort = () => {
+    // tslint:disable-next-line no-any
+    (userStream as any).abort = () => {
       if (requestStream) {
         requestStream.abort();
       }
@@ -650,10 +658,11 @@ class Logging {
       requestStream = self.request({
         client: 'ConfigServiceV2Client',
         method: 'listSinksStream',
-        reqOpts: reqOpts,
+        reqOpts,
         gaxOpts: gaxOptions,
       });
-      userStream.setPipeline(requestStream, toSinkStream);
+      // tslint:disable-next-line no-any
+      (userStream as any).setPipeline(requestStream, toSinkStream);
     });
     return userStream;
   }
@@ -705,7 +714,7 @@ class Logging {
    * @param {object} config.reqOpts Request options.
    * @param {function} [callback] Callback function.
    */
-  request(config, callback) {
+  request(config, callback?) {
     const self = this;
     const isStreamMode = !callback;
     let gaxStream;
@@ -727,7 +736,7 @@ class Logging {
           callback(err);
           return;
         }
-        self.projectId = projectId;
+        self.projectId = projectId!;
         let gaxClient = self.api[config.client];
         if (!gaxClient) {
           // Lazily instantiate client.
@@ -735,14 +744,15 @@ class Logging {
           self.api[config.client] = gaxClient;
         }
         let reqOpts = extend(true, {}, config.reqOpts);
-        reqOpts = replaceProjectIdToken(reqOpts, projectId);
+        reqOpts = replaceProjectIdToken(reqOpts, projectId!);
         const requestFn =
             gaxClient[config.method].bind(gaxClient, reqOpts, config.gaxOpts);
         callback(null, requestFn);
       });
     }
     function makeRequestCallback() {
-      if (global.GCLOUD_SANDBOX_ENV) {
+      // tslint:disable-next-line no-any
+      if ((global as any).GCLOUD_SANDBOX_ENV) {
         return;
       }
       prepareGaxRequest((err, requestFn) => {
@@ -754,7 +764,8 @@ class Logging {
       });
     }
     function makeRequestStream() {
-      if (global.GCLOUD_SANDBOX_ENV) {
+      // tslint:disable-next-line no-any
+      if ((global as any).GCLOUD_SANDBOX_ENV) {
         return through.obj();
       }
       prepareGaxRequest((err, requestFn) => {
@@ -770,6 +781,7 @@ class Logging {
                 })
             .pipe(stream);
       });
+      return;
     }
     return stream;
   }
@@ -820,7 +832,7 @@ class Logging {
       });
       dataset.setMetadata(
           {
-            access: access,
+            access,
           },
           (err, apiResp) => {
             if (err) {
