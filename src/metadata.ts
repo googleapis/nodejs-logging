@@ -16,8 +16,8 @@
 
 'use strict';
 
-const fs = require('fs');
-const gcpMetadata = require('gcp-metadata');
+import * as fs from 'fs';
+import * as gcpMetadata from 'gcp-metadata';
 
 /**
  * The Metadata class attempts to contact the metadata service and determine,
@@ -32,6 +32,7 @@ const gcpMetadata = require('gcp-metadata');
  * @param {Logging} logging The parent Logging instance.
  */
 class Metadata {
+  logging;
   constructor(logging) {
     this.logging = logging;
   }
@@ -110,7 +111,7 @@ class Metadata {
             // idResponse can be BigNumber when the id too large for JavaScript
             // numbers. Use a toString() to uniformly convert to a string.
             instance_id: idResponse.toString(),
-            zone: zone,
+            zone,
           },
         });
       }, callback);
@@ -133,11 +134,15 @@ class Metadata {
     //
     gcpMetadata.instance('attributes/cluster-name').then(resp => {
       fs.readFile(
-          Metadata.KUBERNETES_NAMESPACE_ID_PATH, 'utf8', (err, namespace) => {
+          // tslint:disable-next-line no-any
+          (Metadata as any).KUBERNETES_NAMESPACE_ID_PATH, 'utf8',
+          (err, namespace) => {
             if (err) {
               callback(new Error(
                   `Error reading ` +
-                  `${Metadata.KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`));
+                  // tslint:disable-next-line no-any
+                  `${(Metadata as any).KUBERNETES_NAMESPACE_ID_PATH}: ${
+                      err.message}`));
               return;
             }
             callback(null, {
@@ -163,7 +168,8 @@ class Metadata {
   }
 }
 
-Metadata.KUBERNETES_NAMESPACE_ID_PATH =
+// tslint:disable-next-line no-any
+(Metadata as any).KUBERNETES_NAMESPACE_ID_PATH =
     '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
 
 module.exports.Metadata = Metadata;

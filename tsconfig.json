@@ -4,12 +4,12 @@
     "rootDir": ".",
     "outDir": "build",
     "allowJs": true,
+    "noImplicitAny": false,
     "declaration": false,
     "skipLibCheck": true
   },
   "include": [
     "src/*.ts",
-    "src/*/js",
     "src/**/*.ts",
     "src/**/*.js",
     "test/*.ts",

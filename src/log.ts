@@ -16,10 +16,10 @@
 
 'use strict';
 
-const arrify = require('arrify');
-const {promisifyAll} = require('@google-cloud/promisify');
-const extend = require('extend');
-const is = require('is');
+import * as arrify from 'arrify';
+import {promisifyAll} from '@google-cloud/promisify';
+import * as extend from 'extend';
+import * as is from 'is';
 const snakeCaseKeys = require('snakecase-keys');
 
 const {Entry} = require('./entry');
@@ -48,6 +48,11 @@ const {Metadata} = require('./metadata');
  * const log = logging.log('syslog');
  */
 class Log {
+  formattedName_: string;
+  removeCircular_: boolean;
+  metadata_;
+  logging;
+  name: string;
   constructor(logging, name, options) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
@@ -58,7 +63,7 @@ class Log {
      * @name Log#name
      * @type {string}
      */
-    this.name = this.formattedName_.split('/').pop();
+    this.name = this.formattedName_.split('/').pop()!;
   }
 
   /**
@@ -211,7 +216,7 @@ class Log {
         {
           client: 'LoggingServiceV2Client',
           method: 'deleteLog',
-          reqOpts: reqOpts,
+          reqOpts,
           gaxOpts: gaxOptions,
         },
         callback);
@@ -300,7 +305,7 @@ class Log {
    * //   }
    * // }
    */
-  entry(metadata, data) {
+  entry(metadata, data?) {
     if (!data) {
       data = metadata;
       metadata = {};
@@ -656,7 +661,7 @@ class Log {
             {
               logName: self.formattedName_,
               entries: decoratedEntries,
-              resource: resource,
+              resource,
             },
             options);
         delete reqOpts.gaxOptions;
@@ -664,7 +669,7 @@ class Log {
             {
               client: 'LoggingServiceV2Client',
               method: 'writeLogEntries',
-              reqOpts: reqOpts,
+              reqOpts,
               gaxOpts: options.gaxOptions,
             },
             callback);
@@ -702,10 +707,10 @@ class Log {
   static assignSeverityToEntries_(entries, severity) {
       return arrify(entries).map(entry => {
         const metadata = extend(true, {}, entry.metadata, {
-          severity: severity,
+          severity,
         });
         return extend(new Entry(), entry, {
-          metadata: metadata,
+          metadata,
         });
       });
   }

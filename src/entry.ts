@@ -16,10 +16,11 @@
 
 'use strict';
 
-const {Service} = require('@google-cloud/common-grpc');
+import {Service} from '@google-cloud/common-grpc';
+// tslint:disable-next-line variable-name
 const EventId = require('eventid');
-const extend = require('extend');
-const is = require('is');
+import * as extend from 'extend';
+import * as is from 'is';
 
 const eventId = new EventId();
 
@@ -82,6 +83,8 @@ const eventId = new EventId();
  * });
  */
 class Entry {
+  metadata;
+  data;
   constructor(metadata, data) {
     /**
      * @name Entry#metadata
@@ -122,7 +125,8 @@ class Entry {
     options = options || {};
     const entry = extend(true, {}, this.metadata);
     if (is.object(this.data)) {
-      entry.jsonPayload = Service.objToStruct_(this.data, {
+      // tslint:disable-next-line no-any
+      entry.jsonPayload = (Service as any).objToStruct_(this.data, {
         removeCircular: !!options.removeCircular,
         stringify: true,
       });
@@ -152,7 +156,8 @@ class Entry {
   static fromApiResponse_(entry) {
     let data = entry[entry.payload];
     if (entry.payload === 'jsonPayload') {
-      data = Service.structToObj_(data);
+      // tslint:disable-next-line no-any
+      data = (Service as any).structToObj_(data);
     }
     const serializedEntry = new Entry(entry, data);
     if (serializedEntry.metadata.timestamp) {

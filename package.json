@@ -54,10 +54,10 @@
     "test-no-cover": "mocha build/test/*.js",
     "test": "npm run cover",
     "docs": "jsdoc -c .jsdoc.js",
-    "system-test": "mocha build/system-test/*.js --timeout 600000",
+    "system-test": "mocha build/system-test --timeout 600000",
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
-    "lint": "eslint samples/",
+    "lint": "gts check && eslint samples/",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p . && cp src/v2/*.json build/src/v2 && cp -r protos build",
@@ -92,10 +92,19 @@
     "@google-cloud/nodejs-repo-tools": "^2.3.3",
     "@google-cloud/pubsub": "^0.20.1",
     "@google-cloud/storage": "^2.0.2",
+    "@types/arrify": "^1.0.4",
+    "@types/extend": "^3.0.0",
+    "@types/is": "0.0.20",
+    "@types/mocha": "^5.2.5",
+    "@types/nock": "^9.3.0",
+    "@types/pumpify": "^1.4.1",
+    "@types/through2": "^2.0.34",
+    "@types/uuid": "^3.4.4",
     "bignumber.js": "^7.2.1",
     "codecov": "^3.0.4",
     "eslint": "^5.4.0",
     "eslint-plugin-node": "^7.0.1",
+    "gts": "^0.8.0",
     "ink-docstrap": "git+https://github.com/docstrap/docstrap.git",
     "intelli-espower-loader": "^1.0.1",
     "jsdoc": "^3.5.5",
@@ -104,8 +113,12 @@
     "power-assert": "^1.6.0",
     "propprop": "^0.3.1",
     "proxyquire": "^2.1.0",
-    "uuid": "^3.3.2",
-    "gts": "^0.8.0",
-    "typescript": "~3.1.0"
+    "typescript": "~3.1.0",
+    "uuid": "^3.3.2"
+  },
+  "nyc": {
+    "exclude": [
+      "build/test"
+    ]
   }
 }

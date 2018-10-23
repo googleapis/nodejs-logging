@@ -16,10 +16,10 @@
 
 'use strict';
 
-const common = require('@google-cloud/common-grpc');
-const {promisifyAll} = require('@google-cloud/promisify');
-const extend = require('extend');
-const is = require('is');
+import * as common from '@google-cloud/common-grpc';
+import {promisifyAll} from '@google-cloud/promisify';
+import * as extend from 'extend';
+import * as is from 'is';
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
@@ -41,6 +41,10 @@ const is = require('is');
  * const sink = logging.sink('my-sink');
  */
 class Sink {
+  logging;
+  name: string;
+  formattedName_: string;
+  metadata;
   constructor(logging, name) {
     this.logging = logging;
     /**
@@ -146,7 +150,7 @@ class Sink {
         {
           client: 'ConfigServiceV2Client',
           method: 'deleteSink',
-          reqOpts: reqOpts,
+          reqOpts,
           gaxOpts: gaxOptions,
         },
         callback);
@@ -193,7 +197,7 @@ class Sink {
    * region_tag:logging_get_sink
    * Another example:
    */
-  getMetadata(gaxOptions, callback) {
+  getMetadata(gaxOptions, callback?) {
     const self = this;
     if (is.fn(gaxOptions)) {
       callback = gaxOptions;
@@ -206,14 +210,14 @@ class Sink {
         {
           client: 'ConfigServiceV2Client',
           method: 'getSink',
-          reqOpts: reqOpts,
+          reqOpts,
           gaxOpts: gaxOptions,
         },
-        function() {
-          if (arguments[1]) {
-            self.metadata = arguments[1];
+        (...args) => {
+          if (args[1]) {
+            self.metadata = args[1];
           }
-          callback.apply(null, arguments);
+          callback.apply(null, args);
         });
   }
 
@@ -256,7 +260,7 @@ class Sink {
   setFilter(filter, callback) {
     this.setMetadata(
         {
-          filter: filter,
+          filter,
         },
         callback);
   }
@@ -324,14 +328,14 @@ class Sink {
           {
             client: 'ConfigServiceV2Client',
             method: 'updateSink',
-            reqOpts: reqOpts,
+            reqOpts,
             gaxOpts: metadata.gaxOptions,
           },
-          function() {
-            if (arguments[1]) {
-              self.metadata = arguments[1];
+          (...args) => {
+            if (args[1]) {
+              self.metadata = args[1];
             }
-            callback.apply(null, arguments);
+            callback.apply(null, args);
           });
     });
   }
