@@ -42,8 +42,7 @@
  *
  * @property {string} userAgent
  *   The user agent sent by the client. Example:
- *   `"Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Q312461; .NET
- * CLR 1.0.3705)"`.
+ *   `"Mozilla/4.0 (compatible; MSIE 6.0; Windows 98; Q312461; .NET CLR 1.0.3705)"`.
  *
  * @property {string} remoteIp
  *   The IP address (IPv4 or IPv6) of the client that issued the HTTP
@@ -55,15 +54,13 @@
  *
  * @property {string} referer
  *   The referer URL of the request, as defined in
- *   [HTTP/1.1 Header Field
- * Definitions](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html).
+ *   [HTTP/1.1 Header Field Definitions](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html).
  *
  * @property {Object} latency
  *   The request processing latency on the server, from the time the request was
  *   received until the response was sent.
  *
- *   This object should have the same structure as [Duration]{@link
- * google.protobuf.Duration}
+ *   This object should have the same structure as [Duration]{@link google.protobuf.Duration}
  *
  * @property {boolean} cacheLookup
  *   Whether or not a cache lookup was attempted.
@@ -89,5 +86,5 @@
  * @see [google.logging.type.HttpRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/type/http_request.proto}
  */
 const HttpRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
