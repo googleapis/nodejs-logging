@@ -13,40 +13,41 @@
  * limitations under the License.
  */
 
-'use strict';
+"use strict";
 
 // [START logging_quickstart]
 // Imports the Google Cloud client library
-const {Logging} = require('@google-cloud/logging');
+const { Logging } = require("@google-cloud/logging");
 
 // Your Google Cloud Platform project ID
-const projectId = 'YOUR_PROJECT_ID';
+const projectId = "YOUR_PROJECT_ID";
 
 // Creates a client
 const logging = new Logging({
-  projectId: projectId,
+  projectId: projectId
 });
 
 // The name of the log to write to
-const logName = 'my-log';
+const logName = "my-log";
 // Selects the log to write to
 const log = logging.log(logName);
 
 // The data to write to the log
-const text = 'Hello, world!';
+const text = "Hello, world!";
 // The metadata associated with the entry
 const metadata = {
-  resource: {type: 'global'}
+  resource: { type: "global" }
 };
 // Prepares a log entry
 const entry = log.entry(metadata, text);
 
 // Writes the log entry
-log.write(entry)
-    .then(() => {
-      console.log(`Logged: ${text}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+log
+  .write(entry)
+  .then(() => {
+    console.log(`Logged: ${text}`);
+  })
+  .catch(err => {
+    console.error("ERROR:", err);
+  });
 // [END logging_quickstart]

@@ -13,47 +13,47 @@
  * limitations under the License.
  */
 
-'use strict';
+"use strict";
 
-const express = require('express');
+const express = require("express");
 const app = express();
 
-app.get('*', (req, res, next) => {
-  return next('oops');
+app.get("*", (req, res, next) => {
+  return next("oops");
 });
 
 // [START fluent]
-const structuredLogger = require('fluent-logger').createFluentSender('myapp', {
-  host: 'localhost',
+const structuredLogger = require("fluent-logger").createFluentSender("myapp", {
+  host: "localhost",
   port: 24224,
-  timeout: 3.0,
+  timeout: 3.0
 });
 
 const report = (err, req) => {
   const payload = {
     serviceContext: {
-      service: 'myapp',
+      service: "myapp"
     },
     message: err.stack,
     context: {
       httpRequest: {
         url: req.originalUrl,
         method: req.method,
-        referrer: req.header('Referer'),
-        userAgent: req.header('User-Agent'),
+        referrer: req.header("Referer"),
+        userAgent: req.header("User-Agent"),
         remoteIp: req.ip,
-        responseStatusCode: 500,
-      },
-    },
+        responseStatusCode: 500
+      }
+    }
   };
-  structuredLogger.emit('errors', payload);
+  structuredLogger.emit("errors", payload);
 };
 
 // Handle errors (the following uses the Express framework)
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   report(err, req);
-  res.status(500).send(err.response || 'Something broke!');
+  res.status(500).send(err.response || "Something broke!");
 });
 // [END fluent]
 

@@ -73,7 +73,7 @@
  *   Optional. The time the event described by the log entry occurred.
  *   This time is used to compute the log entry's age and to enforce
  *   the logs retention period. If this field is omitted in a new log
- *   entry, then Stackdriver Logging assigns it the current time.
+ *   entry, then Logging assigns it the current time.
  *   Timestamps have nanosecond accuracy, but trailing zeros in the fractional
  *   seconds might be omitted when the timestamp is displayed.
  *
@@ -88,7 +88,7 @@
  * google.protobuf.Timestamp}
  *
  * @property {Object} receiveTimestamp
- *   Output only. The time the log entry was received by Stackdriver Logging.
+ *   Output only. The time the log entry was received by Logging.
  *
  *   This object should have the same structure as [Timestamp]{@link
  * google.protobuf.Timestamp}
@@ -102,9 +102,9 @@
  *
  * @property {string} insertId
  *   Optional. A unique identifier for the log entry. If you provide a value,
- *   then Stackdriver Logging considers other log entries in the same project,
+ *   then Logging considers other log entries in the same project,
  *   with the same `timestamp`, and with the same `insert_id` to be duplicates
- *   which can be removed.  If omitted in new log entries, then Stackdriver
+ *   which can be removed.  If omitted in new log entries, then
  *   Logging assigns its own unique identifier. The `insert_id` is also used
  *   to order log entries that have the same `timestamp` value.
  *
@@ -141,10 +141,18 @@
  *   `projects/my-projectid/traces/06796866738c859f2f19b7cfb3214824`
  *
  * @property {string} spanId
- *   Optional. The span ID within the trace associated with the log entry. For
- *   Stackdriver Trace spans, this is the same format that the Stackdriver Trace
+ *   Optional. The span ID within the trace associated with the log entry.
+ *   For Trace spans, this is the same format that the Trace
  *   API v2 uses: a 16-character hexadecimal encoding of an 8-byte array, such
  *   as <code>"000000000000004a"</code>.
+ *
+ * @property {boolean} traceSampled
+ *   Optional. The sampling decision of the trace associated with the log entry.
+ *   True means that the trace resource name in the `trace` field was sampled
+ *   for storage in a trace backend. False means that the trace was not sampled
+ *   for storage when this log entry was written, or the sampling decision was
+ *   unknown at the time. A non-sampled `trace` value is still useful as a
+ *   request correlation identifier. The default is False.
  *
  * @property {Object} sourceLocation
  *   Optional. Source code location information associated with the log entry,
