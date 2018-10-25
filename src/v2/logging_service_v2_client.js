@@ -49,10 +49,8 @@ class LoggingServiceV2Client {
    *     Developer's Console, e.g. 'grape-spaceship-123'. We will also check
    *     the environment variable GCLOUD_PROJECT for your project ID. If your
    *     app is running in an environment which supports
-   *     {@link
-   * https://developers.google.com/identity/protocols/application-default-credentials
-   * Application Default Credentials}, your project ID will be detected
-   * automatically.
+   *     {@link https://developers.google.com/identity/protocols/application-default-credentials Application Default Credentials},
+   *     your project ID will be detected automatically.
    * @param {function} [options.promise] - Custom promise module to use instead
    *     of native Promises.
    * @param {string} [options.servicePath] - The domain name of the
@@ -63,12 +61,13 @@ class LoggingServiceV2Client {
 
     // Ensure that options include the service address and port.
     opts = Object.assign(
-        {
-          clientConfig: {},
-          port: this.constructor.port,
-          servicePath: this.constructor.servicePath,
-        },
-        opts);
+      {
+        clientConfig: {},
+        port: this.constructor.port,
+        servicePath: this.constructor.servicePath,
+      },
+      opts
+    );
 
     // Create a `gaxGrpc` object, with any grpc-specific options
     // sent to the client.
@@ -91,49 +90,74 @@ class LoggingServiceV2Client {
 
     // Load the applicable protos.
     const protos = merge(
-        {},
-        gaxGrpc.loadProto(
-            path.join(__dirname, '..', '..', 'protos'),
-            'google/logging/v2/logging.proto'));
+      {},
+      gaxGrpc.loadProto(
+        path.join(__dirname, '..', '..', 'protos'),
+        'google/logging/v2/logging.proto'
+      )
+    );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      logPathTemplate: new gax.PathTemplate('projects/{project}/logs/{log}'),
-      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      logPathTemplate: new gax.PathTemplate(
+        'projects/{project}/logs/{log}'
+      ),
+      projectPathTemplate: new gax.PathTemplate(
+        'projects/{project}'
+      ),
     };
 
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
-      listLogEntries:
-          new gax.PageDescriptor('pageToken', 'nextPageToken', 'entries'),
+      listLogEntries: new gax.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'entries'
+      ),
       listMonitoredResourceDescriptors: new gax.PageDescriptor(
-          'pageToken', 'nextPageToken', 'resourceDescriptors'),
-      listLogs:
-          new gax.PageDescriptor('pageToken', 'nextPageToken', 'logNames'),
+        'pageToken',
+        'nextPageToken',
+        'resourceDescriptors'
+      ),
+      listLogs: new gax.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'logNames'
+      ),
     };
     let protoFilesRoot = new gax.GoogleProtoFilesRoot();
     protoFilesRoot = protobuf.loadSync(
-        path.join(
-            __dirname, '..', '..', 'protos', 'google/logging/v2/logging.proto'),
-        protoFilesRoot);
+      path.join(__dirname, '..', '..', 'protos', 'google/logging/v2/logging.proto'),
+      protoFilesRoot
+    );
+
 
     // Some methods on this API support automatically batching
     // requests; denote this.
     this._descriptors.batching = {
       writeLogEntries: new gax.BundleDescriptor(
-          'entries', ['logName', 'resource', 'labels'], null,
-          gax.createByteLengthFunction(
-              protoFilesRoot.lookup('google.logging.v2.LogEntry'))),
+        'entries',
+        [
+          'logName',
+          'resource',
+          'labels',
+        ],
+        null,
+        gax.createByteLengthFunction(protoFilesRoot.lookup('google.logging.v2.LogEntry'))
+      ),
     };
 
     // Put together the default options sent with requests.
     const defaults = gaxGrpc.constructSettings(
-        'google.logging.v2.LoggingServiceV2', gapicConfig, opts.clientConfig,
-        {'x-goog-api-client': clientHeader.join(' ')});
+      'google.logging.v2.LoggingServiceV2',
+      gapicConfig,
+      opts.clientConfig,
+      {'x-goog-api-client': clientHeader.join(' ')}
+    );
 
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
@@ -142,8 +166,10 @@ class LoggingServiceV2Client {
 
     // Put together the "service stub" for
     // google.logging.v2.LoggingServiceV2.
-    const loggingServiceV2Stub =
-        gaxGrpc.createStub(protos.google.logging.v2.LoggingServiceV2, opts);
+    const loggingServiceV2Stub = gaxGrpc.createStub(
+      protos.google.logging.v2.LoggingServiceV2,
+      opts
+    );
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
@@ -156,13 +182,16 @@ class LoggingServiceV2Client {
     ];
     for (const methodName of loggingServiceV2StubMethods) {
       this._innerApiCalls[methodName] = gax.createApiCall(
-          loggingServiceV2Stub.then(stub => function() {
-            const args = Array.prototype.slice.call(arguments, 0);
-            return stub[methodName].apply(stub, args);
-          }),
-          defaults[methodName],
-          this._descriptors.page[methodName] ||
-              this._descriptors.batching[methodName]);
+        loggingServiceV2Stub.then(
+          stub =>
+            function() {
+              const args = Array.prototype.slice.call(arguments, 0);
+              return stub[methodName].apply(stub, args);
+            }
+        ),
+        defaults[methodName],
+        this._descriptors.page[methodName] || this._descriptors.batching[methodName]
+      );
     }
   }
 
@@ -229,19 +258,16 @@ class LoggingServiceV2Client {
    *   For more information about log names, see
    *   LogEntry.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -263,11 +289,10 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * Writes log entries to Stackdriver Logging. This API method is the
-   * only way to send log entries to Stackdriver Logging. This method
-   * is used, directly or indirectly, by the Stackdriver Logging agent
-   * (fluentd) and all logging libraries configured to use Stackdriver
-   * Logging.
+   * Writes log entries to Logging. This API method is the
+   * only way to send log entries to Logging. This method
+   * is used, directly or indirectly, by the Logging agent
+   * (fluentd) and all logging libraries configured to use Logging.
    * A single request may contain log entries for a maximum of 1000
    * different resources (projects, organizations, billing accounts or
    * folders)
@@ -275,33 +300,31 @@ class LoggingServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {Object[]} request.entries
-   *   Required. The log entries to send to Stackdriver Logging. The order of
-   * log entries in this list does not matter. Values supplied in this method's
+   *   Required. The log entries to send to Logging. The order of log
+   *   entries in this list does not matter. Values supplied in this method's
    *   `log_name`, `resource`, and `labels` fields are copied into those log
    *   entries in this list that do not include values for their corresponding
    *   fields. For more information, see the
    *   LogEntry type.
    *
    *   If the `timestamp` or `insert_id` fields are missing in log entries, then
-   *   this method supplies the current time or a unique identifier,
-   * respectively. The supplied values are chosen so that, among the log entries
-   * that did not supply their own values, the entries earlier in the list will
-   * sort before the entries later in the list. See the `entries.list` method.
+   *   this method supplies the current time or a unique identifier, respectively.
+   *   The supplied values are chosen so that, among the log entries that did not
+   *   supply their own values, the entries earlier in the list will sort before
+   *   the entries later in the list. See the `entries.list` method.
    *
    *   Log entries with timestamps that are more than the
-   *   [logs retention period](https://cloud.google.com/logging/quota-policy) in
-   * the past or more than 24 hours in the future will not be available when
-   * calling `entries.list`. However, those log entries can still be exported
-   * with
+   *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
+   *   24 hours in the future will not be available when calling `entries.list`.
+   *   However, those log entries can still be exported with
    *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
    *
    *   To improve throughput and to avoid exceeding the
-   *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to
-   * `entries.write`, you should try to include several log entries in this
-   * list, rather than calling this method for each individual log entry.
+   *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
+   *   you should try to include several log entries in this list,
+   *   rather than calling this method for each individual log entry.
    *
-   *   This object should have the same structure as [LogEntry]{@link
-   * google.logging.v2.LogEntry}
+   *   This object should have the same structure as [LogEntry]{@link google.logging.v2.LogEntry}
    * @param {string} [request.logName]
    *   Optional. A default log resource name that is assigned to all log entries
    *   in `entries` that do not specify a value for `log_name`:
@@ -311,11 +334,15 @@ class LoggingServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
    *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
    *
-   *   `[LOG_ID]` must be URL-encoded. For example,
-   *   `"projects/my-project-id/logs/syslog"` or
-   *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-   *   For more information about log names, see
-   *   LogEntry.
+   *   `[LOG_ID]` must be URL-encoded. For example:
+   *
+   *       "projects/my-project-id/logs/syslog"
+   *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+   *
+   *   The permission <code>logging.logEntries.create</code> is needed on each
+   *   project, organization, billing account, or folder that is receiving
+   *   new log entries, whether the resource is specified in
+   *   <code>logName</code> or in an individual log entry.
    * @param {Object} [request.resource]
    *   Optional. A default monitored resource object that is assigned to all log
    *   entries in `entries` that do not specify a value for `resource`. Example:
@@ -326,13 +353,12 @@ class LoggingServiceV2Client {
    *
    *   See LogEntry.
    *
-   *   This object should have the same structure as [MonitoredResource]{@link
-   * google.api.MonitoredResource}
+   *   This object should have the same structure as [MonitoredResource]{@link google.api.MonitoredResource}
    * @param {Object.<string, string>} [request.labels]
    *   Optional. Default labels that are added to the `labels` field of all log
-   *   entries in `entries`. If a log entry already has a label with the same
-   * key as a label in this parameter, then the log entry's label is not
-   * changed. See LogEntry.
+   *   entries in `entries`. If a log entry already has a label with the same key
+   *   as a label in this parameter, then the log entry's label is not changed.
+   *   See LogEntry.
    * @param {boolean} [request.partialSuccess]
    *   Optional. Whether valid entries should be written even if some other
    *   entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
@@ -344,24 +370,19 @@ class LoggingServiceV2Client {
    *   entries won't be persisted nor exported. Useful for checking whether the
    *   logging API endpoints are working properly before sending valuable data.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
-   *   The second parameter to the callback is an object representing
-   * [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
+   *   The second parameter to the callback is an object representing [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing
-   * [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   *   The first element of the array is an object representing [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -389,7 +410,7 @@ class LoggingServiceV2Client {
 
   /**
    * Lists log entries.  Use this method to retrieve log entries from
-   * Stackdriver Logging.  For ways to export log entries, see
+   * Logging.  For ways to export log entries, see
    * [Exporting Logs](https://cloud.google.com/logging/docs/export).
    *
    * @param {Object} request
@@ -405,27 +426,26 @@ class LoggingServiceV2Client {
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string[]} [request.projectIds]
-   *   Deprecated. Use `resource_names` instead.  One or more project
-   * identifiers or project numbers from which to retrieve log entries. Example:
+   *   Deprecated. Use `resource_names` instead.  One or more project identifiers
+   *   or project numbers from which to retrieve log entries.  Example:
    *   `"my-project-1A"`. If present, these project identifiers are converted to
    *   resource name format and added to the list of resources in
    *   `resource_names`.
    * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See
-   * [Advanced Logs
-   * Filters](https://cloud.google.com/logging/docs/view/advanced_filters). Only
-   * log entries that match the filter are returned.  An empty filter matches
-   * all log entries in the resources listed in `resource_names`. Referencing a
-   * parent resource that is not listed in `resource_names` will cause the
-   * filter to return no results. The maximum length of the filter is 20000
-   * characters.
+   *   Optional. A filter that chooses which log entries to return.  See [Advanced
+   *   Logs Filters](https://cloud.google.com/logging/docs/view/advanced_filters).  Only log entries that
+   *   match the filter are returned.  An empty filter matches all log entries in
+   *   the resources listed in `resource_names`. Referencing a parent resource
+   *   that is not listed in `resource_names` will cause the filter to return no
+   *   results.
+   *   The maximum length of the filter is 20000 characters.
    * @param {string} [request.orderBy]
-   *   Optional. How the results should be sorted.  Presently, the only
-   * permitted values are `"timestamp asc"` (default) and `"timestamp desc"`.
-   * The first option returns entries in order of increasing values of
-   *   `LogEntry.timestamp` (oldest first), and the second option returns
-   * entries in order of decreasing timestamps (newest first).  Entries with
-   * equal timestamps are returned in order of their `insert_id` values.
+   *   Optional. How the results should be sorted.  Presently, the only permitted
+   *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+   *   option returns entries in order of increasing values of
+   *   `LogEntry.timestamp` (oldest first), and the second option returns entries
+   *   in order of decreasing timestamps (newest first).  Entries with equal
+   *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
@@ -433,39 +453,31 @@ class LoggingServiceV2Client {
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
-   *   The second parameter to the callback is Array of [LogEntry]{@link
-   * google.logging.v2.LogEntry}.
+   *   The second parameter to the callback is Array of [LogEntry]{@link google.logging.v2.LogEntry}.
    *
-   *   When autoPaginate: false is specified through options, it contains the
-   * result in a single response. If the response indicates the next page
-   * exists, the third parameter is set to be used for the next request object.
-   * The fourth parameter keeps the raw response object of an object
-   * representing [ListLogEntriesResponse]{@link
-   * google.logging.v2.ListLogEntriesResponse}.
+   *   When autoPaginate: false is specified through options, it contains the result
+   *   in a single response. If the response indicates the next page exists, the third
+   *   parameter is set to be used for the next request object. The fourth parameter keeps
+   *   the raw response object of an object representing [ListLogEntriesResponse]{@link google.logging.v2.ListLogEntriesResponse}.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogEntry]{@link
-   * google.logging.v2.LogEntry}.
+   *   The first element of the array is Array of [LogEntry]{@link google.logging.v2.LogEntry}.
    *
-   *   When autoPaginate: false is specified through options, the array has
-   * three elements. The first element is Array of [LogEntry]{@link
-   * google.logging.v2.LogEntry} in a single response. The second element is the
-   * next request object if the response indicates the next page exists, or
-   * null. The third element is an object representing
-   * [ListLogEntriesResponse]{@link google.logging.v2.ListLogEntriesResponse}.
+   *   When autoPaginate: false is specified through options, the array has three elements.
+   *   The first element is Array of [LogEntry]{@link google.logging.v2.LogEntry} in a single response.
+   *   The second element is the next request object if the response
+   *   indicates the next page exists, or null. The third element is
+   *   an object representing [ListLogEntriesResponse]{@link google.logging.v2.ListLogEntriesResponse}.
    *
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -525,8 +537,8 @@ class LoggingServiceV2Client {
    * Equivalent to {@link listLogEntries}, but returns a NodeJS Stream object.
    *
    * This fetches the paged responses for {@link listLogEntries} continuously
-   * and invokes the callback registered for 'data' event for each element in
-   * the responses.
+   * and invokes the callback registered for 'data' event for each element in the
+   * responses.
    *
    * The returned object has 'end' method when no more elements are required.
    *
@@ -547,27 +559,26 @@ class LoggingServiceV2Client {
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string[]} [request.projectIds]
-   *   Deprecated. Use `resource_names` instead.  One or more project
-   * identifiers or project numbers from which to retrieve log entries. Example:
+   *   Deprecated. Use `resource_names` instead.  One or more project identifiers
+   *   or project numbers from which to retrieve log entries.  Example:
    *   `"my-project-1A"`. If present, these project identifiers are converted to
    *   resource name format and added to the list of resources in
    *   `resource_names`.
    * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See
-   * [Advanced Logs
-   * Filters](https://cloud.google.com/logging/docs/view/advanced_filters). Only
-   * log entries that match the filter are returned.  An empty filter matches
-   * all log entries in the resources listed in `resource_names`. Referencing a
-   * parent resource that is not listed in `resource_names` will cause the
-   * filter to return no results. The maximum length of the filter is 20000
-   * characters.
+   *   Optional. A filter that chooses which log entries to return.  See [Advanced
+   *   Logs Filters](https://cloud.google.com/logging/docs/view/advanced_filters).  Only log entries that
+   *   match the filter are returned.  An empty filter matches all log entries in
+   *   the resources listed in `resource_names`. Referencing a parent resource
+   *   that is not listed in `resource_names` will cause the filter to return no
+   *   results.
+   *   The maximum length of the filter is 20000 characters.
    * @param {string} [request.orderBy]
-   *   Optional. How the results should be sorted.  Presently, the only
-   * permitted values are `"timestamp asc"` (default) and `"timestamp desc"`.
-   * The first option returns entries in order of increasing values of
-   *   `LogEntry.timestamp` (oldest first), and the second option returns
-   * entries in order of decreasing timestamps (newest first).  Entries with
-   * equal timestamps are returned in order of their `insert_id` values.
+   *   Optional. How the results should be sorted.  Presently, the only permitted
+   *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+   *   option returns entries in order of increasing values of
+   *   `LogEntry.timestamp` (oldest first), and the second option returns entries
+   *   in order of decreasing timestamps (newest first).  Entries with equal
+   *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
    *   The maximum number of resources contained in the underlying API
    *   response. If page streaming is performed per-resource, this
@@ -575,17 +586,14 @@ class LoggingServiceV2Client {
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
-   *   An object stream which emits an object representing [LogEntry]{@link
-   * google.logging.v2.LogEntry} on 'data' event.
+   *   An object stream which emits an object representing [LogEntry]{@link google.logging.v2.LogEntry} on 'data' event.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -603,12 +611,14 @@ class LoggingServiceV2Client {
     options = options || {};
 
     return this._descriptors.page.listLogEntries.createStream(
-        this._innerApiCalls.listLogEntries, request, options);
-  }
+      this._innerApiCalls.listLogEntries,
+      request,
+      options
+    );
+  };
 
   /**
-   * Lists the descriptors for monitored resource types used by Stackdriver
-   * Logging.
+   * Lists the descriptors for monitored resource types used by Logging.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -619,42 +629,31 @@ class LoggingServiceV2Client {
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
-   *   The second parameter to the callback is Array of
-   * [MonitoredResourceDescriptor]{@link
-   * google.api.MonitoredResourceDescriptor}.
+   *   The second parameter to the callback is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}.
    *
-   *   When autoPaginate: false is specified through options, it contains the
-   * result in a single response. If the response indicates the next page
-   * exists, the third parameter is set to be used for the next request object.
-   * The fourth parameter keeps the raw response object of an object
-   * representing [ListMonitoredResourceDescriptorsResponse]{@link
-   * google.logging.v2.ListMonitoredResourceDescriptorsResponse}.
+   *   When autoPaginate: false is specified through options, it contains the result
+   *   in a single response. If the response indicates the next page exists, the third
+   *   parameter is set to be used for the next request object. The fourth parameter keeps
+   *   the raw response object of an object representing [ListMonitoredResourceDescriptorsResponse]{@link google.logging.v2.ListMonitoredResourceDescriptorsResponse}.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of
-   * [MonitoredResourceDescriptor]{@link
-   * google.api.MonitoredResourceDescriptor}.
+   *   The first element of the array is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}.
    *
-   *   When autoPaginate: false is specified through options, the array has
-   * three elements. The first element is Array of
-   * [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}
-   * in a single response. The second element is the next request object if the
-   * response indicates the next page exists, or null. The third element is an
-   * object representing [ListMonitoredResourceDescriptorsResponse]{@link
-   * google.logging.v2.ListMonitoredResourceDescriptorsResponse}.
+   *   When autoPaginate: false is specified through options, the array has three elements.
+   *   The first element is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} in a single response.
+   *   The second element is the next request object if the response
+   *   indicates the next page exists, or null. The third element is
+   *   an object representing [ListMonitoredResourceDescriptorsResponse]{@link google.logging.v2.ListMonitoredResourceDescriptorsResponse}.
    *
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -687,8 +686,7 @@ class LoggingServiceV2Client {
    *   }
    *   if (nextRequest) {
    *     // Fetch the next page.
-   *     return client.listMonitoredResourceDescriptors(nextRequest,
-   * options).then(callback);
+   *     return client.listMonitoredResourceDescriptors(nextRequest, options).then(callback);
    *   }
    * }
    * client.listMonitoredResourceDescriptors({}, options)
@@ -704,17 +702,15 @@ class LoggingServiceV2Client {
     }
     options = options || {};
 
-    return this._innerApiCalls.listMonitoredResourceDescriptors(
-        request, options, callback);
+    return this._innerApiCalls.listMonitoredResourceDescriptors(request, options, callback);
   }
 
   /**
-   * Equivalent to {@link listMonitoredResourceDescriptors}, but returns a
-   * NodeJS Stream object.
+   * Equivalent to {@link listMonitoredResourceDescriptors}, but returns a NodeJS Stream object.
    *
-   * This fetches the paged responses for {@link
-   * listMonitoredResourceDescriptors} continuously and invokes the callback
-   * registered for 'data' event for each element in the responses.
+   * This fetches the paged responses for {@link listMonitoredResourceDescriptors} continuously
+   * and invokes the callback registered for 'data' event for each element in the
+   * responses.
    *
    * The returned object has 'end' method when no more elements are required.
    *
@@ -731,18 +727,14 @@ class LoggingServiceV2Client {
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
-   *   An object stream which emits an object representing
-   * [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}
-   * on 'data' event.
+   *   An object stream which emits an object representing [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} on 'data' event.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -760,8 +752,11 @@ class LoggingServiceV2Client {
     options = options || {};
 
     return this._descriptors.page.listMonitoredResourceDescriptors.createStream(
-        this._innerApiCalls.listMonitoredResourceDescriptors, request, options);
-  }
+      this._innerApiCalls.listMonitoredResourceDescriptors,
+      request,
+      options
+    );
+  };
 
   /**
    * Lists the logs in projects, organizations, folders, or billing accounts.
@@ -783,36 +778,31 @@ class LoggingServiceV2Client {
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of string.
    *
-   *   When autoPaginate: false is specified through options, it contains the
-   * result in a single response. If the response indicates the next page
-   * exists, the third parameter is set to be used for the next request object.
-   * The fourth parameter keeps the raw response object of an object
-   * representing [ListLogsResponse]{@link google.logging.v2.ListLogsResponse}.
+   *   When autoPaginate: false is specified through options, it contains the result
+   *   in a single response. If the response indicates the next page exists, the third
+   *   parameter is set to be used for the next request object. The fourth parameter keeps
+   *   the raw response object of an object representing [ListLogsResponse]{@link google.logging.v2.ListLogsResponse}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is Array of string.
    *
-   *   When autoPaginate: false is specified through options, the array has
-   * three elements. The first element is Array of string in a single response.
+   *   When autoPaginate: false is specified through options, the array has three elements.
+   *   The first element is Array of string in a single response.
    *   The second element is the next request object if the response
    *   indicates the next page exists, or null. The third element is
-   *   an object representing [ListLogsResponse]{@link
-   * google.logging.v2.ListLogsResponse}.
+   *   an object representing [ListLogsResponse]{@link google.logging.v2.ListLogsResponse}.
    *
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -872,8 +862,8 @@ class LoggingServiceV2Client {
    * Equivalent to {@link listLogs}, but returns a NodeJS Stream object.
    *
    * This fetches the paged responses for {@link listLogs} continuously
-   * and invokes the callback registered for 'data' event for each element in
-   * the responses.
+   * and invokes the callback registered for 'data' event for each element in the
+   * responses.
    *
    * The returned object has 'end' method when no more elements are required.
    *
@@ -897,16 +887,14 @@ class LoggingServiceV2Client {
    *   performed per-page, this determines the maximum number of
    *   resources in a page.
    * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the details.
    * @returns {Stream}
    *   An object stream which emits a string on 'data' event.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -924,8 +912,11 @@ class LoggingServiceV2Client {
     options = options || {};
 
     return this._descriptors.page.listLogs.createStream(
-        this._innerApiCalls.listLogs, request, options);
-  }
+      this._innerApiCalls.listLogs,
+      request,
+      options
+    );
+  };
 
   // --------------------
   // -- Path templates --
@@ -965,7 +956,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromLogName(logName) {
-    return this._pathTemplates.logPathTemplate.match(logName).project;
+    return this._pathTemplates.logPathTemplate
+      .match(logName)
+      .project;
   }
 
   /**
@@ -976,7 +969,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the log.
    */
   matchLogFromLogName(logName) {
-    return this._pathTemplates.logPathTemplate.match(logName).log;
+    return this._pathTemplates.logPathTemplate
+      .match(logName)
+      .log;
   }
 
   /**
@@ -987,8 +982,11 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 }
+
 
 module.exports = LoggingServiceV2Client;
