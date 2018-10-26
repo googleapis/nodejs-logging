@@ -15,12 +15,12 @@
  */
 
 // Types-only import.
-import * as express from 'express';
+import {Request, Response} from 'express';
 
 import {StackdriverHttpRequest} from '../../http-request';
 
 export function makeHttpRequestData(
-    req: express.Request, res: express.Response,
+    req: Request, res: Response,
     latencyMilliseconds: number): StackdriverHttpRequest {
   return {
     status: res.statusCode,
