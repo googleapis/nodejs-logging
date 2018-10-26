@@ -16,7 +16,7 @@
 
 import * as assert from 'assert';
 // Types-only import.
-import * as express from 'express';
+import {Request, Response} from 'express';
 import {makeHttpRequestData} from '../../../src/middleware/express/make-http-request';
 
 describe('middleware/express/make-http-request', () => {
@@ -25,18 +25,16 @@ describe('middleware/express/make-http-request', () => {
     const fakeResponse = {};
 
     const h1 = makeHttpRequestData(
-        fakeRequest as express.Request, fakeResponse as express.Response, 1003);
+        fakeRequest as Request, fakeResponse as Response, 1003);
     assert.deepStrictEqual(h1.latency, {seconds: 1, nanos: 3e6});
 
     const h2 = makeHttpRequestData(
-        fakeRequest as express.Request, fakeResponse as express.Response,
-        9003.1);
+        fakeRequest as Request, fakeResponse as Response, 9003.1);
     assert.deepStrictEqual(h2.latency, {seconds: 9, nanos: 3.1e6});
 
     // Make sure we nanos is uint32.
     const h3 = makeHttpRequestData(
-        fakeRequest as express.Request, fakeResponse as express.Response,
-        1.0000000001);
+        fakeRequest as Request, fakeResponse as Response, 1.0000000001);
     assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
   });
 });

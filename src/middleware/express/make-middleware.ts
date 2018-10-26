@@ -17,12 +17,12 @@
 import onFinished = require('on-finished');
 import {getOrInjectContext, makeHeaderWrapper} from '../context';
 // Types-only import.
-import * as express from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {makeHttpRequestData} from './make-http-request';
 
 const CHILD_LOG_NAME_SUFFIX = 'applog';
 
-export interface AnnotatedRequestType<LoggerType> extends express.Request {
+export interface AnnotatedRequestType<LoggerType> extends Request {
   log: LoggerType;
 }
 
@@ -30,8 +30,7 @@ export function makeMiddleware<LoggerType>(
     projectId: string,
     emitRequestLog: (httpRequest: HttpRequest, trace: string) => void,
     makeChildLogger: (childSuffix: string, trace: string) => LoggerType) {
-  return (req: express.Request, res: express.Response,
-          next: express.NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 
