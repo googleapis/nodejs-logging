@@ -121,11 +121,18 @@ class LoggingServiceV2Client {
             __dirname, '..', '..', 'protos', 'google/logging/v2/logging.proto'),
         protoFilesRoot);
 
+
     // Some methods on this API support automatically batching
     // requests; denote this.
     this._descriptors.batching = {
       writeLogEntries: new gax.BundleDescriptor(
-          'entries', ['logName', 'resource', 'labels'], null,
+          'entries',
+          [
+            'logName',
+            'resource',
+            'labels',
+          ],
+          null,
           gax.createByteLengthFunction(
               protoFilesRoot.lookup('google.logging.v2.LogEntry'))),
     };
@@ -241,7 +248,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -263,11 +270,10 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * Writes log entries to Stackdriver Logging. This API method is the
-   * only way to send log entries to Stackdriver Logging. This method
-   * is used, directly or indirectly, by the Stackdriver Logging agent
-   * (fluentd) and all logging libraries configured to use Stackdriver
-   * Logging.
+   * Writes log entries to Logging. This API method is the
+   * only way to send log entries to Logging. This method
+   * is used, directly or indirectly, by the Logging agent
+   * (fluentd) and all logging libraries configured to use Logging.
    * A single request may contain log entries for a maximum of 1000
    * different resources (projects, organizations, billing accounts or
    * folders)
@@ -275,8 +281,8 @@ class LoggingServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {Object[]} request.entries
-   *   Required. The log entries to send to Stackdriver Logging. The order of
-   * log entries in this list does not matter. Values supplied in this method's
+   *   Required. The log entries to send to Logging. The order of log
+   *   entries in this list does not matter. Values supplied in this method's
    *   `log_name`, `resource`, and `labels` fields are copied into those log
    *   entries in this list that do not include values for their corresponding
    *   fields. For more information, see the
@@ -311,11 +317,15 @@ class LoggingServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
    *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
    *
-   *   `[LOG_ID]` must be URL-encoded. For example,
-   *   `"projects/my-project-id/logs/syslog"` or
-   *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-   *   For more information about log names, see
-   *   LogEntry.
+   *   `[LOG_ID]` must be URL-encoded. For example:
+   *
+   *       "projects/my-project-id/logs/syslog"
+   *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+   *
+   *   The permission <code>logging.logEntries.create</code> is needed on each
+   *   project, organization, billing account, or folder that is receiving
+   *   new log entries, whether the resource is specified in
+   *   <code>logName</code> or in an individual log entry.
    * @param {Object} [request.resource]
    *   Optional. A default monitored resource object that is assigned to all log
    *   entries in `entries` that do not specify a value for `resource`. Example:
@@ -361,7 +371,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -389,7 +399,7 @@ class LoggingServiceV2Client {
 
   /**
    * Lists log entries.  Use this method to retrieve log entries from
-   * Stackdriver Logging.  For ways to export log entries, see
+   * Logging.  For ways to export log entries, see
    * [Exporting Logs](https://cloud.google.com/logging/docs/export).
    *
    * @param {Object} request
@@ -465,7 +475,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -585,7 +595,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -604,11 +614,10 @@ class LoggingServiceV2Client {
 
     return this._descriptors.page.listLogEntries.createStream(
         this._innerApiCalls.listLogEntries, request, options);
-  }
+  };
 
   /**
-   * Lists the descriptors for monitored resource types used by Stackdriver
-   * Logging.
+   * Lists the descriptors for monitored resource types used by Logging.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -654,7 +663,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -742,7 +751,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -761,7 +770,7 @@ class LoggingServiceV2Client {
 
     return this._descriptors.page.listMonitoredResourceDescriptors.createStream(
         this._innerApiCalls.listMonitoredResourceDescriptors, request, options);
-  }
+  };
 
   /**
    * Lists the logs in projects, organizations, folders, or billing accounts.
@@ -812,7 +821,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -906,7 +915,7 @@ class LoggingServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.LoggingServiceV2Client({
    *   // optional auth parameters.
@@ -925,7 +934,7 @@ class LoggingServiceV2Client {
 
     return this._descriptors.page.listLogs.createStream(
         this._innerApiCalls.listLogs, request, options);
-  }
+  };
 
   // --------------------
   // -- Path templates --
@@ -990,5 +999,6 @@ class LoggingServiceV2Client {
     return this._pathTemplates.projectPathTemplate.match(projectName).project;
   }
 }
+
 
 module.exports = LoggingServiceV2Client;

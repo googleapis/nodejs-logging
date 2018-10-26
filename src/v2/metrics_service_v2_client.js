@@ -235,7 +235,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -327,7 +327,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -346,7 +346,7 @@ class MetricsServiceV2Client {
 
     return this._descriptors.page.listLogMetrics.createStream(
         this._innerApiCalls.listLogMetrics, request, options);
-  }
+  };
 
   /**
    * Gets a logs-based metric.
@@ -374,7 +374,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -434,7 +434,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -500,7 +500,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -553,7 +553,7 @@ class MetricsServiceV2Client {
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -637,5 +637,6 @@ class MetricsServiceV2Client {
     return this._pathTemplates.metricPathTemplate.match(metricName).metric;
   }
 }
+
 
 module.exports = MetricsServiceV2Client;

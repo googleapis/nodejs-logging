@@ -22,7 +22,6 @@ import subprocess
 logging.basicConfig(level=logging.DEBUG)
 
 gapic = gcp.GAPICGenerator()
-common_templates = gcp.CommonTemplates()
 
 # tasks has two product names, and a poorly named artman yaml
 v2_library = gapic.node_library(
@@ -44,17 +43,7 @@ s.replace(
     "../../../package.json",
 )
 
-s.replace(
-    [
-        "src/v2/config_service_v2_client.js",
-        "src/v2/logging_service_v2_client.js",
-        "src/v2/metrics_service_v2_client.js",
-    ],
-    "(\*\s*)const logging = require\('@google-cloud/logging'\);",
-    "\1const logging = require('@google-cloud/logging');",
-)
-
-
+common_templates = gcp.CommonTemplates()
 templates = common_templates.node_library()
 s.copy(templates)
 
@@ -62,5 +51,4 @@ s.copy(templates)
 Node.js specific cleanup
 """
 subprocess.run(["npm", "install"])
-subprocess.run(["npm", "run", "prettier"])
-subprocess.run(["npm", "run", "lint"])
+subprocess.run(["npm", "run", "fix"])
