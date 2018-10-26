@@ -32,5 +32,11 @@ describe('middleware/express/make-http-request', () => {
         fakeRequest as express.Request, fakeResponse as express.Response,
         9003.1);
     assert.deepStrictEqual(h2.latency, {seconds: 9, nanos: 3.1e6});
+
+    // Make sure we nanos is uint32.
+    const h3 = makeHttpRequestData(
+        fakeRequest as express.Request, fakeResponse as express.Response,
+        1.0000000001);
+    assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
   });
 });
