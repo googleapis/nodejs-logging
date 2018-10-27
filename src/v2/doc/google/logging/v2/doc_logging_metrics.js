@@ -45,9 +45,9 @@
  *   Optional. A description of this metric, which is used in documentation.
  *
  * @property {string} filter
- *   Required. An [advanced logs
- * filter](https://cloud.google.com/logging/docs/view/advanced_filters) which is
- * used to match log entries. Example:
+ *   Required. An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters)
+ *   which is used to match log entries.
+ *   Example:
  *
  *       "resource.type=gae_app AND severity>=ERROR"
  *
@@ -76,8 +76,7 @@
  *   `metric_descriptor`, but existing labels cannot be modified except for
  *   their description.
  *
- *   This object should have the same structure as [MetricDescriptor]{@link
- * google.api.MetricDescriptor}
+ *   This object should have the same structure as [MetricDescriptor]{@link google.api.MetricDescriptor}
  *
  * @property {string} valueExtractor
  *   Optional. A `value_extractor` is required when using a distribution
@@ -121,15 +120,13 @@
  *   using a DISTRIBUTION value type and it describes the bucket boundaries
  *   used to create a histogram of the extracted values.
  *
- *   This object should have the same structure as [BucketOptions]{@link
- * google.api.BucketOptions}
+ *   This object should have the same structure as [BucketOptions]{@link google.api.BucketOptions}
  *
  * @property {number} version
  *   Deprecated. The API version that created or updated this metric.
  *   The v2 format is used by default and cannot be changed.
  *
- *   The number should be among the values of [ApiVersion]{@link
- * google.logging.v2.ApiVersion}
+ *   The number should be among the values of [ApiVersion]{@link google.logging.v2.ApiVersion}
  *
  * @typedef LogMetric
  * @memberof google.logging.v2
@@ -139,7 +136,7 @@ const LogMetric = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
-   * Stackdriver Logging API version.
+   * Logging API version.
    *
    * @enum {number}
    * @memberof google.logging.v2
@@ -147,12 +144,12 @@ const LogMetric = {
   ApiVersion: {
 
     /**
-     * Stackdriver Logging API v2.
+     * Logging API v2.
      */
     V2: 0,
 
     /**
-     * Stackdriver Logging API v1.
+     * Logging API v1.
      */
     V1: 1
   }
@@ -182,7 +179,7 @@ const LogMetric = {
  * @see [google.logging.v2.ListLogMetricsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
 const ListLogMetricsRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -191,8 +188,7 @@ const ListLogMetricsRequest = {
  * @property {Object[]} metrics
  *   A list of logs-based metrics.
  *
- *   This object should have the same structure as [LogMetric]{@link
- * google.logging.v2.LogMetric}
+ *   This object should have the same structure as [LogMetric]{@link google.logging.v2.LogMetric}
  *
  * @property {string} nextPageToken
  *   If there might be more results than appear in this response, then
@@ -204,7 +200,7 @@ const ListLogMetricsRequest = {
  * @see [google.logging.v2.ListLogMetricsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
 const ListLogMetricsResponse = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -220,7 +216,7 @@ const ListLogMetricsResponse = {
  * @see [google.logging.v2.GetLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
 const GetLogMetricRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -237,15 +233,14 @@ const GetLogMetricRequest = {
  *   The new logs-based metric, which must not have an identifier that
  *   already exists.
  *
- *   This object should have the same structure as [LogMetric]{@link
- * google.logging.v2.LogMetric}
+ *   This object should have the same structure as [LogMetric]{@link google.logging.v2.LogMetric}
  *
  * @typedef CreateLogMetricRequest
  * @memberof google.logging.v2
  * @see [google.logging.v2.CreateLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
 const CreateLogMetricRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -263,15 +258,14 @@ const CreateLogMetricRequest = {
  * @property {Object} metric
  *   The updated metric.
  *
- *   This object should have the same structure as [LogMetric]{@link
- * google.logging.v2.LogMetric}
+ *   This object should have the same structure as [LogMetric]{@link google.logging.v2.LogMetric}
  *
  * @typedef UpdateLogMetricRequest
  * @memberof google.logging.v2
  * @see [google.logging.v2.UpdateLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
 const UpdateLogMetricRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -287,5 +281,5 @@ const UpdateLogMetricRequest = {
  * @see [google.logging.v2.DeleteLogMetricRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_metrics.proto}
  */
 const DeleteLogMetricRequest = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };

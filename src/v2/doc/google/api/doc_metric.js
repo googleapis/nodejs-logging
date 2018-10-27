@@ -25,11 +25,12 @@
  *
  * @property {string} type
  *   The metric type, including its DNS name prefix. The type is not
- *   URL-encoded.  All user-defined custom metric types have the DNS name
- *   `custom.googleapis.com`.  Metric types should use a natural hierarchical
- *   grouping. For example:
+ *   URL-encoded.  All user-defined metric types have the DNS name
+ *   `custom.googleapis.com` or `external.googleapis.com`.  Metric types should
+ *   use a natural hierarchical grouping. For example:
  *
  *       "custom.googleapis.com/invoice/paid/amount"
+ *       "external.googleapis.com/prometheus/up"
  *       "appengine.googleapis.com/http/server/response_latencies"
  *
  * @property {Object[]} labels
@@ -40,22 +41,19 @@
  *   you can look at latencies for successful responses or just
  *   for responses that failed.
  *
- *   This object should have the same structure as [LabelDescriptor]{@link
- * google.api.LabelDescriptor}
+ *   This object should have the same structure as [LabelDescriptor]{@link google.api.LabelDescriptor}
  *
  * @property {number} metricKind
  *   Whether the metric records instantaneous values, changes to a value, etc.
  *   Some combinations of `metric_kind` and `value_type` might not be supported.
  *
- *   The number should be among the values of [MetricKind]{@link
- * google.api.MetricKind}
+ *   The number should be among the values of [MetricKind]{@link google.api.MetricKind}
  *
  * @property {number} valueType
  *   Whether the measurement is an integer, a floating-point number, etc.
  *   Some combinations of `metric_kind` and `value_type` might not be supported.
  *
- *   The number should be among the values of [ValueType]{@link
- * google.api.ValueType}
+ *   The number should be among the values of [ValueType]{@link google.api.ValueType}
  *
  * @property {string} unit
  *   The unit in which the metric value is reported. It is only applicable
@@ -133,12 +131,48 @@
  *   This field is optional but it is recommended to be set for any metrics
  *   associated with user-visible concepts, such as Quota.
  *
+ * @property {Object} metadata
+ *   Optional. Metadata which can be used to guide usage of the metric.
+ *
+ *   This object should have the same structure as [MetricDescriptorMetadata]{@link google.api.MetricDescriptorMetadata}
+ *
  * @typedef MetricDescriptor
  * @memberof google.api
  * @see [google.api.MetricDescriptor definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
  */
 const MetricDescriptor = {
   // This is for documentation. Actual contents will be loaded by gRPC.
+
+  /**
+   * Additional annotations that can be used to guide the usage of a metric.
+   *
+   * @property {number} launchStage
+   *   The launch stage of the metric definition.
+   *
+   *   The number should be among the values of [LaunchStage]{@link google.api.LaunchStage}
+   *
+   * @property {Object} samplePeriod
+   *   The sampling period of metric data points. For metrics which are written
+   *   periodically, consecutive data points are stored at this time interval,
+   *   excluding data loss due to errors. Metrics with a higher granularity have
+   *   a smaller sampling period.
+   *
+   *   This object should have the same structure as [Duration]{@link google.protobuf.Duration}
+   *
+   * @property {Object} ingestDelay
+   *   The delay of data points caused by ingestion. Data points older than this
+   *   age are guaranteed to be ingested and available to be read, excluding
+   *   data loss due to errors.
+   *
+   *   This object should have the same structure as [Duration]{@link google.protobuf.Duration}
+   *
+   * @typedef MetricDescriptorMetadata
+   * @memberof google.api
+   * @see [google.api.MetricDescriptor.MetricDescriptorMetadata definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
+   */
+  MetricDescriptorMetadata: {
+    // This is for documentation. Actual contents will be loaded by gRPC.
+  },
 
   /**
    * The kind of measurement. It describes how the data is reported.
@@ -237,5 +271,5 @@ const MetricDescriptor = {
  * @see [google.api.Metric definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
  */
 const Metric = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
