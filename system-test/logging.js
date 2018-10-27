@@ -56,7 +56,7 @@ describe('Logging', () => {
 
   after(async () => {
     await Promise.all(
-        [deleteBuckets, deleteDatasets, deleteTopics, deleteSinks]);
+        [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
 
     async function deleteBuckets() {
       const [buckets] = await storage.getBuckets({

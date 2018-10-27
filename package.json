@@ -54,6 +54,7 @@
     "test-no-cover": "mocha build/test/*.js",
     "test": "npm run cover",
     "docs": "jsdoc -c .jsdoc.js",
+    "presystem-test": "npm run compile",
     "system-test": "mocha build/system-test --timeout 600000",
     "samples-test": "cd samples/ && npm test && cd ../",
     "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
