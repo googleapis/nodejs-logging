@@ -48,14 +48,16 @@
  *   associated with the monitored resource designating the particular
  *   database that reported the error.
  *
- *   This object should have the same structure as [MonitoredResource]{@link google.api.MonitoredResource}
+ *   This object should have the same structure as [MonitoredResource]{@link
+ * google.api.MonitoredResource}
  *
  * @property {Object} protoPayload
  *   The log entry payload, represented as a protocol buffer.  Some
  *   Google Cloud Platform services use this field for their log
  *   entry payloads.
  *
- *   This object should have the same structure as [Any]{@link google.protobuf.Any}
+ *   This object should have the same structure as [Any]{@link
+ * google.protobuf.Any}
  *
  * @property {string} textPayload
  *   The log entry payload, represented as a Unicode string (UTF-8).
@@ -64,7 +66,8 @@
  *   The log entry payload, represented as a structure that is
  *   expressed as a JSON object.
  *
- *   This object should have the same structure as [Struct]{@link google.protobuf.Struct}
+ *   This object should have the same structure as [Struct]{@link
+ * google.protobuf.Struct}
  *
  * @property {Object} timestamp
  *   Optional. The time the event described by the log entry occurred.
@@ -75,24 +78,27 @@
  *   seconds might be omitted when the timestamp is displayed.
  *
  *   Incoming log entries should have timestamps that are no more than
- *   the [logs retention period](https://cloud.google.com/logging/quotas) in the past,
- *   and no more than 24 hours in the future. Log entries outside those time
+ *   the [logs retention period](https://cloud.google.com/logging/quotas) in the
+ * past, and no more than 24 hours in the future. Log entries outside those time
  *   boundaries will not be available when calling `entries.list`, but
  *   those log entries can still be exported with
  *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
- *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *   This object should have the same structure as [Timestamp]{@link
+ * google.protobuf.Timestamp}
  *
  * @property {Object} receiveTimestamp
  *   Output only. The time the log entry was received by Logging.
  *
- *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *   This object should have the same structure as [Timestamp]{@link
+ * google.protobuf.Timestamp}
  *
  * @property {number} severity
  *   Optional. The severity of the log entry. The default value is
  *   `LogSeverity.DEFAULT`.
  *
- *   The number should be among the values of [LogSeverity]{@link google.logging.type.LogSeverity}
+ *   The number should be among the values of [LogSeverity]{@link
+ * google.logging.type.LogSeverity}
  *
  * @property {string} insertId
  *   Optional. A unique identifier for the log entry. If you provide a value,
@@ -106,7 +112,8 @@
  *   Optional. Information about the HTTP request associated with this
  *   log entry, if applicable.
  *
- *   This object should have the same structure as [HttpRequest]{@link google.logging.type.HttpRequest}
+ *   This object should have the same structure as [HttpRequest]{@link
+ * google.logging.type.HttpRequest}
  *
  * @property {Object.<string, string>} labels
  *   Optional. A set of user-defined (key, value) data that provides additional
@@ -117,13 +124,15 @@
  *   Only `k8s_container`, `k8s_pod`, and `k8s_node` MonitoredResources have
  *   this field populated.
  *
- *   This object should have the same structure as [MonitoredResourceMetadata]{@link google.api.MonitoredResourceMetadata}
+ *   This object should have the same structure as
+ * [MonitoredResourceMetadata]{@link google.api.MonitoredResourceMetadata}
  *
  * @property {Object} operation
  *   Optional. Information about an operation associated with the log entry, if
  *   applicable.
  *
- *   This object should have the same structure as [LogEntryOperation]{@link google.logging.v2.LogEntryOperation}
+ *   This object should have the same structure as [LogEntryOperation]{@link
+ * google.logging.v2.LogEntryOperation}
  *
  * @property {string} trace
  *   Optional. Resource name of the trace associated with the log entry, if any.
@@ -149,14 +158,15 @@
  *   Optional. Source code location information associated with the log entry,
  *   if any.
  *
- *   This object should have the same structure as [LogEntrySourceLocation]{@link google.logging.v2.LogEntrySourceLocation}
+ *   This object should have the same structure as
+ * [LogEntrySourceLocation]{@link google.logging.v2.LogEntrySourceLocation}
  *
  * @typedef LogEntry
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogEntry definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
 const LogEntry = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -183,7 +193,7 @@ const LogEntry = {
  * @see [google.logging.v2.LogEntryOperation definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
 const LogEntryOperation = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -211,5 +221,5 @@ const LogEntryOperation = {
  * @see [google.logging.v2.LogEntrySourceLocation definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/log_entry.proto}
  */
 const LogEntrySourceLocation = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
+    // This is for documentation. Actual contents will be loaded by gRPC.
 };

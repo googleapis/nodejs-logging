@@ -55,13 +55,15 @@
  *   If specified, contains the range of the population values. The field
  *   must not be present if the `count` is zero.
  *
- *   This object should have the same structure as [Range]{@link google.api.Range}
+ *   This object should have the same structure as [Range]{@link
+ * google.api.Range}
  *
  * @property {Object} bucketOptions
  *   Defines the histogram bucket boundaries. If the distribution does not
  *   contain a histogram, then omit this field.
  *
- *   This object should have the same structure as [BucketOptions]{@link google.api.BucketOptions}
+ *   This object should have the same structure as [BucketOptions]{@link
+ * google.api.BucketOptions}
  *
  * @property {number[]} bucketCounts
  *   The number of values in each bucket of the histogram, as described in
@@ -83,7 +85,8 @@
  * @property {Object[]} exemplars
  *   Must be in increasing order of `value` field.
  *
- *   This object should have the same structure as [Exemplar]{@link google.api.Exemplar}
+ *   This object should have the same structure as [Exemplar]{@link
+ * google.api.Exemplar}
  *
  * @typedef Distribution
  * @memberof google.api
@@ -106,7 +109,7 @@ const Distribution = {
    * @see [google.api.Distribution.Range definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
    */
   Range: {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+      // This is for documentation. Actual contents will be loaded by gRPC.
   },
 
   /**
@@ -129,17 +132,20 @@ const Distribution = {
    * @property {Object} linearBuckets
    *   The linear bucket.
    *
-   *   This object should have the same structure as [Linear]{@link google.api.Linear}
+   *   This object should have the same structure as [Linear]{@link
+   * google.api.Linear}
    *
    * @property {Object} exponentialBuckets
    *   The exponential buckets.
    *
-   *   This object should have the same structure as [Exponential]{@link google.api.Exponential}
+   *   This object should have the same structure as [Exponential]{@link
+   * google.api.Exponential}
    *
    * @property {Object} explicitBuckets
    *   The explicit buckets.
    *
-   *   This object should have the same structure as [Explicit]{@link google.api.Explicit}
+   *   This object should have the same structure as [Explicit]{@link
+   * google.api.Explicit}
    *
    * @typedef BucketOptions
    * @memberof google.api
@@ -173,7 +179,7 @@ const Distribution = {
      * @see [google.api.Distribution.BucketOptions.Linear definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
      */
     Linear: {
-      // This is for documentation. Actual contents will be loaded by gRPC.
+        // This is for documentation. Actual contents will be loaded by gRPC.
     },
 
     /**
@@ -201,7 +207,7 @@ const Distribution = {
      * @see [google.api.Distribution.BucketOptions.Exponential definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
      */
     Exponential: {
-      // This is for documentation. Actual contents will be loaded by gRPC.
+        // This is for documentation. Actual contents will be loaded by gRPC.
     },
 
     /**
@@ -225,7 +231,7 @@ const Distribution = {
      * @see [google.api.Distribution.BucketOptions.Explicit definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
      */
     Explicit: {
-      // This is for documentation. Actual contents will be loaded by gRPC.
+        // This is for documentation. Actual contents will be loaded by gRPC.
     }
   },
 
@@ -243,7 +249,8 @@ const Distribution = {
    * @property {Object} timestamp
    *   The observation (sampling) time of the above value.
    *
-   *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+   *   This object should have the same structure as [Timestamp]{@link
+   * google.protobuf.Timestamp}
    *
    * @property {Object[]} attachments
    *   Contextual information about the example value. Examples are:
@@ -258,13 +265,14 @@ const Distribution = {
    *   There may be only a single attachment of any given message type in a
    *   single exemplar, and this is enforced by the system.
    *
-   *   This object should have the same structure as [Any]{@link google.protobuf.Any}
+   *   This object should have the same structure as [Any]{@link
+   * google.protobuf.Any}
    *
    * @typedef Exemplar
    * @memberof google.api
    * @see [google.api.Distribution.Exemplar definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
    */
   Exemplar: {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+      // This is for documentation. Actual contents will be loaded by gRPC.
   }
 };
