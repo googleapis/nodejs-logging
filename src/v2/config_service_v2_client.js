@@ -22,8 +22,8 @@ const path = require('path');
 const VERSION = require('../../../package.json').version;
 
 /**
- * Service for configuring sinks used to export log entries outside of
- * Stackdriver Logging.
+ * Service for configuring sinks used to export log entries out of
+ * Logging.
  *
  * @class
  * @memberof v2
@@ -215,38 +215,43 @@ class ConfigServiceV2Client {
    *   resources in a page.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [LogSink]{@link
-   * google.logging.v2.LogSink}.
+   google.logging.v2.LogSink}.
    *
    *   When autoPaginate: false is specified through options, it contains the
-   * result in a single response. If the response indicates the next page
-   * exists, the third parameter is set to be used for the next request object.
-   * The fourth parameter keeps the raw response object of an object
-   * representing [ListSinksResponse]{@link
-   * google.logging.v2.ListSinksResponse}.
+   result
+   *   in a single response. If the response indicates the next page exists, the
+   third
+   *   parameter is set to be used for the next request object. The fourth
+   parameter keeps
+   *   the raw response object of an object representing
+   [ListSinksResponse]{@link google.logging.v2.ListSinksResponse}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is Array of [LogSink]{@link
-   * google.logging.v2.LogSink}.
+   google.logging.v2.LogSink}.
    *
    *   When autoPaginate: false is specified through options, the array has
-   * three elements. The first element is Array of [LogSink]{@link
-   * google.logging.v2.LogSink} in a single response. The second element is the
-   * next request object if the response indicates the next page exists, or
-   * null. The third element is an object representing [ListSinksResponse]{@link
-   * google.logging.v2.ListSinksResponse}.
+   three elements.
+   *   The first element is Array of [LogSink]{@link google.logging.v2.LogSink}
+   in a single response.
+   *   The second element is the next request object if the response
+   *   indicates the next page exists, or null. The third element is
+   *   an object representing [ListSinksResponse]{@link
+   google.logging.v2.ListSinksResponse}.
    *
    *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -307,7 +312,8 @@ class ConfigServiceV2Client {
    *
    * This fetches the paged responses for {@link listSinks} continuously
    * and invokes the callback registered for 'data' event for each element in
-   * the responses.
+   the
+   * responses.
    *
    * The returned object has 'end' method when no more elements are required.
    *
@@ -332,16 +338,17 @@ class ConfigServiceV2Client {
    *   resources in a page.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @returns {Stream}
    *   An object stream which emits an object representing [LogSink]{@link
-   * google.logging.v2.LogSink} on 'data' event.
+   google.logging.v2.LogSink} on 'data' event.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -360,7 +367,7 @@ class ConfigServiceV2Client {
 
     return this._descriptors.page.listSinks.createStream(
         this._innerApiCalls.listSinks, request, options);
-  }
+  };
 
   /**
    * Gets a sink.
@@ -378,22 +385,24 @@ class ConfigServiceV2Client {
    *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogSink]{@link google.logging.v2.LogSink}.
+   [LogSink]{@link google.logging.v2.LogSink}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing [LogSink]{@link
-   * google.logging.v2.LogSink}. The promise has a method named "cancel" which
-   * cancels the ongoing API call.
+   google.logging.v2.LogSink}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -441,37 +450,42 @@ class ConfigServiceV2Client {
    *   is not already in use.
    *
    *   This object should have the same structure as [LogSink]{@link
-   * google.logging.v2.LogSink}
+   google.logging.v2.LogSink}
    * @param {boolean} [request.uniqueWriterIdentity]
    *   Optional. Determines the kind of IAM identity returned as
-   * `writer_identity` in the new sink.  If this value is omitted or set to
-   * false, and if the sink's parent is a project, then the value returned as
-   * `writer_identity` is the same group or service account used by Stackdriver
-   * Logging before the addition of writer identities to this API. The sink's
-   * destination must be in the same project as the sink itself.
+   `writer_identity`
+   *   in the new sink.  If this value is omitted or set to false, and if the
+   *   sink's parent is a project, then the value returned as `writer_identity`
+   is
+   *   the same group or service account used by Logging before the
+   *   addition of writer identities to this API. The sink's destination must be
+   *   in the same project as the sink itself.
    *
    *   If this field is set to true, or if the sink is owned by a non-project
    *   resource such as an organization, then the value of `writer_identity`
-   * will be a unique service account used only for exports from the new sink.
-   * For more information, see `writer_identity` in LogSink.
+   will
+   *   be a unique service account used only for exports from the new sink.  For
+   *   more information, see `writer_identity` in LogSink.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogSink]{@link google.logging.v2.LogSink}.
+   [LogSink]{@link google.logging.v2.LogSink}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing [LogSink]{@link
-   * google.logging.v2.LogSink}. The promise has a method named "cancel" which
-   * cancels the ongoing API call.
+   google.logging.v2.LogSink}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -522,16 +536,20 @@ class ConfigServiceV2Client {
    *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
    * @param {Object} request.sink
    *   Required. The updated sink, whose name is the same identifier that
-   * appears as part of `sink_name`.
+   appears
+   *   as part of `sink_name`.
    *
    *   This object should have the same structure as [LogSink]{@link
-   * google.logging.v2.LogSink}
+   google.logging.v2.LogSink}
    * @param {boolean} [request.uniqueWriterIdentity]
    *   Optional. See
-   *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
+   *
+   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
    *   for a description of this field.  When updating a sink, the effect of
-   * this field on the value of `writer_identity` in the updated sink depends on
-   * both the old and new values of this field:
+   this
+   *   field on the value of `writer_identity` in the updated sink depends on
+   both
+   *   the old and new values of this field:
    *
    *   +   If the old and new values of this field are both false or both true,
    *       then there is no change to the sink's `writer_identity`.
@@ -551,30 +569,33 @@ class ConfigServiceV2Client {
    *   empty updateMask will be an error.
    *
    *   For a detailed `FieldMask` definition, see
-   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
+   *
+   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
    *
    *   Example: `updateMask=filter`.
    *
    *   This object should have the same structure as [FieldMask]{@link
-   * google.protobuf.FieldMask}
+   google.protobuf.FieldMask}
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogSink]{@link google.logging.v2.LogSink}.
+   [LogSink]{@link google.logging.v2.LogSink}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing [LogSink]{@link
-   * google.logging.v2.LogSink}. The promise has a method named "cancel" which
-   * cancels the ongoing API call.
+   google.logging.v2.LogSink}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -623,18 +644,19 @@ class ConfigServiceV2Client {
    *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
    *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -675,38 +697,43 @@ class ConfigServiceV2Client {
    *   resources in a page.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [LogExclusion]{@link
-   * google.logging.v2.LogExclusion}.
+   google.logging.v2.LogExclusion}.
    *
    *   When autoPaginate: false is specified through options, it contains the
-   * result in a single response. If the response indicates the next page
-   * exists, the third parameter is set to be used for the next request object.
-   * The fourth parameter keeps the raw response object of an object
-   * representing [ListExclusionsResponse]{@link
-   * google.logging.v2.ListExclusionsResponse}.
+   result
+   *   in a single response. If the response indicates the next page exists, the
+   third
+   *   parameter is set to be used for the next request object. The fourth
+   parameter keeps
+   *   the raw response object of an object representing
+   [ListExclusionsResponse]{@link google.logging.v2.ListExclusionsResponse}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is Array of [LogExclusion]{@link
-   * google.logging.v2.LogExclusion}.
+   google.logging.v2.LogExclusion}.
    *
    *   When autoPaginate: false is specified through options, the array has
-   * three elements. The first element is Array of [LogExclusion]{@link
-   * google.logging.v2.LogExclusion} in a single response. The second element is
-   * the next request object if the response indicates the next page exists, or
-   * null. The third element is an object representing
-   * [ListExclusionsResponse]{@link google.logging.v2.ListExclusionsResponse}.
+   three elements.
+   *   The first element is Array of [LogExclusion]{@link
+   google.logging.v2.LogExclusion} in a single response.
+   *   The second element is the next request object if the response
+   *   indicates the next page exists, or null. The third element is
+   *   an object representing [ListExclusionsResponse]{@link
+   google.logging.v2.ListExclusionsResponse}.
    *
    *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -767,7 +794,8 @@ class ConfigServiceV2Client {
    *
    * This fetches the paged responses for {@link listExclusions} continuously
    * and invokes the callback registered for 'data' event for each element in
-   * the responses.
+   the
+   * responses.
    *
    * The returned object has 'end' method when no more elements are required.
    *
@@ -792,16 +820,17 @@ class ConfigServiceV2Client {
    *   resources in a page.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @returns {Stream}
    *   An object stream which emits an object representing [LogExclusion]{@link
-   * google.logging.v2.LogExclusion} on 'data' event.
+   google.logging.v2.LogExclusion} on 'data' event.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -820,7 +849,7 @@ class ConfigServiceV2Client {
 
     return this._descriptors.page.listExclusions.createStream(
         this._innerApiCalls.listExclusions, request, options);
-  }
+  };
 
   /**
    * Gets the description of an exclusion.
@@ -838,22 +867,24 @@ class ConfigServiceV2Client {
    *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogExclusion]{@link google.logging.v2.LogExclusion}.
+   [LogExclusion]{@link google.logging.v2.LogExclusion}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing
-   * [LogExclusion]{@link google.logging.v2.LogExclusion}. The promise has a
-   * method named "cancel" which cancels the ongoing API call.
+   [LogExclusion]{@link google.logging.v2.LogExclusion}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -900,25 +931,27 @@ class ConfigServiceV2Client {
    *   that is not already used in the parent resource.
    *
    *   This object should have the same structure as [LogExclusion]{@link
-   * google.logging.v2.LogExclusion}
+   google.logging.v2.LogExclusion}
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogExclusion]{@link google.logging.v2.LogExclusion}.
+   [LogExclusion]{@link google.logging.v2.LogExclusion}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing
-   * [LogExclusion]{@link google.logging.v2.LogExclusion}. The promise has a
-   * method named "cancel" which cancels the ongoing API call.
+   [LogExclusion]{@link google.logging.v2.LogExclusion}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -965,10 +998,11 @@ class ConfigServiceV2Client {
    *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
    * @param {Object} request.exclusion
    *   Required. New values for the existing exclusion. Only the fields
-   * specified in `update_mask` are relevant.
+   specified
+   *   in `update_mask` are relevant.
    *
    *   This object should have the same structure as [LogExclusion]{@link
-   * google.logging.v2.LogExclusion}
+   google.logging.v2.LogExclusion}
    * @param {Object} request.updateMask
    *   Required. A nonempty list of fields to change in the existing exclusion.
    *   New values for the fields are taken from the corresponding fields in the
@@ -979,25 +1013,27 @@ class ConfigServiceV2Client {
    *   specify an `update_mask` of `"filter,description"`.
    *
    *   This object should have the same structure as [FieldMask]{@link
-   * google.protobuf.FieldMask}
+   google.protobuf.FieldMask}
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogExclusion]{@link google.logging.v2.LogExclusion}.
+   [LogExclusion]{@link google.logging.v2.LogExclusion}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing
-   * [LogExclusion]{@link google.logging.v2.LogExclusion}. The promise has a
-   * method named "cancel" which cancels the ongoing API call.
+   [LogExclusion]{@link google.logging.v2.LogExclusion}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -1046,18 +1082,19 @@ class ConfigServiceV2Client {
    *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
    *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -1179,5 +1216,6 @@ class ConfigServiceV2Client {
         .exclusion;
   }
 }
+
 
 module.exports = ConfigServiceV2Client;

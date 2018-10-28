@@ -204,38 +204,43 @@ class MetricsServiceV2Client {
    *   resources in a page.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is Array of [LogMetric]{@link
-   * google.logging.v2.LogMetric}.
+   google.logging.v2.LogMetric}.
    *
    *   When autoPaginate: false is specified through options, it contains the
-   * result in a single response. If the response indicates the next page
-   * exists, the third parameter is set to be used for the next request object.
-   * The fourth parameter keeps the raw response object of an object
-   * representing [ListLogMetricsResponse]{@link
-   * google.logging.v2.ListLogMetricsResponse}.
+   result
+   *   in a single response. If the response indicates the next page exists, the
+   third
+   *   parameter is set to be used for the next request object. The fourth
+   parameter keeps
+   *   the raw response object of an object representing
+   [ListLogMetricsResponse]{@link google.logging.v2.ListLogMetricsResponse}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is Array of [LogMetric]{@link
-   * google.logging.v2.LogMetric}.
+   google.logging.v2.LogMetric}.
    *
    *   When autoPaginate: false is specified through options, the array has
-   * three elements. The first element is Array of [LogMetric]{@link
-   * google.logging.v2.LogMetric} in a single response. The second element is
-   * the next request object if the response indicates the next page exists, or
-   * null. The third element is an object representing
-   * [ListLogMetricsResponse]{@link google.logging.v2.ListLogMetricsResponse}.
+   three elements.
+   *   The first element is Array of [LogMetric]{@link
+   google.logging.v2.LogMetric} in a single response.
+   *   The second element is the next request object if the response
+   *   indicates the next page exists, or null. The third element is
+   *   an object representing [ListLogMetricsResponse]{@link
+   google.logging.v2.ListLogMetricsResponse}.
    *
    *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -296,7 +301,8 @@ class MetricsServiceV2Client {
    *
    * This fetches the paged responses for {@link listLogMetrics} continuously
    * and invokes the callback registered for 'data' event for each element in
-   * the responses.
+   the
+   * responses.
    *
    * The returned object has 'end' method when no more elements are required.
    *
@@ -318,16 +324,17 @@ class MetricsServiceV2Client {
    *   resources in a page.
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @returns {Stream}
    *   An object stream which emits an object representing [LogMetric]{@link
-   * google.logging.v2.LogMetric} on 'data' event.
+   google.logging.v2.LogMetric} on 'data' event.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -346,7 +353,7 @@ class MetricsServiceV2Client {
 
     return this._descriptors.page.listLogMetrics.createStream(
         this._innerApiCalls.listLogMetrics, request, options);
-  }
+  };
 
   /**
    * Gets a logs-based metric.
@@ -359,22 +366,24 @@ class MetricsServiceV2Client {
    *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogMetric]{@link google.logging.v2.LogMetric}.
+   [LogMetric]{@link google.logging.v2.LogMetric}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing
-   * [LogMetric]{@link google.logging.v2.LogMetric}. The promise has a method
-   * named "cancel" which cancels the ongoing API call.
+   [LogMetric]{@link google.logging.v2.LogMetric}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -416,25 +425,27 @@ class MetricsServiceV2Client {
    *   already exists.
    *
    *   This object should have the same structure as [LogMetric]{@link
-   * google.logging.v2.LogMetric}
+   google.logging.v2.LogMetric}
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogMetric]{@link google.logging.v2.LogMetric}.
+   [LogMetric]{@link google.logging.v2.LogMetric}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing
-   * [LogMetric]{@link google.logging.v2.LogMetric}. The promise has a method
-   * named "cancel" which cancels the ongoing API call.
+   [LogMetric]{@link google.logging.v2.LogMetric}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -482,25 +493,27 @@ class MetricsServiceV2Client {
    *   The updated metric.
    *
    *   This object should have the same structure as [LogMetric]{@link
-   * google.logging.v2.LogMetric}
+   google.logging.v2.LogMetric}
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error, ?Object)} [callback]
    *   The function which will be called with the result of the API call.
    *
    *   The second parameter to the callback is an object representing
-   * [LogMetric]{@link google.logging.v2.LogMetric}.
+   [LogMetric]{@link google.logging.v2.LogMetric}.
    * @returns {Promise} - The promise which resolves to an array.
    *   The first element of the array is an object representing
-   * [LogMetric]{@link google.logging.v2.LogMetric}. The promise has a method
-   * named "cancel" which cancels the ongoing API call.
+   [LogMetric]{@link google.logging.v2.LogMetric}.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -542,18 +555,19 @@ class MetricsServiceV2Client {
    *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
    * @param {Object} [options]
    *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See [gax.CallOptions]{@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
-   * details.
+   e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link
+   https://googleapis.github.io/gax-nodejs/global.html#CallOptions} for the
+   details.
    * @param {function(?Error)} [callback]
    *   The function which will be called with the result of the API call.
    * @returns {Promise} - The promise which resolves when API call finishes.
    *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
+   call.
    *
    * @example
    *
-   * const {Logging} = require('@google-cloud/logging');
+   const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.MetricsServiceV2Client({
    *   // optional auth parameters.
@@ -637,5 +651,6 @@ class MetricsServiceV2Client {
     return this._pathTemplates.metricPathTemplate.match(metricName).metric;
   }
 }
+
 
 module.exports = MetricsServiceV2Client;
