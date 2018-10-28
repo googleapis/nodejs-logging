@@ -5,7 +5,6 @@ extends:
 plugins:
   - node
 rules:
-  prettier/prettier: error
   block-scoped-var: error
   eqeqeq: error
   no-warning-comments: warn
