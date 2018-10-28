@@ -25,13 +25,11 @@ import {util} from '@google-cloud/common-grpc';
 const {v2} = require('../src');
 const PKG = require('../../package.json');
 
-const g: {[index: string]: boolean} = global as {};
-
 let extended = false;
 const fakePaginator = {
   paginator: {
-    extend(c, methods) {
-      if (c.name !== 'Logging') {
+    extend(klass, methods) {
+      if (klass.name !== 'Logging') {
         return;
       }
       extended = true;
@@ -895,9 +893,11 @@ describe('Logging', () => {
         logging.auth.getProjectId = () => {
           done(new Error('Should not have gotten project ID.'));
         };
-        g.GCLOUD_SANDBOX_ENV = true;
+        // tslint:disable-next-line no-any
+        (global as any).GCLOUD_SANDBOX_ENV = true;
         const returnValue = logging.request(CONFIG, assert.ifError);
-        delete g.GCLOUD_SANDBOX_ENV;
+        // tslint:disable-next-line no-any
+        delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert.strictEqual(returnValue, undefined);
         done();
@@ -961,10 +961,12 @@ describe('Logging', () => {
           done(new Error('Should not have gotten project ID.'));
         };
 
-        g.GCLOUD_SANDBOX_ENV = true;
+        // tslint:disable-next-line no-any
+        (global as any).GCLOUD_SANDBOX_ENV = true;
         const returnValue = logging.request(CONFIG);
         returnValue.emit('reading');
-        delete g.GCLOUD_SANDBOX_ENV;
+        // tslint:disable-next-line no-any
+        delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert(returnValue instanceof require('stream'));
         done();
