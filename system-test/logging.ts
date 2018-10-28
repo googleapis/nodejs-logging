@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-const assert = require('assert');
+import * as assert from 'assert';
+// tslint:disable-next-line variable-name
 const BigQuery = require('@google-cloud/bigquery');
-const extend = require('extend');
-const is = require('is');
-const nock = require('nock');
+import * as extend from 'extend';
+import * as is from 'is';
+import * as nock from 'nock';
+// tslint:disable-next-line variable-name
 const PubSub = require('@google-cloud/pubsub');
-const {Storage} = require('@google-cloud/storage');
-const uuid = require('uuid');
-const {Logging} = require('../src');
+import {Storage} from '@google-cloud/storage';
+import * as uuid from 'uuid';
+import {Logging} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')
@@ -81,7 +83,7 @@ describe('Logging', () => {
     }
 
     async function getAndDelete(method) {
-      let [objects] = await method();
+      const [objects] = await method();
       return Promise.all(
           objects.filter(o => (o.name || o.id).indexOf(TESTS_PREFIX) === 0)
               .map(o => o.delete()));

@@ -16,14 +16,14 @@
 
 'use strict';
 
-const assert = require('assert');
-const BigNumber = require('bignumber.js');
-const extend = require('extend');
-const proxyquire = require('proxyquire');
+import * as assert from 'assert';
+import BigNumber from 'bignumber.js';
+import * as extend from 'extend';
+import * as proxyquire from 'proxyquire';
 
 let instanceOverride;
 const fakeGcpMetadata = {
-  instance: function(path) {
+  instance(path) {
     if (instanceOverride) {
       const override = Array.isArray(instanceOverride) ?
           instanceOverride.find(entry => entry.path === path) :
@@ -52,17 +52,20 @@ let readFileShouldError;
 const fakeFS = {
   readFile: (filename, encoding, callback) => {
     setImmediate(() => {
-      if (readFileShouldError)
+      if (readFileShouldError) {
         callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
-      else
+      } else {
         callback(null, FAKE_READFILE_CONTENTS);
+      }
     });
   },
 };
 
 describe('metadata', () => {
-  let MetadataCached;
-  let Metadata;
+  // tslint:disable-next-line no-any variable-name
+  let MetadataCached: any;
+  // tslint:disable-next-line no-any variable-name
+  let Metadata: any;
   let metadata;
 
   let LOGGING;

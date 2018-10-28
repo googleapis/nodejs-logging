@@ -14,13 +14,14 @@
 
 'use strict';
 
-const assert = require('assert');
+import * as assert from 'assert';
+import {ApiError} from '@google-cloud/common';
 
 const loggingModule = require('../src');
 
 const FAKE_STATUS_CODE = 1;
 const error = new Error();
-error.code = FAKE_STATUS_CODE;
+(error as ApiError).code = FAKE_STATUS_CODE;
 
 describe('LoggingServiceV2Client', () => {
   describe('deleteLog', () => {
@@ -79,7 +80,7 @@ describe('LoggingServiceV2Client', () => {
       // Mock request
       const entries = [];
       const request = {
-        entries: entries,
+        entries,
       };
 
       // Mock response
@@ -105,7 +106,7 @@ describe('LoggingServiceV2Client', () => {
       // Mock request
       const entries = [];
       const request = {
-        entries: entries,
+        entries,
       };
 
       // Mock Grpc layer
@@ -139,8 +140,8 @@ describe('LoggingServiceV2Client', () => {
       const entriesElement = {};
       const entries = [entriesElement];
       const expectedResponse = {
-        nextPageToken: nextPageToken,
-        entries: entries,
+        nextPageToken,
+        entries,
       };
 
       // Mock Grpc layer
@@ -197,8 +198,8 @@ describe('LoggingServiceV2Client', () => {
       const resourceDescriptorsElement = {};
       const resourceDescriptors = [resourceDescriptorsElement];
       const expectedResponse = {
-        nextPageToken: nextPageToken,
-        resourceDescriptors: resourceDescriptors,
+        nextPageToken,
+        resourceDescriptors,
       };
 
       // Mock Grpc layer
@@ -255,8 +256,8 @@ describe('LoggingServiceV2Client', () => {
       const logNamesElement = 'logNamesElement-1079688374';
       const logNames = [logNamesElement];
       const expectedResponse = {
-        nextPageToken: nextPageToken,
-        logNames: logNames,
+        nextPageToken,
+        logNames,
       };
 
       // Mock Grpc layer
@@ -316,8 +317,8 @@ describe('ConfigServiceV2Client', () => {
       const sinksElement = {};
       const sinks = [sinksElement];
       const expectedResponse = {
-        nextPageToken: nextPageToken,
-        sinks: sinks,
+        nextPageToken,
+        sinks,
       };
 
       // Mock Grpc layer
@@ -378,11 +379,11 @@ describe('ConfigServiceV2Client', () => {
       const writerIdentity = 'writerIdentity775638794';
       const includeChildren = true;
       const expectedResponse = {
-        name: name,
-        destination: destination,
-        filter: filter,
-        writerIdentity: writerIdentity,
-        includeChildren: includeChildren,
+        name,
+        destination,
+        filter,
+        writerIdentity,
+        includeChildren,
       };
 
       // Mock Grpc layer
@@ -433,7 +434,7 @@ describe('ConfigServiceV2Client', () => {
       const sink = {};
       const request = {
         parent: formattedParent,
-        sink: sink,
+        sink,
       };
 
       // Mock response
@@ -443,11 +444,11 @@ describe('ConfigServiceV2Client', () => {
       const writerIdentity = 'writerIdentity775638794';
       const includeChildren = true;
       const expectedResponse = {
-        name: name,
-        destination: destination,
-        filter: filter,
-        writerIdentity: writerIdentity,
-        includeChildren: includeChildren,
+        name,
+        destination,
+        filter,
+        writerIdentity,
+        includeChildren,
       };
 
       // Mock Grpc layer
@@ -472,7 +473,7 @@ describe('ConfigServiceV2Client', () => {
       const sink = {};
       const request = {
         parent: formattedParent,
-        sink: sink,
+        sink,
       };
 
       // Mock Grpc layer
@@ -500,7 +501,7 @@ describe('ConfigServiceV2Client', () => {
       const sink = {};
       const request = {
         sinkName: formattedSinkName,
-        sink: sink,
+        sink,
       };
 
       // Mock response
@@ -510,11 +511,11 @@ describe('ConfigServiceV2Client', () => {
       const writerIdentity = 'writerIdentity775638794';
       const includeChildren = true;
       const expectedResponse = {
-        name: name,
-        destination: destination,
-        filter: filter,
-        writerIdentity: writerIdentity,
-        includeChildren: includeChildren,
+        name,
+        destination,
+        filter,
+        writerIdentity,
+        includeChildren,
       };
 
       // Mock Grpc layer
@@ -539,7 +540,7 @@ describe('ConfigServiceV2Client', () => {
       const sink = {};
       const request = {
         sinkName: formattedSinkName,
-        sink: sink,
+        sink,
       };
 
       // Mock Grpc layer
@@ -619,8 +620,8 @@ describe('ConfigServiceV2Client', () => {
       const exclusionsElement = {};
       const exclusions = [exclusionsElement];
       const expectedResponse = {
-        nextPageToken: nextPageToken,
-        exclusions: exclusions,
+        nextPageToken,
+        exclusions,
       };
 
       // Mock Grpc layer
@@ -682,9 +683,9 @@ describe('ConfigServiceV2Client', () => {
       const disabled = true;
       const expectedResponse = {
         name: name2,
-        description: description,
-        filter: filter,
-        disabled: disabled,
+        description,
+        filter,
+        disabled,
       };
 
       // Mock Grpc layer
@@ -735,7 +736,7 @@ describe('ConfigServiceV2Client', () => {
       const exclusion = {};
       const request = {
         parent: formattedParent,
-        exclusion: exclusion,
+        exclusion,
       };
 
       // Mock response
@@ -744,10 +745,10 @@ describe('ConfigServiceV2Client', () => {
       const filter = 'filter-1274492040';
       const disabled = true;
       const expectedResponse = {
-        name: name,
-        description: description,
-        filter: filter,
-        disabled: disabled,
+        name,
+        description,
+        filter,
+        disabled,
       };
 
       // Mock Grpc layer
@@ -772,7 +773,7 @@ describe('ConfigServiceV2Client', () => {
       const exclusion = {};
       const request = {
         parent: formattedParent,
-        exclusion: exclusion,
+        exclusion,
       };
 
       // Mock Grpc layer
@@ -801,8 +802,8 @@ describe('ConfigServiceV2Client', () => {
       const updateMask = {};
       const request = {
         name: formattedName,
-        exclusion: exclusion,
-        updateMask: updateMask,
+        exclusion,
+        updateMask,
       };
 
       // Mock response
@@ -812,9 +813,9 @@ describe('ConfigServiceV2Client', () => {
       const disabled = true;
       const expectedResponse = {
         name: name2,
-        description: description,
-        filter: filter,
-        disabled: disabled,
+        description,
+        filter,
+        disabled,
       };
 
       // Mock Grpc layer
@@ -840,8 +841,8 @@ describe('ConfigServiceV2Client', () => {
       const updateMask = {};
       const request = {
         name: formattedName,
-        exclusion: exclusion,
-        updateMask: updateMask,
+        exclusion,
+        updateMask,
       };
 
       // Mock Grpc layer
@@ -922,8 +923,8 @@ describe('MetricsServiceV2Client', () => {
       const metricsElement = {};
       const metrics = [metricsElement];
       const expectedResponse = {
-        nextPageToken: nextPageToken,
-        metrics: metrics,
+        nextPageToken,
+        metrics,
       };
 
       // Mock Grpc layer
@@ -984,10 +985,10 @@ describe('MetricsServiceV2Client', () => {
       const filter = 'filter-1274492040';
       const valueExtractor = 'valueExtractor2047672534';
       const expectedResponse = {
-        name: name,
-        description: description,
-        filter: filter,
-        valueExtractor: valueExtractor,
+        name,
+        description,
+        filter,
+        valueExtractor,
       };
 
       // Mock Grpc layer
@@ -1038,7 +1039,7 @@ describe('MetricsServiceV2Client', () => {
       const metric = {};
       const request = {
         parent: formattedParent,
-        metric: metric,
+        metric,
       };
 
       // Mock response
@@ -1047,10 +1048,10 @@ describe('MetricsServiceV2Client', () => {
       const filter = 'filter-1274492040';
       const valueExtractor = 'valueExtractor2047672534';
       const expectedResponse = {
-        name: name,
-        description: description,
-        filter: filter,
-        valueExtractor: valueExtractor,
+        name,
+        description,
+        filter,
+        valueExtractor,
       };
 
       // Mock Grpc layer
@@ -1075,7 +1076,7 @@ describe('MetricsServiceV2Client', () => {
       const metric = {};
       const request = {
         parent: formattedParent,
-        metric: metric,
+        metric,
       };
 
       // Mock Grpc layer
@@ -1103,7 +1104,7 @@ describe('MetricsServiceV2Client', () => {
       const metric = {};
       const request = {
         metricName: formattedMetricName,
-        metric: metric,
+        metric,
       };
 
       // Mock response
@@ -1112,10 +1113,10 @@ describe('MetricsServiceV2Client', () => {
       const filter = 'filter-1274492040';
       const valueExtractor = 'valueExtractor2047672534';
       const expectedResponse = {
-        name: name,
-        description: description,
-        filter: filter,
-        valueExtractor: valueExtractor,
+        name,
+        description,
+        filter,
+        valueExtractor,
       };
 
       // Mock Grpc layer
@@ -1140,7 +1141,7 @@ describe('MetricsServiceV2Client', () => {
       const metric = {};
       const request = {
         metricName: formattedMetricName,
-        metric: metric,
+        metric,
       };
 
       // Mock Grpc layer
@@ -1203,8 +1204,8 @@ describe('MetricsServiceV2Client', () => {
   });
 });
 
-function mockSimpleGrpcMethod(expectedRequest, response, error) {
-  return function(actualRequest, options, callback) {
+function mockSimpleGrpcMethod(expectedRequest, response?, error?) {
+  return (actualRequest, options, callback) => {
     assert.deepStrictEqual(actualRequest, expectedRequest);
     if (error) {
       callback(error);
