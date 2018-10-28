@@ -16,22 +16,27 @@
 
 'use strict';
 
-const assert = require('assert');
-const extend = require('extend');
-const {GrpcService, util} = require('@google-cloud/common-grpc');
-const proxyquire = require('proxyquire');
+import * as assert from 'assert';
+import * as extend from 'extend';
+import {Service, util} from '@google-cloud/common-grpc';
+import * as proxyquire from 'proxyquire';
 
-function FakeGrpcService() {}
+class FakeGrpcService {
+  static structToObj_?: Function;
+  static objToStruct_?: Function;
+}
 
 let fakeEventIdNewOverride;
 
-function FakeEventId() {}
-FakeEventId.prototype.new = function() {
-  return (fakeEventIdNewOverride || util.noop).apply(null, arguments);
-};
+class FakeEventId {
+  new() {
+    return (fakeEventIdNewOverride || util.noop).apply(null, arguments);
+  }
+}
 
 describe('Entry', () => {
-  let Entry;
+  // tslint:disable-next-line no-any variable-name
+  let Entry: any;
   let entry;
 
   const METADATA = {};
@@ -48,7 +53,7 @@ describe('Entry', () => {
 
   beforeEach(() => {
     fakeEventIdNewOverride = null;
-    extend(FakeGrpcService, GrpcService);
+    extend(FakeGrpcService, Service);
     entry = new Entry(METADATA, DATA);
   });
 
@@ -69,7 +74,7 @@ describe('Entry', () => {
       const timestamp = new Date('2012');
 
       const entry = new Entry({
-        timestamp: timestamp,
+        timestamp,
       });
 
       assert.strictEqual(entry.metadata.timestamp, timestamp);

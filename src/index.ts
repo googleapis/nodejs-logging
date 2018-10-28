@@ -116,7 +116,7 @@ class Logging {
   options;
   projectId: string;
 
-  constructor(options) {
+  constructor(options?) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
     const scopes: Array<{}> = [];
@@ -398,7 +398,8 @@ class Logging {
    * region_tag:logging_list_log_entries_advanced
    * Another example:
    */
-  getEntries(options, callback) {
+  // tslint:disable-next-line no-any
+  getEntries(options, callback?): void|Promise<any> {
     if (is.fn(options)) {
       callback = options;
       options = {};
@@ -562,7 +563,8 @@ class Logging {
    * region_tag:logging_list_sinks
    * Another example:
    */
-  getSinks(options, callback) {
+  // tslint:disable-next-line no-any
+  getSinks(options?, callback?): void|Promise<any> {
     const self = this;
     if (is.fn(options)) {
       callback = options;
@@ -683,7 +685,7 @@ class Logging {
    * const logging = new Logging();
    * const log = logging.log('my-log');
    */
-  log(name, options) {
+  log(name, options?) {
     return new Log(this, name, options);
   }
 
@@ -957,7 +959,7 @@ module.exports.Sink = Sink;
  * region_tag:logging_quickstart
  * Full quickstart example:
  */
-module.exports.Logging = Logging;
+export {Logging};
 
 /**
  * Reference to the low-level auto-generated clients for the V2 Logging service.

@@ -16,16 +16,16 @@
 
 'use strict';
 
-const assert = require('assert');
-const extend = require('extend');
-const proxyquire = require('proxyquire');
-const {util} = require('@google-cloud/common-grpc');
-const promisify = require('@google-cloud/promisify');
+import * as assert from 'assert';
+import * as extend from 'extend';
+import * as proxyquire from 'proxyquire';
+import {util} from '@google-cloud/common-grpc';
+import * as promisify from '@google-cloud/promisify';
 
 let promisifed = false;
 const fakePromisify = extend({}, promisify, {
-  promisifyAll: function(Class, options) {
-    if (Class.name !== 'Log') {
+  promisifyAll(c, options) {
+    if (c.name !== 'Log') {
       return;
     }
     promisifed = true;
@@ -35,12 +35,16 @@ const fakePromisify = extend({}, promisify, {
 
 const {Entry} = require('../src');
 
-function FakeMetadata() {
-  this.calledWith_ = arguments;
+class FakeMetadata {
+  calledWith_: IArguments;
+  constructor() {
+    this.calledWith_ = arguments;
+  }
 }
 
 describe('Log', () => {
-  let Log;
+  // tslint:disable-next-line no-any variable-name
+  let Log: any;
   let log;
 
   const PROJECT_ID = 'project-id';
@@ -55,19 +59,18 @@ describe('Log', () => {
 
   let LOGGING;
 
-  let assignSeverityToEntriesOverride = null;
+  let assignSeverityToEntriesOverride: Function|null = null;
 
   before(() => {
     Log = proxyquire('../src/log', {
             '@google-cloud/promisify': fakePromisify,
-            './entry': {Entry: Entry},
+            './entry': {Entry},
             './metadata': {Metadata: FakeMetadata},
           }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
-    Log.assignSeverityToEntries_ = function() {
-      return (assignSeverityToEntriesOverride || assignSeverityToEntries_)
-          .apply(null, arguments);
-    };
+    Log.assignSeverityToEntries_ = (...args) =>
+        (assignSeverityToEntriesOverride || assignSeverityToEntries_)
+            .apply(null, args);
   });
 
   beforeEach(() => {
@@ -130,11 +133,9 @@ describe('Log', () => {
   });
 
   describe('assignSeverityToEntries_', () => {
-    const circular = {};
+    const circular = {} as {circular: {}};
     circular.circular = circular;
-
     const ENTRIES = [{data: {a: 'b'}}, {data: {c: 'd'}}, {data: {e: circular}}];
-
     const SEVERITY = 'severity';
 
     it('should assign severity to a single entry', () => {

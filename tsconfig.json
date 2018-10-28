@@ -13,12 +13,7 @@
     "src/**/*.ts",
     "src/**/*.js",
     "test/*.ts",
-    "test/*.js",
     "test/**/*.ts",
-    "test/**/*.js",
     "system-test/*.ts",
-    "system-test/*.js",
-    "system-test/**/*.ts",
-    "system-test/**/*.js"
   ]
 }

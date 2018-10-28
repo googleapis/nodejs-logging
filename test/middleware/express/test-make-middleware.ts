@@ -16,7 +16,6 @@
 
 import * as assert from 'assert';
 import * as EventEmitter from 'events';
-import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
 const FAKE_PROJECT_ID = 'project-🦄';

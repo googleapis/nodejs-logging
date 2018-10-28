@@ -16,27 +16,27 @@
 
 'use strict';
 
-const arrify = require('arrify');
-const assert = require('assert');
-const extend = require('extend');
-const proxyquire = require('proxyquire');
-const through = require('through2');
-const {util} = require('@google-cloud/common-grpc');
+import * as arrify from 'arrify';
+import * as assert from 'assert';
+import * as extend from 'extend';
+import * as proxyquire from 'proxyquire';
+import * as through from 'through2';
+import {util} from '@google-cloud/common-grpc';
 const {v2} = require('../src');
 const PKG = require('../../package.json');
 
 let extended = false;
 const fakePaginator = {
   paginator: {
-    extend: function(Class, methods) {
-      if (Class.name !== 'Logging') {
+    extend(klass, methods) {
+      if (klass.name !== 'Logging') {
         return;
       }
       extended = true;
       methods = arrify(methods);
       assert.deepStrictEqual(methods, ['getEntries', 'getSinks']);
     },
-    streamify: function(methodName) {
+    streamify(methodName) {
       return methodName;
     },
   },
@@ -51,7 +51,7 @@ let isCustomTypeOverride;
 let promisifed = false;
 let replaceProjectIdTokenOverride;
 const fakeUtil = extend({}, util, {
-  isCustomType: function() {
+  isCustomType() {
     if (isCustomTypeOverride) {
       return isCustomTypeOverride.apply(null, arguments);
     }
@@ -59,8 +59,8 @@ const fakeUtil = extend({}, util, {
   },
 });
 const fakePromisify = {
-  promisifyAll: function(Class, options) {
-    if (Class.name !== 'Logging') {
+  promisifyAll(c, options) {
+    if (c.name !== 'Logging') {
       return;
     }
     promisifed = true;
@@ -73,7 +73,7 @@ const fakePromisify = {
   },
 };
 const fakeProjectify = {
-  replaceProjectIdToken: function(reqOpts) {
+  replaceProjectIdToken(reqOpts) {
     if (replaceProjectIdTokenOverride) {
       return replaceProjectIdTokenOverride.apply(null, arguments);
     }
@@ -85,24 +85,33 @@ const originalFakeUtil = extend(true, {}, fakeUtil);
 
 function fakeV2() {}
 
-function FakeEntry() {
-  this.calledWith_ = arguments;
+class FakeEntry {
+  calledWith_: IArguments;
+  constructor() {
+    this.calledWith_ = arguments;
+  }
+  static fromApiResponse_() {
+    return arguments;
+  }
 }
 
-FakeEntry.fromApiResponse_ = function() {
-  return arguments;
-};
-
-function FakeLog() {
-  this.calledWith_ = arguments;
+class FakeLog {
+  calledWith_: IArguments;
+  constructor() {
+    this.calledWith_ = arguments;
+  }
 }
 
-function FakeSink() {
-  this.calledWith_ = arguments;
+class FakeSink {
+  calledWith_: IArguments;
+  constructor() {
+    this.calledWith_ = arguments;
+  }
 }
 
 describe('Logging', () => {
-  let Logging;
+  // tslint:disable-next-line no-any variable-name
+  let Logging: any;
   let logging;
 
   const PROJECT_ID = 'project-id';
@@ -136,7 +145,7 @@ describe('Logging', () => {
   });
 
   describe('instantiation', () => {
-    const EXPECTED_SCOPES = [];
+    const EXPECTED_SCOPES: string[] = [];
     const clientClasses = [
       v2.ConfigServiceV2Client,
       v2.LoggingServiceV2Client,
@@ -494,8 +503,7 @@ describe('Logging', () => {
       });
 
       it('should execute callback with error & API response', done => {
-        logging.getEntries({}, function() {
-          const args = [].slice.call(arguments);
+        logging.getEntries({}, (...args) => {
           assert.deepStrictEqual(args, ARGS);
           done();
         });
@@ -522,7 +530,7 @@ describe('Logging', () => {
         logging.getEntries({}, (err, entries) => {
           assert.ifError(err);
           const argsPassedToFromApiResponse_ = entries[0];
-          assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS[1][0]);
+          assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS[1]![0]);
           done();
         });
       });
@@ -648,8 +656,7 @@ describe('Logging', () => {
       });
 
       it('should execute callback with error & API response', done => {
-        logging.getEntries(OPTIONS, function() {
-          const args = [].slice.call(arguments);
+        logging.getEntries(OPTIONS, (...args) => {
           assert.deepStrictEqual(args, ARGS);
           done();
         });
@@ -676,13 +683,13 @@ describe('Logging', () => {
       it('should execute callback with Logs & API resp', done => {
         const sinkInstance = {};
         logging.sink = name => {
-          assert.strictEqual(name, ARGS[1][0].name);
+          assert.strictEqual(name, ARGS[1]![0].name);
           return sinkInstance;
         };
         logging.getSinks(OPTIONS, (err, sinks) => {
           assert.ifError(err);
           assert.strictEqual(sinks[0], sinkInstance);
-          assert.strictEqual(sinks[0].metadata, ARGS[1][0]);
+          assert.strictEqual(sinks[0].metadata, ARGS[1]![0]);
           done();
         });
       });
@@ -836,9 +843,11 @@ describe('Logging', () => {
         const fakeClient = {
           [CONFIG.method]: util.noop,
         };
-        fakeV2[CONFIG.client] = function(options) {
-          assert.strictEqual(options, logging.options);
-          return fakeClient;
+        fakeV2[CONFIG.client] = class {
+          constructor(options) {
+            assert.strictEqual(options, logging.options);
+            return fakeClient;
+          }
         };
         logging.api = {};
         logging.request(CONFIG, assert.ifError);
@@ -866,7 +875,7 @@ describe('Logging', () => {
         };
 
         logging.api[CONFIG.client][CONFIG.method] = {
-          bind: function(gaxClient, reqOpts) {
+          bind(gaxClient, reqOpts) {
             assert.strictEqual(reqOpts, replacedReqOpts);
 
             setImmediate(done);
@@ -881,13 +890,14 @@ describe('Logging', () => {
 
     describe('makeRequestCallback', () => {
       it('should return if in snippet sandbox', done => {
-        logging.auth.getProjectId = function() {
+        logging.auth.getProjectId = () => {
           done(new Error('Should not have gotten project ID.'));
         };
-
-        global.GCLOUD_SANDBOX_ENV = true;
+        // tslint:disable-next-line no-any
+        (global as any).GCLOUD_SANDBOX_ENV = true;
         const returnValue = logging.request(CONFIG, assert.ifError);
-        delete global.GCLOUD_SANDBOX_ENV;
+        // tslint:disable-next-line no-any
+        delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert.strictEqual(returnValue, undefined);
         done();
@@ -895,7 +905,7 @@ describe('Logging', () => {
 
       it('should prepare the request', done => {
         logging.api[CONFIG.client][CONFIG.method] = {
-          bind: function(gaxClient, reqOpts, gaxOpts) {
+          bind(gaxClient, reqOpts, gaxOpts) {
             assert.strictEqual(gaxClient, logging.api[CONFIG.client]);
             assert.deepStrictEqual(reqOpts, CONFIG.reqOpts);
             assert.strictEqual(gaxOpts, CONFIG.gaxOpts);
@@ -912,20 +922,20 @@ describe('Logging', () => {
       it('should execute callback with error', done => {
         const error = new Error('Error.');
 
-        logging.api[CONFIG.client][CONFIG.method] = function() {
-          const callback = [].slice.call(arguments).pop();
+        logging.api[CONFIG.client][CONFIG.method] = (...args) => {
+          const callback = args.pop();
           callback(error);
         };
 
-        logging.request(CONFIG, function(err) {
+        logging.request(CONFIG, err => {
           assert.strictEqual(err, error);
           done();
         });
       });
 
       it('should execute the request function', () => {
-        logging.api[CONFIG.client][CONFIG.method] = function(done) {
-          const callback = [].slice.call(arguments).pop();
+        logging.api[CONFIG.client][CONFIG.method] = (done, ...args) => {
+          const callback = args.pop();
           callback(null, done);  // so it ends the test
         };
 
@@ -940,23 +950,23 @@ describe('Logging', () => {
         GAX_STREAM = through();
 
         logging.api[CONFIG.client][CONFIG.method] = {
-          bind: function() {
-            return function() {
-              return GAX_STREAM;
-            };
+          bind() {
+            return () => GAX_STREAM;
           },
         };
       });
 
       it('should return if in snippet sandbox', done => {
-        logging.auth.getProjectId = function() {
+        logging.auth.getProjectId = () => {
           done(new Error('Should not have gotten project ID.'));
         };
 
-        global.GCLOUD_SANDBOX_ENV = true;
+        // tslint:disable-next-line no-any
+        (global as any).GCLOUD_SANDBOX_ENV = true;
         const returnValue = logging.request(CONFIG);
         returnValue.emit('reading');
-        delete global.GCLOUD_SANDBOX_ENV;
+        // tslint:disable-next-line no-any
+        delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert(returnValue instanceof require('stream'));
         done();
@@ -972,16 +982,12 @@ describe('Logging', () => {
 
       it('should prepare the request once reading', done => {
         logging.api[CONFIG.client][CONFIG.method] = {
-          bind: function(gaxClient, reqOpts, gaxOpts) {
+          bind(gaxClient, reqOpts, gaxOpts) {
             assert.strictEqual(gaxClient, logging.api[CONFIG.client]);
             assert.deepStrictEqual(reqOpts, CONFIG.reqOpts);
             assert.strictEqual(gaxOpts, CONFIG.gaxOpts);
-
             setImmediate(done);
-
-            return function() {
-              return GAX_STREAM;
-            };
+            return () => GAX_STREAM;
           },
         };
 
@@ -999,7 +1005,7 @@ describe('Logging', () => {
         const requestStream = logging.request(CONFIG);
         requestStream.emit('reading');
 
-        requestStream.on('error', function(err) {
+        requestStream.on('error', err => {
           assert.strictEqual(err, error);
           done();
         });
@@ -1011,7 +1017,7 @@ describe('Logging', () => {
         const requestStream = logging.request(CONFIG);
         requestStream.emit('reading');
 
-        requestStream.on('error', function(err) {
+        requestStream.on('error', err => {
           assert.strictEqual(err, error);
           done();
         });
@@ -1054,7 +1060,7 @@ describe('Logging', () => {
     });
 
     it('should add cloud-logs as an owner', done => {
-      bucket.acl.owners.addGroup = function(entity) {
+      bucket.acl.owners.addGroup = entity => {
         assert.strictEqual(entity, 'cloud-logs@google.com');
         done();
       };
@@ -1067,13 +1073,13 @@ describe('Logging', () => {
       const apiResponse = {};
 
       beforeEach(() => {
-        bucket.acl.owners.addGroup = function(entity, callback) {
+        bucket.acl.owners.addGroup = (entity, callback) => {
           callback(error, apiResponse);
         };
       });
 
       it('should return error and API response to callback', done => {
-        logging.setAclForBucket_(SINK_NAME, CONFIG, function(err, sink, resp) {
+        logging.setAclForBucket_(SINK_NAME, CONFIG, (err, sink, resp) => {
           assert.strictEqual(err, error);
           assert.strictEqual(sink, null);
           assert.strictEqual(resp, apiResponse);
@@ -1087,13 +1093,13 @@ describe('Logging', () => {
       const apiResponse = {};
 
       beforeEach(() => {
-        bucket.acl.owners.addGroup = function(entity, callback) {
+        bucket.acl.owners.addGroup = (entity, callback) => {
           callback(null, apiResponse);
         };
       });
 
       it('should call createSink with string destination', done => {
-        bucket.acl.owners.addGroup = function(entity, callback) {
+        bucket.acl.owners.addGroup = (entity, callback) => {
           logging.createSink = (name, config, callback) => {
             assert.strictEqual(name, SINK_NAME);
 
@@ -1173,7 +1179,7 @@ describe('Logging', () => {
 
           const expectedAccess = [].slice.call(originalAccess).concat(access);
 
-          dataset.setMetadata = function(metadata) {
+          dataset.setMetadata = metadata => {
             assert.deepStrictEqual(apiResponse.access, originalAccess);
             assert.deepStrictEqual(metadata.access, expectedAccess);
             done();
@@ -1187,13 +1193,13 @@ describe('Logging', () => {
           const apiResponse = {};
 
           beforeEach(() => {
-            dataset.setMetadata = function(metadata, callback) {
+            dataset.setMetadata = (metadata, callback) => {
               callback(error, apiResponse);
             };
           });
 
           it('should exec callback with error & API response', done => {
-            logging.setAclForDataset_(SINK_NAME, CONFIG, function(err, _, res) {
+            logging.setAclForDataset_(SINK_NAME, CONFIG, (err, _, res) => {
               assert.strictEqual(err, error);
               assert.strictEqual(_, null);
               assert.strictEqual(res, apiResponse);
@@ -1206,7 +1212,7 @@ describe('Logging', () => {
           const apiResponse = {};
 
           beforeEach(() => {
-            dataset.setMetadata = function(metadata, callback) {
+            dataset.setMetadata = (metadata, callback) => {
               callback(null, apiResponse);
             };
           });
