@@ -3,17 +3,14 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
-    "allowJs": true,
     "noImplicitAny": false,
-    "declaration": false,
     "skipLibCheck": true
   },
   "include": [
     "src/*.ts",
     "src/**/*.ts",
-    "src/**/*.js",
     "test/*.ts",
     "test/**/*.ts",
-    "system-test/*.ts",
+    "system-test/*.ts"
   ]
 }
