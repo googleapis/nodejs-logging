@@ -46,7 +46,7 @@ describe('middleware/express/make-middleware', () => {
         {'../context': FAKE_CONTEXT});
 
     it('should return a function accepting 3 arguments', () => {
-      const middleware = makeMiddleware(FAKE_PROJECT_ID, () => {}, () => {});
+      const middleware = makeMiddleware(FAKE_PROJECT_ID, () => {});
       assert.ok(typeof middleware === 'function');
       assert.ok(middleware.length === 3);
     });
@@ -64,7 +64,7 @@ describe('middleware/express/make-middleware', () => {
         const fakeResponse = makeFakeResponse();
         let called = false;
 
-        const middleware = makeMiddleware(FAKE_PROJECT_ID, () => {}, () => {});
+        const middleware = makeMiddleware(FAKE_PROJECT_ID, () => {});
 
         middleware(fakeRequest, fakeResponse, () => {
           called = true;
@@ -78,16 +78,15 @@ describe('middleware/express/make-middleware', () => {
         const fakeRequest = makeFakeRequest();
         const fakeResponse = makeFakeResponse();
 
-        function makeChild(childSuffix, trace) {
+        function makeChild(trace) {
           assert.strictEqual(
               trace,
               `projects/${FAKE_PROJECT_ID}/traces/${
                   FAKE_SPAN_CONTEXT.traceId}`);
-          assert.strictEqual(typeof childSuffix, 'string');
           return FAKE_CHILD_LOGGER;
         }
 
-        const middleware = makeMiddleware(FAKE_PROJECT_ID, () => {}, makeChild);
+        const middleware = makeMiddleware(FAKE_PROJECT_ID, makeChild);
         middleware(fakeRequest, fakeResponse, () => {});
 
         // Should annotate the request with the child logger.
@@ -111,7 +110,7 @@ describe('middleware/express/make-middleware', () => {
         }
 
         const middleware =
-            makeMiddleware(FAKE_PROJECT_ID, emitRequestLog, () => {});
+            makeMiddleware(FAKE_PROJECT_ID, () => {}, emitRequestLog);
         middleware(fakeRequest, fakeResponse, () => {});
 
         setTimeout(() => {
