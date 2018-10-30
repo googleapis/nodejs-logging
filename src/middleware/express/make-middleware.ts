@@ -19,6 +19,7 @@ import {getOrInjectContext, makeHeaderWrapper} from '../context';
 // Types-only import.
 import {Request, Response, NextFunction} from 'express';
 import {makeHttpRequestData} from './make-http-request';
+import {StackdriverHttpRequest} from '../../http-request';
 
 const CHILD_LOG_NAME_SUFFIX = 'applog';
 
@@ -28,7 +29,8 @@ export interface AnnotatedRequestType<LoggerType> extends Request {
 
 export function makeMiddleware<LoggerType>(
     projectId: string,
-    emitRequestLog: (httpRequest: HttpRequest, trace: string) => void,
+    emitRequestLog: (httpRequest: StackdriverHttpRequest, trace: string) =>
+        void,
     makeChildLogger: (childSuffix: string, trace: string) => LoggerType) {
   return (req: Request, res: Response, next: NextFunction) => {
     // TODO(ofrobots): use high-resolution timer.
