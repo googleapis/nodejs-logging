@@ -165,7 +165,8 @@ describe('Logging', () => {
         const logstream = logging.getSinksStream({pageSize: 1})
                               .on('error', done)
                               .once('data', () => {
-                                logstream.end();
+                                // tslint:disable-next-line no-any
+                                (logstream as any).end();
                                 done();
                               });
       });
