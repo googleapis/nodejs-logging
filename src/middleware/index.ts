@@ -16,4 +16,4 @@
 
 import * as express from './express';
 
-export { express };
+export {express};
