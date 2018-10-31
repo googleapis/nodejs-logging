@@ -32,7 +32,7 @@ export interface AnnotatedRequestType<LoggerType> extends Request {
  * libraries such as winston and bunyan.
  *
  * @param projectId Generated traceIds will be associated with this project.
- * @param makeChildLogger A function that generates a logger instances that will
+ * @param makeChildLogger A function that generates logger instances that will
  * be installed onto `req` as `req.log`. The logger should include the trace in
  * each log entry's metadata (associated with the LOGGING_TRACE_KEY property.
  * @param emitRequestLog Optional. A function that will emit a parent request
