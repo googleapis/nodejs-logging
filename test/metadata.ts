@@ -20,7 +20,7 @@ import * as assert from 'assert';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import {getGKEDescriptor} from '../src/metadata';
+import assertRejects from 'assert-rejects';
 
 let instanceOverride;
 const fakeGcpMetadata = {
@@ -160,31 +160,19 @@ describe('metadata', () => {
     });
 
     it('should throw error on failure to acquire metadata', async () => {
-      let caught = false;
       const FAKE_ERROR = new Error();
       instanceOverride = {
         errorArg: FAKE_ERROR,
       };
 
-      try {
-        await metadata.getGKEDescriptor();
-      } catch (err) {
-        assert.strictEqual(err, FAKE_ERROR);
-        caught = true;
-      }
-      assert.ok(caught);
+      assertRejects(metadata.getGKEDescriptor(), (err) => err === FAKE_ERROR);
     });
 
     it('should throw error when read of namespace file fails', async () => {
-      let caught = false;
       readFileShouldError = true;
-      try {
-        await metadata.getGKEDescriptor();
-      } catch (err) {
-        assert.ok(err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
-        caught = true;
-      }
-      assert.ok(caught);
+      assertRejects(
+          metadata.getGKEDescriptor(),
+          (err) => err.message.includes(FAKE_READFILE_CONTENTS));
     });
   });
 
