@@ -21,17 +21,30 @@ import {Request, Response, NextFunction} from 'express';
 import {makeHttpRequestData} from './make-http-request';
 import {StackdriverHttpRequest} from '../../http-request';
 
-const CHILD_LOG_NAME_SUFFIX = 'applog';
-
 export interface AnnotatedRequestType<LoggerType> extends Request {
   log: LoggerType;
 }
 
+/**
+ * Generates an express middleware that installs a request-specific logger on
+ * the `request` object. It optionally can do HttpRequest timing that can be
+ * used for generating request logs. This can be used to integrate with logging
+ * libraries such as winston and bunyan.
+ *
+ * @param projectId Generated traceIds will be associated with this project.
+ * @param makeChildLogger A function that generates logger instances that will
+ * be installed onto `req` as `req.log`. The logger should include the trace in
+ * each log entry's metadata (associated with the LOGGING_TRACE_KEY property.
+ * @param emitRequestLog Optional. A function that will emit a parent request
+ * log. While some environments like GAE and GCF emit parent request logs
+ * automatically, other environments do not. When provided this function will be
+ * called with a populated `StackdriverHttpRequest` which can be emitted as
+ * request log.
+ */
 export function makeMiddleware<LoggerType>(
-    projectId: string,
-    emitRequestLog: (httpRequest: StackdriverHttpRequest, trace: string) =>
-        void,
-    makeChildLogger: (childSuffix: string, trace: string) => LoggerType) {
+    projectId: string, makeChildLogger: (trace: string) => LoggerType,
+    emitRequestLog?: (httpRequest: StackdriverHttpRequest, trace: string) =>
+        void) {
   return (req: Request, res: Response, next: NextFunction) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
@@ -42,15 +55,16 @@ export function makeMiddleware<LoggerType>(
     const trace = `projects/${projectId}/traces/${spanContext.traceId}`;
 
     // Install a child logger on the request object.
-    (req as AnnotatedRequestType<LoggerType>).log =
-        makeChildLogger(CHILD_LOG_NAME_SUFFIX, trace);
+    (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(trace);
 
-    // Emit a 'Request Log' on the parent logger.
-    onFinished(res, () => {
-      const latencyMs = Date.now() - requestStartMs;
-      const httpRequest = makeHttpRequestData(req, res, latencyMs);
-      emitRequestLog(httpRequest, trace);
-    });
+    if (emitRequestLog) {
+      // Emit a 'Request Log' on the parent logger.
+      onFinished(res, () => {
+        const latencyMs = Date.now() - requestStartMs;
+        const httpRequest = makeHttpRequestData(req, res, latencyMs);
+        emitRequestLog(httpRequest, trace);
+      });
+    }
 
     next();
   };
