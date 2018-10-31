@@ -35,12 +35,13 @@ const fakePromisify = extend({}, promisify, {
 
 const {Entry} = require('../src');
 
-class FakeMetadata {
-  calledWith_: IArguments;
-  constructor() {
-    this.calledWith_ = arguments;
-  }
-}
+const originalGetDefaultResource = async () => {
+  return 'very-fake-resource';
+};
+
+const fakeMetadata = {
+  getDefaultResource: originalGetDefaultResource
+};
 
 describe('Log', () => {
   // tslint:disable-next-line no-any variable-name
@@ -65,7 +66,7 @@ describe('Log', () => {
     Log = proxyquire('../src/log', {
             '@google-cloud/promisify': fakePromisify,
             './entry': {Entry},
-            './metadata': {Metadata: FakeMetadata},
+            './metadata': fakeMetadata,
           }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = (...args) =>
@@ -110,11 +111,6 @@ describe('Log', () => {
       const log = new Log(LOGGING, LOG_NAME_FORMATTED);
 
       assert.strictEqual(log.formattedName_, formattedName);
-    });
-
-    it('should localize an instance of Metadata', () => {
-      assert(log.metadata_ instanceof FakeMetadata);
-      assert.strictEqual(log.metadata_.calledWith_[0], LOGGING);
     });
 
     it('should accept and localize options.removeCircular', () => {
@@ -319,8 +315,8 @@ describe('Log', () => {
       log.decorateEntries_ = entries => {
         return entries;
       };
-      log.metadata_.getDefaultResource = callback => {
-        callback(null, FAKE_RESOURCE);
+      fakeMetadata.getDefaultResource = async () => {
+        return FAKE_RESOURCE;
       };
     });
 
@@ -645,9 +641,6 @@ describe('Log', () => {
 
     beforeEach(() => {
       log.entry = () => new FakeEntry();
-      log.metadata_.assignDefaultResource = (entryJson, callback) => {
-        callback(null, entryJson);
-      };
     });
 
     it('should create an Entry object if one is not provided', () => {

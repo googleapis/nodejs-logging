@@ -20,6 +20,7 @@ import * as assert from 'assert';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+import assertRejects = require('assert-rejects');
 
 let instanceOverride;
 const fakeGcpMetadata = {
@@ -63,42 +64,30 @@ const fakeFS = {
 
 describe('metadata', () => {
   // tslint:disable-next-line no-any variable-name
-  let MetadataCached: any;
+  let metadataCached: any;
   // tslint:disable-next-line no-any variable-name
-  let Metadata: any;
-  let metadata;
-
-  let LOGGING;
-
+  let metadata: any;
+  let AUTH;
   const ENV_CACHED = extend({}, process.env);
 
   before(() => {
-    Metadata = proxyquire('../src/metadata', {
-                 'gcp-metadata': fakeGcpMetadata,
-                 fs: fakeFS,
-               }).Metadata;
+    metadata = proxyquire('../src/metadata', {
+      'gcp-metadata': fakeGcpMetadata,
+      fs: fakeFS,
+    });
 
-    MetadataCached = extend({}, Metadata);
+    metadataCached = extend({}, metadata);
   });
 
   beforeEach(() => {
-    LOGGING = {
-      auth: {},
-    };
-    extend(Metadata, MetadataCached);
-    metadata = new Metadata(LOGGING);
+    AUTH = {};
+    extend(metadata, metadataCached);
     instanceOverride = null;
     readFileShouldError = false;
   });
 
   afterEach(() => {
     extend(process.env, ENV_CACHED);
-  });
-
-  describe('instantiation', () => {
-    it('should localize Logging instance', () => {
-      assert.strictEqual(metadata.logging, LOGGING);
-    });
   });
 
   describe('getCloudFunctionDescriptor', () => {
@@ -111,7 +100,7 @@ describe('metadata', () => {
     });
 
     it('should return the correct descriptor', () => {
-      assert.deepStrictEqual(Metadata.getCloudFunctionDescriptor(), {
+      assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
         type: 'cloud_function',
         labels: {
           function_name: FUNCTION_NAME,
@@ -133,7 +122,7 @@ describe('metadata', () => {
     });
 
     it('should return the correct descriptor', () => {
-      assert.deepStrictEqual(Metadata.getGAEDescriptor(), {
+      assert.deepStrictEqual(metadata.getGAEDescriptor(), {
         type: 'gae_app',
         labels: {
           module_id: GAE_SERVICE,
@@ -145,7 +134,7 @@ describe('metadata', () => {
     it('should use GAE_MODULE_NAME for module_id', () => {
       delete process.env.GAE_SERVICE;
 
-      const moduleId = Metadata.getGAEDescriptor().labels.module_id;
+      const moduleId = metadata.getGAEDescriptor().labels.module_id;
       assert.strictEqual(moduleId, GAE_MODULE_NAME);
     });
   });
@@ -153,150 +142,115 @@ describe('metadata', () => {
   describe('getGKEDescriptor', () => {
     const CLUSTER_NAME = 'gke-cluster-name';
 
-    it('should return the correct descriptor', done => {
+    it('should return the correct descriptor', async () => {
       instanceOverride = {
         path: 'attributes/cluster-name',
         successArg: CLUSTER_NAME,
       };
 
-      Metadata.getGKEDescriptor((err, descriptor) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(descriptor, {
-          type: 'container',
-          labels: {
-            cluster_name: CLUSTER_NAME,
-            namespace_id: FAKE_READFILE_CONTENTS,
-          },
-        });
-        done();
+      const descriptor = await metadata.getGKEDescriptor();
+      assert.deepStrictEqual(descriptor, {
+        type: 'container',
+        labels: {
+          cluster_name: CLUSTER_NAME,
+          namespace_id: FAKE_READFILE_CONTENTS,
+        },
       });
     });
 
-    it('should return error on failure to acquire metadata', done => {
+    it('should throw error on failure to acquire metadata', async () => {
       const FAKE_ERROR = new Error();
       instanceOverride = {
         errorArg: FAKE_ERROR,
       };
 
-      Metadata.getGKEDescriptor(err => {
-        assert.strictEqual(err, FAKE_ERROR);
-        done();
-      });
+      assertRejects(metadata.getGKEDescriptor(), (err) => err === FAKE_ERROR);
     });
 
-    it('should return error when read of namespace file fails', done => {
+    it('should throw error when read of namespace file fails', async () => {
       readFileShouldError = true;
-      Metadata.getGKEDescriptor(err => {
-        assert.ok(err);
-        assert.ok(err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
-        done();
-      });
-    });
-  });
 
-  describe('getGCEDescriptor', () => {
-    const INSTANCE_ID = 'fake-instance-id';
-    const ZONE_ID = 'morrowind-vivec-1';
-    const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
-
-    it('should return the correct descriptor', done => {
-      instanceOverride = [
-        {
-          path: 'id',
-          successArg: INSTANCE_ID,
-        },
-        {
-          path: 'zone',
-          successArg: ZONE_FULL,
-        },
-      ];
-
-      Metadata.getGCEDescriptor((err, descriptor) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(descriptor, {
-          type: 'gce_instance',
-          labels: {
-            instance_id: INSTANCE_ID,
-            zone: ZONE_ID,
-          },
-        });
-        done();
-      });
-    });
-
-    it('should return error on failure to acquire metadata', done => {
-      const FAKE_ERROR = new Error();
-      instanceOverride = {
-        errorArg: FAKE_ERROR,
-      };
-
-      Metadata.getGCEDescriptor(err => {
-        assert.strictEqual(err, FAKE_ERROR);
-        done();
-      });
+      assertRejects(
+          metadata.getGKEDescriptor(),
+          (err) => err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
     });
   });
 
   describe('getGlobalDescriptor', () => {
     it('should return the correct descriptor', () => {
-      assert.deepStrictEqual(Metadata.getGlobalDescriptor(), {
+      assert.deepStrictEqual(metadata.getGlobalDescriptor(), {
         type: 'global',
       });
     });
   });
 
   describe('getDefaultResource', () => {
-    it('should get the environment from auth client', done => {
-      metadata.logging.auth.getEnv = () => {
-        done();
-      };
+    it('should get the environment from auth client', async () => {
+      let called = false;
 
-      metadata.getDefaultResource(assert.ifError);
+      const fakeAuth = {
+        async getEnv() {
+          called = true;
+          return null;
+        }
+      };
+      await metadata.getDefaultResource(fakeAuth);
+      assert.ok(called);
     });
 
     describe('environments', () => {
       describe('app engine', () => {
-        it('should return correct descriptor', done => {
-          const DESCRIPTOR = {};
+        it('should return correct descriptor', async () => {
+          const GAE_MODULE_NAME = 'gae-module-name';
+          const GAE_SERVICE = 'gae-service';
+          const GAE_VERSION = 'gae-version';
+          process.env.GAE_MODULE_NAME = GAE_MODULE_NAME;
+          process.env.GAE_SERVICE = GAE_SERVICE;
+          process.env.GAE_VERSION = GAE_VERSION;
 
-          Metadata.getGAEDescriptor = () => {
-            return DESCRIPTOR;
+          const fakeAuth = {
+            async getEnv() {
+              return 'APP_ENGINE';
+            }
           };
 
-          metadata.logging.auth.getEnv = () => {
-            return Promise.resolve('APP_ENGINE');
-          };
-
-          metadata.getDefaultResource((err, defaultResource) => {
-            assert.ifError(err);
-            assert.strictEqual(defaultResource, DESCRIPTOR);
-            done();
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepEqual(defaultResource, {
+            type: 'gae_app',
+            labels: {
+              module_id: GAE_SERVICE,
+              version_id: GAE_VERSION,
+            },
           });
         });
       });
 
       describe('cloud function', () => {
-        it('should return correct descriptor', done => {
-          const DESCRIPTOR = {};
+        it('should return correct descriptor', async () => {
+          const FUNCTION_NAME = 'function-name';
+          const FUNCTION_REGION = 'function-region';
+          process.env.FUNCTION_NAME = FUNCTION_NAME;
+          process.env.FUNCTION_REGION = FUNCTION_REGION;
 
-          Metadata.getCloudFunctionDescriptor = () => {
-            return DESCRIPTOR;
+          const fakeAuth = {
+            async getEnv() {
+              return 'CLOUD_FUNCTIONS';
+            }
           };
 
-          metadata.logging.auth.getEnv = () => {
-            return Promise.resolve('CLOUD_FUNCTIONS');
-          };
-
-          metadata.getDefaultResource((err, defaultResource) => {
-            assert.ifError(err);
-            assert.strictEqual(defaultResource, DESCRIPTOR);
-            done();
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepEqual(defaultResource, {
+            type: 'cloud_function',
+            labels: {
+              function_name: FUNCTION_NAME,
+              region: FUNCTION_REGION,
+            },
           });
         });
       });
 
       describe('compute engine', () => {
-        it('should return correct descriptor', done => {
+        it('should return correct descriptor', async () => {
           const INSTANCE_ID = 1234567;
           const ZONE_ID = 'cyrodiil-anvil-2';
           const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
@@ -311,24 +265,22 @@ describe('metadata', () => {
             },
           ];
 
-          metadata.logging.auth.getEnv = () => {
-            return Promise.resolve('COMPUTE_ENGINE');
+          const fakeAuth = {
+            async getEnv() {
+              return 'COMPUTE_ENGINE';
+            }
           };
-
-          metadata.getDefaultResource((err, defaultResource) => {
-            assert.ifError(err);
-            assert.deepStrictEqual(defaultResource, {
-              type: 'gce_instance',
-              labels: {
-                instance_id: INSTANCE_ID.toString(),
-                zone: ZONE_ID,
-              },
-            });
-            done();
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepStrictEqual(defaultResource, {
+            type: 'gce_instance',
+            labels: {
+              instance_id: INSTANCE_ID.toString(),
+              zone: ZONE_ID,
+            },
           });
         });
 
-        it('should deal with instance id being a BigNumber', done => {
+        it('should deal with instance id being a BigNumber', async () => {
           const INSTANCE_ID_STRING = `3279739563200103600`;
           const INSTANCE_ID = new BigNumber(INSTANCE_ID_STRING);
           const ZONE_ID = 'cyrodiil-anvil-2';
@@ -344,66 +296,59 @@ describe('metadata', () => {
             },
           ];
 
-          metadata.logging.auth.getEnv = () => {
-            return Promise.resolve('COMPUTE_ENGINE');
+          const fakeAuth = {
+            async getEnv() {
+              return 'COMPUTE_ENGINE';
+            }
           };
 
-          metadata.getDefaultResource((err, defaultResource) => {
-            assert.ifError(err);
-            assert.deepStrictEqual(defaultResource, {
-              type: 'gce_instance',
-              labels: {
-                instance_id: INSTANCE_ID_STRING,
-                zone: ZONE_ID,
-              },
-            });
-            done();
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepStrictEqual(defaultResource, {
+            type: 'gce_instance',
+            labels: {
+              instance_id: INSTANCE_ID_STRING,
+              zone: ZONE_ID,
+            },
           });
         });
       });
 
       describe('container engine', () => {
-        it('should return correct descriptor', done => {
+        it('should return correct descriptor', async () => {
           const CLUSTER_NAME = 'overridden-value';
           instanceOverride = {
             path: 'attributes/cluster-name',
             successArg: CLUSTER_NAME,
           };
 
-          metadata.logging.auth.getEnv = () => {
-            return Promise.resolve('KUBERNETES_ENGINE');
+          const fakeAuth = {
+            async getEnv() {
+              return 'KUBERNETES_ENGINE';
+            }
           };
 
-          metadata.getDefaultResource((err, defaultResource) => {
-            assert.ifError(err);
-            assert.deepStrictEqual(defaultResource, {
-              type: 'container',
-              labels: {
-                cluster_name: CLUSTER_NAME,
-                namespace_id: FAKE_READFILE_CONTENTS,
-              },
-            });
-            done();
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepStrictEqual(defaultResource, {
+            type: 'container',
+            labels: {
+              cluster_name: CLUSTER_NAME,
+              namespace_id: FAKE_READFILE_CONTENTS,
+            },
           });
         });
       });
 
       describe('global', () => {
-        it('should return correct descriptor', done => {
-          const DESCRIPTOR = {};
-
-          Metadata.getGlobalDescriptor = () => {
-            return DESCRIPTOR;
+        it('should return correct descriptor', async () => {
+          const fakeAuth = {
+            async getEnv() {
+              return 'NONE';
+            }
           };
 
-          metadata.logging.auth.getEnv = () => {
-            return Promise.resolve('NONE');
-          };
-
-          metadata.getDefaultResource((err, defaultResource) => {
-            assert.ifError(err);
-            assert.strictEqual(defaultResource, DESCRIPTOR);
-            done();
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepEqual(defaultResource, {
+            type: 'global',
           });
         });
       });

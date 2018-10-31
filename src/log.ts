@@ -20,10 +20,12 @@ import * as arrify from 'arrify';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
 import * as is from 'is';
+
+import {getDefaultResource} from './metadata';
+
 const snakeCaseKeys = require('snakecase-keys');
 
 const {Entry} = require('./entry');
-const {Metadata} = require('./metadata');
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -50,14 +52,12 @@ const {Metadata} = require('./metadata');
 class Log {
   formattedName_: string;
   removeCircular_: boolean;
-  metadata_;
   logging;
   name: string;
   constructor(logging, name, options) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
-    this.metadata_ = new Metadata(logging);
     this.logging = logging;
     /**
      * @name Log#name
@@ -640,10 +640,15 @@ class Log {
         options = {};
       }
       if (!options.resource) {
-        this.metadata_.getDefaultResource((err, resource) => {
-          // Ignore errors (the API will speak up if it has an issue).
-          writeWithResource(resource);
-        });
+        getDefaultResource(this.logging.auth)
+            .then(
+                (resource) => {
+                  writeWithResource(resource);
+                },
+                () => {
+                  // Ignore errors (the API will speak up if it has an issue).
+                  writeWithResource(null);
+                });
       } else {
         if (options.resource.labels) {
           options.resource.labels = snakeCaseKeys(options.resource.labels);
