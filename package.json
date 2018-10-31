@@ -91,7 +91,7 @@
     "through2": "^2.0.3"
   },
   "devDependencies": {
-    "@google-cloud/bigquery": "*",
+    "@google-cloud/bigquery": "^2.0.1",
     "@google-cloud/nodejs-repo-tools": "^2.3.3",
     "@google-cloud/pubsub": "^0.20.1",
     "@google-cloud/storage": "^2.2.0",
