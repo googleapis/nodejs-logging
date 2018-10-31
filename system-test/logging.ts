@@ -15,8 +15,7 @@
  */
 
 import * as assert from 'assert';
-// tslint:disable-next-line variable-name
-const BigQuery = require('@google-cloud/bigquery');
+const {BigQuery} = require('@google-cloud/bigquery');
 import * as extend from 'extend';
 import * as is from 'is';
 import * as nock from 'nock';
