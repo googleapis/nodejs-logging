@@ -24,8 +24,7 @@
  * @property {number} valueType
  *   The type of data that can be assigned to the label.
  *
- *   The number should be among the values of [ValueType]{@link
- * google.api.ValueType}
+ *   The number should be among the values of [ValueType]{@link google.api.ValueType}
  *
  * @property {string} description
  *   A human-readable description for the label.
