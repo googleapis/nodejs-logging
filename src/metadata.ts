@@ -52,7 +52,8 @@ export function getCloudFunctionDescriptor() {
  * @returns {object}
  */
 export async function getGAEDescriptor() {
-  const zone = zoneFromQualifiedZone(await gcpMetadata.instance('zone'));
+  const qualifiedZone = await gcpMetadata.instance('zone');
+  const zone = zoneFromQualifiedZone(qualifiedZone);
   return {
     type: 'gae_app',
     labels: {
