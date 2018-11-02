@@ -121,20 +121,22 @@ describe('metadata', () => {
       process.env.GAE_VERSION = GAE_VERSION;
     });
 
-    it('should return the correct descriptor', () => {
-      assert.deepStrictEqual(metadata.getGAEDescriptor(), {
+    it('should return the correct descriptor', async () => {
+      const ZONE_ID = 'cyrodiil-anvil-2';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = {path: 'zone', successArg: ZONE_FULL};
+      const descriptor = await metadata.getGAEDescriptor();
+      assert.deepStrictEqual(descriptor, {
         type: 'gae_app',
-        labels: {
-          module_id: GAE_SERVICE,
-          version_id: GAE_VERSION,
-        },
+        labels:
+            {module_id: GAE_SERVICE, version_id: GAE_VERSION, zone: ZONE_ID},
       });
     });
 
-    it('should use GAE_MODULE_NAME for module_id', () => {
+    it('should use GAE_MODULE_NAME for module_id', async () => {
       delete process.env.GAE_SERVICE;
 
-      const moduleId = metadata.getGAEDescriptor().labels.module_id;
+      const moduleId = (await metadata.getGAEDescriptor()).labels.module_id;
       assert.strictEqual(moduleId, GAE_MODULE_NAME);
     });
   });
@@ -207,6 +209,9 @@ describe('metadata', () => {
           process.env.GAE_MODULE_NAME = GAE_MODULE_NAME;
           process.env.GAE_SERVICE = GAE_SERVICE;
           process.env.GAE_VERSION = GAE_VERSION;
+          const ZONE_ID = 'cyrodiil-anvil-2';
+          const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+          instanceOverride = {path: 'zone', successArg: ZONE_FULL};
 
           const fakeAuth = {
             async getEnv() {
@@ -220,6 +225,7 @@ describe('metadata', () => {
             labels: {
               module_id: GAE_SERVICE,
               version_id: GAE_VERSION,
+              zone: ZONE_ID
             },
           });
         });
