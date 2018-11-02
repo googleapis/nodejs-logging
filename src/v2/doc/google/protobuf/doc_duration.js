@@ -93,5 +93,5 @@
  * @see [google.protobuf.Duration definition in proto format]{@link https://github.com/google/protobuf/blob/master/src/google/protobuf/duration.proto}
  */
 const Duration = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
