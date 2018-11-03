@@ -92,7 +92,8 @@ describe('Logging', () => {
   describe('sinks', () => {
     it('should create a sink with a Bucket destination', async () => {
       const sink = logging.sink(generateName());
-      const [_, apiResponse] = await sink.create({
+      // tslint:disable-next-line no-any
+      const [_, apiResponse] = await (sink as any).create({
         destination: bucket,
       });
       const destination = 'storage.googleapis.com/' + bucket.name;
@@ -101,11 +102,13 @@ describe('Logging', () => {
 
     it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());
-      const [_, apiResponse] = await sink.create(
-          {
-            destination: dataset,
-          },
-      );
+      // tslint:disable-next-line no-any
+      const [_, apiResponse] = await (sink as any)
+                                   .create(
+                                       {
+                                         destination: dataset,
+                                       },
+                                   );
 
       const destination = `bigquery.googleapis.com/datasets/${dataset.id}`;
 
@@ -118,7 +121,8 @@ describe('Logging', () => {
 
     it('should create a sink with a Topic destination', async () => {
       const sink = logging.sink(generateName());
-      const [_, apiResponse] = await sink.create({destination: topic});
+      // tslint:disable-next-line no-any
+      const [_, apiResponse] = await (sink as any).create({destination: topic});
       const destination = 'pubsub.googleapis.com/' + topic.name;
 
       // The projectId may have been replaced depending on how the system
@@ -138,12 +142,14 @@ describe('Logging', () => {
 
       it('should set metadata', async () => {
         const metadata = {filter: FILTER};
-        const [apiResponse] = await sink.setMetadata(metadata);
+        // tslint:disable-next-line no-any
+        const [apiResponse] = await (sink as any).setMetadata(metadata);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
 
       it('should set a filter', async () => {
-        const [apiResponse] = await sink.setFilter(FILTER);
+        // tslint:disable-next-line no-any
+        const [apiResponse] = await (sink as any).setFilter(FILTER);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
     });

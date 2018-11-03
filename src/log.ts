@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-'use strict';
-
-import * as arrify from 'arrify';
 import {promisifyAll} from '@google-cloud/promisify';
+import * as arrify from 'arrify';
 import * as extend from 'extend';
 import * as is from 'is';
 
@@ -25,7 +23,7 @@ import {getDefaultResource} from './metadata';
 
 const snakeCaseKeys = require('snakecase-keys');
 
-const {Entry} = require('./entry');
+import {Entry} from './entry';
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -204,7 +202,7 @@ class Log {
    * region_tag:logging_delete_log
    * Another example:
    */
-  delete(gaxOptions, callback) {
+  delete(gaxOptions, callback?) {
     if (is.fn(gaxOptions)) {
       callback = gaxOptions;
       gaxOptions = {};
@@ -387,7 +385,7 @@ class Log {
    *   const entries = data[0];
    * });
    */
-  getEntries(options, callback) {
+  getEntries(options, callback?) {
     if (is.function(options))
       {
         callback = options;
@@ -633,7 +631,7 @@ class Log {
    * region_tag:logging_write_log_entry_advanced
    * Another example:
    */
-  write(entry, options, callback) {
+  write(entry, options?, callback?) {
       const self = this;
       if (is.fn(options)) {
         callback = options;
@@ -753,4 +751,4 @@ class Log {
    * @name module:@google-cloud/logging.Log
    * @see Log
    */
-  module.exports.Log = Log;
+  export {Log};

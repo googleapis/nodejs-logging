@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-'use strict';
-
-import * as arrify from 'arrify';
 import * as common from '@google-cloud/common-grpc';
-import {promisifyAll} from '@google-cloud/promisify';
 import {paginator} from '@google-cloud/paginator';
 import {replaceProjectIdToken} from '@google-cloud/projectify';
+import {promisifyAll} from '@google-cloud/promisify';
+import * as arrify from 'arrify';
 import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
 import * as is from 'is';
+
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as through from 'through2';
@@ -36,9 +35,9 @@ export {HttpRequest};
 const PKG = require('../../package.json');
 const v2 = require('./v2');
 
-const {Entry} = require('./entry');
-const {Log} = require('./log');
-const {Sink} = require('./sink');
+import {Entry} from './entry';
+import {Log} from './log';
+import {Sink} from './sink';
 
 /**
  * @namespace google
@@ -913,7 +912,7 @@ promisifyAll(Logging, {
  * @see Entry
  * @type {Constructor}
  */
-module.exports.Entry = Entry;
+export {Entry};
 
 /**
  * {@link Log} class.
@@ -922,7 +921,7 @@ module.exports.Entry = Entry;
  * @see Log
  * @type {Constructor}
  */
-module.exports.Log = Log;
+export {Log};
 
 /**
  * {@link Sink} class.
@@ -931,7 +930,7 @@ module.exports.Log = Log;
  * @see Sink
  * @type {Constructor}
  */
-module.exports.Sink = Sink;
+export {Sink};
 
 /**
  * The default export of the `@google-cloud/logging` package is the

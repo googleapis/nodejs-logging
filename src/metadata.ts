@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-'use strict';
-
 import * as fs from 'fs';
 import * as gcpMetadata from 'gcp-metadata';
 import {GoogleAuth} from 'google-auth-library';
