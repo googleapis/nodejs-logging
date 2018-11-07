@@ -65,7 +65,9 @@
     "fix": "gts fix && eslint --fix 'samples/*.js' 'samples/**/*.js'",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run check"
+    "posttest": "npm run check",
+    "proto": "npm run proto:logging",
+    "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files -o proto/logging.js google/logging/v2/logging.proto && pbts -o proto/logging.d.ts proto/logging.js"
   },
   "dependencies": {
     "@google-cloud/common-grpc": "^0.9.2",
@@ -113,6 +115,7 @@
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-prettier": "^3.0.0",
+    "google-proto-files": "^0.17.0",
     "gts": "^0.8.0",
     "ink-docstrap": "git+https://github.com/docstrap/docstrap.git",
     "intelli-espower-loader": "^1.0.1",
