@@ -29,8 +29,7 @@ const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
 after(async () => {
   try {
     await logging.log(logName).delete();
-  } catch (err) {
-  }  // ignore error
+  } catch (err) {} // ignore error
 });
 
 beforeEach(tools.stubConsole);

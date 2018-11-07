@@ -54,15 +54,14 @@
  *   resource type. For example, an individual Google Cloud SQL database is
  *   identified by values for the labels `"database_id"` and `"zone"`.
  *
- *   This object should have the same structure as [LabelDescriptor]{@link
- * google.api.LabelDescriptor}
+ *   This object should have the same structure as [LabelDescriptor]{@link google.api.LabelDescriptor}
  *
  * @typedef MonitoredResourceDescriptor
  * @memberof google.api
  * @see [google.api.MonitoredResourceDescriptor definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
 const MonitoredResourceDescriptor = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -95,7 +94,7 @@ const MonitoredResourceDescriptor = {
  * @see [google.api.MonitoredResource definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
 const MonitoredResource = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
 /**
@@ -118,8 +117,7 @@ const MonitoredResource = {
  *         "security_group": ["a", "b", "c"],
  *         "spot_instance": false }
  *
- *   This object should have the same structure as [Struct]{@link
- * google.protobuf.Struct}
+ *   This object should have the same structure as [Struct]{@link google.protobuf.Struct}
  *
  * @property {Object.<string, string>} userLabels
  *   Output only. A map of user-defined metadata labels.
@@ -129,5 +127,5 @@ const MonitoredResource = {
  * @see [google.api.MonitoredResourceMetadata definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/monitored_resource.proto}
  */
 const MonitoredResourceMetadata = {
-    // This is for documentation. Actual contents will be loaded by gRPC.
+  // This is for documentation. Actual contents will be loaded by gRPC.
 };

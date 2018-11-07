@@ -36,17 +36,18 @@ const log = logging.log(logName);
 const text = 'Hello, world!';
 // The metadata associated with the entry
 const metadata = {
-  resource: {type: 'global'}
+  resource: {type: 'global'},
 };
 // Prepares a log entry
 const entry = log.entry(metadata, text);
 
 // Writes the log entry
-log.write(entry)
-    .then(() => {
-      console.log(`Logged: ${text}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+log
+  .write(entry)
+  .then(() => {
+    console.log(`Logged: ${text}`);
+  })
+  .catch(err => {
+    console.error('ERROR:', err);
+  });
 // [END logging_quickstart]
