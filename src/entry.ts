@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-'use strict';
-
 import {Service} from '@google-cloud/common-grpc';
 // tslint:disable-next-line variable-name
 const EventId = require('eventid');
@@ -85,7 +83,7 @@ const eventId = new EventId();
 class Entry {
   metadata;
   data;
-  constructor(metadata, data) {
+  constructor(metadata?, data?) {
     /**
      * @name Entry#metadata
      * @type {object}
@@ -174,4 +172,4 @@ class Entry {
  * @name module:@google-cloud/logging.Entry
  * @see Entry
  */
-module.exports.Entry = Entry;
+export {Entry};

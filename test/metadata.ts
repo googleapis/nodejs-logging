@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-'use strict';
-
 import * as assert from 'assert';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
