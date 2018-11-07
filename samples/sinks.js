@@ -53,13 +53,14 @@ function createSink(sinkName, bucketName, filter) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=create
-  sink.create(config)
-      .then(() => {
-        console.log(`Created sink ${sinkName} to ${bucketName}`);
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
-      });
+  sink
+    .create(config)
+    .then(() => {
+      console.log(`Created sink ${sinkName} to ${bucketName}`);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
   // [END logging_create_sink]
 }
 
@@ -80,17 +81,18 @@ function getSinkMetadata(sinkName) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=getMetadata
-  sink.getMetadata()
-      .then(results => {
-        const metadata = results[0];
+  sink
+    .getMetadata()
+    .then(results => {
+      const metadata = results[0];
 
-        console.log(`Name: ${metadata.name}`);
-        console.log(`Destination: ${metadata.destination}`);
-        console.log(`Filter: ${metadata.filter}`);
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
-      });
+      console.log(`Name: ${metadata.name}`);
+      console.log(`Destination: ${metadata.destination}`);
+      console.log(`Filter: ${metadata.filter}`);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
   // [END logging_get_sink]
 }
 
@@ -104,20 +106,21 @@ function listSinks() {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getSinks
-  logging.getSinks()
-      .then(results => {
-        const sinks = results[0];
+  logging
+    .getSinks()
+    .then(results => {
+      const sinks = results[0];
 
-        console.log('Sinks:');
-        sinks.forEach(sink => {
-          console.log(sink.name);
-          console.log(`  Destination: ${sink.metadata.destination}`);
-          console.log(`  Filter: ${sink.metadata.filter}`);
-        });
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
+      console.log('Sinks:');
+      sinks.forEach(sink => {
+        console.log(sink.name);
+        console.log(`  Destination: ${sink.metadata.destination}`);
+        console.log(`  Filter: ${sink.metadata.filter}`);
       });
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
   // [END logging_list_sinks]
 }
 
@@ -150,14 +153,15 @@ function updateSink(sinkName, filter) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=setMetadata
-  sink.setMetadata(metadata)
-      .then(results => {
-        const metadata = results[0];
-        console.log(`Sink ${sinkName} updated.`, metadata);
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
-      });
+  sink
+    .setMetadata(metadata)
+    .then(results => {
+      const metadata = results[0];
+      console.log(`Sink ${sinkName} updated.`, metadata);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
   // [END logging_update_sink]
 }
 
@@ -178,57 +182,66 @@ function deleteSink(sinkName) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=delete
-  sink.delete()
-      .then(() => {
-        console.log(`Sink ${sinkName} deleted.`);
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
-      });
+  sink
+    .delete()
+    .then(() => {
+      console.log(`Sink ${sinkName} deleted.`);
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
   // [END logging_delete_sink]
 }
 
 require(`yargs`)
-    .demand(1)
-    .command(
-        'create <sinkName> <bucketName> [filter]',
-        'Creates a new sink with the given name to the specified bucket with an optional filter.',
-        {},
-        opts => {
-          createSink(opts.sinkName, opts.bucketName, opts.filter);
-        })
-    .command(
-        'get <sinkName>', 'Gets the metadata for the specified sink.', {},
-        opts => {
-          getSinkMetadata(opts.sinkName);
-        })
-    .command('list', 'Lists all sinks.', {}, listSinks)
-    .command(
-        'update <sinkName> <filter>',
-        'Updates the filter for the specified sink.', {},
-        opts => {
-          updateSink(opts.sinkName, opts.filter);
-        })
-    .command(
-        'delete <sinkName>', 'Deletes the specified sink.', {},
-        opts => {
-          deleteSink(opts.sinkName);
-        })
-    .example(
-        'node $0 create export-errors app-error-logs',
-        'Create a new sink named "export-errors" that exports logs to a bucket named "app-error-logs".')
-    .example(
-        'node $0 get export-errors',
-        'Get the metadata for a sink name "export-errors".')
-    .example('node $0 list', 'List all sinks.')
-    .example(
-        'node $0 update export-errors "severity >= WARNING"',
-        'Update the filter for a sink named "export-errors".')
-    .example(
-        'node $0 delete export-errors', 'Delete a sink named "export-errors".')
-    .wrap(120)
-    .recommendCommands()
-    .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
-    .help()
-    .strict()
-    .argv;
+  .demand(1)
+  .command(
+    'create <sinkName> <bucketName> [filter]',
+    'Creates a new sink with the given name to the specified bucket with an optional filter.',
+    {},
+    opts => {
+      createSink(opts.sinkName, opts.bucketName, opts.filter);
+    }
+  )
+  .command(
+    'get <sinkName>',
+    'Gets the metadata for the specified sink.',
+    {},
+    opts => {
+      getSinkMetadata(opts.sinkName);
+    }
+  )
+  .command('list', 'Lists all sinks.', {}, listSinks)
+  .command(
+    'update <sinkName> <filter>',
+    'Updates the filter for the specified sink.',
+    {},
+    opts => {
+      updateSink(opts.sinkName, opts.filter);
+    }
+  )
+  .command('delete <sinkName>', 'Deletes the specified sink.', {}, opts => {
+    deleteSink(opts.sinkName);
+  })
+  .example(
+    'node $0 create export-errors app-error-logs',
+    'Create a new sink named "export-errors" that exports logs to a bucket named "app-error-logs".'
+  )
+  .example(
+    'node $0 get export-errors',
+    'Get the metadata for a sink name "export-errors".'
+  )
+  .example('node $0 list', 'List all sinks.')
+  .example(
+    'node $0 update export-errors "severity >= WARNING"',
+    'Update the filter for a sink named "export-errors".'
+  )
+  .example(
+    'node $0 delete export-errors',
+    'Delete a sink named "export-errors".'
+  )
+  .wrap(120)
+  .recommendCommands()
+  .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
+  .help()
+  .strict().argv;
