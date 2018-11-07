@@ -40,17 +40,17 @@ before(async () => {
 after(async () => {
   try {
     await logging.sink(sinkName).delete();
-  } catch (err) {
-  }  // ignore error
+  } catch (err) {} // ignore error
   try {
     await storage.bucket(bucketName).delete();
-  } catch (err) {
-  }  // ignore error
+  } catch (err) {} // ignore error
 });
 
 it(`should create a sink`, async () => {
   const output = await tools.runAsync(
-      `${cmd} create ${sinkName} ${bucketName} "${filter}"`, cwd);
+    `${cmd} create ${sinkName} ${bucketName} "${filter}"`,
+    cwd
+  );
   assert.strictEqual(output, `Created sink ${sinkName} to ${bucketName}`);
   const [metadata] = await logging.sink(sinkName).getMetadata();
   assert.strictEqual(metadata.name, sinkName);
@@ -65,18 +65,20 @@ it(`should get a sink`, async () => {
 
 it(`should list sinks`, async () => {
   await tools
-      .tryTest(async assert => {
-        const output = await tools.runAsync(`${cmd} list`, cwd);
-        assert(output.includes(`Sinks:`));
-        assert(output.includes(sinkName));
-      })
-      .start();
+    .tryTest(async assert => {
+      const output = await tools.runAsync(`${cmd} list`, cwd);
+      assert(output.includes(`Sinks:`));
+      assert(output.includes(sinkName));
+    })
+    .start();
 });
 
 it(`should update a sink`, async () => {
   const newFilter = 'severity >= WARNING';
-  const output =
-      await tools.runAsync(`${cmd} update ${sinkName} "${newFilter}"`, cwd);
+  const output = await tools.runAsync(
+    `${cmd} update ${sinkName} "${newFilter}"`,
+    cwd
+  );
   assert(output.indexOf(`Sink ${sinkName} updated.`) > -1);
   const [metadata] = await logging.sink(sinkName).getMetadata();
   assert.strictEqual(metadata.name, sinkName);

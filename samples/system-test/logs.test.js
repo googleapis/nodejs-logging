@@ -32,8 +32,9 @@ before(async () => {
 
 it(`should write a log entry`, async () => {
   const output = await tools.runAsync(
-      `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`,
-      cwd);
+    `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`,
+    cwd
+  );
   assert.strictEqual(output, `Wrote to ${logName}`);
 });
 

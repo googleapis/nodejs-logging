@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-'use strict';
-
+import {util} from '@google-cloud/common-grpc';
+import * as promisify from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import {util} from '@google-cloud/common-grpc';
-import * as promisify from '@google-cloud/promisify';
 
 let promisifed = false;
 const fakePromisify = extend({}, promisify, {
@@ -33,7 +31,7 @@ const fakePromisify = extend({}, promisify, {
   },
 });
 
-const {Entry} = require('../src');
+import {Entry} from '../src';
 
 const originalGetDefaultResource = async () => {
   return 'very-fake-resource';

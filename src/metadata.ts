@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-'use strict';
-
 import * as fs from 'fs';
 import * as gcpMetadata from 'gcp-metadata';
 import {GoogleAuth} from 'google-auth-library';
 import * as pify from 'pify';
 
 const readFile = pify(fs.readFile);
+
+function zoneFromQualifiedZone(qualified: string): string|undefined {
+  // Some parsing is necessary. Metadata service returns a fully
+  // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
+  // wants just the zone part.
+  //
+  return qualified.split('/').pop();
+}
 
 /**
  * Create a descriptor for Cloud Functions.
@@ -43,12 +49,15 @@ export function getCloudFunctionDescriptor() {
  *
  * @returns {object}
  */
-export function getGAEDescriptor() {
+export async function getGAEDescriptor() {
+  const qualifiedZone = await gcpMetadata.instance('zone');
+  const zone = zoneFromQualifiedZone(qualifiedZone);
   return {
     type: 'gae_app',
     labels: {
       module_id: process.env.GAE_SERVICE || process.env.GAE_MODULE_NAME,
       version_id: process.env.GAE_VERSION,
+      zone
     },
   };
 }
@@ -64,7 +73,7 @@ export async function getGCEDescriptor() {
   // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
   // wants just the zone part.
   //
-  const zone = zoneResponse.split('/').pop();
+  const zone = zoneFromQualifiedZone(zoneResponse);
   return {
     type: 'gce_instance',
     labels: {

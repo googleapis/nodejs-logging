@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-'use strict';
-
 import * as common from '@google-cloud/common-grpc';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
@@ -93,7 +91,7 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
-  create(config, callback) {
+  create(config, callback?) {
     this.logging.createSink(this.name, config, callback);
   }
 
@@ -257,7 +255,7 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    */
-  setFilter(filter, callback) {
+  setFilter(filter, callback?) {
     this.setMetadata(
         {
           filter,
@@ -311,7 +309,7 @@ class Sink {
    * region_tag:logging_update_sink
    * Another example:
    */
-  setMetadata(metadata, callback) {
+  setMetadata(metadata, callback?) {
     const self = this;
     callback = callback || common.util.noop;
     this.getMetadata((err, currentMetadata, apiResponse) => {
@@ -353,4 +351,4 @@ promisifyAll(Sink);
  * @name module:@google-cloud/logging.Sink
  * @see Sink
  */
-module.exports.Sink = Sink;
+export {Sink};

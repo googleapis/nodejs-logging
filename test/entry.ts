@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-'use strict';
-
+import {Service, util} from '@google-cloud/common-grpc';
 import * as assert from 'assert';
 import * as extend from 'extend';
-import {Service, util} from '@google-cloud/common-grpc';
 import * as proxyquire from 'proxyquire';
 
 class FakeGrpcService {

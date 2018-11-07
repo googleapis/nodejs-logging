@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-'use strict';
-
+import {util} from '@google-cloud/common-grpc';
 import * as arrify from 'arrify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
-import {util} from '@google-cloud/common-grpc';
+
 const {v2} = require('../src');
 const PKG = require('../../package.json');
 

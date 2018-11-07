@@ -1,7 +1,7 @@
 {
   "name": "@google-cloud/logging",
   "description": "Stackdriver Logging Client Library for Node.js",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
@@ -61,8 +61,8 @@
     "lint": "gts check && eslint samples/",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "tsc -p . && cp -r src/v2 build/src/v2 && cp -r protos build",
-    "fix": "gts fix && gts fix samples/*.js samples/test/*.js",
+    "compile": "tsc -p . && cp -r src/v2 build/src/v2 && cp -r protos build && cp test/*.js build/test",
+    "fix": "gts fix && eslint --fix 'samples/*.js' 'samples/**/*.js'",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run check"
@@ -87,7 +87,7 @@
     "pumpify": "^1.5.1",
     "snakecase-keys": "^2.0.0",
     "stream-events": "^1.0.4",
-    "through2": "^2.0.3"
+    "through2": "^3.0.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^2.0.1",
@@ -110,7 +110,9 @@
     "bignumber.js": "^7.2.1",
     "codecov": "^3.0.4",
     "eslint": "^5.4.0",
+    "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-prettier": "^3.0.0",
     "gts": "^0.8.0",
     "ink-docstrap": "git+https://github.com/docstrap/docstrap.git",
     "intelli-espower-loader": "^1.0.1",
@@ -119,6 +121,7 @@
     "nock": "^10.0.1",
     "nyc": "^13.0.1",
     "power-assert": "^1.6.0",
+    "prettier": "^1.15.1",
     "proxyquire": "^2.1.0",
     "typescript": "~3.1.0",
     "uuid": "^3.3.2"
