@@ -29,26 +29,6 @@
     "stackdriver logging",
     "stackdriver"
   ],
-  "contributors": [
-    "Ace Nassri <anassri@google.com>",
-    "Alexander Fenster <github@fenster.name>",
-    "Ali Ijaz Sheikh <ofrobots@google.com>",
-    "Bill Prin <waprin@google.com>",
-    "Cristian Cavalli <cristiancavall@google.com>",
-    "Dave Gramlich <callmehiphop@gmail.com>",
-    "Eric Uldall <ericuldall@gmail.com>",
-    "Ernest Landrito <landrito@google.com>",
-    "Jason Dobry <jdobry@google.com>",
-    "Josh Ferge <josh.ferge@gmail.com>",
-    "Jun Mukai <jun.mukai@gmail.com>",
-    "Justin Beckwith <justin.beckwith@gmail.com>",
-    "Luke Sneeringer <lukesneeringer@google.com>",
-    "Song Wang <songwang@google.com>",
-    "Stephen Sawchuk <sawchuk@gmail.com>",
-    "Takashi Matsuo <tmatsuo@google.com>",
-    "Tim Swast <swast@google.com>",
-    "greenkeeper[bot] <greenkeeper[bot]@users.noreply.github.com>"
-  ],
   "scripts": {
     "cover": "nyc --reporter=lcov mocha build/test/*.js build/test/**/*.js build/test/**/**/*.js && nyc report",
     "test-no-cover": "mocha build/test/*.js",
