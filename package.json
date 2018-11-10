@@ -77,7 +77,7 @@
     "@types/arrify": "^1.0.4",
     "@types/express": "^4.16.0",
     "@types/extend": "^3.0.0",
-    "@types/is": "0.0.20",
+    "@types/is": "0.0.21",
     "@types/mocha": "^5.2.5",
     "@types/nock": "^9.3.0",
     "@types/on-finished": "^2.3.1",
