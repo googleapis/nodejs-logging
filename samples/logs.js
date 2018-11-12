@@ -15,7 +15,7 @@
 
 'use strict';
 
-function writeLogEntry(logName) {
+async function writeLogEntry(logName) {
   // [START logging_write_log_entry]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -53,18 +53,13 @@ function writeLogEntry(logName) {
 
   // Save the two log entries. You can write entries one at a time, but it is
   // best to write multiple entires together in a batch.
-  log
-    .write([entry, secondEntry])
-    .then(() => {
-      console.log(`Wrote to ${logName}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+  await log.write([entry, secondEntry]);
+  console.log(`Wrote to ${logName}`);
+
   // [END logging_write_log_entry]
 }
 
-function writeLogEntryAdvanced(logName, options) {
+async function writeLogEntryAdvanced(logName, options) {
   // [START logging_write_log_entry_advanced]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -88,18 +83,13 @@ function writeLogEntryAdvanced(logName, options) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=write
-  log
-    .write(entry)
-    .then(() => {
-      console.log(`Wrote to ${logName}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+  await log.write(entry);
+  console.log(`Wrote to ${logName}`);
+
   // [END logging_write_log_entry_advanced]
 }
 
-function listLogEntries(logName) {
+async function listLogEntries(logName) {
   // [START logging_list_log_entries]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -117,24 +107,17 @@ function listLogEntries(logName) {
   // List the most recent entries for a given log
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
-  log
-    .getEntries()
-    .then(results => {
-      const entries = results[0];
+  const [entries] = await log.getEntries();
+  console.log('Logs:');
+  entries.forEach(entry => {
+    const metadata = entry.metadata;
+    console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
+  });
 
-      console.log('Logs:');
-      entries.forEach(entry => {
-        const metadata = entry.metadata;
-        console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
-      });
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
   // [END logging_list_log_entries]
 }
 
-function listLogEntriesAdvanced(filter, pageSize, orderBy) {
+async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
   // [START logging_list_log_entries_advanced]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -161,24 +144,17 @@ function listLogEntriesAdvanced(filter, pageSize, orderBy) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
-  logging
-    .getEntries(options)
-    .then(results => {
-      const entries = results[0];
+  const [entries] = await logging.getEntries(options);
+  console.log('Logs:');
+  entries.forEach(entry => {
+    const metadata = entry.metadata;
+    console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
+  });
 
-      console.log('Logs:');
-      entries.forEach(entry => {
-        const metadata = entry.metadata;
-        console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
-      });
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
   // [START logging_list_log_entries_advanced]
 }
 
-function deleteLog(logName) {
+async function deleteLog(logName) {
   // [START logging_delete_log]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -197,14 +173,9 @@ function deleteLog(logName) {
   // Note that a deletion can take several minutes to take effect.
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=delete
-  log
-    .delete()
-    .then(() => {
-      console.log(`Deleted log: ${logName}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+  await log.delete();
+  console.log(`Deleted log: ${logName}`);
+
   // [END logging_delete_log]
 }
 
@@ -233,18 +204,23 @@ require(`yargs`)
         description: 'Sort results.',
       },
     },
-    opts => {
-      listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
+    async opts => {
+      await listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort).catch(
+        console.error
+      );
     }
   )
-  .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
-    listLogEntries(opts.logName)
+  .command(
+    'list-simple <logName>',
+    'Lists log entries.',
+    {},
+    async opts => await listLogEntries(opts.logName).catch(console.error)
   )
   .command(
     'write <logName> <resource> <entry>',
     'Writes a log entry to the specified log.',
     {},
-    opts => {
+    async opts => {
       try {
         opts.resource = JSON.parse(opts.resource);
       } catch (err) {
@@ -259,19 +235,19 @@ require(`yargs`)
         return;
       }
 
-      writeLogEntryAdvanced(opts.logName, opts);
+      await writeLogEntryAdvanced(opts.logName, opts).catch(console.error);
     }
   )
   .command(
     'write-simple <logName>',
     'Writes a basic log entry to the specified log.',
     {},
-    opts => {
-      writeLogEntry(opts.logName);
+    async opts => {
+      await writeLogEntry(opts.logName).catch(console.error);
     }
   )
-  .command('delete <logName>', 'Deletes the specified Log.', {}, opts => {
-    deleteLog(opts.logName);
+  .command('delete <logName>', 'Deletes the specified Log.', {}, async opts => {
+    await deleteLog(opts.logName).catch(console.error);
   })
   .example('node $0 list', 'List all log entries.')
   .example(

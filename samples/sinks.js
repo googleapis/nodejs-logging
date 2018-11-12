@@ -15,7 +15,7 @@
 
 'use strict';
 
-function createSink(sinkName, bucketName, filter) {
+async function createSink(sinkName, bucketName, filter) {
   // [START logging_create_sink]
   // Imports the Google Cloud client libraries
   const {Logging} = require('@google-cloud/logging');
@@ -53,18 +53,13 @@ function createSink(sinkName, bucketName, filter) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=create
-  sink
-    .create(config)
-    .then(() => {
-      console.log(`Created sink ${sinkName} to ${bucketName}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+  await sink.create(config);
+  console.log(`Created sink ${sinkName} to ${bucketName}`);
+
   // [END logging_create_sink]
 }
 
-function getSinkMetadata(sinkName) {
+async function getSinkMetadata(sinkName) {
   // [START logging_get_sink]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -81,22 +76,15 @@ function getSinkMetadata(sinkName) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=getMetadata
-  sink
-    .getMetadata()
-    .then(results => {
-      const metadata = results[0];
+  const [metadata] = await sink.getMetadata();
+  console.log(`Name: ${metadata.name}`);
+  console.log(`Destination: ${metadata.destination}`);
+  console.log(`Filter: ${metadata.filter}`);
 
-      console.log(`Name: ${metadata.name}`);
-      console.log(`Destination: ${metadata.destination}`);
-      console.log(`Filter: ${metadata.filter}`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
   // [END logging_get_sink]
 }
 
-function listSinks() {
+async function listSinks() {
   // [START logging_list_sinks]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -106,25 +94,18 @@ function listSinks() {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getSinks
-  logging
-    .getSinks()
-    .then(results => {
-      const sinks = results[0];
+  const [sinks] = await logging.getSinks();
+  console.log('Sinks:');
+  sinks.forEach(sink => {
+    console.log(sink.name);
+    console.log(`  Destination: ${sink.metadata.destination}`);
+    console.log(`  Filter: ${sink.metadata.filter}`);
+  });
 
-      console.log('Sinks:');
-      sinks.forEach(sink => {
-        console.log(sink.name);
-        console.log(`  Destination: ${sink.metadata.destination}`);
-        console.log(`  Filter: ${sink.metadata.filter}`);
-      });
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
   // [END logging_list_sinks]
 }
 
-function updateSink(sinkName, filter) {
+async function updateSink(sinkName, filter) {
   // [START logging_update_sink]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -147,25 +128,19 @@ function updateSink(sinkName, filter) {
    * See https://cloud.google.com/logging/docs/view/advanced_filters for more
    * filter information.
    */
-  const metadata = {
+  const metadataInfo = {
     filter: filter,
   };
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=setMetadata
-  sink
-    .setMetadata(metadata)
-    .then(results => {
-      const metadata = results[0];
-      console.log(`Sink ${sinkName} updated.`, metadata);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+  const [metadata] = await sink.setMetadata(metadataInfo);
+  console.log(`Sink ${sinkName} updated.`, metadata);
+
   // [END logging_update_sink]
 }
 
-function deleteSink(sinkName) {
+async function deleteSink(sinkName) {
   // [START logging_delete_sink]
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
@@ -182,14 +157,9 @@ function deleteSink(sinkName) {
 
   // See
   // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=delete
-  sink
-    .delete()
-    .then(() => {
-      console.log(`Sink ${sinkName} deleted.`);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+  await sink.delete();
+  console.log(`Sink ${sinkName} deleted.`);
+
   // [END logging_delete_sink]
 }
 
@@ -199,16 +169,18 @@ require(`yargs`)
     'create <sinkName> <bucketName> [filter]',
     'Creates a new sink with the given name to the specified bucket with an optional filter.',
     {},
-    opts => {
-      createSink(opts.sinkName, opts.bucketName, opts.filter);
+    async opts => {
+      await createSink(opts.sinkName, opts.bucketName, opts.filter).catch(
+        console.error
+      );
     }
   )
   .command(
     'get <sinkName>',
     'Gets the metadata for the specified sink.',
     {},
-    opts => {
-      getSinkMetadata(opts.sinkName);
+    async opts => {
+      await getSinkMetadata(opts.sinkName).catch(console.error);
     }
   )
   .command('list', 'Lists all sinks.', {}, listSinks)
@@ -216,13 +188,18 @@ require(`yargs`)
     'update <sinkName> <filter>',
     'Updates the filter for the specified sink.',
     {},
-    opts => {
-      updateSink(opts.sinkName, opts.filter);
+    async opts => {
+      await updateSink(opts.sinkName, opts.filter).catch(console.error);
     }
   )
-  .command('delete <sinkName>', 'Deletes the specified sink.', {}, opts => {
-    deleteSink(opts.sinkName);
-  })
+  .command(
+    'delete <sinkName>',
+    'Deletes the specified sink.',
+    {},
+    async opts => {
+      await deleteSink(opts.sinkName).catch(console.error);
+    }
+  )
   .example(
     'node $0 create export-errors app-error-logs',
     'Create a new sink named "export-errors" that exports logs to a bucket named "app-error-logs".'
