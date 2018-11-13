@@ -163,62 +163,64 @@ async function deleteSink(sinkName) {
   // [END logging_delete_sink]
 }
 
-require(`yargs`)
-  .demand(1)
-  .command(
-    'create <sinkName> <bucketName> [filter]',
-    'Creates a new sink with the given name to the specified bucket with an optional filter.',
-    {},
-    async opts => {
-      await createSink(opts.sinkName, opts.bucketName, opts.filter).catch(
-        console.error
-      );
-    }
-  )
-  .command(
-    'get <sinkName>',
-    'Gets the metadata for the specified sink.',
-    {},
-    async opts => {
-      await getSinkMetadata(opts.sinkName).catch(console.error);
-    }
-  )
-  .command('list', 'Lists all sinks.', {}, listSinks)
-  .command(
-    'update <sinkName> <filter>',
-    'Updates the filter for the specified sink.',
-    {},
-    async opts => {
-      await updateSink(opts.sinkName, opts.filter).catch(console.error);
-    }
-  )
-  .command(
-    'delete <sinkName>',
-    'Deletes the specified sink.',
-    {},
-    async opts => {
-      await deleteSink(opts.sinkName).catch(console.error);
-    }
-  )
-  .example(
-    'node $0 create export-errors app-error-logs',
-    'Create a new sink named "export-errors" that exports logs to a bucket named "app-error-logs".'
-  )
-  .example(
-    'node $0 get export-errors',
-    'Get the metadata for a sink name "export-errors".'
-  )
-  .example('node $0 list', 'List all sinks.')
-  .example(
-    'node $0 update export-errors "severity >= WARNING"',
-    'Update the filter for a sink named "export-errors".'
-  )
-  .example(
-    'node $0 delete export-errors',
-    'Delete a sink named "export-errors".'
-  )
-  .wrap(120)
-  .recommendCommands()
-  .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
-  .help()
-  .strict().argv;
+async function main() {
+  require(`yargs`)
+    .demand(1)
+    .command(
+      'create <sinkName> <bucketName> [filter]',
+      'Creates a new sink with the given name to the specified bucket with an optional filter.',
+      {},
+      async opts => {
+        await createSink(opts.sinkName, opts.bucketName, opts.filter);
+      }
+    )
+    .command(
+      'get <sinkName>',
+      'Gets the metadata for the specified sink.',
+      {},
+      async opts => {
+        await getSinkMetadata(opts.sinkName);
+      }
+    )
+    .command('list', 'Lists all sinks.', {}, listSinks)
+    .command(
+      'update <sinkName> <filter>',
+      'Updates the filter for the specified sink.',
+      {},
+      async opts => {
+        await updateSink(opts.sinkName, opts.filter);
+      }
+    )
+    .command(
+      'delete <sinkName>',
+      'Deletes the specified sink.',
+      {},
+      async opts => {
+        await deleteSink(opts.sinkName);
+      }
+    )
+    .example(
+      'node $0 create export-errors app-error-logs',
+      'Create a new sink named "export-errors" that exports logs to a bucket named "app-error-logs".'
+    )
+    .example(
+      'node $0 get export-errors',
+      'Get the metadata for a sink name "export-errors".'
+    )
+    .example('node $0 list', 'List all sinks.')
+    .example(
+      'node $0 update export-errors "severity >= WARNING"',
+      'Update the filter for a sink named "export-errors".'
+    )
+    .example(
+      'node $0 delete export-errors',
+      'Delete a sink named "export-errors".'
+    )
+    .wrap(120)
+    .recommendCommands()
+    .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
+    .help()
+    .strict().argv;
+}
+
+main().catch(console.error);

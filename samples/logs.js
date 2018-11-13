@@ -179,96 +179,103 @@ async function deleteLog(logName) {
   // [END logging_delete_log]
 }
 
-require(`yargs`)
-  .demand(1)
-  .command(
-    'list',
-    'Lists log entries, optionally filtering, limiting, and sorting results.',
-    {
-      filter: {
-        alias: 'f',
-        type: 'string',
-        requiresArg: true,
-        description: 'Only log entries matching the filter are written.',
+async function main() {
+  require(`yargs`)
+    .demand(1)
+    .command(
+      'list',
+      'Lists log entries, optionally filtering, limiting, and sorting results.',
+      {
+        filter: {
+          alias: 'f',
+          type: 'string',
+          requiresArg: true,
+          description: 'Only log entries matching the filter are written.',
+        },
+        limit: {
+          alias: 'l',
+          type: 'number',
+          requiresArg: true,
+          description: 'Maximum number of results to return.',
+        },
+        sort: {
+          alias: 's',
+          type: 'string',
+          requiresArg: true,
+          description: 'Sort results.',
+        },
       },
-      limit: {
-        alias: 'l',
-        type: 'number',
-        requiresArg: true,
-        description: 'Maximum number of results to return.',
-      },
-      sort: {
-        alias: 's',
-        type: 'string',
-        requiresArg: true,
-        description: 'Sort results.',
-      },
-    },
-    async opts => {
-      await listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort).catch(
-        console.error
-      );
-    }
-  )
-  .command(
-    'list-simple <logName>',
-    'Lists log entries.',
-    {},
-    async opts => await listLogEntries(opts.logName).catch(console.error)
-  )
-  .command(
-    'write <logName> <resource> <entry>',
-    'Writes a log entry to the specified log.',
-    {},
-    async opts => {
-      try {
-        opts.resource = JSON.parse(opts.resource);
-      } catch (err) {
-        console.error('"resource" must be a valid JSON string!');
-        return;
+      async opts => {
+        await listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
       }
+    )
+    .command(
+      'list-simple <logName>',
+      'Lists log entries.',
+      {},
+      async opts => await listLogEntries(opts.logName)
+    )
+    .command(
+      'write <logName> <resource> <entry>',
+      'Writes a log entry to the specified log.',
+      {},
+      async opts => {
+        try {
+          opts.resource = JSON.parse(opts.resource);
+        } catch (err) {
+          console.error('"resource" must be a valid JSON string!');
+          return;
+        }
 
-      try {
-        opts.entry = JSON.parse(opts.entry);
-      } catch (err) {
-        console.error('"entry" must be a valid JSON string!');
-        return;
+        try {
+          opts.entry = JSON.parse(opts.entry);
+        } catch (err) {
+          console.error('"entry" must be a valid JSON string!');
+          return;
+        }
+
+        await writeLogEntryAdvanced(opts.logName, opts);
       }
+    )
+    .command(
+      'write-simple <logName>',
+      'Writes a basic log entry to the specified log.',
+      {},
+      async opts => {
+        await writeLogEntry(opts.logName);
+      }
+    )
+    .command(
+      'delete <logName>',
+      'Deletes the specified Log.',
+      {},
+      async opts => {
+        await deleteLog(opts.logName);
+      }
+    )
+    .example('node $0 list', 'List all log entries.')
+    .example(
+      'node $0 list -f "severity=ERROR" -s "timestamp" -l 2',
+      'List up to 2 error entries, sorted by timestamp ascending.'
+    )
+    .example(
+      `node $0 list -f 'logName="my-log"' -l 2`,
+      'List up to 2 log entries from the "my-log" log.'
+    )
+    .example(
+      'node $0 write my-log \'{"type":"gae_app","labels":{"module_id":"default"}}\' \'"Hello World!"\'',
+      'Write a string log entry.'
+    )
+    .example(
+      'node $0 write my-log \'{"type":"global"}\' \'{"message":"Hello World!"}\'',
+      'Write a JSON log entry.'
+    )
+    .example('node $0 delete my-log', 'Delete "my-log".')
+    .wrap(120)
+    .recommendCommands()
+    .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
+    .help()
+    .strict().argv;
+}
 
-      await writeLogEntryAdvanced(opts.logName, opts).catch(console.error);
-    }
-  )
-  .command(
-    'write-simple <logName>',
-    'Writes a basic log entry to the specified log.',
-    {},
-    async opts => {
-      await writeLogEntry(opts.logName).catch(console.error);
-    }
-  )
-  .command('delete <logName>', 'Deletes the specified Log.', {}, async opts => {
-    await deleteLog(opts.logName).catch(console.error);
-  })
-  .example('node $0 list', 'List all log entries.')
-  .example(
-    'node $0 list -f "severity=ERROR" -s "timestamp" -l 2',
-    'List up to 2 error entries, sorted by timestamp ascending.'
-  )
-  .example(
-    `node $0 list -f 'logName="my-log"' -l 2`,
-    'List up to 2 log entries from the "my-log" log.'
-  )
-  .example(
-    'node $0 write my-log \'{"type":"gae_app","labels":{"module_id":"default"}}\' \'"Hello World!"\'',
-    'Write a string log entry.'
-  )
-  .example(
-    'node $0 write my-log \'{"type":"global"}\' \'{"message":"Hello World!"}\'',
-    'Write a JSON log entry.'
-  )
-  .example('node $0 delete my-log', 'Delete "my-log".')
-  .wrap(120)
-  .recommendCommands()
-  .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
-  .help()
-  .strict().argv;
+main().catch(console.error);
