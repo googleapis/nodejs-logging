@@ -19,8 +19,7 @@ const {BigQuery} = require('@google-cloud/bigquery');
 import * as extend from 'extend';
 import * as is from 'is';
 import * as nock from 'nock';
-// tslint:disable-next-line variable-name
-const PubSub = require('@google-cloud/pubsub');
+const {PubSub} = require('@google-cloud/pubsub');
 import {Storage} from '@google-cloud/storage';
 import * as uuid from 'uuid';
 import {Logging} from '../src';
