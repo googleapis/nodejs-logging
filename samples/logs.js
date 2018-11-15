@@ -205,21 +205,18 @@ async function main() {
           description: 'Sort results.',
         },
       },
-      async opts => {
-        await listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
+      opts => {
+        listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
       }
     )
-    .command(
-      'list-simple <logName>',
-      'Lists log entries.',
-      {},
-      async opts => await listLogEntries(opts.logName)
+    .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
+      listLogEntries(opts.logName)
     )
     .command(
       'write <logName> <resource> <entry>',
       'Writes a log entry to the specified log.',
       {},
-      async opts => {
+      opts => {
         try {
           opts.resource = JSON.parse(opts.resource);
         } catch (err) {
@@ -234,25 +231,20 @@ async function main() {
           return;
         }
 
-        await writeLogEntryAdvanced(opts.logName, opts);
+        writeLogEntryAdvanced(opts.logName, opts);
       }
     )
     .command(
       'write-simple <logName>',
       'Writes a basic log entry to the specified log.',
       {},
-      async opts => {
-        await writeLogEntry(opts.logName);
+      opts => {
+        writeLogEntry(opts.logName);
       }
     )
-    .command(
-      'delete <logName>',
-      'Deletes the specified Log.',
-      {},
-      async opts => {
-        await deleteLog(opts.logName);
-      }
-    )
+    .command('delete <logName>', 'Deletes the specified Log.', {}, opts => {
+      deleteLog(opts.logName);
+    })
     .example('node $0 list', 'List all log entries.')
     .example(
       'node $0 list -f "severity=ERROR" -s "timestamp" -l 2',

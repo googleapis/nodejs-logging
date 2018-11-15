@@ -170,16 +170,16 @@ async function main() {
       'create <sinkName> <bucketName> [filter]',
       'Creates a new sink with the given name to the specified bucket with an optional filter.',
       {},
-      async opts => {
-        await createSink(opts.sinkName, opts.bucketName, opts.filter);
+      opts => {
+        createSink(opts.sinkName, opts.bucketName, opts.filter);
       }
     )
     .command(
       'get <sinkName>',
       'Gets the metadata for the specified sink.',
       {},
-      async opts => {
-        await getSinkMetadata(opts.sinkName);
+      opts => {
+        getSinkMetadata(opts.sinkName);
       }
     )
     .command('list', 'Lists all sinks.', {}, listSinks)
@@ -187,18 +187,13 @@ async function main() {
       'update <sinkName> <filter>',
       'Updates the filter for the specified sink.',
       {},
-      async opts => {
-        await updateSink(opts.sinkName, opts.filter);
+      opts => {
+        updateSink(opts.sinkName, opts.filter);
       }
     )
-    .command(
-      'delete <sinkName>',
-      'Deletes the specified sink.',
-      {},
-      async opts => {
-        await deleteSink(opts.sinkName);
-      }
-    )
+    .command('delete <sinkName>', 'Deletes the specified sink.', {}, opts => {
+      deleteSink(opts.sinkName);
+    })
     .example(
       'node $0 create export-errors app-error-logs',
       'Create a new sink named "export-errors" that exports logs to a bucket named "app-error-logs".'
