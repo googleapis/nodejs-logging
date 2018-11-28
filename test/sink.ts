@@ -20,9 +20,29 @@ import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
+interface Sink {
+  logging: {createSink: Function, request: Function};
+  formattedName_: string;
+  name: string;
+  create: Function;
+  delete: Function;
+  getMetadata: Function;
+  metadata: {};
+  setMetadata: Function;
+  setFilter: Function;
+  gaxOptions: {};
+}
+
+interface Config {
+  client: {};
+  method: string;
+  reqOpts: {sink: Sink};
+  gaxOpts:{};
+}
+
 let promisifed = false;
 const fakePromisify = extend({}, promisify, {
-  promisifyAll(c) {
+  promisifyAll(c: {name: string}) {
     if (c.name === 'Sink') {
       promisifed = true;
     }
@@ -32,7 +52,7 @@ const fakePromisify = extend({}, promisify, {
 describe('Sink', () => {
   // tslint:disable-next-line no-any variable-name
   let Sink: any;
-  let sink;
+  let sink: Sink;
 
   const LOGGING = {
     createSink: util.noop,
@@ -74,11 +94,12 @@ describe('Sink', () => {
     it('should call parent createSink', done => {
       const config = {};
 
-      sink.logging.createSink = (name, config_, callback) => {
-        assert.strictEqual(name, sink.name);
-        assert.strictEqual(config_, config);
-        callback();  // done()
-      };
+      sink.logging.createSink =
+          (name: string, config_: {}, callback: Function) => {
+            assert.strictEqual(name, sink.name);
+            assert.strictEqual(config_, config);
+            callback();  // done()
+          };
 
       sink.create(config, done);
     });
@@ -86,7 +107,7 @@ describe('Sink', () => {
 
   describe('delete', () => {
     it('should accept gaxOptions', done => {
-      sink.logging.request = (config, callback) => {
+      sink.logging.request = (config: Config, callback: Function) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'deleteSink');
 
@@ -105,7 +126,7 @@ describe('Sink', () => {
     it('should accept gaxOptions', done => {
       const gaxOptions = {};
 
-      sink.logging.request = config => {
+      sink.logging.request = (config: Config) => {
         assert.strictEqual(config.gaxOpts, gaxOptions);
         done();
       };
@@ -116,7 +137,7 @@ describe('Sink', () => {
 
   describe('getMetadata', () => {
     it('should make correct request', done => {
-      sink.logging.request = config => {
+      sink.logging.request = (config: Config) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'getSink');
 
@@ -135,7 +156,7 @@ describe('Sink', () => {
     it('should accept gaxOptions', done => {
       const gaxOptions = {};
 
-      sink.logging.request = config => {
+      sink.logging.request = (config: Config) => {
         assert.strictEqual(config.gaxOpts, gaxOptions);
         done();
       };
@@ -146,7 +167,7 @@ describe('Sink', () => {
     it('should update metadata', done => {
       const metadata = {};
 
-      sink.logging.request = (config, callback) => {
+      sink.logging.request = (config: Config, callback: Function) => {
         callback(null, metadata);
       };
 
@@ -159,11 +180,11 @@ describe('Sink', () => {
     it('should execute callback with original arguments', done => {
       const ARGS = [{}, {}, {}];
 
-      sink.logging.request = (config, callback) => {
+      sink.logging.request = (_config: {}, callback: Function) => {
         callback.apply(null, ARGS);
       };
 
-      sink.getMetadata((...args) => {
+      sink.getMetadata((...args: []) => {
         assert.deepStrictEqual(args, ARGS);
         done();
       });
@@ -174,7 +195,7 @@ describe('Sink', () => {
     const FILTER = 'filter';
 
     it('should call set metadata', done => {
-      sink.setMetadata = (metadata, callback) => {
+      sink.setMetadata = (metadata: {filter: string}, callback: Function) => {
         assert.strictEqual(metadata.filter, FILTER);
         callback();  // done()
       };
@@ -187,7 +208,7 @@ describe('Sink', () => {
     const METADATA = {a: 'b', c: 'd'};
 
     beforeEach(() => {
-      sink.getMetadata = (callback) => {
+      sink.getMetadata = (callback: Function) => {
         callback(null, METADATA);
       };
     });
@@ -204,11 +225,11 @@ describe('Sink', () => {
       const error = new Error('Error.');
       const apiResponse = {};
 
-      sink.getMetadata = (callback) => {
+      sink.getMetadata = (callback: Function) => {
         callback(error, null, apiResponse);
       };
 
-      sink.setMetadata(METADATA, (err, apiResponse_) => {
+      sink.setMetadata(METADATA, (err: Error, apiResponse_: {}) => {
         assert.strictEqual(err, error);
         assert.strictEqual(apiResponse_, apiResponse);
         done();
@@ -218,11 +239,11 @@ describe('Sink', () => {
     it('should make the correct request', done => {
       const currentMetadata = {a: 'a', e: 'e'};
 
-      sink.getMetadata = (callback) => {
+      sink.getMetadata = (callback: Function) => {
         callback(null, currentMetadata);
       };
 
-      sink.logging.request = (config) => {
+      sink.logging.request = (config: Config) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'updateSink');
 
@@ -244,7 +265,7 @@ describe('Sink', () => {
         gaxOptions: {},
       });
 
-      sink.logging.request = (config) => {
+      sink.logging.request = (config: Config) => {
         assert.strictEqual(config.reqOpts.sink.gaxOptions, undefined);
         assert.strictEqual(config.gaxOpts, metadata.gaxOptions);
         done();
@@ -256,7 +277,7 @@ describe('Sink', () => {
     it('should update metadata', done => {
       const metadata = {};
 
-      sink.logging.request = (config, callback) => {
+      sink.logging.request = (config: Config, callback: Function) => {
         callback(null, metadata);
       };
 
@@ -269,11 +290,11 @@ describe('Sink', () => {
     it('should execute callback with original arguments', done => {
       const ARGS = [{}, {}, {}];
 
-      sink.logging.request = (config, callback) => {
+      sink.logging.request = (config: Config, callback: Function) => {
         callback.apply(null, ARGS);
       };
 
-      sink.setMetadata(METADATA, (...args) => {
+      sink.setMetadata(METADATA, (...args: []) => {
         assert.deepStrictEqual(args, ARGS);
         done();
       });
