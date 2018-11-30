@@ -24,18 +24,25 @@ class FakeGrpcService {
   static objToStruct_?: Function;
 }
 
-let fakeEventIdNewOverride;
 
+
+let fakeEventIdNewOverride: {apply: Function}|null;
 class FakeEventId {
   new() {
     return (fakeEventIdNewOverride || util.noop).apply(null, arguments);
   }
 }
 
+interface ENTRY {
+  metadata: {timestamp: Date, resource: {}, extraProperty: boolean};
+  data: {};
+  toJSON({}?): Function;
+}
+
 describe('Entry', () => {
   // tslint:disable-next-line no-any variable-name
   let Entry: any;
-  let entry;
+  let entry: ENTRY;
 
   const METADATA = {};
   const DATA = {};
@@ -113,14 +120,14 @@ describe('Entry', () => {
 
   describe('fromApiResponse_', () => {
     const RESOURCE = {};
-    let entry;
+    let entry: ENTRY;
     const date = new Date();
 
     beforeEach(() => {
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
 
-      FakeGrpcService.structToObj_ = data => {
+      FakeGrpcService.structToObj_ = (data: {}) => {
         return data;
       };
 
@@ -187,7 +194,7 @@ describe('Entry', () => {
       const input = {};
       const converted = {};
 
-      FakeGrpcService.objToStruct_ = (obj, options) => {
+      FakeGrpcService.objToStruct_ = (obj: {}, options: {}) => {
         assert.strictEqual(obj, input);
         assert.deepStrictEqual(options, {
           removeCircular: false,
@@ -197,15 +204,17 @@ describe('Entry', () => {
       };
 
       entry.data = input;
-      const json = entry.toJSON();
+      // tslint:disable-next-line
+      const json: any = entry.toJSON();
       assert.strictEqual(json.jsonPayload, converted);
     });
 
     it('should pass removeCircular to objToStruct_', done => {
-      FakeGrpcService.objToStruct_ = (obj, options) => {
-        assert.strictEqual(options.removeCircular, true);
-        done();
-      };
+      FakeGrpcService.objToStruct_ =
+          (obj: {}, options: {removeCircular: boolean}) => {
+            assert.strictEqual(options.removeCircular, true);
+            done();
+          };
 
       entry.data = {};
       entry.toJSON({removeCircular: true});
@@ -213,7 +222,8 @@ describe('Entry', () => {
 
     it('should assign string data as textPayload', () => {
       entry.data = 'string';
-      const json = entry.toJSON();
+      // tslint:disable-next-line
+      const json: any = entry.toJSON();
       assert.strictEqual(json.textPayload, entry.data);
     });
 
@@ -221,7 +231,8 @@ describe('Entry', () => {
       const date = new Date();
       entry.metadata.timestamp = date;
 
-      const json = entry.toJSON();
+      // tslint:disable-next-line
+      const json: any = entry.toJSON();
 
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);

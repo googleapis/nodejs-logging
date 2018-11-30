@@ -20,9 +20,53 @@ import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
+interface Logging {
+  projectId: string;
+  entry: Function;
+  request: Function;
+  getEntries?: Function;
+  getEntriesStream?: Function;
+}
+
+interface Config {
+  client: {}|string;
+  method: string;
+  reqOpts: {entries: {}|[]};
+  gaxOpts: {};
+}
+
+interface LOG {
+  logging: Logging;
+  LOG_NAME_FORMATTED: string;
+  name: string;
+  removeCircular_: boolean;
+  formattedName_: string;
+  delete: Function;
+  entry: Function;
+  getEntries: Function;
+  getEntriesStream: Function;
+  decorateEntries_: Function;
+  write: Function;
+  alert: Function;
+  critical: Function;
+  debug: Function;
+  emergency: Function;
+  error: Function;
+  info: Function;
+  notice: Function;
+  warning: Function;
+}
+
+class FakeEntry {
+  constructor(toJSONResponse: {}) {
+    this.toJSON = () => toJSONResponse;
+  }
+  toJSON = () => {};
+}
+
 let promisifed = false;
 const fakePromisify = extend({}, promisify, {
-  promisifyAll(c, options) {
+  promisifyAll(c: {name: string}, options: {exclude: []}) {
     if (c.name !== 'Log') {
       return;
     }
@@ -44,7 +88,8 @@ const fakeMetadata = {
 describe('Log', () => {
   // tslint:disable-next-line no-any variable-name
   let Log: any;
-  let log;
+  let log: LOG;
+
 
   const PROJECT_ID = 'project-id';
   const LOG_NAME = 'escaping/required/for/this/log-name';
@@ -56,7 +101,7 @@ describe('Log', () => {
     LOG_NAME_ENCODED,
   ].join('/');
 
-  let LOGGING;
+  let LOGGING: Logging;
 
   let assignSeverityToEntriesOverride: Function|null = null;
 
@@ -67,7 +112,7 @@ describe('Log', () => {
             './metadata': fakeMetadata,
           }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
-    Log.assignSeverityToEntries_ = (...args) =>
+    Log.assignSeverityToEntries_ = (...args: []) =>
         (assignSeverityToEntriesOverride || assignSeverityToEntries_)
             .apply(null, args);
   });
@@ -135,16 +180,16 @@ describe('Log', () => {
     it('should assign severity to a single entry', () => {
       assert.deepStrictEqual(
           Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
-              .map(x => x.metadata)
-              .map(x => x.severity),
+              .map((x: {metadata: {}}) => x.metadata)
+              .map((x: {severity: {}}) => x.severity),
           [SEVERITY]);
     });
 
     it('should assign severity property to multiple entries', () => {
       assert.deepStrictEqual(
           Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
-              .map(x => x.metadata)
-              .map(x => x.severity),
+              .map((x: {metadata: {}}) => x.metadata)
+              .map((x: {severity: {}}) => x.severity),
           [SEVERITY, SEVERITY, SEVERITY]);
     });
 
@@ -182,7 +227,7 @@ describe('Log', () => {
 
   describe('delete', () => {
     it('should accept gaxOptions', done => {
-      log.logging.request = (config, callback) => {
+      log.logging.request = (config: Config, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'deleteLog');
 
@@ -201,7 +246,7 @@ describe('Log', () => {
     it('should accept gaxOptions', done => {
       const gaxOptions = {};
 
-      log.logging.request = config => {
+      log.logging.request = (config: Config) => {
         assert.strictEqual(config.gaxOpts, gaxOptions);
         done();
       };
@@ -219,7 +264,7 @@ describe('Log', () => {
 
       const entryObject = {};
 
-      log.logging.entry = (metadata_, data_) => {
+      log.logging.entry = (metadata_: {}, data_: {}) => {
         assert.deepStrictEqual(metadata_, metadata);
         assert.strictEqual(data_, data);
         return entryObject;
@@ -232,7 +277,7 @@ describe('Log', () => {
     it('should assume one argument means data', done => {
       const data = {};
 
-      log.logging.entry = (metadata, data_) => {
+      log.logging.entry = (metadata: {}, data_: {}) => {
         assert.strictEqual(data_, data);
         done();
       };
@@ -247,7 +292,7 @@ describe('Log', () => {
     };
 
     it('should call Logging getEntries with defaults', done => {
-      log.logging.getEntries = (options, callback) => {
+      log.logging.getEntries = (options: {}, callback: Function) => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
         callback();  // done()
       };
@@ -261,7 +306,7 @@ describe('Log', () => {
         filter: 'custom filter',
       };
 
-      log.logging.getEntries = (options_, callback) => {
+      log.logging.getEntries = (options_: {}, callback: Function) => {
         assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
         callback();  // done()
       };
@@ -277,7 +322,7 @@ describe('Log', () => {
     };
 
     it('should call Logging getEntriesStream with defaults', done => {
-      log.logging.getEntriesStream = options => {
+      log.logging.getEntriesStream = (options: {}) => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
         setImmediate(done);
         return fakeStream;
@@ -293,7 +338,7 @@ describe('Log', () => {
         filter: 'custom filter',
       };
 
-      log.logging.getEntriesStream = options_ => {
+      log.logging.getEntriesStream = (options_: {}) => {
         assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
         setImmediate(done);
         return fakeStream;
@@ -310,7 +355,7 @@ describe('Log', () => {
     const FAKE_RESOURCE = 'fake-resource';
 
     beforeEach(() => {
-      log.decorateEntries_ = entries => {
+      log.decorateEntries_ = (entries: {}) => {
         return entries;
       };
       fakeMetadata.getDefaultResource = async () => {
@@ -324,7 +369,7 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      log.logging.request = (config, callback) => {
+      log.logging.request = (config: Config, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
@@ -357,7 +402,7 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      log.logging.request = (config, callback) => {
+      log.logging.request = (config: Config, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
@@ -376,7 +421,7 @@ describe('Log', () => {
     });
 
     it('should make the correct API request', done => {
-      log.logging.request = (config, callback) => {
+      log.logging.request = (config: Config, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
@@ -395,14 +440,14 @@ describe('Log', () => {
     });
 
     it('should arrify & decorate the entries', done => {
-      const decoratedEntries = [];
+      const decoratedEntries: [] = [];
 
-      log.decorateEntries_ = entries => {
+      log.decorateEntries_ = (entries: [number]) => {
         assert.strictEqual(entries[0], ENTRY);
         return decoratedEntries;
       };
 
-      log.logging.request = config => {
+      log.logging.request = (config: Config) => {
         assert.strictEqual(config.reqOpts.entries, decoratedEntries);
         done();
       };
@@ -411,7 +456,7 @@ describe('Log', () => {
     });
 
     it('should not require options', done => {
-      log.logging.request = (config, callback) => {
+      log.logging.request = (config: Config, callback: Function) => {
         callback();  // done()
       };
 
@@ -421,7 +466,7 @@ describe('Log', () => {
 
   describe('severity shortcuts', () => {
     const ENTRY = {};
-    const LABELS = [];
+    const LABELS: [] = [];
 
     beforeEach(() => {
       log.write = util.noop;
@@ -429,7 +474,7 @@ describe('Log', () => {
 
     describe('alert', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: {}, severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'ALERT');
           done();
@@ -438,9 +483,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -451,7 +496,7 @@ describe('Log', () => {
 
     describe('critical', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: {}, severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'CRITICAL');
 
@@ -462,9 +507,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -475,7 +520,7 @@ describe('Log', () => {
 
     describe('debug', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: {}, severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'DEBUG');
 
@@ -486,9 +531,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -499,7 +544,7 @@ describe('Log', () => {
 
     describe('emergency', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: [], severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'EMERGENCY');
 
@@ -510,9 +555,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -523,7 +568,7 @@ describe('Log', () => {
 
     describe('error', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: [], severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'ERROR');
           done();
@@ -532,13 +577,13 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
 
         assignSeverityToEntriesOverride = () => {
           return assignedEntries;
         };
 
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -550,7 +595,7 @@ describe('Log', () => {
 
     describe('info', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: [], severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'INFO');
 
@@ -561,13 +606,13 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
 
         assignSeverityToEntriesOverride = () => {
           return assignedEntries;
         };
 
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -579,7 +624,7 @@ describe('Log', () => {
 
     describe('notice', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: [], severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'NOTICE');
 
@@ -590,13 +635,13 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
 
         assignSeverityToEntriesOverride = () => {
           return assignedEntries;
         };
 
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -608,7 +653,7 @@ describe('Log', () => {
 
     describe('warning', () => {
       it('should format the entries', done => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (entries: [], severity: string) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'WARNING');
 
@@ -619,9 +664,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', done => {
-        const assignedEntries = [];
+        const assignedEntries: [] = [];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = (entry, labels, callback) => {
+        log.write = (entry: [], labels: [], callback: Function) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
           callback();  // done()
@@ -634,19 +679,19 @@ describe('Log', () => {
   describe('decorateEntries_', () => {
     const toJSONResponse = {};
 
-    function FakeEntry() {}
-    FakeEntry.prototype.toJSON = () => toJSONResponse;
+    // function FakeEntry() {}
+    // FakeEntry.prototype.toJSON = () => toJSONResponse;
 
     beforeEach(() => {
-      log.entry = () => new FakeEntry();
+      log.entry = () => new FakeEntry(toJSONResponse);
     });
 
     it('should create an Entry object if one is not provided', () => {
       const entry = {};
 
-      log.entry = entry_ => {
+      log.entry = (entry_: {}) => {
         assert.strictEqual(entry_, entry);
-        return new FakeEntry();
+        return new FakeEntry(toJSONResponse);
       };
 
       const decoratedEntries = log.decorateEntries_([entry]);

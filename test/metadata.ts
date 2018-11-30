@@ -20,24 +20,31 @@ import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import assertRejects = require('assert-rejects');
 
-let instanceOverride;
+interface Override {
+  path: string;
+  errorArg: string;
+  successArg: string;
+}
+
+let instanceOverride: []|{}|null;
 const fakeGcpMetadata = {
-  instance(path) {
+  instance(path: string) {
     if (instanceOverride) {
-      const override = Array.isArray(instanceOverride) ?
-          instanceOverride.find(entry => entry.path === path) :
-          instanceOverride;
+      const override: []|Override|undefined = Array.isArray(instanceOverride) ?
+          instanceOverride.find(
+              (entry: {path: string}) => entry.path === path) :
+          (instanceOverride as Override);
 
-      if (override.path) {
-        assert.strictEqual(path, override.path);
+      if ((override as Override).path) {
+        assert.strictEqual(path, (override as Override).path);
       }
 
-      if (override.errorArg) {
-        return Promise.reject(override.errorArg);
+      if ((override as Override).errorArg) {
+        return Promise.reject((override as Override).errorArg);
       }
 
-      if (override.successArg) {
-        return Promise.resolve(override.successArg);
+      if ((override as Override).successArg) {
+        return Promise.resolve((override as Override).successArg);
       }
     }
 
@@ -47,9 +54,9 @@ const fakeGcpMetadata = {
 
 const FAKE_READFILE_ERROR_MESSAGE = 'fake readFile error';
 const FAKE_READFILE_CONTENTS = 'fake readFile contents';
-let readFileShouldError;
+let readFileShouldError: boolean;
 const fakeFS = {
-  readFile: (filename, encoding, callback) => {
+  readFile: (filename: string, encoding: string, callback: Function) => {
     setImmediate(() => {
       if (readFileShouldError) {
         callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
@@ -164,7 +171,8 @@ describe('metadata', () => {
         errorArg: FAKE_ERROR,
       };
 
-      assertRejects(metadata.getGKEDescriptor(), (err) => err === FAKE_ERROR);
+      assertRejects(
+          metadata.getGKEDescriptor(), (err: Error) => err === FAKE_ERROR);
     });
 
     it('should throw error when read of namespace file fails', async () => {
@@ -172,7 +180,7 @@ describe('metadata', () => {
 
       assertRejects(
           metadata.getGKEDescriptor(),
-          (err) => err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
+          (err: Error) => err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
     });
   });
 

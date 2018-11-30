@@ -34,10 +34,10 @@ interface Sink {
 }
 
 interface Config {
-  client: {};
+  client: {}|string;
   method: string;
   reqOpts: {sink: Sink};
-  gaxOpts:{};
+  gaxOpts: {};
 }
 
 let promisifed = false;
