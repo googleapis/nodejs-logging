@@ -1176,7 +1176,9 @@ describe('Logging', () => {
             groupByEmail: 'cloud-logs@google.com',
           };
 
-          const expectedAccess = [].slice.call(originalAccess).concat(access);
+          const expectedAccess =
+              // tslint:disable-next-line no-any
+              ([] as any[]).slice.call(originalAccess).concat(access);
 
           dataset.setMetadata = metadata => {
             assert.deepStrictEqual(apiResponse.access, originalAccess);
@@ -1298,7 +1300,8 @@ describe('Logging', () => {
             members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
           };
 
-          const expectedBindings = [].slice.call(originalBindings);
+          // tslint:disable-next-line no-any
+          const expectedBindings = ([] as any[]).slice.call(originalBindings);
           expectedBindings.push(binding);
 
           topic.iam.setPolicy = policy => {
