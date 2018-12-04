@@ -31,8 +31,7 @@
   ],
   "scripts": {
     "cover": "nyc --reporter=lcov mocha build/test/*.js build/test/**/*.js build/test/**/**/*.js && nyc report",
-    "test-no-cover": "mocha build/test/*.js",
-    "test": "npm run cover",
+    "test": "nyc mocha",
     "docs": "jsdoc -c .jsdoc.js",
     "presystem-test": "npm run compile",
     "system-test": "mocha build/system-test --timeout 600000",
@@ -108,10 +107,5 @@
     "proxyquire": "^2.1.0",
     "typescript": "~3.2.0",
     "uuid": "^3.3.2"
-  },
-  "nyc": {
-    "exclude": [
-      "build/test"
-    ]
   }
 }
