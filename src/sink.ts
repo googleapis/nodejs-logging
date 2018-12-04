@@ -19,6 +19,42 @@ import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
 import * as is from 'is';
 
+import {LoggingInterface} from '../src';
+import {ConfigInterface} from '../src/sink';
+
+
+export interface SinkInterface {
+  logging: LoggingInterface;
+  formattedName_: string;
+  name: string;
+  create: Function;
+  delete: Function;
+  getMetadata: Function;
+  metadata: {}|undefined;
+  setMetadata: Function;
+  setFilter: Function;
+  gaxOptions?: {}|unknown;
+}
+
+export interface ConfigInterface {
+  client: {}|string;
+  method: string;
+  reqOpts: {
+    entries: {}|[],
+    sink: SinkInterface,
+    parent: string,
+    resourceNames: [],
+    orderBy: string,
+    gaxOptions: {}
+  };
+  gaxOpts: {}|undefined;
+  destination?: {};
+  gaxOptions?: {};
+  parent: string;
+}
+
+
+
 /**
  * A sink is an object that lets you to specify a set of log entries to export
  * to a particular destination. Stackdriver Logging lets you export log entries
@@ -38,12 +74,12 @@ import * as is from 'is';
  * const logging = new Logging();
  * const sink = logging.sink('my-sink');
  */
-class Sink {
-  logging;
+class Sink implements SinkInterface {
+  logging: LoggingInterface;
   name: string;
   formattedName_: string;
-  metadata;
-  constructor(logging, name) {
+  metadata: {}|undefined;
+  constructor(logging: LoggingInterface, name: string) {
     this.logging = logging;
     /**
      * @name Sink#name
@@ -91,8 +127,10 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
-  create(config, callback?) {
-    this.logging.createSink(this.name, config, callback);
+  create(config: ConfigInterface, callback?: Function) {
+    if (this.logging.createSink) {
+      this.logging.createSink(this.name, config, callback);
+    }
   }
 
   /**
@@ -136,9 +174,9 @@ class Sink {
    * region_tag:logging_delete_sink
    * Another example:
    */
-  delete(gaxOptions, callback) {
+  delete(gaxOptions: {}, callback: Function) {
     if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
+      callback = gaxOptions as Function;
       gaxOptions = {};
     }
     const reqOpts = {
@@ -195,10 +233,10 @@ class Sink {
    * region_tag:logging_get_sink
    * Another example:
    */
-  getMetadata(gaxOptions, callback?) {
+  getMetadata(gaxOptions: {}, callback?: Function) {
     const self = this;
     if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
+      callback = gaxOptions as Function;
       gaxOptions = {};
     }
     const reqOpts = {
@@ -211,11 +249,14 @@ class Sink {
           reqOpts,
           gaxOpts: gaxOptions,
         },
-        (...args) => {
+        (...args: [{}, {}]) => {
           if (args[1]) {
             self.metadata = args[1];
           }
-          callback.apply(null, args);
+
+          if (callback) {
+            callback.apply(null, args);
+          }
         });
   }
 
@@ -255,7 +296,7 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    */
-  setFilter(filter, callback?) {
+  setFilter(filter: {}, callback?: Function) {
     this.setMetadata(
         {
           filter,
@@ -309,11 +350,11 @@ class Sink {
    * region_tag:logging_update_sink
    * Another example:
    */
-  setMetadata(metadata, callback?) {
+  setMetadata(metadata: {gaxOptions?: {}, filter: {}}, callback?: Function) {
     const self = this;
     callback = callback || common.util.noop;
-    this.getMetadata((err, currentMetadata, apiResponse) => {
-      if (err) {
+    this.getMetadata((err: Error, currentMetadata: {}, apiResponse: {}) => {
+      if (err && callback) {
         callback(err, apiResponse);
         return;
       }
@@ -329,11 +370,13 @@ class Sink {
             reqOpts,
             gaxOpts: metadata.gaxOptions,
           },
-          (...args) => {
+          (...args: [{}, {}]) => {
             if (args[1]) {
               self.metadata = args[1];
             }
-            callback.apply(null, args);
+            if (callback) {
+              callback.apply(null, args);
+            }
           });
     });
   }

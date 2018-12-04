@@ -20,6 +20,21 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import * as is from 'is';
 
+export type timestamp = {
+  seconds: number,
+  nanos: number
+};
+export interface EntryInterface {
+  metadata: {
+    insertId: number,
+    timestamp: Date|timestamp,
+    resource?: {},
+    extraProperty?: boolean
+  };
+  data: {};
+  toJSON({}?): Function;
+}
+
 const eventId = new EventId();
 
 /**
@@ -80,21 +95,17 @@ const eventId = new EventId();
  *   }
  * });
  */
-class Entry {
-  metadata;
-  data;
-  constructor(metadata?, data?) {
+class Entry implements EntryInterface {
+  metadata: {insertId: number, timestamp: Date|timestamp};
+  data: {} = {};
+  constructor(metadata?: {}, data?: {}) {
     /**
      * @name Entry#metadata
      * @type {object}
      * @property {Date} timestamp
      * @property {number} insertId
      */
-    this.metadata = extend(
-        {
-          timestamp: new Date(),
-        },
-        metadata);
+    this.metadata = extend(metadata);
     // JavaScript date has a very coarse granularity (millisecond), which makes
     // it quite likely that multiple log entries would have the same timestamp.
     // The Logging API doesn't guarantee to preserve insertion order for entries
@@ -109,7 +120,9 @@ class Entry {
      * @name Entry#data
      * @type {object}
      */
-    this.data = data;
+    if (data) {
+      this.data = data;
+    }
   }
 
   /**
@@ -119,9 +132,11 @@ class Entry {
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
-  toJSON(options) {
+  // tslint:disable-next-line no-any
+  toJSON(options: {removeCircular: {}}): any {
     options = options || {};
-    const entry = extend(true, {}, this.metadata);
+    const entry =
+        extend(true, {jsonPayload: {}, textPayload: {}}, this.metadata);
     if (is.object(this.data)) {
       // tslint:disable-next-line no-any
       entry.jsonPayload = (Service as any).objToStruct_(this.data, {
@@ -132,7 +147,7 @@ class Entry {
       entry.textPayload = this.data;
     }
     if (is.date(entry.timestamp)) {
-      const seconds = entry.timestamp.getTime() / 1000;
+      const seconds = (entry.timestamp as Date).getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
       entry.timestamp = {
         seconds: secondsRounded,
@@ -151,7 +166,8 @@ class Entry {
    *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
    * @returns {Entry}
    */
-  static fromApiResponse_(entry) {
+  // tslint:disable-next-line no-any
+  static fromApiResponse_(entry: any) {
     let data = entry[entry.payload];
     if (entry.payload === 'jsonPayload') {
       // tslint:disable-next-line no-any
@@ -159,8 +175,9 @@ class Entry {
     }
     const serializedEntry = new Entry(entry, data);
     if (serializedEntry.metadata.timestamp) {
-      let ms = serializedEntry.metadata.timestamp.seconds * 1000;
-      ms += serializedEntry.metadata.timestamp.nanos / 1e6;
+      const timestamp = (serializedEntry.metadata.timestamp as timestamp);
+      let ms = timestamp.seconds * 1000;
+      ms += timestamp.nanos / 1e6;
       serializedEntry.metadata.timestamp = new Date(ms);
     }
     return serializedEntry;

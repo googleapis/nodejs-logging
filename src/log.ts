@@ -24,6 +24,38 @@ import {getDefaultResource} from './metadata';
 const snakeCaseKeys = require('snakecase-keys');
 
 import {Entry} from './entry';
+import {LoggingInterface} from '../src';
+import {GoogleAuth} from 'google-auth-library';
+
+
+export type WriteOptions = {
+  resource: {labels: {}, type?: string},
+  gaxOptions?: {}
+};
+
+
+
+export interface LogInterface {
+  logging: LoggingInterface;
+  LOG_NAME_FORMATTED?: string;
+  name: string;
+  removeCircular_: boolean;
+  formattedName_: string;
+  delete: Function;
+  entry: Function;
+  getEntries: Function;
+  getEntriesStream: Function;
+  decorateEntries_: Function;
+  write: Function;
+  alert: Function;
+  critical: Function;
+  debug: Function;
+  emergency: Function;
+  error: Function;
+  info: Function;
+  notice: Function;
+  warning: Function;
+}
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -47,12 +79,14 @@ import {Entry} from './entry';
  * const logging = new Logging();
  * const log = logging.log('syslog');
  */
-class Log {
+class Log implements LogInterface {
   formattedName_: string;
   removeCircular_: boolean;
-  logging;
+  logging: LoggingInterface;
   name: string;
-  constructor(logging, name, options) {
+  constructor(logging: LoggingInterface, name: string, options?: {
+    removeCircular?: boolean
+  }) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
@@ -92,7 +126,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  alert(entry, options, callback) {
+  alert(entry: Entry|Entry[], options: WriteOptions, callback: Function) {
     this.write(Log.assignSeverityToEntries_(entry, 'ALERT'), options, callback);
   }
 
@@ -124,7 +158,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  critical(entry, options, callback) {
+  critical(entry: Entry|Entry[], options: WriteOptions, callback: Function) {
     const entries = Log.assignSeverityToEntries_(entry, 'CRITICAL');
     this.write(entries, options, callback);
   }
@@ -157,7 +191,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  debug(entry, options, callback) {
+  debug(entry: Entry|Entry[], options: WriteOptions, callback: Function) {
     this.write(Log.assignSeverityToEntries_(entry, 'DEBUG'), options, callback);
   }
 
@@ -202,9 +236,9 @@ class Log {
    * region_tag:logging_delete_log
    * Another example:
    */
-  delete(gaxOptions, callback?) {
+  delete(gaxOptions: {}, callback?: Function) {
     if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
+      callback = gaxOptions as Function;
       gaxOptions = {};
     }
     const reqOpts = {
@@ -248,7 +282,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  emergency(entry, options, callback) {
+  emergency(entry: Entry|Entry[], options: WriteOptions, callback: Function) {
     const entries = Log.assignSeverityToEntries_(entry, 'EMERGENCY');
     this.write(entries, options, callback);
   }
@@ -303,7 +337,7 @@ class Log {
    * //   }
    * // }
    */
-  entry(metadata, data?) {
+  entry(metadata: {}, data?: {}) {
     if (!data) {
       data = metadata;
       metadata = {};
@@ -339,7 +373,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  error(entry, options, callback) {
+  error(entry: Entry|Entry[], options: WriteOptions, callback: Function) {
     this.write(Log.assignSeverityToEntries_(entry, 'ERROR'), options, callback);
   }
 
@@ -385,10 +419,10 @@ class Log {
    *   const entries = data[0];
    * });
    */
-  getEntries(options, callback?) {
+  getEntries(options: {}, callback?: Function) {
     if (is.function(options))
       {
-        callback = options;
+        callback = options as Function;
         options = {};
       }
       options = extend(
@@ -396,7 +430,9 @@ class Log {
             filter: 'logName="' + this.formattedName_ + '"',
           },
           options);
-      return this.logging.getEntries(options, callback);
+      if (this.logging.getEntries) {
+        return this.logging.getEntries(options, callback);
+      }
   }
 
   /**
@@ -432,13 +468,15 @@ class Log {
    *     this.end();
    *   });
    */
-  getEntriesStream(options) {
+  getEntriesStream(options: {}) {
       options = extend(
           {
             filter: 'logName="' + this.formattedName_ + '"',
           },
           options);
-      return this.logging.getEntriesStream(options);
+      if (this.logging.getEntriesStream) {
+        return this.logging.getEntriesStream(options);
+      }
   }
 
   /**
@@ -469,7 +507,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  info(entry, options, callback) {
+  info(entry:Entry | Entry[], options:WriteOptions, callback:Function) {
       this.write(
           Log.assignSeverityToEntries_(entry, 'INFO'), options, callback);
   }
@@ -502,7 +540,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  notice(entry, options, callback) {
+  notice(entry: Entry | Entry[], options:WriteOptions, callback:Function) {
       this.write(
           Log.assignSeverityToEntries_(entry, 'NOTICE'), options, callback);
   }
@@ -535,7 +573,7 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  warning(entry, options, callback) {
+  warning(entry: Entry | Entry[], options:WriteOptions, callback:Function) {
       this.write(
           Log.assignSeverityToEntries_(entry, 'WARNING'), options, callback);
   }
@@ -631,14 +669,14 @@ class Log {
    * region_tag:logging_write_log_entry_advanced
    * Another example:
    */
-  write(entry, options?, callback?) {
+  write(entry: Entry | Entry[], options?:WriteOptions, callback?:Function) {
       const self = this;
       if (is.fn(options)) {
-        callback = options;
-        options = {};
+        callback = options as unknown as Function;
+        options = {resource: {labels: {}}};
       }
-      if (!options.resource) {
-        getDefaultResource(this.logging.auth)
+      if (options && !options.resource && this.logging.auth) {
+        getDefaultResource((this.logging.auth) as GoogleAuth)
             .then(
                 (resource) => {
                   writeWithResource(resource);
@@ -648,12 +686,14 @@ class Log {
                   writeWithResource(null);
                 });
       } else {
-        if (options.resource.labels) {
+        if (options && options.resource.labels) {
           options.resource.labels = snakeCaseKeys(options.resource.labels);
         }
-        writeWithResource(options.resource);
+        if (options) {
+          writeWithResource(options.resource);
+        }
       }
-      function writeWithResource(resource) {
+      function writeWithResource(resource: {labels: {}}|{type: string}|null) {
         let decoratedEntries;
         try {
           decoratedEntries = self.decorateEntries_(arrify(entry));
@@ -665,17 +705,20 @@ class Log {
               logName: self.formattedName_,
               entries: decoratedEntries,
               resource,
+              gaxOptions: {}
             },
             options);
         delete reqOpts.gaxOptions;
-        self.logging.request(
-            {
-              client: 'LoggingServiceV2Client',
-              method: 'writeLogEntries',
-              reqOpts,
-              gaxOpts: options.gaxOptions,
-            },
-            callback);
+        if (options) {
+          self.logging.request(
+              {
+                client: 'LoggingServiceV2Client',
+                method: 'writeLogEntries',
+                reqOpts,
+                gaxOpts: options.gaxOptions,
+              },
+              callback);
+        }
       }
   }
 
@@ -688,7 +731,7 @@ class Log {
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  decorateEntries_(entries) {
+  decorateEntries_(entries:Entry[]) {
       return entries.map(entry => {
         if (!(entry instanceof Entry)) {
           entry = this.entry(entry);
@@ -707,7 +750,7 @@ class Log {
    * @param {object|object[]} entries - Log entries.
    * @param {string} severity - The desired severity level.
    */
-  static assignSeverityToEntries_(entries, severity) {
+  static assignSeverityToEntries_(entries:Entry | Entry[], severity:{}) {
       return arrify(entries).map(entry => {
         const metadata = extend(true, {}, entry.metadata, {
           severity,
@@ -726,7 +769,7 @@ class Log {
    *
    * @returns {string}
    */
-  static formatName_(projectId, name) {
+  static formatName_(projectId:string, name:string) {
       const path = 'projects/' + projectId + '/logs/';
       name = name.replace(path, '');
       if (decodeURIComponent(name) === name) {

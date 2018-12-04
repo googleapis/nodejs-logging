@@ -21,54 +21,57 @@ import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
 
-interface Config {
-  client: {}|string;
-  method: string;
-  reqOpts: {
-    entries: {}|[],
-    sink: Sink,
-    parent: string,
-    resourceNames: [],
-    orderBy: string,
-    gaxOptions: {}
-  };
-  gaxOpts: {};
-  parent: string;
-  destination: {};
-}
+import {LoggingInterface} from '../src';
+import {ConfigInterface, SinkInterface} from '../src/sink';
 
-interface Sink {
-  logging: {createSink: Function, request: Function};
-  formattedName_: string;
-  name: string;
-  create: Function;
-  delete: Function;
-  getMetadata: Function;
-  metadata: {};
-  setMetadata: Function;
-  setFilter: Function;
-  gaxOptions: {};
-}
+// interface Config {
+//   client: {}|string;
+//   method: string;
+//   reqOpts: {
+//     entries: {}|[],
+//     sink: Sink,
+//     parent: string,
+//     resourceNames: [],
+//     orderBy: string,
+//     gaxOptions: {}
+//   };
+//   gaxOpts: {};
+//   parent: string;
+//   destination: {};
+// }
 
-interface LOGGING {
-  projectId: string;
-  // tslint:disable-next-line
-  api: string|any;
-  createSink: Function;
-  setAclForTopic_: Function;
-  setAclForDataset_: Function;
-  setAclForBucket_: Function;
-  request: Function;
-  sink: Function;
-  entry: Function;
-  getEntries: Function;
-  getEntriesStream: Function;
-  getSinks: Function;
-  getSinksStream: Function;
-  log: Function;
-  auth: {getProjectId: Function};
-  options: {};
-}
+// interface Sink {
+//   logging: {createSink: Function, request: Function};
+//   formattedName_: string;
+//   name: string;
+//   create: Function;
+//   delete: Function;
+//   getMetadata: Function;
+//   metadata: {};
+//   setMetadata: Function;
+//   setFilter: Function;
+//   gaxOptions: {};
+// }
+
+// interface LOGGING {
+//   projectId: string;
+//   // tslint:disable-next-line
+//   api: string|any;
+//   createSink: Function;
+//   setAclForTopic_: Function;
+//   setAclForDataset_: Function;
+//   setAclForBucket_: Function;
+//   request: Function;
+//   sink: Function;
+//   entry: Function;
+//   getEntries: Function;
+//   getEntriesStream: Function;
+//   getSinks: Function;
+//   getSinksStream: Function;
+//   log: Function;
+//   auth: {getProjectId: Function};
+//   options: {};
+// }
 
 const {v2} = require('../src');
 const PKG = require('../../package.json');
@@ -163,7 +166,7 @@ class FakeSink {
 describe('Logging', () => {
   // tslint:disable-next-line no-any variable-name
   let Logging: any;
-  let logging: LOGGING;
+  let logging: LoggingInterface;
 
   const PROJECT_ID = 'project-id';
 
@@ -370,7 +373,7 @@ describe('Logging', () => {
           name: SINK_NAME,
         });
 
-        logging.request = (config: Config) => {
+        logging.request = (config: ConfigInterface) => {
           assert.strictEqual(config.client, 'ConfigServiceV2Client');
           assert.strictEqual(config.method, 'createSink');
           const expectedParent = 'projects/' + logging.projectId;
@@ -390,7 +393,7 @@ describe('Logging', () => {
           gaxOptions: {},
         };
 
-        logging.request = (config_: Config) => {
+        logging.request = (config_: ConfigInterface) => {
           assert.strictEqual(config_.reqOpts.sink.gaxOptions, undefined);
           assert.strictEqual(config_.gaxOpts, config.gaxOptions);
           done();
@@ -404,14 +407,15 @@ describe('Logging', () => {
         const apiResponse = {};
 
         beforeEach(() => {
-          logging.request = (config: Config, callback: Function) => {
+          logging.request = (config: ConfigInterface, callback: Function) => {
             callback(error, apiResponse);
           };
         });
 
         it('should exec callback with error & API response', done => {
           logging.createSink(
-              SINK_NAME, {}, (err: Error, sink: Sink, apiResponse_: {}) => {
+              SINK_NAME, {},
+              (err: Error, sink: SinkInterface, apiResponse_: {}) => {
                 assert.strictEqual(err, error);
                 assert.strictEqual(sink, null);
                 assert.strictEqual(apiResponse_, apiResponse);
@@ -427,7 +431,7 @@ describe('Logging', () => {
         };
 
         beforeEach(() => {
-          logging.request = (config: Config, callback: Function) => {
+          logging.request = (config: ConfigInterface, callback: Function) => {
             callback(null, apiResponse);
           };
         });
@@ -442,7 +446,8 @@ describe('Logging', () => {
 
           logging.createSink(
               SINK_NAME, {},
-              (err: Error, sink_: Sink, apiResponse_: {name: string}) => {
+              (err: Error, sink_: SinkInterface,
+               apiResponse_: {name: string}) => {
                 assert.ifError(err);
 
                 assert.strictEqual(sink_, sink);
@@ -470,7 +475,7 @@ describe('Logging', () => {
 
   describe('getEntries', () => {
     it('should accept only a callback', done => {
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.deepStrictEqual(config.reqOpts, {
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
@@ -484,7 +489,7 @@ describe('Logging', () => {
     it('should make the correct API request', done => {
       const options = {};
 
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntries');
 
@@ -509,7 +514,7 @@ describe('Logging', () => {
         resourceNames: ['projects/' + logging.projectId],
       };
 
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.deepStrictEqual(config.reqOpts.resourceNames, [
           'projects/' + logging.projectId,
         ]);
@@ -524,7 +529,7 @@ describe('Logging', () => {
         orderBy: 'timestamp asc',
       };
 
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.deepStrictEqual(config.reqOpts.orderBy, options.orderBy);
         done();
       };
@@ -541,7 +546,7 @@ describe('Logging', () => {
         },
       };
 
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.reqOpts.gaxOptions, undefined);
         assert.deepStrictEqual(config.gaxOpts, options.gaxOptions);
         done();
@@ -554,7 +559,7 @@ describe('Logging', () => {
       const ARGS = [new Error('Error.'), [], {}];
 
       beforeEach(() => {
-        logging.request = (config: Config, callback: Function) => {
+        logging.request = (config: ConfigInterface, callback: Function) => {
           callback.apply(null, ARGS);
         };
       });
@@ -578,7 +583,7 @@ describe('Logging', () => {
       ];
 
       beforeEach(() => {
-        logging.request = (config: Config, callback: Function) => {
+        logging.request = (config: ConfigInterface, callback: Function) => {
           callback.apply(null, ARGS);
         };
       });
@@ -618,7 +623,7 @@ describe('Logging', () => {
     });
 
     it('should make request once reading', done => {
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'listLogEntriesStream');
 
@@ -685,7 +690,7 @@ describe('Logging', () => {
     });
 
     it('should make the correct API request', done => {
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinks');
 
@@ -711,7 +716,7 @@ describe('Logging', () => {
       const ARGS = [new Error('Error.'), [], {}];
 
       beforeEach(() => {
-        logging.request = (config: Config, callback: Function) => {
+        logging.request = (config: ConfigInterface, callback: Function) => {
           callback.apply(null, ARGS);
         };
       });
@@ -737,7 +742,7 @@ describe('Logging', () => {
       ];
 
       beforeEach(() => {
-        logging.request = (config: Config, callback: Function) => {
+        logging.request = (config: ConfigInterface, callback: Function) => {
           callback.apply(null, ARGS);
         };
       });
@@ -748,7 +753,7 @@ describe('Logging', () => {
           assert.strictEqual(name, ARGS[1]![0].name);
           return sinkInstance;
         };
-        logging.getSinks(OPTIONS, (err: Error, sinks: Sink[]) => {
+        logging.getSinks(OPTIONS, (err: Error, sinks: SinkInterface[]) => {
           assert.ifError(err);
           assert.strictEqual(sinks[0], sinkInstance);
           assert.strictEqual(sinks[0].metadata, ARGS[1]![0]);
@@ -783,7 +788,7 @@ describe('Logging', () => {
     });
 
     it('should make request once reading', done => {
-      logging.request = (config: Config) => {
+      logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'listSinksStream');
 
@@ -818,7 +823,7 @@ describe('Logging', () => {
         return sinkInstance;
       };
 
-      stream.on('data', (sink: Sink) => {
+      stream.on('data', (sink: SinkInterface) => {
         assert.strictEqual(sink, sinkInstance);
         assert.strictEqual(sink.metadata, RESULT);
         done();
@@ -1149,7 +1154,7 @@ describe('Logging', () => {
 
       it('should return error and API response to callback', done => {
         logging.setAclForBucket_(
-            SINK_NAME, CONFIG, (err: Error, sink: Sink, resp: {}) => {
+            SINK_NAME, CONFIG, (err: Error, sink: SinkInterface, resp: {}) => {
               assert.strictEqual(err, error);
               assert.strictEqual(sink, null);
               assert.strictEqual(resp, apiResponse);
@@ -1171,7 +1176,7 @@ describe('Logging', () => {
       it('should call createSink with string destination', done => {
         bucket.acl.owners.addGroup = (entity: {}, callback: Function) => {
           logging.createSink =
-              (name: string, config: Config, callback: Function) => {
+              (name: string, config: ConfigInterface, callback: Function) => {
                 assert.strictEqual(name, SINK_NAME);
 
                 assert.strictEqual(config, CONFIG);
@@ -1297,7 +1302,7 @@ describe('Logging', () => {
 
           it('should call createSink with string destination', done => {
             logging.createSink =
-                (name: string, config: Config, callback: Function) => {
+                (name: string, config: ConfigInterface, callback: Function) => {
                   const expectedDestination = [
                     'bigquery.googleapis.com',
                     'projects',
@@ -1423,7 +1428,7 @@ describe('Logging', () => {
 
           it('should call createSink with string destination', done => {
             logging.createSink =
-                (name: string, config: Config, callback: Function) => {
+                (name: string, config: ConfigInterface, callback: Function) => {
                   const expectedDestination =
                       'pubsub.googleapis.com/' + topic.name;
                   assert.strictEqual(name, SINK_NAME);

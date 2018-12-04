@@ -20,25 +20,7 @@ import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
-interface Sink {
-  logging: {createSink: Function, request: Function};
-  formattedName_: string;
-  name: string;
-  create: Function;
-  delete: Function;
-  getMetadata: Function;
-  metadata: {};
-  setMetadata: Function;
-  setFilter: Function;
-  gaxOptions: {};
-}
-
-interface Config {
-  client: {}|string;
-  method: string;
-  reqOpts: {sink: Sink};
-  gaxOpts: {};
-}
+import {ConfigInterface, SinkInterface} from '../src/sink';
 
 let promisifed = false;
 const fakePromisify = extend({}, promisify, {
@@ -52,7 +34,7 @@ const fakePromisify = extend({}, promisify, {
 describe('Sink', () => {
   // tslint:disable-next-line no-any variable-name
   let Sink: any;
-  let sink: Sink;
+  let sink: SinkInterface;
 
   const LOGGING = {
     createSink: util.noop,
@@ -107,7 +89,7 @@ describe('Sink', () => {
 
   describe('delete', () => {
     it('should accept gaxOptions', done => {
-      sink.logging.request = (config: Config, callback: Function) => {
+      sink.logging.request = (config: ConfigInterface, callback: Function) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'deleteSink');
 
@@ -126,7 +108,7 @@ describe('Sink', () => {
     it('should accept gaxOptions', done => {
       const gaxOptions = {};
 
-      sink.logging.request = (config: Config) => {
+      sink.logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.gaxOpts, gaxOptions);
         done();
       };
@@ -137,7 +119,7 @@ describe('Sink', () => {
 
   describe('getMetadata', () => {
     it('should make correct request', done => {
-      sink.logging.request = (config: Config) => {
+      sink.logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'getSink');
 
@@ -156,7 +138,7 @@ describe('Sink', () => {
     it('should accept gaxOptions', done => {
       const gaxOptions = {};
 
-      sink.logging.request = (config: Config) => {
+      sink.logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.gaxOpts, gaxOptions);
         done();
       };
@@ -167,7 +149,7 @@ describe('Sink', () => {
     it('should update metadata', done => {
       const metadata = {};
 
-      sink.logging.request = (config: Config, callback: Function) => {
+      sink.logging.request = (config: ConfigInterface, callback: Function) => {
         callback(null, metadata);
       };
 
@@ -243,7 +225,7 @@ describe('Sink', () => {
         callback(null, currentMetadata);
       };
 
-      sink.logging.request = (config: Config) => {
+      sink.logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.client, 'ConfigServiceV2Client');
         assert.strictEqual(config.method, 'updateSink');
 
@@ -265,8 +247,9 @@ describe('Sink', () => {
         gaxOptions: {},
       });
 
-      sink.logging.request = (config: Config) => {
-        assert.strictEqual(config.reqOpts.sink.gaxOptions, undefined);
+      sink.logging.request = (config: ConfigInterface) => {
+        assert.strictEqual(
+            (config.reqOpts.sink as SinkInterface).gaxOptions, undefined);
         assert.strictEqual(config.gaxOpts, metadata.gaxOptions);
         done();
       };
@@ -277,7 +260,7 @@ describe('Sink', () => {
     it('should update metadata', done => {
       const metadata = {};
 
-      sink.logging.request = (config: Config, callback: Function) => {
+      sink.logging.request = (config: ConfigInterface, callback: Function) => {
         callback(null, metadata);
       };
 
@@ -290,7 +273,7 @@ describe('Sink', () => {
     it('should execute callback with original arguments', done => {
       const ARGS = [{}, {}, {}];
 
-      sink.logging.request = (config: Config, callback: Function) => {
+      sink.logging.request = (config: ConfigInterface, callback: Function) => {
         callback.apply(null, ARGS);
       };
 

@@ -18,6 +18,7 @@ import {Service, util} from '@google-cloud/common-grpc';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+import {EntryInterface} from '../src/entry';
 
 class FakeGrpcService {
   static structToObj_?: Function;
@@ -33,18 +34,14 @@ class FakeEventId {
   }
 }
 
-interface ENTRY {
-  metadata: {timestamp: Date, resource: {}, extraProperty: boolean};
-  data: {};
-  toJSON({}?): Function;
-}
+
 
 describe('Entry', () => {
   // tslint:disable-next-line no-any variable-name
   let Entry: any;
-  let entry: ENTRY;
+  let entry: EntryInterface;
 
-  const METADATA = {};
+  let METADATA = {};
   const DATA = {};
 
   before(() => {
@@ -57,6 +54,8 @@ describe('Entry', () => {
   });
 
   beforeEach(() => {
+    const now = new Date();
+    METADATA = {timestamp: new Date(now.getTime() + 1000)};
     fakeEventIdNewOverride = null;
     extend(FakeGrpcService, Service);
     entry = new Entry(METADATA, DATA);
@@ -67,7 +66,7 @@ describe('Entry', () => {
       const now = new Date();
 
       const expectedTimestampBoundaries = {
-        start: new Date(now.getTime() - 1000),
+        start: new Date(now.getTime() - 2000),
         end: new Date(now.getTime() + 1000),
       };
 
@@ -120,7 +119,7 @@ describe('Entry', () => {
 
   describe('fromApiResponse_', () => {
     const RESOURCE = {};
-    let entry: ENTRY;
+    let entry: EntryInterface;
     const date = new Date();
 
     beforeEach(() => {

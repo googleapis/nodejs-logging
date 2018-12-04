@@ -23,6 +23,8 @@ const {PubSub} = require('@google-cloud/pubsub');
 import {Storage} from '@google-cloud/storage';
 import * as uuid from 'uuid';
 import {Logging} from '../src';
+import {ConfigInterface} from '../src/sink';
+
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')
@@ -31,7 +33,7 @@ nock('http://metadata.google.internal')
     .persist();
 
 describe('Logging', () => {
-  let PROJECT_ID;
+  let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
   const WRITE_CONSISTENCY_DELAY_MS = 10000;
 
@@ -80,11 +82,14 @@ describe('Logging', () => {
       return getAndDelete(logging.getSinks.bind(logging));
     }
 
-    async function getAndDelete(method) {
+    async function getAndDelete(method: Function) {
       const [objects] = await method();
       return Promise.all(
-          objects.filter(o => (o.name || o.id).indexOf(TESTS_PREFIX) === 0)
-              .map(o => o.delete()));
+          objects
+              .filter(
+                  (o: {name: string, id: string}) =>
+                      (o.name || o.id).indexOf(TESTS_PREFIX) === 0)
+              .map((o: {delete: Function}) => o.delete()));
     }
   });
 
@@ -136,7 +141,7 @@ describe('Logging', () => {
       const FILTER = 'severity = ALERT';
 
       before(async () => {
-        await sink.create({destination: topic});
+        await sink.create({destination: topic} as ConfigInterface);
       });
 
       it('should set metadata', async () => {
@@ -157,7 +162,7 @@ describe('Logging', () => {
       const sink = logging.sink(generateName());
 
       before(async () => {
-        await sink.create({destination: topic});
+        await sink.create({destination: topic} as ConfigInterface);
       });
 
       it('should list sinks', async () => {
@@ -178,8 +183,8 @@ describe('Logging', () => {
       it('should get metadata', done => {
         logging.getSinksStream({pageSize: 1})
             .on('error', done)
-            .once('data', sink => {
-              sink.getMetadata((err, metadata) => {
+            .once('data', (sink: {getMetadata: Function}) => {
+              sink.getMetadata((err: Error, metadata: {}) => {
                 assert.ifError(err);
                 assert.strictEqual(is.object(metadata), true);
                 done();
@@ -282,7 +287,7 @@ describe('Logging', () => {
         autoPaginate: false,
         pageSize: logEntries.length,
       });
-      assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
+      assert.deepStrictEqual(entries.map((x: {data: {}}) => x.data).reverse(), [
         'log entry 1',
         {delegate: 'my_username'},
         {
@@ -306,7 +311,7 @@ describe('Logging', () => {
         const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
 
         // Re-arrange to confirm the timestamp is sent and honored.
-        log.write([entry2, entry3, entry1], options, err => {
+        log.write([entry2, entry3, entry1], options, (err: Error) => {
           assert.ifError(err);
 
           setTimeout(() => {
@@ -315,13 +320,14 @@ describe('Logging', () => {
                   autoPaginate: false,
                   pageSize: 3,
                 },
-                (err, entries) => {
+                (err: Error, entries: []) => {
                   assert.ifError(err);
-                  assert.deepStrictEqual(entries.map(x => x.data), [
-                    '3',
-                    '2',
-                    '1',
-                  ]);
+                  assert.deepStrictEqual(
+                      entries.map((x: {data: {}}) => x.data), [
+                        '3',
+                        '2',
+                        '1',
+                      ]);
                   done();
                 });
           }, WRITE_CONSISTENCY_DELAY_MS * 4);
@@ -342,10 +348,10 @@ describe('Logging', () => {
               autoPaginate: false,
               pageSize: messages.length,
             },
-            (err, entries) => {
+            (err: Error, entries: []) => {
               assert.ifError(err);
               assert.deepStrictEqual(
-                  entries.reverse().map(x => x.data), messages);
+                  entries.reverse().map((x: {data: {}}) => x.data), messages);
               done();
             });
       }, WRITE_CONSISTENCY_DELAY_MS * 4);
@@ -359,7 +365,7 @@ describe('Logging', () => {
         shouldNotBeSaved: undefined,
       });
 
-      log.write(logEntry, options, err => {
+      log.write(logEntry, options, (err: Error) => {
         assert.ifError(err);
 
         setTimeout(() => {
@@ -368,10 +374,10 @@ describe('Logging', () => {
                 autoPaginate: false,
                 pageSize: 1,
               },
-              (err, entries) => {
+              (err: Error, entries: [{data: {}}]) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry: {data: {}} = entries[0];
 
                 assert.deepStrictEqual(entry.data, {
                   when: logEntry.data.when.toString(),
@@ -396,7 +402,7 @@ describe('Logging', () => {
 
       const logEntry = log.entry(metadata, data);
 
-      log.write(logEntry, err => {
+      log.write(logEntry, undefined, (err: Error) => {
         assert.ifError(err);
 
         setTimeout(() => {
@@ -405,10 +411,12 @@ describe('Logging', () => {
                 autoPaginate: false,
                 pageSize: 1,
               },
-              (err, entries) => {
+              (err: Error,
+               entries: [{metadata: {severity: string}, data: {}}]) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry: {metadata: {severity: string}, data: {}} =
+                    entries[0];
 
                 assert.strictEqual(entry.metadata.severity, metadata.severity);
                 assert.deepStrictEqual(entry.data, data);
@@ -423,7 +431,7 @@ describe('Logging', () => {
       const text = 'entry-text';
       const entry = log.entry(text);
 
-      log.write(entry, err => {
+      log.write(entry, undefined, (err: Error) => {
         assert.ifError(err);
 
         setTimeout(() => {
@@ -432,7 +440,7 @@ describe('Logging', () => {
                 autoPaginate: false,
                 pageSize: 1,
               },
-              (err, entries) => {
+              (err: Error, entries: [{metadata: {resource: {}}, data: {}}]) => {
                 assert.ifError(err);
 
                 const entry = entries[0];

@@ -20,7 +20,7 @@ import {replaceProjectIdToken} from '@google-cloud/projectify';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as arrify from 'arrify';
 import * as extend from 'extend';
-import {GoogleAuth} from 'google-auth-library';
+import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 import * as is from 'is';
 
 const pumpify = require('pumpify');
@@ -37,7 +37,35 @@ const v2 = require('./v2');
 
 import {Entry} from './entry';
 import {Log} from './log';
-import {Sink} from './sink';
+import {Sink, ConfigInterface, SinkInterface} from './sink';
+
+type ClientConfig = {
+  resourceNames?: string[],
+  autoPaginate?: {},
+  gaxOptions?: {},
+  pageSize?: number
+};
+
+export interface LoggingInterface {
+  projectId: string;
+  entry: Function;
+  request: Function;
+  getEntries: Function;
+  getEntriesStream: Function;
+  createSink: Function;
+  auth: GoogleAuth|{getProjectId: Function};
+  // tslint:disable-next-line
+  api: string|any;
+  setAclForTopic_: Function;
+  setAclForDataset_: Function;
+  setAclForBucket_: Function;
+  sink: Function;
+  getSinks: Function;
+  log: Function;
+  options: {};
+  getSinksStream: Function;
+}
+
 
 /**
  * @namespace google
@@ -114,13 +142,14 @@ import {Sink} from './sink';
  * region_tag:logging_quickstart
  * Full quickstart example:
  */
-class Logging {
-  api;
+class Logging implements LoggingInterface {
+  // tslint:disable-next-line no-any
+  api: any;
   auth: GoogleAuth;
-  options;
+  options: GoogleAuthOptions;
   projectId: string;
 
-  constructor(options?) {
+  constructor(options?: GoogleAuthOptions) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
     const scopes: Array<{}> = [];
@@ -227,7 +256,7 @@ class Logging {
    * region_tag:logging_create_sink
    * Another example:
    */
-  createSink(name, config, callback) {
+  createSink(name: string, config: ConfigInterface, callback: Function) {
     // jscs:enable maximumLineLength
     const self = this;
     if (!is.string(name)) {
@@ -248,6 +277,7 @@ class Logging {
       this.setAclForBucket_(name, config, callback);
       return;
     }
+
     const reqOpts = {
       parent: 'projects/' + this.projectId,
       sink: extend({}, config, {name}),
@@ -260,7 +290,7 @@ class Logging {
           reqOpts,
           gaxOpts: config.gaxOptions,
         },
-        (err, resp) => {
+        (err: Error, resp: {name: string}) => {
           if (err) {
             callback(err, null, resp);
             return;
@@ -317,7 +347,7 @@ class Logging {
    * //   }
    * // }
    */
-  entry(resource, data) {
+  entry(resource: {}, data: {}) {
     return new Entry(resource, data);
   }
 
@@ -403,9 +433,11 @@ class Logging {
    * Another example:
    */
   // tslint:disable-next-line no-any
-  getEntries(options, callback?): void|Promise<any> {
+  getEntries(options: ClientConfig, callback?: Function): void|Promise<any> {
     if (is.fn(options)) {
-      callback = options;
+      if (callback) {
+        callback = options as Function;
+      }
       options = {};
     }
     const reqOpts = extend(
@@ -432,12 +464,14 @@ class Logging {
           reqOpts,
           gaxOpts: gaxOptions,
         },
-        (...args) => {
+        (...args: [{}, {map: Function}]) => {
           const entries = args[1];
           if (entries) {
             args[1] = entries.map(Entry.fromApiResponse_);
           }
-          callback.apply(null, args);
+          if (callback) {
+            callback.apply(null, args);
+          }
         });
   }
 
@@ -473,10 +507,11 @@ class Logging {
    *     this.end();
    *   });
    */
-  getEntriesStream(options) {
+  getEntriesStream(options: ClientConfig) {
     const self = this;
     options = options || {};
-    let requestStream;
+    // tslint:disable-next-line no-any
+    let requestStream: any;
     const userStream = streamEvents(pumpify.obj());
     // tslint:disable-next-line no-any
     (userStream as any).abort = () => {
@@ -568,10 +603,12 @@ class Logging {
    * Another example:
    */
   // tslint:disable-next-line no-any
-  getSinks(options?, callback?): void|Promise<any> {
+  getSinks(options?: any, callback?: Function): void|Promise<any> {
     const self = this;
     if (is.fn(options)) {
-      callback = options;
+      if (callback) {
+        callback = options as Function;
+      }
       options = {};
     }
     const reqOpts = extend({}, options, {
@@ -591,16 +628,18 @@ class Logging {
           reqOpts,
           gaxOpts: gaxOptions,
         },
-        (...args) => {
+        (...args: [{}, {map: Function}]) => {
           const sinks = args[1];
           if (sinks) {
-            args[1] = sinks.map(sink => {
+            args[1] = sinks.map((sink: SinkInterface) => {
               const sinkInstance = self.sink(sink.name);
               sinkInstance.metadata = sink;
               return sinkInstance;
             });
           }
-          callback.apply(null, args);
+          if (callback) {
+            callback.apply(null, args);
+          }
         });
   }
 
@@ -635,10 +674,11 @@ class Logging {
    *     this.end();
    *   });
    */
-  getSinksStream(options) {
+  getSinksStream(options: ClientConfig) {
     const self = this;
     options = options || {};
-    let requestStream;
+    // tslint:disable-next-line
+    let requestStream: any;
     const userStream = streamEvents(pumpify.obj());
     // tslint:disable-next-line no-any
     (userStream as any).abort = () => {
@@ -689,7 +729,7 @@ class Logging {
    * const logging = new Logging();
    * const log = logging.log('my-log');
    */
-  log(name, options?) {
+  log(name: string, options?: {}) {
     return new Log(this, name, options);
   }
 
@@ -706,7 +746,7 @@ class Logging {
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
    */
-  sink(name) {
+  sink(name: string) {
     return new Sink(this, name);
   }
 
@@ -720,11 +760,14 @@ class Logging {
    * @param {object} config.reqOpts Request options.
    * @param {function} [callback] Callback function.
    */
-  request(config, callback?) {
+  // tslint:disable-next-line no-any
+  request(config: any, callback?: Function) {
     const self = this;
-    const isStreamMode = !callback;
-    let gaxStream;
-    let stream;
+    const isStreamMode: boolean = !callback;
+    // tslint:disable-next-line no-any
+    let gaxStream: any;
+    // tslint:disable-next-line no-any
+    let stream: any;
     if (isStreamMode) {
       stream = streamEvents(through.obj());
       stream.abort = () => {
@@ -736,7 +779,7 @@ class Logging {
     } else {
       makeRequestCallback();
     }
-    function prepareGaxRequest(callback) {
+    function prepareGaxRequest(callback: Function) {
       self.auth.getProjectId((err, projectId) => {
         if (err) {
           callback(err);
@@ -761,8 +804,8 @@ class Logging {
       if ((global as any).GCLOUD_SANDBOX_ENV) {
         return;
       }
-      prepareGaxRequest((err, requestFn) => {
-        if (err) {
+      prepareGaxRequest((err: Error, requestFn: Function) => {
+        if (err && callback) {
           callback(err);
           return;
         }
@@ -774,7 +817,7 @@ class Logging {
       if ((global as any).GCLOUD_SANDBOX_ENV) {
         return through.obj();
       }
-      prepareGaxRequest((err, requestFn) => {
+      prepareGaxRequest((err: Error, requestFn: Function) => {
         if (err) {
           stream.destroy(err);
           return;
@@ -782,7 +825,7 @@ class Logging {
         gaxStream = requestFn();
         gaxStream
             .on('error',
-                err => {
+                (err: Error) => {
                   stream.destroy(err);
                 })
             .pipe(stream);
@@ -801,17 +844,19 @@ class Logging {
    *
    * @private
    */
-  setAclForBucket_(name, config, callback) {
+  setAclForBucket_(name: string, config: ConfigInterface, callback: Function) {
     const self = this;
-    const bucket = config.destination;
-    bucket.acl.owners.addGroup('cloud-logs@google.com', (err, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      config.destination = 'storage.googleapis.com/' + bucket.name;
-      self.createSink(name, config, callback);
-    });
+    // tslint:disable-next-line no-any
+    const bucket = config.destination as any;
+    bucket.acl.owners.addGroup(
+        'cloud-logs@google.com', (err: Error, apiResp: {}) => {
+          if (err) {
+            callback(err, null, apiResp);
+            return;
+          }
+          config.destination = 'storage.googleapis.com/' + bucket.name;
+          self.createSink(name, config, callback);
+        });
   }
 
   /**
@@ -823,10 +868,12 @@ class Logging {
    *
    * @private
    */
-  setAclForDataset_(name, config, callback) {
+  setAclForDataset_(name: string, config: ConfigInterface, callback: Function) {
     const self = this;
-    const dataset = config.destination;
-    dataset.getMetadata((err, metadata, apiResp) => {
+
+    // tslint:disable-next-line no-any
+    const dataset = config.destination as any;
+    dataset.getMetadata((err: Error, metadata: {access: []}, apiResp: {}) => {
       if (err) {
         callback(err, null, apiResp);
         return;
@@ -840,7 +887,7 @@ class Logging {
           {
             access,
           },
-          (err, apiResp) => {
+          (err: Error, apiResp: {}) => {
             if (err) {
               callback(err, null, apiResp);
               return;
@@ -863,30 +910,32 @@ class Logging {
    *
    * @private
    */
-  setAclForTopic_(name, config, callback) {
+  setAclForTopic_(name: string, config: ConfigInterface, callback: Function) {
     const self = this;
-    const topic = config.destination;
-    topic.iam.getPolicy((err, policy, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      policy.bindings = arrify(policy.bindings);
-      policy.bindings.push({
-        role: 'roles/pubsub.publisher',
-        members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
-      });
-      topic.iam.setPolicy(policy, (err, policy, apiResp) => {
-        if (err) {
-          callback(err, null, apiResp);
-          return;
-        }
-        const baseUrl = 'pubsub.googleapis.com';
-        const topicName = topic.name;
-        config.destination = `${baseUrl}/${topicName}`;
-        self.createSink(name, config, callback);
-      });
-    });
+    // tslint:disable-next-line no-any
+    const topic = config.destination as any;
+    topic.iam.getPolicy(
+        (err: Error, policy: {bindings: Array<{}>}, apiResp: {}) => {
+          if (err) {
+            callback(err, null, apiResp);
+            return;
+          }
+          policy.bindings = arrify(policy.bindings);
+          policy.bindings.push({
+            role: 'roles/pubsub.publisher',
+            members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
+          });
+          topic.iam.setPolicy(policy, (err: Error, policy: {}, apiResp: {}) => {
+            if (err) {
+              callback(err, null, apiResp);
+              return;
+            }
+            const baseUrl = 'pubsub.googleapis.com';
+            const topicName = topic.name;
+            config.destination = `${baseUrl}/${topicName}`;
+            self.createSink(name, config, callback);
+          });
+        });
   }
 }
 

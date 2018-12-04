@@ -20,42 +20,10 @@ import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
-interface Logging {
-  projectId: string;
-  entry: Function;
-  request: Function;
-  getEntries?: Function;
-  getEntriesStream?: Function;
-}
+import {LoggingInterface} from '../src';
+import {LogInterface, WriteOptions} from '../src/log';
+import {ConfigInterface} from '../src/sink';
 
-interface Config {
-  client: {}|string;
-  method: string;
-  reqOpts: {entries: {}|[]};
-  gaxOpts: {};
-}
-
-interface LOG {
-  logging: Logging;
-  LOG_NAME_FORMATTED: string;
-  name: string;
-  removeCircular_: boolean;
-  formattedName_: string;
-  delete: Function;
-  entry: Function;
-  getEntries: Function;
-  getEntriesStream: Function;
-  decorateEntries_: Function;
-  write: Function;
-  alert: Function;
-  critical: Function;
-  debug: Function;
-  emergency: Function;
-  error: Function;
-  info: Function;
-  notice: Function;
-  warning: Function;
-}
 
 class FakeEntry {
   constructor(toJSONResponse: {}) {
@@ -88,7 +56,7 @@ const fakeMetadata = {
 describe('Log', () => {
   // tslint:disable-next-line no-any variable-name
   let Log: any;
-  let log: LOG;
+  let log: LogInterface;
 
 
   const PROJECT_ID = 'project-id';
@@ -101,7 +69,7 @@ describe('Log', () => {
     LOG_NAME_ENCODED,
   ].join('/');
 
-  let LOGGING: Logging;
+  let LOGGING: LoggingInterface|{};
 
   let assignSeverityToEntriesOverride: Function|null = null;
 
@@ -227,7 +195,7 @@ describe('Log', () => {
 
   describe('delete', () => {
     it('should accept gaxOptions', done => {
-      log.logging.request = (config: Config, callback: Function) => {
+      log.logging.request = (config: ConfigInterface, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'deleteLog');
 
@@ -246,7 +214,7 @@ describe('Log', () => {
     it('should accept gaxOptions', done => {
       const gaxOptions = {};
 
-      log.logging.request = (config: Config) => {
+      log.logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.gaxOpts, gaxOptions);
         done();
       };
@@ -351,7 +319,7 @@ describe('Log', () => {
 
   describe('write', () => {
     const ENTRY = {};
-    const OPTIONS = {};
+    const OPTIONS: WriteOptions = {resource: {labels: {}}};
     const FAKE_RESOURCE = 'fake-resource';
 
     beforeEach(() => {
@@ -369,7 +337,7 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      log.logging.request = (config: Config, callback: Function) => {
+      log.logging.request = (config: ConfigInterface, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
@@ -402,7 +370,7 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      log.logging.request = (config: Config, callback: Function) => {
+      log.logging.request = (config: ConfigInterface, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
@@ -421,7 +389,10 @@ describe('Log', () => {
     });
 
     it('should make the correct API request', done => {
-      log.logging.request = (config: Config, callback: Function) => {
+      const optionsWithResource = extend({}, OPTIONS, {
+        resource: FAKE_RESOURCE,
+      });
+      log.logging.request = (config: ConfigInterface, callback: Function) => {
         assert.strictEqual(config.client, 'LoggingServiceV2Client');
         assert.strictEqual(config.method, 'writeLogEntries');
 
@@ -436,7 +407,7 @@ describe('Log', () => {
         callback();
       };
 
-      log.write(ENTRY, OPTIONS, done);
+      log.write(ENTRY, optionsWithResource, done);
     });
 
     it('should arrify & decorate the entries', done => {
@@ -447,7 +418,7 @@ describe('Log', () => {
         return decoratedEntries;
       };
 
-      log.logging.request = (config: Config) => {
+      log.logging.request = (config: ConfigInterface) => {
         assert.strictEqual(config.reqOpts.entries, decoratedEntries);
         done();
       };
@@ -456,7 +427,7 @@ describe('Log', () => {
     });
 
     it('should not require options', done => {
-      log.logging.request = (config: Config, callback: Function) => {
+      log.logging.request = (config: ConfigInterface, callback: Function) => {
         callback();  // done()
       };
 
