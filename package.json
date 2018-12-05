@@ -108,10 +108,5 @@
     "proxyquire": "^2.1.0",
     "typescript": "~3.2.0",
     "uuid": "^3.3.2"
-  },
-  "nyc": {
-    "exclude": [
-      "build/test"
-    ]
   }
 }
