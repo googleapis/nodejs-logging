@@ -101,12 +101,8 @@ class ConfigServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate(
-        'projects/{project}'
-      ),
-      sinkPathTemplate: new gax.PathTemplate(
-        'projects/{project}/sinks/{sink}'
-      ),
+      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      sinkPathTemplate: new gax.PathTemplate('projects/{project}/sinks/{sink}'),
       exclusionPathTemplate: new gax.PathTemplate(
         'projects/{project}/exclusions/{exclusion}'
       ),
@@ -116,11 +112,7 @@ class ConfigServiceV2Client {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
-      listSinks: new gax.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'sinks'
-      ),
+      listSinks: new gax.PageDescriptor('pageToken', 'nextPageToken', 'sinks'),
       listExclusions: new gax.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -261,7 +253,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -353,7 +345,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -375,7 +367,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   /**
    * Gets a sink.
@@ -404,7 +396,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -477,7 +469,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -574,7 +566,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -631,7 +623,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -695,7 +687,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -787,7 +779,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -809,7 +801,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  };
+  }
 
   /**
    * Gets the description of an exclusion.
@@ -838,7 +830,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -898,7 +890,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -971,7 +963,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -1028,7 +1020,7 @@ class ConfigServiceV2Client {
    *
    * @example
    *
-   const logging = require('@google-cloud/logging');
+   * const logging = require('@google-cloud/logging');
    *
    * const client = new logging.v2.ConfigServiceV2Client({
    *   // optional auth parameters.
@@ -1101,9 +1093,7 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate
-      .match(projectName)
-      .project;
+    return this._pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -1114,9 +1104,7 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromSinkName(sinkName) {
-    return this._pathTemplates.sinkPathTemplate
-      .match(sinkName)
-      .project;
+    return this._pathTemplates.sinkPathTemplate.match(sinkName).project;
   }
 
   /**
@@ -1127,9 +1115,7 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the sink.
    */
   matchSinkFromSinkName(sinkName) {
-    return this._pathTemplates.sinkPathTemplate
-      .match(sinkName)
-      .sink;
+    return this._pathTemplates.sinkPathTemplate.match(sinkName).sink;
   }
 
   /**
@@ -1140,8 +1126,7 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate
-      .match(exclusionName)
+    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
       .project;
   }
 
@@ -1153,11 +1138,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the exclusion.
    */
   matchExclusionFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate
-      .match(exclusionName)
+    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
       .exclusion;
   }
 }
-
 
 module.exports = ConfigServiceV2Client;
