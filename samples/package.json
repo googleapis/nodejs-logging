@@ -12,7 +12,7 @@
     "test": "nyc mocha system-test/ test/"
   },
   "dependencies": {
-    "@google-cloud/logging": "^4.1.0",
+    "@google-cloud/logging": "^4.1.1",
     "@google-cloud/logging-bunyan": "^0.9.0",
     "@google-cloud/logging-winston": "^0.10.0",
     "@google-cloud/storage": "^2.0.2",
