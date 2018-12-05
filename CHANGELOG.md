@@ -4,6 +4,43 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.1.1
+
+12-05-2018 13:12 PST
+
+### Implementation Changes
+TypeScript related changes:
+- refactor(ts): generate logging types from proto ([#314](https://github.com/googleapis/nodejs-logging/pull/314))
+- refactor(ts): use es imports and exports ([#307](https://github.com/googleapis/nodejs-logging/pull/307))
+
+### Dependencies
+- chore(deps): update dependency typescript to ~3.2.0 ([#331](https://github.com/googleapis/nodejs-logging/pull/331))
+- chore(deps): update dependency @google-cloud/pubsub to ^0.22.0 ([#333](https://github.com/googleapis/nodejs-logging/pull/333))
+- fix(deps): update dependency google-gax to ^0.22.0 ([#323](https://github.com/googleapis/nodejs-logging/pull/323))
+- fix(deps): update dependency @opencensus/propagation-stackdriver to v0.0.7 ([#322](https://github.com/googleapis/nodejs-logging/pull/322))
+- chore(deps): update dependency @google-cloud/pubsub to ^0.21.0 ([#324](https://github.com/googleapis/nodejs-logging/pull/324))
+- chore(deps): update dependency gts to ^0.9.0 ([#321](https://github.com/googleapis/nodejs-logging/pull/321))
+- chore(deps): update dependency bignumber.js to v8 ([#301](https://github.com/googleapis/nodejs-logging/pull/301))
+- chore(deps): update dependency @types/is to v0.0.21 ([#315](https://github.com/googleapis/nodejs-logging/pull/315))
+- chore(deps): update dependency @google-cloud/nodejs-repo-tools to v3 ([#318](https://github.com/googleapis/nodejs-logging/pull/318))
+- fix(deps): update dependency through2 to v3 ([#311](https://github.com/googleapis/nodejs-logging/pull/311))
+
+### Documentation
+- docs(samples): updated samples code to use async await ([#329](https://github.com/googleapis/nodejs-logging/pull/329))
+- docs: update directory for docs generation ([#312](https://github.com/googleapis/nodejs-logging/pull/312))
+
+### Internal / Testing Changes
+- fix(docs): const logging = require.. contains binary ([#338](https://github.com/googleapis/nodejs-logging/pull/338))
+- chore: update license file ([#337](https://github.com/googleapis/nodejs-logging/pull/337))
+- docs: update readme badges ([#335](https://github.com/googleapis/nodejs-logging/pull/335))
+- fix(build): fix system key decryption ([#332](https://github.com/googleapis/nodejs-logging/pull/332))
+- chore: add synth.metadata
+- chore: update eslintignore config ([#320](https://github.com/googleapis/nodejs-logging/pull/320))
+- chore: drop contributors from multiple places ([#316](https://github.com/googleapis/nodejs-logging/pull/316))
+- chore: use latest npm on Windows ([#313](https://github.com/googleapis/nodejs-logging/pull/313))
+- chore(build): use the latest npm on windows for tests ([#304](https://github.com/googleapis/nodejs-logging/pull/304))
+- refactor: go back to prettier, use generated gapic tests ([#308](https://github.com/googleapis/nodejs-logging/pull/308))
+
 ## v4.1.0
 
 ### New Features
