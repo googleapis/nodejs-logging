@@ -166,9 +166,15 @@ class Entry implements EntryInterface {
    *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
    * @returns {Entry}
    */
-  // tslint:disable-next-line no-any
-  static fromApiResponse_(entry: any) {
-    let data = entry[entry.payload];
+
+  static fromApiResponse_(entry: {payload: string}) {
+    let data: {} = {};
+    if (entry.hasOwnProperty(entry.payload)) {
+      data = (Object.getOwnPropertyDescriptor(entry, entry.payload) as
+              PropertyDescriptor)
+                 .value;
+    }
+
     if (entry.payload === 'jsonPayload') {
       // tslint:disable-next-line no-any
       data = (Service as any).structToObj_(data);
