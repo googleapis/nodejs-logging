@@ -42,10 +42,6 @@ describe('LoggingServiceV2SmokeTest', () => {
     };
     client
       .writeLogEntries(request)
-      .then(responses => {
-        const response = responses[0];
-        console.log(response);
-      })
       .then(done)
       .catch(done);
   });

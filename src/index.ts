@@ -878,7 +878,8 @@ class Logging implements LoggingInterface {
         callback(err, null, apiResp);
         return;
       }
-      const access = [].slice.call(arrify(metadata.access));
+      // tslint:disable-next-line no-any
+      const access = ([] as any[]).slice.call(arrify(metadata.access));
       access.push({
         role: 'WRITER',
         groupByEmail: 'cloud-logs@google.com',
