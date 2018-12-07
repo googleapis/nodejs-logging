@@ -55,7 +55,7 @@ export interface LoggingInterface {
   createSink: Function;
   auth: GoogleAuth|{getProjectId: Function};
   // tslint:disable-next-line
-  api: string|any;
+  api: any;
   setAclForTopic_: Function;
   setAclForDataset_: Function;
   setAclForBucket_: Function;
@@ -603,7 +603,7 @@ class Logging implements LoggingInterface {
    * Another example:
    */
   // tslint:disable-next-line no-any
-  getSinks(options?: any, callback?: Function): void|Promise<any> {
+  getSinks(options?: ClientConfig, callback?: Function): void|Promise<any> {
     const self = this;
     if (is.fn(options)) {
       if (callback) {
@@ -618,9 +618,9 @@ class Logging implements LoggingInterface {
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
         {
-          autoPaginate: options.autoPaginate,
+          autoPaginate: options ? options.autoPaginate : null,
         },
-        options.gaxOptions);
+        options ? options.gaxOptions : null);
     this.request(
         {
           client: 'ConfigServiceV2Client',

@@ -650,9 +650,6 @@ describe('Log', () => {
   describe('decorateEntries_', () => {
     const toJSONResponse = {};
 
-    // function FakeEntry() {}
-    // FakeEntry.prototype.toJSON = () => toJSONResponse;
-
     beforeEach(() => {
       log.entry = () => new FakeEntry(toJSONResponse);
     });

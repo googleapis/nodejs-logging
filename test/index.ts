@@ -19,59 +19,16 @@ import * as arrify from 'arrify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+import {PassThrough, Transform} from 'stream';
 import * as through from 'through2';
+import {isFunction} from 'util';
 
 import {LoggingInterface} from '../src';
 import {ConfigInterface, SinkInterface} from '../src/sink';
 
-// interface Config {
-//   client: {}|string;
-//   method: string;
-//   reqOpts: {
-//     entries: {}|[],
-//     sink: Sink,
-//     parent: string,
-//     resourceNames: [],
-//     orderBy: string,
-//     gaxOptions: {}
-//   };
-//   gaxOpts: {};
-//   parent: string;
-//   destination: {};
-// }
-
-// interface Sink {
-//   logging: {createSink: Function, request: Function};
-//   formattedName_: string;
-//   name: string;
-//   create: Function;
-//   delete: Function;
-//   getMetadata: Function;
-//   metadata: {};
-//   setMetadata: Function;
-//   setFilter: Function;
-//   gaxOptions: {};
-// }
-
-// interface LOGGING {
-//   projectId: string;
-//   // tslint:disable-next-line
-//   api: string|any;
-//   createSink: Function;
-//   setAclForTopic_: Function;
-//   setAclForDataset_: Function;
-//   setAclForBucket_: Function;
-//   request: Function;
-//   sink: Function;
-//   entry: Function;
-//   getEntries: Function;
-//   getEntriesStream: Function;
-//   getSinks: Function;
-//   getSinksStream: Function;
-//   log: Function;
-//   auth: {getProjectId: Function};
-//   options: {};
-// }
+interface GaxStreamInterface extends PassThrough {
+  cancel?: Function;
+}
 
 const {v2} = require('../src');
 const PKG = require('../../package.json');
@@ -135,7 +92,7 @@ const fakeProjectify = {
 const originalFakeUtil = extend(true, {}, fakeUtil);
 
 // tslint:disable-next-line
-const fakeV2: {}|any = {};
+const fakeV2: any = {};
 
 
 
@@ -1007,9 +964,10 @@ describe('Logging', () => {
       it('should execute the request function', () => {
         logging.api[CONFIG.client][CONFIG.method] =
             (done: Function, ...args: []) => {
-              // tslint:disable-next-line no-any variable-callback
-              const callback: any = args.pop();
-              callback(null, done);  // so it ends the test
+              const callback: Function|undefined = args.pop();
+              if (callback && isFunction(callback)) {
+                (callback as Function)(null, done);
+              }  // so it ends the test
             };
 
         logging.request(CONFIG, assert.ifError);
@@ -1017,8 +975,7 @@ describe('Logging', () => {
     });
 
     describe('makeRequestStream', () => {
-      // tslint:disable-next-line no-any variable-GAX_STREAM
-      let GAX_STREAM: {cancel: Function}|any;
+      let GAX_STREAM: GaxStreamInterface;
 
       beforeEach(() => {
         GAX_STREAM = through();
