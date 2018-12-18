@@ -93,23 +93,6 @@ const Distribution = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 
   /**
-   * The range of the population values.
-   *
-   * @property {number} min
-   *   The minimum of the population values.
-   *
-   * @property {number} max
-   *   The maximum of the population values.
-   *
-   * @typedef Range
-   * @memberof google.api
-   * @see [google.api.Distribution.Range definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
-   */
-  Range: {
-    // This is for documentation. Actual contents will be loaded by gRPC.
-  },
-
-  /**
    * `BucketOptions` describes the bucket boundaries used to create a histogram
    * for the distribution. The buckets can be in a linear sequence, an
    * exponential sequence, or each bucket can be specified explicitly.
@@ -227,44 +210,5 @@ const Distribution = {
     Explicit: {
       // This is for documentation. Actual contents will be loaded by gRPC.
     }
-  },
-
-  /**
-   * Exemplars are example points that may be used to annotate aggregated
-   * distribution values. They are metadata that gives information about a
-   * particular value added to a Distribution bucket, such as a trace ID that
-   * was active when a value was added. They may contain further information,
-   * such as a example values and timestamps, origin, etc.
-   *
-   * @property {number} value
-   *   Value of the exemplar point. This value determines to which bucket the
-   *   exemplar belongs.
-   *
-   * @property {Object} timestamp
-   *   The observation (sampling) time of the above value.
-   *
-   *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
-   *
-   * @property {Object[]} attachments
-   *   Contextual information about the example value. Examples are:
-   *
-   *     Trace ID: type.googleapis.com/google.devtools.cloudtrace.v1.Trace
-   *
-   *     Literal string: type.googleapis.com/google.protobuf.StringValue
-   *
-   *     Labels dropped during aggregation:
-   *       type.googleapis.com/google.monitoring.v3.DroppedLabels
-   *
-   *   There may be only a single attachment of any given message type in a
-   *   single exemplar, and this is enforced by the system.
-   *
-   *   This object should have the same structure as [Any]{@link google.protobuf.Any}
-   *
-   * @typedef Exemplar
-   * @memberof google.api
-   * @see [google.api.Distribution.Exemplar definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/distribution.proto}
-   */
-  Exemplar: {
-    // This is for documentation. Actual contents will be loaded by gRPC.
   }
 };
