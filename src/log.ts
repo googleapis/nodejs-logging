@@ -14,16 +14,48 @@
  * limitations under the License.
  */
 
+import {DeleteCallback} from '@google-cloud/common';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as arrify from 'arrify';
 import * as extend from 'extend';
+import {CallOptions} from 'google-gax/build/src/gax';
 import * as is from 'is';
+import {Response} from 'request';
 
+import {google} from '../proto/logging';
+
+import {Logging} from '.';
+import {Entry} from './entry';
 import {getDefaultResource} from './metadata';
 
 const snakeCaseKeys = require('snakecase-keys');
 
-import {Entry} from './entry';
+export interface GetEntriesRequest {
+  autoPaginate?: boolean;
+  filter?: string;
+  gaxOptions?: CallOptions;
+  maxApiCalls?: number;
+  maxResults?: number;
+  orderBy?: string;
+  pageSize?: number;
+  pageToken?: string;
+}
+
+export interface LogOptions {
+  removeCircular?: boolean;
+}
+
+export type ApiResponse = [Response];
+export interface ApiResponseCallback {
+  (err: Error|null, apiResponse?: Response): void;
+}
+
+export type MonitoredResource = google.api.IMonitoredResource;
+export interface WriteOptions {
+  gaxOptions?: CallOptions;
+  labels?: {[index: string]: string};
+  resource?: MonitoredResource;
+}
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -50,9 +82,9 @@ import {Entry} from './entry';
 class Log {
   formattedName_: string;
   removeCircular_: boolean;
-  logging;
+  logging: Logging;
   name: string;
-  constructor(logging, name, options) {
+  constructor(logging: Logging, name: string, options: LogOptions) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
@@ -92,8 +124,21 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  alert(entry, options, callback) {
-    this.write(Log.assignSeverityToEntries_(entry, 'ALERT'), options, callback);
+  alert(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  alert(
+      entry: Entry|Entry[], options: WriteOptions,
+      callback: ApiResponseCallback): void;
+  alert(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  alert(
+      entry: Entry|Entry[],
+      optionsOrCallback?: WriteOptions|ApiResponseCallback,
+      cb?: ApiResponseCallback): void|Promise<ApiResponse> {
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    this.write(
+        Log.assignSeverityToEntries_(entry, 'ALERT'), options, callback!);
   }
 
   /**
@@ -124,9 +169,21 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  critical(entry, options, callback) {
+  critical(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  critical(
+      entry: Entry|Entry[], options: WriteOptions,
+      callback: ApiResponseCallback): void;
+  critical(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  critical(
+      entry: Entry|Entry[],
+      optionsOrCallback?: WriteOptions|ApiResponseCallback,
+      cb?: ApiResponseCallback): void|Promise<ApiResponse> {
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
     const entries = Log.assignSeverityToEntries_(entry, 'CRITICAL');
-    this.write(entries, options, callback);
+    this.write(entries, options, callback!);
   }
 
   /**
@@ -157,8 +214,21 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  debug(entry, options, callback) {
-    this.write(Log.assignSeverityToEntries_(entry, 'DEBUG'), options, callback);
+  debug(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  debug(
+      entry: Entry|Entry[], options: WriteOptions,
+      callback: ApiResponseCallback): void;
+  debug(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  debug(
+      entry: Entry|Entry[],
+      optionsOrCallback?: WriteOptions|ApiResponseCallback,
+      cb?: ApiResponseCallback): void|Promise<ApiResponse> {
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    this.write(
+        Log.assignSeverityToEntries_(entry, 'DEBUG'), options, callback!);
   }
 
   /**
@@ -202,11 +272,15 @@ class Log {
    * region_tag:logging_delete_log
    * Another example:
    */
-  delete(gaxOptions, callback?) {
-    if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
-      gaxOptions = {};
-    }
+  delete(gaxOptions?: CallOptions): Promise<ApiResponse>;
+  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
+  delete(callback: DeleteCallback): void;
+  delete(optionsOrCallback?: CallOptions|DeleteCallback, cb?: DeleteCallback):
+      void|Promise<ApiResponse> {
+    const gaxOptions =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
     const reqOpts = {
       logName: this.formattedName_,
     };
@@ -248,9 +322,21 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  emergency(entry, options, callback) {
+  emergency(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  emergency(
+      entry: Entry|Entry[], options: WriteOptions,
+      callback: ApiResponseCallback): void;
+  emergency(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  emergency(
+      entry: Entry|Entry[],
+      optionsOrCallback?: WriteOptions|ApiResponseCallback,
+      cb?: ApiResponseCallback): void|Promise<ApiResponse> {
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
     const entries = Log.assignSeverityToEntries_(entry, 'EMERGENCY');
-    this.write(entries, options, callback);
+    this.write(entries, options, callback!);
   }
 
   /**
@@ -339,8 +425,21 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  error(entry, options, callback) {
-    this.write(Log.assignSeverityToEntries_(entry, 'ERROR'), options, callback);
+  error(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  error(
+      entry: Entry|Entry[], options: WriteOptions,
+      callback: ApiResponseCallback): void;
+  error(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  error(
+      entry: Entry|Entry[],
+      optionsOrCallback?: WriteOptions|ApiResponseCallback,
+      cb?: ApiResponseCallback): void|Promise<ApiResponse> {
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    this.write(
+        Log.assignSeverityToEntries_(entry, 'ERROR'), options, callback!);
   }
 
   /**
@@ -385,7 +484,7 @@ class Log {
    *   const entries = data[0];
    * });
    */
-  getEntries(options, callback?) {
+  getEntries(options: GetEntriesRequest, callback?) {
     if (is.function(options))
       {
         callback = options;
@@ -432,7 +531,7 @@ class Log {
    *     this.end();
    *   });
    */
-  getEntriesStream(options) {
+  getEntriesStream(options: GetEntriesRequest) {
       options = extend(
           {
             filter: 'logName="' + this.formattedName_ + '"',
@@ -469,9 +568,16 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  info(entry, options, callback) {
+  info(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  info(entry: Entry|Entry[], options: WriteOptions, callback: ApiResponseCallback): void;
+  info(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  info(entry: Entry|Entry[], optionsOrCallback?: WriteOptions|ApiResponseCallback, cb?: ApiResponseCallback):void|Promise<ApiResponse> {
+      const options =
+          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+      const callback =
+          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
       this.write(
-          Log.assignSeverityToEntries_(entry, 'INFO'), options, callback);
+          Log.assignSeverityToEntries_(entry, 'INFO'), options, callback!);
   }
 
   /**
@@ -502,9 +608,16 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  notice(entry, options, callback) {
+  notice(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  notice(entry: Entry|Entry[], options: WriteOptions, callback: ApiResponseCallback): void;
+  notice(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  notice(entry: Entry|Entry[], optionsOrCallback?: WriteOptions|ApiResponseCallback, cb?: ApiResponseCallback):void|Promise<ApiResponse> {
+      const options =
+          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+      const callback =
+          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
       this.write(
-          Log.assignSeverityToEntries_(entry, 'NOTICE'), options, callback);
+          Log.assignSeverityToEntries_(entry, 'NOTICE'), options, callback!);
   }
 
   /**
@@ -535,9 +648,16 @@ class Log {
    *   const apiResponse = data[0];
    * });
    */
-  warning(entry, options, callback) {
+  warning(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  warning(entry: Entry|Entry[], options: WriteOptions, callback: ApiResponseCallback): void;
+  warning(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  warning(entry: Entry|Entry[], optionsOrCallback?: WriteOptions|ApiResponseCallback, cb?: ApiResponseCallback):void|Promise<ApiResponse> {
+      const options =
+          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+      const callback =
+          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
       this.write(
-          Log.assignSeverityToEntries_(entry, 'WARNING'), options, callback);
+          Log.assignSeverityToEntries_(entry, 'WARNING'), options, callback!);
   }
 
   /**
@@ -631,12 +751,16 @@ class Log {
    * region_tag:logging_write_log_entry_advanced
    * Another example:
    */
-  write(entry, options?, callback?) {
+  write(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  write(entry: Entry|Entry[], options: WriteOptions, callback: ApiResponseCallback): void;
+  write(entry: Entry|Entry[], callback: ApiResponseCallback): void;
+  write(entry: Entry|Entry[], optionsOrCallback?: WriteOptions|ApiResponseCallback, cb?: ApiResponseCallback): void|Promise<ApiResponse> {
+      const options =
+          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+      const callback =
+          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
       const self = this;
-      if (is.fn(options)) {
-        callback = options;
-        options = {};
-      }
+
       if (!options.resource) {
         getDefaultResource(this.logging.auth)
             .then(
@@ -653,7 +777,7 @@ class Log {
         }
         writeWithResource(options.resource);
       }
-      function writeWithResource(resource) {
+      function writeWithResource(resource: {}|null) {
         let decoratedEntries;
         try {
           decoratedEntries = self.decorateEntries_(arrify(entry));
@@ -688,7 +812,7 @@ class Log {
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  decorateEntries_(entries) {
+  decorateEntries_(entries: Entry[]) {
       return entries.map(entry => {
         if (!(entry instanceof Entry)) {
           entry = this.entry(entry);
@@ -707,7 +831,7 @@ class Log {
    * @param {object|object[]} entries - Log entries.
    * @param {string} severity - The desired severity level.
    */
-  static assignSeverityToEntries_(entries, severity) {
+  static assignSeverityToEntries_(entries: Entry|Entry[], severity: string): Entry[] {
       return arrify(entries).map(entry => {
         const metadata = extend(true, {}, entry.metadata, {
           severity,
@@ -726,7 +850,7 @@ class Log {
    *
    * @returns {string}
    */
-  static formatName_(projectId, name) {
+  static formatName_(projectId: string, name: string) {
       const path = 'projects/' + projectId + '/logs/';
       name = name.replace(path, '');
       if (decodeURIComponent(name) === name) {

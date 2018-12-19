@@ -32,6 +32,7 @@ const fakePromisify = extend({}, promisify, {
 });
 
 import {Entry} from '../src';
+import {EntryJson} from '../src/entry';
 
 const originalGetDefaultResource = async () => {
   return 'very-fake-resource';
@@ -658,7 +659,7 @@ describe('Log', () => {
         throw new Error('should not be called');
       };
       const entry = new Entry();
-      entry.toJSON = () => toJSONResponse;
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
       const decoratedEntries = log.decorateEntries_([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
     });
@@ -670,7 +671,7 @@ describe('Log', () => {
       entry.toJSON = options_ => {
         assert.deepStrictEqual(options_, {removeCircular: true});
         setImmediate(done);
-        return {};
+        return {} as EntryJson;
       };
 
       log.decorateEntries_([entry]);

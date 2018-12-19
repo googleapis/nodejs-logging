@@ -23,6 +23,7 @@ const {PubSub} = require('@google-cloud/pubsub');
 import {Storage} from '@google-cloud/storage';
 import * as uuid from 'uuid';
 import {Logging} from '../src';
+import {ServiceObject} from '@google-cloud/common';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock('http://metadata.google.internal')
@@ -31,7 +32,7 @@ nock('http://metadata.google.internal')
     .persist();
 
 describe('Logging', () => {
-  let PROJECT_ID;
+  let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
   const WRITE_CONSISTENCY_DELAY_MS = 10000;
 
@@ -77,10 +78,11 @@ describe('Logging', () => {
     }
 
     async function deleteSinks() {
-      return getAndDelete(logging.getSinks.bind(logging));
+      // tslint:disable-next-line no-any
+      return getAndDelete(logging.getSinks.bind(logging) as any);
     }
 
-    async function getAndDelete(method) {
+    async function getAndDelete(method: () => Promise<[ServiceObject[]]>) {
       const [objects] = await method();
       return Promise.all(
           objects.filter(o => (o.name || o.id).indexOf(TESTS_PREFIX) === 0)

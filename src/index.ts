@@ -21,6 +21,7 @@ import {promisifyAll} from '@google-cloud/promisify';
 import * as arrify from 'arrify';
 import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
+import * as gax from 'google-gax';
 import * as is from 'is';
 
 const pumpify = require('pumpify');
@@ -36,8 +37,15 @@ const PKG = require('../../package.json');
 const v2 = require('./v2');
 
 import {Entry} from './entry';
-import {Log} from './log';
+import {Log, GetEntriesRequest} from './log';
 import {Sink} from './sink';
+import {Duplex} from 'stream';
+import {AbortableDuplex} from '@google-cloud/common';
+
+export interface LoggingOptions extends gax.GoogleAuthOptions {
+  autoRetry?: boolean;
+  maxRetries?: number;
+}
 
 /**
  * @namespace google
@@ -115,12 +123,12 @@ import {Sink} from './sink';
  * Full quickstart example:
  */
 class Logging {
-  api;
+  api: {};
   auth: GoogleAuth;
-  options;
+  options: LoggingOptions;
   projectId: string;
 
-  constructor(options?) {
+  constructor(options?: LoggingOptions) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
     const scopes: Array<{}> = [];
@@ -227,7 +235,7 @@ class Logging {
    * region_tag:logging_create_sink
    * Another example:
    */
-  createSink(name, config, callback) {
+  createSink(name: string, config, callback) {
     // jscs:enable maximumLineLength
     const self = this;
     if (!is.string(name)) {
@@ -473,22 +481,22 @@ class Logging {
    *     this.end();
    *   });
    */
-  getEntriesStream(options) {
+  getEntriesStream(options: GetEntriesRequest) {
     const self = this;
     options = options || {};
-    let requestStream;
-    const userStream = streamEvents(pumpify.obj());
-    // tslint:disable-next-line no-any
-    (userStream as any).abort = () => {
+    let requestStream: Duplex;
+    const userStream = streamEvents<Duplex>(pumpify.obj());
+    (userStream as AbortableDuplex).abort = () => {
       if (requestStream) {
-        requestStream.abort();
+        (requestStream as AbortableDuplex).abort();
       }
     };
     const toEntryStream = through.obj((entry, _, next) => {
       next(null, Entry.fromApiResponse_(entry));
     });
     userStream.once('reading', () => {
-      const reqOpts = extend(
+      // tslint:disable-next-line no-any
+      const reqOpts: any = extend(
           {
             orderBy: 'timestamp desc',
           },
@@ -706,7 +714,7 @@ class Logging {
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
    */
-  sink(name) {
+  sink(name: string) {
     return new Sink(this, name);
   }
 
@@ -724,10 +732,10 @@ class Logging {
     const self = this;
     const isStreamMode = !callback;
     let gaxStream;
-    let stream;
+    let stream: Duplex;
     if (isStreamMode) {
-      stream = streamEvents(through.obj());
-      stream.abort = () => {
+      stream = streamEvents<Duplex>(through.obj());
+      (stream as AbortableDuplex).abort = () => {
         if (gaxStream && gaxStream.cancel) {
           gaxStream.cancel();
         }
@@ -789,7 +797,7 @@ class Logging {
       });
       return;
     }
-    return stream;
+    return stream!;
   }
 
   /**
@@ -801,7 +809,7 @@ class Logging {
    *
    * @private
    */
-  setAclForBucket_(name, config, callback) {
+  setAclForBucket_(name: string, config, callback) {
     const self = this;
     const bucket = config.destination;
     bucket.acl.owners.addGroup('cloud-logs@google.com', (err, apiResp) => {
@@ -823,7 +831,7 @@ class Logging {
    *
    * @private
    */
-  setAclForDataset_(name, config, callback) {
+  setAclForDataset_(name: string, config, callback) {
     const self = this;
     const dataset = config.destination;
     dataset.getMetadata((err, metadata, apiResp) => {
@@ -864,7 +872,7 @@ class Logging {
    *
    * @private
    */
-  setAclForTopic_(name, config, callback) {
+  setAclForTopic_(name: string, config, callback) {
     const self = this;
     const topic = config.destination;
     topic.iam.getPolicy((err, policy, apiResp) => {
