@@ -15,30 +15,25 @@
 
 'use strict';
 
-const path = require(`path`);
-const assert = require('assert');
-const tools = require(`@google-cloud/nodejs-repo-tools`);
-const uuid = require(`uuid`);
+const {assert} = require('chai');
+const execa = require('execa');
+const uuid = require('uuid');
 
-const cwd = path.join(__dirname, `..`);
-const cmd = `node logs.js`;
-
+const cmd = 'node logs';
+const exec = async cmd => (await execa.shell(cmd)).stdout;
 const logName = `nodejs-logging-logs-test-${uuid.v4()}`;
-const message = `Hello world!`;
+const message = 'Hello world!';
 
-before(async () => {
-  await tools.checkCredentials();
-});
+describe('logs', () => {
+  it('should write a log entry', async () => {
+    const output = await exec(
+      `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`
+    );
+    assert.strictEqual(output, `Wrote to ${logName}`);
+  });
 
-it(`should write a log entry`, async () => {
-  const output = await tools.runAsync(
-    `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`,
-    cwd
-  );
-  assert.strictEqual(output, `Wrote to ${logName}`);
-});
-
-it(`should write a simple log entry`, async () => {
-  const output = await tools.runAsync(`${cmd} write-simple ${logName}`, cwd);
-  assert.strictEqual(output, `Wrote to ${logName}`);
+  it('should write a simple log entry', async () => {
+    const output = await exec(`${cmd} write-simple ${logName}`);
+    assert.strictEqual(output, `Wrote to ${logName}`);
+  });
 });
