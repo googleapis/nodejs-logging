@@ -19,8 +19,23 @@ import {Service} from '@google-cloud/common-grpc';
 const EventId = require('eventid');
 import * as extend from 'extend';
 import * as is from 'is';
+import {google} from '../proto/logging';
 
 const eventId = new EventId();
+
+export type LogEntry = google.logging.v2.ILogEntry;
+export type Timestamp = google.protobuf.IDuration;
+
+export interface EntryJson {
+  timestamp: Timestamp|Date;
+  insertId: number;
+  jsonPayload?: google.protobuf.IStruct;
+  textPayload?: string;
+}
+
+export interface ToJsonOptions {
+  removeCircular?: boolean;
+}
 
 /**
  * Create an entry object to define new data to insert into a log.
@@ -81,9 +96,11 @@ const eventId = new EventId();
  * });
  */
 class Entry {
-  metadata;
-  data;
-  constructor(metadata?, data?) {
+  metadata: LogEntry;
+  // tslint:disable-next-line no-any
+  data: any;
+  // tslint:disable-next-line no-any
+  constructor(metadata?: LogEntry, data?: any) {
     /**
      * @name Entry#metadata
      * @type {object}
@@ -119,9 +136,9 @@ class Entry {
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
-  toJSON(options) {
+  toJSON(options: ToJsonOptions) {
     options = options || {};
-    const entry = extend(true, {}, this.metadata);
+    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     if (is.object(this.data)) {
       // tslint:disable-next-line no-any
       entry.jsonPayload = (Service as any).objToStruct_(this.data, {
@@ -132,7 +149,7 @@ class Entry {
       entry.textPayload = this.data;
     }
     if (is.date(entry.timestamp)) {
-      const seconds = entry.timestamp.getTime() / 1000;
+      const seconds = (entry.timestamp as Date).getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
       entry.timestamp = {
         seconds: secondsRounded,
@@ -151,17 +168,18 @@ class Entry {
    *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
    * @returns {Entry}
    */
-  static fromApiResponse_(entry) {
-    let data = entry[entry.payload];
+  static fromApiResponse_(entry: google.logging.v2.LogEntry) {
+    let data = entry[entry.payload!];
     if (entry.payload === 'jsonPayload') {
       // tslint:disable-next-line no-any
       data = (Service as any).structToObj_(data);
     }
     const serializedEntry = new Entry(entry, data);
     if (serializedEntry.metadata.timestamp) {
-      let ms = serializedEntry.metadata.timestamp.seconds * 1000;
-      ms += serializedEntry.metadata.timestamp.nanos / 1e6;
-      serializedEntry.metadata.timestamp = new Date(ms);
+      let ms = Number(serializedEntry.metadata.timestamp.seconds) * 1000;
+      ms += Number(serializedEntry.metadata.timestamp.nanos) / 1e6;
+      // tslint:disable-next-line no-any
+      (serializedEntry as any).metadata.timestamp = new Date(ms);
     }
     return serializedEntry;
   }

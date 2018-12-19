@@ -17,7 +17,10 @@
 import * as common from '@google-cloud/common-grpc';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
+import {CallOptions} from 'google-gax/build/src/gax';
 import * as is from 'is';
+
+import {Logging} from '.';
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
@@ -39,11 +42,11 @@ import * as is from 'is';
  * const sink = logging.sink('my-sink');
  */
 class Sink {
-  logging;
+  logging: Logging;
   name: string;
   formattedName_: string;
-  metadata;
-  constructor(logging, name) {
+  metadata?: {};
+  constructor(logging: Logging, name: string) {
     this.logging = logging;
     /**
      * @name Sink#name
@@ -136,7 +139,7 @@ class Sink {
    * region_tag:logging_delete_sink
    * Another example:
    */
-  delete(gaxOptions, callback) {
+  delete(gaxOptions: CallOptions, callback) {
     if (is.fn(gaxOptions)) {
       callback = gaxOptions;
       gaxOptions = {};
@@ -195,7 +198,8 @@ class Sink {
    * region_tag:logging_get_sink
    * Another example:
    */
-  getMetadata(gaxOptions, callback?) {
+  getMetadata(callback?);
+  getMetadata(gaxOptions: CallOptions, callback?) {
     const self = this;
     if (is.fn(gaxOptions)) {
       callback = gaxOptions;
@@ -255,7 +259,7 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    */
-  setFilter(filter, callback?) {
+  setFilter(filter: string, callback?) {
     this.setMetadata(
         {
           filter,

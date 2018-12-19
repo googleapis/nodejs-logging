@@ -10,10 +10,9 @@
   "repository": "googleapis/nodejs-logging",
   "main": "./build/src/index.js",
   "files": [
-    "build",
-    "AUTHORS",
-    "CONTRIBUTORS",
-    "LICENSE"
+    "build/src",
+    "build/protos",
+    "build/proto"
   ],
   "keywords": [
     "google apis client",
@@ -41,13 +40,13 @@
     "lint": "gts check && eslint '**/*.js'",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "tsc -p . && cp -r src/v2 build/src/v2 && cp -r protos build && cp test/*.js build/test",
+    "compile": "tsc -p . && cp -r src/v2 build/src/v2 && cp -r protos build && cp -r proto build && cp test/*.js build/test",
     "fix": "gts fix && eslint --fix '**/*.js'",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run check",
     "proto": "npm run proto:logging",
-    "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files -o proto/logging.js google/logging/v2/logging.proto && pbts -o proto/logging.d.ts proto/logging.js"
+    "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging.proto | pbts -o proto/logging.d.ts -"
   },
   "dependencies": {
     "@google-cloud/common-grpc": "^0.9.2",
