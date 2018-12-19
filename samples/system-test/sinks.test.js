@@ -16,78 +16,71 @@
 'use strict';
 
 const {Logging} = new require('@google-cloud/logging');
-const path = require(`path`);
 const {Storage} = new require('@google-cloud/storage');
-const assert = require('assert');
-const tools = require(`@google-cloud/nodejs-repo-tools`);
+const {assert} = require('chai');
+const execa = require('execa');
 const uuid = require(`uuid`);
 const assertRejects = require('assert-rejects');
 
-const cwd = path.join(__dirname, `..`);
-const cmd = `node sinks.js`;
-
+const exec = async cmd => (await execa.shell(cmd)).stdout;
+const cmd = 'node sinks.js';
 const bucketName = `nodejs-logging-sinks-test-${uuid.v4()}`;
 const sinkName = `nodejs-logging-sinks-test-${uuid.v4()}`;
-const filter = `severity > WARNING`;
+const filter = 'severity > WARNING';
 const logging = new Logging();
 const storage = new Storage();
 
-before(tools.checkCredentials);
-before(async () => {
-  await storage.createBucket(bucketName);
-});
+describe('sinks', () => {
+  before(async () => {
+    await storage.createBucket(bucketName);
+  });
 
-after(async () => {
-  try {
-    await logging.sink(sinkName).delete();
-  } catch (err) {} // ignore error
-  try {
-    await storage.bucket(bucketName).delete();
-  } catch (err) {} // ignore error
-});
+  after(async () => {
+    await logging
+      .sink(sinkName)
+      .delete()
+      .catch(console.warn);
+    await storage
+      .bucket(bucketName)
+      .delete()
+      .catch(console.warn);
+  });
 
-it(`should create a sink`, async () => {
-  const output = await tools.runAsync(
-    `${cmd} create ${sinkName} ${bucketName} "${filter}"`,
-    cwd
-  );
-  assert.strictEqual(output, `Created sink ${sinkName} to ${bucketName}`);
-  const [metadata] = await logging.sink(sinkName).getMetadata();
-  assert.strictEqual(metadata.name, sinkName);
-  assert.strictEqual(metadata.destination.includes(bucketName), true);
-  assert.strictEqual(metadata.filter, filter);
-});
+  it(`should create a sink`, async () => {
+    const output = await exec(
+      `${cmd} create ${sinkName} ${bucketName} "${filter}"`
+    );
+    assert.strictEqual(output, `Created sink ${sinkName} to ${bucketName}`);
+    const [metadata] = await logging.sink(sinkName).getMetadata();
+    assert.strictEqual(metadata.name, sinkName);
+    assert.match(metadata.destination, new RegExp(bucketName));
+    assert.strictEqual(metadata.filter, filter);
+  });
 
-it(`should get a sink`, async () => {
-  const output = await tools.runAsync(`${cmd} get ${sinkName}`, cwd);
-  assert.strictEqual(output.includes(sinkName), true);
-});
+  it(`should get a sink`, async () => {
+    const output = await exec(`${cmd} get ${sinkName}`);
+    assert.match(output, new RegExp(sinkName));
+  });
 
-it(`should list sinks`, async () => {
-  await tools
-    .tryTest(async assert => {
-      const output = await tools.runAsync(`${cmd} list`, cwd);
-      assert(output.includes(`Sinks:`));
-      assert(output.includes(sinkName));
-    })
-    .start();
-});
+  it(`should list sinks`, async () => {
+    const output = await exec(`${cmd} list`);
+    assert.match(output, /Sinks:/);
+    assert.match(output, new RegExp(sinkName));
+  });
 
-it(`should update a sink`, async () => {
-  const newFilter = 'severity >= WARNING';
-  const output = await tools.runAsync(
-    `${cmd} update ${sinkName} "${newFilter}"`,
-    cwd
-  );
-  assert(output.indexOf(`Sink ${sinkName} updated.`) > -1);
-  const [metadata] = await logging.sink(sinkName).getMetadata();
-  assert.strictEqual(metadata.name, sinkName);
-  assert.strictEqual(metadata.destination.includes(bucketName), true);
-  assert.strictEqual(metadata.filter, newFilter);
-});
+  it(`should update a sink`, async () => {
+    const newFilter = 'severity >= WARNING';
+    const output = await exec(`${cmd} update ${sinkName} "${newFilter}"`);
+    assert.match(output, new RegExp(`Sink ${sinkName} updated.`));
+    const [metadata] = await logging.sink(sinkName).getMetadata();
+    assert.strictEqual(metadata.name, sinkName);
+    assert.match(metadata.destination, new RegExp(bucketName));
+    assert.strictEqual(metadata.filter, newFilter);
+  });
 
-it(`should delete a sink`, async () => {
-  const output = await tools.runAsync(`${cmd} delete ${sinkName}`, cwd);
-  assert.strictEqual(output, `Sink ${sinkName} deleted.`);
-  await assertRejects(logging.sink(sinkName).getMetadata());
+  it(`should delete a sink`, async () => {
+    const output = await exec(`${cmd} delete ${sinkName}`);
+    assert.strictEqual(output, `Sink ${sinkName} deleted.`);
+    await assertRejects(logging.sink(sinkName).getMetadata());
+  });
 });

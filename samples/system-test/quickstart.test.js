@@ -15,64 +15,26 @@
 
 'use strict';
 
-const proxyquire = require(`proxyquire`).noPreserveCache();
-const sinon = require(`sinon`);
-const assert = require('assert');
-const tools = require(`@google-cloud/nodejs-repo-tools`);
-const uuid = require(`uuid`);
+const {assert} = require('chai');
+const uuid = require('uuid');
+const {Logging} = require('@google-cloud/logging');
+const execa = require('execa');
 
-const {Logging} = proxyquire(`@google-cloud/logging`, {});
 const logging = new Logging();
-
 const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
+const projectId = process.env.GCLOUD_PROJECT;
+const cmd = 'node quickstart';
 
-after(async () => {
-  try {
-    await logging.log(logName).delete();
-  } catch (err) {} // ignore error
-});
+describe('quickstart', () => {
+  after(async () => {
+    await logging
+      .log(logName)
+      .delete()
+      .catch(console.warn);
+  });
 
-beforeEach(tools.stubConsole);
-afterEach(tools.restoreConsole);
-
-it(`should log an entry`, done => {
-  const expectedlogName = `my-log`;
-
-  const logMock = {
-    entry: sinon.stub().returns({}),
-    write: _entry => {
-      assert.deepStrictEqual(_entry, {});
-
-      const log = logging.log(logName);
-      const text = `Hello, world!`;
-      const entry = log.entry({resource: {type: `global`}}, text);
-
-      return log.write(entry).then(results => {
-        setTimeout(() => {
-          try {
-            assert(console.log.calledOnce);
-            assert.deepStrictEqual(console.log.firstCall.args, [
-              `Logged: ${text}`,
-            ]);
-            done();
-          } catch (err) {
-            done(err);
-          }
-        }, 200);
-
-        return results;
-      });
-    },
-  };
-  const loggingMock = {
-    log: _logName => {
-      assert.strictEqual(_logName, expectedlogName);
-      return logMock;
-    },
-  };
-  proxyquire(`../quickstart`, {
-    '@google-cloud/logging': {
-      Logging: sinon.stub().returns(loggingMock),
-    },
+  it('should log an entry', async () => {
+    const {stdout} = await execa.shell(`${cmd} ${projectId} ${logName}`);
+    assert.match(stdout, /Logged: Hello, world!/);
   });
 });

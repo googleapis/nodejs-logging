@@ -14,38 +14,37 @@
  */
 
 'use strict';
-async function main() {
-  // [START logging_quickstart]
+
+// [START logging_quickstart]
+async function quickstart(
+  projectId = 'YOUR_PROJECT_ID', // Your Google Cloud Platform project ID
+  logName = 'my-log' // The name of the log to write to
+) {
   // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
 
-  // Your Google Cloud Platform project ID
-  const projectId = 'YOUR_PROJECT_ID';
-
   // Creates a client
-  const logging = new Logging({
-    projectId: projectId,
-  });
+  const logging = new Logging({projectId});
 
-  // The name of the log to write to
-  const logName = 'my-log';
   // Selects the log to write to
   const log = logging.log(logName);
 
   // The data to write to the log
   const text = 'Hello, world!';
+
   // The metadata associated with the entry
   const metadata = {
     resource: {type: 'global'},
   };
+
   // Prepares a log entry
   const entry = log.entry(metadata, text);
 
   // Writes the log entry
   await log.write(entry);
   console.log(`Logged: ${text}`);
-
-  // [END logging_quickstart]
 }
+// [END logging_quickstart]
 
-main().catch(console.error);
+const args = process.argv.slice(2);
+quickstart(...args).catch(console.error);

@@ -39,7 +39,7 @@ async function writeLogEntry(logName) {
   };
 
   // A text log entry
-  const entry = log.entry({resource: resource}, 'Hello, world!');
+  const entry = log.entry({resource}, 'Hello, world!');
 
   // A structured log entry
   const secondEntry = log.entry(
