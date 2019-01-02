@@ -4,6 +4,27 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.2.0
+
+01-02-2019 12:43 PST
+
+### New Features
+- feat: cache detected environment's default resource ([#359](https://github.com/googleapis/nodejs-logging/pull/359))
+
+### Dependencies
+- fix(deps): update dependency @opencensus/propagation-stackdriver to v0.0.8 ([#354](https://github.com/googleapis/nodejs-logging/pull/354))
+
+### Internal / Testing Changes
+- refactor: modernize the sample tests ([#356](https://github.com/googleapis/nodejs-logging/pull/356))
+- refactor(ts): improve typescript types ([#309](https://github.com/googleapis/nodejs-logging/pull/309))
+- chore(build): inject yoshi automation key ([#352](https://github.com/googleapis/nodejs-logging/pull/352))
+- chore: update nyc and eslint configs ([#351](https://github.com/googleapis/nodejs-logging/pull/351))
+- chore: fix publish.sh permission +x ([#348](https://github.com/googleapis/nodejs-logging/pull/348))
+- fix(build): fix Kokoro release script ([#347](https://github.com/googleapis/nodejs-logging/pull/347))
+- build: add Kokoro configs for autorelease ([#346](https://github.com/googleapis/nodejs-logging/pull/346))
+- chore: always nyc report before calling codecov ([#342](https://github.com/googleapis/nodejs-logging/pull/342))
+- chore: nyc ignore build/test by default ([#341](https://github.com/googleapis/nodejs-logging/pull/341))
+
 ## v4.1.1
 
 12-05-2018 13:12 PST
