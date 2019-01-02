@@ -80,7 +80,6 @@ export interface WriteOptions {
  * const log = logging.log('syslog');
  */
 class Log {
-  detectedResource_?: object;
   formattedName_: string;
   removeCircular_: boolean;
   logging: Logging;
@@ -767,13 +766,13 @@ class Log {
           options.resource.labels = snakeCaseKeys(options.resource.labels);
         }
         writeWithResource(options.resource);
-      } else if (this.detectedResource_) {
-        writeWithResource(this.detectedResource_);
+      } else if (this.logging.detectedResource) {
+        writeWithResource(this.logging.detectedResource);
       } else {
         getDefaultResource(this.logging.auth)
             .then(
                 (resource) => {
-                  this.detectedResource_ = resource;
+                  this.logging.detectedResource = resource;
                   writeWithResource(resource);
                 },
                 () => {

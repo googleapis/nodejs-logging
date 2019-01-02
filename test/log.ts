@@ -351,7 +351,7 @@ describe('Log', () => {
       };
 
       log.logging.request = () => {
-        assert.strictEqual(log.detectedResource_, fakeResource);
+        assert.strictEqual(log.logging.detectedResource, fakeResource);
         done();
       };
 
@@ -359,22 +359,15 @@ describe('Log', () => {
     });
 
     it('should re-use detected resource', done => {
-      const fakeResource = 'test-level-fake-resource';
+      log.logging.detectedResource = 'environment-default-resource';
 
-      let numTimesDefaultResourceFetched = 0;
-
-      fakeMetadata.getDefaultResource = async () => {
-        numTimesDefaultResourceFetched++;
-
-        if (numTimesDefaultResourceFetched > 1) {
-          throw new Error('Cached resource was not used.');
-        }
-
-        return fakeResource;
+      fakeMetadata.getDefaultResource = () => {
+        throw new Error('Cached resource was not used.');
       };
 
       log.logging.request = config => {
-        assert.deepStrictEqual(config.reqOpts.resource, fakeResource);
+        assert.strictEqual(
+            config.reqOpts.resource, log.logging.detectedResource);
         done();
       };
 
