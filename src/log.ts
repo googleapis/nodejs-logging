@@ -80,6 +80,7 @@ export interface WriteOptions {
  * const log = logging.log('syslog');
  */
 class Log {
+  detectedResource_?: object;
   formattedName_: string;
   removeCircular_: boolean;
   logging: Logging;
@@ -761,21 +762,24 @@ class Log {
           typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
       const self = this;
 
-      if (!options.resource) {
+      if (options.resource) {
+        if (options.resource.labels) {
+          options.resource.labels = snakeCaseKeys(options.resource.labels);
+        }
+        writeWithResource(options.resource);
+      } else if (this.detectedResource_) {
+        writeWithResource(this.detectedResource_);
+      } else {
         getDefaultResource(this.logging.auth)
             .then(
                 (resource) => {
+                  this.detectedResource_ = resource;
                   writeWithResource(resource);
                 },
                 () => {
                   // Ignore errors (the API will speak up if it has an issue).
                   writeWithResource(null);
                 });
-      } else {
-        if (options.resource.labels) {
-          options.resource.labels = snakeCaseKeys(options.resource.labels);
-        }
-        writeWithResource(options.resource);
       }
       function writeWithResource(resource: {}|null) {
         let decoratedEntries;

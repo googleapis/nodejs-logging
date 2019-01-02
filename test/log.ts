@@ -343,6 +343,44 @@ describe('Log', () => {
       log.write(ENTRY, optionsWithResource, done);
     });
 
+    it('should cache a detected resource', done => {
+      const fakeResource = 'test-level-fake-resource';
+
+      fakeMetadata.getDefaultResource = async () => {
+        return fakeResource;
+      };
+
+      log.logging.request = () => {
+        assert.strictEqual(log.detectedResource_, fakeResource);
+        done();
+      };
+
+      log.write(ENTRY, done);
+    });
+
+    it('should re-use detected resource', done => {
+      const fakeResource = 'test-level-fake-resource';
+
+      let numTimesDefaultResourceFetched = 0;
+
+      fakeMetadata.getDefaultResource = async () => {
+        numTimesDefaultResourceFetched++;
+
+        if (numTimesDefaultResourceFetched > 1) {
+          throw new Error('Cached resource was not used.');
+        }
+
+        return fakeResource;
+      };
+
+      log.logging.request = config => {
+        assert.deepStrictEqual(config.reqOpts.resource, fakeResource);
+        done();
+      };
+
+      log.write(ENTRY, done);
+    });
+
     it('should transform camelcase label keys to snake case', done => {
       const CUSTOM_RESOURCE = {
         labels: {
