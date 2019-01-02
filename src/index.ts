@@ -127,6 +127,7 @@ class Logging {
   auth: GoogleAuth;
   options: LoggingOptions;
   projectId: string;
+  detectedResource?: object;
 
   constructor(options?: LoggingOptions) {
     // Determine what scopes are needed.

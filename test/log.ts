@@ -343,6 +343,37 @@ describe('Log', () => {
       log.write(ENTRY, optionsWithResource, done);
     });
 
+    it('should cache a detected resource', done => {
+      const fakeResource = 'test-level-fake-resource';
+
+      fakeMetadata.getDefaultResource = async () => {
+        return fakeResource;
+      };
+
+      log.logging.request = () => {
+        assert.strictEqual(log.logging.detectedResource, fakeResource);
+        done();
+      };
+
+      log.write(ENTRY, done);
+    });
+
+    it('should re-use detected resource', done => {
+      log.logging.detectedResource = 'environment-default-resource';
+
+      fakeMetadata.getDefaultResource = () => {
+        throw new Error('Cached resource was not used.');
+      };
+
+      log.logging.request = config => {
+        assert.strictEqual(
+            config.reqOpts.resource, log.logging.detectedResource);
+        done();
+      };
+
+      log.write(ENTRY, done);
+    });
+
     it('should transform camelcase label keys to snake case', done => {
       const CUSTOM_RESOURCE = {
         labels: {
