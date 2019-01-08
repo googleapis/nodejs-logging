@@ -68,6 +68,7 @@ const fakePromisify = {
       'log',
       'request',
       'sink',
+      'createSink',
     ]);
   },
 };
@@ -108,6 +109,18 @@ class FakeSink {
   }
 }
 
+async function assertThrowsAsync(fn, regExp) {
+  let f = () => {};
+  try {
+    await fn();
+  } catch (e) {
+    f = () => {
+      throw e;
+    };
+  } finally {
+    assert.throws(f, regExp);
+  }
+}
 describe('Logging', () => {
   // tslint:disable-next-line no-any variable-name
   let Logging: any;
@@ -229,19 +242,19 @@ describe('Logging', () => {
   describe('createSink', () => {
     const SINK_NAME = 'name';
 
-    it('should throw if a name is not provided', () => {
-      assert.throws(() => {
-        logging.createSink();
-      }, /A sink name must be provided\./);
+    it('should throw if a name is not provided', async () => {
+      await assertThrowsAsync(
+          async () => await logging.createSink(),
+          /A sink name must be provided\./);
     });
 
-    it('should throw if a config object is not provided', () => {
-      assert.throws(() => {
-        logging.createSink(SINK_NAME);
-      }, /A sink configuration object must be provided\./);
+    it('should throw if a config object is not provided', async () => {
+      await assertThrowsAsync(
+          async () => await logging.createSink(SINK_NAME),
+          /A sink configuration object must be provided\./);
     });
 
-    it('should set acls for a Dataset destination', done => {
+    it('should set acls for a Dataset destination', async () => {
       const dataset = {};
 
       const CONFIG = {
@@ -253,16 +266,15 @@ describe('Logging', () => {
         return type === 'bigquery/dataset';
       };
 
-      logging.setAclForDataset_ = (name, config, callback) => {
+      logging.setAclForDataset_ = async (name, config) => {
         assert.strictEqual(name, SINK_NAME);
         assert.strictEqual(config, CONFIG);
-        callback();  // done()
       };
 
-      logging.createSink(SINK_NAME, CONFIG, done);
+      await logging.createSink(SINK_NAME, CONFIG);
     });
 
-    it('should set acls for a Topic destination', done => {
+    it('should set acls for a Topic destination', async () => {
       const topic = {};
 
       const CONFIG = {
@@ -274,16 +286,15 @@ describe('Logging', () => {
         return type === 'pubsub/topic';
       };
 
-      logging.setAclForTopic_ = (name, config, callback) => {
+      logging.setAclForTopic_ = async (name, config) => {
         assert.strictEqual(name, SINK_NAME);
         assert.strictEqual(config, CONFIG);
-        callback();  // done()
       };
 
-      logging.createSink(SINK_NAME, CONFIG, done);
+      await logging.createSink(SINK_NAME, CONFIG);
     });
 
-    it('should set acls for a Bucket destination', done => {
+    it('should set acls for a Bucket destination', async () => {
       const bucket = {};
 
       const CONFIG = {
@@ -295,66 +306,72 @@ describe('Logging', () => {
         return type === 'storage/bucket';
       };
 
-      logging.setAclForBucket_ = (name, config, callback) => {
+      logging.setAclForBucket_ = async (name, config) => {
         assert.strictEqual(name, SINK_NAME);
         assert.strictEqual(config, CONFIG);
-        callback();  // done()
       };
 
-      logging.createSink(SINK_NAME, CONFIG, done);
+      await logging.createSink(SINK_NAME, CONFIG);
     });
 
     describe('API request', () => {
-      it('should make the correct API request', done => {
+      it('should call GAX method', async () => {
         const config = {
           a: 'b',
           c: 'd',
         };
 
-        const expectedConfig = extend({}, config, {
+        const expectedSink = extend({}, config, {
           name: SINK_NAME,
         });
 
-        logging.request = config => {
-          assert.strictEqual(config.client, 'ConfigServiceV2Client');
-          assert.strictEqual(config.method, 'createSink');
+
+        logging.configService.createSink = async (reqOpts, gaxOptions) => {
           const expectedParent = 'projects/' + logging.projectId;
-          assert.strictEqual(config.reqOpts.parent, expectedParent);
-          assert.deepStrictEqual(config.reqOpts.sink, expectedConfig);
-          assert.strictEqual(config.gaxOpts, undefined);
-          done();
+          assert.strictEqual(reqOpts.parent, expectedParent);
+          assert.deepStrictEqual(reqOpts.sink, expectedSink);
+          assert.strictEqual(gaxOptions, undefined);
+          return {name: SINK_NAME};
         };
 
-        logging.createSink(SINK_NAME, config, assert.ifError);
+        try {
+          await logging.createSink(SINK_NAME, config);
+        } catch (err) {
+          assert.ifError(err);
+        }
       });
 
-      it('should accept GAX options', done => {
+      it('should accept GAX options', async () => {
         const config = {
           a: 'b',
           c: 'd',
           gaxOptions: {},
         };
 
-        logging.request = config_ => {
-          assert.strictEqual(config_.reqOpts.sink.gaxOptions, undefined);
-          assert.strictEqual(config_.gaxOpts, config.gaxOptions);
-          done();
+        logging.configService.createSink = async (reqOpts, gaxOptions) => {
+          assert.strictEqual(reqOpts.sink.gaxOptions, undefined);
+          assert.strictEqual(gaxOptions, config.gaxOptions);
+          return {name: SINK_NAME};
         };
 
-        logging.createSink(SINK_NAME, config, assert.ifError);
+        try {
+          await logging.createSink(SINK_NAME, config);
+        } catch (err) {
+          assert.ifError(err);
+        }
       });
 
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = {};
+        const apiResponse = null;
 
         beforeEach(() => {
-          logging.request = (config, callback) => {
-            callback(error, apiResponse);
+          logging.configService.createSink = async (reqOpts, gaxOptions) => {
+            throw error;
           };
         });
 
-        it('should exec callback with error & API response', done => {
+        it('should exec callback with error', done => {
           logging.createSink(SINK_NAME, {}, (err, sink, apiResponse_) => {
             assert.strictEqual(err, error);
             assert.strictEqual(sink, null);
@@ -362,6 +379,17 @@ describe('Logging', () => {
 
             done();
           });
+        });
+
+        it('should throw an error', async () => {
+          logging.configService.createSink = async (reqOpts, gaxOptions) => {
+            throw error;
+          };
+          try {
+            await logging.createSink(SINK_NAME, {});
+          } catch (err) {
+            assert.strictEqual(err, error);
+          }
         });
       });
 
@@ -371,8 +399,8 @@ describe('Logging', () => {
         };
 
         beforeEach(() => {
-          logging.request = (config, callback) => {
-            callback(null, apiResponse);
+          logging.configService.createSink = async (reqOpts, gaxOptions) => {
+            return apiResponse;
           };
         });
 
@@ -393,6 +421,27 @@ describe('Logging', () => {
 
             done();
           });
+        });
+
+        it('should return a promise', async () => {
+          const sink = {};
+
+          logging.sink = name_ => {
+            assert.strictEqual(name_, SINK_NAME);
+            return sink;
+          };
+          logging.configService.createSink = async (reqOpts, gaxOptions) => {
+            return apiResponse;
+          };
+          try {
+            const [sink_, apiResponse_] =
+                await logging.createSink(SINK_NAME, {});
+            assert.strictEqual(sink_, sink);
+            assert.strictEqual(sink_.metadata, apiResponse);
+            assert.strictEqual(apiResponse_, apiResponse);
+          } catch (err) {
+            assert.ifError(err);
+          }
         });
       });
     });
@@ -1058,13 +1107,17 @@ describe('Logging', () => {
       };
     });
 
-    it('should add cloud-logs as an owner', done => {
-      bucket.acl.owners.addGroup = entity => {
+    it('should add cloud-logs as an owner', async () => {
+      bucket.acl.owners.addGroup = async (entity) => {
         assert.strictEqual(entity, 'cloud-logs@google.com');
-        done();
+        logging.createSink = async () => {};
       };
 
-      logging.setAclForBucket_(SINK_NAME, CONFIG, assert.ifError);
+      try {
+        await logging.setAclForBucket_(SINK_NAME, CONFIG);
+      } catch (err) {
+        assert.ifError(err);
+      }
     });
 
     describe('error', () => {
@@ -1072,48 +1125,38 @@ describe('Logging', () => {
       const apiResponse = {};
 
       beforeEach(() => {
-        bucket.acl.owners.addGroup = (entity, callback) => {
-          callback(error, apiResponse);
+        bucket.acl.owners.addGroup = async () => {
+          throw error;
         };
       });
 
-      it('should return error and API response to callback', done => {
-        logging.setAclForBucket_(SINK_NAME, CONFIG, (err, sink, resp) => {
+      it('should throw an error', async () => {
+        try {
+          await logging.setAclForBucket_(SINK_NAME, CONFIG);
+        } catch (err) {
           assert.strictEqual(err, error);
-          assert.strictEqual(sink, null);
-          assert.strictEqual(resp, apiResponse);
-
-          done();
-        });
+        }
       });
     });
 
     describe('success', () => {
-      const apiResponse = {};
-
       beforeEach(() => {
-        bucket.acl.owners.addGroup = (entity, callback) => {
-          callback(null, apiResponse);
-        };
+        bucket.acl.owners.addGroup = async () => {};
       });
 
-      it('should call createSink with string destination', done => {
-        bucket.acl.owners.addGroup = (entity, callback) => {
-          logging.createSink = (name, config, callback) => {
+      it('should call createSink with string destination', async () => {
+        bucket.acl.owners.addGroup = async () => {
+          logging.createSink = async (name, config) => {
             assert.strictEqual(name, SINK_NAME);
 
             assert.strictEqual(config, CONFIG);
 
             const expectedDestination = 'storage.googleapis.com/' + bucket.name;
             assert.strictEqual(config.destination, expectedDestination);
-
-            callback();  // done()
           };
-
-          callback(null, apiResponse);
         };
 
-        logging.setAclForBucket_(SINK_NAME, CONFIG, done);
+        await logging.setAclForBucket_(SINK_NAME, CONFIG);
       });
     });
   });
@@ -1139,21 +1182,20 @@ describe('Logging', () => {
     describe('metadata refresh', () => {
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = {};
 
         beforeEach(() => {
-          dataset.getMetadata = callback => {
-            callback(error, null, apiResponse);
+          dataset.getMetadata = async () => {
+            throw error;
           };
         });
 
-        it('should execute the callback with error & API resp', done => {
-          logging.setAclForDataset_(SINK_NAME, CONFIG, (err, _, resp) => {
+
+        it('should throw an error (apiResponse)', async () => {
+          try {
+            await logging.setAclForDataset_(SINK_NAME, CONFIG);
+          } catch (err) {
             assert.strictEqual(err, error);
-            assert.strictEqual(_, null);
-            assert.strictEqual(resp, apiResponse);
-            done();
-          });
+          }
         });
       });
 
@@ -1165,12 +1207,12 @@ describe('Logging', () => {
         const originalAccess = [].slice.call(apiResponse.access);
 
         beforeEach(() => {
-          dataset.getMetadata = callback => {
-            callback(null, apiResponse, apiResponse);
+          dataset.getMetadata = async () => {
+            return [apiResponse, apiResponse];
           };
         });
 
-        it('should set the correct metadata', done => {
+        it('should set the correct metadata', async () => {
           const access = {
             role: 'WRITER',
             groupByEmail: 'cloud-logs@google.com',
@@ -1180,13 +1222,18 @@ describe('Logging', () => {
               // tslint:disable-next-line no-any
               ([] as any[]).slice.call(originalAccess).concat(access);
 
-          dataset.setMetadata = metadata => {
+          dataset.setMetadata = async (metadata) => {
             assert.deepStrictEqual(apiResponse.access, originalAccess);
             assert.deepStrictEqual(metadata.access, expectedAccess);
-            done();
           };
 
-          logging.setAclForDataset_(SINK_NAME, CONFIG, assert.ifError);
+          logging.createSink = async () => {};
+
+          try {
+            await logging.setAclForDataset_(SINK_NAME, CONFIG);
+          } catch (err) {
+            assert.ifError(err);
+          }
         });
 
         describe('updating metadata error', () => {
@@ -1194,32 +1241,28 @@ describe('Logging', () => {
           const apiResponse = {};
 
           beforeEach(() => {
-            dataset.setMetadata = (metadata, callback) => {
-              callback(error, apiResponse);
+            dataset.setMetadata = async () => {
+              throw error;
             };
+            logging.createSink = async () => {};
           });
 
-          it('should exec callback with error & API response', done => {
-            logging.setAclForDataset_(SINK_NAME, CONFIG, (err, _, res) => {
+          it('should exec with error', async () => {
+            try {
+              await logging.setAclForDataset_(SINK_NAME, CONFIG);
+            } catch (err) {
               assert.strictEqual(err, error);
-              assert.strictEqual(_, null);
-              assert.strictEqual(res, apiResponse);
-              done();
-            });
+            }
           });
         });
 
         describe('updating metadata success', () => {
-          const apiResponse = {};
-
           beforeEach(() => {
-            dataset.setMetadata = (metadata, callback) => {
-              callback(null, apiResponse);
-            };
+            dataset.setMetadata = async () => {};
           });
 
-          it('should call createSink with string destination', done => {
-            logging.createSink = (name, config, callback) => {
+          it('should call createSink with string destination', async () => {
+            logging.createSink = async (name, config) => {
               const expectedDestination = [
                 'bigquery.googleapis.com',
                 'projects',
@@ -1231,10 +1274,9 @@ describe('Logging', () => {
               assert.strictEqual(name, SINK_NAME);
               assert.strictEqual(config, CONFIG);
               assert.strictEqual(config.destination, expectedDestination);
-              callback();  // done()
             };
 
-            logging.setAclForDataset_(SINK_NAME, CONFIG, done);
+            await logging.setAclForDataset_(SINK_NAME, CONFIG);
           });
         });
       });
@@ -1263,21 +1305,20 @@ describe('Logging', () => {
     describe('get policy', () => {
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = {};
 
         beforeEach(() => {
-          topic.iam.getPolicy = callback => {
-            callback(error, null, apiResponse);
+          topic.iam.getPolicy = async () => {
+            throw error;
           };
+          logging.createSink = async () => {};
         });
 
-        it('should execute the callback with error & API resp', done => {
-          logging.setAclForTopic_(SINK_NAME, CONFIG, (err, _, resp) => {
+        it('should execute with an error', async () => {
+          try {
+            await logging.setAclForTopic_(SINK_NAME, CONFIG);
+          } catch (err) {
             assert.strictEqual(err, error);
-            assert.strictEqual(_, null);
-            assert.strictEqual(resp, apiResponse);
-            done();
-          });
+          }
         });
       });
 
@@ -1289,12 +1330,12 @@ describe('Logging', () => {
         const originalBindings = [].slice.call(apiResponse.bindings);
 
         beforeEach(() => {
-          topic.iam.getPolicy = callback => {
-            callback(null, apiResponse, apiResponse);
+          topic.iam.getPolicy = async () => {
+            return [apiResponse, apiResponse];
           };
         });
 
-        it('should set the correct policy bindings', done => {
+        it('should set the correct policy bindings', async () => {
           const binding = {
             role: 'roles/pubsub.publisher',
             members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
@@ -1304,53 +1345,51 @@ describe('Logging', () => {
           const expectedBindings = ([] as any[]).slice.call(originalBindings);
           expectedBindings.push(binding);
 
-          topic.iam.setPolicy = policy => {
+          topic.iam.setPolicy = async (policy) => {
             assert.strictEqual(policy, apiResponse);
             assert.deepStrictEqual(policy.bindings, expectedBindings);
-            done();
           };
+          logging.createSink = async () => {};
 
-          logging.setAclForTopic_(SINK_NAME, CONFIG, assert.ifError);
+          try {
+            await logging.setAclForTopic_(SINK_NAME, CONFIG);
+          } catch (err) {
+            assert.ifError(err);
+          }
         });
 
         describe('updating policy error', () => {
           const error = new Error('Error.');
-          const apiResponse = {};
 
           beforeEach(() => {
-            topic.iam.setPolicy = (policy, callback) => {
-              callback(error, null, apiResponse);
+            topic.iam.setPolicy = async () => {
+              throw error;
             };
+            logging.createSink = async () => {};
           });
 
-          it('should exec callback with error & API response', done => {
-            logging.setAclForTopic_(SINK_NAME, CONFIG, (err, _, res) => {
+          it('should exec with an error', async () => {
+            try {
+              await logging.setAclForTopic_(SINK_NAME, CONFIG);
+            } catch (err) {
               assert.strictEqual(err, error);
-              assert.strictEqual(_, null);
-              assert.strictEqual(res, apiResponse);
-              done();
-            });
+            }
           });
         });
 
         describe('updating policy success', () => {
-          const apiResponse = {};
-
           beforeEach(() => {
-            topic.iam.setPolicy = (policy, callback) => {
-              callback(null, apiResponse);
-            };
+            topic.iam.setPolicy = async () => {};
           });
 
-          it('should call createSink with string destination', done => {
-            logging.createSink = (name, config, callback) => {
+          it('should call createSink with string destination', async () => {
+            logging.createSink = async (name, config) => {
               const expectedDestination = 'pubsub.googleapis.com/' + topic.name;
               assert.strictEqual(name, SINK_NAME);
               assert.strictEqual(config, CONFIG);
               assert.strictEqual(config.destination, expectedDestination);
-              callback();  // done()
             };
-            logging.setAclForTopic_(SINK_NAME, CONFIG, done);
+            await logging.setAclForTopic_(SINK_NAME, CONFIG);
           });
         });
       });

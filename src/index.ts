@@ -34,13 +34,16 @@ export {middleware};
 export {HttpRequest};
 
 const PKG = require('../../package.json');
-const v2 = require('./v2');
+import * as v2 from './v2';
 
 import {Entry} from './entry';
 import {Log, GetEntriesRequest} from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
 import {AbortableDuplex} from '@google-cloud/common';
+import {google} from '../proto/logging_config';
+
+export type LogSink = google.logging.v2.LogSink;
 
 export interface LoggingOptions extends gax.GoogleAuthOptions {
   autoRetry?: boolean;
@@ -128,6 +131,7 @@ class Logging {
   options: LoggingOptions;
   projectId: string;
   detectedResource?: object;
+  configService?: v2.ConfigServiceV2Client;
 
   constructor(options?: LoggingOptions) {
     // Determine what scopes are needed.
@@ -156,6 +160,7 @@ class Logging {
     this.auth = new GoogleAuth(options_);
     this.options = options_;
     this.projectId = this.options.projectId || '{{projectId}}';
+    this.configService = new v2.ConfigServiceV2Client(this.options);
   }
   /**
    * Config to set for the sink. Not all available options are listed here, see
@@ -236,7 +241,10 @@ class Logging {
    * region_tag:logging_create_sink
    * Another example:
    */
-  createSink(name: string, config, callback) {
+  async createSink(name: string, config): Promise<[Sink, LogSink]>;
+  async createSink(name: string, config, callback): Promise<void>;
+  async createSink(name: string, config, callback?):
+      Promise<[Sink, LogSink]|void> {
     // jscs:enable maximumLineLength
     const self = this;
     if (!is.string(name)) {
@@ -246,38 +254,49 @@ class Logging {
       throw new Error('A sink configuration object must be provided.');
     }
     if (common.util.isCustomType(config.destination, 'bigquery/dataset')) {
-      this.setAclForDataset_(name, config, callback);
+      await this.setAclForDataset_(name, config);
       return;
     }
     if (common.util.isCustomType(config.destination, 'pubsub/topic')) {
-      this.setAclForTopic_(name, config, callback);
+      await this.setAclForTopic_(name, config);
       return;
     }
     if (common.util.isCustomType(config.destination, 'storage/bucket')) {
-      this.setAclForBucket_(name, config, callback);
+      await this.setAclForBucket_(name, config);
       return;
     }
+    await this.verifyProjectId();
     const reqOpts = {
       parent: 'projects/' + this.projectId,
       sink: extend({}, config, {name}),
     };
     delete reqOpts.sink.gaxOptions;
-    this.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'createSink',
-          reqOpts,
-          gaxOpts: config.gaxOptions,
-        },
-        (err, resp) => {
-          if (err) {
-            callback(err, null, resp);
-            return;
-          }
-          const sink = self.sink(resp.name);
-          sink.metadata = resp;
-          callback(null, sink, resp);
-        });
+
+    // tslint:disable-next-line no-any
+    let resp: LogSink|any = null;
+    let error: Error|null = null;
+    let sink: Sink|null = null;
+    try {
+      [resp] = await this.configService.createSink(reqOpts, config.gaxOptions);
+      sink = self.sink(resp.name);
+      sink.metadata = resp;
+    } catch (err) {
+      error = err;
+    }
+
+    if (callback) {
+      return callback(error, sink, resp);
+    }
+    if (error) {
+      throw error;
+    }
+    return [sink as Sink, resp as LogSink];
+  }
+
+  private async verifyProjectId() {
+    if (this.projectId === '{{projectId}}') {
+      this.projectId = await this.auth.getProjectId();
+    }
   }
 
   /**
@@ -810,17 +829,13 @@ class Logging {
    *
    * @private
    */
-  setAclForBucket_(name: string, config, callback) {
+  // setAclForBucket_(name: string, config, callback) {
+  async setAclForBucket_(name: string, config) {
     const self = this;
     const bucket = config.destination;
-    bucket.acl.owners.addGroup('cloud-logs@google.com', (err, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      config.destination = 'storage.googleapis.com/' + bucket.name;
-      self.createSink(name, config, callback);
-    });
+    await bucket.acl.owners.addGroup('cloud-logs@google.com');
+    config.destination = 'storage.googleapis.com/' + bucket.name;
+    await self.createSink(name, config);
   }
 
   /**
@@ -832,36 +847,24 @@ class Logging {
    *
    * @private
    */
-  setAclForDataset_(name: string, config, callback) {
+  async setAclForDataset_(name: string, config) {
     const self = this;
     const dataset = config.destination;
-    dataset.getMetadata((err, metadata, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      // tslint:disable-next-line no-any
-      const access = ([] as any[]).slice.call(arrify(metadata.access));
-      access.push({
-        role: 'WRITER',
-        groupByEmail: 'cloud-logs@google.com',
-      });
-      dataset.setMetadata(
-          {
-            access,
-          },
-          (err, apiResp) => {
-            if (err) {
-              callback(err, null, apiResp);
-              return;
-            }
-            const baseUrl = 'bigquery.googleapis.com';
-            const pId = dataset.parent.projectId;
-            const dId = dataset.id;
-            config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
-            self.createSink(name, config, callback);
-          });
+    const [metadata, ] = await dataset.getMetadata();
+    // tslint:disable-next-line no-any
+    const access = ([] as any[]).slice.call(arrify(metadata.access));
+    access.push({
+      role: 'WRITER',
+      groupByEmail: 'cloud-logs@google.com',
     });
+    await dataset.setMetadata({
+      access,
+    });
+    const baseUrl = 'bigquery.googleapis.com';
+    const pId = dataset.parent.projectId;
+    const dId = dataset.id;
+    config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
+    await self.createSink(name, config);
   }
 
   /**
@@ -873,30 +876,21 @@ class Logging {
    *
    * @private
    */
-  setAclForTopic_(name: string, config, callback) {
+  // setAclForTopic_(name: string, config, callback) {
+  async setAclForTopic_(name: string, config) {
     const self = this;
     const topic = config.destination;
-    topic.iam.getPolicy((err, policy, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      policy.bindings = arrify(policy.bindings);
-      policy.bindings.push({
-        role: 'roles/pubsub.publisher',
-        members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
-      });
-      topic.iam.setPolicy(policy, (err, policy, apiResp) => {
-        if (err) {
-          callback(err, null, apiResp);
-          return;
-        }
-        const baseUrl = 'pubsub.googleapis.com';
-        const topicName = topic.name;
-        config.destination = `${baseUrl}/${topicName}`;
-        self.createSink(name, config, callback);
-      });
+    const [policy, ] = await topic.iam.getPolicy();
+    policy.bindings = arrify(policy.bindings);
+    policy.bindings.push({
+      role: 'roles/pubsub.publisher',
+      members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
     });
+    await topic.iam.setPolicy(policy);
+    const baseUrl = 'pubsub.googleapis.com';
+    const topicName = topic.name;
+    config.destination = `${baseUrl}/${topicName}`;
+    await self.createSink(name, config);
   }
 }
 
@@ -912,7 +906,7 @@ paginator.extend(Logging, ['getEntries', 'getSinks']);
  * that a callback is omitted.
  */
 promisifyAll(Logging, {
-  exclude: ['entry', 'log', 'request', 'sink'],
+  exclude: ['entry', 'log', 'request', 'sink', 'createSink'],
 });
 
 /**
