@@ -6,6 +6,7 @@
     "noImplicitAny": false
   },
   "include": [
+    "callbackify/*.ts",
     "src/*.ts",
     "src/**/*.ts",
     "test/*.ts",
