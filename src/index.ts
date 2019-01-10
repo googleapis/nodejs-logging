@@ -50,6 +50,10 @@ export interface LoggingOptions extends gax.GoogleAuthOptions {
   maxRetries?: number;
 }
 
+export interface CreateSinkCallback {
+  (err?: Error|null, sink?: Sink, resp?: LogSink): void;
+}
+
 /**
  * @namespace google
  */
@@ -242,8 +246,9 @@ class Logging {
    * Another example:
    */
   async createSink(name: string, config): Promise<[Sink, LogSink]>;
-  async createSink(name: string, config, callback): Promise<void>;
-  async createSink(name: string, config, callback?):
+  async createSink(name: string, config, callback: CreateSinkCallback):
+      Promise<void>;
+  async createSink(name: string, config, callback?: CreateSinkCallback):
       Promise<[Sink, LogSink]|void> {
     // jscs:enable maximumLineLength
     const self = this;
@@ -254,30 +259,29 @@ class Logging {
       throw new Error('A sink configuration object must be provided.');
     }
     if (common.util.isCustomType(config.destination, 'bigquery/dataset')) {
-      await this.setAclForDataset_(name, config);
-      return;
+      await this.setAclForDataset_(config);
     }
     if (common.util.isCustomType(config.destination, 'pubsub/topic')) {
-      await this.setAclForTopic_(name, config);
-      return;
+      await this.setAclForTopic_(config);
     }
     if (common.util.isCustomType(config.destination, 'storage/bucket')) {
-      await this.setAclForBucket_(name, config);
-      return;
+      await this.setAclForBucket_(config);
     }
-    await this.verifyProjectId();
-    const reqOpts = {
+
+    let reqOpts = {
       parent: 'projects/' + this.projectId,
       sink: extend({}, config, {name}),
     };
     delete reqOpts.sink.gaxOptions;
-
-    // tslint:disable-next-line no-any
-    let resp: LogSink|any = null;
+    await this.verifyProjectId_();
+    reqOpts = replaceProjectIdToken(reqOpts, this.projectId!);
+    // tslint:disable-next-line no-any prefer-const
+    let resp: any = null;
     let error: Error|null = null;
     let sink: Sink|null = null;
     try {
-      [resp] = await this.configService.createSink(reqOpts, config.gaxOptions);
+      [resp as LogSink] =
+          await this.configService.createSink(reqOpts, config.gaxOptions);
       sink = self.sink(resp.name);
       sink.metadata = resp;
     } catch (err) {
@@ -285,15 +289,15 @@ class Logging {
     }
 
     if (callback) {
-      return callback(error, sink, resp);
+      return callback(error, sink as Sink, resp);
     }
     if (error) {
       throw error;
     }
-    return [sink as Sink, resp as LogSink];
+    return [sink as Sink, resp];
   }
 
-  private async verifyProjectId() {
+  private async verifyProjectId_() {
     if (this.projectId === '{{projectId}}') {
       this.projectId = await this.auth.getProjectId();
     }
@@ -830,12 +834,10 @@ class Logging {
    * @private
    */
   // setAclForBucket_(name: string, config, callback) {
-  async setAclForBucket_(name: string, config) {
-    const self = this;
+  async setAclForBucket_(config) {
     const bucket = config.destination;
     await bucket.acl.owners.addGroup('cloud-logs@google.com');
     config.destination = 'storage.googleapis.com/' + bucket.name;
-    await self.createSink(name, config);
   }
 
   /**
@@ -847,8 +849,7 @@ class Logging {
    *
    * @private
    */
-  async setAclForDataset_(name: string, config) {
-    const self = this;
+  async setAclForDataset_(config) {
     const dataset = config.destination;
     const [metadata, ] = await dataset.getMetadata();
     // tslint:disable-next-line no-any
@@ -864,7 +865,6 @@ class Logging {
     const pId = dataset.parent.projectId;
     const dId = dataset.id;
     config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
-    await self.createSink(name, config);
   }
 
   /**
@@ -877,8 +877,7 @@ class Logging {
    * @private
    */
   // setAclForTopic_(name: string, config, callback) {
-  async setAclForTopic_(name: string, config) {
-    const self = this;
+  async setAclForTopic_(config) {
     const topic = config.destination;
     const [policy, ] = await topic.iam.getPolicy();
     policy.bindings = arrify(policy.bindings);
@@ -890,7 +889,6 @@ class Logging {
     const baseUrl = 'pubsub.googleapis.com';
     const topicName = topic.name;
     config.destination = `${baseUrl}/${topicName}`;
-    await self.createSink(name, config);
   }
 }
 

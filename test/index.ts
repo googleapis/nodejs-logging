@@ -266,9 +266,10 @@ describe('Logging', () => {
         return type === 'bigquery/dataset';
       };
 
-      logging.setAclForDataset_ = async (name, config) => {
-        assert.strictEqual(name, SINK_NAME);
-        assert.strictEqual(config, CONFIG);
+      logging.createSink = async () => {
+        logging.setAclForDataset_ = async (config) => {
+          assert.strictEqual(config, CONFIG);
+        };
       };
 
       await logging.createSink(SINK_NAME, CONFIG);
@@ -286,9 +287,10 @@ describe('Logging', () => {
         return type === 'pubsub/topic';
       };
 
-      logging.setAclForTopic_ = async (name, config) => {
-        assert.strictEqual(name, SINK_NAME);
-        assert.strictEqual(config, CONFIG);
+      logging.createSink = async () => {
+        logging.setAclForTopic_ = async (config) => {
+          assert.strictEqual(config, CONFIG);
+        };
       };
 
       await logging.createSink(SINK_NAME, CONFIG);
@@ -306,9 +308,10 @@ describe('Logging', () => {
         return type === 'storage/bucket';
       };
 
-      logging.setAclForBucket_ = async (name, config) => {
-        assert.strictEqual(name, SINK_NAME);
-        assert.strictEqual(config, CONFIG);
+      logging.createSink = async () => {
+        logging.setAclForBucket_ = async (config) => {
+          assert.strictEqual(config, CONFIG);
+        };
       };
 
       await logging.createSink(SINK_NAME, CONFIG);
@@ -331,7 +334,7 @@ describe('Logging', () => {
           assert.strictEqual(reqOpts.parent, expectedParent);
           assert.deepStrictEqual(reqOpts.sink, expectedSink);
           assert.strictEqual(gaxOptions, undefined);
-          return {name: SINK_NAME};
+          return [{name: SINK_NAME}];
         };
 
         try {
@@ -351,7 +354,7 @@ describe('Logging', () => {
         logging.configService.createSink = async (reqOpts, gaxOptions) => {
           assert.strictEqual(reqOpts.sink.gaxOptions, undefined);
           assert.strictEqual(gaxOptions, config.gaxOptions);
-          return {name: SINK_NAME};
+          return [{name: SINK_NAME}];
         };
 
         try {
@@ -366,7 +369,7 @@ describe('Logging', () => {
         const apiResponse = null;
 
         beforeEach(() => {
-          logging.configService.createSink = async (reqOpts, gaxOptions) => {
+          logging.configService.createSink = async () => {
             throw error;
           };
         });
@@ -382,7 +385,7 @@ describe('Logging', () => {
         });
 
         it('should throw an error', async () => {
-          logging.configService.createSink = async (reqOpts, gaxOptions) => {
+          logging.configService.createSink = async () => {
             throw error;
           };
           try {
@@ -399,8 +402,8 @@ describe('Logging', () => {
         };
 
         beforeEach(() => {
-          logging.configService.createSink = async (reqOpts, gaxOptions) => {
-            return apiResponse;
+          logging.configService.createSink = async () => {
+            return [apiResponse];
           };
         });
 
@@ -430,8 +433,8 @@ describe('Logging', () => {
             assert.strictEqual(name_, SINK_NAME);
             return sink;
           };
-          logging.configService.createSink = async (reqOpts, gaxOptions) => {
-            return apiResponse;
+          logging.configService.createSink = async () => {
+            return [apiResponse];
           };
           try {
             const [sink_, apiResponse_] =
@@ -1114,7 +1117,7 @@ describe('Logging', () => {
       };
 
       try {
-        await logging.setAclForBucket_(SINK_NAME, CONFIG);
+        await logging.setAclForBucket_(CONFIG);
       } catch (err) {
         assert.ifError(err);
       }
@@ -1122,7 +1125,6 @@ describe('Logging', () => {
 
     describe('error', () => {
       const error = new Error('Error.');
-      const apiResponse = {};
 
       beforeEach(() => {
         bucket.acl.owners.addGroup = async () => {
@@ -1132,7 +1134,7 @@ describe('Logging', () => {
 
       it('should throw an error', async () => {
         try {
-          await logging.setAclForBucket_(SINK_NAME, CONFIG);
+          await logging.setAclForBucket_(CONFIG);
         } catch (err) {
           assert.strictEqual(err, error);
         }
@@ -1145,18 +1147,10 @@ describe('Logging', () => {
       });
 
       it('should call createSink with string destination', async () => {
-        bucket.acl.owners.addGroup = async () => {
-          logging.createSink = async (name, config) => {
-            assert.strictEqual(name, SINK_NAME);
+        const expectedDestination = 'storage.googleapis.com/' + bucket.name;
+        await logging.setAclForBucket_(CONFIG);
 
-            assert.strictEqual(config, CONFIG);
-
-            const expectedDestination = 'storage.googleapis.com/' + bucket.name;
-            assert.strictEqual(config.destination, expectedDestination);
-          };
-        };
-
-        await logging.setAclForBucket_(SINK_NAME, CONFIG);
+        assert.strictEqual(CONFIG.destination, expectedDestination);
       });
     });
   });
@@ -1192,7 +1186,7 @@ describe('Logging', () => {
 
         it('should throw an error (apiResponse)', async () => {
           try {
-            await logging.setAclForDataset_(SINK_NAME, CONFIG);
+            await logging.setAclForDataset_(CONFIG);
           } catch (err) {
             assert.strictEqual(err, error);
           }
@@ -1230,7 +1224,7 @@ describe('Logging', () => {
           logging.createSink = async () => {};
 
           try {
-            await logging.setAclForDataset_(SINK_NAME, CONFIG);
+            await logging.setAclForDataset_(CONFIG);
           } catch (err) {
             assert.ifError(err);
           }
@@ -1249,7 +1243,7 @@ describe('Logging', () => {
 
           it('should exec with error', async () => {
             try {
-              await logging.setAclForDataset_(SINK_NAME, CONFIG);
+              await logging.setAclForDataset_(CONFIG);
             } catch (err) {
               assert.strictEqual(err, error);
             }
@@ -1262,21 +1256,16 @@ describe('Logging', () => {
           });
 
           it('should call createSink with string destination', async () => {
-            logging.createSink = async (name, config) => {
-              const expectedDestination = [
-                'bigquery.googleapis.com',
-                'projects',
-                dataset.parent.projectId,
-                'datasets',
-                dataset.id,
-              ].join('/');
+            const expectedDestination = [
+              'bigquery.googleapis.com',
+              'projects',
+              dataset.parent.projectId,
+              'datasets',
+              dataset.id,
+            ].join('/');
 
-              assert.strictEqual(name, SINK_NAME);
-              assert.strictEqual(config, CONFIG);
-              assert.strictEqual(config.destination, expectedDestination);
-            };
-
-            await logging.setAclForDataset_(SINK_NAME, CONFIG);
+            await logging.setAclForDataset_(CONFIG);
+            assert.strictEqual(CONFIG.destination, expectedDestination);
           });
         });
       });
@@ -1315,7 +1304,7 @@ describe('Logging', () => {
 
         it('should execute with an error', async () => {
           try {
-            await logging.setAclForTopic_(SINK_NAME, CONFIG);
+            await logging.setAclForTopic_(CONFIG);
           } catch (err) {
             assert.strictEqual(err, error);
           }
@@ -1352,7 +1341,7 @@ describe('Logging', () => {
           logging.createSink = async () => {};
 
           try {
-            await logging.setAclForTopic_(SINK_NAME, CONFIG);
+            await logging.setAclForTopic_(CONFIG);
           } catch (err) {
             assert.ifError(err);
           }
@@ -1370,7 +1359,7 @@ describe('Logging', () => {
 
           it('should exec with an error', async () => {
             try {
-              await logging.setAclForTopic_(SINK_NAME, CONFIG);
+              await logging.setAclForTopic_(CONFIG);
             } catch (err) {
               assert.strictEqual(err, error);
             }
@@ -1383,13 +1372,9 @@ describe('Logging', () => {
           });
 
           it('should call createSink with string destination', async () => {
-            logging.createSink = async (name, config) => {
-              const expectedDestination = 'pubsub.googleapis.com/' + topic.name;
-              assert.strictEqual(name, SINK_NAME);
-              assert.strictEqual(config, CONFIG);
-              assert.strictEqual(config.destination, expectedDestination);
-            };
-            await logging.setAclForTopic_(SINK_NAME, CONFIG);
+            const expectedDestination = 'pubsub.googleapis.com/' + topic.name;
+            await logging.setAclForTopic_(CONFIG);
+            assert.strictEqual(CONFIG.destination, expectedDestination);
           });
         });
       });

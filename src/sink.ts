@@ -21,6 +21,9 @@ import {CallOptions} from 'google-gax/build/src/gax';
 import * as is from 'is';
 
 import {Logging} from '.';
+import {LogSink} from './index';
+
+
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
@@ -94,8 +97,14 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
-  create(config, callback?) {
-    this.logging.createSink(this.name, config, callback);
+  async create(config): Promise<[Sink, LogSink]>;
+  async create(config, callback): Promise<void>;
+  async create(config, callback?): Promise<[Sink, LogSink]|void> {
+    const resp = await this.logging.createSink(this.name, config, callback);
+    if (callback) {
+      return callback(null, resp);
+    }
+    return resp;
   }
 
   /**
@@ -348,7 +357,9 @@ class Sink {
  * All async methods (except for streams) will return a Promise in the event
  * that a callback is omitted.
  */
-promisifyAll(Sink);
+promisifyAll(Sink, {
+  exclude: ['create'],
+});
 
 /**
  * Reference to the {@link Sink} class.

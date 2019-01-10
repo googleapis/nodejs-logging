@@ -71,16 +71,15 @@ describe('Sink', () => {
   });
 
   describe('create', () => {
-    it('should call parent createSink', done => {
+    it('should call parent createSink', async () => {
       const config = {};
 
-      sink.logging.createSink = (name, config_, callback) => {
+      sink.logging.createSink = async (name, config_) => {
         assert.strictEqual(name, sink.name);
         assert.strictEqual(config_, config);
-        callback();  // done()
       };
 
-      sink.create(config, done);
+      await sink.create(config);
     });
   });
 
