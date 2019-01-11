@@ -20,6 +20,8 @@ import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
+import {LogSink} from '../src/index';
+import {Sink} from '../src/sink';
 
 const {v2} = require('../src');
 const PKG = require('../../package.json');
@@ -46,8 +48,9 @@ function fakeGoogleAuth() {
   return (googleAuthOverride || util.noop).apply(null, arguments);
 }
 
+const callbackified = false;
 let isCustomTypeOverride;
-let promisifed = false;
+let promisified = false;
 let replaceProjectIdTokenOverride;
 const fakeUtil = extend({}, util, {
   isCustomType() {
@@ -62,7 +65,7 @@ const fakePromisify = {
     if (c.name !== 'Logging') {
       return;
     }
-    promisifed = true;
+    promisified = true;
     assert.deepStrictEqual(options.exclude, [
       'entry',
       'log',
@@ -177,7 +180,7 @@ describe('Logging', () => {
     });
 
     it('should promisify all the things', () => {
-      assert(promisifed);
+      assert(promisified);
     });
 
     it('should initialize the API object', () => {
@@ -366,7 +369,7 @@ describe('Logging', () => {
 
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = null;
+        const apiResponse = undefined;
 
         beforeEach(() => {
           logging.configService.createSink = async () => {
@@ -377,14 +380,14 @@ describe('Logging', () => {
         it('should exec callback with error', done => {
           logging.createSink(SINK_NAME, {}, (err, sink, apiResponse_) => {
             assert.strictEqual(err, error);
-            assert.strictEqual(sink, null);
+            assert.strictEqual(sink, undefined);
             assert.strictEqual(apiResponse_, apiResponse);
 
             done();
           });
         });
 
-        it('should throw an error', async () => {
+        it('should exec as Promise and throw an error', async () => {
           logging.configService.createSink = async () => {
             throw error;
           };
@@ -403,30 +406,31 @@ describe('Logging', () => {
 
         beforeEach(() => {
           logging.configService.createSink = async () => {
-            return [apiResponse];
+            return [apiResponse as LogSink];
           };
         });
 
         it('should exec callback with Sink & API response', done => {
-          const sink = {};
+          const sink = {} as Sink;
 
           logging.sink = name_ => {
             assert.strictEqual(name_, SINK_NAME);
             return sink;
           };
 
-          logging.createSink(SINK_NAME, {}, (err, sink_, apiResponse_) => {
-            assert.ifError(err);
+          logging.createSink(
+              SINK_NAME, {}, (err, sink_: Sink, apiResponse_: LogSink) => {
+                assert.ifError(err);
 
-            assert.strictEqual(sink_, sink);
-            assert.strictEqual(sink_.metadata, apiResponse);
-            assert.strictEqual(apiResponse_, apiResponse);
+                assert.strictEqual(sink_, sink);
+                assert.strictEqual(sink_.metadata, apiResponse);
+                assert.strictEqual(apiResponse_, apiResponse);
 
-            done();
-          });
+                done();
+              });
         });
 
-        it('should return a promise', async () => {
+        it('should return a promise with Sink & API response', async () => {
           const sink = {};
 
           logging.sink = name_ => {
@@ -1146,7 +1150,7 @@ describe('Logging', () => {
         bucket.acl.owners.addGroup = async () => {};
       });
 
-      it('should call createSink with string destination', async () => {
+      it('should update destination', async () => {
         const expectedDestination = 'storage.googleapis.com/' + bucket.name;
         await logging.setAclForBucket_(CONFIG);
 
@@ -1255,7 +1259,7 @@ describe('Logging', () => {
             dataset.setMetadata = async () => {};
           });
 
-          it('should call createSink with string destination', async () => {
+          it('should update destination', async () => {
             const expectedDestination = [
               'bigquery.googleapis.com',
               'projects',
@@ -1371,7 +1375,7 @@ describe('Logging', () => {
             topic.iam.setPolicy = async () => {};
           });
 
-          it('should call createSink with string destination', async () => {
+          it('should update destination', async () => {
             const expectedDestination = 'pubsub.googleapis.com/' + topic.name;
             await logging.setAclForTopic_(CONFIG);
             assert.strictEqual(CONFIG.destination, expectedDestination);

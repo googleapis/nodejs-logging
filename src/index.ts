@@ -24,6 +24,8 @@ import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
 import * as is from 'is';
 
+import {callbackifyAll} from '../callbackify/index';
+
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as through from 'through2';
@@ -248,8 +250,7 @@ class Logging {
   async createSink(name: string, config): Promise<[Sink, LogSink]>;
   async createSink(name: string, config, callback: CreateSinkCallback):
       Promise<void>;
-  async createSink(name: string, config, callback?: CreateSinkCallback):
-      Promise<[Sink, LogSink]|void> {
+  async createSink(name: string, config): Promise<[Sink, LogSink]|void> {
     // jscs:enable maximumLineLength
     const self = this;
     if (!is.string(name)) {
@@ -276,24 +277,28 @@ class Logging {
     await this.verifyProjectId_();
     reqOpts = replaceProjectIdToken(reqOpts, this.projectId!);
     // tslint:disable-next-line no-any prefer-const
-    let resp: any = null;
-    let error: Error|null = null;
-    let sink: Sink|null = null;
-    try {
-      [resp as LogSink] =
-          await this.configService.createSink(reqOpts, config.gaxOptions);
-      sink = self.sink(resp.name);
-      sink.metadata = resp;
-    } catch (err) {
-      error = err;
-    }
+    const [resp] =
+        await this.configService.createSink(reqOpts, config.gaxOptions);
+    const sink = self.sink(resp.name);
+    sink.metadata = resp;
+    // let resp: any = null;
+    // let error: Error|null = null;
+    // let sink: Sink|null = null;
+    // try {
+    //   [resp as LogSink] =
+    //       await this.configService.createSink(reqOpts, config.gaxOptions);
+    //   sink = self.sink(resp.name);
+    //   sink.metadata = resp;
+    // } catch (err) {
+    //   error = err;
+    // }
 
-    if (callback) {
-      return callback(error, sink as Sink, resp);
-    }
-    if (error) {
-      throw error;
-    }
+    // if (callback) {
+    //   return callback(error, sink as Sink, resp);
+    // }
+    // if (error) {
+    //   throw error;
+    // }
     return [sink as Sink, resp];
   }
 
@@ -905,6 +910,19 @@ paginator.extend(Logging, ['getEntries', 'getSinks']);
  */
 promisifyAll(Logging, {
   exclude: ['entry', 'log', 'request', 'sink', 'createSink'],
+});
+
+/*! Developer Documentation
+ *
+ * All async methods (except for streams) will execute a callback in the event
+ * that a callback is provided.
+ */
+callbackifyAll(Logging, {
+  exclude: [
+    'entry', 'log', 'request', 'sink', 'setAclForBucket_', 'setAclForDataset_',
+    'setAclForTopic_', 'getEntries', 'getSinks', 'prepareGaxRequest',
+    'makeRequestCallback', 'makeRequestStream'
+  ],
 });
 
 /**

@@ -91,15 +91,22 @@ describe('Logging', () => {
   });
 
   describe('sinks', () => {
-    it('should create a sink with a Bucket destination', async () => {
-      const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any).create({
-        destination: bucket,
-      });
-      const destination = 'storage.googleapis.com/' + bucket.name;
-      assert.strictEqual(apiResponse.destination, destination);
-    });
+    it('should create a sink with a Bucket destination with callback via callbackifyAll',
+       done => {
+         const sink = logging.sink(generateName());
+         sink.create(
+             {
+               destination: bucket,
+             },
+             (err, _, apiResponse) => {
+               if (err) {
+                 throw err;
+               }
+               const destination = 'storage.googleapis.com/' + bucket.name;
+               assert.strictEqual(apiResponse.destination, destination);
+               done();
+             });
+       });
 
     it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());

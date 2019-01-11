@@ -20,6 +20,8 @@ import * as extend from 'extend';
 import {CallOptions} from 'google-gax/build/src/gax';
 import * as is from 'is';
 
+import {callbackifyAll} from '../callbackify/index';
+
 import {Logging} from '.';
 import {LogSink} from './index';
 
@@ -99,12 +101,15 @@ class Sink {
    */
   async create(config): Promise<[Sink, LogSink]>;
   async create(config, callback): Promise<void>;
-  async create(config, callback?): Promise<[Sink, LogSink]|void> {
-    const resp = await this.logging.createSink(this.name, config, callback);
-    if (callback) {
-      return callback(null, resp);
-    }
-    return resp;
+  // async create(config, callback?): Promise<[Sink, LogSink]|void> {
+  //   const resp = await this.logging.createSink(this.name, config);
+  //   if (callback) {
+  //     return callback.apply(null, [null, ...resp]);
+  //   }
+  //   return resp;
+  // }
+  async create(config): Promise<[Sink, LogSink]|void> {
+    return this.logging.createSink(this.name, config);
   }
 
   /**
@@ -359,6 +364,10 @@ class Sink {
  */
 promisifyAll(Sink, {
   exclude: ['create'],
+});
+
+callbackifyAll(Sink, {
+  exclude: ['delete', 'getMetadata', 'setFilter', 'setMetadata'],
 });
 
 /**
