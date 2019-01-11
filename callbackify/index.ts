@@ -16,18 +16,11 @@
 
 import * as is from 'is';
 
-export interface CallbackifyAllOptions extends CallbackifyOptions {
+export interface CallbackifyAllOptions {
   /**
    * Array of methods to ignore when callbackifying.
    */
   exclude?: string[];
-}
-
-export interface CallbackifyOptions {
-  /**
-   * Pass to the callback a single arg instead of an array.
-   */
-  singular?: boolean;
 }
 
 export interface CallbackMethod extends Function {
@@ -42,13 +35,10 @@ export interface CallbackMethod extends Function {
  * @param {boolean} options.singular - Pass to the callback a single arg instead of an array.
  * @return {function} wrapped
  */
-export function callbackify(originalMethod, options?: CallbackifyOptions) {
+export function callbackify(originalMethod) {
   if (originalMethod.callbackified_) {
     return originalMethod;
   }
-
-  options = options || {};
-
   const slice = Array.prototype.slice;
 
   // tslint:disable-next-line:no-any
@@ -72,11 +62,7 @@ export function callbackify(originalMethod, options?: CallbackifyOptions) {
     if (cb) {
       originalMethod.apply(context, args)
           .then(res => {
-            if (options!.singular && Array.isArray(res) && res.length === 1) {
-              cb(null, res[0]);
-            } else {
-              cb(null, ...res);
-            }
+            cb(null, ...res);
           })
           .catch(err => cb(err));
     } else {
@@ -110,7 +96,7 @@ export function callbackifyAll(
 
   methods.forEach((methodName) => {
     const originalMethod = Class.prototype[methodName];
-    if (!originalMethod.promisified_) {
+    if (!originalMethod.callbackified_) {
       Class.prototype[methodName] =
           exports.callbackify(originalMethod, options);
     }
