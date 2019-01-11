@@ -281,24 +281,6 @@ class Logging {
         await this.configService.createSink(reqOpts, config.gaxOptions);
     const sink = self.sink(resp.name);
     sink.metadata = resp;
-    // let resp: any = null;
-    // let error: Error|null = null;
-    // let sink: Sink|null = null;
-    // try {
-    //   [resp as LogSink] =
-    //       await this.configService.createSink(reqOpts, config.gaxOptions);
-    //   sink = self.sink(resp.name);
-    //   sink.metadata = resp;
-    // } catch (err) {
-    //   error = err;
-    // }
-
-    // if (callback) {
-    //   return callback(error, sink as Sink, resp);
-    // }
-    // if (error) {
-    //   throw error;
-    // }
     return [sink as Sink, resp];
   }
 
