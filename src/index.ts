@@ -53,7 +53,7 @@ export interface LoggingOptions extends gax.GoogleAuthOptions {
 }
 
 export interface CreateSinkCallback {
-  (err?: Error|null, sink?: Sink, resp?: LogSink): void;
+  (err: Error|null, sink?: Sink, resp?: LogSink): void;
 }
 
 /**
@@ -276,18 +276,11 @@ class Logging {
     delete reqOpts.sink.gaxOptions;
     await this.verifyProjectId_();
     reqOpts = replaceProjectIdToken(reqOpts, this.projectId!);
-    // tslint:disable-next-line no-any prefer-const
     const [resp] =
         await this.configService.createSink(reqOpts, config.gaxOptions);
     const sink = self.sink(resp.name);
     sink.metadata = resp;
     return [sink as Sink, resp];
-  }
-
-  private async verifyProjectId_() {
-    if (this.projectId === '{{projectId}}') {
-      this.projectId = await this.auth.getProjectId();
-    }
   }
 
   /**
@@ -876,6 +869,12 @@ class Logging {
     const baseUrl = 'pubsub.googleapis.com';
     const topicName = topic.name;
     config.destination = `${baseUrl}/${topicName}`;
+  }
+
+  private async verifyProjectId_() {
+    if (this.projectId === '{{projectId}}') {
+      this.projectId = await this.auth.getProjectId();
+    }
   }
 }
 

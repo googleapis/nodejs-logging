@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import * as is from 'is';
-
 export interface CallbackifyAllOptions {
   /**
    * Array of methods to ignore when callbackifying.
@@ -87,7 +85,7 @@ export function callbackifyAll(
   const ownPropertyNames = Object.getOwnPropertyNames(Class.prototype);
   const methods = ownPropertyNames.filter((methodName) => {
     // clang-format off
-    return (is.fn(Class.prototype[methodName]) && // is it a function?
+    return (typeof Class.prototype[methodName] === 'function' && // is it a function?
       !/^_|(Stream|_)|^constructor$/.test(methodName) && // is it callbackifyable?
       exclude.indexOf(methodName) === -1
     ); // is it blacklisted?
