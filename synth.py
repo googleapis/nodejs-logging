@@ -45,6 +45,22 @@ common_templates = gcp.CommonTemplates()
 templates = common_templates.node_library(source_location='build/src')
 s.copy(templates)
 
+# [START fix-dead-link]
+s.replace('**/doc/google/protobuf/doc_timestamp.js',
+        'https:\/\/cloud\.google\.com[\s\*]*http:\/\/(.*)[\s\*]*\)',
+        r"https://\1)")
+
+s.replace('**/doc/google/protobuf/doc_timestamp.js',
+        'toISOString\]',
+        'toISOString)')
+# [END fix-dead-link]
+
+s.replace('src/v2/doc/google/api/doc_distribution.js',
+        r"Sum\[i=1\.\.n\]\(https:\/\/cloud\.google\.com\(x_i - mean\)\^2\)",
+        "Sum\[i=1..n](x_1 - mean)^2")
+
+
+
 # Node.js specific cleanup
 subprocess.run(["npm", "install"])
 subprocess.run(["npm", "run", "fix"])
