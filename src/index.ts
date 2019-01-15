@@ -98,10 +98,10 @@ export interface LoggingOptions extends gax.GoogleAuthOptions {
  *
  * @class
  *
- * @see [What is Stackdriver Logging?]{@link https://cloud.google.com/logging/docs}
- * @see [Introduction to the Stackdriver Logging API]{@link https://cloud.google.com/logging/docs/api}
- * @see [Logging to Stackdriver from Bunyan]{@link https://www.npmjs.com/package/@google-cloud/logging-bunyan}
- * @see [Logging to Stackdriver from Winston]{@link https://www.npmjs.com/package/@google-cloud/logging-winston}
+ * @see [What is Stackdriver Logging?](@link https://cloud.google.com/logging/docs)
+ * @see [Introduction to the Stackdriver Logging API](@link https://cloud.google.com/logging/docs/api)
+ * @see [Logging to Stackdriver from Bunyan](https://www.npmjs.com/package/@google-cloud/logging-bunyan)
+ * @see [Logging to Stackdriver from Winston](@link https://www.npmjs.com/package/@google-cloud/logging-winston)
  *
  * @param {ClientConfig} [options] Configuration options.
  *
