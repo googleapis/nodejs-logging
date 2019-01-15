@@ -139,25 +139,6 @@ const WriteLogEntriesResponse = {
 };
 
 /**
- * Error details for WriteLogEntries with partial success.
- *
- * @property {Object.<number, Object>} logEntryErrors
- *   When `WriteLogEntriesRequest.partial_success` is true, records the error
- *   status for entries that were not written due to a permanent error, keyed
- *   by the entry's zero-based index in `WriteLogEntriesRequest.entries`.
- *
- *   Failed requests for which no entries are written will not include
- *   per-entry errors.
- *
- * @typedef WriteLogEntriesPartialErrors
- * @memberof google.logging.v2
- * @see [google.logging.v2.WriteLogEntriesPartialErrors definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
- */
-const WriteLogEntriesPartialErrors = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
-};
-
-/**
  * The parameters to `ListLogEntries`.
  *
  * @property {string[]} projectIds

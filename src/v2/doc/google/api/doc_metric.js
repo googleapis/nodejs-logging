@@ -253,23 +253,3 @@ const MetricDescriptor = {
     MONEY: 6
   }
 };
-
-/**
- * A specific metric, identified by specifying values for all of the
- * labels of a `MetricDescriptor`.
- *
- * @property {string} type
- *   An existing metric type, see google.api.MetricDescriptor.
- *   For example, `custom.googleapis.com/invoice/paid/amount`.
- *
- * @property {Object.<string, string>} labels
- *   The set of label values that uniquely identify this metric. All
- *   labels listed in the `MetricDescriptor` must be assigned values.
- *
- * @typedef Metric
- * @memberof google.api
- * @see [google.api.Metric definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/api/metric.proto}
- */
-const Metric = {
-  // This is for documentation. Actual contents will be loaded by gRPC.
-};
