@@ -4,6 +4,31 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.3.0
+
+01-31-2019 12:49 PST
+
+
+### Implementation Changes
+- Modify retry settings for WriteLogEntries, update year in the license headers ([#366](https://github.com/googleapis/nodejs-logging/pull/366))
+
+### Dependencies
+- fix(deps): update dependency google-gax to ^0.25.0 ([#373](https://github.com/googleapis/nodejs-logging/pull/373))
+- chore(deps): update dependency @google-cloud/pubsub to ^0.24.0 ([#371](https://github.com/googleapis/nodejs-logging/pull/371))
+- fix(deps): update dependency @google-cloud/common-grpc to ^0.10.0 ([#372](https://github.com/googleapis/nodejs-logging/pull/372))
+- chore(deps): update dependency eslint-config-prettier to v4 ([#370](https://github.com/googleapis/nodejs-logging/pull/370))
+- fix(deps): update dependency google-gax to ^0.24.0 ([#369](https://github.com/googleapis/nodejs-logging/pull/369))
+- chore(deps): update dependency @google-cloud/pubsub to ^0.23.0 ([#367](https://github.com/googleapis/nodejs-logging/pull/367))
+- fix(deps): update dependency google-auth-library to v3 ([#365](https://github.com/googleapis/nodejs-logging/pull/365))
+- fix(deps): update dependency google-gax to ^0.23.0 ([#364](https://github.com/googleapis/nodejs-logging/pull/364))
+
+### Documentation
+- build: ignore googleapis.com in doc link check ([#368](https://github.com/googleapis/nodejs-logging/pull/368))
+- fix(docs): removed unused gRPC message types
+
+### Internal / Testing Changes
+- build: check broken links in generated docs ([#358](https://github.com/googleapis/nodejs-logging/pull/358))
+
 ## v4.2.0
 
 01-02-2019 12:43 PST
