@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+import * as http from 'http';
 import onFinished = require('on-finished');
 import {getOrInjectContext, makeHeaderWrapper} from '../context';
-// Types-only import.
-import {Request, Response, NextFunction} from 'express';
+
 import {makeHttpRequestData} from './make-http-request';
 import {StackdriverHttpRequest} from '../../http-request';
 
-export interface AnnotatedRequestType<LoggerType> extends Request {
+interface AnnotatedRequestType<LoggerType> extends http.IncomingMessage {
   log: LoggerType;
 }
 
@@ -45,7 +45,8 @@ export function makeMiddleware<LoggerType>(
     projectId: string, makeChildLogger: (trace: string) => LoggerType,
     emitRequestLog?: (httpRequest: StackdriverHttpRequest, trace: string) =>
         void) {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: http.IncomingMessage, res: http.ServerResponse,
+          next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 
