@@ -1,7 +1,7 @@
 {
   "name": "@google-cloud/logging",
   "description": "Stackdriver Logging Client Library for Node.js",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
@@ -49,7 +49,7 @@
     "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging.proto | pbts -o proto/logging.d.ts -"
   },
   "dependencies": {
-    "@google-cloud/common-grpc": "^0.9.2",
+    "@google-cloud/common-grpc": "^0.10.0",
     "@google-cloud/paginator": "^0.1.0",
     "@google-cloud/projectify": "^0.3.0",
     "@google-cloud/promisify": "^0.3.0",
@@ -59,7 +59,7 @@
     "extend": "^3.0.2",
     "gcp-metadata": "^0.9.0",
     "google-auth-library": "^3.0.0",
-    "google-gax": "^0.23.0",
+    "google-gax": "^0.25.0",
     "is": "^3.2.1",
     "lodash.merge": "^4.6.1",
     "on-finished": "^2.3.0",
@@ -73,7 +73,7 @@
   "devDependencies": {
     "@google-cloud/bigquery": "^2.0.1",
     "@google-cloud/nodejs-repo-tools": "^3.0.0",
-    "@google-cloud/pubsub": "^0.23.0",
+    "@google-cloud/pubsub": "^0.24.0",
     "@google-cloud/storage": "^2.2.0",
     "@types/arrify": "^1.0.4",
     "@types/extend": "^3.0.0",
@@ -90,7 +90,7 @@
     "bignumber.js": "^8.0.0",
     "codecov": "^3.0.4",
     "eslint": "^5.4.0",
-    "eslint-config-prettier": "^3.1.0",
+    "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-prettier": "^3.0.0",
     "google-proto-files": "^0.18.0",
@@ -104,7 +104,7 @@
     "power-assert": "^1.6.0",
     "prettier": "^1.15.1",
     "proxyquire": "^2.1.0",
-    "typescript": "~3.2.0",
+    "typescript": "~3.3.0",
     "uuid": "^3.3.2"
   }
 }
