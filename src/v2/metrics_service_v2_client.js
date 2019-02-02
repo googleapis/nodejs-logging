@@ -254,7 +254,7 @@ class MetricsServiceV2Client {
    * client.listLogMetrics({parent: formattedParent})
    *   .then(responses => {
    *     const resources = responses[0];
-   *     for (let i = 0; i < resources.length; i += 1) {
+   *     for (const resource of resources) {
    *       // doThingsWith(resources[i])
    *     }
    *   })
@@ -274,7 +274,7 @@ class MetricsServiceV2Client {
    *   const nextRequest = responses[1];
    *   // The actual response object, if necessary.
    *   // const rawResponse = responses[2];
-   *   for (let i = 0; i < resources.length; i += 1) {
+   *   for (const resource of resources) {
    *     // doThingsWith(resources[i]);
    *   }
    *   if (nextRequest) {
