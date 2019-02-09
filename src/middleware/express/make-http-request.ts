@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-// Types-only import.
-import {Request, Response} from 'express';
+import * as http from 'http';
 
 import {StackdriverHttpRequest} from '../../http-request';
 
 export function makeHttpRequestData(
-    req: Request, res: Response,
+    req: http.IncomingMessage, res: http.ServerResponse,
     latencyMilliseconds: number): StackdriverHttpRequest {
   return {
     status: res.statusCode,

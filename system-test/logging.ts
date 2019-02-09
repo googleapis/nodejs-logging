@@ -85,7 +85,10 @@ describe('Logging', () => {
     async function getAndDelete(method: () => Promise<[ServiceObject[]]>) {
       const [objects] = await method();
       return Promise.all(
-          objects.filter(o => (o.name || o.id).indexOf(TESTS_PREFIX) === 0)
+          objects
+              .filter(
+                  // tslint:disable-next-line no-any
+                  o => ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
               .map(o => o.delete()));
     }
   });
