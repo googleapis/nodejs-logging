@@ -17,7 +17,9 @@
 import * as assert from 'assert';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
+import {GCPEnv} from 'google-auth-library';
 import * as proxyquire from 'proxyquire';
+
 import assertRejects = require('assert-rejects');
 
 let instanceOverride;
@@ -213,7 +215,7 @@ describe('metadata', () => {
 
           const fakeAuth = {
             async getEnv() {
-              return 'APP_ENGINE';
+              return GCPEnv.APP_ENGINE;
             }
           };
 
@@ -238,7 +240,7 @@ describe('metadata', () => {
 
           const fakeAuth = {
             async getEnv() {
-              return 'CLOUD_FUNCTIONS';
+              return GCPEnv.CLOUD_FUNCTIONS;
             }
           };
 
@@ -271,7 +273,7 @@ describe('metadata', () => {
 
           const fakeAuth = {
             async getEnv() {
-              return 'COMPUTE_ENGINE';
+              return GCPEnv.COMPUTE_ENGINE;
             }
           };
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
@@ -302,7 +304,7 @@ describe('metadata', () => {
 
           const fakeAuth = {
             async getEnv() {
-              return 'COMPUTE_ENGINE';
+              return GCPEnv.COMPUTE_ENGINE;
             }
           };
 
@@ -327,7 +329,7 @@ describe('metadata', () => {
 
           const fakeAuth = {
             async getEnv() {
-              return 'KUBERNETES_ENGINE';
+              return GCPEnv.KUBERNETES_ENGINE;
             }
           };
 
@@ -346,7 +348,7 @@ describe('metadata', () => {
         it('should return correct descriptor', async () => {
           const fakeAuth = {
             async getEnv() {
-              return 'NONE';
+              return GCPEnv.NONE;
             }
           };
 

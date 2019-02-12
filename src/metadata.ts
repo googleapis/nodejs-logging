@@ -16,7 +16,7 @@
 
 import * as fs from 'fs';
 import * as gcpMetadata from 'gcp-metadata';
-import {GoogleAuth} from 'google-auth-library';
+import {GCPEnv, GoogleAuth} from 'google-auth-library';
 import * as pify from 'pify';
 
 const readFile = pify(fs.readFile);
@@ -139,13 +139,13 @@ export function getGlobalDescriptor() {
 export async function getDefaultResource(auth: GoogleAuth) {
   const env = await auth.getEnv();
   switch (env) {
-    case 'KUBERNETES_ENGINE':
+    case GCPEnv.KUBERNETES_ENGINE:
       return getGKEDescriptor();
-    case 'APP_ENGINE':
+    case GCPEnv.APP_ENGINE:
       return getGAEDescriptor();
-    case 'CLOUD_FUNCTIONS':
+    case GCPEnv.CLOUD_FUNCTIONS:
       return getCloudFunctionDescriptor();
-    case 'COMPUTE_ENGINE':
+    case GCPEnv.COMPUTE_ENGINE:
       // Test for compute engine should be done after all the rest -
       // everything runs on top of compute engine.
       return getGCEDescriptor();
