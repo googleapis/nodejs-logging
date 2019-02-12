@@ -4,6 +4,27 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.4.0
+
+02-11-2019 17:40 PST
+
+### New Features
+- feat: include TypeScript types ([#387](https://github.com/googleapis/nodejs-logging/pull/387))
+
+### Bug Fixes
+- fix: stop exporting express types publicly ([#376](https://github.com/googleapis/nodejs-logging/pull/376))
+
+### Documentation
+- docs: update contributing path in README ([#383](https://github.com/googleapis/nodejs-logging/pull/383))
+- chore: move CONTRIBUTING.md to root ([#382](https://github.com/googleapis/nodejs-logging/pull/382))
+- docs: add lint/fix example to contributing guide ([#379](https://github.com/googleapis/nodejs-logging/pull/379))
+- docs: fix example comments ([#378](https://github.com/googleapis/nodejs-logging/pull/378))
+
+### Internal / Testing Changes
+- build: create docs test npm scripts ([#385](https://github.com/googleapis/nodejs-logging/pull/385))
+- build: test using @grpc/grpc-js in CI ([#384](https://github.com/googleapis/nodejs-logging/pull/384))
+- refactor: improve generated code style. ([#377](https://github.com/googleapis/nodejs-logging/pull/377))
+
 ## v4.3.0
 
 01-31-2019 12:49 PST
