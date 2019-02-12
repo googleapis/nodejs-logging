@@ -57,6 +57,26 @@ export interface WriteOptions {
   resource?: MonitoredResource;
 }
 
+export enum Severity {
+  emergency,
+  alert,
+  critical,
+  error,
+  warning,
+  notice,
+  info,
+  debug
+}
+
+export type SeverityNames = keyof typeof Severity;
+
+// Mapped types are only supported in type aliases and not in interfaces and
+// classes.
+type LogSeverityFunctions = {
+  // FIXME: the following can be made more precise.
+  [P in SeverityNames]: Function;
+}
+
 /**
  * A log is a named collection of entries, each entry representing a timestamped
  * event. Logs can be produced by Google Cloud Platform services, by third-party
@@ -79,7 +99,7 @@ export interface WriteOptions {
  * const logging = new Logging();
  * const log = logging.log('syslog');
  */
-class Log {
+class Log implements LogSeverityFunctions {
   formattedName_: string;
   removeCircular_: boolean;
   logging: Logging;
