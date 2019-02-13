@@ -965,7 +965,7 @@ export {Sink};
 
 /**
  * {@link MonitoredResource} class.
- * 
+ *
  * @name Logging.MonitoredResource
  * @see MonitoredResource
  * @type {Interface}

@@ -75,7 +75,7 @@ export type SeverityNames = keyof typeof Severity;
 type LogSeverityFunctions = {
   // FIXME: the following can be made more precise.
   [P in SeverityNames]: Function;
-}
+};
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
