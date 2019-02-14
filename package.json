@@ -48,14 +48,14 @@
     "posttest": "npm run check",
     "proto": "npm run proto:logging",
     "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging.proto | pbts -o proto/logging.d.ts -",
-    "docs-test": "blcl docs -r --exclude www.googleapis.com",
+    "docs-test": "linkinator docs -r --skip www.googleapis.com",
     "predocs-test": "npm run docs"
   },
   "dependencies": {
     "@google-cloud/common-grpc": "^0.10.0",
     "@google-cloud/paginator": "^0.1.0",
     "@google-cloud/projectify": "^0.3.0",
-    "@google-cloud/promisify": "^0.3.0",
+    "@google-cloud/promisify": "^0.4.0",
     "@opencensus/propagation-stackdriver": "0.0.8",
     "arrify": "^1.0.1",
     "eventid": "^0.1.2",
@@ -109,6 +109,6 @@
     "proxyquire": "^2.1.0",
     "typescript": "~3.3.0",
     "uuid": "^3.3.2",
-    "broken-link-checker-local": "^0.2.0"
+    "linkinator": "^1.1.2"
   }
 }

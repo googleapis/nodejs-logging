@@ -37,7 +37,7 @@ const PKG = require('../../package.json');
 const v2 = require('./v2');
 
 import {Entry} from './entry';
-import {Log, GetEntriesRequest} from './log';
+import {Log, GetEntriesRequest, MonitoredResource, Severity, SeverityNames} from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
 import {AbortableDuplex} from '@google-cloud/common';
@@ -45,6 +45,25 @@ import {AbortableDuplex} from '@google-cloud/common';
 export interface LoggingOptions extends gax.GoogleAuthOptions {
   autoRetry?: boolean;
   maxRetries?: number;
+}
+
+/**
+ * For logged errors, one can provide a the service context. For more
+ * information see [this guide]{@link
+ * https://cloud.google.com/error-reporting/docs/formatting-error-messages}
+ * and the [official documentation]{@link
+ * https://cloud.google.com/error-reporting/reference/rest/v1beta1/ServiceContext}.
+ */
+export interface ServiceContext {
+  /**
+   * An identifier of the service, such as the name of the executable, job, or
+   * Google App Engine service name.
+   */
+  service?: string;
+  /**
+   * Represents the version of the service.
+   */
+  version?: string;
 }
 
 /**
@@ -932,6 +951,8 @@ export {Entry};
  * @type {Constructor}
  */
 export {Log};
+export {Severity};
+export {SeverityNames};
 
 /**
  * {@link Sink} class.
@@ -941,6 +962,15 @@ export {Log};
  * @type {Constructor}
  */
 export {Sink};
+
+/**
+ * {@link MonitoredResource} class.
+ *
+ * @name Logging.MonitoredResource
+ * @see MonitoredResource
+ * @type {Interface}
+ */
+export {MonitoredResource};
 
 /**
  * The default export of the `@google-cloud/logging` package is the
