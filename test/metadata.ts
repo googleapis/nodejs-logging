@@ -21,6 +21,7 @@ import {GCPEnv} from 'google-auth-library';
 import * as proxyquire from 'proxyquire';
 
 import assertRejects = require('assert-rejects');
+import {detectServiceContext} from '../src/metadata';
 
 let instanceOverride;
 const fakeGcpMetadata = {
@@ -358,6 +359,87 @@ describe('metadata', () => {
           });
         });
       });
+    });
+  });
+
+  describe('detectServiceContext', () => {
+    it('should return the correct descriptor for App Engine', async () => {
+      const GAE_MODULE_NAME = 'gae-module-name';
+      const GAE_MODULE_VERSION = 'gae-module-version';
+      const GAE_SERVICE = 'gae-service';
+      const GAE_VERSION = 'gae-version';
+      process.env.GAE_MODULE_NAME = GAE_MODULE_NAME;
+      process.env.GAE_MODULE_VERSION = GAE_MODULE_VERSION;
+      process.env.GAE_SERVICE = GAE_SERVICE;
+      process.env.GAE_VERSION = GAE_VERSION;
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.APP_ENGINE;
+        }
+      };
+
+      const sc1 = await metadata.detectServiceContext(fakeAuth);
+      assert.deepStrictEqual(sc1, {
+        service: GAE_SERVICE,
+        version: GAE_VERSION,
+      });
+
+      delete process.env.GAE_SERVICE;
+      const sc2 = await metadata.detectServiceContext(fakeAuth);
+      assert.deepStrictEqual(sc2, {
+        service: GAE_MODULE_NAME,
+        version: GAE_VERSION,
+      });
+
+      delete process.env.GAE_VERSION;
+      const sc3 = await metadata.detectServiceContext(fakeAuth);
+      assert.deepStrictEqual(sc3, {
+        service: GAE_MODULE_NAME,
+        version: GAE_MODULE_VERSION,
+      });
+    });
+
+    it('should return the correct descriptor for Cloud Functions', async () => {
+      const FUNCTION_NAME = process.env.FUNCTION_NAME = 'function-name';
+
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.CLOUD_FUNCTIONS;
+        }
+      };
+
+      const sc1 = await metadata.detectServiceContext(fakeAuth);
+      assert.deepStrictEqual(sc1, {service: FUNCTION_NAME});
+    });
+
+    it('should return null on GKE', async () => {
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.KUBERNETES_ENGINE;
+        }
+      };
+      const serviceContext = await metadata.detectServiceContext(fakeAuth);
+      assert.strictEqual(serviceContext, null);
+    });
+
+    it('should return null on GCE', async () => {
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.COMPUTE_ENGINE;
+        }
+      };
+      const serviceContext = await metadata.detectServiceContext(fakeAuth);
+      assert.strictEqual(serviceContext, null);
+    });
+
+    it('should return null elsewhere', async () => {
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.NONE;
+        }
+      };
+      const serviceContext = await metadata.detectServiceContext(fakeAuth);
+      assert.strictEqual(serviceContext, null);
     });
   });
 });

@@ -19,6 +19,8 @@ import * as gcpMetadata from 'gcp-metadata';
 import {GCPEnv, GoogleAuth} from 'google-auth-library';
 import * as pify from 'pify';
 
+import {ServiceContext} from './index';
+
 const readFile = pify(fs.readFile);
 
 function zoneFromQualifiedZone(qualified: string): string|undefined {
@@ -151,5 +153,36 @@ export async function getDefaultResource(auth: GoogleAuth) {
       return getGCEDescriptor();
     default:
       return getGlobalDescriptor();
+  }
+}
+
+/**
+ * For logged errors, users can provide a service context. This enables errors
+ * to be picked up Stackdriver Error Reporting. For more information see
+ * [this guide]{@link
+ * https://cloud.google.com/error-reporting/docs/formatting-error-messages} and
+ * the [official documentation]{@link
+ * https://cloud.google.com/error-reporting/reference/rest/v1beta1/ServiceContext}.
+ */
+export async function detectServiceContext(auth: GoogleAuth):
+    Promise<ServiceContext|null> {
+  const env = await auth.getEnv();
+  switch (env) {
+    case GCPEnv.APP_ENGINE:
+      return {
+        service: process.env.GAE_SERVICE || process.env.GAE_MODULE_NAME,
+        version: process.env.GAE_VERSION || process.env.GAE_MODULE_VERSION,
+      };
+    case GCPEnv.CLOUD_FUNCTIONS:
+      return {
+        service: process.env.FUNCTION_NAME,
+      };
+    // One Kubernetes we probably need to use the pod-name to describe the
+    // service. Currently there isn't a universal way to acquire the pod
+    // name from within the pod.
+    case GCPEnv.KUBERNETES_ENGINE:
+    case GCPEnv.COMPUTE_ENGINE:
+    default:
+      return null;
   }
 }

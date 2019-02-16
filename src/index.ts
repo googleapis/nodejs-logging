@@ -28,10 +28,12 @@ const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as through from 'through2';
 import * as middleware from './middleware';
+import {detectServiceContext} from './metadata';
 import {StackdriverHttpRequest as HttpRequest} from './http-request';
 
 export {middleware};
 export {HttpRequest};
+export {detectServiceContext};
 
 const PKG = require('../../package.json');
 const v2 = require('./v2');
