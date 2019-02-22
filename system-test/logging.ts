@@ -85,54 +85,50 @@ describe('Logging', () => {
     async function getAndDelete(method: () => Promise<[ServiceObject[]]>) {
       const [objects] = await method();
       return Promise.all(
-          objects
-              .filter(
-                  // tslint:disable-next-line no-any
-                  o => ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
+          objects.filter(o => (o.name || o.id).indexOf(TESTS_PREFIX) === 0)
               .map(o => o.delete()));
     }
   });
 
   describe('sinks', () => {
-    it('should create a sink with a Bucket destination', async () => {
+    it('should create a sink with a Bucket destination callback mode', done => {
       const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any).create({
-        destination: bucket,
+      sink.create({destination: bucket}, (err, _, apiResponse) => {
+        if (err) {
+          throw err;
+        }
+        const destination = 'storage.googleapis.com/' + bucket.name;
+        assert.strictEqual(apiResponse!.destination, destination);
+        done();
       });
-      const destination = 'storage.googleapis.com/' + bucket.name;
-      assert.strictEqual(apiResponse.destination, destination);
     });
 
     it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any)
-                                   .create(
-                                       {
-                                         destination: dataset,
-                                       },
-                                   );
+      const [_, apiResponse] = await sink.create(
+          {
+            destination: dataset,
+          },
+      );
 
       const destination = `bigquery.googleapis.com/datasets/${dataset.id}`;
 
       // The projectId may have been replaced depending on how the system
       // tests are being run, so let's not care about that.
       apiResponse.destination =
-          apiResponse.destination.replace(/projects\/[^/]*\//, '');
+          apiResponse.destination!.replace(/projects\/[^/]*\//, '');
       assert.strictEqual(apiResponse.destination, destination);
     });
 
     it('should create a sink with a Topic destination', async () => {
       const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any).create({destination: topic});
+      const [_, apiResponse] = await sink.create({destination: topic});
       const destination = 'pubsub.googleapis.com/' + topic.name;
 
       // The projectId may have been replaced depending on how the system
       // tests are being run, so let's not care about that.
       assert.strictEqual(
-          apiResponse.destination.replace(/projects\/[^/]*\//, ''),
+          apiResponse.destination!.replace(/projects\/[^/]*\//, ''),
           destination.replace(/projects\/[^/]*\//, ''));
     });
 
@@ -146,14 +142,12 @@ describe('Logging', () => {
 
       it('should set metadata', async () => {
         const metadata = {filter: FILTER};
-        // tslint:disable-next-line no-any
-        const [apiResponse] = await (sink as any).setMetadata(metadata);
+        const [apiResponse] = await sink.setMetadata(metadata);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
 
       it('should set a filter', async () => {
-        // tslint:disable-next-line no-any
-        const [apiResponse] = await (sink as any).setFilter(FILTER);
+        const [apiResponse] = await sink.setFilter(FILTER);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
     });
@@ -174,8 +168,7 @@ describe('Logging', () => {
         const logstream = logging.getSinksStream({pageSize: 1})
                               .on('error', done)
                               .once('data', () => {
-                                // tslint:disable-next-line no-any
-                                (logstream as any).end();
+                                logstream.end();
                                 done();
                               });
       });
@@ -189,6 +182,16 @@ describe('Logging', () => {
                 assert.strictEqual(is.object(metadata), true);
                 done();
               });
+            });
+      });
+
+      it('should get metadata promise', (done) => {
+        logging.getSinksStream({pageSize: 1})
+            .on('error', done)
+            .once('data', async (sink) => {
+              const [metadata] = await sink.getMetadata();
+              assert.strictEqual(is.object(metadata), true);
+              done();
             });
       });
     });
@@ -232,22 +235,43 @@ describe('Logging', () => {
     after(done => log.delete(done));
 
     it('should list log entries', async () => {
-      const [entries] = await logging.getEntries({
+      const entries = await logging.getEntries({
         autoPaginate: false,
         pageSize: 1,
       });
-      assert.strictEqual(entries.length, 1);
+      assert.strictEqual(entries[0].length, 1);
+    });
+
+    it('should list log entries callback', (done) => {
+      logging.getEntries(
+          {
+            autoPaginate: false,
+            pageSize: 1,
+          },
+          (err, entries) => {
+            assert.ifError(err);
+            assert.strictEqual(entries!.length, 1);
+            done();
+          });
     });
 
     it('should list log entries as a stream', done => {
+      const entries = new Array<{}>();
       const logstream = logging
                             .getEntriesStream({
                               autoPaginate: false,
                               pageSize: 1,
                             })
                             .on('error', done)
-                            .once('data', () => logstream.end())
-                            .on('end', done);
+                            .on('data',
+                                entry => {
+                                  entries.push(entry);
+                                  logstream.end();
+                                })
+                            .on('end', () => {
+                              assert.strictEqual(entries.length, 1);
+                              done();
+                            });
     });
 
     describe('log-specific entries', () => {
@@ -322,7 +346,7 @@ describe('Logging', () => {
                 },
                 (err, entries) => {
                   assert.ifError(err);
-                  assert.deepStrictEqual(entries.map(x => x.data), [
+                  assert.deepStrictEqual(entries!.map(x => x.data), [
                     '3',
                     '2',
                     '1',
@@ -350,7 +374,7 @@ describe('Logging', () => {
             (err, entries) => {
               assert.ifError(err);
               assert.deepStrictEqual(
-                  entries.reverse().map(x => x.data), messages);
+                  entries!.reverse().map(x => x.data), messages);
               done();
             });
       }, WRITE_CONSISTENCY_DELAY_MS * 4);
@@ -376,7 +400,7 @@ describe('Logging', () => {
               (err, entries) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry = entries![0];
 
                 assert.deepStrictEqual(entry.data, {
                   when: logEntry.data.when.toString(),
@@ -413,7 +437,7 @@ describe('Logging', () => {
               (err, entries) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry = entries![0];
 
                 assert.strictEqual(entry.metadata.severity, metadata.severity);
                 assert.deepStrictEqual(entry.data, data);
@@ -440,7 +464,7 @@ describe('Logging', () => {
               (err, entries) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry = entries![0];
 
                 assert.strictEqual(entry.data, text);
                 assert.deepStrictEqual(entry.metadata.resource, {

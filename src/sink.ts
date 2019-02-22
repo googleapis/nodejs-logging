@@ -15,13 +15,23 @@
  */
 
 import * as common from '@google-cloud/common-grpc';
-import {promisifyAll} from '@google-cloud/promisify';
+import {callbackifyAll, promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax/build/src/gax';
 import * as is from 'is';
+import {DeleteCallback, DeleteResponse} from '.';
 
-import {Logging} from '.';
+import {CreateSinkCallback, CreateSinkRequest, Logging, LogSink} from '.';
 
+export interface GetSinkMetadataCallback {
+  (error: (Error|null), response?: LogSink): void;
+}
+
+export type GetSinkMetadataResponse = [LogSink];
+
+export interface SetSinkMetadata extends LogSink {
+  gaxOptions?: CallOptions;
+}
 /**
  * A sink is an object that lets you to specify a set of log entries to export
  * to a particular destination. Stackdriver Logging lets you export log entries
@@ -45,7 +55,7 @@ class Sink {
   logging: Logging;
   name: string;
   formattedName_: string;
-  metadata?: {};
+  metadata?: LogSink;
   constructor(logging: Logging, name: string) {
     this.logging = logging;
     /**
@@ -94,8 +104,10 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
-  create(config, callback?) {
-    this.logging.createSink(this.name, config, callback);
+  create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
+  create(config: CreateSinkRequest): Promise<[Sink, LogSink]> {
+    return this.logging.createSink(this.name, config);
   }
 
   /**
@@ -139,22 +151,17 @@ class Sink {
    * region_tag:logging_delete_sink
    * Another example:
    */
-  delete(gaxOptions: CallOptions, callback) {
-    if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
-      gaxOptions = {};
-    }
+  delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
+  delete(callback: DeleteCallback): void;
+  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
+  async delete(gaxOptions?: CallOptions|
+               DeleteCallback): Promise<DeleteResponse> {
     const reqOpts = {
       sinkName: this.formattedName_,
     };
-    this.logging.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'deleteSink',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        callback);
+    await this.logging.setProjectId(reqOpts);
+    return this.logging.configService.deleteSink(
+        reqOpts, gaxOptions as CallOptions);
   }
 
   /**
@@ -191,36 +198,26 @@ class Sink {
    * //-
    * sink.getMetadata().then(data => {
    *   const metadata = data[0];
-   *   const apiResponse = data[1];
    * });
    *
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_get_sink
    * Another example:
    */
-  getMetadata(callback?);
-  getMetadata(gaxOptions: CallOptions, callback?) {
-    const self = this;
-    if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
-      gaxOptions = {};
-    }
+  getMetadata(gaxOptions?: CallOptions): Promise<GetSinkMetadataResponse>;
+  getMetadata(callback: GetSinkMetadataCallback): void;
+  getMetadata(gaxOptions: CallOptions, callback: GetSinkMetadataCallback): void;
+  async getMetadata(gaxOptions?: CallOptions|
+                    GetSinkMetadataCallback): Promise<GetSinkMetadataResponse> {
     const reqOpts = {
       sinkName: this.formattedName_,
     };
-    this.logging.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'getSink',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        (...args) => {
-          if (args[1]) {
-            self.metadata = args[1];
-          }
-          callback.apply(null, args);
-        });
+
+    await this.logging.setProjectId(reqOpts);
+
+    [this.metadata] = await this.logging.configService.getSink(
+        reqOpts, gaxOptions as CallOptions);
+    return [this.metadata!];
   }
 
   /**
@@ -259,12 +256,14 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    */
-  setFilter(filter: string, callback?) {
-    this.setMetadata(
+  setFilter(filter: string): Promise<GetSinkMetadataResponse>;
+  setFilter(filter: string, callback: GetSinkMetadataCallback): void;
+  setFilter(filter: string): Promise<GetSinkMetadataResponse> {
+    return this.setMetadata(
         {
           filter,
         },
-        callback);
+    );
   }
 
   /**
@@ -313,42 +312,30 @@ class Sink {
    * region_tag:logging_update_sink
    * Another example:
    */
-  setMetadata(metadata, callback?) {
-    const self = this;
-    callback = callback || common.util.noop;
-    this.getMetadata((err, currentMetadata, apiResponse) => {
-      if (err) {
-        callback(err, apiResponse);
-        return;
-      }
-      const reqOpts = {
-        sinkName: self.formattedName_,
-        sink: extend({}, currentMetadata, metadata),
-      };
-      delete reqOpts.sink.gaxOptions;
-      self.logging.request(
-          {
-            client: 'ConfigServiceV2Client',
-            method: 'updateSink',
-            reqOpts,
-            gaxOpts: metadata.gaxOptions,
-          },
-          (...args) => {
-            if (args[1]) {
-              self.metadata = args[1];
-            }
-            callback.apply(null, args);
-          });
-    });
+  setMetadata(metadata: SetSinkMetadata): Promise<GetSinkMetadataResponse>;
+  setMetadata(metadata: SetSinkMetadata, callback: GetSinkMetadataCallback):
+      void;
+  async setMetadata(metadata: SetSinkMetadata):
+      Promise<GetSinkMetadataResponse> {
+    const [currentMetadata] = await this.getMetadata();
+    const reqOpts = {
+      sinkName: this.formattedName_,
+      sink: extend({}, currentMetadata, metadata),
+    };
+    delete reqOpts.sink.gaxOptions;
+    await this.logging.setProjectId(reqOpts);
+    [this.metadata] = await this.logging.configService.updateSink(
+        reqOpts, metadata.gaxOptions);
+    return [this.metadata!];
   }
 }
 
 /*! Developer Documentation
  *
- * All async methods (except for streams) will return a Promise in the event
- * that a callback is omitted.
+ * All async methods (except for streams) will call a callback in the event
+ * that a callback is provided.
  */
-promisifyAll(Sink);
+callbackifyAll(Sink);
 
 /**
  * Reference to the {@link Sink} class.
