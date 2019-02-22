@@ -46,8 +46,9 @@
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run check",
-    "proto": "npm run proto:logging",
+    "proto": "npm run proto:logging && npm run proto:logging_config",
     "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging.proto | pbts -o proto/logging.d.ts -",
+    "proto:logging_config": "pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging_config.proto | pbts -o proto/logging_config.d.ts -",
     "docs-test": "linkinator docs -r --skip www.googleapis.com",
     "predocs-test": "npm run docs"
   },
