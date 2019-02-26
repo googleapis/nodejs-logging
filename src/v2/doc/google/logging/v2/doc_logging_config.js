@@ -232,7 +232,8 @@ const GetSinkRequest = {
  *   If this field is set to true, or if the sink is owned by a non-project
  *   resource such as an organization, then the value of `writer_identity` will
  *   be a unique service account used only for exports from the new sink.  For
- *   more information, see `writer_identity` in LogSink.
+ *   more information, see `writer_identity` in
+ *   LogSink.
  *
  * @typedef CreateSinkRequest
  * @memberof google.logging.v2
@@ -486,8 +487,9 @@ const CreateExclusionRequest = {
  * @property {Object} updateMask
  *   Required. A nonempty list of fields to change in the existing exclusion.
  *   New values for the fields are taken from the corresponding fields in the
- *   LogExclusion included in this request. Fields not mentioned in
- *   `update_mask` are not changed and are ignored in the request.
+ *   LogExclusion included in this request.
+ *   Fields not mentioned in `update_mask` are not changed and are ignored in
+ *   the request.
  *
  *   For example, to change the filter and description of an exclusion,
  *   specify an `update_mask` of `"filter,description"`.
