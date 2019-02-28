@@ -202,15 +202,13 @@ describe('Sink', () => {
 
     it('should exec callback with error from refresh', done => {
       const error = new Error('Error.');
-      const apiResponse = {};
 
       sink.getMetadata = (callback) => {
-        callback(error, null, apiResponse);
+        callback(error);
       };
 
-      sink.setMetadata(METADATA, (err, apiResponse_) => {
+      sink.setMetadata(METADATA, (err) => {
         assert.strictEqual(err, error);
-        assert.strictEqual(apiResponse_, apiResponse);
         done();
       });
     });

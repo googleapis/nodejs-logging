@@ -24,8 +24,8 @@ import {Response} from 'request';
 
 import {google} from '../proto/logging';
 
-import {Logging} from '.';
-import {Entry} from './entry';
+import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
+import {Entry, LogEntry} from './entry';
 import {getDefaultResource} from './metadata';
 
 const snakeCaseKeys = require('snakecase-keys');
@@ -39,6 +39,7 @@ export interface GetEntriesRequest {
   orderBy?: string;
   pageSize?: number;
   pageToken?: string;
+  resourceNames?: string[]|string;
 }
 
 export interface LogOptions {
@@ -104,7 +105,7 @@ class Log implements LogSeverityFunctions {
   removeCircular_: boolean;
   logging: Logging;
   name: string;
-  constructor(logging: Logging, name: string, options: LogOptions) {
+  constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
@@ -409,10 +410,16 @@ class Log implements LogSeverityFunctions {
    * //   }
    * // }
    */
-  entry(metadata, data?) {
+  entry(metadata?: LogEntry): Entry;
+  entry(data?: string|{}): Entry;
+  entry(metadata?: LogEntry, data?: string|{}): Entry;
+  entry(metadataOrData?: LogEntry|string|{}, data?: string|{}) {
+    let metadata: LogEntry;
     if (!data) {
-      data = metadata;
+      data = metadataOrData as string | {};
       metadata = {};
+    } else {
+      metadata = metadataOrData as LogEntry;
     }
     return this.logging.entry(metadata, data);
   }
@@ -504,10 +511,15 @@ class Log implements LogSeverityFunctions {
    *   const entries = data[0];
    * });
    */
-  getEntries(options: GetEntriesRequest, callback?) {
+  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
+  getEntries(callback: GetEntriesCallback): void;
+  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
+  getEntries(
+      options?: GetEntriesRequest|GetEntriesCallback,
+      callback?: GetEntriesCallback): Promise<GetEntriesResponse>|void {
     if (is.function(options))
       {
-        callback = options;
+        callback = options as GetEntriesCallback;
         options = {};
       }
       options = extend(
@@ -515,7 +527,7 @@ class Log implements LogSeverityFunctions {
             filter: 'logName="' + this.formattedName_ + '"',
           },
           options);
-      return this.logging.getEntries(options, callback);
+      return this.logging.getEntries(options as GetEntriesRequest, callback!);
   }
 
   /**

@@ -20,7 +20,17 @@ import * as extend from 'extend';
 import {CallOptions} from 'google-gax/build/src/gax';
 import * as is from 'is';
 
-import {Logging} from '.';
+import {CreateSinkCallback, CreateSinkRequest, DeleteCallback, DeleteResponse, Logging, LogSink} from '.';
+
+export interface SinkMetadataCallback {
+  (error: (Error|null), response?: LogSink): void;
+}
+
+export type SinkMetadataResponse = [LogSink];
+
+export interface SetSinkMetadata extends LogSink {
+  gaxOptions?: CallOptions;
+}
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
@@ -45,7 +55,7 @@ class Sink {
   logging: Logging;
   name: string;
   formattedName_: string;
-  metadata?: {};
+  metadata?: LogSink;
   constructor(logging: Logging, name: string) {
     this.logging = logging;
     /**
@@ -94,8 +104,11 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
-  create(config, callback?) {
-    this.logging.createSink(this.name, config, callback);
+  create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
+  create(config: CreateSinkRequest, callback?: CreateSinkCallback):
+      Promise<[Sink, LogSink]>|void {
+    this.logging.createSink(this.name, config, callback!);
   }
 
   /**
@@ -139,9 +152,13 @@ class Sink {
    * region_tag:logging_delete_sink
    * Another example:
    */
-  delete(gaxOptions: CallOptions, callback) {
-    if (is.fn(gaxOptions)) {
-      callback = gaxOptions;
+  delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
+  delete(callback: DeleteCallback): void;
+  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
+  delete(gaxOptions?: CallOptions|DeleteCallback, callback?: DeleteCallback):
+      Promise<DeleteResponse>|void {
+    if (typeof gaxOptions === 'function') {
+      callback = gaxOptions as DeleteCallback;
       gaxOptions = {};
     }
     const reqOpts = {
@@ -152,7 +169,7 @@ class Sink {
           client: 'ConfigServiceV2Client',
           method: 'deleteSink',
           reqOpts,
-          gaxOpts: gaxOptions,
+          gaxOpts: gaxOptions as CallOptions,
         },
         callback);
   }
@@ -176,8 +193,8 @@ class Sink {
    *
    * @param {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
-   * @param {GetSinkMetadataCallback} [callback] Callback function.
-   * @returns {Promise<GetSinkMetadataResponse>}
+   * @param {SinkMetadataCallback} [callback] Callback function.
+   * @returns {Promise<SinkMetadataResponse>}
    *
    * @example
    * const {Logging} = require('@google-cloud/logging');
@@ -191,24 +208,27 @@ class Sink {
    * //-
    * sink.getMetadata().then(data => {
    *   const metadata = data[0];
-   *   const apiResponse = data[1];
    * });
    *
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_get_sink
    * Another example:
    */
-  getMetadata(callback?);
-  getMetadata(gaxOptions: CallOptions, callback?) {
+  getMetadata(gaxOptions?: CallOptions): Promise<SinkMetadataResponse>;
+  getMetadata(callback: SinkMetadataCallback): void;
+  getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
+  getMetadata(
+      gaxOptions?: CallOptions|SinkMetadataCallback,
+      callback?: SinkMetadataCallback): Promise<SinkMetadataResponse>|void {
     const self = this;
-    if (is.fn(gaxOptions)) {
+    if (typeof gaxOptions === 'function') {
       callback = gaxOptions;
       gaxOptions = {};
     }
     const reqOpts = {
       sinkName: this.formattedName_,
     };
-    this.logging.request(
+    this.logging.request<LogSink>(
         {
           client: 'ConfigServiceV2Client',
           method: 'getSink',
@@ -219,7 +239,7 @@ class Sink {
           if (args[1]) {
             self.metadata = args[1];
           }
-          callback.apply(null, args);
+          callback!.apply(null, args);
         });
   }
 
@@ -259,12 +279,15 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    */
-  setFilter(filter: string, callback?) {
+  setFilter(filter: string): Promise<SinkMetadataResponse>;
+  setFilter(filter: string, callback: SinkMetadataCallback): void;
+  setFilter(filter: string, callback?: SinkMetadataCallback):
+      Promise<SinkMetadataResponse>|void {
     this.setMetadata(
         {
           filter,
         },
-        callback);
+        callback!);
   }
 
   /**
@@ -313,12 +336,15 @@ class Sink {
    * region_tag:logging_update_sink
    * Another example:
    */
-  setMetadata(metadata, callback?) {
+  setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse>;
+  setMetadata(metadata: SetSinkMetadata, callback: SinkMetadataCallback): void;
+  setMetadata(metadata: SetSinkMetadata, callback?: SinkMetadataCallback):
+      Promise<SinkMetadataResponse>|void {
     const self = this;
     callback = callback || common.util.noop;
-    this.getMetadata((err, currentMetadata, apiResponse) => {
+    this.getMetadata((err, currentMetadata) => {
       if (err) {
-        callback(err, apiResponse);
+        callback!(err);
         return;
       }
       const reqOpts = {
@@ -337,7 +363,7 @@ class Sink {
             if (args[1]) {
               self.metadata = args[1];
             }
-            callback.apply(null, args);
+            callback!.apply(null, args);
           });
     });
   }
