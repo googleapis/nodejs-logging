@@ -1263,11 +1263,10 @@ describe('Logging', () => {
     describe('get policy', () => {
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = {};
 
         beforeEach(() => {
           topic.iam.getPolicy = callback => {
-            callback(error, null, apiResponse);
+            callback(error, null);
           };
         });
 
@@ -1275,7 +1274,7 @@ describe('Logging', () => {
           logging.setAclForTopic_(SINK_NAME, CONFIG, (err, _, resp) => {
             assert.strictEqual(err, error);
             assert.strictEqual(_, null);
-            assert.strictEqual(resp, apiResponse);
+            assert.strictEqual(resp, undefined);
             done();
           });
         });
@@ -1315,11 +1314,10 @@ describe('Logging', () => {
 
         describe('updating policy error', () => {
           const error = new Error('Error.');
-          const apiResponse = {};
 
           beforeEach(() => {
             topic.iam.setPolicy = (policy, callback) => {
-              callback(error, null, apiResponse);
+              callback(error, null);
             };
           });
 
@@ -1327,7 +1325,7 @@ describe('Logging', () => {
             logging.setAclForTopic_(SINK_NAME, CONFIG, (err, _, res) => {
               assert.strictEqual(err, error);
               assert.strictEqual(_, null);
-              assert.strictEqual(res, apiResponse);
+              assert.strictEqual(res, undefined);
               done();
             });
           });

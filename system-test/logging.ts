@@ -322,7 +322,7 @@ describe('Logging', () => {
                 },
                 (err, entries) => {
                   assert.ifError(err);
-                  assert.deepStrictEqual(entries.map(x => x.data), [
+                  assert.deepStrictEqual(entries!.map(x => x.data), [
                     '3',
                     '2',
                     '1',
@@ -350,7 +350,7 @@ describe('Logging', () => {
             (err, entries) => {
               assert.ifError(err);
               assert.deepStrictEqual(
-                  entries.reverse().map(x => x.data), messages);
+                  entries!.reverse().map(x => x.data), messages);
               done();
             });
       }, WRITE_CONSISTENCY_DELAY_MS * 4);
@@ -376,7 +376,7 @@ describe('Logging', () => {
               (err, entries) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry = entries![0];
 
                 assert.deepStrictEqual(entry.data, {
                   when: logEntry.data.when.toString(),
@@ -413,7 +413,7 @@ describe('Logging', () => {
               (err, entries) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry = entries![0];
 
                 assert.strictEqual(entry.metadata.severity, metadata.severity);
                 assert.deepStrictEqual(entry.data, data);
@@ -440,7 +440,7 @@ describe('Logging', () => {
               (err, entries) => {
                 assert.ifError(err);
 
-                const entry = entries[0];
+                const entry = entries![0];
 
                 assert.strictEqual(entry.data, text);
                 assert.deepStrictEqual(entry.metadata.resource, {
