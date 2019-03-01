@@ -22,7 +22,9 @@ import * as arrify from 'arrify';
 import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
+import {ClientReadableStream} from 'grpc';
 import * as is from 'is';
+import * as request from 'request';
 
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
@@ -38,17 +40,90 @@ export {detectServiceContext};
 const PKG = require('../../package.json');
 const v2 = require('./v2');
 
-import {Entry} from './entry';
-import {Log, GetEntriesRequest, MonitoredResource, Severity, SeverityNames} from './log';
+import {Entry, LogEntry} from './entry';
+import {Log, GetEntriesRequest, LogOptions, MonitoredResource, Severity, SeverityNames} from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
-import {AbortableDuplex} from '@google-cloud/common';
+import {AbortableDuplex, ApiError} from '@google-cloud/common';
+import {google} from '../proto/logging';
+import {google as google_config} from '../proto/logging_config';
+
+import {Bucket} from '@google-cloud/storage';              // types only
+import {Dataset, BigQuery} from '@google-cloud/bigquery';  // types only
+import {Topic} from '@google-cloud/pubsub';                // types only
 
 export interface LoggingOptions extends gax.GoogleAuthOptions {
   autoRetry?: boolean;
   maxRetries?: number;
 }
 
+export interface DeleteCallback {
+  (error?: (Error|null), response?: google.protobuf.Empty): void;
+}
+
+export type DeleteResponse = google.protobuf.Empty;
+
+export type LogSink = google_config.logging.v2.ILogSink;
+
+export interface CreateSinkRequest {
+  destination: Bucket|Dataset|Topic|string;
+  filter?: string;
+  includeChildren?: boolean;
+  name?: string;
+  outputVersionFormat?: google_config.logging.v2.LogSink.VersionFormat;
+  gaxOptions?: gax.CallOptions;
+}
+
+export interface CreateSinkCallback {
+  (err: Error|null, sink?: Sink|null, resp?: LogSink|request.Response): void;
+}
+
+export type GetEntriesResponse = [
+  Entry[], google.logging.v2.IListLogEntriesRequest,
+  google.logging.v2.IListLogEntriesResponse
+];
+
+export interface GetEntriesCallback {
+  (err: Error|null, entries?: Entry[],
+   request?: google.logging.v2.IListLogEntriesRequest,
+   apiResponse?: google.logging.v2.IListLogEntriesResponse): void;
+}
+
+export interface GetSinksRequest {
+  autoPaginate?: boolean;
+  gaxOptions?: gax.CallOptions;
+  maxApiCalls?: number;
+  maxResults?: number;
+  pageSize?: number;
+  pageToken?: string;
+}
+
+export type GetSinksResponse = [
+  Sink[], google_config.logging.v2.IListSinksRequest,
+  google_config.logging.v2.IListSinksResponse
+];
+
+export interface GetSinksCallback {
+  (err: Error|null, entries?: Sink[],
+   request?: google_config.logging.v2.IListSinksRequest,
+   apiResponse?: google_config.logging.v2.IListSinksResponse): void;
+}
+export type Client = string;
+
+export interface RequestConfig {
+  client: Client;
+  method: string;
+  reqOpts?: object;
+  gaxOpts?: gax.CallOptions;
+}
+
+export interface RequestCallback<TResponse> {
+  (err: Error|null, res?: TResponse): void;
+}
+
+interface GaxRequestCallback {
+  (err: Error|null, requestFn?: Function): void;
+}
 /**
  * For logged errors, one can provide a the service context. For more
  * information see [this guide]{@link
@@ -144,7 +219,7 @@ export interface ServiceContext {
  * Full quickstart example:
  */
 class Logging {
-  api: {};
+  api: {[key: string]: gax.ClientStub};
   auth: GoogleAuth;
   options: LoggingOptions;
   projectId: string;
@@ -257,8 +332,13 @@ class Logging {
    * region_tag:logging_create_sink
    * Another example:
    */
-  createSink(name: string, config, callback) {
-    // jscs:enable maximumLineLength
+  createSink(name: string, config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  createSink(
+      name: string, config: CreateSinkRequest,
+      callback: CreateSinkCallback): void;
+  createSink(
+      name: string, config: CreateSinkRequest,
+      callback?: CreateSinkCallback): Promise<[Sink, LogSink]>|void {
     const self = this;
     if (!is.string(name)) {
       throw new Error('A sink name must be provided.');
@@ -267,15 +347,15 @@ class Logging {
       throw new Error('A sink configuration object must be provided.');
     }
     if (common.util.isCustomType(config.destination, 'bigquery/dataset')) {
-      this.setAclForDataset_(name, config, callback);
+      this.setAclForDataset_(name, config, callback!);
       return;
     }
     if (common.util.isCustomType(config.destination, 'pubsub/topic')) {
-      this.setAclForTopic_(name, config, callback);
+      this.setAclForTopic_(name, config, callback!);
       return;
     }
     if (common.util.isCustomType(config.destination, 'storage/bucket')) {
-      this.setAclForBucket_(name, config, callback);
+      this.setAclForBucket_(name, config, callback!);
       return;
     }
     const reqOpts = {
@@ -292,12 +372,12 @@ class Logging {
         },
         (err, resp) => {
           if (err) {
-            callback(err, null, resp);
+            callback!(err, null, resp);
             return;
           }
           const sink = self.sink(resp.name);
           sink.metadata = resp;
-          callback(null, sink, resp);
+          callback!(null, sink, resp);
         });
   }
 
@@ -347,7 +427,7 @@ class Logging {
    * //   }
    * // }
    */
-  entry(resource, data) {
+  entry(resource?: LogEntry, data?: {}|string) {
     return new Entry(resource, data);
   }
 
@@ -432,10 +512,14 @@ class Logging {
    * region_tag:logging_list_log_entries_advanced
    * Another example:
    */
-  // tslint:disable-next-line no-any
-  getEntries(options, callback?): void|Promise<any> {
-    if (is.fn(options)) {
-      callback = options;
+  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
+  getEntries(callback: GetEntriesCallback): void;
+  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
+  getEntries(
+      options?: GetEntriesRequest|GetEntriesCallback,
+      callback?: GetEntriesCallback): void|Promise<GetEntriesResponse> {
+    if (typeof options === 'function') {
+      callback = options as GetEntriesCallback;
       options = {};
     }
     const reqOpts = extend(
@@ -452,9 +536,9 @@ class Logging {
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
         {
-          autoPaginate: options.autoPaginate,
+          autoPaginate: options!.autoPaginate,
         },
-        options.gaxOptions);
+        options!.gaxOptions);
     this.request(
         {
           client: 'LoggingServiceV2Client',
@@ -467,7 +551,7 @@ class Logging {
           if (entries) {
             args[1] = entries.map(Entry.fromApiResponse_);
           }
-          callback.apply(null, args);
+          callback!.apply(null, args);
         });
   }
 
@@ -517,8 +601,7 @@ class Logging {
       next(null, Entry.fromApiResponse_(entry));
     });
     userStream.once('reading', () => {
-      // tslint:disable-next-line no-any
-      const reqOpts: any = extend(
+      const reqOpts = extend(
           {
             orderBy: 'timestamp desc',
           },
@@ -597,11 +680,15 @@ class Logging {
    * region_tag:logging_list_sinks
    * Another example:
    */
-  // tslint:disable-next-line no-any
-  getSinks(options?, callback?): void|Promise<any> {
+  getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
+  getSinks(callback: GetSinksCallback): void;
+  getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
+  getSinks(
+      options?: GetSinksRequest|GetSinksCallback,
+      callback?: GetSinksCallback): void|Promise<GetSinksResponse> {
     const self = this;
-    if (is.fn(options)) {
-      callback = options;
+    if (typeof options === 'function') {
+      callback = options as GetSinksCallback;
       options = {};
     }
     const reqOpts = extend({}, options, {
@@ -611,9 +698,9 @@ class Logging {
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
         {
-          autoPaginate: options.autoPaginate,
+          autoPaginate: (options as GetSinksRequest).autoPaginate,
         },
-        options.gaxOptions);
+        (options as GetSinksRequest).gaxOptions);
     this.request(
         {
           client: 'ConfigServiceV2Client',
@@ -624,13 +711,13 @@ class Logging {
         (...args) => {
           const sinks = args[1];
           if (sinks) {
-            args[1] = sinks.map(sink => {
-              const sinkInstance = self.sink(sink.name);
+            args[1] = sinks.map((sink: LogSink) => {
+              const sinkInstance = self.sink(sink.name!);
               sinkInstance.metadata = sink;
               return sinkInstance;
             });
           }
-          callback.apply(null, args);
+          callback!.apply(null, args);
         });
   }
 
@@ -665,15 +752,14 @@ class Logging {
    *     this.end();
    *   });
    */
-  getSinksStream(options) {
+  getSinksStream(options: GetSinksRequest) {
     const self = this;
     options = options || {};
-    let requestStream;
+    let requestStream: Duplex;
     const userStream = streamEvents(pumpify.obj());
-    // tslint:disable-next-line no-any
-    (userStream as any).abort = () => {
+    (userStream as AbortableDuplex).abort = () => {
       if (requestStream) {
-        requestStream.abort();
+        (requestStream as AbortableDuplex).abort();
       }
     };
     const toSinkStream = through.obj((sink, _, next) => {
@@ -719,7 +805,7 @@ class Logging {
    * const logging = new Logging();
    * const log = logging.log('my-log');
    */
-  log(name, options?) {
+  log(name: string, options?: LogOptions) {
     return new Log(this, name, options);
   }
 
@@ -750,10 +836,12 @@ class Logging {
    * @param {object} config.reqOpts Request options.
    * @param {function} [callback] Callback function.
    */
-  request(config, callback?) {
+  // tslint:disable-next-line no-any
+  request<TResponse = any>(
+      config: RequestConfig, callback?: RequestCallback<TResponse>) {
     const self = this;
     const isStreamMode = !callback;
-    let gaxStream;
+    let gaxStream: ClientReadableStream<LogSink|LogEntry>;
     let stream: Duplex;
     if (isStreamMode) {
       stream = streamEvents<Duplex>(through.obj());
@@ -766,7 +854,7 @@ class Logging {
     } else {
       makeRequestCallback();
     }
-    function prepareGaxRequest(callback) {
+    function prepareGaxRequest(callback: GaxRequestCallback): void {
       self.auth.getProjectId((err, projectId) => {
         if (err) {
           callback(err);
@@ -793,10 +881,10 @@ class Logging {
       }
       prepareGaxRequest((err, requestFn) => {
         if (err) {
-          callback(err);
+          callback!(err);
           return;
         }
-        requestFn(callback);
+        requestFn!(callback);
       });
     }
     function makeRequestStream() {
@@ -809,7 +897,7 @@ class Logging {
           stream.destroy(err);
           return;
         }
-        gaxStream = requestFn();
+        gaxStream = requestFn!();
         gaxStream
             .on('error',
                 err => {
@@ -831,17 +919,22 @@ class Logging {
    *
    * @private
    */
-  setAclForBucket_(name: string, config, callback) {
+  setAclForBucket_(
+      name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
     const self = this;
-    const bucket = config.destination;
-    bucket.acl.owners.addGroup('cloud-logs@google.com', (err, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      config.destination = 'storage.googleapis.com/' + bucket.name;
-      self.createSink(name, config, callback);
-    });
+    const bucket = config.destination as Bucket;
+    // tslint:disable-next-line no-any
+    (bucket.acl.owners as any)
+        .addGroup(
+            'cloud-logs@google.com',
+            (err: Error, apiResp: request.Response) => {
+              if (err) {
+                callback(err, null, apiResp);
+                return;
+              }
+              config.destination = 'storage.googleapis.com/' + bucket.name;
+              self.createSink(name, config, callback);
+            });
   }
 
   /**
@@ -853,9 +946,10 @@ class Logging {
    *
    * @private
    */
-  setAclForDataset_(name: string, config, callback) {
+  setAclForDataset_(
+      name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
     const self = this;
-    const dataset = config.destination;
+    const dataset = config.destination as Dataset;
     dataset.getMetadata((err, metadata, apiResp) => {
       if (err) {
         callback(err, null, apiResp);
@@ -877,7 +971,7 @@ class Logging {
               return;
             }
             const baseUrl = 'bigquery.googleapis.com';
-            const pId = dataset.parent.projectId;
+            const pId = (dataset.parent as BigQuery).projectId;
             const dId = dataset.id;
             config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
             self.createSink(name, config, callback);
@@ -894,22 +988,23 @@ class Logging {
    *
    * @private
    */
-  setAclForTopic_(name: string, config, callback) {
+  setAclForTopic_(
+      name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
     const self = this;
-    const topic = config.destination;
-    topic.iam.getPolicy((err, policy, apiResp) => {
+    const topic = config.destination as Topic;
+    topic.iam.getPolicy((err, policy) => {
       if (err) {
-        callback(err, null, apiResp);
+        callback(err, null);
         return;
       }
-      policy.bindings = arrify(policy.bindings);
-      policy.bindings.push({
+      policy!.bindings = arrify(policy!.bindings);
+      policy!.bindings.push({
         role: 'roles/pubsub.publisher',
         members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
       });
-      topic.iam.setPolicy(policy, (err, policy, apiResp) => {
+      topic.iam.setPolicy(policy!, (err, policy) => {
         if (err) {
-          callback(err, null, apiResp);
+          callback(err, null);
           return;
         }
         const baseUrl = 'pubsub.googleapis.com';
