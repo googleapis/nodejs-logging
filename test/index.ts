@@ -572,6 +572,15 @@ describe('Logging', () => {
       stream.emit('reading');
     });
 
+    it.only('should destroy request stream if gax fails', done => {
+      logging.loggingService.listLogEntriesStream = () => {
+        throw new Error();
+      };
+      const stream = logging.getEntriesStream(OPTIONS);
+      stream.emit('reading');
+      stream.once('error', () => done());
+    });
+
     it('should convert results from request to Entry', done => {
       const stream = logging.getEntriesStream(OPTIONS);
       stream.on('data', entry => {

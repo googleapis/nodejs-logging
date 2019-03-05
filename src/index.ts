@@ -623,6 +623,7 @@ class Logging {
                 this.loggingService.listLogEntriesStream(reqOpts, gaxOptions);
           } catch (error) {
             requestStream.destroy(error);
+            return;
           }
           gaxStream
               .on('error',
