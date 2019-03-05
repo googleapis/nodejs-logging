@@ -23,7 +23,6 @@ import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
 import {ClientReadableStream} from 'grpc';
-import * as is from 'is';
 import * as request from 'request';
 
 const pumpify = require('pumpify');
@@ -44,7 +43,7 @@ import {Entry, LogEntry} from './entry';
 import {Log, GetEntriesRequest, LogOptions, MonitoredResource, Severity, SeverityNames} from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
-import {AbortableDuplex, ApiError} from '@google-cloud/common';
+import {AbortableDuplex} from '@google-cloud/common';
 import {google} from '../proto/logging';
 import {google as google_config} from '../proto/logging_config';
 
