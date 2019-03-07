@@ -149,7 +149,7 @@ describe('Logging', () => {
 
     for (const clientClass of clientClasses) {
       for (const scope of clientClass.scopes) {
-        if (clientClasses.indexOf(scope) === -1) {
+        if (EXPECTED_SCOPES.indexOf(scope) === -1) {
           EXPECTED_SCOPES.push(scope);
         }
       }
