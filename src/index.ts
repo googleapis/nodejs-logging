@@ -236,7 +236,7 @@ class Logging {
     ];
     for (const clientClass of clientClasses) {
       for (const scope of clientClass.scopes) {
-        if (clientClasses.indexOf(scope) === -1) {
+        if (scopes.indexOf(scope) === -1) {
           scopes.push(scope);
         }
       }
