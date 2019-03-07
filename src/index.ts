@@ -611,29 +611,27 @@ class Logging {
           gaxStream.cancel();
         }
       };
-
-      requestStream.once('reading', () => {
-        // tslint:disable-next-line no-any
-        if ((global as any).GCLOUD_SANDBOX_ENV) {
-          return through.obj();
-        }
-        self.setProjectId(reqOpts).then(() => {
-          try {
-            gaxStream =
-                this.loggingService.listLogEntriesStream(reqOpts, gaxOptions);
-          } catch (error) {
-            requestStream.destroy(error);
-            return;
-          }
-          gaxStream
-              .on('error',
-                  err => {
-                    requestStream.destroy(err);
-                  })
-              .pipe(requestStream);
+      // tslint:disable-next-line no-any
+      if (!(global as any).GCLOUD_SANDBOX_ENV) {
+        requestStream.once('reading', () => {
+          self.setProjectId(reqOpts).then(() => {
+            try {
+              gaxStream =
+                  this.loggingService.listLogEntriesStream(reqOpts, gaxOptions);
+            } catch (error) {
+              requestStream.destroy(error);
+              return;
+            }
+            gaxStream
+                .on('error',
+                    err => {
+                      requestStream.destroy(err);
+                    })
+                .pipe(requestStream);
+          });
+          return;
         });
-        return;
-      });
+      }
       // tslint:disable-next-line no-any
       (userStream as any).setPipeline(requestStream, toEntryStream);
     });
@@ -799,26 +797,27 @@ class Logging {
           gaxStream.cancel();
         }
       };
-      requestStream.once('reading', () => {
-        // tslint:disable-next-line no-any
-        if ((global as any).GCLOUD_SANDBOX_ENV) {
-          return through.obj();
-        }
-        self.setProjectId(reqOpts).then(() => {
-          try {
-            gaxStream = this.configService.listSinksStream(reqOpts, gaxOptions);
-          } catch (error) {
-            requestStream.destroy(error);
-          }
-          gaxStream
-              .on('error',
-                  err => {
-                    requestStream.destroy(err);
-                  })
-              .pipe(requestStream);
+      // tslint:disable-next-line no-any
+      if (!(global as any).GCLOUD_SANDBOX_ENV) {
+        requestStream.once('reading', () => {
+          self.setProjectId(reqOpts).then(() => {
+            try {
+              gaxStream =
+                  this.configService.listSinksStream(reqOpts, gaxOptions);
+            } catch (error) {
+              requestStream.destroy(error);
+              return;
+            }
+            gaxStream
+                .on('error',
+                    err => {
+                      requestStream.destroy(err);
+                    })
+                .pipe(requestStream);
+          });
+          return;
         });
-        return;
-      });
+      }
       // tslint:disable-next-line no-any
       (userStream as any).setPipeline(requestStream, toSinkStream);
     });

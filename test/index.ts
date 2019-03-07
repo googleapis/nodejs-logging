@@ -585,6 +585,33 @@ describe('Logging', () => {
       });
     });
 
+    it('should destroy request stream if gaxStream catches error', done => {
+      const error = new Error('Error.');
+      const stream = logging.getEntriesStream(OPTIONS);
+      stream.emit('reading');
+      stream.on('error', (err) => {
+        assert.strictEqual(err, error);
+        done();
+      });
+      setImmediate(() => {
+        GAX_STREAM.emit('error', error);
+      });
+    });
+
+    it('should return if in snippet sandbox', done => {
+      logging.setProjectId = async () => {
+        return done(new Error('Should not have gotten project ID'));
+      };
+      // tslint:disable-next-line no-any
+      (global as any).GCLOUD_SANDBOX_ENV = true;
+      const stream = logging.getEntriesStream(OPTIONS);
+      stream.emit('reading');
+      // tslint:disable-next-line no-any
+      delete (global as any).GCLOUD_SANDBOX_ENV;
+      assert(stream instanceof require('stream'));
+      done();
+    });
+
     it('should convert results from request to Entry', done => {
       const stream = logging.getEntriesStream(OPTIONS);
       stream.on('data', entry => {
@@ -743,6 +770,46 @@ describe('Logging', () => {
 
       const stream = logging.getSinksStream(OPTIONS);
       stream.emit('reading');
+    });
+
+    it('should destroy request stream if gax fails', done => {
+      const error = new Error('Error.');
+      logging.configService.listSinksStream = () => {
+        throw error;
+      };
+      const stream = logging.getSinksStream(OPTIONS);
+      stream.emit('reading');
+      stream.once('error', (err) => {
+        assert.strictEqual(err, error);
+        done();
+      });
+    });
+
+    it('should destroy request stream if gaxStream catches error', done => {
+      const error = new Error('Error.');
+      const stream = logging.getSinksStream(OPTIONS);
+      stream.emit('reading');
+      stream.on('error', (err) => {
+        assert.strictEqual(err, error);
+        done();
+      });
+      setImmediate(() => {
+        GAX_STREAM.emit('error', error);
+      });
+    });
+
+    it('should return if in snippet sandbox', done => {
+      logging.setProjectId = async () => {
+        return done(new Error('Should not have gotten project ID'));
+      };
+      // tslint:disable-next-line no-any
+      (global as any).GCLOUD_SANDBOX_ENV = true;
+      const stream = logging.getSinksStream(OPTIONS);
+      stream.emit('reading');
+      // tslint:disable-next-line no-any
+      delete (global as any).GCLOUD_SANDBOX_ENV;
+      assert(stream instanceof require('stream'));
+      done();
     });
 
     it('should convert results from request to Sink', done => {
