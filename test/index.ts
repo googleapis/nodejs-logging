@@ -1370,4 +1370,15 @@ describe('Logging', () => {
       });
     });
   });
+
+  describe('updating project ID', () => {
+    it('should update project id in case of default placeholder', async () => {
+      logging = new Logging({projectId: '{{projectId}}'});
+      logging.auth.getProjectId = async () => {
+        return PROJECT_ID;
+      };
+      await logging.setProjectId({});
+      assert.strictEqual(logging.projectId, PROJECT_ID);
+    });
+  });
 });
