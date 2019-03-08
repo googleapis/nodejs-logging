@@ -587,9 +587,7 @@ class Logging {
    *     this.end();
    *   });
    */
-  getEntriesStream(options: GetEntriesRequest) {
-    const self = this;
-    options = options || {};
+  getEntriesStream(options: GetEntriesRequest = {}) {
     let requestStream: Duplex;
     const userStream = streamEvents<Duplex>(pumpify.obj());
     (userStream as AbortableDuplex).abort = () => {
@@ -607,7 +605,7 @@ class Logging {
           },
           options);
       reqOpts.resourceNames = arrify(reqOpts.resourceNames);
-      reqOpts.resourceNames.push('projects/' + self.projectId);
+      reqOpts.resourceNames.push(`projects/${this.projectId}`);
       delete reqOpts.autoPaginate;
       delete reqOpts.gaxOptions;
       const gaxOptions = extend(
@@ -615,7 +613,7 @@ class Logging {
             autoPaginate: options.autoPaginate,
           },
           options.gaxOptions);
-      requestStream = self.request({
+      requestStream = this.request({
         client: 'LoggingServiceV2Client',
         method: 'listLogEntriesStream',
         reqOpts,
@@ -921,7 +919,6 @@ class Logging {
    */
   setAclForBucket_(
       name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
-    const self = this;
     const bucket = config.destination as Bucket;
     // tslint:disable-next-line no-any
     (bucket.acl.owners as any)
@@ -933,7 +930,7 @@ class Logging {
                 return;
               }
               config.destination = 'storage.googleapis.com/' + bucket.name;
-              self.createSink(name, config, callback);
+              this.createSink(name, config, callback);
             });
   }
 
