@@ -18,13 +18,15 @@ import {Service, util} from '@google-cloud/common-grpc';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+import * as sinon from 'sinon';
+import * as entryTypes from '../src/entry';
 
 class FakeGrpcService {
   static structToObj_?: Function;
   static objToStruct_?: Function;
 }
 
-let fakeEventIdNewOverride;
+let fakeEventIdNewOverride: Function|null;
 
 class FakeEventId {
   new() {
@@ -34,11 +36,12 @@ class FakeEventId {
 
 describe('Entry', () => {
   // tslint:disable-next-line no-any variable-name
-  let Entry: any;
-  let entry;
+  let Entry: typeof entryTypes.Entry;
+  let entry: entryTypes.Entry;
 
   const METADATA = {};
   const DATA = {};
+  const sandbox = sinon.createSandbox();
 
   before(() => {
     Entry = proxyquire('../src/entry.js', {
@@ -55,54 +58,39 @@ describe('Entry', () => {
     entry = new Entry(METADATA, DATA);
   });
 
+  afterEach(() => sandbox.restore());
+
   describe('instantiation', () => {
     it('should assign timestamp to metadata', () => {
-      const now = new Date();
-
+      const now = Date.now();
       const expectedTimestampBoundaries = {
-        start: new Date(now.getTime() - 1000),
-        end: new Date(now.getTime() + 1000),
+        start: new Date(now - 1000),
+        end: new Date(now + 1000),
       };
-
-      assert(entry.metadata.timestamp >= expectedTimestampBoundaries.start);
-      assert(entry.metadata.timestamp <= expectedTimestampBoundaries.end);
+      assert(entry.metadata.timestamp! >= expectedTimestampBoundaries.start);
+      assert(entry.metadata.timestamp! <= expectedTimestampBoundaries.end);
     });
 
     it('should not assign timestamp if one is already set', () => {
-      const timestamp = new Date('2012');
-
-      const entry = new Entry({
-        timestamp,
-      });
-
+      const timestamp = new Date('2012') as entryTypes.Timestamp;
+      const entry = new Entry({timestamp});
       assert.strictEqual(entry.metadata.timestamp, timestamp);
     });
 
     it('should assign insertId to metadata', () => {
       const eventId = 'event-id';
-
-      fakeEventIdNewOverride = () => {
-        return eventId;
-      };
-
+      fakeEventIdNewOverride = () => eventId;
       const entry = new Entry();
-
       assert.strictEqual(entry.metadata.insertId, eventId);
     });
 
     it('should not assign insertId if one is already set', () => {
       const eventId = 'event-id';
-
-      fakeEventIdNewOverride = () => {
-        return eventId;
-      };
-
+      fakeEventIdNewOverride = () => eventId;
       const userDefinedInsertId = 'user-defined-insert-id';
-
       const entry = new Entry({
         insertId: userDefinedInsertId,
       });
-
       assert.strictEqual(entry.metadata.insertId, userDefinedInsertId);
     });
 
@@ -113,17 +101,13 @@ describe('Entry', () => {
 
   describe('fromApiResponse_', () => {
     const RESOURCE = {};
-    let entry;
+    let entry: entryTypes.Entry;
     const date = new Date();
 
     beforeEach(() => {
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
-
-      FakeGrpcService.structToObj_ = data => {
-        return data;
-      };
-
+      FakeGrpcService.structToObj_ = data => data;
       entry = Entry.fromApiResponse_({
         resource: RESOURCE,
         payload: 'jsonPayload',
@@ -133,14 +117,16 @@ describe('Entry', () => {
           seconds: secondsRounded,
           nanos: Math.floor((seconds - secondsRounded) * 1e9),
         },
-      });
+        // tslint:disable-next-line: no-any
+      } as any);
     });
 
     it('should create an Entry', () => {
       assert(entry instanceof Entry);
       assert.strictEqual(entry.metadata.resource, RESOURCE);
       assert.strictEqual(entry.data, DATA);
-      assert.strictEqual(entry.metadata.extraProperty, true);
+      // tslint:disable-next-line: no-any
+      assert.strictEqual((entry.metadata as any).extraProperty, true);
       assert.deepStrictEqual(entry.metadata.timestamp, date);
     });
 
@@ -150,8 +136,8 @@ describe('Entry', () => {
         payload: 'protoPayload',
         protoPayload: DATA,
         extraProperty: true,
-      });
-
+        // tslint:disable-next-line: no-any
+      } as any);
       assert.strictEqual(entry.data, DATA);
     });
 
@@ -163,9 +149,10 @@ describe('Entry', () => {
       const entry = Entry.fromApiResponse_({
         resource: RESOURCE,
         payload: 'textPayload',
-        textPayload: DATA,
+        textPayload: DATA as string,
         extraProperty: true,
-      });
+        // tslint:disable-next-line: no-any
+      } as any);
 
       assert.strictEqual(entry.data, DATA);
     });
@@ -187,14 +174,15 @@ describe('Entry', () => {
       const input = {};
       const converted = {};
 
-      FakeGrpcService.objToStruct_ = (obj, options) => {
-        assert.strictEqual(obj, input);
-        assert.deepStrictEqual(options, {
-          removeCircular: false,
-          stringify: true,
-        });
-        return converted;
-      };
+      sandbox.stub(FakeGrpcService, 'objToStruct_')
+          .callsFake((obj, options) => {
+            assert.strictEqual(obj, input);
+            assert.deepStrictEqual(options, {
+              removeCircular: false,
+              stringify: true,
+            });
+            return converted;
+          });
 
       entry.data = input;
       const json = entry.toJSON();
@@ -202,11 +190,11 @@ describe('Entry', () => {
     });
 
     it('should pass removeCircular to objToStruct_', done => {
-      FakeGrpcService.objToStruct_ = (obj, options) => {
-        assert.strictEqual(options.removeCircular, true);
-        done();
-      };
-
+      sandbox.stub(FakeGrpcService, 'objToStruct_')
+          .callsFake((obj, options) => {
+            assert.strictEqual(options.removeCircular, true);
+            done();
+          });
       entry.data = {};
       entry.toJSON({removeCircular: true});
     });
@@ -219,13 +207,10 @@ describe('Entry', () => {
 
     it('should convert a date', () => {
       const date = new Date();
-      entry.metadata.timestamp = date;
-
+      entry.metadata.timestamp = date as entryTypes.Timestamp;
       const json = entry.toJSON();
-
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
-
       assert.deepStrictEqual(json.timestamp, {
         seconds: secondsRounded,
         nanos: Math.floor((seconds - secondsRounded) * 1e9),

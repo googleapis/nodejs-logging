@@ -20,9 +20,9 @@ import * as proxyquire from 'proxyquire';
 import {makeHeaderWrapper} from '../../src/middleware/context';
 
 const FAKE_CONTEXT = {
-  extract: (headerWrapper) => {},
+  extract: (headerWrapper: {}) => {},
   generate: () => {},
-  inject: (headerWrapper, spanContext) => {}
+  inject: (headerWrapper: {}, spanContext: {}) => {}
 };
 
 const fakeContext = Object.assign({}, FAKE_CONTEXT);
@@ -43,7 +43,7 @@ describe('middleware/context', () => {
     });
 
     it('should correctly set request headers', () => {
-      const req = {headers: {}};
+      const req = {headers: {} as http.IncomingHttpHeaders};
       const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       wrapper.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);

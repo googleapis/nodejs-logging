@@ -31,7 +31,7 @@ function makeFakeResponse() {
   return ee;
 }
 
-let getOrInjectContextValue;
+let getOrInjectContextValue: {}|undefined;
 const FAKE_CONTEXT = {
   getOrInjectContext: () => {
     return getOrInjectContextValue;
@@ -78,7 +78,7 @@ describe('middleware/express/make-middleware', () => {
         const fakeRequest = makeFakeRequest();
         const fakeResponse = makeFakeResponse();
 
-        function makeChild(trace) {
+        function makeChild(trace: {}) {
           assert.strictEqual(
               trace,
               `projects/${FAKE_PROJECT_ID}/traces/${
@@ -100,7 +100,7 @@ describe('middleware/express/make-middleware', () => {
         const fakeResponse = makeFakeResponse();
         let emitRequestLogCalled = false;
 
-        function emitRequestLog(httpRequest, trace) {
+        function emitRequestLog(httpRequest: {}, trace: {}) {
           assert.strictEqual(
               trace,
               `projects/${FAKE_PROJECT_ID}/traces/${

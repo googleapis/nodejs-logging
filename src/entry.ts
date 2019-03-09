@@ -25,6 +25,8 @@ const eventId = new EventId();
 
 export type LogEntry = google.logging.v2.ILogEntry;
 export type Timestamp = google.protobuf.IDuration;
+// tslint:disable-next-line no-any
+export type Data = any;
 
 export interface EntryJson {
   timestamp: Timestamp|Date;
@@ -97,10 +99,8 @@ export interface ToJsonOptions {
  */
 class Entry {
   metadata: LogEntry;
-  // tslint:disable-next-line no-any
-  data: any;
-  // tslint:disable-next-line no-any
-  constructor(metadata?: LogEntry, data?: any) {
+  data: Data;
+  constructor(metadata?: LogEntry, data?: Data) {
     /**
      * @name Entry#metadata
      * @type {object}
@@ -136,8 +136,7 @@ class Entry {
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
-  toJSON(options: ToJsonOptions) {
-    options = options || {};
+  toJSON(options: ToJsonOptions = {}) {
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     if (is.object(this.data)) {
       // tslint:disable-next-line no-any
@@ -178,8 +177,7 @@ class Entry {
     if (serializedEntry.metadata.timestamp) {
       let ms = Number(serializedEntry.metadata.timestamp.seconds) * 1000;
       ms += Number(serializedEntry.metadata.timestamp.nanos) / 1e6;
-      // tslint:disable-next-line no-any
-      (serializedEntry as any).metadata.timestamp = new Date(ms);
+      serializedEntry.metadata.timestamp = new Date(ms) as Timestamp;
     }
     return serializedEntry;
   }
