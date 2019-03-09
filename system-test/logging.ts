@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-if (process.env.GOOGLE_CLOUD_USE_GRPC_JS) {
-  process.exit(0);
-}
-
 import {BigQuery} from '@google-cloud/bigquery';
-import {ServiceObject} from '@google-cloud/common';
 import {PubSub} from '@google-cloud/pubsub';
 import {Storage} from '@google-cloud/storage';
 import * as assert from 'assert';
@@ -62,39 +57,6 @@ describe('Logging', () => {
   after(async () => {
     await Promise.all(
         [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
-
-    async function deleteBuckets() {
-      const [buckets] = await storage.getBuckets({
-        prefix: TESTS_PREFIX,
-      });
-      return Promise.all(buckets.map(async bucket => {
-        await bucket.deleteFiles();
-        await bucket.delete();
-      }));
-    }
-
-    async function deleteDatasets() {
-      await getAndDelete(bigQuery.getDatasets.bind(bigQuery));
-    }
-
-    async function deleteTopics() {
-      await getAndDelete(pubsub.getTopics.bind(pubsub));
-    }
-
-    async function deleteSinks() {
-      await getAndDelete(logging.getSinks.bind(logging));
-    }
-
-    async function getAndDelete(method: Function) {
-      const [objects] = await method();
-      return Promise.all(
-          objects
-              .filter(
-                  (o: ServiceObject) =>
-                      // tslint:disable-next-line no-any
-                  ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
-              .map((o: ServiceObject) => o.delete()));
-    }
   });
 
   describe('sinks', () => {
@@ -498,5 +460,66 @@ describe('Logging', () => {
 
   function generateName() {
     return TESTS_PREFIX + uuid.v1();
+  }
+
+  async function deleteBuckets() {
+    const [buckets] = await storage.getBuckets({
+      prefix: TESTS_PREFIX,
+    });
+    const bucketsToDelete = buckets.filter(b => {
+      const expiration = Date.now() - 60 * 60 * 1000;
+      const timeCreated = Date.parse(b.metadata.timeCreated);
+      return timeCreated < expiration;
+    });
+    console.log(`Cleaning up ${bucketsToDelete.length} buckets...`);
+    return Promise.all(bucketsToDelete.map(async bucket => {
+      await bucket.deleteFiles();
+      await bucket.delete();
+    }));
+  }
+
+  async function deleteDatasets() {
+    const [datasets] = await bigQuery.getDatasets();
+    let datasetsToDelete = datasets.filter(ds => {
+      return ds.id!.indexOf(TESTS_PREFIX) > -1;
+    });
+    datasetsToDelete = await Promise.all(datasetsToDelete.map(async ds => {
+      await ds.get();
+      return ds;
+    }));
+    datasetsToDelete = datasetsToDelete.filter(ds => {
+      const expiration = Date.now() - 60 * 60 * 1000;
+      const timeCreated = ds.metadata.creationTime;
+      return timeCreated < expiration;
+    });
+    console.log(`Deleting ${datasetsToDelete.length} datasets...`);
+    await Promise.all(datasetsToDelete.map(ds => ds.delete()));
+  }
+
+  async function deleteTopics() {
+    // TODO(beckwith): There is no readily available metadata for the creation
+    // time of a topic. Need to figure out how to protect these from early
+    // deleting to avoid race conditions.
+    const [topics] = await pubsub.getTopics();
+    const topicsToDelete = topics.filter(topic => {
+      return topic.name.indexOf(TESTS_PREFIX) > -1;
+    });
+    console.log(`Deleting ${topicsToDelete.length} topics...`);
+    await Promise.all(topicsToDelete.map(topic => topic.delete()));
+  }
+
+  async function deleteSinks() {
+    const [sinks] = await logging.getSinks();
+    let sinksToDelete = sinks.filter(sink => {
+      return sink.name.indexOf(TESTS_PREFIX) > -1;
+    });
+    sinksToDelete = sinks.filter(sink => {
+      const expiration = Date.now() - 60 * 60 * 1000;
+      // tslint:disable-next-line no-any
+      const timeCreated = Date.parse((sink!.metadata as any).createTime);
+      return timeCreated < expiration;
+    });
+    console.log(`Deleting ${sinksToDelete.length} sinks...`);
+    await Promise.all(sinksToDelete.map(sink => sink.delete()));
   }
 });
