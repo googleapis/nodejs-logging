@@ -17,7 +17,7 @@
 import * as common from '@google-cloud/common-grpc';
 import {paginator} from '@google-cloud/paginator';
 import {replaceProjectIdToken} from '@google-cloud/projectify';
-import {callbackifyAll, promisifyAll} from '@google-cloud/promisify';
+import {callbackifyAll} from '@google-cloud/promisify';
 import * as arrify from 'arrify';
 import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
@@ -503,13 +503,9 @@ class Logging {
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
-  getEntries(
-      options?: GetEntriesRequest|GetEntriesCallback,
-      callback?: GetEntriesCallback): void|Promise<GetEntriesResponse> {
-    if (typeof options === 'function') {
-      callback = options as GetEntriesCallback;
-      options = {};
-    }
+  async getEntries(opts?: GetEntriesRequest|
+                   GetEntriesCallback): Promise<GetEntriesResponse> {
+    const options = opts ? opts as GetEntriesRequest : {};
     const reqOpts = extend(
         {
           orderBy: 'timestamp desc',
@@ -522,25 +518,18 @@ class Logging {
     }
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
+    this.setProjectId(reqOpts);
     const gaxOptions = extend(
         {
           autoPaginate: options!.autoPaginate,
         },
         options!.gaxOptions);
-    this.request(
-        {
-          client: 'LoggingServiceV2Client',
-          method: 'listLogEntries',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        (...args) => {
-          const entries = args[1];
-          if (entries) {
-            args[1] = entries.map(Entry.fromApiResponse_);
-          }
-          callback!.apply(null, args);
-        });
+    const resp = await this.loggingService.listLogEntries(reqOpts, gaxOptions);
+    const [entries] = resp;
+    if (entries) {
+      resp[0] = entries.map(Entry.fromApiResponse_);
+    }
+    return resp;
   }
 
   /**
@@ -693,14 +682,9 @@ class Logging {
   getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
   getSinks(callback: GetSinksCallback): void;
   getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
-  getSinks(
-      options?: GetSinksRequest|GetSinksCallback,
-      callback?: GetSinksCallback): void|Promise<GetSinksResponse> {
-    const self = this;
-    if (typeof options === 'function') {
-      callback = options as GetSinksCallback;
-      options = {};
-    }
+  async getSinks(opts?: GetSinksRequest|
+                 GetSinksCallback): Promise<GetSinksResponse> {
+    const options = opts ? opts as GetSinksRequest : {};
     const reqOpts = extend({}, options, {
       parent: 'projects/' + this.projectId,
     });
@@ -708,27 +692,19 @@ class Logging {
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
         {
-          autoPaginate: (options as GetSinksRequest).autoPaginate,
+          autoPaginate: options.autoPaginate,
         },
-        (options as GetSinksRequest).gaxOptions);
-    this.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'listSinks',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        (...args) => {
-          const sinks = args[1];
-          if (sinks) {
-            args[1] = sinks.map((sink: LogSink) => {
-              const sinkInstance = self.sink(sink.name!);
-              sinkInstance.metadata = sink;
-              return sinkInstance;
-            });
-          }
-          callback!.apply(null, args);
-        });
+        options.gaxOptions);
+    const resp = await this.configService.listSinks(reqOpts, gaxOptions);
+    const [sinks] = resp;
+    if (sinks) {
+      resp[0] = sinks.map((sink: LogSink) => {
+        const sinkInstance = this.sink(sink.name!);
+        sinkInstance.metadata = sink;
+        return sinkInstance;
+      });
+    }
+    return resp;
   }
 
   /**
@@ -1022,7 +998,7 @@ class Logging {
  * that a callback is provided.
  */
 callbackifyAll(Logging, {
-  exclude: ['request', 'getEntries', 'getSinks'],
+  exclude: ['request'],
 });
 
 /*! Developer Documentation
@@ -1030,15 +1006,6 @@ callbackifyAll(Logging, {
  * These methods can be auto-paginated.
  */
 paginator.extend(Logging, ['getEntries', 'getSinks']);
-
-/*! Developer Documentation
- *
- * All async methods (except for streams) will return a Promise in the event
- * that a callback is omitted.
- */
-promisifyAll(Logging, {
-  exclude: ['entry', 'log', 'request', 'sink', 'createSink'],
-});
 
 /**
  * {@link Entry} class.

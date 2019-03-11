@@ -15,11 +15,15 @@
  */
 
 import {util} from '@google-cloud/common-grpc';
+import {CallbackifyAllOptions} from '@google-cloud/promisify';
 import * as arrify from 'arrify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
+
+import {GetEntriesCallback} from '../src/index';
+import {getOrInjectContext} from '../src/middleware/context';
 
 const {v2} = require('../src');
 const PKG = require('../../package.json');
@@ -47,7 +51,7 @@ function fakeGoogleAuth() {
 }
 
 let isCustomTypeOverride: Function|null;
-let promisifed = false;
+let callbackified = false;
 let replaceProjectIdTokenOverride: Function|null;
 const fakeUtil = extend({}, util, {
   isCustomType() {
@@ -57,14 +61,13 @@ const fakeUtil = extend({}, util, {
     return false;
   },
 });
-const fakePromisify = {
-  promisifyAll(c, options) {
+const fakeCallbackify = {
+  callbackifyAll(c: Function, options: CallbackifyAllOptions) {
     if (c.name !== 'Logging') {
       return;
     }
-    promisifed = true;
-    assert.deepStrictEqual(
-        options.exclude, ['entry', 'log', 'request', 'sink', 'createSink']);
+    callbackified = true;
+    assert.deepStrictEqual(options.exclude, ['request']);
   },
 };
 const fakeProjectify = {
@@ -116,7 +119,7 @@ describe('Logging', () => {
                 '@google-cloud/common-grpc': {
                   util: fakeUtil,
                 },
-                '@google-cloud/promisify': fakePromisify,
+                '@google-cloud/promisify': fakeCallbackify,
                 '@google-cloud/paginator': fakePaginator,
                 '@google-cloud/projectify': fakeProjectify,
                 'google-auth-library': {
@@ -159,8 +162,8 @@ describe('Logging', () => {
       assert(extended);  // See `fakePaginator.extend`
     });
 
-    it('should promisify all the things', () => {
-      assert(promisifed);
+    it('should callbackify all the things', () => {
+      assert(callbackified);
     });
 
     it('should initialize the API object', () => {
@@ -403,70 +406,74 @@ describe('Logging', () => {
   });
 
   describe('getEntries', () => {
-    it('should accept only a callback', done => {
-      logging.request = config => {
-        assert.deepStrictEqual(config.reqOpts, {
+    beforeEach(() => {
+      logging.setProjectId = async () => {};
+    });
+
+    it('exec without options', async () => {
+      logging.loggingService.listLogEntries = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
-        done();
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+        });
+        return [[]];
       };
 
-      logging.getEntries(assert.ifError);
+      await logging.getEntries();
     });
 
-    it('should make the correct API request', done => {
-      const options = {};
+    it('should accept options', async () => {
+      const options = {filter: 'test'};
 
-      logging.request = config => {
-        assert.strictEqual(config.client, 'LoggingServiceV2Client');
-        assert.strictEqual(config.method, 'listLogEntries');
-
+      logging.loggingService.listLogEntries = async (reqOpts, gaxOpts) => {
         assert.deepStrictEqual(
-            config.reqOpts, extend(options, {
+            reqOpts, extend(options, {
+              filter: 'test',
               orderBy: 'timestamp desc',
               resourceNames: ['projects/' + logging.projectId],
             }));
 
-        assert.deepStrictEqual(config.gaxOpts, {
+        assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
         });
-
-        done();
+        return [[]];
       };
 
-      logging.getEntries(options, assert.ifError);
+      await logging.getEntries(options);
     });
 
-    it('should not push the same resourceName again', done => {
+    it('should not push the same resourceName again', async () => {
       const options = {
         resourceNames: ['projects/' + logging.projectId],
       };
 
-      logging.request = config => {
-        assert.deepStrictEqual(config.reqOpts.resourceNames, [
+      logging.loggingService.listLogEntries = async (reqOpts) => {
+        assert.deepStrictEqual(reqOpts.resourceNames, [
           'projects/' + logging.projectId,
         ]);
-        done();
+        return [[]];
       };
 
       logging.getEntries(options, assert.ifError);
     });
 
-    it('should allow overriding orderBy', done => {
+    it('should allow overriding orderBy', async () => {
       const options = {
         orderBy: 'timestamp asc',
       };
 
-      logging.request = config => {
-        assert.deepStrictEqual(config.reqOpts.orderBy, options.orderBy);
-        done();
+      logging.loggingService.listLogEntries = async (reqOpts) => {
+        assert.deepStrictEqual(reqOpts.orderBy, options.orderBy);
+        return [[]];
       };
 
-      logging.getEntries(options, assert.ifError);
+      await logging.getEntries(options);
     });
 
-    it('should accept GAX options', done => {
+    it('should accept GAX options', async () => {
       const options = {
         a: 'b',
         c: 'd',
@@ -475,55 +482,52 @@ describe('Logging', () => {
         },
       };
 
-      logging.request = config => {
-        assert.strictEqual(config.reqOpts.gaxOptions, undefined);
-        assert.deepStrictEqual(config.gaxOpts, options.gaxOptions);
-        done();
+      logging.loggingService.listLogEntries = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
+          a: 'b',
+          c: 'd',
+          orderBy: 'timestamp desc',
+          resourceNames: ['projects/' + logging.projectId],
+        });
+        assert.strictEqual(reqOpts.gaxOptions, undefined);
+        assert.deepStrictEqual(gaxOpts, options.gaxOptions);
+        return [[]];
       };
 
-      logging.getEntries(options, assert.ifError);
+      await logging.getEntries(options);
     });
 
     describe('error', () => {
-      const ARGS = [new Error('Error.'), [], {}];
+      const error = new Error('Error.');
 
       beforeEach(() => {
-        logging.request = (config, callback) => {
-          callback.apply(null, ARGS);
+        logging.loggingService.listLogEntries = async () => {
+          throw error;
         };
       });
 
-      it('should execute callback with error & API response', done => {
-        logging.getEntries({}, (...args) => {
-          assert.deepStrictEqual(args, ARGS);
-          done();
-        });
+      it('should reject promise with error', () => {
+        logging.getEntries().then(
+            util.noop, (err) => assert.strictEqual(err, error));
       });
     });
 
     describe('success', () => {
-      const ARGS = [
-        null,
-        [
-          {
-            logName: 'syslog',
-          },
-        ],
-      ];
+      const expectedResponse = [[
+        {
+          logName: 'syslog',
+        },
+      ]];
 
       beforeEach(() => {
-        logging.request = (config, callback) => {
-          callback.apply(null, ARGS);
+        logging.loggingService.listLogEntries = async () => {
+          return expectedResponse;
         };
       });
 
-      it('should execute callback with entries & API resp', done => {
-        logging.getEntries({}, (err, entries) => {
-          assert.ifError(err);
-          const argsPassedToFromApiResponse_ = entries[0];
-          assert.strictEqual(argsPassedToFromApiResponse_[0], ARGS[1]![0]);
-          done();
-        });
+      it('should resolve promise with entries & API resp', async () => {
+        const [entries] = await logging.getEntries();
+        assert.strictEqual(entries[0], expectedResponse[0][0]);
       });
     });
   });
@@ -640,6 +644,9 @@ describe('Logging', () => {
   });
 
   describe('getSinks', () => {
+    beforeEach(() => {
+      logging.setProjectId = async () => {};
+    });
     const OPTIONS = {
       a: 'b',
       c: 'd',
@@ -649,54 +656,47 @@ describe('Logging', () => {
       },
     };
 
-    it('should accept only a callback', done => {
-      logging.request = () => done();
-      logging.getSinks(assert.ifError);
+    it('should exec without options', async () => {
+      logging.configService.listSinks = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(gaxOpts, {autoPaginate: undefined});
+        return [[]];
+      };
+      await logging.getSinks();
     });
 
-    it('should make the correct API request', done => {
-      logging.request = config => {
-        assert.strictEqual(config.client, 'ConfigServiceV2Client');
-        assert.strictEqual(config.method, 'listSinks');
-
-        assert.deepStrictEqual(config.reqOpts, {
+    it('should call gax method', async () => {
+      logging.configService.listSinks = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
           parent: 'projects/' + logging.projectId,
           a: 'b',
           c: 'd',
         });
 
-        assert.deepStrictEqual(config.gaxOpts, {
+        assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
           c: 'd',
         });
 
-        done();
+        return [[]];
       };
 
-      logging.getSinks(OPTIONS, assert.ifError);
+      await logging.getSinks(OPTIONS);
     });
 
     describe('error', () => {
-      const ARGS = [new Error('Error.'), [], {}];
-
-      beforeEach(() => {
-        logging.request = (config, callback) => {
-          callback.apply(null, ARGS);
+      it('should reject promise with error', () => {
+        const error = new Error('Error.');
+        logging.configService.listSinks = async () => {
+          throw error;
         };
-      });
-
-      it('should execute callback with error & API response', done => {
-        logging.getEntries(OPTIONS, (...args) => {
-          assert.deepStrictEqual(args, ARGS);
-          done();
-        });
+        logging.getSinks(OPTIONS).then(
+            util.noop, (err) => assert.strictEqual(err, error));
       });
     });
 
     describe('success', () => {
       const ARGS = [
-        null,
         [
           {
             name: 'sink-name',
@@ -706,23 +706,20 @@ describe('Logging', () => {
       ];
 
       beforeEach(() => {
-        logging.request = (config, callback) => {
-          callback.apply(null, ARGS);
+        logging.configService.listSinks = async () => {
+          return ARGS;
         };
       });
 
-      it('should execute callback with Logs & API resp', done => {
+      it('should resolve promise with Logs & API resp', async () => {
         const sinkInstance = {};
         logging.sink = name => {
-          assert.strictEqual(name, ARGS[1]![0].name);
+          assert.strictEqual(name, ARGS[0]![0].name);
           return sinkInstance;
         };
-        logging.getSinks(OPTIONS, (err, sinks) => {
-          assert.ifError(err);
-          assert.strictEqual(sinks[0], sinkInstance);
-          assert.strictEqual(sinks[0].metadata, ARGS[1]![0]);
-          done();
-        });
+        const [sinks] = await logging.getSinks(OPTIONS);
+        assert.strictEqual(sinks[0], sinkInstance);
+        assert.strictEqual(sinks[0].metadata, ARGS[0][0].metadata);
       });
     });
   });
