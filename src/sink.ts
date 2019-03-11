@@ -17,9 +17,7 @@
 import * as common from '@google-cloud/common-grpc';
 import {promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
-import {CallOptions} from 'google-gax/build/src/gax';
-import * as is from 'is';
-
+import {CallOptions} from 'google-gax';
 import {CreateSinkCallback, CreateSinkRequest, DeleteCallback, DeleteResponse, Logging, LogSink} from '.';
 
 export interface SinkMetadataCallback {

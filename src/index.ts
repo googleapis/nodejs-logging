@@ -575,9 +575,7 @@ class Logging {
    *     this.end();
    *   });
    */
-  getEntriesStream(options: GetEntriesRequest) {
-    const self = this;
-    options = options || {};
+  getEntriesStream(options: GetEntriesRequest = {}) {
     let requestStream: Duplex;
     const userStream = streamEvents<Duplex>(pumpify.obj());
     (userStream as AbortableDuplex).abort = () => {
@@ -595,7 +593,7 @@ class Logging {
           },
           options);
       reqOpts.resourceNames = arrify(reqOpts.resourceNames);
-      reqOpts.resourceNames.push('projects/' + self.projectId);
+      reqOpts.resourceNames.push(`projects/${this.projectId}`);
       delete reqOpts.autoPaginate;
       delete reqOpts.gaxOptions;
       const gaxOptions = extend(
@@ -614,7 +612,7 @@ class Logging {
       // tslint:disable-next-line no-any
       if (!(global as any).GCLOUD_SANDBOX_ENV) {
         requestStream.once('reading', () => {
-          self.setProjectId(reqOpts).then(() => {
+          this.setProjectId(reqOpts).then(() => {
             try {
               gaxStream =
                   this.loggingService.listLogEntriesStream(reqOpts, gaxOptions);

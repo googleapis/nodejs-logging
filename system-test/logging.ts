@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-import * as assert from 'assert';
-const {BigQuery} = require('@google-cloud/bigquery');
-import * as extend from 'extend';
-import * as is from 'is';
-import * as nock from 'nock';
-const {PubSub} = require('@google-cloud/pubsub');
-import {Storage} from '@google-cloud/storage';
-import * as uuid from 'uuid';
-import {Logging} from '../src';
+if (process.env.GOOGLE_CLOUD_USE_GRPC_JS) {
+  process.exit(0);
+}
+
+import {BigQuery} from '@google-cloud/bigquery';
 import {ServiceObject} from '@google-cloud/common';
+import {PubSub} from '@google-cloud/pubsub';
+import {Storage} from '@google-cloud/storage';
+import * as assert from 'assert';
+import * as nock from 'nock';
+import {Duplex} from 'stream';
+import * as uuid from 'uuid';
+
+import {Logging, Sink} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
-nock('http://metadata.google.internal')
+nock('http://metadata.google.internal.')
     .get(() => true)
     .replyWithError({code: 'ENOTFOUND'})
     .persist();
@@ -70,34 +74,33 @@ describe('Logging', () => {
     }
 
     async function deleteDatasets() {
-      return getAndDelete(bigQuery.getDatasets.bind(bigQuery));
+      await getAndDelete(bigQuery.getDatasets.bind(bigQuery));
     }
 
     async function deleteTopics() {
-      return getAndDelete(pubsub.getTopics.bind(pubsub));
+      await getAndDelete(pubsub.getTopics.bind(pubsub));
     }
 
     async function deleteSinks() {
-      // tslint:disable-next-line no-any
-      return getAndDelete(logging.getSinks.bind(logging) as any);
+      await getAndDelete(logging.getSinks.bind(logging));
     }
 
-    async function getAndDelete(method: () => Promise<[ServiceObject[]]>) {
+    async function getAndDelete(method: Function) {
       const [objects] = await method();
       return Promise.all(
           objects
               .filter(
-                  // tslint:disable-next-line no-any
-                  o => ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
-              .map(o => o.delete()));
+                  (o: ServiceObject) =>
+                      // tslint:disable-next-line no-any
+                  ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
+              .map((o: ServiceObject) => o.delete()));
     }
   });
 
   describe('sinks', () => {
     it('should create a sink with a Bucket destination', async () => {
       const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any).create({
+      const [_, apiResponse] = await sink.create({
         destination: bucket,
       });
       const destination = 'storage.googleapis.com/' + bucket.name;
@@ -106,33 +109,26 @@ describe('Logging', () => {
 
     it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any)
-                                   .create(
-                                       {
-                                         destination: dataset,
-                                       },
-                                   );
+      const [_, apiResponse] = await sink.create({destination: dataset});
 
       const destination = `bigquery.googleapis.com/datasets/${dataset.id}`;
 
       // The projectId may have been replaced depending on how the system
       // tests are being run, so let's not care about that.
       apiResponse.destination =
-          apiResponse.destination.replace(/projects\/[^/]*\//, '');
+          apiResponse.destination!.replace(/projects\/[^/]*\//, '');
       assert.strictEqual(apiResponse.destination, destination);
     });
 
     it('should create a sink with a Topic destination', async () => {
       const sink = logging.sink(generateName());
-      // tslint:disable-next-line no-any
-      const [_, apiResponse] = await (sink as any).create({destination: topic});
+      const [_, apiResponse] = await sink.create({destination: topic});
       const destination = 'pubsub.googleapis.com/' + topic.name;
 
       // The projectId may have been replaced depending on how the system
       // tests are being run, so let's not care about that.
       assert.strictEqual(
-          apiResponse.destination.replace(/projects\/[^/]*\//, ''),
+          apiResponse.destination!.replace(/projects\/[^/]*\//, ''),
           destination.replace(/projects\/[^/]*\//, ''));
     });
 
@@ -146,14 +142,12 @@ describe('Logging', () => {
 
       it('should set metadata', async () => {
         const metadata = {filter: FILTER};
-        // tslint:disable-next-line no-any
-        const [apiResponse] = await (sink as any).setMetadata(metadata);
+        const [apiResponse] = await sink.setMetadata(metadata);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
 
       it('should set a filter', async () => {
-        // tslint:disable-next-line no-any
-        const [apiResponse] = await (sink as any).setFilter(FILTER);
+        const [apiResponse] = await sink.setFilter(FILTER);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
     });
@@ -171,22 +165,21 @@ describe('Logging', () => {
       });
 
       it('should list sinks as a stream', done => {
-        const logstream = logging.getSinksStream({pageSize: 1})
-                              .on('error', done)
-                              .once('data', () => {
-                                // tslint:disable-next-line no-any
-                                (logstream as any).end();
-                                done();
-                              });
+        const logstream: Duplex = logging.getSinksStream({pageSize: 1})
+                                      .on('error', done)
+                                      .once('data', () => {
+                                        logstream.end();
+                                        done();
+                                      });
       });
 
       it('should get metadata', done => {
         logging.getSinksStream({pageSize: 1})
             .on('error', done)
-            .once('data', sink => {
+            .once('data', (sink: Sink) => {
               sink.getMetadata((err, metadata) => {
                 assert.ifError(err);
-                assert.strictEqual(is.object(metadata), true);
+                assert.strictEqual(typeof metadata, 'object');
                 done();
               });
             });
@@ -240,14 +233,14 @@ describe('Logging', () => {
     });
 
     it('should list log entries as a stream', done => {
-      const logstream = logging
-                            .getEntriesStream({
-                              autoPaginate: false,
-                              pageSize: 1,
-                            })
-                            .on('error', done)
-                            .once('data', () => logstream.end())
-                            .on('end', done);
+      const logstream: Duplex = logging
+                                    .getEntriesStream({
+                                      autoPaginate: false,
+                                      pageSize: 1,
+                                    })
+                                    .on('error', done)
+                                    .once('data', () => logstream.end())
+                                    .on('end', done);
     });
 
     describe('log-specific entries', () => {
@@ -391,7 +384,7 @@ describe('Logging', () => {
     });
 
     it('should write a log with metadata', done => {
-      const metadata = extend({}, options, {
+      const metadata = Object.assign({}, options, {
         severity: 'DEBUG',
       });
 

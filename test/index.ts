@@ -27,7 +27,7 @@ const PKG = require('../../package.json');
 let extended = false;
 const fakePaginator = {
   paginator: {
-    extend(klass, methods) {
+    extend(klass: Function, methods: string[]) {
       if (klass.name !== 'Logging') {
         return;
       }
@@ -35,20 +35,20 @@ const fakePaginator = {
       methods = arrify(methods);
       assert.deepStrictEqual(methods, ['getEntries', 'getSinks']);
     },
-    streamify(methodName) {
+    streamify(methodName: string) {
       return methodName;
     },
   },
 };
 
-let googleAuthOverride;
+let googleAuthOverride: Function|null;
 function fakeGoogleAuth() {
   return (googleAuthOverride || util.noop).apply(null, arguments);
 }
 
-let isCustomTypeOverride;
+let isCustomTypeOverride: Function|null;
 let promisifed = false;
-let replaceProjectIdTokenOverride;
+let replaceProjectIdTokenOverride: Function|null;
 const fakeUtil = extend({}, util, {
   isCustomType() {
     if (isCustomTypeOverride) {
