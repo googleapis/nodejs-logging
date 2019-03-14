@@ -234,7 +234,7 @@ describe('Logging', () => {
 
     it('should write multiple entries to a log', async () => {
       await log.write(logEntries, options);
-      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS*2));
       const [entries] = await log.getEntries({
         autoPaginate: false,
         pageSize: logEntries.length,
@@ -286,26 +286,24 @@ describe('Logging', () => {
       }, 1000);
     });
 
-    it('should preserve order for sequential write calls', done => {
+    it('should preserve order for sequential write calls', async () => {
       const messages = ['1', '2', '3', '4', '5'];
-
       messages.forEach(message => {
         log.write(log.entry(message));
       });
 
-      setTimeout(() => {
-        log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: messages.length,
-            },
-            (err, entries) => {
-              assert.ifError(err);
-              assert.deepStrictEqual(
-                  entries!.reverse().map(x => x.data), messages);
-              done();
-            });
-      }, WRITE_CONSISTENCY_DELAY_MS * 4);
+      for (let i=0; i<8; i++) {
+        await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: messages.length,
+        });
+        const data = entries.reverse().map(x => x.data);
+        if (data.length === messages.length) {
+          assert.deepStrictEqual(data, messages);
+        }
+      }
+      assert.fail('The number of messages received does not match.');
     });
 
     it('should write an entry with primitive values', done => {
