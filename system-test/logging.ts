@@ -43,20 +43,17 @@ describe('Logging', () => {
   // Create the possible destinations for sinks that we will create.
   const bucket = storage.bucket(generateName());
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
-  const topic = pubsub.topic(generateName());
+  const topic = pubsub.topic(`${generateName()}-${Date.now()}`);
 
   before(async () => {
+    await Promise.all(
+        [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
     await Promise.all([
       bucket.create(), dataset.create(), topic.create(),
       logging.auth.getProjectId().then(projectId => {
         PROJECT_ID = projectId;
       })
     ]);
-  });
-
-  after(async () => {
-    await Promise.all(
-        [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
   });
 
   describe('sinks', () => {
@@ -470,7 +467,7 @@ describe('Logging', () => {
       const timeCreated = Date.parse(b.metadata.timeCreated);
       return timeCreated < expiration;
     });
-    console.log(`Cleaning up ${bucketsToDelete.length} buckets...`);
+    console.log(`Deleting ${bucketsToDelete.length} buckets...`);
     return Promise.all(bucketsToDelete.map(async bucket => {
       await bucket.deleteFiles();
       await bucket.delete();
@@ -496,12 +493,17 @@ describe('Logging', () => {
   }
 
   async function deleteTopics() {
-    // TODO(beckwith): There is no readily available metadata for the creation
-    // time of a topic. Need to figure out how to protect these from early
-    // deleting to avoid race conditions.
     const [topics] = await pubsub.getTopics();
     const topicsToDelete = topics.filter(topic => {
-      return topic.name.indexOf(TESTS_PREFIX) > -1;
+      if (!topic.name.includes(TESTS_PREFIX)) {
+        return false;
+      }
+      // The name of the topic is created with the timestamp built in:
+      // gcloud-logging-test-xxxx-1484202038383
+      const nameParts = topic.name.split('-');
+      const created = Number(nameParts[nameParts.length - 1]);
+      const expiration = Date.now() - 60 * 60 * 1000;
+      return created < expiration;
     });
     console.log(`Deleting ${topicsToDelete.length} topics...`);
     await Promise.all(topicsToDelete.map(topic => topic.delete()));
