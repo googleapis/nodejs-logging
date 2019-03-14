@@ -33,8 +33,6 @@ nock('http://metadata.google.internal.')
 describe('Logging', () => {
   let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
-  const WRITE_CONSISTENCY_DELAY_MS = 10000;
-
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
   const storage = new Storage();
@@ -233,13 +231,7 @@ describe('Logging', () => {
     });
 
     it('should write multiple entries to a log', async () => {
-      await log.write(logEntries, options);
-      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS * 2));
-      const [entries] = await log.getEntries({
-        autoPaginate: false,
-        pageSize: logEntries.length,
-      });
-      assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
+      const expected = [
         'log entry 1',
         {delegate: 'my_username'},
         {
@@ -252,38 +244,44 @@ describe('Logging', () => {
             delegate: 'my_username',
           },
         },
-      ]);
+      ];
+      await log.write(logEntries, options);
+      for (let i = 0; i < 4; i++) {
+        await wait();
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: logEntries.length,
+        });
+        if (entries.length === expected.length) {
+          const data = entries.map(x => x.data).reverse();
+          assert.deepStrictEqual(data, expected);
+          return;
+        }
+      }
+      assert.fail('Got the incorrect number of results.', expected);
     });
 
-    it('should preserve order of entries', done => {
+    it('should preserve order of entries', async () => {
       const entry1 = log.entry('1');
+      await new Promise(r => setTimeout(r, 1000));
+      const entry2 = log.entry('2');
+      const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
+      const expected = ['3', '2', '1'];
 
-      setTimeout(() => {
-        const entry2 = log.entry('2');
-        const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
-
-        // Re-arrange to confirm the timestamp is sent and honored.
-        log.write([entry2, entry3, entry1], options, err => {
-          assert.ifError(err);
-
-          setTimeout(() => {
-            log.getEntries(
-                {
-                  autoPaginate: false,
-                  pageSize: 3,
-                },
-                (err, entries) => {
-                  assert.ifError(err);
-                  assert.deepStrictEqual(entries!.map(x => x.data), [
-                    '3',
-                    '2',
-                    '1',
-                  ]);
-                  done();
-                });
-          }, WRITE_CONSISTENCY_DELAY_MS * 4);
+      // Re-arrange to confirm the timestamp is sent and honored.
+      await log.write([entry2, entry3, entry1], options);
+      for (let i = 0; i < 8; i++) {
+        await wait();
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: 3,
         });
-      }, 1000);
+        if (entries.length === expected.length) {
+          assert.deepStrictEqual(entries.map(x => x.data), expected);
+          return;
+        }
+      }
+      assert.fail('The number of messages received does not match.', expected);
     });
 
     it('should preserve order for sequential write calls', async () => {
@@ -293,7 +291,7 @@ describe('Logging', () => {
       });
 
       for (let i = 0; i < 8; i++) {
-        await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+        await wait();
         const [entries] = await log.getEntries({
           autoPaginate: false,
           pageSize: messages.length,
@@ -306,7 +304,7 @@ describe('Logging', () => {
       assert.fail('The number of messages received does not match.');
     });
 
-    it('should write an entry with primitive values', done => {
+    it('should write an entry with primitive values', async () => {
       const logEntry = log.entry({
         when: new Date(),
         matchUser: /username: (.+)/,
@@ -314,33 +312,29 @@ describe('Logging', () => {
         shouldNotBeSaved: undefined,
       });
 
-      log.write(logEntry, options, err => {
-        assert.ifError(err);
+      const expected = {
+        when: logEntry.data.when.toString(),
+        matchUser: logEntry.data.matchUser.toString(),
+        matchUserError: logEntry.data.matchUserError.toString(),
+      };
 
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 1,
-              },
-              (err, entries) => {
-                assert.ifError(err);
-
-                const entry = entries![0];
-
-                assert.deepStrictEqual(entry.data, {
-                  when: logEntry.data.when.toString(),
-                  matchUser: logEntry.data.matchUser.toString(),
-                  matchUserError: logEntry.data.matchUserError.toString(),
-                });
-
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
-      });
+      await log.write(logEntry, options);
+      for (let i = 0; i < 4; i++) {
+        await wait();
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: 1,
+        });
+        if (entries.length === 1) {
+          const entry = entries[0];
+          assert.deepStrictEqual(entry.data, expected);
+          return;
+        }
+      }
+      assert.fail('Invalid number of log entries returned.', expected);
     });
 
-    it('should write a log with metadata', done => {
+    it('should write a log with metadata', async () => {
       const metadata = Object.assign({}, options, {
         severity: 'DEBUG',
       });
@@ -351,59 +345,47 @@ describe('Logging', () => {
 
       const logEntry = log.entry(metadata, data);
 
-      log.write(logEntry, err => {
-        assert.ifError(err);
-
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 1,
-              },
-              (err, entries) => {
-                assert.ifError(err);
-
-                const entry = entries![0];
-
-                assert.strictEqual(entry.metadata.severity, metadata.severity);
-                assert.deepStrictEqual(entry.data, data);
-
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
-      });
+      await log.write(logEntry);
+      for (let i = 0; i < 4; i++) {
+        await wait();
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: 1,
+        });
+        if (entries.length === 1) {
+          const entry = entries[0];
+          assert.strictEqual(entry.metadata.severity, metadata.severity);
+          assert.deepStrictEqual(entry.data, data);
+          return;
+        }
+      }
+      assert.fail('Unexpected number of results.');
     });
 
-    it('should set the default resource', done => {
+    it('should set the default resource', async () => {
       const text = 'entry-text';
       const entry = log.entry(text);
 
-      log.write(entry, err => {
-        assert.ifError(err);
-
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 1,
-              },
-              (err, entries) => {
-                assert.ifError(err);
-
-                const entry = entries![0];
-
-                assert.strictEqual(entry.data, text);
-                assert.deepStrictEqual(entry.metadata.resource, {
-                  type: 'global',
-                  labels: {
-                    project_id: PROJECT_ID,
-                  },
-                });
-
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
-      });
+      await log.write(entry);
+      for (let i = 0; i < 4; i++) {
+        await wait();
+        const [entries] = await log.getEntries({
+          autoPaginate: false,
+          pageSize: 1,
+        });
+        if (entries.length === 1) {
+          const entry = entries[0];
+          assert.strictEqual(entry.data, text);
+          assert.deepStrictEqual(entry.metadata.resource, {
+            type: 'global',
+            labels: {
+              project_id: PROJECT_ID,
+            },
+          });
+          return;
+        }
+      }
+      assert.fail('The number of messages received does not match.');
     });
 
     it('should write a log with camelcase resource label keys', done => {
@@ -520,5 +502,9 @@ describe('Logging', () => {
     });
     console.log(`Deleting ${sinksToDelete.length} sinks...`);
     await Promise.all(sinksToDelete.map(sink => sink.delete()));
+  }
+
+  async function wait() {
+    await new Promise(r => setTimeout(r, 5000));
   }
 });
