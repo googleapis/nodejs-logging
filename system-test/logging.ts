@@ -234,7 +234,7 @@ describe('Logging', () => {
 
     it('should write multiple entries to a log', async () => {
       await log.write(logEntries, options);
-      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS*2));
+      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS * 2));
       const [entries] = await log.getEntries({
         autoPaginate: false,
         pageSize: logEntries.length,
@@ -292,7 +292,7 @@ describe('Logging', () => {
         log.write(log.entry(message));
       });
 
-      for (let i=0; i<8; i++) {
+      for (let i = 0; i < 8; i++) {
         await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
         const [entries] = await log.getEntries({
           autoPaginate: false,
