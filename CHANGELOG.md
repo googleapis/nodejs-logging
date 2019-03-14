@@ -4,6 +4,45 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.5.0
+
+03-13-2019 22:25 PDT
+
+### New Features
+- feat: ability to detect service context ([#400](https://github.com/googleapis/nodejs-logging/pull/400))
+
+### Bug Fixes
+- fix: do not push duplicate scopes ([#414](https://github.com/googleapis/nodejs-logging/pull/414))
+- fix: throw on invalid credentials ([#395](https://github.com/googleapis/nodejs-logging/pull/395))
+
+### Dependencies
+- fix(deps): update dependency @google-cloud/paginator to ^0.2.0 ([#419](https://github.com/googleapis/nodejs-logging/pull/419))
+- fix(deps): update dependency gcp-metadata to v1 ([#402](https://github.com/googleapis/nodejs-logging/pull/402))
+- fix(deps): update dependency @opencensus/propagation-stackdriver to v0.0.9 ([#394](https://github.com/googleapis/nodejs-logging/pull/394))
+- fix(deps): update dependency @google-cloud/promisify to ^0.4.0 ([#398](https://github.com/googleapis/nodejs-logging/pull/398))
+
+### Documentation
+- docs: update links in contrib guide ([#399](https://github.com/googleapis/nodejs-logging/pull/399))
+
+### Internal / Testing Changes
+- chore(deps): update dependency @google-cloud/pubsub to ^0.28.0 ([#421](https://github.com/googleapis/nodejs-logging/pull/421))
+- refactor: update json import paths ([#422](https://github.com/googleapis/nodejs-logging/pull/422))
+- chore(deps): update dependency supertest to v4 ([#420](https://github.com/googleapis/nodejs-logging/pull/420))
+- refactor: clean up types and imports ([#409](https://github.com/googleapis/nodejs-logging/pull/409))
+- build: Add docuploader credentials to node publish jobs ([#415](https://github.com/googleapis/nodejs-logging/pull/415))
+- build: use node10 to run samples-test, system-test etc ([#413](https://github.com/googleapis/nodejs-logging/pull/413))
+- build: update release configuration
+- chore(deps): update @google-cloud/pubsub to v0.27.0 ([#410](https://github.com/googleapis/nodejs-logging/pull/410))
+- chore(deps): update dependency @google-cloud/pubsub to ^0.26.0 ([#407](https://github.com/googleapis/nodejs-logging/pull/407))
+- refactor (typescript): noImplilcitAny ([#408](https://github.com/googleapis/nodejs-logging/pull/408))
+- chore(deps): update dependency @google-cloud/pubsub to ^0.25.0 ([#405](https://github.com/googleapis/nodejs-logging/pull/405))
+- chore: update proto docs and code style
+- chore(deps): update dependency mocha to v6 ([#403](https://github.com/googleapis/nodejs-logging/pull/403))
+- build: use linkinator for docs test ([#397](https://github.com/googleapis/nodejs-logging/pull/397))
+- refactor: expose and improve types ([#393](https://github.com/googleapis/nodejs-logging/pull/393))
+- fix(deps): update dependency yargs to v13 ([#392](https://github.com/googleapis/nodejs-logging/pull/392))
+- chore: use proper enum for GCPEnv ([#389](https://github.com/googleapis/nodejs-logging/pull/389))
+
 ## v4.4.0
 
 02-11-2019 17:40 PST
