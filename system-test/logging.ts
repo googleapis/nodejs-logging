@@ -70,15 +70,15 @@ describe('Logging', () => {
       const [buckets] = await storage.getBuckets({
         prefix: TESTS_PREFIX,
       });
-      return Promise.all(
-          buckets
-              .filter(bucket => {
-                return new Date(bucket.metadata.timeCreated) < oneHourAgo;
-              })
-              .map(async bucket => {
-                await bucket.deleteFiles();
-                await bucket.delete();
-              }));
+      return Promise.all(buckets
+                             .filter(bucket => {
+                               return new Date(bucket.metadata.timeCreated) <
+                                   oneHourAgo;
+                             })
+                             .map(async bucket => {
+                               await bucket.deleteFiles();
+                               await bucket.delete();
+                             }));
     }
 
     async function deleteDatasets() {
@@ -106,7 +106,8 @@ describe('Logging', () => {
                 }
 
                 // Parse the time the resource was created using the resource id
-                const timeResourceCreated = parseInt(id.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0]);
+                const timeResourceCreated =
+                    Number(id.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0]);
                 const dateResourceCreated = new Date(timeResourceCreated);
 
                 return dateResourceCreated < oneHourAgo;
