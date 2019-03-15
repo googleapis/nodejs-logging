@@ -353,7 +353,11 @@ describe('Logging', () => {
         log.write(log.entry(message));
       });
 
-      setTimeout(() => {
+      let numAttempts = 0;
+
+      function pollForMessages() {
+        numAttempts++;
+
         log.getEntries(
             {
               autoPaginate: false,
@@ -361,11 +365,19 @@ describe('Logging', () => {
             },
             (err, entries) => {
               assert.ifError(err);
+
+              if (entries!.length === 0 && numAttempts < 8) {
+                setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+                return;
+              }
+
               assert.deepStrictEqual(
                   entries!.reverse().map(x => x.data), messages);
               done();
             });
-      }, WRITE_CONSISTENCY_DELAY_MS * 4);
+      }
+
+      setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
     });
 
     it('should write an entry with primitive values', done => {
