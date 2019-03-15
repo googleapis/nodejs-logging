@@ -60,6 +60,9 @@ describe('Logging', () => {
   });
 
   after(async () => {
+    const oneHourAgo = new Date();
+    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+
     await Promise.all(
         [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
 
@@ -67,10 +70,15 @@ describe('Logging', () => {
       const [buckets] = await storage.getBuckets({
         prefix: TESTS_PREFIX,
       });
-      return Promise.all(buckets.map(async bucket => {
-        await bucket.deleteFiles();
-        await bucket.delete();
-      }));
+      return Promise.all(
+          buckets
+              .filter(bucket => {
+                return new Date(bucket.metadata.timeCreated) < oneHourAgo;
+              })
+              .map(async bucket => {
+                await bucket.deleteFiles();
+                await bucket.delete();
+              }));
     }
 
     async function deleteDatasets() {
@@ -89,10 +97,20 @@ describe('Logging', () => {
       const [objects] = await method();
       return Promise.all(
           objects
-              .filter(
-                  (o: ServiceObject) =>
-                      // tslint:disable-next-line no-any
-                  ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
+              .filter((o: ServiceObject) => {
+                // tslint:disable-next-line no-any
+                const id = (o as any).name || o.id;
+
+                if (!id.startsWith(TESTS_PREFIX)) {
+                  return false;
+                }
+
+                // Parse the time the resource was created using the resource id
+                const timeResourceCreated = parseInt(id.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0]);
+                const dateResourceCreated = new Date(timeResourceCreated);
+
+                return dateResourceCreated < oneHourAgo;
+              })
               .map((o: ServiceObject) => o.delete()));
     }
   });
@@ -497,6 +515,6 @@ describe('Logging', () => {
   });
 
   function generateName() {
-    return TESTS_PREFIX + uuid.v1();
+    return `${TESTS_PREFIX}-${Date.now()}-${uuid().split('-').pop()}`;
   }
 });
