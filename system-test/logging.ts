@@ -207,29 +207,61 @@ describe('Logging', () => {
   });
 
   describe('logs', () => {
-    const log = logging.log(`system-test-logs-${uuid.v4()}`);
+    // tslint:disable-next-line no-any
+    const logs: any[] = [];
 
-    const logEntries = [
-      // string data
-      log.entry('log entry 1'),
+    function getTestLog() {
+      const log = logging.log(`system-test-logs-${uuid.v4()}`);
+      logs.push(log);
 
-      // object data
-      log.entry({delegate: 'my_username'}),
+      const logEntries = [
+        // string data
+        log.entry('log entry 1'),
 
-      // various data types
-      log.entry({
-        nonValue: null,
-        boolValue: true,
-        arrayValue: [1, 2, 3],
-      }),
+        // object data
+        log.entry({delegate: 'my_username'}),
 
-      // nested object data
-      log.entry({
-        nested: {
-          delegate: 'my_username',
-        },
-      }),
-    ];
+        // various data types
+        log.entry({
+          nonValue: null,
+          boolValue: true,
+          arrayValue: [1, 2, 3],
+        }),
+
+        // nested object data
+        log.entry({
+          nested: {
+            delegate: 'my_username',
+          },
+        }),
+      ];
+
+      return {log, logEntries};
+    }
+
+    function getEntriesFromLog(log, callback) {
+      let numAttempts = 0;
+
+      setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+
+      function pollForMessages() {
+        numAttempts++;
+
+        log.getEntries({autoPaginate: false}, (err, entries) => {
+          if (err) {
+            callback(err);
+            return;
+          }
+
+          if (entries!.length === 0 && numAttempts < 8) {
+            setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+            return;
+          }
+
+          callback(null, entries);
+        });
+      }
+    }
 
     const options = {
       resource: {
@@ -241,38 +273,52 @@ describe('Logging', () => {
       },
     };
 
-    after(done => log.delete(done));
+    after(() => Promise.all(logs.map(log => log.delete())));
 
-    it('should list log entries', async () => {
-      const [entries] = await logging.getEntries({
-        autoPaginate: false,
-        pageSize: 1,
+    it('should list log entries', (done) => {
+      const {log, logEntries} = getTestLog();
+
+      log.write(logEntries, options, err => {
+        assert.ifError(err);
+
+        getEntriesFromLog(log, (err, entries) => {
+          assert.ifError(err);
+          assert.strictEqual(entries.length, logEntries.length);
+          done();
+        });
       });
-      assert.strictEqual(entries.length, 1);
     });
 
     it('should list log entries as a stream', done => {
-      const logstream: Duplex = logging
-                                    .getEntriesStream({
-                                      autoPaginate: false,
-                                      pageSize: 1,
-                                    })
-                                    .on('error', done)
-                                    .once('data', () => logstream.end())
-                                    .on('end', done);
+      const {log, logEntries} = getTestLog();
+
+      log.write(logEntries, options, err => {
+        assert.ifError(err);
+
+        const logstream: Duplex = logging
+                                      .getEntriesStream({
+                                        autoPaginate: false,
+                                        pageSize: 1,
+                                      })
+                                      .on('error', done)
+                                      .once('data', () => logstream.end())
+                                      .on('end', done);
+      });
     });
 
     describe('log-specific entries', () => {
+      const {log, logEntries} = getTestLog();
+
       before(done => {
         log.write(logEntries, options, done);
       });
 
-      it('should list log entries', async () => {
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: 1,
+      it('should list log entries', (done) => {
+        getEntriesFromLog(log, (err, entries) => {
+          assert.ifError(err);
+          assert.strictEqual(entries.length, logEntries.length);
+          done();
         });
-        assert.strictEqual(entries.length, 1);
       });
 
       it('should list log entries as a stream', done => {
@@ -289,33 +335,42 @@ describe('Logging', () => {
     });
 
     it('should write a single entry to a log', done => {
+      const {log, logEntries} = getTestLog();
       log.write(logEntries[0], options, done);
     });
 
-    it('should write multiple entries to a log', async () => {
-      await log.write(logEntries, options);
-      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
-      const [entries] = await log.getEntries({
-        autoPaginate: false,
-        pageSize: logEntries.length,
+    it('should write multiple entries to a log', (done) => {
+      const {log, logEntries} = getTestLog();
+
+      log.write(logEntries, options, (err) => {
+        assert.ifError(err);
+
+        getEntriesFromLog(log, (err, entries) => {
+          assert.ifError(err);
+
+          assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
+            'log entry 1',
+            {delegate: 'my_username'},
+            {
+              nonValue: null,
+              boolValue: true,
+              arrayValue: [1, 2, 3],
+            },
+            {
+              nested: {
+                delegate: 'my_username',
+              },
+            },
+          ]);
+
+          done();
+        });
       });
-      assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
-        'log entry 1',
-        {delegate: 'my_username'},
-        {
-          nonValue: null,
-          boolValue: true,
-          arrayValue: [1, 2, 3],
-        },
-        {
-          nested: {
-            delegate: 'my_username',
-          },
-        },
-      ]);
     });
 
     it('should preserve order of entries', done => {
+      const {log} = getTestLog();
+
       const entry1 = log.entry('1');
 
       setTimeout(() => {
@@ -326,61 +381,37 @@ describe('Logging', () => {
         log.write([entry2, entry3, entry1], options, err => {
           assert.ifError(err);
 
-          setTimeout(() => {
-            log.getEntries(
-                {
-                  autoPaginate: false,
-                  pageSize: 3,
-                },
-                (err, entries) => {
-                  assert.ifError(err);
-                  assert.deepStrictEqual(entries!.map(x => x.data), [
-                    '3',
-                    '2',
-                    '1',
-                  ]);
-                  done();
-                });
-          }, WRITE_CONSISTENCY_DELAY_MS * 4);
+          getEntriesFromLog(log, (err, entries) => {
+            assert.ifError(err);
+            assert.deepStrictEqual(entries!.map(x => x.data), [
+              '3',
+              '2',
+              '1',
+            ]);
+            done();
+          });
         });
       }, 1000);
     });
 
     it('should preserve order for sequential write calls', done => {
+      const {log} = getTestLog();
       const messages = ['1', '2', '3', '4', '5'];
 
       messages.forEach(message => {
         log.write(log.entry(message));
       });
 
-      let numAttempts = 0;
-
-      function pollForMessages() {
-        numAttempts++;
-
-        log.getEntries(
-            {
-              autoPaginate: false,
-              pageSize: messages.length,
-            },
-            (err, entries) => {
-              assert.ifError(err);
-
-              if (entries!.length === 0 && numAttempts < 8) {
-                setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
-                return;
-              }
-
-              assert.deepStrictEqual(
-                  entries!.reverse().map(x => x.data), messages);
-              done();
-            });
-      }
-
-      setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+      getEntriesFromLog(log, (err, entries) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(entries!.reverse().map(x => x.data), messages);
+        done();
+      });
     });
 
     it('should write an entry with primitive values', done => {
+      const {log} = getTestLog();
+
       const logEntry = log.entry({
         when: new Date(),
         matchUser: /username: (.+)/,
@@ -391,30 +422,25 @@ describe('Logging', () => {
       log.write(logEntry, options, err => {
         assert.ifError(err);
 
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 1,
-              },
-              (err, entries) => {
-                assert.ifError(err);
+        getEntriesFromLog(log, (err, entries) => {
+          assert.ifError(err);
 
-                const entry = entries![0];
+          const entry = entries![0];
 
-                assert.deepStrictEqual(entry.data, {
-                  when: logEntry.data.when.toString(),
-                  matchUser: logEntry.data.matchUser.toString(),
-                  matchUserError: logEntry.data.matchUserError.toString(),
-                });
+          assert.deepStrictEqual(entry.data, {
+            when: logEntry.data.when.toString(),
+            matchUser: logEntry.data.matchUser.toString(),
+            matchUserError: logEntry.data.matchUserError.toString(),
+          });
 
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
+          done();
+        });
       });
     });
 
     it('should write a log with metadata', done => {
+      const {log} = getTestLog();
+
       const metadata = Object.assign({}, options, {
         severity: 'DEBUG',
       });
@@ -428,59 +454,46 @@ describe('Logging', () => {
       log.write(logEntry, err => {
         assert.ifError(err);
 
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 1,
-              },
-              (err, entries) => {
-                assert.ifError(err);
+        getEntriesFromLog(log, (err, entries) => {
+          assert.ifError(err);
 
-                const entry = entries![0];
-
-                assert.strictEqual(entry.metadata.severity, metadata.severity);
-                assert.deepStrictEqual(entry.data, data);
-
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
+          const entry = entries![0];
+          assert.strictEqual(entry.metadata.severity, metadata.severity);
+          assert.deepStrictEqual(entry.data, data);
+          done();
+        });
       });
     });
 
     it('should set the default resource', done => {
+      const {log} = getTestLog();
+
       const text = 'entry-text';
       const entry = log.entry(text);
 
       log.write(entry, err => {
         assert.ifError(err);
 
-        setTimeout(() => {
-          log.getEntries(
-              {
-                autoPaginate: false,
-                pageSize: 1,
-              },
-              (err, entries) => {
-                assert.ifError(err);
+        getEntriesFromLog(log, (err, entries) => {
+          assert.ifError(err);
 
-                const entry = entries![0];
+          const entry = entries![0];
 
-                assert.strictEqual(entry.data, text);
-                assert.deepStrictEqual(entry.metadata.resource, {
-                  type: 'global',
-                  labels: {
-                    project_id: PROJECT_ID,
-                  },
-                });
+          assert.strictEqual(entry.data, text);
+          assert.deepStrictEqual(entry.metadata.resource, {
+            type: 'global',
+            labels: {
+              project_id: PROJECT_ID,
+            },
+          });
 
-                done();
-              });
-        }, WRITE_CONSISTENCY_DELAY_MS);
+          done();
+        });
       });
     });
 
     it('should write a log with camelcase resource label keys', done => {
+      const {log, logEntries} = getTestLog();
       log.write(
           logEntries, {
             resource: {
@@ -495,34 +508,42 @@ describe('Logging', () => {
     });
 
     it('should write to a log with alert helper', done => {
+      const {log, logEntries} = getTestLog();
       log.alert(logEntries, options, done);
     });
 
     it('should write to a log with critical helper', done => {
+      const {log, logEntries} = getTestLog();
       log.critical(logEntries, options, done);
     });
 
     it('should write to a log with debug helper', done => {
+      const {log, logEntries} = getTestLog();
       log.debug(logEntries, options, done);
     });
 
     it('should write to a log with emergency helper', done => {
+      const {log, logEntries} = getTestLog();
       log.emergency(logEntries, options, done);
     });
 
     it('should write to a log with error helper', done => {
+      const {log, logEntries} = getTestLog();
       log.error(logEntries, options, done);
     });
 
     it('should write to a log with info helper', done => {
+      const {log, logEntries} = getTestLog();
       log.info(logEntries, options, done);
     });
 
     it('should write to a log with notice helper', done => {
+      const {log, logEntries} = getTestLog();
       log.notice(logEntries, options, done);
     });
 
     it('should write to a log with warning helper', done => {
+      const {log, logEntries} = getTestLog();
       log.warning(logEntries, options, done);
     });
   });
