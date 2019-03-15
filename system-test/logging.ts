@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
+if (process.env.GOOGLE_CLOUD_USE_GRPC_JS) {
+  process.exit(0);
+}
+
 import {BigQuery} from '@google-cloud/bigquery';
+import {ServiceObject} from '@google-cloud/common';
 import {PubSub} from '@google-cloud/pubsub';
 import {Storage} from '@google-cloud/storage';
 import * as assert from 'assert';
@@ -33,6 +38,8 @@ nock('http://metadata.google.internal.')
 describe('Logging', () => {
   let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
+  const WRITE_CONSISTENCY_DELAY_MS = 10000;
+
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
   const storage = new Storage();
@@ -41,17 +48,53 @@ describe('Logging', () => {
   // Create the possible destinations for sinks that we will create.
   const bucket = storage.bucket(generateName());
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
-  const topic = pubsub.topic(`${generateName()}-${Date.now()}`);
+  const topic = pubsub.topic(generateName());
 
   before(async () => {
-    await Promise.all(
-        [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
     await Promise.all([
       bucket.create(), dataset.create(), topic.create(),
       logging.auth.getProjectId().then(projectId => {
         PROJECT_ID = projectId;
       })
     ]);
+  });
+
+  after(async () => {
+    await Promise.all(
+        [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
+
+    async function deleteBuckets() {
+      const [buckets] = await storage.getBuckets({
+        prefix: TESTS_PREFIX,
+      });
+      return Promise.all(buckets.map(async bucket => {
+        await bucket.deleteFiles();
+        await bucket.delete();
+      }));
+    }
+
+    async function deleteDatasets() {
+      await getAndDelete(bigQuery.getDatasets.bind(bigQuery));
+    }
+
+    async function deleteTopics() {
+      await getAndDelete(pubsub.getTopics.bind(pubsub));
+    }
+
+    async function deleteSinks() {
+      await getAndDelete(logging.getSinks.bind(logging));
+    }
+
+    async function getAndDelete(method: Function) {
+      const [objects] = await method();
+      return Promise.all(
+          objects
+              .filter(
+                  (o: ServiceObject) =>
+                      // tslint:disable-next-line no-any
+                  ((o as any).name || o.id).indexOf(TESTS_PREFIX) === 0)
+              .map((o: ServiceObject) => o.delete()));
+    }
   });
 
   describe('sinks', () => {
@@ -231,7 +274,13 @@ describe('Logging', () => {
     });
 
     it('should write multiple entries to a log', async () => {
-      const expected = [
+      await log.write(logEntries, options);
+      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+      const [entries] = await log.getEntries({
+        autoPaginate: false,
+        pageSize: logEntries.length,
+      });
+      assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
         'log entry 1',
         {delegate: 'my_username'},
         {
@@ -244,67 +293,63 @@ describe('Logging', () => {
             delegate: 'my_username',
           },
         },
-      ];
-      await log.write(logEntries, options);
-      for (let i = 0; i < 4; i++) {
-        await wait();
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: logEntries.length,
-        });
-        if (entries.length === expected.length) {
-          const data = entries.map(x => x.data).reverse();
-          assert.deepStrictEqual(data, expected);
-          return;
-        }
-      }
-      assert.fail('Got the incorrect number of results.', expected);
+      ]);
     });
 
-    it('should preserve order of entries', async () => {
+    it('should preserve order of entries', done => {
       const entry1 = log.entry('1');
-      await new Promise(r => setTimeout(r, 1000));
-      const entry2 = log.entry('2');
-      const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
-      const expected = ['3', '2', '1'];
 
-      // Re-arrange to confirm the timestamp is sent and honored.
-      await log.write([entry2, entry3, entry1], options);
-      for (let i = 0; i < 8; i++) {
-        await wait();
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: 3,
+      setTimeout(() => {
+        const entry2 = log.entry('2');
+        const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
+
+        // Re-arrange to confirm the timestamp is sent and honored.
+        log.write([entry2, entry3, entry1], options, err => {
+          assert.ifError(err);
+
+          setTimeout(() => {
+            log.getEntries(
+                {
+                  autoPaginate: false,
+                  pageSize: 3,
+                },
+                (err, entries) => {
+                  assert.ifError(err);
+                  assert.deepStrictEqual(entries!.map(x => x.data), [
+                    '3',
+                    '2',
+                    '1',
+                  ]);
+                  done();
+                });
+          }, WRITE_CONSISTENCY_DELAY_MS * 4);
         });
-        if (entries.length === expected.length) {
-          assert.deepStrictEqual(entries.map(x => x.data), expected);
-          return;
-        }
-      }
-      assert.fail('The number of messages received does not match.', expected);
+      }, 1000);
     });
 
-    it('should preserve order for sequential write calls', async () => {
+    it('should preserve order for sequential write calls', done => {
       const messages = ['1', '2', '3', '4', '5'];
+
       messages.forEach(message => {
         log.write(log.entry(message));
       });
 
-      for (let i = 0; i < 8; i++) {
-        await wait();
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: messages.length,
-        });
-        const data = entries.reverse().map(x => x.data);
-        if (data.length === messages.length) {
-          assert.deepStrictEqual(data, messages);
-        }
-      }
-      assert.fail('The number of messages received does not match.');
+      setTimeout(() => {
+        log.getEntries(
+            {
+              autoPaginate: false,
+              pageSize: messages.length,
+            },
+            (err, entries) => {
+              assert.ifError(err);
+              assert.deepStrictEqual(
+                  entries!.reverse().map(x => x.data), messages);
+              done();
+            });
+      }, WRITE_CONSISTENCY_DELAY_MS * 4);
     });
 
-    it('should write an entry with primitive values', async () => {
+    it('should write an entry with primitive values', done => {
       const logEntry = log.entry({
         when: new Date(),
         matchUser: /username: (.+)/,
@@ -312,29 +357,33 @@ describe('Logging', () => {
         shouldNotBeSaved: undefined,
       });
 
-      const expected = {
-        when: logEntry.data.when.toString(),
-        matchUser: logEntry.data.matchUser.toString(),
-        matchUserError: logEntry.data.matchUserError.toString(),
-      };
+      log.write(logEntry, options, err => {
+        assert.ifError(err);
 
-      await log.write(logEntry, options);
-      for (let i = 0; i < 4; i++) {
-        await wait();
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: 1,
-        });
-        if (entries.length === 1) {
-          const entry = entries[0];
-          assert.deepStrictEqual(entry.data, expected);
-          return;
-        }
-      }
-      assert.fail('Invalid number of log entries returned.', expected);
+        setTimeout(() => {
+          log.getEntries(
+              {
+                autoPaginate: false,
+                pageSize: 1,
+              },
+              (err, entries) => {
+                assert.ifError(err);
+
+                const entry = entries![0];
+
+                assert.deepStrictEqual(entry.data, {
+                  when: logEntry.data.when.toString(),
+                  matchUser: logEntry.data.matchUser.toString(),
+                  matchUserError: logEntry.data.matchUserError.toString(),
+                });
+
+                done();
+              });
+        }, WRITE_CONSISTENCY_DELAY_MS);
+      });
     });
 
-    it('should write a log with metadata', async () => {
+    it('should write a log with metadata', done => {
       const metadata = Object.assign({}, options, {
         severity: 'DEBUG',
       });
@@ -345,47 +394,59 @@ describe('Logging', () => {
 
       const logEntry = log.entry(metadata, data);
 
-      await log.write(logEntry);
-      for (let i = 0; i < 4; i++) {
-        await wait();
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: 1,
-        });
-        if (entries.length === 1) {
-          const entry = entries[0];
-          assert.strictEqual(entry.metadata.severity, metadata.severity);
-          assert.deepStrictEqual(entry.data, data);
-          return;
-        }
-      }
-      assert.fail('Unexpected number of results.');
+      log.write(logEntry, err => {
+        assert.ifError(err);
+
+        setTimeout(() => {
+          log.getEntries(
+              {
+                autoPaginate: false,
+                pageSize: 1,
+              },
+              (err, entries) => {
+                assert.ifError(err);
+
+                const entry = entries![0];
+
+                assert.strictEqual(entry.metadata.severity, metadata.severity);
+                assert.deepStrictEqual(entry.data, data);
+
+                done();
+              });
+        }, WRITE_CONSISTENCY_DELAY_MS);
+      });
     });
 
-    it('should set the default resource', async () => {
+    it('should set the default resource', done => {
       const text = 'entry-text';
       const entry = log.entry(text);
 
-      await log.write(entry);
-      for (let i = 0; i < 4; i++) {
-        await wait();
-        const [entries] = await log.getEntries({
-          autoPaginate: false,
-          pageSize: 1,
-        });
-        if (entries.length === 1) {
-          const entry = entries[0];
-          assert.strictEqual(entry.data, text);
-          assert.deepStrictEqual(entry.metadata.resource, {
-            type: 'global',
-            labels: {
-              project_id: PROJECT_ID,
-            },
-          });
-          return;
-        }
-      }
-      assert.fail('The number of messages received does not match.');
+      log.write(entry, err => {
+        assert.ifError(err);
+
+        setTimeout(() => {
+          log.getEntries(
+              {
+                autoPaginate: false,
+                pageSize: 1,
+              },
+              (err, entries) => {
+                assert.ifError(err);
+
+                const entry = entries![0];
+
+                assert.strictEqual(entry.data, text);
+                assert.deepStrictEqual(entry.metadata.resource, {
+                  type: 'global',
+                  labels: {
+                    project_id: PROJECT_ID,
+                  },
+                });
+
+                done();
+              });
+        }, WRITE_CONSISTENCY_DELAY_MS);
+      });
     });
 
     it('should write a log with camelcase resource label keys', done => {
@@ -437,74 +498,5 @@ describe('Logging', () => {
 
   function generateName() {
     return TESTS_PREFIX + uuid.v1();
-  }
-  async function deleteBuckets() {
-    const [buckets] = await storage.getBuckets({
-      prefix: TESTS_PREFIX,
-    });
-    const bucketsToDelete = buckets.filter(b => {
-      const expiration = Date.now() - 60 * 60 * 1000;
-      const timeCreated = Date.parse(b.metadata.timeCreated);
-      return timeCreated < expiration;
-    });
-    console.log(`Deleting ${bucketsToDelete.length} buckets...`);
-    return Promise.all(bucketsToDelete.map(async bucket => {
-      await bucket.deleteFiles();
-      await bucket.delete();
-    }));
-  }
-
-  async function deleteDatasets() {
-    const [datasets] = await bigQuery.getDatasets();
-    let datasetsToDelete = datasets.filter(ds => {
-      return ds.id!.indexOf(TESTS_PREFIX) > -1;
-    });
-    datasetsToDelete = await Promise.all(datasetsToDelete.map(async ds => {
-      await ds.get();
-      return ds;
-    }));
-    datasetsToDelete = datasetsToDelete.filter(ds => {
-      const expiration = Date.now() - 60 * 60 * 1000;
-      const timeCreated = ds.metadata.creationTime;
-      return timeCreated < expiration;
-    });
-    console.log(`Deleting ${datasetsToDelete.length} datasets...`);
-    await Promise.all(datasetsToDelete.map(ds => ds.delete()));
-  }
-
-  async function deleteTopics() {
-    const [topics] = await pubsub.getTopics();
-    const topicsToDelete = topics.filter(topic => {
-      if (!topic.name.includes(TESTS_PREFIX)) {
-        return false;
-      }
-      // The name of the topic is created with the timestamp built in:
-      // gcloud-logging-test-xxxx-1484202038383
-      const nameParts = topic.name.split('-');
-      const created = Number(nameParts[nameParts.length - 1]);
-      const expiration = Date.now() - 60 * 60 * 1000;
-      return created < expiration;
-    });
-    console.log(`Deleting ${topicsToDelete.length} topics...`);
-    await Promise.all(topicsToDelete.map(topic => topic.delete()));
-  }
-
-  async function deleteSinks() {
-    const [sinks] = await logging.getSinks();
-    let sinksToDelete = sinks.filter(sink => {
-      return sink.name.indexOf(TESTS_PREFIX) > -1;
-    });
-    sinksToDelete = sinks.filter(sink => {
-      const expiration = Date.now() - 60 * 60 * 1000;
-      // tslint:disable-next-line no-any
-      const timeCreated = Date.parse((sink!.metadata as any).createTime);
-      return timeCreated < expiration;
-    });
-    console.log(`Deleting ${sinksToDelete.length} sinks...`);
-    await Promise.all(sinksToDelete.map(sink => sink.delete()));
-  }
-
-  async function wait() {
-    await new Promise(r => setTimeout(r, 5000));
   }
 });
