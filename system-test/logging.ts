@@ -273,7 +273,13 @@ describe('Logging', () => {
       },
     };
 
-    after(() => Promise.all(logs.map(log => log.delete())));
+    after(async () => {
+      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+
+      for (const log of logs) {
+        await log.delete();
+      }
+    });
 
     it('should list log entries', (done) => {
       const {log, logEntries} = getTestLog();
@@ -399,7 +405,7 @@ describe('Logging', () => {
       const messages = ['1', '2', '3', '4', '5'];
 
       messages.forEach(message => {
-        log.write(log.entry(message));
+        log.write(log.entry(message), options);
       });
 
       getEntriesFromLog(log, (err, entries) => {
