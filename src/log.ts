@@ -828,7 +828,8 @@ class Log implements LogSeverityFunctions {
                   this.logging.detectedResource = resource;
                   writeWithResource(resource);
                 },
-                () => {
+                (err) => {
+                  console.log(err)
                   // Ignore errors (the API will speak up if it has an issue).
                   writeWithResource(null);
                 });
