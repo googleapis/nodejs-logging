@@ -471,7 +471,7 @@ describe('Logging', () => {
       });
     });
 
-    it.only('should set the default resource', done => {
+    it('should set the default resource', done => {
       const {log} = getTestLog();
 
       const text = 'entry-text';
