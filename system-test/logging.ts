@@ -558,6 +558,6 @@ describe('Logging', () => {
   // Format 2: ${TESTS_PREFIX}_${date}_${uuid}
   function getDateFromGeneratedName(name) {
     const timeCreated = name.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0];
-    return new Date(Number(timeResourceCreated));
+    return new Date(Number(timeCreated));
   }
 });
