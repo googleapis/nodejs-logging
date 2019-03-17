@@ -95,24 +95,19 @@ describe('Logging', () => {
 
     async function getAndDelete(method: Function) {
       const [objects] = await method();
-      return Promise.all(
-          objects
-              .filter((o: ServiceObject) => {
-                // tslint:disable-next-line no-any
-                const id = (o as any).name || o.id;
+      return Promise.all(objects
+                             .filter((o: ServiceObject) => {
+                               // tslint:disable-next-line no-any
+                               const name = (o as any).name || o.id;
 
-                if (!id.startsWith(TESTS_PREFIX)) {
-                  return false;
-                }
+                               if (!name.startsWith(TESTS_PREFIX)) {
+                                 return false;
+                               }
 
-                // Parse the time the resource was created using the resource id
-                const timeResourceCreated =
-                    Number(id.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0]);
-                const dateResourceCreated = new Date(timeResourceCreated);
-
-                return dateResourceCreated < oneHourAgo;
-              })
-              .map((o: ServiceObject) => o.delete()));
+                               return getDateFromGeneratedName(name) <
+                                   oneHourAgo;
+                             })
+                             .map((o: ServiceObject) => o.delete()));
     }
   });
 
@@ -556,5 +551,13 @@ describe('Logging', () => {
 
   function generateName() {
     return `${TESTS_PREFIX}-${Date.now()}-${uuid().split('-').pop()}`;
+  }
+
+  // Parse the time the resource was created using the resource id
+  // Format 1: ${TESTS_PREFIX}-${date}-${uuid}
+  // Format 2: ${TESTS_PREFIX}_${date}_${uuid}
+  function getDateFromGeneratedName(name) {
+    const timeCreated = name.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0];
+    return new Date(Number(timeResourceCreated));
   }
 });
