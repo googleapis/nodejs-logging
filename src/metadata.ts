@@ -147,7 +147,7 @@ export async function getDefaultResource(auth: GoogleAuth) {
     case GCPEnv.APP_ENGINE:
       return getGAEDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.CLOUD_FUNCTIONS:
-      return getCloudFunctionDescriptor().catch(() => getGlobalDescriptor());
+      return getCloudFunctionDescriptor();
     case GCPEnv.COMPUTE_ENGINE:
       // Test for compute engine should be done after all the rest -
       // everything runs on top of compute engine.
