@@ -822,16 +822,10 @@ class Log implements LogSeverityFunctions {
       } else if (this.logging.detectedResource) {
         writeWithResource(this.logging.detectedResource);
       } else {
-        getDefaultResource(this.logging.auth)
-            .then(
-                (resource) => {
-                  this.logging.detectedResource = resource;
-                  writeWithResource(resource);
-                },
-                () => {
-                  // Ignore errors (the API will speak up if it has an issue).
-                  writeWithResource(null);
-                });
+        getDefaultResource(this.logging.auth).then((resource) => {
+          this.logging.detectedResource = resource;
+          writeWithResource(resource);
+        });
       }
       function writeWithResource(resource: {}|null) {
         let decoratedEntries;
