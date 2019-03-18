@@ -141,8 +141,6 @@ export function getGlobalDescriptor() {
 export async function getDefaultResource(auth: GoogleAuth) {
   const env = await auth.getEnv();
 
-  console.log({env});
-
   switch (env) {
     case GCPEnv.KUBERNETES_ENGINE:
       return getGKEDescriptor().catch(() => getGlobalDescriptor());
