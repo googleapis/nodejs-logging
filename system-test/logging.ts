@@ -31,10 +31,7 @@ import * as uuid from 'uuid';
 import {Logging, Sink} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
-nock(BASE_URL)
-    .get(() => true)
-    .replyWithError({code: 'ENOTFOUND'})
-    .persist();
+nock(BASE_URL).get(() => true).replyWithError({code: 'ENOTFOUND'}).persist();
 
 describe('Logging', () => {
   let PROJECT_ID: string;
