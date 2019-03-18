@@ -140,17 +140,18 @@ export function getGlobalDescriptor() {
  */
 export async function getDefaultResource(auth: GoogleAuth) {
   const env = await auth.getEnv();
+
   switch (env) {
     case GCPEnv.KUBERNETES_ENGINE:
-      return getGKEDescriptor();
+      return getGKEDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.APP_ENGINE:
-      return getGAEDescriptor();
+      return getGAEDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.CLOUD_FUNCTIONS:
       return getCloudFunctionDescriptor();
     case GCPEnv.COMPUTE_ENGINE:
       // Test for compute engine should be done after all the rest -
       // everything runs on top of compute engine.
-      return getGCEDescriptor();
+      return getGCEDescriptor().catch(() => getGlobalDescriptor());
     default:
       return getGlobalDescriptor();
   }
