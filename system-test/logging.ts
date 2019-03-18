@@ -23,7 +23,6 @@ import {ServiceObject} from '@google-cloud/common';
 import {PubSub} from '@google-cloud/pubsub';
 import {Storage} from '@google-cloud/storage';
 import * as assert from 'assert';
-import {BASE_URL} from 'gcp-metadata';
 import * as nock from 'nock';
 import {Duplex} from 'stream';
 import * as uuid from 'uuid';
@@ -31,7 +30,10 @@ import * as uuid from 'uuid';
 import {Logging, Sink} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
-nock(BASE_URL).get(() => true).replyWithError({code: 'ENOTFOUND'}).persist();
+nock('http://metadata.google.internal')
+    .get(() => true)
+    .replyWithError({code: 'ENOTFOUND'})
+    .persist();
 
 describe('Logging', () => {
   let PROJECT_ID: string;
@@ -464,7 +466,7 @@ describe('Logging', () => {
       });
     });
 
-    it.only('should set the default resource', done => {
+    it('should set the default resource', done => {
       const {log} = getTestLog();
 
       const text = 'entry-text';
