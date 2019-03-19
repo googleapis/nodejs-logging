@@ -66,7 +66,9 @@ export type DeleteResponse = google.protobuf.Empty;
 export type LogSink = google_config.logging.v2.ILogSink;
 
 export interface CreateSinkRequest {
-  destination: Bucket|Dataset|Topic|string;
+  // destination: Bucket|Dataset|Topic|string;
+  // tslint:disable-next-line no-any
+  destination: any;
   filter?: string;
   includeChildren?: boolean;
   name?: string;
