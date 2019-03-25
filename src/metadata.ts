@@ -40,8 +40,8 @@ export function getCloudFunctionDescriptor() {
   return {
     type: 'cloud_function',
     labels: {
-      function_name: process.env.FUNCTION_NAME,
-      region: process.env.FUNCTION_REGION,
+      function_name: process.env.K_SERVICE || process.env.FUNCTION_NAME,
+      region: process.env.GOOGLE_CLOUD_REGION || process.env.FUNCTION_REGION,
     },
   };
 }

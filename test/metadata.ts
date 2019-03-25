@@ -95,12 +95,37 @@ describe('metadata', () => {
     const FUNCTION_NAME = 'function-name';
     const FUNCTION_REGION = 'function-region';
 
+    const K_SERVICE = 'k-service';
+    const GOOGLE_CLOUD_REGION = 'google-cloud-region';
+
     beforeEach(() => {
       process.env.FUNCTION_NAME = FUNCTION_NAME;
       process.env.FUNCTION_REGION = FUNCTION_REGION;
+      delete process.env.K_SERVICE;
+      delete process.env.GOOGLE_CLOUD_REGION;
     });
 
-    it('should return the correct descriptor', () => {
+    afterEach(() => {
+      delete process.env.FUNCTION_NAME;
+      delete process.env.FUNCTION_REGION;
+      delete process.env.K_SERVICE;
+      delete process.env.GOOGLE_CLOUD_REGION;
+    });
+
+    it('should return the correct primary descriptor', () => {
+      process.env.K_SERVICE = K_SERVICE;
+      process.env.GOOGLE_CLOUD_REGION = GOOGLE_CLOUD_REGION;
+
+      assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
+        type: 'cloud_function',
+        labels: {
+          function_name: K_SERVICE,
+          region: GOOGLE_CLOUD_REGION,
+        },
+      });
+    });
+
+    it('should return the correct fallback descriptor', () => {
       assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
         type: 'cloud_function',
         labels: {
