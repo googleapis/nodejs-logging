@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.5.1
+
+03-18-2019 19:32 PDT
+
+### Bug Fixes
+- fix(ts): do not require storage/pubsub types, add install test ([#430](https://github.com/googleapis/nodejs-logging/pull/430))
+
 ## v4.5.0
 
 03-13-2019 22:25 PDT
