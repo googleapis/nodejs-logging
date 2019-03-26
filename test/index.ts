@@ -645,7 +645,7 @@ describe('Logging', () => {
 
   describe('getSinks', () => {
     beforeEach(() => {
-      logging.setProjectId = async () => {};
+      logging.auth.getProjectId = async () => {};
     });
     const OPTIONS = {
       a: 'b',
@@ -743,7 +743,7 @@ describe('Logging', () => {
       GAX_STREAM = through.obj();
       GAX_STREAM.push(RESULT);
       logging.configService.listSinksStream = () => GAX_STREAM;
-      logging.setProjectId = async () => {};
+      logging.auth.getProjectId = async () => {};
     });
 
     it('should make request once reading', done => {

@@ -685,6 +685,7 @@ class Logging {
   async getSinks(opts?: GetSinksRequest|
                  GetSinksCallback): Promise<GetSinksResponse> {
     const options = opts ? opts as GetSinksRequest : {};
+    this.projectId = await this.auth.getProjectId();
     const reqOpts = extend({}, options, {
       parent: 'projects/' + this.projectId,
     });
@@ -754,27 +755,28 @@ class Logging {
       next(null, sinkInstance);
     });
     userStream.once('reading', () => {
-      const reqOpts = extend({}, options, {
-        parent: 'projects/' + self.projectId,
-      });
-      delete reqOpts.gaxOptions;
-      const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions);
+      this.auth.getProjectId().then(projectId => {
+        this.projectId = projectId;
+        const reqOpts = extend({}, options, {
+          parent: 'projects/' + self.projectId,
+        });
+        delete reqOpts.gaxOptions;
+        const gaxOptions = extend(
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions);
 
-      let gaxStream: ClientReadableStream<LogSink>;
-      requestStream = streamEvents<Duplex>(through.obj());
-      (requestStream as AbortableDuplex).abort = () => {
-        if (gaxStream && gaxStream.cancel) {
-          gaxStream.cancel();
-        }
-      };
-      // tslint:disable-next-line no-any
-      if (!(global as any).GCLOUD_SANDBOX_ENV) {
-        requestStream.once('reading', () => {
-          self.setProjectId(reqOpts).then(() => {
+        let gaxStream: ClientReadableStream<LogSink>;
+        requestStream = streamEvents<Duplex>(through.obj());
+        (requestStream as AbortableDuplex).abort = () => {
+          if (gaxStream && gaxStream.cancel) {
+            gaxStream.cancel();
+          }
+        };
+        // tslint:disable-next-line no-any
+        if (!(global as any).GCLOUD_SANDBOX_ENV) {
+          requestStream.once('reading', () => {
             try {
               gaxStream =
                   this.configService.listSinksStream(reqOpts, gaxOptions);
@@ -788,12 +790,12 @@ class Logging {
                       requestStream.destroy(err);
                     })
                 .pipe(requestStream);
+            return;
           });
-          return;
-        });
-      }
-      // tslint:disable-next-line no-any
-      (userStream as any).setPipeline(requestStream, toSinkStream);
+        }
+        // tslint:disable-next-line no-any
+        (userStream as any).setPipeline(requestStream, toSinkStream);
+      });
     });
     return userStream;
   }
@@ -989,7 +991,7 @@ class Logging {
     if (this.projectId === '{{projectId}}') {
       this.projectId = await this.auth.getProjectId();
     }
-    reqOpts = replaceProjectIdToken(reqOpts, this.projectId!);
+    reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
   }
 }
 
