@@ -288,6 +288,13 @@ class LoggingServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      log_name: request.logName,
+    });
 
     return this._innerApiCalls.deleteLog(request, options, callback);
   }
@@ -862,6 +869,13 @@ class LoggingServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent,
+    });
 
     return this._innerApiCalls.listLogs(request, options, callback);
   }
