@@ -33,13 +33,13 @@ export interface GetEntriesRequest {
   autoPaginate?: boolean;
   filter?: string;
   gaxOptions?: CallOptions;
+  log?: string;
   maxApiCalls?: number;
   maxResults?: number;
   orderBy?: string;
   pageSize?: number;
   pageToken?: string;
   resourceNames?: string[]|string;
-  logName_?: string;
 }
 
 export interface LogOptions {
@@ -563,7 +563,7 @@ class Log implements LogSeverityFunctions {
   getEntriesStream(options: GetEntriesRequest) {
     options = extend(
         {
-          logName_: this.name,
+          log: this.name,
         },
         options);
     return this.logging.getEntriesStream(options);

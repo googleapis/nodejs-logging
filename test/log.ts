@@ -277,7 +277,7 @@ describe('Log', () => {
   describe('getEntriesStream', () => {
     const fakeStream = {};
     const EXPECTED_OPTIONS = {
-      logName_: LOG_NAME_ENCODED,
+      log: LOG_NAME_ENCODED,
     };
 
     it('should call Logging getEntriesStream with defaults', done => {

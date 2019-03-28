@@ -433,6 +433,8 @@ class Logging {
    * empty filter matches all log entries.
    * @property {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+   * @property {string} [log] A name of the log specifying to pnly return
+   *     entries from this log.
    * @property {number} [maxApiCalls] Maximum number of API calls to make.
    * @property {number} [maxResults] Maximum number of items plus prefixes to
    *     return.
@@ -580,10 +582,14 @@ class Logging {
     userStream.once('reading', () => {
       this.auth.getProjectId().then(projectId => {
         this.projectId = projectId;
-        if (options.logName_) {
-          options.filter =
-              `logName="${Log.formatName_(this.projectId, options.logName_)}"`;
-          delete options.logName_;
+        if (options.log) {
+          options = extend(
+              {
+                filter:
+                    `logName="${Log.formatName_(this.projectId, options.log)}"`,
+              },
+              options);
+          delete options.log;
         }
         const reqOpts = extend(
             {

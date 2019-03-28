@@ -21,6 +21,7 @@ import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
+import {Logging as LOGGING} from '../src/index';
 
 import {GetEntriesCallback} from '../src/index';
 import {getOrInjectContext} from '../src/middleware/context';
@@ -573,6 +574,36 @@ describe('Logging', () => {
       };
 
       const stream = logging.getEntriesStream(OPTIONS);
+      stream.emit('reading');
+    });
+
+    it('should set logName filter if has logName flag', done => {
+      const logName = 'log-name';
+      logging = new LOGGING({projectId: PROJECT_ID});
+      logging.loggingService.listLogEntriesStream = (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
+          resourceNames: ['projects/' + logging.projectId],
+          orderBy: 'timestamp desc',
+          a: 'b',
+          c: 'd',
+          filter: `logName="${
+                  ['projects', PROJECT_ID, 'logs', encodeURIComponent(logName)]
+                      .join('/')}"`,
+        });
+
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+          a: 'b',
+          c: 'd',
+        });
+
+        setImmediate(done);
+
+        return GAX_STREAM;
+      };
+
+      const log = logging.log('log-name');
+      const stream = log.getEntriesStream(OPTIONS);
       stream.emit('reading');
     });
 
