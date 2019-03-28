@@ -514,13 +514,13 @@ class Logging {
         },
         options);
     reqOpts.resourceNames = arrify(reqOpts.resourceNames);
+    this.projectId = await this.auth.getProjectId();
     const resourceName = 'projects/' + this.projectId;
     if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
       reqOpts.resourceNames.push(resourceName);
     }
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
-    this.setProjectId(reqOpts);
     const gaxOptions = extend(
         {
           autoPaginate: options!.autoPaginate,
@@ -578,32 +578,38 @@ class Logging {
       next(null, Entry.fromApiResponse_(entry));
     });
     userStream.once('reading', () => {
-      const reqOpts = extend(
-          {
-            orderBy: 'timestamp desc',
-          },
-          options);
-      reqOpts.resourceNames = arrify(reqOpts.resourceNames);
-      reqOpts.resourceNames.push(`projects/${this.projectId}`);
-      delete reqOpts.autoPaginate;
-      delete reqOpts.gaxOptions;
-      const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions);
-
-      let gaxStream: ClientReadableStream<LogEntry>;
-      requestStream = streamEvents<Duplex>(through.obj());
-      (requestStream as AbortableDuplex).abort = () => {
-        if (gaxStream && gaxStream.cancel) {
-          gaxStream.cancel();
+      this.auth.getProjectId().then(projectId => {
+        this.projectId = projectId;
+        if (options.logName_) {
+          options.filter =
+              `logName="${Log.formatName_(this.projectId, options.logName_)}"`;
+          delete options.logName_;
         }
-      };
-      // tslint:disable-next-line no-any
-      if (!(global as any).GCLOUD_SANDBOX_ENV) {
-        requestStream.once('reading', () => {
-          this.setProjectId(reqOpts).then(() => {
+        const reqOpts = extend(
+            {
+              orderBy: 'timestamp desc',
+            },
+            options);
+        reqOpts.resourceNames = arrify(reqOpts.resourceNames);
+        reqOpts.resourceNames.push(`projects/${this.projectId}`);
+        delete reqOpts.autoPaginate;
+        delete reqOpts.gaxOptions;
+        const gaxOptions = extend(
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions);
+
+        let gaxStream: ClientReadableStream<LogEntry>;
+        requestStream = streamEvents<Duplex>(through.obj());
+        (requestStream as AbortableDuplex).abort = () => {
+          if (gaxStream && gaxStream.cancel) {
+            gaxStream.cancel();
+          }
+        };
+        // tslint:disable-next-line no-any
+        if (!(global as any).GCLOUD_SANDBOX_ENV) {
+          requestStream.once('reading', () => {
             try {
               gaxStream =
                   this.loggingService.listLogEntriesStream(reqOpts, gaxOptions);
@@ -617,12 +623,12 @@ class Logging {
                       requestStream.destroy(err);
                     })
                 .pipe(requestStream);
+            return;
           });
-          return;
-        });
-      }
-      // tslint:disable-next-line no-any
-      (userStream as any).setPipeline(requestStream, toEntryStream);
+        }
+        // tslint:disable-next-line no-any
+        (userStream as any).setPipeline(requestStream, toEntryStream);
+      });
     });
     return userStream;
   }

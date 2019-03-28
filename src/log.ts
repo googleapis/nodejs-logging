@@ -15,11 +15,10 @@
  */
 
 import {DeleteCallback} from '@google-cloud/common';
-import {promisifyAll} from '@google-cloud/promisify';
+import {callbackifyAll, promisifyAll} from '@google-cloud/promisify';
 import * as arrify from 'arrify';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import * as is from 'is';
 import {Response} from 'request';
 
 import {google} from '../proto/logging';
@@ -40,6 +39,7 @@ export interface GetEntriesRequest {
   pageSize?: number;
   pageToken?: string;
   resourceNames?: string[]|string;
+  logName_?: string;
 }
 
 export interface LogOptions {
@@ -514,20 +514,16 @@ class Log implements LogSeverityFunctions {
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
-  getEntries(
-      options?: GetEntriesRequest|GetEntriesCallback,
-      callback?: GetEntriesCallback): Promise<GetEntriesResponse>|void {
-    if (is.function(options))
-      {
-        callback = options as GetEntriesCallback;
-        options = {};
-      }
-      options = extend(
-          {
-            filter: 'logName="' + this.formattedName_ + '"',
-          },
-          options);
-      return this.logging.getEntries(options as GetEntriesRequest, callback!);
+  async getEntries(options?: GetEntriesRequest|
+                   GetEntriesCallback): Promise<GetEntriesResponse> {
+    this.logging.projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = Log.formatName_(this.logging.projectId, this.name);
+    options = extend(
+        {
+          filter: `logName="${this.formattedName_}"`,
+        },
+        options as GetEntriesRequest);
+    return this.logging.getEntries(options);
   }
 
   /**
@@ -565,12 +561,12 @@ class Log implements LogSeverityFunctions {
    *   });
    */
   getEntriesStream(options: GetEntriesRequest) {
-      options = extend(
-          {
-            filter: 'logName="' + this.formattedName_ + '"',
-          },
-          options);
-      return this.logging.getEntriesStream(options);
+    options = extend(
+        {
+          logName_: this.name,
+        },
+        options);
+    return this.logging.getEntriesStream(options);
   }
 
   /**
@@ -610,12 +606,11 @@ class Log implements LogSeverityFunctions {
       entry: Entry|Entry[],
       optionsOrCallback?: WriteOptions|ApiResponseCallback,
       cb?: ApiResponseCallback): void|Promise<ApiResponse> {
-      const options =
-          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
-      const callback =
-          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
-      this.write(
-          Log.assignSeverityToEntries_(entry, 'INFO'), options, callback!);
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    this.write(Log.assignSeverityToEntries_(entry, 'INFO'), options, callback!);
   }
 
   /**
@@ -655,12 +650,12 @@ class Log implements LogSeverityFunctions {
       entry: Entry|Entry[],
       optionsOrCallback?: WriteOptions|ApiResponseCallback,
       cb?: ApiResponseCallback): void|Promise<ApiResponse> {
-      const options =
-          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
-      const callback =
-          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
-      this.write(
-          Log.assignSeverityToEntries_(entry, 'NOTICE'), options, callback!);
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    this.write(
+        Log.assignSeverityToEntries_(entry, 'NOTICE'), options, callback!);
   }
 
   /**
@@ -700,12 +695,12 @@ class Log implements LogSeverityFunctions {
       entry: Entry|Entry[],
       optionsOrCallback?: WriteOptions|ApiResponseCallback,
       cb?: ApiResponseCallback): void|Promise<ApiResponse> {
-      const options =
-          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
-      const callback =
-          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
-      this.write(
-          Log.assignSeverityToEntries_(entry, 'WARNING'), options, callback!);
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    this.write(
+        Log.assignSeverityToEntries_(entry, 'WARNING'), options, callback!);
   }
 
   /**
@@ -808,49 +803,49 @@ class Log implements LogSeverityFunctions {
       entry: Entry|Entry[],
       optionsOrCallback?: WriteOptions|ApiResponseCallback,
       cb?: ApiResponseCallback): void|Promise<ApiResponse> {
-      const options =
-          typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
-      const callback =
-          typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
-      const self = this;
+    const options =
+        typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+    const callback =
+        typeof optionsOrCallback === 'function' ? optionsOrCallback : cb;
+    const self = this;
 
-      if (options.resource) {
-        if (options.resource.labels) {
-          options.resource.labels = snakeCaseKeys(options.resource.labels);
-        }
-        writeWithResource(options.resource);
-      } else if (this.logging.detectedResource) {
-        writeWithResource(this.logging.detectedResource);
-      } else {
-        getDefaultResource(this.logging.auth).then((resource) => {
-          this.logging.detectedResource = resource;
-          writeWithResource(resource);
-        });
+    if (options.resource) {
+      if (options.resource.labels) {
+        options.resource.labels = snakeCaseKeys(options.resource.labels);
       }
-      function writeWithResource(resource: {}|null) {
-        let decoratedEntries;
-        try {
-          decoratedEntries = self.decorateEntries_(arrify(entry));
-        } catch (err) {
-          // Ignore errors (the API will speak up if it has an issue).
-        }
-        const reqOpts = extend(
-            {
-              logName: self.formattedName_,
-              entries: decoratedEntries,
-              resource,
-            },
-            options);
-        delete reqOpts.gaxOptions;
-        self.logging.request(
-            {
-              client: 'LoggingServiceV2Client',
-              method: 'writeLogEntries',
-              reqOpts,
-              gaxOpts: options.gaxOptions,
-            },
-            callback);
+      writeWithResource(options.resource);
+    } else if (this.logging.detectedResource) {
+      writeWithResource(this.logging.detectedResource);
+    } else {
+      getDefaultResource(this.logging.auth).then((resource) => {
+        this.logging.detectedResource = resource;
+        writeWithResource(resource);
+      });
+    }
+    function writeWithResource(resource: {}|null) {
+      let decoratedEntries;
+      try {
+        decoratedEntries = self.decorateEntries_(arrify(entry));
+      } catch (err) {
+        // Ignore errors (the API will speak up if it has an issue).
       }
+      const reqOpts = extend(
+          {
+            logName: self.formattedName_,
+            entries: decoratedEntries,
+            resource,
+          },
+          options);
+      delete reqOpts.gaxOptions;
+      self.logging.request(
+          {
+            client: 'LoggingServiceV2Client',
+            method: 'writeLogEntries',
+            reqOpts,
+            gaxOpts: options.gaxOptions,
+          },
+          callback);
+    }
   }
 
   /**
@@ -863,14 +858,14 @@ class Log implements LogSeverityFunctions {
    * @throws if there is an error during serialization.
    */
   decorateEntries_(entries: Entry[]) {
-      return entries.map(entry => {
-        if (!(entry instanceof Entry)) {
-          entry = this.entry(entry);
-        }
-        return entry.toJSON({
-          removeCircular: this.removeCircular_,
-        });
+    return entries.map(entry => {
+      if (!(entry instanceof Entry)) {
+        entry = this.entry(entry);
+      }
+      return entry.toJSON({
+        removeCircular: this.removeCircular_,
       });
+    });
   }
 
   /**
@@ -883,14 +878,14 @@ class Log implements LogSeverityFunctions {
    */
   static assignSeverityToEntries_(entries: Entry|Entry[], severity: string):
       Entry[] {
-      return arrify(entries).map(entry => {
-        const metadata = extend(true, {}, entry.metadata, {
-          severity,
-        });
-        return extend(new Entry(), entry, {
-          metadata,
-        });
+    return arrify(entries).map(entry => {
+      const metadata = extend(true, {}, entry.metadata, {
+        severity,
       });
+      return extend(new Entry(), entry, {
+        metadata,
+      });
+    });
   }
 
   /**
@@ -902,28 +897,35 @@ class Log implements LogSeverityFunctions {
    * @returns {string}
    */
   static formatName_(projectId: string, name: string) {
-      const path = 'projects/' + projectId + '/logs/';
-      name = name.replace(path, '');
-      if (decodeURIComponent(name) === name) {
-        // The name has not been encoded yet.
-        name = encodeURIComponent(name);
-      }
-      return path + name;
+    const path = 'projects/' + projectId + '/logs/';
+    name = name.replace(path, '');
+    if (decodeURIComponent(name) === name) {
+      // The name has not been encoded yet.
+      name = encodeURIComponent(name);
+    }
+    return path + name;
   }
-  }
+}
 
-  /*! Developer Documentation
-   *
-   * All async methods (except for streams) will return a Promise in the event
-   * that a callback is omitted.
-   */
-  promisifyAll(Log, {
-    exclude: ['entry'],
-  });
+/*! Developer Documentation
+ *
+ * All async methods (except for streams) will return a Promise in the event
+ * that a callback is omitted.
+ */
+promisifyAll(Log, {
+  exclude: ['entry', 'getEntries'],
+});
 
-  /**
-   * Reference to the {@link Log} class.
-   * @name module:@google-cloud/logging.Log
-   * @see Log
-   */
-  export {Log};
+callbackifyAll(Log, {
+  exclude: [
+    'alert', 'critical', 'debug', 'delete', 'emergency', 'entry', 'error',
+    'getEntriesStream', 'info', 'notice', 'warning', 'write'
+  ]
+});
+
+/**
+ * Reference to the {@link Log} class.
+ * @name module:@google-cloud/logging.Log
+ * @see Log
+ */
+export {Log};

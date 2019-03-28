@@ -407,10 +407,10 @@ describe('Logging', () => {
 
   describe('getEntries', () => {
     beforeEach(() => {
-      logging.setProjectId = async () => {};
+      logging.auth.getProjectId = async () => PROJECT_ID;
     });
 
-    it('exec without options', async () => {
+    it('should exec without options', async () => {
       logging.loggingService.listLogEntries = async (reqOpts, gaxOpts) => {
         assert.deepStrictEqual(reqOpts, {
           orderBy: 'timestamp desc',
@@ -549,7 +549,7 @@ describe('Logging', () => {
       GAX_STREAM = through.obj();
       GAX_STREAM.push(RESULT);
       logging.loggingService.listLogEntriesStream = () => GAX_STREAM;
-      logging.setProjectId = async () => {};
+      logging.auth.getProjectId = async () => PROJECT_ID;
     });
 
     it('should make request once reading', done => {
