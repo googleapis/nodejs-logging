@@ -298,6 +298,13 @@ class MetricsServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent,
+    });
 
     return this._innerApiCalls.listLogMetrics(request, options, callback);
   }
@@ -403,6 +410,13 @@ class MetricsServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      metric_name: request.metricName,
+    });
 
     return this._innerApiCalls.getLogMetric(request, options, callback);
   }
@@ -463,6 +477,13 @@ class MetricsServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent,
+    });
 
     return this._innerApiCalls.createLogMetric(request, options, callback);
   }
@@ -524,6 +545,13 @@ class MetricsServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      metric_name: request.metricName,
+    });
 
     return this._innerApiCalls.updateLogMetric(request, options, callback);
   }
@@ -564,6 +592,13 @@ class MetricsServiceV2Client {
       options = {};
     }
     options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      metric_name: request.metricName,
+    });
 
     return this._innerApiCalls.deleteLogMetric(request, options, callback);
   }
