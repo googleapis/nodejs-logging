@@ -607,6 +607,41 @@ describe('Logging', () => {
       stream.emit('reading');
     });
 
+    it('should add logName filter to user provided filter', done => {
+      const logName = 'log-name';
+      const OPTIONS_WITH_FILTER = extend(
+          {
+            filter: 'custom filter',
+          },
+          OPTIONS);
+      logging = new LOGGING({projectId: PROJECT_ID});
+      logging.loggingService.listLogEntriesStream = (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
+          resourceNames: ['projects/' + logging.projectId],
+          orderBy: 'timestamp desc',
+          a: 'b',
+          c: 'd',
+          filter: `(${OPTIONS_WITH_FILTER.filter}) AND logName="${
+                  ['projects', PROJECT_ID, 'logs', encodeURIComponent(logName)]
+                      .join('/')}"`,
+        });
+
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+          a: 'b',
+          c: 'd',
+        });
+
+        setImmediate(done);
+
+        return GAX_STREAM;
+      };
+
+      const log = logging.log('log-name');
+      const stream = log.getEntriesStream(OPTIONS_WITH_FILTER);
+      stream.emit('reading');
+    });
+
     it('should destroy request stream if gax fails', done => {
       const error = new Error('Error.');
       logging.loggingService.listLogEntriesStream = () => {

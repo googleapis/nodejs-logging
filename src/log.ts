@@ -514,15 +514,17 @@ class Log implements LogSeverityFunctions {
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
-  async getEntries(options?: GetEntriesRequest|
+  async getEntries(opts?: GetEntriesRequest|
                    GetEntriesCallback): Promise<GetEntriesResponse> {
+    const options = extend({}, opts as GetEntriesRequest);
     this.logging.projectId = await this.logging.auth.getProjectId();
     this.formattedName_ = Log.formatName_(this.logging.projectId, this.name);
-    options = extend(
-        {
-          filter: `logName="${this.formattedName_}"`,
-        },
-        options as GetEntriesRequest);
+    if (options.filter) {
+      options.filter =
+          `(${options.filter}) AND logName="${this.formattedName_}"`;
+    } else {
+      options.filter = `logName="${this.formattedName_}"`;
+    }
     return this.logging.getEntries(options);
   }
 

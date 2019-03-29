@@ -583,12 +583,13 @@ class Logging {
       this.auth.getProjectId().then(projectId => {
         this.projectId = projectId;
         if (options.log) {
-          options = extend(
-              {
-                filter:
-                    `logName="${Log.formatName_(this.projectId, options.log)}"`,
-              },
-              options);
+          if (options.filter) {
+            options.filter = `(${options.filter}) AND logName="${
+                Log.formatName_(this.projectId, options.log)}"`;
+          } else {
+            options.filter =
+                `logName="${Log.formatName_(this.projectId, options.log)}"`;
+          }
           delete options.log;
         }
         const reqOpts = extend(

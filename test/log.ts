@@ -260,14 +260,19 @@ describe('Log', () => {
       await log.getEntries();
     });
 
-    it('should allow overriding the options', async () => {
+    it('should add logName filter to user provided filter', async () => {
       const options = {
         custom: true,
         filter: 'custom filter',
       };
 
+      const expectedOptions = extend({}, options);
+      expectedOptions.filter =
+          `(${options.filter}) AND logName="${log.formattedName_}"`;
+
       log.logging.getEntries = (options_) => {
-        assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
+        assert.notDeepStrictEqual(options_, options);
+        assert.deepStrictEqual(options_, expectedOptions);
       };
 
       await log.getEntries(options);
