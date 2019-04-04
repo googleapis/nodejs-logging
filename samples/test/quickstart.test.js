@@ -18,7 +18,9 @@
 const {assert} = require('chai');
 const uuid = require('uuid');
 const {Logging} = require('@google-cloud/logging');
-const execa = require('execa');
+const cp = require('child_process');
+
+const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
 const logging = new Logging();
 const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
@@ -33,8 +35,8 @@ describe('quickstart', () => {
       .catch(console.warn);
   });
 
-  it('should log an entry', async () => {
-    const {stdout} = await execa.shell(`${cmd} ${projectId} ${logName}`);
-    assert.match(stdout, /Logged: Hello, world!/);
+  it('should log an entry', () => {
+    const stdout = execSync(`${cmd} ${projectId} ${logName}`);
+    assert.include(stdout, 'Logged: Hello, world!');
   });
 });
