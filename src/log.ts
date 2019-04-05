@@ -16,7 +16,7 @@
 
 import {DeleteCallback} from '@google-cloud/common';
 import {promisifyAll} from '@google-cloud/promisify';
-import * as arrify from 'arrify';
+import arrify = require('arrify');
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import * as is from 'is';
@@ -830,7 +830,7 @@ class Log implements LogSeverityFunctions {
       function writeWithResource(resource: {}|null) {
         let decoratedEntries;
         try {
-          decoratedEntries = self.decorateEntries_(arrify(entry));
+          decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
         } catch (err) {
           // Ignore errors (the API will speak up if it has an issue).
         }
@@ -883,7 +883,7 @@ class Log implements LogSeverityFunctions {
    */
   static assignSeverityToEntries_(entries: Entry|Entry[], severity: string):
       Entry[] {
-      return arrify(entries).map(entry => {
+      return (arrify(entries) as Entry[]).map(entry => {
         const metadata = extend(true, {}, entry.metadata, {
           severity,
         });

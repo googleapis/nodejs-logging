@@ -15,7 +15,7 @@
  */
 
 import {util} from '@google-cloud/common-grpc';
-import * as arrify from 'arrify';
+import arrify = require('arrify');
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
