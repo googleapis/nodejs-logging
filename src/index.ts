@@ -18,7 +18,7 @@ import * as common from '@google-cloud/common-grpc';
 import {paginator} from '@google-cloud/paginator';
 import {replaceProjectIdToken} from '@google-cloud/projectify';
 import {promisifyAll} from '@google-cloud/promisify';
-import * as arrify from 'arrify';
+import arrify = require('arrify');
 import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
@@ -529,7 +529,7 @@ class Logging {
           orderBy: 'timestamp desc',
         },
         options);
-    reqOpts.resourceNames = arrify(reqOpts.resourceNames);
+    reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
     const resourceName = 'projects/' + this.projectId;
     if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
       reqOpts.resourceNames.push(resourceName);
@@ -606,7 +606,7 @@ class Logging {
             orderBy: 'timestamp desc',
           },
           options);
-      reqOpts.resourceNames = arrify(reqOpts.resourceNames);
+      reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
       reqOpts.resourceNames.push(`projects/${this.projectId}`);
       delete reqOpts.autoPaginate;
       delete reqOpts.gaxOptions;
@@ -996,7 +996,7 @@ class Logging {
         callback(err, null);
         return;
       }
-      policy!.bindings = arrify(policy!.bindings);
+      policy!.bindings = arrify(policy!.bindings!);
       policy!.bindings.push({
         role: 'roles/pubsub.publisher',
         members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
