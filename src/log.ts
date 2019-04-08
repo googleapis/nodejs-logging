@@ -827,7 +827,7 @@ class Log implements LogSeverityFunctions {
     function writeWithResource(resource: {}|null) {
       let decoratedEntries;
       try {
-        decoratedEntries = self.decorateEntries_(arrify(entry));
+        decoratedEntries = self.decorateEntries_(arrify(entry)as Entry[]);
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
@@ -880,7 +880,7 @@ class Log implements LogSeverityFunctions {
    */
   static assignSeverityToEntries_(entries: Entry|Entry[], severity: string):
       Entry[] {
-    return arrify(entries).map(entry => {
+    return (arrify(entries)as Entry[]).map(entry => {
       const metadata = extend(true, {}, entry.metadata, {
         severity,
       });

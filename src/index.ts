@@ -515,7 +515,7 @@ class Logging {
           orderBy: 'timestamp desc',
         },
         options);
-    reqOpts.resourceNames = arrify(reqOpts.resourceNames);
+    reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
     this.projectId = await this.auth.getProjectId();
     const resourceName = 'projects/' + this.projectId;
     if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
@@ -597,7 +597,7 @@ class Logging {
               orderBy: 'timestamp desc',
             },
             options);
-        reqOpts.resourceNames = arrify(reqOpts.resourceNames);
+        reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
         reqOpts.resourceNames.push(`projects/${this.projectId}`);
         delete reqOpts.autoPaginate;
         delete reqOpts.gaxOptions;
@@ -991,7 +991,7 @@ class Logging {
   async setAclForTopic_(config: CreateSinkRequest) {
     const topic = config.destination as Topic;
     const [policy] = await topic.iam.getPolicy();
-    policy.bindings = arrify(policy.bindings);
+    policy.bindings = arrify(policy.bindings!);
     policy!.bindings.push({
       role: 'roles/pubsub.publisher',
       members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
