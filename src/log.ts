@@ -16,7 +16,7 @@
 
 import {DeleteCallback} from '@google-cloud/common';
 import {callbackifyAll, promisifyAll} from '@google-cloud/promisify';
-import * as arrify from 'arrify';
+import arrify = require('arrify');
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {Response} from 'request';

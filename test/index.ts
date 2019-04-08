@@ -16,7 +16,7 @@
 
 import {util} from '@google-cloud/common-grpc';
 import {CallbackifyAllOptions} from '@google-cloud/promisify';
-import * as arrify from 'arrify';
+import arrify = require('arrify');
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
