@@ -21,7 +21,6 @@ import {GCPEnv} from 'google-auth-library';
 import * as proxyquire from 'proxyquire';
 
 import assertRejects = require('assert-rejects');
-import {detectServiceContext} from '../src/metadata';
 
 let instanceOverride;
 const fakeGcpMetadata = {

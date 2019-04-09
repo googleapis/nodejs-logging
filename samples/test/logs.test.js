@@ -16,24 +16,24 @@
 'use strict';
 
 const {assert} = require('chai');
-const execa = require('execa');
+const cp = require('child_process');
 const uuid = require('uuid');
 
+const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 const cmd = 'node logs';
-const exec = async cmd => (await execa.shell(cmd)).stdout;
 const logName = `nodejs-logging-logs-test-${uuid.v4()}`;
 const message = 'Hello world!';
 
 describe('logs', () => {
-  it('should write a log entry', async () => {
-    const output = await exec(
+  it('should write a log entry', () => {
+    const output = execSync(
       `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`
     );
-    assert.strictEqual(output, `Wrote to ${logName}`);
+    assert.include(output, `Wrote to ${logName}`);
   });
 
-  it('should write a simple log entry', async () => {
-    const output = await exec(`${cmd} write-simple ${logName}`);
-    assert.strictEqual(output, `Wrote to ${logName}`);
+  it('should write a simple log entry', () => {
+    const output = execSync(`${cmd} write-simple ${logName}`);
+    assert.include(output, `Wrote to ${logName}`);
   });
 });
