@@ -115,6 +115,7 @@
     "prettier": "^1.15.1",
     "proxyquire": "^2.1.0",
     "sinon": "^7.2.5",
+    "type-fest": "^0.3.1",
     "typescript": "~3.4.0",
     "uuid": "^3.3.2"
   }
