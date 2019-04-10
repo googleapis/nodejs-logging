@@ -72,7 +72,8 @@
     "pumpify": "^1.5.1",
     "snakecase-keys": "^2.0.0",
     "stream-events": "^1.0.4",
-    "through2": "^3.0.0"
+    "through2": "^3.0.0",
+    "type-fest": "^0.3.1"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^3.0.0",
@@ -115,7 +116,6 @@
     "prettier": "^1.15.1",
     "proxyquire": "^2.1.0",
     "sinon": "^7.2.5",
-    "type-fest": "^0.3.1",
     "typescript": "~3.4.0",
     "uuid": "^3.3.2"
   }
