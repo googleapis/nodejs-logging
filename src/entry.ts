@@ -15,6 +15,7 @@
  */
 
 import {Service} from '@google-cloud/common-grpc';
+import {Merge} from 'type-fest';
 // tslint:disable-next-line variable-name
 const EventId = require('eventid');
 import * as extend from 'extend';
@@ -23,13 +24,17 @@ import {google} from '../proto/logging';
 
 const eventId = new EventId();
 
-export type LogEntry = google.logging.v2.ILogEntry;
-export type Timestamp = google.protobuf.IDuration;
+export type Timestamp = google.protobuf.ITimestamp|Date;
+export type LogSeverity = google.logging.type.LogSeverity|string;
+export type LogEntry = Merge<google.logging.v2.ILogEntry, {
+  timestamp?: Timestamp | null,
+  severity?: LogSeverity | null,
+}>;
 // tslint:disable-next-line no-any
 export type Data = any;
 
 export interface EntryJson {
-  timestamp: Timestamp|Date;
+  timestamp: Timestamp;
   insertId: number;
   jsonPayload?: google.protobuf.IStruct;
   textPayload?: string;
@@ -174,10 +179,10 @@ class Entry {
       data = (Service as any).structToObj_(data);
     }
     const serializedEntry = new Entry(entry, data);
-    if (serializedEntry.metadata.timestamp) {
-      let ms = Number(serializedEntry.metadata.timestamp.seconds) * 1000;
-      ms += Number(serializedEntry.metadata.timestamp.nanos) / 1e6;
-      serializedEntry.metadata.timestamp = new Date(ms) as Timestamp;
+    if (entry.timestamp) {
+      let ms = Number(entry.timestamp.seconds) * 1000;
+      ms += Number(entry.timestamp.nanos) / 1e6;
+      serializedEntry.metadata.timestamp = new Date(ms);
     }
     return serializedEntry;
   }
