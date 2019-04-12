@@ -4,6 +4,15 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## v4.5.2
+
+04-11-2019 14:26 PDT
+
+This release has minor bug fixes:
+
+- fix(types): improve types for LogEntry ([#448](https://github.com/googleapis/nodejs-logging/pull/448))
+- fix: include 'x-goog-request-params' header in requests ([#439](https://github.com/googleapis/nodejs-logging/pull/439))
+
 ## v4.5.1
 
 03-18-2019 19:32 PDT
