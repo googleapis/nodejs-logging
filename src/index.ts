@@ -17,13 +17,12 @@
 import * as common from '@google-cloud/common-grpc';
 import {paginator} from '@google-cloud/paginator';
 import {replaceProjectIdToken} from '@google-cloud/projectify';
-import {promisifyAll} from '@google-cloud/promisify';
+import {callbackifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
 import {ClientReadableStream} from 'grpc';
-import * as is from 'is';
 import * as request from 'request';
 
 const pumpify = require('pumpify');
@@ -44,7 +43,7 @@ import {Entry, LogEntry} from './entry';
 import {Log, GetEntriesRequest, LogOptions, MonitoredResource, Severity, SeverityNames} from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
-import {AbortableDuplex, ApiError} from '@google-cloud/common';
+import {AbortableDuplex} from '@google-cloud/common';
 import {google} from '../proto/logging';
 import {google as google_config} from '../proto/logging_config';
 
@@ -226,6 +225,8 @@ class Logging {
   options: LoggingOptions;
   projectId: string;
   detectedResource?: object;
+  configService?: typeof v2.ConfigServiceV2Client;
+  loggingService?: typeof v2.LoggingServiceV2Client;
 
   constructor(options?: LoggingOptions) {
     // Determine what scopes are needed.
@@ -254,6 +255,8 @@ class Logging {
     this.auth = new GoogleAuth(options_);
     this.options = options_;
     this.projectId = this.options.projectId || '{{projectId}}';
+    this.configService = new v2.ConfigServiceV2Client(this.options);
+    this.loggingService = new v2.LoggingServiceV2Client(this.options);
   }
   /**
    * Config to set for the sink. Not all available options are listed here, see
@@ -338,49 +341,34 @@ class Logging {
   createSink(
       name: string, config: CreateSinkRequest,
       callback: CreateSinkCallback): void;
-  createSink(
-      name: string, config: CreateSinkRequest,
-      callback?: CreateSinkCallback): Promise<[Sink, LogSink]>|void {
-    const self = this;
-    if (!is.string(name)) {
+  async createSink(name: string, config: CreateSinkRequest):
+      Promise<[Sink, LogSink]> {
+    if (typeof name !== 'string') {
       throw new Error('A sink name must be provided.');
     }
-    if (!is.object(config)) {
+    if (typeof config !== 'object') {
       throw new Error('A sink configuration object must be provided.');
     }
     if (common.util.isCustomType(config.destination, 'bigquery/dataset')) {
-      this.setAclForDataset_(name, config, callback!);
-      return;
+      await this.setAclForDataset_(config);
     }
     if (common.util.isCustomType(config.destination, 'pubsub/topic')) {
-      this.setAclForTopic_(name, config, callback!);
-      return;
+      await this.setAclForTopic_(config);
     }
     if (common.util.isCustomType(config.destination, 'storage/bucket')) {
-      this.setAclForBucket_(name, config, callback!);
-      return;
+      await this.setAclForBucket_(config);
     }
     const reqOpts = {
       parent: 'projects/' + this.projectId,
       sink: extend({}, config, {name}),
     };
     delete reqOpts.sink.gaxOptions;
-    this.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'createSink',
-          reqOpts,
-          gaxOpts: config.gaxOptions,
-        },
-        (err, resp) => {
-          if (err) {
-            callback!(err, null, resp);
-            return;
-          }
-          const sink = self.sink(resp.name);
-          sink.metadata = resp;
-          callback!(null, sink, resp);
-        });
+    await this.setProjectId(reqOpts);
+    const [resp] =
+        await this.configService.createSink(reqOpts, config.gaxOptions);
+    const sink = this.sink(resp.name);
+    sink.metadata = resp;
+    return [sink, resp];
   }
 
   /**
@@ -445,6 +433,8 @@ class Logging {
    * empty filter matches all log entries.
    * @property {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+   * @property {string} [log] A name of the log specifying to pnly return
+   *     entries from this log.
    * @property {number} [maxApiCalls] Maximum number of API calls to make.
    * @property {number} [maxResults] Maximum number of items plus prefixes to
    *     return.
@@ -517,19 +507,16 @@ class Logging {
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
-  getEntries(
-      options?: GetEntriesRequest|GetEntriesCallback,
-      callback?: GetEntriesCallback): void|Promise<GetEntriesResponse> {
-    if (typeof options === 'function') {
-      callback = options as GetEntriesCallback;
-      options = {};
-    }
+  async getEntries(opts?: GetEntriesRequest|
+                   GetEntriesCallback): Promise<GetEntriesResponse> {
+    const options = opts ? opts as GetEntriesRequest : {};
     const reqOpts = extend(
         {
           orderBy: 'timestamp desc',
         },
         options);
     reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
+    this.projectId = await this.auth.getProjectId();
     const resourceName = 'projects/' + this.projectId;
     if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
       reqOpts.resourceNames.push(resourceName);
@@ -541,20 +528,12 @@ class Logging {
           autoPaginate: options!.autoPaginate,
         },
         options!.gaxOptions);
-    this.request(
-        {
-          client: 'LoggingServiceV2Client',
-          method: 'listLogEntries',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        (...args) => {
-          const entries = args[1];
-          if (entries) {
-            args[1] = entries.map(Entry.fromApiResponse_);
-          }
-          callback!.apply(null, args);
-        });
+    const resp = await this.loggingService.listLogEntries(reqOpts, gaxOptions);
+    const [entries] = resp;
+    if (entries) {
+      resp[0] = entries.map(Entry.fromApiResponse_);
+    }
+    return resp;
   }
 
   /**
@@ -601,31 +580,66 @@ class Logging {
       next(null, Entry.fromApiResponse_(entry));
     });
     userStream.once('reading', () => {
-      const reqOpts = extend(
-          {
-            orderBy: 'timestamp desc',
-          },
-          options);
-      reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
-      reqOpts.resourceNames.push(`projects/${this.projectId}`);
-      delete reqOpts.autoPaginate;
-      delete reqOpts.gaxOptions;
-      const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions);
-      requestStream = this.request({
-        client: 'LoggingServiceV2Client',
-        method: 'listLogEntriesStream',
-        reqOpts,
-        gaxOpts: gaxOptions,
+      this.auth.getProjectId().then(projectId => {
+        this.projectId = projectId;
+        if (options.log) {
+          if (options.filter) {
+            options.filter = `(${options.filter}) AND logName="${
+                Log.formatName_(this.projectId, options.log)}"`;
+          } else {
+            options.filter =
+                `logName="${Log.formatName_(this.projectId, options.log)}"`;
+          }
+          delete options.log;
+        }
+        const reqOpts = extend(
+            {
+              orderBy: 'timestamp desc',
+            },
+            options);
+        reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
+        reqOpts.resourceNames.push(`projects/${this.projectId}`);
+        delete reqOpts.autoPaginate;
+        delete reqOpts.gaxOptions;
+        const gaxOptions = extend(
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions);
+
+        let gaxStream: ClientReadableStream<LogEntry>;
+        requestStream = streamEvents<Duplex>(through.obj());
+        (requestStream as AbortableDuplex).abort = () => {
+          if (gaxStream && gaxStream.cancel) {
+            gaxStream.cancel();
+          }
+        };
+        // tslint:disable-next-line no-any
+        if (!(global as any).GCLOUD_SANDBOX_ENV) {
+          requestStream.once('reading', () => {
+            try {
+              gaxStream =
+                  this.loggingService.listLogEntriesStream(reqOpts, gaxOptions);
+            } catch (error) {
+              requestStream.destroy(error);
+              return;
+            }
+            gaxStream
+                .on('error',
+                    err => {
+                      requestStream.destroy(err);
+                    })
+                .pipe(requestStream);
+            return;
+          });
+        }
+        // tslint:disable-next-line no-any
+        (userStream as any).setPipeline(requestStream, toEntryStream);
       });
-      // tslint:disable-next-line no-any
-      (userStream as any).setPipeline(requestStream, toEntryStream);
     });
     return userStream;
   }
+
   /**
    * Query object for listing sinks.
    *
@@ -683,14 +697,10 @@ class Logging {
   getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
   getSinks(callback: GetSinksCallback): void;
   getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
-  getSinks(
-      options?: GetSinksRequest|GetSinksCallback,
-      callback?: GetSinksCallback): void|Promise<GetSinksResponse> {
-    const self = this;
-    if (typeof options === 'function') {
-      callback = options as GetSinksCallback;
-      options = {};
-    }
+  async getSinks(opts?: GetSinksRequest|
+                 GetSinksCallback): Promise<GetSinksResponse> {
+    const options = opts ? opts as GetSinksRequest : {};
+    this.projectId = await this.auth.getProjectId();
     const reqOpts = extend({}, options, {
       parent: 'projects/' + this.projectId,
     });
@@ -698,27 +708,19 @@ class Logging {
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
         {
-          autoPaginate: (options as GetSinksRequest).autoPaginate,
+          autoPaginate: options.autoPaginate,
         },
-        (options as GetSinksRequest).gaxOptions);
-    this.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'listSinks',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        (...args) => {
-          const sinks = args[1];
-          if (sinks) {
-            args[1] = sinks.map((sink: LogSink) => {
-              const sinkInstance = self.sink(sink.name!);
-              sinkInstance.metadata = sink;
-              return sinkInstance;
-            });
-          }
-          callback!.apply(null, args);
-        });
+        options.gaxOptions);
+    const resp = await this.configService.listSinks(reqOpts, gaxOptions);
+    const [sinks] = resp;
+    if (sinks) {
+      resp[0] = sinks.map((sink: LogSink) => {
+        const sinkInstance = this.sink(sink.name!);
+        sinkInstance.metadata = sink;
+        return sinkInstance;
+      });
+    }
+    return resp;
   }
 
   /**
@@ -756,7 +758,7 @@ class Logging {
     const self = this;
     options = options || {};
     let requestStream: Duplex;
-    const userStream = streamEvents(pumpify.obj());
+    const userStream = streamEvents<Duplex>(pumpify.obj());
     (userStream as AbortableDuplex).abort = () => {
       if (requestStream) {
         (requestStream as AbortableDuplex).abort();
@@ -768,23 +770,47 @@ class Logging {
       next(null, sinkInstance);
     });
     userStream.once('reading', () => {
-      const reqOpts = extend({}, options, {
-        parent: 'projects/' + self.projectId,
+      this.auth.getProjectId().then(projectId => {
+        this.projectId = projectId;
+        const reqOpts = extend({}, options, {
+          parent: 'projects/' + self.projectId,
+        });
+        delete reqOpts.gaxOptions;
+        const gaxOptions = extend(
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions);
+
+        let gaxStream: ClientReadableStream<LogSink>;
+        requestStream = streamEvents<Duplex>(through.obj());
+        (requestStream as AbortableDuplex).abort = () => {
+          if (gaxStream && gaxStream.cancel) {
+            gaxStream.cancel();
+          }
+        };
+        // tslint:disable-next-line no-any
+        if (!(global as any).GCLOUD_SANDBOX_ENV) {
+          requestStream.once('reading', () => {
+            try {
+              gaxStream =
+                  this.configService.listSinksStream(reqOpts, gaxOptions);
+            } catch (error) {
+              requestStream.destroy(error);
+              return;
+            }
+            gaxStream
+                .on('error',
+                    err => {
+                      requestStream.destroy(err);
+                    })
+                .pipe(requestStream);
+            return;
+          });
+        }
+        // tslint:disable-next-line no-any
+        (userStream as any).setPipeline(requestStream, toSinkStream);
       });
-      delete reqOpts.gaxOptions;
-      const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions);
-      requestStream = self.request({
-        client: 'ConfigServiceV2Client',
-        method: 'listSinksStream',
-        reqOpts,
-        gaxOpts: gaxOptions,
-      });
-      // tslint:disable-next-line no-any
-      (userStream as any).setPipeline(requestStream, toSinkStream);
     });
     return userStream;
   }
@@ -919,21 +945,11 @@ class Logging {
    *
    * @private
    */
-  setAclForBucket_(
-      name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
+  async setAclForBucket_(config: CreateSinkRequest) {
     const bucket = config.destination as Bucket;
     // tslint:disable-next-line no-any
-    (bucket.acl.owners as any)
-        .addGroup(
-            'cloud-logs@google.com',
-            (err: Error, apiResp: request.Response) => {
-              if (err) {
-                callback(err, null, apiResp);
-                return;
-              }
-              config.destination = 'storage.googleapis.com/' + bucket.name;
-              this.createSink(name, config, callback);
-            });
+    await (bucket.acl.owners as any).addGroup('cloud-logs@google.com');
+    config.destination = 'storage.googleapis.com/' + bucket.name;
   }
 
   /**
@@ -945,37 +961,22 @@ class Logging {
    *
    * @private
    */
-  setAclForDataset_(
-      name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
-    const self = this;
+  async setAclForDataset_(config: CreateSinkRequest) {
     const dataset = config.destination as Dataset;
-    dataset.getMetadata((err, metadata, apiResp) => {
-      if (err) {
-        callback(err, null, apiResp);
-        return;
-      }
-      // tslint:disable-next-line no-any
-      const access = ([] as any[]).slice.call(arrify(metadata.access));
-      access.push({
-        role: 'WRITER',
-        groupByEmail: 'cloud-logs@google.com',
-      });
-      dataset.setMetadata(
-          {
-            access,
-          },
-          (err, apiResp) => {
-            if (err) {
-              callback(err, null, apiResp);
-              return;
-            }
-            const baseUrl = 'bigquery.googleapis.com';
-            const pId = (dataset.parent as BigQuery).projectId;
-            const dId = dataset.id;
-            config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
-            self.createSink(name, config, callback);
-          });
+    const [metadata] = await dataset.getMetadata();
+    // tslint:disable-next-line no-any
+    const access = ([] as any[]).slice.call(arrify(metadata.access));
+    access.push({
+      role: 'WRITER',
+      groupByEmail: 'cloud-logs@google.com',
     });
+    await dataset.setMetadata({
+      access,
+    });
+    const baseUrl = 'bigquery.googleapis.com';
+    const pId = (dataset.parent as BigQuery).projectId;
+    const dId = dataset.id;
+    config.destination = `${baseUrl}/projects/${pId}/datasets/${dId}`;
   }
 
   /**
@@ -987,48 +988,41 @@ class Logging {
    *
    * @private
    */
-  setAclForTopic_(
-      name: string, config: CreateSinkRequest, callback: CreateSinkCallback) {
-    const self = this;
+  async setAclForTopic_(config: CreateSinkRequest) {
     const topic = config.destination as Topic;
-    topic.iam.getPolicy((err, policy) => {
-      if (err) {
-        callback(err, null);
-        return;
-      }
-      policy!.bindings = arrify(policy!.bindings!);
-      policy!.bindings.push({
-        role: 'roles/pubsub.publisher',
-        members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
-      });
-      topic.iam.setPolicy(policy!, (err, policy) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        const baseUrl = 'pubsub.googleapis.com';
-        const topicName = topic.name;
-        config.destination = `${baseUrl}/${topicName}`;
-        self.createSink(name, config, callback);
-      });
+    const [policy] = await topic.iam.getPolicy();
+    policy.bindings = arrify(policy.bindings!);
+    policy!.bindings.push({
+      role: 'roles/pubsub.publisher',
+      members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
     });
+    await topic.iam.setPolicy(policy);
+    const baseUrl = 'pubsub.googleapis.com';
+    const topicName = topic.name;
+    config.destination = `${baseUrl}/${topicName}`;
+  }
+
+  async setProjectId(reqOpts: {}) {
+    if (this.projectId === '{{projectId}}') {
+      this.projectId = await this.auth.getProjectId();
+    }
+    reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
   }
 }
+
+/*! Developer Documentation
+ * All async methods (except for streams) will execute a callback in the event
+ * that a callback is provided.
+ */
+callbackifyAll(Logging, {
+  exclude: ['request'],
+});
 
 /*! Developer Documentation
  *
  * These methods can be auto-paginated.
  */
 paginator.extend(Logging, ['getEntries', 'getSinks']);
-
-/*! Developer Documentation
- *
- * All async methods (except for streams) will return a Promise in the event
- * that a callback is omitted.
- */
-promisifyAll(Logging, {
-  exclude: ['entry', 'log', 'request', 'sink'],
-});
 
 /**
  * {@link Entry} class.

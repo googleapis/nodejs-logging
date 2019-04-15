@@ -27,7 +27,7 @@ const fakePromisify = extend({}, promisify, {
       return;
     }
     promisifed = true;
-    assert.deepStrictEqual(options.exclude, ['entry']);
+    assert.deepStrictEqual(options.exclude, ['entry', 'getEntries']);
   },
 });
 
@@ -80,9 +80,10 @@ describe('Log', () => {
       projectId: PROJECT_ID,
       entry: util.noop,
       request: util.noop,
+      auth: util.noop,
     };
 
-    log = new Log(LOGGING, LOG_NAME_FORMATTED);
+    log = new Log(LOGGING, LOG_NAME);
   });
 
   describe('instantiation', () => {
@@ -107,14 +108,14 @@ describe('Log', () => {
         return formattedName;
       };
 
-      const log = new Log(LOGGING, LOG_NAME_FORMATTED);
+      const log = new Log(LOGGING, LOG_NAME);
 
       assert.strictEqual(log.formattedName_, formattedName);
     });
 
     it('should accept and localize options.removeCircular', () => {
       const options = {removeCircular: true};
-      const log = new Log(LOGGING, LOG_NAME_FORMATTED, options);
+      const log = new Log(LOGGING, LOG_NAME, options);
       assert.strictEqual(log.removeCircular_, true);
     });
 
@@ -243,38 +244,45 @@ describe('Log', () => {
   });
 
   describe('getEntries', () => {
+    beforeEach(() => {
+      log.logging.auth.getProjectId = async () => PROJECT_ID;
+    });
+
     const EXPECTED_OPTIONS = {
       filter: 'logName="' + LOG_NAME_FORMATTED + '"',
     };
 
-    it('should call Logging getEntries with defaults', done => {
-      log.logging.getEntries = (options, callback) => {
+    it('should call Logging getEntries with defaults', async () => {
+      log.logging.getEntries = (options) => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
-        callback();  // done()
       };
 
-      log.getEntries(done);
+      await log.getEntries();
     });
 
-    it('should allow overriding the options', done => {
+    it('should add logName filter to user provided filter', async () => {
       const options = {
         custom: true,
         filter: 'custom filter',
       };
 
-      log.logging.getEntries = (options_, callback) => {
-        assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
-        callback();  // done()
+      const expectedOptions = extend({}, options);
+      expectedOptions.filter =
+          `(${options.filter}) AND logName="${log.formattedName_}"`;
+
+      log.logging.getEntries = (options_) => {
+        assert.notDeepStrictEqual(options_, options);
+        assert.deepStrictEqual(options_, expectedOptions);
       };
 
-      log.getEntries(options, done);
+      await log.getEntries(options);
     });
   });
 
   describe('getEntriesStream', () => {
     const fakeStream = {};
     const EXPECTED_OPTIONS = {
-      filter: 'logName="' + LOG_NAME_FORMATTED + '"',
+      log: LOG_NAME_ENCODED,
     };
 
     it('should call Logging getEntriesStream with defaults', done => {
