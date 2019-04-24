@@ -73,7 +73,7 @@
     "snakecase-keys": "^2.0.0",
     "stream-events": "^1.0.4",
     "through2": "^3.0.0",
-    "type-fest": "^0.3.1"
+    "type-fest": "^0.4.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^3.0.0",
@@ -111,7 +111,7 @@
     "mv": "^2.1.1",
     "ncp": "^2.0.0",
     "nock": "^10.0.1",
-    "nyc": "^13.0.1",
+    "nyc": "^14.0.0",
     "power-assert": "^1.6.0",
     "prettier": "^1.15.1",
     "proxyquire": "^2.1.0",
