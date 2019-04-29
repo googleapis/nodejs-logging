@@ -153,9 +153,8 @@ class Sink {
   delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   async delete(gaxOptions?: CallOptions|
                DeleteCallback): Promise<DeleteResponse> {
-    this.logging.projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ =
-        'projects/' + this.logging.projectId + '/sinks/' + this.name;
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = 'projects/' + projectId + '/sinks/' + this.name;
     const reqOpts = {
       sinkName: this.formattedName_,
     };
@@ -208,9 +207,8 @@ class Sink {
   getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
   async getMetadata(gaxOptions?: CallOptions|
                     SinkMetadataCallback): Promise<SinkMetadataResponse> {
-    this.logging.projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ =
-        'projects/' + this.logging.projectId + '/sinks/' + this.name;
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = 'projects/' + projectId + '/sinks/' + this.name;
     const reqOpts = {
       sinkName: this.formattedName_,
     };
