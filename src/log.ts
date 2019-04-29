@@ -279,8 +279,8 @@ class Log implements LogSeverityFunctions {
   delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   delete(callback: DeleteCallback): void;
   async delete(gaxOptions?: CallOptions|DeleteCallback): Promise<ApiResponse> {
-    this.logging.projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(this.logging.projectId, this.name);
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = Log.formatName_(projectId, this.name);
     const reqOpts = {
       logName: this.formattedName_,
     };
@@ -478,8 +478,8 @@ class Log implements LogSeverityFunctions {
   async getEntries(opts?: GetEntriesRequest|
                    GetEntriesCallback): Promise<GetEntriesResponse> {
     const options = extend({}, opts as GetEntriesRequest);
-    this.logging.projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(this.logging.projectId, this.name);
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = Log.formatName_(projectId, this.name);
     if (options.filter) {
       options.filter =
           `(${options.filter}) AND logName="${this.formattedName_}"`;
