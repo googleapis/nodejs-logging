@@ -19,18 +19,20 @@ import * as http from 'http';
 import {StackdriverHttpRequest} from '../../http-request';
 
 export function makeHttpRequestData(
-    req: http.IncomingMessage, res: http.ServerResponse,
-    latencyMilliseconds: number): StackdriverHttpRequest {
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+  latencyMilliseconds: number
+): StackdriverHttpRequest {
   return {
     status: res.statusCode,
     requestUrl: req.url,
     requestMethod: req.method,
     userAgent: req.headers['user-agent'],
     responseSize:
-        (res.getHeader && Number(res.getHeader('Content-Length'))) || 0,
+      (res.getHeader && Number(res.getHeader('Content-Length'))) || 0,
     latency: {
       seconds: Math.floor(latencyMilliseconds / 1e3),
-      nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6)
-    }
+      nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
+    },
   };
 }

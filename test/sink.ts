@@ -46,8 +46,8 @@ describe('Sink', () => {
 
   before(() => {
     Sink = proxyquire('../src/sink', {
-             '@google-cloud/promisify': fakeCallbackify,
-           }).Sink;
+      '@google-cloud/promisify': fakeCallbackify,
+    }).Sink;
   });
 
   beforeEach(() => {
@@ -69,8 +69,9 @@ describe('Sink', () => {
 
     it('should localize the formatted name', () => {
       assert.strictEqual(
-          sink.formattedName_,
-          'projects/' + LOGGING.projectId + '/sinks/' + SINK_NAME);
+        sink.formattedName_,
+        'projects/' + LOGGING.projectId + '/sinks/' + SINK_NAME
+      );
     });
   });
 
@@ -166,7 +167,7 @@ describe('Sink', () => {
     const FILTER = 'filter';
 
     it('should call set metadata', async () => {
-      sink.setMetadata = async (metadata) => {
+      sink.setMetadata = async metadata => {
         assert.strictEqual(metadata.filter, FILTER);
         return [];
       };
@@ -207,8 +208,9 @@ describe('Sink', () => {
         throw error;
       };
 
-      sink.setMetadata(METADATA).then(
-          util.noop, (err) => assert.strictEqual(err, error));
+      sink
+        .setMetadata(METADATA)
+        .then(util.noop, err => assert.strictEqual(err, error));
     });
 
     it('should execute gax method', async () => {
