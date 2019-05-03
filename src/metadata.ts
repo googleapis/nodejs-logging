@@ -23,7 +23,7 @@ import {ServiceContext} from './index';
 
 const readFile = pify(fs.readFile);
 
-function zoneFromQualifiedZone(qualified: string): string|undefined {
+function zoneFromQualifiedZone(qualified: string): string | undefined {
   // Some parsing is necessary. Metadata service returns a fully
   // qualified zone name: 'projects/{projectId}/zones/{zone}'. Logging
   // wants just the zone part.
@@ -64,7 +64,7 @@ export async function getGAEDescriptor() {
     labels: {
       module_id: process.env.GAE_SERVICE || process.env.GAE_MODULE_NAME,
       version_id: process.env.GAE_VERSION,
-      zone
+      zone,
     },
   };
 }
@@ -93,7 +93,7 @@ export async function getGCEDescriptor() {
 }
 
 export const KUBERNETES_NAMESPACE_ID_PATH =
-    '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
+  '/var/run/secrets/kubernetes.io/serviceaccount/namespace';
 
 /**
  * Create a descriptor for Google Container Engine.
@@ -115,7 +115,8 @@ export async function getGKEDescriptor() {
     namespace = await readFile(KUBERNETES_NAMESPACE_ID_PATH, 'utf8');
   } catch (err) {
     throw new Error(
-        `Error reading ${KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`);
+      `Error reading ${KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
+    );
   }
 
   return {
@@ -170,8 +171,9 @@ export async function getDefaultResource(auth: GoogleAuth) {
  * the [official documentation]{@link
  * https://cloud.google.com/error-reporting/reference/rest/v1beta1/ServiceContext}.
  */
-export async function detectServiceContext(auth: GoogleAuth):
-    Promise<ServiceContext|null> {
+export async function detectServiceContext(
+  auth: GoogleAuth
+): Promise<ServiceContext | null> {
   const env = await auth.getEnv();
   switch (env) {
     case GCPEnv.APP_ENGINE:

@@ -46,14 +46,14 @@ const fakePaginator = {
   },
 };
 
-let googleAuthOverride: Function|null;
+let googleAuthOverride: Function | null;
 function fakeGoogleAuth() {
   return (googleAuthOverride || util.noop).apply(null, arguments);
 }
 
-let isCustomTypeOverride: Function|null;
+let isCustomTypeOverride: Function | null;
 let callbackified = false;
-let replaceProjectIdTokenOverride: Function|null;
+let replaceProjectIdTokenOverride: Function | null;
 const fakeUtil = extend({}, util, {
   isCustomType() {
     if (isCustomTypeOverride) {
@@ -117,20 +117,20 @@ describe('Logging', () => {
 
   before(() => {
     Logging = proxyquire('../../', {
-                '@google-cloud/common-grpc': {
-                  util: fakeUtil,
-                },
-                '@google-cloud/promisify': fakeCallbackify,
-                '@google-cloud/paginator': fakePaginator,
-                '@google-cloud/projectify': fakeProjectify,
-                'google-auth-library': {
-                  GoogleAuth: fakeGoogleAuth,
-                },
-                './log': {Log: FakeLog},
-                './entry': {Entry: FakeEntry},
-                './sink': {Sink: FakeSink},
-                './v2': fakeV2,
-              }).Logging;
+      '@google-cloud/common-grpc': {
+        util: fakeUtil,
+      },
+      '@google-cloud/promisify': fakeCallbackify,
+      '@google-cloud/paginator': fakePaginator,
+      '@google-cloud/projectify': fakeProjectify,
+      'google-auth-library': {
+        GoogleAuth: fakeGoogleAuth,
+      },
+      './log': {Log: FakeLog},
+      './entry': {Entry: FakeEntry},
+      './sink': {Sink: FakeSink},
+      './v2': fakeV2,
+    }).Logging;
   });
 
   beforeEach(() => {
@@ -160,7 +160,7 @@ describe('Logging', () => {
     }
 
     it('should extend the correct methods', () => {
-      assert(extended);  // See `fakePaginator.extend`
+      assert(extended); // See `fakePaginator.extend`
     });
 
     it('should callbackify all the things', () => {
@@ -180,14 +180,16 @@ describe('Logging', () => {
 
       googleAuthOverride = options_ => {
         assert.deepStrictEqual(
-            options_,
-            extend(
-                {
-                  libName: 'gccl',
-                  libVersion: PKG.version,
-                  scopes: EXPECTED_SCOPES,
-                },
-                options));
+          options_,
+          extend(
+            {
+              libName: 'gccl',
+              libVersion: PKG.version,
+              scopes: EXPECTED_SCOPES,
+            },
+            options
+          )
+        );
         return fakeGoogleAuthInstance;
       };
 
@@ -206,14 +208,16 @@ describe('Logging', () => {
       assert.notStrictEqual(logging.options, options);
 
       assert.deepStrictEqual(
-          logging.options,
-          extend(
-              {
-                libName: 'gccl',
-                libVersion: PKG.version,
-                scopes: EXPECTED_SCOPES,
-              },
-              options));
+        logging.options,
+        extend(
+          {
+            libName: 'gccl',
+            libVersion: PKG.version,
+            scopes: EXPECTED_SCOPES,
+          },
+          options
+        )
+      );
     });
 
     it('should set the projectId', () => {
@@ -259,7 +263,7 @@ describe('Logging', () => {
         return type === 'bigquery/dataset';
       };
 
-      logging.setAclForDataset_ = async (config) => {
+      logging.setAclForDataset_ = async config => {
         assert.strictEqual(config, CONFIG);
       };
 
@@ -278,7 +282,7 @@ describe('Logging', () => {
         return type === 'pubsub/topic';
       };
 
-      logging.setAclForTopic_ = async (config) => {
+      logging.setAclForTopic_ = async config => {
         assert.strictEqual(config, CONFIG);
       };
 
@@ -297,7 +301,7 @@ describe('Logging', () => {
         return type === 'storage/bucket';
       };
 
-      logging.setAclForBucket_ = async (config) => {
+      logging.setAclForBucket_ = async config => {
         assert.strictEqual(config, CONFIG);
       };
 
@@ -357,8 +361,9 @@ describe('Logging', () => {
             throw error;
           };
 
-          logging.createSink(SINK_NAME, {})
-              .then(util.noop, (err) => assert.deepStrictEqual(err, error));
+          logging
+            .createSink(SINK_NAME, {})
+            .then(util.noop, err => assert.deepStrictEqual(err, error));
         });
       });
 
@@ -431,11 +436,13 @@ describe('Logging', () => {
 
       logging.loggingService.listLogEntries = async (reqOpts, gaxOpts) => {
         assert.deepStrictEqual(
-            reqOpts, extend(options, {
-              filter: 'test',
-              orderBy: 'timestamp desc',
-              resourceNames: ['projects/' + logging.projectId],
-            }));
+          reqOpts,
+          extend(options, {
+            filter: 'test',
+            orderBy: 'timestamp desc',
+            resourceNames: ['projects/' + logging.projectId],
+          })
+        );
 
         assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
@@ -451,7 +458,7 @@ describe('Logging', () => {
         resourceNames: ['projects/' + logging.projectId],
       };
 
-      logging.loggingService.listLogEntries = async (reqOpts) => {
+      logging.loggingService.listLogEntries = async reqOpts => {
         assert.deepStrictEqual(reqOpts.resourceNames, [
           'projects/' + logging.projectId,
         ]);
@@ -466,7 +473,7 @@ describe('Logging', () => {
         orderBy: 'timestamp asc',
       };
 
-      logging.loggingService.listLogEntries = async (reqOpts) => {
+      logging.loggingService.listLogEntries = async reqOpts => {
         assert.deepStrictEqual(reqOpts.orderBy, options.orderBy);
         return [[]];
       };
@@ -508,17 +515,20 @@ describe('Logging', () => {
       });
 
       it('should reject promise with error', () => {
-        logging.getEntries().then(
-            util.noop, (err) => assert.strictEqual(err, error));
+        logging
+          .getEntries()
+          .then(util.noop, err => assert.strictEqual(err, error));
       });
     });
 
     describe('success', () => {
-      const expectedResponse = [[
-        {
-          logName: 'syslog',
-        },
-      ]];
+      const expectedResponse = [
+        [
+          {
+            logName: 'syslog',
+          },
+        ],
+      ];
 
       beforeEach(() => {
         logging.loggingService.listLogEntries = async () => {
@@ -586,9 +596,12 @@ describe('Logging', () => {
           orderBy: 'timestamp desc',
           a: 'b',
           c: 'd',
-          filter: `logName="${
-                  ['projects', PROJECT_ID, 'logs', encodeURIComponent(logName)]
-                      .join('/')}"`,
+          filter: `logName="${[
+            'projects',
+            PROJECT_ID,
+            'logs',
+            encodeURIComponent(logName),
+          ].join('/')}"`,
         });
 
         assert.deepStrictEqual(gaxOpts, {
@@ -610,10 +623,11 @@ describe('Logging', () => {
     it('should add logName filter to user provided filter', done => {
       const logName = 'log-name';
       const OPTIONS_WITH_FILTER = extend(
-          {
-            filter: 'custom filter',
-          },
-          OPTIONS);
+        {
+          filter: 'custom filter',
+        },
+        OPTIONS
+      );
       logging = new LOGGING({projectId: PROJECT_ID});
       logging.loggingService.listLogEntriesStream = (reqOpts, gaxOpts) => {
         assert.deepStrictEqual(reqOpts, {
@@ -621,9 +635,12 @@ describe('Logging', () => {
           orderBy: 'timestamp desc',
           a: 'b',
           c: 'd',
-          filter: `(${OPTIONS_WITH_FILTER.filter}) AND logName="${
-                  ['projects', PROJECT_ID, 'logs', encodeURIComponent(logName)]
-                      .join('/')}"`,
+          filter: `(${OPTIONS_WITH_FILTER.filter}) AND logName="${[
+            'projects',
+            PROJECT_ID,
+            'logs',
+            encodeURIComponent(logName),
+          ].join('/')}"`,
         });
 
         assert.deepStrictEqual(gaxOpts, {
@@ -649,7 +666,7 @@ describe('Logging', () => {
       };
       const stream = logging.getEntriesStream(OPTIONS);
       stream.emit('reading');
-      stream.once('error', (err) => {
+      stream.once('error', err => {
         assert.strictEqual(err, error);
         done();
       });
@@ -659,7 +676,7 @@ describe('Logging', () => {
       const error = new Error('Error.');
       const stream = logging.getEntriesStream(OPTIONS);
       stream.emit('reading');
-      stream.on('error', (err) => {
+      stream.on('error', err => {
         assert.strictEqual(err, error);
         done();
       });
@@ -756,8 +773,9 @@ describe('Logging', () => {
         logging.configService.listSinks = async () => {
           throw error;
         };
-        logging.getSinks(OPTIONS).then(
-            util.noop, (err) => assert.strictEqual(err, error));
+        logging
+          .getSinks(OPTIONS)
+          .then(util.noop, err => assert.strictEqual(err, error));
       });
     });
 
@@ -842,7 +860,7 @@ describe('Logging', () => {
       };
       const stream = logging.getSinksStream(OPTIONS);
       stream.emit('reading');
-      stream.once('error', (err) => {
+      stream.once('error', err => {
         assert.strictEqual(err, error);
         done();
       });
@@ -852,7 +870,7 @@ describe('Logging', () => {
       const error = new Error('Error.');
       const stream = logging.getSinksStream(OPTIONS);
       stream.emit('reading');
-      stream.on('error', (err) => {
+      stream.on('error', err => {
         assert.strictEqual(err, error);
         done();
       });
@@ -1070,7 +1088,7 @@ describe('Logging', () => {
       it('should execute the request function', () => {
         logging.api[CONFIG.client][CONFIG.method] = (done, ...args) => {
           const callback = args.pop();
-          callback(null, done);  // so it ends the test
+          callback(null, done); // so it ends the test
         };
 
         logging.request(CONFIG, assert.ifError);
@@ -1194,7 +1212,7 @@ describe('Logging', () => {
     });
 
     it('should add cloud-logs as an owner', async () => {
-      bucket.acl.owners.addGroup = async (entity) => {
+      bucket.acl.owners.addGroup = async entity => {
         assert.strictEqual(entity, 'cloud-logs@google.com');
       };
 
@@ -1211,8 +1229,9 @@ describe('Logging', () => {
       });
 
       it('should return error', () => {
-        logging.setAclForBucket_(CONFIG).then(
-            util.noop, (err) => assert.deepStrictEqual(err, error));
+        logging
+          .setAclForBucket_(CONFIG)
+          .then(util.noop, err => assert.deepStrictEqual(err, error));
       });
     });
 
@@ -1260,8 +1279,9 @@ describe('Logging', () => {
         });
 
         it('should reject with error', () => {
-          logging.setAclForDataset_(CONFIG).then(
-              util.noop, (err) => assert.deepStrictEqual(err, error));
+          logging
+            .setAclForDataset_(CONFIG)
+            .then(util.noop, err => assert.deepStrictEqual(err, error));
         });
       });
 
@@ -1285,10 +1305,10 @@ describe('Logging', () => {
           };
 
           const expectedAccess =
-              // tslint:disable-next-line no-any
-              ([] as any[]).slice.call(originalAccess).concat(access);
+            // tslint:disable-next-line no-any
+            ([] as any[]).slice.call(originalAccess).concat(access);
 
-          dataset.setMetadata = async (metadata) => {
+          dataset.setMetadata = async metadata => {
             assert.deepStrictEqual(apiResponse.access, originalAccess);
             assert.deepStrictEqual(metadata.access, expectedAccess);
           };
@@ -1307,8 +1327,9 @@ describe('Logging', () => {
           });
 
           it('should reject with error', () => {
-            logging.setAclForDataset_(CONFIG).then(
-                util.noop, (err) => assert.deepStrictEqual(err, error));
+            logging
+              .setAclForDataset_(CONFIG)
+              .then(util.noop, err => assert.deepStrictEqual(err, error));
           });
         });
 
@@ -1365,8 +1386,9 @@ describe('Logging', () => {
         });
 
         it('should throw error', () => {
-          logging.setAclForTopic_(CONFIG).then(
-              util.noop, (err) => assert.deepStrictEqual(err, error));
+          logging
+            .setAclForTopic_(CONFIG)
+            .then(util.noop, err => assert.deepStrictEqual(err, error));
         });
       });
 
@@ -1393,7 +1415,7 @@ describe('Logging', () => {
           const expectedBindings = ([] as any[]).slice.call(originalBindings);
           expectedBindings.push(binding);
 
-          topic.iam.setPolicy = async (policy) => {
+          topic.iam.setPolicy = async policy => {
             assert.strictEqual(policy, apiResponse);
             assert.deepStrictEqual(policy.bindings, expectedBindings);
           };
@@ -1412,8 +1434,9 @@ describe('Logging', () => {
           });
 
           it('should throw error', () => {
-            logging.setAclForTopic_(CONFIG).then(
-                util.noop, (err) => assert.deepStrictEqual(err, error));
+            logging
+              .setAclForTopic_(CONFIG)
+              .then(util.noop, err => assert.deepStrictEqual(err, error));
           });
         });
 

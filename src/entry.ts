@@ -24,12 +24,15 @@ import {google} from '../proto/logging';
 
 const eventId = new EventId();
 
-export type Timestamp = google.protobuf.ITimestamp|Date;
-export type LogSeverity = google.logging.type.LogSeverity|string;
-export type LogEntry = Merge<google.logging.v2.ILogEntry, {
-  timestamp?: Timestamp | null,
-  severity?: LogSeverity | null,
-}>;
+export type Timestamp = google.protobuf.ITimestamp | Date;
+export type LogSeverity = google.logging.type.LogSeverity | string;
+export type LogEntry = Merge<
+  google.logging.v2.ILogEntry,
+  {
+    timestamp?: Timestamp | null;
+    severity?: LogSeverity | null;
+  }
+>;
 // tslint:disable-next-line no-any
 export type Data = any;
 
@@ -113,10 +116,11 @@ class Entry {
      * @property {number} insertId
      */
     this.metadata = extend(
-        {
-          timestamp: new Date(),
-        },
-        metadata);
+      {
+        timestamp: new Date(),
+      },
+      metadata
+    );
     // JavaScript date has a very coarse granularity (millisecond), which makes
     // it quite likely that multiple log entries would have the same timestamp.
     // The Logging API doesn't guarantee to preserve insertion order for entries
@@ -142,7 +146,7 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     if (is.object(this.data)) {
       // tslint:disable-next-line no-any
       entry.jsonPayload = (Service as any).objToStruct_(this.data, {

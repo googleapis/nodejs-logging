@@ -26,7 +26,7 @@ class FakeGrpcService {
   static objToStruct_?: Function;
 }
 
-let fakeEventIdNewOverride: Function|null;
+let fakeEventIdNewOverride: Function | null;
 
 class FakeEventId {
   new() {
@@ -45,11 +45,11 @@ describe('Entry', () => {
 
   before(() => {
     Entry = proxyquire('../src/entry.js', {
-              '@google-cloud/common-grpc': {
-                Service: FakeGrpcService,
-              },
-              eventid: FakeEventId,
-            }).Entry;
+      '@google-cloud/common-grpc': {
+        Service: FakeGrpcService,
+      },
+      eventid: FakeEventId,
+    }).Entry;
   });
 
   beforeEach(() => {
@@ -174,15 +174,16 @@ describe('Entry', () => {
       const input = {};
       const converted = {};
 
-      sandbox.stub(FakeGrpcService, 'objToStruct_')
-          .callsFake((obj, options) => {
-            assert.strictEqual(obj, input);
-            assert.deepStrictEqual(options, {
-              removeCircular: false,
-              stringify: true,
-            });
-            return converted;
+      sandbox
+        .stub(FakeGrpcService, 'objToStruct_')
+        .callsFake((obj, options) => {
+          assert.strictEqual(obj, input);
+          assert.deepStrictEqual(options, {
+            removeCircular: false,
+            stringify: true,
           });
+          return converted;
+        });
 
       entry.data = input;
       const json = entry.toJSON();
@@ -190,11 +191,12 @@ describe('Entry', () => {
     });
 
     it('should pass removeCircular to objToStruct_', done => {
-      sandbox.stub(FakeGrpcService, 'objToStruct_')
-          .callsFake((obj, options) => {
-            assert.strictEqual(options.removeCircular, true);
-            done();
-          });
+      sandbox
+        .stub(FakeGrpcService, 'objToStruct_')
+        .callsFake((obj, options) => {
+          assert.strictEqual(options.removeCircular, true);
+          done();
+        });
       entry.data = {};
       entry.toJSON({removeCircular: true});
     });

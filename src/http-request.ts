@@ -24,7 +24,7 @@ export interface StackdriverHttpRequest {
   remoteIp?: string;
   serverIp?: string;
   referer?: string;
-  latency?: {seconds: number; nanos: number;};
+  latency?: {seconds: number; nanos: number};
   cacheLookup?: boolean;
   cacheHit?: boolean;
   cacheValidatedWithOriginServer?: boolean;
