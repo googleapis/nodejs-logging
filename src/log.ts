@@ -147,13 +147,19 @@ class Log implements LogSeverityFunctions {
    */
   alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   alert(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  alert(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  alert(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  alert(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  alert(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     return this.write(
-        Log.assignSeverityToEntries_(entry, 'ALERT'), options! as WriteOptions);
+      Log.assignSeverityToEntries_(entry, 'ALERT'),
+      options! as WriteOptions
+    );
   }
 
   /**
@@ -185,11 +191,15 @@ class Log implements LogSeverityFunctions {
    * });
    */
   critical(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  critical(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  critical(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  critical(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  critical(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     const entries = Log.assignSeverityToEntries_(entry, 'CRITICAL');
     return this.write(entries, options! as WriteOptions);
   }
@@ -224,13 +234,19 @@ class Log implements LogSeverityFunctions {
    */
   debug(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   debug(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  debug(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  debug(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  debug(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  debug(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     return this.write(
-        Log.assignSeverityToEntries_(entry, 'DEBUG'), options! as WriteOptions);
+      Log.assignSeverityToEntries_(entry, 'DEBUG'),
+      options! as WriteOptions
+    );
   }
 
   /**
@@ -277,14 +293,18 @@ class Log implements LogSeverityFunctions {
   delete(gaxOptions?: CallOptions): Promise<ApiResponse>;
   delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   delete(callback: DeleteCallback): void;
-  async delete(gaxOptions?: CallOptions|DeleteCallback): Promise<ApiResponse> {
+  async delete(
+    gaxOptions?: CallOptions | DeleteCallback
+  ): Promise<ApiResponse> {
     const projectId = await this.logging.auth.getProjectId();
     this.formattedName_ = Log.formatName_(projectId, this.name);
     const reqOpts = {
       logName: this.formattedName_,
     };
     return this.logging.loggingService.deleteLog(
-        reqOpts, gaxOptions! as CallOptions);
+      reqOpts,
+      gaxOptions! as CallOptions
+    );
   }
 
   /**
@@ -316,11 +336,15 @@ class Log implements LogSeverityFunctions {
    * });
    */
   emergency(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  emergency(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  emergency(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  emergency(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  emergency(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     const entries = Log.assignSeverityToEntries_(entry, 'EMERGENCY');
     return this.write(entries, options as WriteOptions);
   }
@@ -419,13 +443,19 @@ class Log implements LogSeverityFunctions {
    */
   error(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   error(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  error(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  error(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  error(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  error(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     return this.write(
-        Log.assignSeverityToEntries_(entry, 'ERROR'), options! as WriteOptions);
+      Log.assignSeverityToEntries_(entry, 'ERROR'),
+      options! as WriteOptions
+    );
   }
 
   /**
@@ -563,13 +593,19 @@ class Log implements LogSeverityFunctions {
    */
   info(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   info(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  info(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  info(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  info(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  info(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     return this.write(
-        Log.assignSeverityToEntries_(entry, 'INFO'), options! as WriteOptions);
+      Log.assignSeverityToEntries_(entry, 'INFO'),
+      options! as WriteOptions
+    );
   }
 
   /**
@@ -602,14 +638,19 @@ class Log implements LogSeverityFunctions {
    */
   notice(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   notice(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  notice(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  notice(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  notice(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  notice(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     return this.write(
-        Log.assignSeverityToEntries_(entry, 'NOTICE'),
-        options! as WriteOptions);
+      Log.assignSeverityToEntries_(entry, 'NOTICE'),
+      options! as WriteOptions
+    );
   }
 
   /**
@@ -642,14 +683,19 @@ class Log implements LogSeverityFunctions {
    */
   warning(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   warning(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  warning(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  warning(entry: Entry|Entry[], options?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  warning(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  warning(
+    entry: Entry | Entry[],
+    options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
     return this.write(
-        Log.assignSeverityToEntries_(entry, 'WARNING'),
-        options as WriteOptions);
+      Log.assignSeverityToEntries_(entry, 'WARNING'),
+      options as WriteOptions
+    );
   }
 
   /**
@@ -745,12 +791,16 @@ class Log implements LogSeverityFunctions {
    */
   write(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   write(
-      entry: Entry|Entry[], options: WriteOptions,
-      callback: ApiResponseCallback): void;
-  write(entry: Entry|Entry[], callback: ApiResponseCallback): void;
-  async write(entry: Entry|Entry[], opts?: WriteOptions|ApiResponseCallback):
-      Promise<ApiResponse> {
-    const options = opts ? opts as WriteOptions : {};
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  write(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  async write(
+    entry: Entry | Entry[],
+    opts?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> {
+    const options = opts ? (opts as WriteOptions) : {};
     const self = this;
 
     if (options.resource) {
@@ -765,7 +815,7 @@ class Log implements LogSeverityFunctions {
       this.logging.detectedResource = resource;
       return writeWithResource(resource);
     }
-    async function writeWithResource(resource: {}|null) {
+    async function writeWithResource(resource: {} | null) {
       let decoratedEntries;
       try {
         decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
@@ -784,7 +834,9 @@ class Log implements LogSeverityFunctions {
       );
       delete reqOpts.gaxOptions;
       return self.logging.loggingService.writeLogEntries(
-          reqOpts, options.gaxOptions);
+        reqOpts,
+        options.gaxOptions
+      );
     }
   }
 

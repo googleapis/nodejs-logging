@@ -360,7 +360,7 @@ describe('Logging', () => {
       log.write(logEntries[1], options);
     });
 
-    it('should write multiple entries to a log', (done) => {
+    it('should write multiple entries to a log', done => {
       const {log, logEntries} = getTestLog();
 
       log.write(logEntries, options, err => {

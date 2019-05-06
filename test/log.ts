@@ -63,10 +63,10 @@ describe('Log', () => {
 
   before(() => {
     Log = proxyquire('../src/log', {
-            '@google-cloud/promisify': fakecallbackify,
-            './entry': {Entry},
-            './metadata': fakeMetadata,
-          }).Log;
+      '@google-cloud/promisify': fakecallbackify,
+      './entry': {Entry},
+      './metadata': fakeMetadata,
+    }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = (...args) =>
       (assignSeverityToEntriesOverride || assignSeverityToEntries_).apply(
