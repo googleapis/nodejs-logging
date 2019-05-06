@@ -39,7 +39,7 @@ const originalGetDefaultResource = async () => {
 };
 
 const fakeMetadata = {
-  getDefaultResource: originalGetDefaultResource
+  getDefaultResource: originalGetDefaultResource,
 };
 
 describe('Log', () => {
@@ -59,7 +59,7 @@ describe('Log', () => {
 
   let LOGGING;
 
-  let assignSeverityToEntriesOverride: Function|null = null;
+  let assignSeverityToEntriesOverride: Function | null = null;
 
   before(() => {
     Log = proxyquire('../src/log', {
@@ -69,8 +69,10 @@ describe('Log', () => {
           }).Log;
     const assignSeverityToEntries_ = Log.assignSeverityToEntries_;
     Log.assignSeverityToEntries_ = (...args) =>
-        (assignSeverityToEntriesOverride || assignSeverityToEntries_)
-            .apply(null, args);
+      (assignSeverityToEntriesOverride || assignSeverityToEntries_).apply(
+        null,
+        args
+      );
   });
 
   beforeEach(() => {
@@ -137,18 +139,20 @@ describe('Log', () => {
 
     it('should assign severity to a single entry', () => {
       assert.deepStrictEqual(
-          Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
-              .map(x => x.metadata)
-              .map(x => x.severity),
-          [SEVERITY]);
+        Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
+          .map(x => x.metadata)
+          .map(x => x.severity),
+        [SEVERITY]
+      );
     });
 
     it('should assign severity property to multiple entries', () => {
       assert.deepStrictEqual(
-          Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
-              .map(x => x.metadata)
-              .map(x => x.severity),
-          [SEVERITY, SEVERITY, SEVERITY]);
+        Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
+          .map(x => x.metadata)
+          .map(x => x.severity),
+        [SEVERITY, SEVERITY, SEVERITY]
+      );
     });
 
     it('should not affect original array', () => {
@@ -252,7 +256,7 @@ describe('Log', () => {
     };
 
     it('should call Logging getEntries with defaults', async () => {
-      log.logging.getEntries = (options) => {
+      log.logging.getEntries = options => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
       };
 
@@ -268,10 +272,11 @@ describe('Log', () => {
       log.formattedName_ = Log.formatName_(log.logging.projectId, log.name);
 
       const expectedOptions = extend({}, options);
-      expectedOptions.filter =
-          `(${options.filter}) AND logName="${log.formattedName_}"`;
+      expectedOptions.filter = `(${options.filter}) AND logName="${
+        log.formattedName_
+      }"`;
 
-      log.logging.getEntries = (options_) => {
+      log.logging.getEntries = options_ => {
         assert.notDeepStrictEqual(options_, options);
         assert.deepStrictEqual(options_, expectedOptions);
       };
@@ -657,7 +662,7 @@ describe('Log', () => {
         throw new Error('should not be called');
       };
       const entry = new Entry();
-      entry.toJSON = () => toJSONResponse as {} as EntryJson;
+      entry.toJSON = () => (toJSONResponse as {}) as EntryJson;
       const decoratedEntries = log.decorateEntries_([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
     });

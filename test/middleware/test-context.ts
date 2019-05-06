@@ -22,14 +22,14 @@ import {makeHeaderWrapper} from '../../src/middleware/context';
 const FAKE_CONTEXT = {
   extract: (headerWrapper: {}) => {},
   generate: () => {},
-  inject: (headerWrapper: {}, spanContext: {}) => {}
+  inject: (headerWrapper: {}, spanContext: {}) => {},
 };
 
 const fakeContext = Object.assign({}, FAKE_CONTEXT);
 
-const {getOrInjectContext} = proxyquire(
-    '../../src/middleware/context',
-    {'@opencensus/propagation-stackdriver': fakeContext});
+const {getOrInjectContext} = proxyquire('../../src/middleware/context', {
+  '@opencensus/propagation-stackdriver': fakeContext,
+});
 
 describe('middleware/context', () => {
   describe('makeHeaderWrapper', () => {
@@ -38,13 +38,17 @@ describe('middleware/context', () => {
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       assert.strictEqual(wrapper.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       wrapper.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
     });

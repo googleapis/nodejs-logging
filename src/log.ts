@@ -39,7 +39,7 @@ export interface GetEntriesRequest {
   orderBy?: string;
   pageSize?: number;
   pageToken?: string;
-  resourceNames?: string[]|string;
+  resourceNames?: string[] | string;
 }
 
 export interface LogOptions {
@@ -48,7 +48,7 @@ export interface LogOptions {
 
 export type ApiResponse = [Response];
 export interface ApiResponseCallback {
-  (err: Error|null, apiResponse?: Response): void;
+  (err: Error | null, apiResponse?: Response): void;
 }
 
 export type MonitoredResource = google.api.IMonitoredResource;
@@ -66,7 +66,7 @@ export enum Severity {
   warning,
   notice,
   info,
-  debug
+  debug,
 }
 
 export type SeverityNames = keyof typeof Severity;
@@ -75,7 +75,7 @@ export type SeverityNames = keyof typeof Severity;
 // classes.
 type LogSeverityFunctions = {
   // FIXME: the following can be made more precise.
-  [P in SeverityNames]: Function;
+  [P in SeverityNames]: Function
 };
 
 /**
@@ -145,7 +145,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  alert(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   alert(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -184,7 +184,6 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  critical(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
   critical(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -223,7 +222,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  debug(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  debug(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   debug(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -316,7 +315,6 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  emergency(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
   emergency(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -378,9 +376,9 @@ class Log implements LogSeverityFunctions {
    * // }
    */
   entry(metadata?: LogEntry): Entry;
-  entry(data?: string|{}): Entry;
-  entry(metadata?: LogEntry, data?: string|{}): Entry;
-  entry(metadataOrData?: LogEntry|string|{}, data?: string|{}) {
+  entry(data?: string | {}): Entry;
+  entry(metadata?: LogEntry, data?: string | {}): Entry;
+  entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
     if (!data) {
       data = metadataOrData as string | {};
@@ -419,7 +417,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  error(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  error(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   error(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -475,14 +473,16 @@ class Log implements LogSeverityFunctions {
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
-  async getEntries(opts?: GetEntriesRequest|
-                   GetEntriesCallback): Promise<GetEntriesResponse> {
+  async getEntries(
+    opts?: GetEntriesRequest | GetEntriesCallback
+  ): Promise<GetEntriesResponse> {
     const options = extend({}, opts as GetEntriesRequest);
     const projectId = await this.logging.auth.getProjectId();
     this.formattedName_ = Log.formatName_(projectId, this.name);
     if (options.filter) {
-      options.filter =
-          `(${options.filter}) AND logName="${this.formattedName_}"`;
+      options.filter = `(${options.filter}) AND logName="${
+        this.formattedName_
+      }"`;
     } else {
       options.filter = `logName="${this.formattedName_}"`;
     }
@@ -525,10 +525,11 @@ class Log implements LogSeverityFunctions {
    */
   getEntriesStream(options: GetEntriesRequest) {
     options = extend(
-        {
-          log: this.name,
-        },
-        options);
+      {
+        log: this.name,
+      },
+      options
+    );
     return this.logging.getEntriesStream(options);
   }
 
@@ -560,7 +561,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  info(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  info(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   info(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -599,7 +600,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  notice(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  notice(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   notice(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -639,7 +640,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  warning(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  warning(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   warning(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -742,7 +743,7 @@ class Log implements LogSeverityFunctions {
    * region_tag:logging_write_log_entry_advanced
    * Another example:
    */
-  write(entry: Entry|Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  write(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   write(
       entry: Entry|Entry[], options: WriteOptions,
       callback: ApiResponseCallback): void;
@@ -774,12 +775,13 @@ class Log implements LogSeverityFunctions {
       self.logging.projectId = await self.logging.auth.getProjectId();
       self.formattedName_ = Log.formatName_(self.logging.projectId, self.name);
       const reqOpts = extend(
-          {
-            logName: self.formattedName_,
-            entries: decoratedEntries,
-            resource,
-          },
-          options);
+        {
+          logName: self.formattedName_,
+          entries: decoratedEntries,
+          resource,
+        },
+        options
+      );
       delete reqOpts.gaxOptions;
       return self.logging.loggingService.writeLogEntries(
           reqOpts, options.gaxOptions);
@@ -814,8 +816,10 @@ class Log implements LogSeverityFunctions {
    * @param {object|object[]} entries - Log entries.
    * @param {string} severity - The desired severity level.
    */
-  static assignSeverityToEntries_(entries: Entry|Entry[], severity: string):
-      Entry[] {
+  static assignSeverityToEntries_(
+    entries: Entry | Entry[],
+    severity: string
+  ): Entry[] {
     return (arrify(entries) as Entry[]).map(entry => {
       const metadata = extend(true, {}, entry.metadata, {
         severity,
