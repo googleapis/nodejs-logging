@@ -200,8 +200,10 @@ class Log implements LogSeverityFunctions {
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
-    const entries = Log.assignSeverityToEntries_(entry, 'CRITICAL');
-    return this.write(entries, options! as WriteOptions);
+    return this.write(
+      Log.assignSeverityToEntries_(entry, 'CRITICAL'),
+      options! as WriteOptions
+    );
   }
 
   /**
@@ -345,8 +347,10 @@ class Log implements LogSeverityFunctions {
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
-    const entries = Log.assignSeverityToEntries_(entry, 'EMERGENCY');
-    return this.write(entries, options as WriteOptions);
+    return this.write(
+      Log.assignSeverityToEntries_(entry, 'EMERGENCY'),
+      options as WriteOptions
+    );
   }
 
   /**
@@ -822,8 +826,8 @@ class Log implements LogSeverityFunctions {
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
-      self.logging.projectId = await self.logging.auth.getProjectId();
-      self.formattedName_ = Log.formatName_(self.logging.projectId, self.name);
+      const projectId = await self.logging.auth.getProjectId();
+      self.formattedName_ = Log.formatName_(projectId, self.name);
       const reqOpts = extend(
         {
           logName: self.formattedName_,
@@ -904,7 +908,7 @@ class Log implements LogSeverityFunctions {
 /*! Developer Documentation
  *
  * All async methods (except for streams) will call a callback in the event
- * that a callback is providedk .
+ * that a callback is provided .
  */
 callbackifyAll(Log, {exclude: ['entry', 'getEntriesStream']});
 

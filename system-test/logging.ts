@@ -355,7 +355,7 @@ describe('Logging', () => {
       log.write(logEntries[0], options, done);
     });
 
-    it('should write a single entry to a log Promise', async () => {
+    it('should write a single entry to a log as a Promise', async () => {
       const {log, logEntries} = getTestLog();
       log.write(logEntries[1], options);
     });

@@ -21,7 +21,7 @@ import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
 let callbackified = false;
-const fakecallbackify = extend({}, callbackify, {
+const fakeCallbackify = extend({}, callbackify, {
   callbackifyAll(c: Function, options: callbackify.CallbackifyAllOptions) {
     if (c.name !== 'Log') {
       return;
@@ -63,7 +63,7 @@ describe('Log', () => {
 
   before(() => {
     Log = proxyquire('../src/log', {
-      '@google-cloud/promisify': fakecallbackify,
+      '@google-cloud/promisify': fakeCallbackify,
       './entry': {Entry},
       './metadata': fakeMetadata,
     }).Log;
@@ -208,7 +208,7 @@ describe('Log', () => {
       const gaxOptions = {};
 
       log.logging.loggingService.deleteLog = async (reqOpts, gaxOpts) => {
-        assert.deepStrictEqual(gaxOpts, gaxOptions);
+        assert.strictEqual(gaxOpts, gaxOptions);
       };
 
       await log.delete(gaxOptions);
