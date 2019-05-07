@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-import * as common from '@google-cloud/common-grpc';
-import {promisifyAll} from '@google-cloud/promisify';
+import {callbackifyAll, promisifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import {CreateSinkCallback, CreateSinkRequest, DeleteCallback, DeleteResponse, Logging, LogSink} from '.';
+import {
+  CreateSinkCallback,
+  CreateSinkRequest,
+  DeleteCallback,
+  DeleteResponse,
+  Logging,
+  LogSink,
+} from '.';
 
 export interface SinkMetadataCallback {
-  (error: (Error|null), response?: LogSink): void;
+  (error: Error | null, response?: LogSink): void;
 }
 
 export type SinkMetadataResponse = [LogSink];
@@ -104,9 +110,8 @@ class Sink {
    */
   create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
   create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
-  create(config: CreateSinkRequest, callback?: CreateSinkCallback):
-      Promise<[Sink, LogSink]>|void {
-    this.logging.createSink(this.name, config, callback!);
+  create(config: CreateSinkRequest): Promise<[Sink, LogSink]> {
+    return this.logging.createSink(this.name, config);
   }
 
   /**
@@ -153,23 +158,18 @@ class Sink {
   delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
   delete(callback: DeleteCallback): void;
   delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
-  delete(gaxOptions?: CallOptions|DeleteCallback, callback?: DeleteCallback):
-      Promise<DeleteResponse>|void {
-    if (typeof gaxOptions === 'function') {
-      callback = gaxOptions as DeleteCallback;
-      gaxOptions = {};
-    }
+  async delete(
+    gaxOptions?: CallOptions | DeleteCallback
+  ): Promise<DeleteResponse> {
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = 'projects/' + projectId + '/sinks/' + this.name;
     const reqOpts = {
       sinkName: this.formattedName_,
     };
-    this.logging.request(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'deleteSink',
-          reqOpts,
-          gaxOpts: gaxOptions as CallOptions,
-        },
-        callback);
+    return this.logging.configService.deleteSink(
+      reqOpts,
+      gaxOptions as CallOptions
+    );
   }
 
   /**
@@ -215,30 +215,20 @@ class Sink {
   getMetadata(gaxOptions?: CallOptions): Promise<SinkMetadataResponse>;
   getMetadata(callback: SinkMetadataCallback): void;
   getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
-  getMetadata(
-      gaxOptions?: CallOptions|SinkMetadataCallback,
-      callback?: SinkMetadataCallback): Promise<SinkMetadataResponse>|void {
-    const self = this;
-    if (typeof gaxOptions === 'function') {
-      callback = gaxOptions;
-      gaxOptions = {};
-    }
+  async getMetadata(
+    gaxOptions?: CallOptions | SinkMetadataCallback
+  ): Promise<SinkMetadataResponse> {
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = 'projects/' + projectId + '/sinks/' + this.name;
     const reqOpts = {
       sinkName: this.formattedName_,
     };
-    this.logging.request<LogSink>(
-        {
-          client: 'ConfigServiceV2Client',
-          method: 'getSink',
-          reqOpts,
-          gaxOpts: gaxOptions,
-        },
-        (...args) => {
-          if (args[1]) {
-            self.metadata = args[1];
-          }
-          callback!.apply(null, args);
-        });
+
+    [this.metadata] = await this.logging.configService.getSink(
+      reqOpts,
+      gaxOptions as CallOptions
+    );
+    return [this.metadata!];
   }
 
   /**
@@ -279,13 +269,10 @@ class Sink {
    */
   setFilter(filter: string): Promise<SinkMetadataResponse>;
   setFilter(filter: string, callback: SinkMetadataCallback): void;
-  setFilter(filter: string, callback?: SinkMetadataCallback):
-      Promise<SinkMetadataResponse>|void {
-    this.setMetadata(
-        {
-          filter,
-        },
-        callback!);
+  setFilter(filter: string): Promise<SinkMetadataResponse> {
+    return this.setMetadata({
+      filter,
+    });
   }
 
   /**
@@ -336,43 +323,27 @@ class Sink {
    */
   setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse>;
   setMetadata(metadata: SetSinkMetadata, callback: SinkMetadataCallback): void;
-  setMetadata(metadata: SetSinkMetadata, callback?: SinkMetadataCallback):
-      Promise<SinkMetadataResponse>|void {
-    const self = this;
-    callback = callback || common.util.noop;
-    this.getMetadata((err, currentMetadata) => {
-      if (err) {
-        callback!(err);
-        return;
-      }
-      const reqOpts = {
-        sinkName: self.formattedName_,
-        sink: extend({}, currentMetadata, metadata),
-      };
-      delete reqOpts.sink.gaxOptions;
-      self.logging.request(
-          {
-            client: 'ConfigServiceV2Client',
-            method: 'updateSink',
-            reqOpts,
-            gaxOpts: metadata.gaxOptions,
-          },
-          (...args) => {
-            if (args[1]) {
-              self.metadata = args[1];
-            }
-            callback!.apply(null, args);
-          });
-    });
+  async setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse> {
+    const [currentMetadata] = await this.getMetadata();
+    const reqOpts = {
+      sinkName: this.formattedName_,
+      sink: extend({}, currentMetadata, metadata),
+    };
+    delete reqOpts.sink.gaxOptions;
+    [this.metadata] = await this.logging.configService.updateSink(
+      reqOpts,
+      metadata.gaxOptions
+    );
+    return [this.metadata!];
   }
 }
 
 /*! Developer Documentation
  *
- * All async methods (except for streams) will return a Promise in the event
- * that a callback is omitted.
+ * All async methods (except for streams) will call a callbakc in the event
+ * that a callback is provided.
  */
-promisifyAll(Sink);
+callbackifyAll(Sink);
 
 /**
  * Reference to the {@link Sink} class.

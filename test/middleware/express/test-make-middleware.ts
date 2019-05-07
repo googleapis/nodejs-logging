@@ -31,19 +31,19 @@ function makeFakeResponse() {
   return ee;
 }
 
-let getOrInjectContextValue: {}|undefined;
+let getOrInjectContextValue: {} | undefined;
 const FAKE_CONTEXT = {
   getOrInjectContext: () => {
     return getOrInjectContextValue;
-  }
+  },
 };
-
 
 describe('middleware/express/make-middleware', () => {
   describe('makeMiddleware', () => {
     const {makeMiddleware} = proxyquire(
-        '../../../src/middleware/express/make-middleware',
-        {'../context': FAKE_CONTEXT});
+      '../../../src/middleware/express/make-middleware',
+      {'../context': FAKE_CONTEXT}
+    );
 
     it('should return a function accepting 3 arguments', () => {
       const middleware = makeMiddleware(FAKE_PROJECT_ID, () => {});
@@ -80,9 +80,9 @@ describe('middleware/express/make-middleware', () => {
 
         function makeChild(trace: {}) {
           assert.strictEqual(
-              trace,
-              `projects/${FAKE_PROJECT_ID}/traces/${
-                  FAKE_SPAN_CONTEXT.traceId}`);
+            trace,
+            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_SPAN_CONTEXT.traceId}`
+          );
           return FAKE_CHILD_LOGGER;
         }
 
@@ -94,7 +94,7 @@ describe('middleware/express/make-middleware', () => {
         assert.strictEqual((fakeRequest as any).log, FAKE_CHILD_LOGGER);
       });
 
-      it('should emit a request log when response is finished', (done) => {
+      it('should emit a request log when response is finished', done => {
         getOrInjectContextValue = FAKE_SPAN_CONTEXT;
         const fakeRequest = makeFakeRequest();
         const fakeResponse = makeFakeResponse();
@@ -102,15 +102,18 @@ describe('middleware/express/make-middleware', () => {
 
         function emitRequestLog(httpRequest: {}, trace: {}) {
           assert.strictEqual(
-              trace,
-              `projects/${FAKE_PROJECT_ID}/traces/${
-                  FAKE_SPAN_CONTEXT.traceId}`);
+            trace,
+            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_SPAN_CONTEXT.traceId}`
+          );
           // TODO: check httpRequest properties.
           emitRequestLogCalled = true;
         }
 
-        const middleware =
-            makeMiddleware(FAKE_PROJECT_ID, () => {}, emitRequestLog);
+        const middleware = makeMiddleware(
+          FAKE_PROJECT_ID,
+          () => {},
+          emitRequestLog
+        );
         middleware(fakeRequest, fakeResponse, () => {});
 
         setTimeout(() => {

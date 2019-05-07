@@ -26,9 +26,9 @@ let instanceOverride;
 const fakeGcpMetadata = {
   instance(path) {
     if (instanceOverride) {
-      const override = Array.isArray(instanceOverride) ?
-          instanceOverride.find(entry => entry.path === path) :
-          instanceOverride;
+      const override = Array.isArray(instanceOverride)
+        ? instanceOverride.find(entry => entry.path === path)
+        : instanceOverride;
 
       if (override.path) {
         assert.strictEqual(path, override.path);
@@ -98,9 +98,12 @@ describe('metadata', () => {
     const GOOGLE_CLOUD_REGION = 'google-cloud-region';
 
     const TARGET_KEYS = [
-      'FUNCTION_NAME', 'FUNCTION_REGION', 'K_SERVICE', 'GOOGLE_CLOUD_REGION'
+      'FUNCTION_NAME',
+      'FUNCTION_REGION',
+      'K_SERVICE',
+      'GOOGLE_CLOUD_REGION',
     ];
-    const INITIAL_ENV: {[key: string]: string|undefined} = {};
+    const INITIAL_ENV: {[key: string]: string | undefined} = {};
 
     before(() => {
       for (const key of TARGET_KEYS) {
@@ -169,8 +172,11 @@ describe('metadata', () => {
       const descriptor = await metadata.getGAEDescriptor();
       assert.deepStrictEqual(descriptor, {
         type: 'gae_app',
-        labels:
-            {module_id: GAE_SERVICE, version_id: GAE_VERSION, zone: ZONE_ID},
+        labels: {
+          module_id: GAE_SERVICE,
+          version_id: GAE_VERSION,
+          zone: ZONE_ID,
+        },
       });
     });
 
@@ -207,15 +213,15 @@ describe('metadata', () => {
         errorArg: FAKE_ERROR,
       };
 
-      assertRejects(metadata.getGKEDescriptor(), (err) => err === FAKE_ERROR);
+      assertRejects(metadata.getGKEDescriptor(), err => err === FAKE_ERROR);
     });
 
     it('should throw error when read of namespace file fails', async () => {
       readFileShouldError = true;
 
-      assertRejects(
-          metadata.getGKEDescriptor(),
-          (err) => err.message.includes(FAKE_READFILE_ERROR_MESSAGE));
+      assertRejects(metadata.getGKEDescriptor(), err =>
+        err.message.includes(FAKE_READFILE_ERROR_MESSAGE)
+      );
     });
   });
 
@@ -235,7 +241,7 @@ describe('metadata', () => {
         async getEnv() {
           called = true;
           return null;
-        }
+        },
       };
       await metadata.getDefaultResource(fakeAuth);
       assert.ok(called);
@@ -257,16 +263,16 @@ describe('metadata', () => {
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.APP_ENGINE;
-            }
+            },
           };
 
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
-          assert.deepEqual(defaultResource, {
+          assert.deepStrictEqual(defaultResource, {
             type: 'gae_app',
             labels: {
               module_id: GAE_SERVICE,
               version_id: GAE_VERSION,
-              zone: ZONE_ID
+              zone: ZONE_ID,
             },
           });
         });
@@ -282,11 +288,11 @@ describe('metadata', () => {
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.CLOUD_FUNCTIONS;
-            }
+            },
           };
 
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
-          assert.deepEqual(defaultResource, {
+          assert.deepStrictEqual(defaultResource, {
             type: 'cloud_function',
             labels: {
               function_name: FUNCTION_NAME,
@@ -315,7 +321,7 @@ describe('metadata', () => {
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.COMPUTE_ENGINE;
-            }
+            },
           };
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
           assert.deepStrictEqual(defaultResource, {
@@ -346,7 +352,7 @@ describe('metadata', () => {
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.COMPUTE_ENGINE;
-            }
+            },
           };
 
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
@@ -371,7 +377,7 @@ describe('metadata', () => {
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.KUBERNETES_ENGINE;
-            }
+            },
           };
 
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
@@ -390,11 +396,11 @@ describe('metadata', () => {
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.NONE;
-            }
+            },
           };
 
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
-          assert.deepEqual(defaultResource, {
+          assert.deepStrictEqual(defaultResource, {
             type: 'global',
           });
         });
@@ -415,7 +421,7 @@ describe('metadata', () => {
       const fakeAuth = {
         async getEnv() {
           return GCPEnv.APP_ENGINE;
-        }
+        },
       };
 
       const sc1 = await metadata.detectServiceContext(fakeAuth);
@@ -440,12 +446,12 @@ describe('metadata', () => {
     });
 
     it('should return the correct descriptor for Cloud Functions', async () => {
-      const FUNCTION_NAME = process.env.FUNCTION_NAME = 'function-name';
+      const FUNCTION_NAME = (process.env.FUNCTION_NAME = 'function-name');
 
       const fakeAuth = {
         async getEnv() {
           return GCPEnv.CLOUD_FUNCTIONS;
-        }
+        },
       };
 
       const sc1 = await metadata.detectServiceContext(fakeAuth);
@@ -456,7 +462,7 @@ describe('metadata', () => {
       const fakeAuth = {
         async getEnv() {
           return GCPEnv.KUBERNETES_ENGINE;
-        }
+        },
       };
       const serviceContext = await metadata.detectServiceContext(fakeAuth);
       assert.strictEqual(serviceContext, null);
@@ -466,7 +472,7 @@ describe('metadata', () => {
       const fakeAuth = {
         async getEnv() {
           return GCPEnv.COMPUTE_ENGINE;
-        }
+        },
       };
       const serviceContext = await metadata.detectServiceContext(fakeAuth);
       assert.strictEqual(serviceContext, null);
@@ -476,7 +482,7 @@ describe('metadata', () => {
       const fakeAuth = {
         async getEnv() {
           return GCPEnv.NONE;
-        }
+        },
       };
       const serviceContext = await metadata.detectServiceContext(fakeAuth);
       assert.strictEqual(serviceContext, null);

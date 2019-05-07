@@ -42,11 +42,15 @@ interface AnnotatedRequestType<LoggerType> extends http.IncomingMessage {
  * request log.
  */
 export function makeMiddleware<LoggerType>(
-    projectId: string, makeChildLogger: (trace: string) => LoggerType,
-    emitRequestLog?: (httpRequest: StackdriverHttpRequest, trace: string) =>
-        void) {
-  return (req: http.IncomingMessage, res: http.ServerResponse,
-          next: Function) => {
+  projectId: string,
+  makeChildLogger: (trace: string) => LoggerType,
+  emitRequestLog?: (httpRequest: StackdriverHttpRequest, trace: string) => void
+) {
+  return (
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+    next: Function
+  ) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 

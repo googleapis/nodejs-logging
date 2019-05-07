@@ -32,9 +32,9 @@ import {Logging, Sink} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
-    .get(() => true)
-    .replyWithError({code: 'ENOTFOUND'})
-    .persist();
+  .get(() => true)
+  .replyWithError({code: 'ENOTFOUND'})
+  .persist();
 
 describe('Logging', () => {
   let PROJECT_ID: string;
@@ -53,10 +53,12 @@ describe('Logging', () => {
 
   before(async () => {
     await Promise.all([
-      bucket.create(), dataset.create(), topic.create(),
+      bucket.create(),
+      dataset.create(),
+      topic.create(),
       logging.auth.getProjectId().then(projectId => {
         PROJECT_ID = projectId;
-      })
+      }),
     ]);
   });
 
@@ -64,22 +66,27 @@ describe('Logging', () => {
     const oneHourAgo = new Date();
     oneHourAgo.setHours(oneHourAgo.getHours() - 1);
 
-    await Promise.all(
-        [deleteBuckets(), deleteDatasets(), deleteTopics(), deleteSinks()]);
+    await Promise.all([
+      deleteBuckets(),
+      deleteDatasets(),
+      deleteTopics(),
+      deleteSinks(),
+    ]);
 
     async function deleteBuckets() {
       const [buckets] = await storage.getBuckets({
         prefix: TESTS_PREFIX,
       });
-      return Promise.all(buckets
-                             .filter(bucket => {
-                               return new Date(bucket.metadata.timeCreated) <
-                                   oneHourAgo;
-                             })
-                             .map(async bucket => {
-                               await bucket.deleteFiles();
-                               await bucket.delete();
-                             }));
+      return Promise.all(
+        buckets
+          .filter(bucket => {
+            return new Date(bucket.metadata.timeCreated) < oneHourAgo;
+          })
+          .map(async bucket => {
+            await bucket.deleteFiles();
+            await bucket.delete();
+          })
+      );
     }
 
     async function deleteDatasets() {
@@ -96,19 +103,20 @@ describe('Logging', () => {
 
     async function getAndDelete(method: Function) {
       const [objects] = await method();
-      return Promise.all(objects
-                             .filter((o: ServiceObject) => {
-                               // tslint:disable-next-line no-any
-                               const name = (o as any).name || o.id;
+      return Promise.all(
+        objects
+          .filter((o: ServiceObject) => {
+            // tslint:disable-next-line no-any
+            const name = (o as any).name || o.id;
 
-                               if (!name.startsWith(TESTS_PREFIX)) {
-                                 return false;
-                               }
+            if (!name.startsWith(TESTS_PREFIX)) {
+              return false;
+            }
 
-                               return getDateFromGeneratedName(name) <
-                                   oneHourAgo;
-                             })
-                             .map((o: ServiceObject) => o.delete()));
+            return getDateFromGeneratedName(name) < oneHourAgo;
+          })
+          .map((o: ServiceObject) => o.delete())
+      );
     }
   });
 
@@ -130,8 +138,10 @@ describe('Logging', () => {
 
       // The projectId may have been replaced depending on how the system
       // tests are being run, so let's not care about that.
-      apiResponse.destination =
-          apiResponse.destination!.replace(/projects\/[^/]*\//, '');
+      apiResponse.destination = apiResponse.destination!.replace(
+        /projects\/[^/]*\//,
+        ''
+      );
       assert.strictEqual(apiResponse.destination, destination);
     });
 
@@ -143,8 +153,9 @@ describe('Logging', () => {
       // The projectId may have been replaced depending on how the system
       // tests are being run, so let's not care about that.
       assert.strictEqual(
-          apiResponse.destination!.replace(/projects\/[^/]*\//, ''),
-          destination.replace(/projects\/[^/]*\//, ''));
+        apiResponse.destination!.replace(/projects\/[^/]*\//, ''),
+        destination.replace(/projects\/[^/]*\//, '')
+      );
     });
 
     describe('metadata', () => {
@@ -180,24 +191,26 @@ describe('Logging', () => {
       });
 
       it('should list sinks as a stream', done => {
-        const logstream: Duplex = logging.getSinksStream({pageSize: 1})
-                                      .on('error', done)
-                                      .once('data', () => {
-                                        logstream.end();
-                                        done();
-                                      });
+        const logstream: Duplex = logging
+          .getSinksStream({pageSize: 1})
+          .on('error', done)
+          .once('data', () => {
+            logstream.end();
+            done();
+          });
       });
 
       it('should get metadata', done => {
-        logging.getSinksStream({pageSize: 1})
-            .on('error', done)
-            .once('data', (sink: Sink) => {
-              sink.getMetadata((err, metadata) => {
-                assert.ifError(err);
-                assert.strictEqual(typeof metadata, 'object');
-                done();
-              });
+        logging
+          .getSinksStream({pageSize: 1})
+          .on('error', done)
+          .once('data', (sink: Sink) => {
+            sink.getMetadata((err, metadata) => {
+              assert.ifError(err);
+              assert.strictEqual(typeof metadata, 'object');
+              done();
             });
+          });
       });
     });
   });
@@ -277,7 +290,7 @@ describe('Logging', () => {
       }
     });
 
-    it('should list log entries', (done) => {
+    it('should list log entries', done => {
       const {log, logEntries} = getTestLog();
 
       log.write(logEntries, options, err => {
@@ -298,13 +311,13 @@ describe('Logging', () => {
         assert.ifError(err);
 
         const logstream: Duplex = logging
-                                      .getEntriesStream({
-                                        autoPaginate: false,
-                                        pageSize: 1,
-                                      })
-                                      .on('error', done)
-                                      .once('data', () => logstream.end())
-                                      .on('end', done);
+          .getEntriesStream({
+            autoPaginate: false,
+            pageSize: 1,
+          })
+          .on('error', done)
+          .once('data', () => logstream.end())
+          .on('end', done);
       });
     });
 
@@ -315,7 +328,7 @@ describe('Logging', () => {
         log.write(logEntries, options, done);
       });
 
-      it('should list log entries', (done) => {
+      it('should list log entries', done => {
         getEntriesFromLog(log, (err, entries) => {
           assert.ifError(err);
           assert.strictEqual(entries.length, logEntries.length);
@@ -324,15 +337,16 @@ describe('Logging', () => {
       });
 
       it('should list log entries as a stream', done => {
-        const logstream = log.getEntriesStream({
-                               autoPaginate: false,
-                               pageSize: 1,
-                             })
-                              .on('error', done)
-                              .once('data', () => {
-                                logstream.end();
-                                done();
-                              });
+        const logstream = log
+          .getEntriesStream({
+            autoPaginate: false,
+            pageSize: 1,
+          })
+          .on('error', done)
+          .once('data', () => {
+            logstream.end();
+            done();
+          });
       });
     });
 
@@ -341,10 +355,10 @@ describe('Logging', () => {
       log.write(logEntries[0], options, done);
     });
 
-    it('should write multiple entries to a log', (done) => {
+    it('should write multiple entries to a log', done => {
       const {log, logEntries} = getTestLog();
 
-      log.write(logEntries, options, (err) => {
+      log.write(logEntries, options, err => {
         assert.ifError(err);
 
         getEntriesFromLog(log, (err, entries) => {
@@ -385,11 +399,7 @@ describe('Logging', () => {
 
           getEntriesFromLog(log, (err, entries) => {
             assert.ifError(err);
-            assert.deepStrictEqual(entries!.map(x => x.data), [
-              '3',
-              '2',
-              '1',
-            ]);
+            assert.deepStrictEqual(entries!.map(x => x.data), ['3', '2', '1']);
             done();
           });
         });
@@ -497,16 +507,18 @@ describe('Logging', () => {
     it('should write a log with camelcase resource label keys', done => {
       const {log, logEntries} = getTestLog();
       log.write(
-          logEntries, {
-            resource: {
-              type: 'gce_instance',
-              labels: {
-                zone: 'global',
-                instanceId: '3',
-              },
+        logEntries,
+        {
+          resource: {
+            type: 'gce_instance',
+            labels: {
+              zone: 'global',
+              instanceId: '3',
             },
           },
-          done);
+        },
+        done
+      );
     });
 
     it('should write to a log with alert helper', done => {
@@ -551,7 +563,9 @@ describe('Logging', () => {
   });
 
   function generateName() {
-    return `${TESTS_PREFIX}-${Date.now()}-${uuid().split('-').pop()}`;
+    return `${TESTS_PREFIX}-${Date.now()}-${uuid()
+      .split('-')
+      .pop()}`;
   }
 
   // Parse the time the resource was created using the resource id

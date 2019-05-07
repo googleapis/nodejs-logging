@@ -15,16 +15,16 @@
  */
 
 import {util} from '@google-cloud/common-grpc';
-import * as promisify from '@google-cloud/promisify';
+import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 
-let promisifed = false;
-const fakePromisify = extend({}, promisify, {
-  promisifyAll(c) {
+let callbackified = false;
+const fakeCallbackify = extend({}, callbackify, {
+  callbackifyAll(c) {
     if (c.name === 'Sink') {
-      promisifed = true;
+      callbackified = true;
     }
   },
 });
@@ -34,16 +34,20 @@ describe('Sink', () => {
   let Sink: any;
   let sink;
 
+  const PROJECT_ID = 'project-id';
+
   const LOGGING = {
     createSink: util.noop,
-    projectId: 'project-id',
+    projectId: '{{projectId}}',
+    auth: util.noop,
+    configService: util.noop,
   };
   const SINK_NAME = 'sink-name';
 
   before(() => {
     Sink = proxyquire('../src/sink', {
-             '@google-cloud/promisify': fakePromisify,
-           }).Sink;
+      '@google-cloud/promisify': fakeCallbackify,
+    }).Sink;
   });
 
   beforeEach(() => {
@@ -52,7 +56,7 @@ describe('Sink', () => {
 
   describe('instantiation', () => {
     it('should promisify all the things', () => {
-      assert(promisifed);
+      assert(callbackified);
     });
 
     it('should localize Logging instance', () => {
@@ -65,121 +69,110 @@ describe('Sink', () => {
 
     it('should localize the formatted name', () => {
       assert.strictEqual(
-          sink.formattedName_,
-          'projects/' + LOGGING.projectId + '/sinks/' + SINK_NAME);
+        sink.formattedName_,
+        'projects/' + LOGGING.projectId + '/sinks/' + SINK_NAME
+      );
     });
   });
 
   describe('create', () => {
-    it('should call parent createSink', done => {
+    it('should call parent createSink', async () => {
       const config = {};
 
-      sink.logging.createSink = (name, config_, callback) => {
+      sink.logging.createSink = async (name, config_) => {
         assert.strictEqual(name, sink.name);
         assert.strictEqual(config_, config);
-        callback();  // done()
       };
 
-      sink.create(config, done);
+      await sink.create(config);
     });
   });
 
   describe('delete', () => {
-    it('should accept gaxOptions', done => {
-      sink.logging.request = (config, callback) => {
-        assert.strictEqual(config.client, 'ConfigServiceV2Client');
-        assert.strictEqual(config.method, 'deleteSink');
-
-        assert.deepStrictEqual(config.reqOpts, {
+    it('should execute gax method', async () => {
+      sink.logging.auth.getProjectId = async () => PROJECT_ID;
+      sink.logging.configService.deleteSink = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
           sinkName: sink.formattedName_,
         });
-
-        assert.deepStrictEqual(config.gaxOpts, {});
-
-        callback();  // done()
+        assert.strictEqual(gaxOpts, undefined);
       };
 
-      sink.delete(done);
+      await sink.delete();
     });
 
-    it('should accept gaxOptions', done => {
+    it('should accept gaxOptions', async () => {
       const gaxOptions = {};
 
-      sink.logging.request = config => {
-        assert.strictEqual(config.gaxOpts, gaxOptions);
-        done();
+      sink.logging.getProjectId = async () => {};
+      sink.logging.configService.deleteSink = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(gaxOpts, gaxOptions);
       };
 
-      sink.delete(gaxOptions, assert.ifError);
+      await sink.delete(gaxOptions);
     });
   });
 
   describe('getMetadata', () => {
-    it('should make correct request', done => {
-      sink.logging.request = config => {
-        assert.strictEqual(config.client, 'ConfigServiceV2Client');
-        assert.strictEqual(config.method, 'getSink');
-
-        assert.deepStrictEqual(config.reqOpts, {
+    beforeEach(() => {
+      sink.logging.auth.getProjectId = async () => PROJECT_ID;
+    });
+    it('should execute gax method', async () => {
+      sink.logging.configService.getSink = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
           sinkName: sink.formattedName_,
         });
-
-        assert.deepStrictEqual(config.gaxOpts, {});
-
-        done();
+        assert.strictEqual(gaxOpts, undefined);
+        return [];
       };
 
-      sink.getMetadata(assert.ifError);
+      await sink.getMetadata();
     });
 
-    it('should accept gaxOptions', done => {
+    it('should accept gaxOptions', async () => {
       const gaxOptions = {};
 
-      sink.logging.request = config => {
-        assert.strictEqual(config.gaxOpts, gaxOptions);
-        done();
+      sink.logging.configService.getSink = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(gaxOpts, gaxOptions);
+        return [];
       };
 
-      sink.delete(gaxOptions, assert.ifError);
+      await sink.getMetadata(gaxOptions);
     });
 
-    it('should update metadata', done => {
+    it('should update metadata', async () => {
       const metadata = {};
 
-      sink.logging.request = (config, callback) => {
-        callback(null, metadata);
+      sink.logging.configService.getSink = async (reqOpts, gaxOpts) => {
+        return [metadata];
       };
 
-      sink.getMetadata(() => {
-        assert.strictEqual(sink.metadata, metadata);
-        done();
-      });
+      await sink.getMetadata();
+      assert.strictEqual(sink.metadata, metadata);
     });
 
-    it('should execute callback with original arguments', done => {
+    it('should return original arguments', async () => {
       const ARGS = [{}, {}, {}];
 
-      sink.logging.request = (config, callback) => {
-        callback.apply(null, ARGS);
+      sink.logging.configService.getSink = async (reqOpts, gaxOpts) => {
+        return [ARGS];
       };
 
-      sink.getMetadata((...args) => {
-        assert.deepStrictEqual(args, ARGS);
-        done();
-      });
+      const [args] = await sink.getMetadata();
+      assert.deepStrictEqual(args, ARGS);
     });
   });
 
   describe('setFilter', () => {
     const FILTER = 'filter';
 
-    it('should call set metadata', done => {
-      sink.setMetadata = (metadata, callback) => {
+    it('should call set metadata', async () => {
+      sink.setMetadata = async metadata => {
         assert.strictEqual(metadata.filter, FILTER);
-        callback();  // done()
+        return [];
       };
 
-      sink.setFilter(FILTER, done);
+      await sink.setFilter(FILTER);
     });
   });
 
@@ -187,94 +180,91 @@ describe('Sink', () => {
     const METADATA = {a: 'b', c: 'd'};
 
     beforeEach(() => {
-      sink.getMetadata = (callback) => {
-        callback(null, METADATA);
+      sink.getMetadata = async () => {
+        return [METADATA];
       };
+
+      sink.logging.auth.getProjectId = async () => PROJECT_ID;
     });
 
-    it('should refresh the metadata', done => {
+    it('should refresh the metadata', async () => {
       sink.getMetadata = () => {
-        done();
+        return [];
       };
 
-      sink.setMetadata(METADATA, assert.ifError);
+      sink.logging.configService.updateSink = async (reqOpts, gaxOpts) => {
+        return [METADATA];
+      };
+
+      assert.strictEqual(sink.metadata, undefined);
+      await sink.setMetadata(METADATA);
+      assert.deepStrictEqual(sink.metadata, METADATA);
     });
 
-    it('should exec callback with error from refresh', done => {
+    it('should throw the error from refresh', () => {
       const error = new Error('Error.');
 
-      sink.getMetadata = (callback) => {
-        callback(error);
+      sink.getMetadata = async () => {
+        throw error;
       };
 
-      sink.setMetadata(METADATA, (err) => {
-        assert.strictEqual(err, error);
-        done();
-      });
+      sink
+        .setMetadata(METADATA)
+        .then(util.noop, err => assert.strictEqual(err, error));
     });
 
-    it('should make the correct request', done => {
+    it('should execute gax method', async () => {
       const currentMetadata = {a: 'a', e: 'e'};
 
-      sink.getMetadata = (callback) => {
-        callback(null, currentMetadata);
+      sink.getMetadata = async () => {
+        return [currentMetadata];
       };
 
-      sink.logging.request = (config) => {
-        assert.strictEqual(config.client, 'ConfigServiceV2Client');
-        assert.strictEqual(config.method, 'updateSink');
-
-        assert.deepStrictEqual(config.reqOpts, {
+      sink.logging.configService.updateSink = async (reqOpts, gaxOpts) => {
+        assert.deepStrictEqual(reqOpts, {
           sinkName: sink.formattedName_,
           sink: extend({}, currentMetadata, METADATA),
         });
-
-        assert.strictEqual(config.gaxOpts, undefined);
-
-        done();
+        assert.strictEqual(gaxOpts, undefined);
+        return [];
       };
 
-      sink.setMetadata(METADATA, assert.ifError);
+      await sink.setMetadata(METADATA);
     });
 
-    it('should accept gaxOptions', done => {
+    it('should accept gaxOptions', async () => {
       const metadata = extend({}, METADATA, {
         gaxOptions: {},
       });
 
-      sink.logging.request = (config) => {
-        assert.strictEqual(config.reqOpts.sink.gaxOptions, undefined);
-        assert.strictEqual(config.gaxOpts, metadata.gaxOptions);
-        done();
+      sink.logging.configService.updateSink = async (reqOpts, gaxOpts) => {
+        assert.strictEqual(reqOpts.sink.gaxOptions, undefined);
+        assert.strictEqual(gaxOpts, metadata.gaxOptions);
+        return [];
       };
-
-      sink.setMetadata(metadata, assert.ifError);
+      await sink.setMetadata(metadata);
     });
 
-    it('should update metadata', done => {
+    it('should update metadata', async () => {
       const metadata = {};
 
-      sink.logging.request = (config, callback) => {
-        callback(null, metadata);
+      sink.logging.configService.updateSink = async (reqOpts, gaxOpts) => {
+        return [metadata];
       };
 
-      sink.setMetadata(metadata, () => {
-        assert.strictEqual(sink.metadata, metadata);
-        done();
-      });
+      await sink.setMetadata(metadata);
+      assert.strictEqual(sink.metadata, metadata);
     });
 
-    it('should execute callback with original arguments', done => {
+    it('should return callback with original arguments', async () => {
       const ARGS = [{}, {}, {}];
 
-      sink.logging.request = (config, callback) => {
-        callback.apply(null, ARGS);
+      sink.logging.configService.updateSink = async (reqOpts, gaxOpts) => {
+        return [ARGS];
       };
 
-      sink.setMetadata(METADATA, (...args) => {
-        assert.deepStrictEqual(args, ARGS);
-        done();
-      });
+      const [args] = await sink.setMetadata(METADATA);
+      assert.deepStrictEqual(args, ARGS);
     });
   });
 });
