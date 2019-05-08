@@ -101,11 +101,11 @@ class ConfigServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
-      sinkPathTemplate: new gax.PathTemplate('projects/{project}/sinks/{sink}'),
       exclusionPathTemplate: new gax.PathTemplate(
         'projects/{project}/exclusions/{exclusion}'
       ),
+      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      sinkPathTemplate: new gax.PathTemplate('projects/{project}/sinks/{sink}'),
     };
 
     // Some of the methods on this service return "paged" results,
@@ -1122,6 +1122,20 @@ class ConfigServiceV2Client {
   // --------------------
 
   /**
+   * Return a fully-qualified exclusion resource name string.
+   *
+   * @param {String} project
+   * @param {String} exclusion
+   * @returns {String}
+   */
+  exclusionPath(project, exclusion) {
+    return this._pathTemplates.exclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
+    });
+  }
+
+  /**
    * Return a fully-qualified project resource name string.
    *
    * @param {String} project
@@ -1148,17 +1162,27 @@ class ConfigServiceV2Client {
   }
 
   /**
-   * Return a fully-qualified exclusion resource name string.
+   * Parse the exclusionName from a exclusion resource.
    *
-   * @param {String} project
-   * @param {String} exclusion
-   * @returns {String}
+   * @param {String} exclusionName
+   *   A fully-qualified path representing a exclusion resources.
+   * @returns {String} - A string representing the project.
    */
-  exclusionPath(project, exclusion) {
-    return this._pathTemplates.exclusionPathTemplate.render({
-      project: project,
-      exclusion: exclusion,
-    });
+  matchProjectFromExclusionName(exclusionName) {
+    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
+      .project;
+  }
+
+  /**
+   * Parse the exclusionName from a exclusion resource.
+   *
+   * @param {String} exclusionName
+   *   A fully-qualified path representing a exclusion resources.
+   * @returns {String} - A string representing the exclusion.
+   */
+  matchExclusionFromExclusionName(exclusionName) {
+    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
+      .exclusion;
   }
 
   /**
@@ -1192,30 +1216,6 @@ class ConfigServiceV2Client {
    */
   matchSinkFromSinkName(sinkName) {
     return this._pathTemplates.sinkPathTemplate.match(sinkName).sink;
-  }
-
-  /**
-   * Parse the exclusionName from a exclusion resource.
-   *
-   * @param {String} exclusionName
-   *   A fully-qualified path representing a exclusion resources.
-   * @returns {String} - A string representing the project.
-   */
-  matchProjectFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
-      .project;
-  }
-
-  /**
-   * Parse the exclusionName from a exclusion resource.
-   *
-   * @param {String} exclusionName
-   *   A fully-qualified path representing a exclusion resources.
-   * @returns {String} - A string representing the exclusion.
-   */
-  matchExclusionFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
-      .exclusion;
   }
 }
 
