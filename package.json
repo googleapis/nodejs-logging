@@ -61,7 +61,7 @@
     "arrify": "^2.0.0",
     "eventid": "^0.1.2",
     "extend": "^3.0.2",
-    "gcp-metadata": "^1.0.0",
+    "gcp-metadata": "^2.0.0",
     "google-auth-library": "^3.0.0",
     "google-gax": "^0.26.0",
     "is": "^3.2.1",
