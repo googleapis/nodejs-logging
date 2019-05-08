@@ -18,14 +18,18 @@ import * as http from 'http';
 
 import {StackdriverHttpRequest} from '../../http-request';
 
+export interface ServerRequest extends http.IncomingMessage {
+  originalUrl?: string;
+}
+
 export function makeHttpRequestData(
-  req: http.IncomingMessage,
+  req: ServerRequest,
   res: http.ServerResponse,
   latencyMilliseconds: number
 ): StackdriverHttpRequest {
   return {
     status: res.statusCode,
-    requestUrl: req.url,
+    requestUrl: req.originalUrl || req.url,
     requestMethod: req.method,
     userAgent: req.headers['user-agent'],
     responseSize:
