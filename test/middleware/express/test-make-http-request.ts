@@ -15,8 +15,11 @@
  */
 
 import * as assert from 'assert';
-import {IncomingMessage, ServerResponse} from 'http';
-import {makeHttpRequestData} from '../../../src/middleware/express/make-http-request';
+import {ServerResponse} from 'http';
+import {
+  makeHttpRequestData,
+  ServerRequest,
+} from '../../../src/middleware/express/make-http-request';
 
 describe('middleware/express/make-http-request', () => {
   it('should convert latency to proto Duration', () => {
@@ -24,14 +27,14 @@ describe('middleware/express/make-http-request', () => {
     const fakeResponse = {};
 
     const h1 = makeHttpRequestData(
-      fakeRequest as IncomingMessage,
+      fakeRequest as ServerRequest,
       fakeResponse as ServerResponse,
       1003
     );
     assert.deepStrictEqual(h1.latency, {seconds: 1, nanos: 3e6});
 
     const h2 = makeHttpRequestData(
-      fakeRequest as IncomingMessage,
+      fakeRequest as ServerRequest,
       fakeResponse as ServerResponse,
       9003.1
     );
@@ -39,7 +42,7 @@ describe('middleware/express/make-http-request', () => {
 
     // Make sure we nanos is uint32.
     const h3 = makeHttpRequestData(
-      fakeRequest as IncomingMessage,
+      fakeRequest as ServerRequest,
       fakeResponse as ServerResponse,
       1.0000000001
     );

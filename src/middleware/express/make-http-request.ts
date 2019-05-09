@@ -19,7 +19,7 @@ import * as http from 'http';
 import {StackdriverHttpRequest} from '../../http-request';
 
 export interface ServerRequest extends http.IncomingMessage {
-  originalUrl?: string;
+  originalUrl: string;
 }
 
 export function makeHttpRequestData(
@@ -29,7 +29,7 @@ export function makeHttpRequestData(
 ): StackdriverHttpRequest {
   return {
     status: res.statusCode,
-    requestUrl: req.originalUrl || req.url,
+    requestUrl: req.originalUrl,
     requestMethod: req.method,
     userAgent: req.headers['user-agent'],
     responseSize:
