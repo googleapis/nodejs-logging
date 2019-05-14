@@ -18,10 +18,10 @@ import * as http from 'http';
 import onFinished = require('on-finished');
 import {getOrInjectContext, makeHeaderWrapper} from '../context';
 
-import {makeHttpRequestData} from './make-http-request';
+import {makeHttpRequestData, ServerRequest} from './make-http-request';
 import {StackdriverHttpRequest} from '../../http-request';
 
-interface AnnotatedRequestType<LoggerType> extends http.IncomingMessage {
+interface AnnotatedRequestType<LoggerType> extends ServerRequest {
   log: LoggerType;
 }
 
@@ -46,11 +46,7 @@ export function makeMiddleware<LoggerType>(
   makeChildLogger: (trace: string) => LoggerType,
   emitRequestLog?: (httpRequest: StackdriverHttpRequest, trace: string) => void
 ) {
-  return (
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-    next: Function
-  ) => {
+  return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 
