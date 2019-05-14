@@ -57,7 +57,7 @@
     "@google-cloud/paginator": "^1.0.0",
     "@google-cloud/projectify": "^1.0.0",
     "@google-cloud/promisify": "^1.0.0",
-    "@opencensus/propagation-stackdriver": "0.0.11",
+    "@opencensus/propagation-stackdriver": "0.0.12",
     "arrify": "^2.0.0",
     "eventid": "^0.1.2",
     "extend": "^3.0.2",
@@ -73,7 +73,7 @@
     "snakecase-keys": "^2.0.0",
     "stream-events": "^1.0.4",
     "through2": "^3.0.0",
-    "type-fest": "^0.4.0"
+    "type-fest": "^0.5.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^3.0.0",
@@ -104,7 +104,7 @@
     "google-proto-files": "^1.0.0",
     "gts": "^1.0.0",
     "intelli-espower-loader": "^1.0.1",
-    "jsdoc": "3.5.5",
+    "jsdoc": "^3.6.2",
     "jsdoc-baseline": "git+https://github.com/hegemonic/jsdoc-baseline.git",
     "linkinator": "^1.1.2",
     "mocha": "^6.0.0",
