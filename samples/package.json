@@ -14,7 +14,7 @@
     "test": "mocha --timeout 60000"
   },
   "dependencies": {
-    "@google-cloud/logging": "^4.5.2",
+    "@google-cloud/logging": "^5.0.0",
     "@google-cloud/storage": "^2.0.2",
     "express": "^4.16.3",
     "fluent-logger": "^3.0.0",

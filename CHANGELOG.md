@@ -4,6 +4,36 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v4.5.2...v5.0.0) (2019-05-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/common-grpc to v1 ([#479](https://www.github.com/googleapis/nodejs-logging/issues/479)) ([58e6154](https://www.github.com/googleapis/nodejs-logging/commit/58e6154))
+* **deps:** update dependency @google-cloud/paginator to v1 ([#467](https://www.github.com/googleapis/nodejs-logging/issues/467)) ([90d74bd](https://www.github.com/googleapis/nodejs-logging/commit/90d74bd))
+* **deps:** update dependency @google-cloud/projectify to v1 ([#464](https://www.github.com/googleapis/nodejs-logging/issues/464)) ([f6ef399](https://www.github.com/googleapis/nodejs-logging/commit/f6ef399))
+* **deps:** update dependency @google-cloud/promisify to v1 ([#465](https://www.github.com/googleapis/nodejs-logging/issues/465)) ([5871e4b](https://www.github.com/googleapis/nodejs-logging/commit/5871e4b))
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.12 ([#483](https://www.github.com/googleapis/nodejs-logging/issues/483)) ([afe89de](https://www.github.com/googleapis/nodejs-logging/commit/afe89de))
+* **deps:** update dependency gcp-metadata to v2 ([#474](https://www.github.com/googleapis/nodejs-logging/issues/474)) ([125b356](https://www.github.com/googleapis/nodejs-logging/commit/125b356))
+* **deps:** update dependency google-auth-library to v4 ([#475](https://www.github.com/googleapis/nodejs-logging/issues/475)) ([558bfc5](https://www.github.com/googleapis/nodejs-logging/commit/558bfc5))
+* **deps:** update dependency google-gax to ^0.26.0 ([#459](https://www.github.com/googleapis/nodejs-logging/issues/459)) ([7417dcb](https://www.github.com/googleapis/nodejs-logging/commit/7417dcb))
+* **deps:** update dependency google-gax to v1 ([#477](https://www.github.com/googleapis/nodejs-logging/issues/477)) ([535aedb](https://www.github.com/googleapis/nodejs-logging/commit/535aedb))
+* DEADLINE_EXCEEDED no longer listed as idempotent ([473d145](https://www.github.com/googleapis/nodejs-logging/commit/473d145))
+* **deps:** update dependency type-fest to ^0.4.0 ([#455](https://www.github.com/googleapis/nodejs-logging/issues/455)) ([3c2324b](https://www.github.com/googleapis/nodejs-logging/commit/3c2324b))
+* **deps:** update dependency type-fest to ^0.5.0 ([#482](https://www.github.com/googleapis/nodejs-logging/issues/482)) ([ee5d17f](https://www.github.com/googleapis/nodejs-logging/commit/ee5d17f))
+* DEADLINE_EXCEEDED retry code is idempotent ([#478](https://www.github.com/googleapis/nodejs-logging/issues/478)) ([4fdb8c1](https://www.github.com/googleapis/nodejs-logging/commit/4fdb8c1))
+* use originalUrl for Express middleware's request url ([#476](https://www.github.com/googleapis/nodejs-logging/issues/476)) ([0ee71bd](https://www.github.com/googleapis/nodejs-logging/commit/0ee71bd)), closes [#472](https://www.github.com/googleapis/nodejs-logging/issues/472)
+
+
+### Build System
+
+* upgrade engines field to >=8.10.0 ([#461](https://www.github.com/googleapis/nodejs-logging/issues/461)) ([641ce87](https://www.github.com/googleapis/nodejs-logging/commit/641ce87))
+
+
+### BREAKING CHANGES
+
+* upgrade engines field to >=8.10.0 (#461)
+
 ## v4.5.2
 
 04-11-2019 14:26 PDT
@@ -304,4 +334,3 @@ This release contains a variety of minor internal changes.
 - test: use strictEqual in tests (#170)
 - fix(deps): update dependency gcp-metadata to ^0.7.0 (#166)
 - fix(deps): update dependency @google-cloud/logging to v2 (#157)
-
