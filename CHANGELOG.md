@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.0.0...v5.0.1) (2019-05-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.13 ([#489](https://www.github.com/googleapis/nodejs-logging/issues/489)) ([0f57adf](https://www.github.com/googleapis/nodejs-logging/commit/0f57adf))
+
 ## [5.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v4.5.2...v5.0.0) (2019-05-17)
 
 
