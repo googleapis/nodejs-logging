@@ -76,7 +76,7 @@
     "type-fest": "^0.5.0"
   },
   "devDependencies": {
-    "@google-cloud/bigquery": "^3.0.0",
+    "@google-cloud/bigquery": "^4.0.0",
     "@google-cloud/nodejs-repo-tools": "^3.0.0",
     "@google-cloud/pubsub": "^0.29.0",
     "@google-cloud/storage": "^2.2.0",
