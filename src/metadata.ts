@@ -17,11 +17,11 @@
 import * as fs from 'fs';
 import * as gcpMetadata from 'gcp-metadata';
 import {GCPEnv, GoogleAuth} from 'google-auth-library';
-import * as pify from 'pify';
+import {promisify} from 'util';
 
 import {ServiceContext} from './index';
 
-const readFile = pify(fs.readFile);
+const readFile = promisify(fs.readFile);
 
 function zoneFromQualifiedZone(qualified: string): string | undefined {
   // Some parsing is necessary. Metadata service returns a fully
