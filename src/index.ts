@@ -61,6 +61,7 @@ import {Topic} from '@google-cloud/pubsub'; // types only
 export interface LoggingOptions extends gax.GoogleAuthOptions {
   autoRetry?: boolean;
   maxRetries?: number;
+  apiEndpoint?: string;
 }
 
 export interface DeleteCallback {
