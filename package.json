@@ -37,7 +37,6 @@
     "presystem-test": "npm run compile",
     "system-test": "mocha build/system-test --timeout 600000",
     "samples-test": "cd samples/ && npm test && cd ../",
-    "generate-scaffolding": "repo-tools generate all && repo-tools generate lib_samples_readme -l samples/ --config ../.cloud-repo-tools.json",
     "lint": "gts check && eslint '**/*.js'",
     "check": "gts check",
     "clean": "gts clean",
