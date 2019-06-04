@@ -57,12 +57,15 @@ class MetricsServiceV2Client {
   constructor(opts) {
     this._descriptors = {};
 
+    const servicePath =
+      opts.servicePath || opts.apiEndpoint || this.constructor.servicePath;
+
     // Ensure that options include the service address and port.
     opts = Object.assign(
       {
         clientConfig: {},
         port: this.constructor.port,
-        servicePath: this.constructor.servicePath,
+        servicePath,
       },
       opts
     );
@@ -165,6 +168,14 @@ class MetricsServiceV2Client {
    * The DNS address for this API service.
    */
   static get servicePath() {
+    return 'logging.googleapis.com';
+  }
+
+  /**
+   * The DNS address for this API service - same as servicePath(),
+   * exists for compatibility reasons.
+   */
+  static get apiEndpoint() {
     return 'logging.googleapis.com';
   }
 

@@ -23,6 +23,22 @@ const error = new Error();
 error.code = FAKE_STATUS_CODE;
 
 describe('LoggingServiceV2Client', () => {
+  it('has servicePath', () => {
+    const servicePath = loggingModule.v2.LoggingServiceV2Client.servicePath;
+    assert(servicePath);
+  });
+
+  it('has apiEndpoint', () => {
+    const apiEndpoint = loggingModule.v2.LoggingServiceV2Client.apiEndpoint;
+    assert(apiEndpoint);
+  });
+
+  it('has port', () => {
+    const port = loggingModule.v2.LoggingServiceV2Client.port;
+    assert(port);
+    assert(typeof port === 'number');
+  });
+
   describe('deleteLog', () => {
     it('invokes deleteLog without error', done => {
       const client = new loggingModule.v2.LoggingServiceV2Client({
@@ -321,6 +337,22 @@ describe('LoggingServiceV2Client', () => {
   });
 });
 describe('ConfigServiceV2Client', () => {
+  it('has servicePath', () => {
+    const servicePath = loggingModule.v2.ConfigServiceV2Client.servicePath;
+    assert(servicePath);
+  });
+
+  it('has apiEndpoint', () => {
+    const apiEndpoint = loggingModule.v2.ConfigServiceV2Client.apiEndpoint;
+    assert(apiEndpoint);
+  });
+
+  it('has port', () => {
+    const port = loggingModule.v2.ConfigServiceV2Client.port;
+    assert(port);
+    assert(typeof port === 'number');
+  });
+
   describe('listSinks', () => {
     it('invokes listSinks without error', done => {
       const client = new loggingModule.v2.ConfigServiceV2Client({
@@ -972,6 +1004,22 @@ describe('ConfigServiceV2Client', () => {
   });
 });
 describe('MetricsServiceV2Client', () => {
+  it('has servicePath', () => {
+    const servicePath = loggingModule.v2.MetricsServiceV2Client.servicePath;
+    assert(servicePath);
+  });
+
+  it('has apiEndpoint', () => {
+    const apiEndpoint = loggingModule.v2.MetricsServiceV2Client.apiEndpoint;
+    assert(apiEndpoint);
+  });
+
+  it('has port', () => {
+    const port = loggingModule.v2.MetricsServiceV2Client.port;
+    assert(port);
+    assert(typeof port === 'number');
+  });
+
   describe('listLogMetrics', () => {
     it('invokes listLogMetrics without error', done => {
       const client = new loggingModule.v2.MetricsServiceV2Client({
