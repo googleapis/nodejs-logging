@@ -4,6 +4,15 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.0.1...v5.1.0) (2019-06-05)
+
+
+### Features
+
+* add .repo-metadata.json for docs generation ([#502](https://www.github.com/googleapis/nodejs-logging/issues/502)) ([4a3b80a](https://www.github.com/googleapis/nodejs-logging/commit/4a3b80a))
+* support apiEndpoint override ([#501](https://www.github.com/googleapis/nodejs-logging/issues/501)) ([f701358](https://www.github.com/googleapis/nodejs-logging/commit/f701358))
+* support apiEndpoint override in client constructor ([#505](https://www.github.com/googleapis/nodejs-logging/issues/505)) ([bda7124](https://www.github.com/googleapis/nodejs-logging/commit/bda7124))
+
 ### [5.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.0.0...v5.0.1) (2019-05-21)
 
 
