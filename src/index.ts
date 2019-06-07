@@ -94,7 +94,7 @@ export interface CreateSinkCallback {
 export type GetEntriesResponse = [
   Entry[],
   google.logging.v2.IListLogEntriesRequest,
-  google.logging.v2.IListLogEntriesResponse
+  google.logging.v2.IListLogEntriesResponse,
 ];
 
 export interface GetEntriesCallback {
@@ -118,7 +118,7 @@ export interface GetSinksRequest {
 export type GetSinksResponse = [
   Sink[],
   google_config.logging.v2.IListSinksRequest,
-  google_config.logging.v2.IListSinksResponse
+  google_config.logging.v2.IListSinksResponse,
 ];
 
 export interface GetSinksCallback {
