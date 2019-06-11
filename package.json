@@ -67,7 +67,7 @@
     "on-finished": "^2.3.0",
     "protobufjs": "^6.8.8",
     "pumpify": "^1.5.1",
-    "snakecase-keys": "^2.0.0",
+    "snakecase-keys": "^3.0.0",
     "stream-events": "^1.0.4",
     "through2": "^3.0.0",
     "type-fest": "^0.5.0"
