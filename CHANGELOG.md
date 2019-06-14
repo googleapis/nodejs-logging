@@ -4,6 +4,15 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.1.0...v5.1.1) (2019-06-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.14 ([#509](https://www.github.com/googleapis/nodejs-logging/issues/509)) ([3cba4dc](https://www.github.com/googleapis/nodejs-logging/commit/3cba4dc))
+* **deps:** update dependency snakecase-keys to v3 ([#510](https://www.github.com/googleapis/nodejs-logging/issues/510)) ([eb2193e](https://www.github.com/googleapis/nodejs-logging/commit/eb2193e))
+* **docs:** move to new client docs URL ([#514](https://www.github.com/googleapis/nodejs-logging/issues/514)) ([9043cfa](https://www.github.com/googleapis/nodejs-logging/commit/9043cfa))
+
 ## [5.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.0.1...v5.1.0) (2019-06-05)
 
 
