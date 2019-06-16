@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.1.2](https://www.github.com/googleapis/nodejs-logging/compare/v5.1.1...v5.1.2) (2019-06-16)
+
+
+### Bug Fixes
+
+* there is a free tier for logging ([#513](https://www.github.com/googleapis/nodejs-logging/issues/513)) ([2079598](https://www.github.com/googleapis/nodejs-logging/commit/2079598))
+* **deps:** update dependency pumpify to v2 ([#516](https://www.github.com/googleapis/nodejs-logging/issues/516)) ([11d8f34](https://www.github.com/googleapis/nodejs-logging/commit/11d8f34))
+
 ### [5.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.1.0...v5.1.1) (2019-06-14)
 
 
