@@ -8,6 +8,5 @@
   "language": "nodejs",
   "repo": "googleapis/nodejs-logging",
   "distribution_name": "@google-cloud/logging",
-  "api_id": "logging.googleapis.com",
-  "requires_billing": true
+  "api_id": "logging.googleapis.com"
 }
