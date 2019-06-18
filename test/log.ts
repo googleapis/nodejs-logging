@@ -272,7 +272,9 @@ describe('Log', () => {
       log.formattedName_ = Log.formatName_(log.logging.projectId, log.name);
 
       const expectedOptions = extend({}, options);
-      expectedOptions.filter = `(${options.filter}) AND logName="${log.formattedName_}"`;
+      expectedOptions.filter = `(${options.filter}) AND logName="${
+        log.formattedName_
+      }"`;
 
       log.logging.getEntries = options_ => {
         assert.notDeepStrictEqual(options_, options);

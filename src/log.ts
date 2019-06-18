@@ -75,7 +75,7 @@ export type SeverityNames = keyof typeof Severity;
 // classes.
 type LogSeverityFunctions = {
   // FIXME: the following can be made more precise.
-  [P in SeverityNames]: Function;
+  [P in SeverityNames]: Function
 };
 
 /**
@@ -514,7 +514,9 @@ class Log implements LogSeverityFunctions {
     const projectId = await this.logging.auth.getProjectId();
     this.formattedName_ = Log.formatName_(projectId, this.name);
     if (options.filter) {
-      options.filter = `(${options.filter}) AND logName="${this.formattedName_}"`;
+      options.filter = `(${options.filter}) AND logName="${
+        this.formattedName_
+      }"`;
     } else {
       options.filter = `logName="${this.formattedName_}"`;
     }
