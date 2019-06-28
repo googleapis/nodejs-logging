@@ -48,7 +48,7 @@
     "proto": "npm run proto:logging && npm run proto:logging_config",
     "proto:logging": "mkdir -p proto && pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging.proto | pbts -o proto/logging.d.ts -",
     "proto:logging_config": "pbjs -t static-module -w commonjs -p node_modules/google-proto-files google/logging/v2/logging_config.proto | pbts -o proto/logging_config.d.ts -",
-    "docs-test": "linkinator docs -r --skip www.googleapis.com",
+    "docs-test": "linkinator docs",
     "predocs-test": "npm run docs"
   },
   "dependencies": {
@@ -102,7 +102,7 @@
     "intelli-espower-loader": "^1.0.1",
     "jsdoc": "^3.6.2",
     "jsdoc-baseline": "^0.1.0",
-    "linkinator": "^1.4.2",
+    "linkinator": "^1.5.0",
     "mocha": "^6.1.4",
     "mv": "^2.1.1",
     "ncp": "^2.0.0",
