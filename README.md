@@ -85,10 +85,12 @@ async function quickstart(
 }
 
 ```
-# Batching Writes
+## Batching Writes
 
-High throughput applications should consider batching writes, as it introduces latency
-communicating with the upstream service for each request.
+High throughput applications should consider batching writes, as it introduces signficant
+latency calling the upstream logging service for each request.
+
+Here's an example of how someone might achieve this:
 
 ```js
 const {Logging} = require('@google-cloud/logging');

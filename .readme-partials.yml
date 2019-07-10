@@ -2,7 +2,7 @@ introduction: |-
   [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
   monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
 body: |-
-  # Batching Writes
+  ## Batching Writes
 
   High throughput applications should consider batching writes, as it introduces signficant
   latency calling the upstream logging service for each request.
