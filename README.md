@@ -101,8 +101,8 @@ const logging = new Logging({projectId});
 // Selects the log to write to
 const log = logging.log(logName);
 
-// main tain a global array of log lines that have not yet been written.
-const logEntries = []
+// maintain a global array of log lines that have not yet been written.
+const logEntries = [];
 logEntries.push({text: 'hello world', timestamp: new Date()});
 
 // we periodically drain the log entries.
