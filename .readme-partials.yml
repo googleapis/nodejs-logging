@@ -1,3 +1,29 @@
 introduction: |-
-        [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
-        monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
+  [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
+  monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
+body: |-
+  # Batching Writes
+
+  High throughput applications should consider batching writes, as it introduces signficant
+  latency calling the upstream logging service for each request.
+
+  Here's an example of how someone might achieve this:
+
+  ```js
+  const {Logging} = require('@google-cloud/logging');
+
+  // Creates a client
+  const logging = new Logging({projectId});
+
+  // Selects the log to write to
+  const log = logging.log(logName);
+
+  // main tain a global array of log lines that have not yet been written.
+  const logEntries = []
+  logEntries.push({text: 'hello world', timestamp: new Date()});
+
+  // we periodically drain the log entries.
+  setInterval(async () => {
+    await log.write(logEntries.splice(0));
+  }, 500);
+  ```
