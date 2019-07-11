@@ -101,8 +101,33 @@ class ConfigServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
+      billingPathTemplate: new gax.PathTemplate(
+        'billingAccounts/{billing_account}'
+      ),
+      billingExclusionPathTemplate: new gax.PathTemplate(
+        'billingAccounts/{billing_account}/exclusions/{exclusion}'
+      ),
+      billingSinkPathTemplate: new gax.PathTemplate(
+        'billingAccounts/{billing_account}/sinks/{sink}'
+      ),
       exclusionPathTemplate: new gax.PathTemplate(
         'projects/{project}/exclusions/{exclusion}'
+      ),
+      folderPathTemplate: new gax.PathTemplate('folders/{folder}'),
+      folderExclusionPathTemplate: new gax.PathTemplate(
+        'folders/{folder}/exclusions/{exclusion}'
+      ),
+      folderSinkPathTemplate: new gax.PathTemplate(
+        'folders/{folder}/sinks/{sink}'
+      ),
+      organizationPathTemplate: new gax.PathTemplate(
+        'organizations/{organization}'
+      ),
+      organizationExclusionPathTemplate: new gax.PathTemplate(
+        'organizations/{organization}/exclusions/{exclusion}'
+      ),
+      organizationSinkPathTemplate: new gax.PathTemplate(
+        'organizations/{organization}/sinks/{sink}'
       ),
       projectPathTemplate: new gax.PathTemplate('projects/{project}'),
       sinkPathTemplate: new gax.PathTemplate('projects/{project}/sinks/{sink}'),
@@ -1130,6 +1155,46 @@ class ConfigServiceV2Client {
   // --------------------
 
   /**
+   * Return a fully-qualified billing resource name string.
+   *
+   * @param {String} billingAccount
+   * @returns {String}
+   */
+  billingPath(billingAccount) {
+    return this._pathTemplates.billingPathTemplate.render({
+      billing_account: billingAccount,
+    });
+  }
+
+  /**
+   * Return a fully-qualified billing_exclusion resource name string.
+   *
+   * @param {String} billingAccount
+   * @param {String} exclusion
+   * @returns {String}
+   */
+  billingExclusionPath(billingAccount, exclusion) {
+    return this._pathTemplates.billingExclusionPathTemplate.render({
+      billing_account: billingAccount,
+      exclusion: exclusion,
+    });
+  }
+
+  /**
+   * Return a fully-qualified billing_sink resource name string.
+   *
+   * @param {String} billingAccount
+   * @param {String} sink
+   * @returns {String}
+   */
+  billingSinkPath(billingAccount, sink) {
+    return this._pathTemplates.billingSinkPathTemplate.render({
+      billing_account: billingAccount,
+      sink: sink,
+    });
+  }
+
+  /**
    * Return a fully-qualified exclusion resource name string.
    *
    * @param {String} project
@@ -1140,6 +1205,86 @@ class ConfigServiceV2Client {
     return this._pathTemplates.exclusionPathTemplate.render({
       project: project,
       exclusion: exclusion,
+    });
+  }
+
+  /**
+   * Return a fully-qualified folder resource name string.
+   *
+   * @param {String} folder
+   * @returns {String}
+   */
+  folderPath(folder) {
+    return this._pathTemplates.folderPathTemplate.render({
+      folder: folder,
+    });
+  }
+
+  /**
+   * Return a fully-qualified folder_exclusion resource name string.
+   *
+   * @param {String} folder
+   * @param {String} exclusion
+   * @returns {String}
+   */
+  folderExclusionPath(folder, exclusion) {
+    return this._pathTemplates.folderExclusionPathTemplate.render({
+      folder: folder,
+      exclusion: exclusion,
+    });
+  }
+
+  /**
+   * Return a fully-qualified folder_sink resource name string.
+   *
+   * @param {String} folder
+   * @param {String} sink
+   * @returns {String}
+   */
+  folderSinkPath(folder, sink) {
+    return this._pathTemplates.folderSinkPathTemplate.render({
+      folder: folder,
+      sink: sink,
+    });
+  }
+
+  /**
+   * Return a fully-qualified organization resource name string.
+   *
+   * @param {String} organization
+   * @returns {String}
+   */
+  organizationPath(organization) {
+    return this._pathTemplates.organizationPathTemplate.render({
+      organization: organization,
+    });
+  }
+
+  /**
+   * Return a fully-qualified organization_exclusion resource name string.
+   *
+   * @param {String} organization
+   * @param {String} exclusion
+   * @returns {String}
+   */
+  organizationExclusionPath(organization, exclusion) {
+    return this._pathTemplates.organizationExclusionPathTemplate.render({
+      organization: organization,
+      exclusion: exclusion,
+    });
+  }
+
+  /**
+   * Return a fully-qualified organization_sink resource name string.
+   *
+   * @param {String} organization
+   * @param {String} sink
+   * @returns {String}
+   */
+  organizationSinkPath(organization, sink) {
+    return this._pathTemplates.organizationSinkPathTemplate.render({
+      organization: organization,
+      sink: sink,
     });
   }
 
@@ -1170,6 +1315,68 @@ class ConfigServiceV2Client {
   }
 
   /**
+   * Parse the billingName from a billing resource.
+   *
+   * @param {String} billingName
+   *   A fully-qualified path representing a billing resources.
+   * @returns {String} - A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingName(billingName) {
+    return this._pathTemplates.billingPathTemplate.match(billingName)
+      .billing_account;
+  }
+
+  /**
+   * Parse the billingExclusionName from a billing_exclusion resource.
+   *
+   * @param {String} billingExclusionName
+   *   A fully-qualified path representing a billing_exclusion resources.
+   * @returns {String} - A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingExclusionName(billingExclusionName) {
+    return this._pathTemplates.billingExclusionPathTemplate.match(
+      billingExclusionName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the billingExclusionName from a billing_exclusion resource.
+   *
+   * @param {String} billingExclusionName
+   *   A fully-qualified path representing a billing_exclusion resources.
+   * @returns {String} - A string representing the exclusion.
+   */
+  matchExclusionFromBillingExclusionName(billingExclusionName) {
+    return this._pathTemplates.billingExclusionPathTemplate.match(
+      billingExclusionName
+    ).exclusion;
+  }
+
+  /**
+   * Parse the billingSinkName from a billing_sink resource.
+   *
+   * @param {String} billingSinkName
+   *   A fully-qualified path representing a billing_sink resources.
+   * @returns {String} - A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingSinkName(billingSinkName) {
+    return this._pathTemplates.billingSinkPathTemplate.match(billingSinkName)
+      .billing_account;
+  }
+
+  /**
+   * Parse the billingSinkName from a billing_sink resource.
+   *
+   * @param {String} billingSinkName
+   *   A fully-qualified path representing a billing_sink resources.
+   * @returns {String} - A string representing the sink.
+   */
+  matchSinkFromBillingSinkName(billingSinkName) {
+    return this._pathTemplates.billingSinkPathTemplate.match(billingSinkName)
+      .sink;
+  }
+
+  /**
    * Parse the exclusionName from a exclusion resource.
    *
    * @param {String} exclusionName
@@ -1191,6 +1398,131 @@ class ConfigServiceV2Client {
   matchExclusionFromExclusionName(exclusionName) {
     return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
       .exclusion;
+  }
+
+  /**
+   * Parse the folderName from a folder resource.
+   *
+   * @param {String} folderName
+   *   A fully-qualified path representing a folder resources.
+   * @returns {String} - A string representing the folder.
+   */
+  matchFolderFromFolderName(folderName) {
+    return this._pathTemplates.folderPathTemplate.match(folderName).folder;
+  }
+
+  /**
+   * Parse the folderExclusionName from a folder_exclusion resource.
+   *
+   * @param {String} folderExclusionName
+   *   A fully-qualified path representing a folder_exclusion resources.
+   * @returns {String} - A string representing the folder.
+   */
+  matchFolderFromFolderExclusionName(folderExclusionName) {
+    return this._pathTemplates.folderExclusionPathTemplate.match(
+      folderExclusionName
+    ).folder;
+  }
+
+  /**
+   * Parse the folderExclusionName from a folder_exclusion resource.
+   *
+   * @param {String} folderExclusionName
+   *   A fully-qualified path representing a folder_exclusion resources.
+   * @returns {String} - A string representing the exclusion.
+   */
+  matchExclusionFromFolderExclusionName(folderExclusionName) {
+    return this._pathTemplates.folderExclusionPathTemplate.match(
+      folderExclusionName
+    ).exclusion;
+  }
+
+  /**
+   * Parse the folderSinkName from a folder_sink resource.
+   *
+   * @param {String} folderSinkName
+   *   A fully-qualified path representing a folder_sink resources.
+   * @returns {String} - A string representing the folder.
+   */
+  matchFolderFromFolderSinkName(folderSinkName) {
+    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+      .folder;
+  }
+
+  /**
+   * Parse the folderSinkName from a folder_sink resource.
+   *
+   * @param {String} folderSinkName
+   *   A fully-qualified path representing a folder_sink resources.
+   * @returns {String} - A string representing the sink.
+   */
+  matchSinkFromFolderSinkName(folderSinkName) {
+    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+      .sink;
+  }
+
+  /**
+   * Parse the organizationName from a organization resource.
+   *
+   * @param {String} organizationName
+   *   A fully-qualified path representing a organization resources.
+   * @returns {String} - A string representing the organization.
+   */
+  matchOrganizationFromOrganizationName(organizationName) {
+    return this._pathTemplates.organizationPathTemplate.match(organizationName)
+      .organization;
+  }
+
+  /**
+   * Parse the organizationExclusionName from a organization_exclusion resource.
+   *
+   * @param {String} organizationExclusionName
+   *   A fully-qualified path representing a organization_exclusion resources.
+   * @returns {String} - A string representing the organization.
+   */
+  matchOrganizationFromOrganizationExclusionName(organizationExclusionName) {
+    return this._pathTemplates.organizationExclusionPathTemplate.match(
+      organizationExclusionName
+    ).organization;
+  }
+
+  /**
+   * Parse the organizationExclusionName from a organization_exclusion resource.
+   *
+   * @param {String} organizationExclusionName
+   *   A fully-qualified path representing a organization_exclusion resources.
+   * @returns {String} - A string representing the exclusion.
+   */
+  matchExclusionFromOrganizationExclusionName(organizationExclusionName) {
+    return this._pathTemplates.organizationExclusionPathTemplate.match(
+      organizationExclusionName
+    ).exclusion;
+  }
+
+  /**
+   * Parse the organizationSinkName from a organization_sink resource.
+   *
+   * @param {String} organizationSinkName
+   *   A fully-qualified path representing a organization_sink resources.
+   * @returns {String} - A string representing the organization.
+   */
+  matchOrganizationFromOrganizationSinkName(organizationSinkName) {
+    return this._pathTemplates.organizationSinkPathTemplate.match(
+      organizationSinkName
+    ).organization;
+  }
+
+  /**
+   * Parse the organizationSinkName from a organization_sink resource.
+   *
+   * @param {String} organizationSinkName
+   *   A fully-qualified path representing a organization_sink resources.
+   * @returns {String} - A string representing the sink.
+   */
+  matchSinkFromOrganizationSinkName(organizationSinkName) {
+    return this._pathTemplates.organizationSinkPathTemplate.match(
+      organizationSinkName
+    ).sink;
   }
 
   /**
