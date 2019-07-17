@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.1.3...v5.2.0) (2019-07-17)
+
+
+### Features
+
+* add path template parsing for billing, organizations, and folders ([#529](https://www.github.com/googleapis/nodejs-logging/issues/529)) ([1e8c67f](https://www.github.com/googleapis/nodejs-logging/commit/1e8c67f))
+
 ### [5.1.3](https://www.github.com/googleapis/nodejs-logging/compare/v5.1.2...v5.1.3) (2019-06-26)
 
 
