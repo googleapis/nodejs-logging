@@ -24,10 +24,10 @@ import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
 import {ClientReadableStream} from 'grpc';
 import * as request from 'request';
+import {Transform} from 'stream';
 
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
-import * as through from 'through2';
 import * as middleware from './middleware';
 import {detectServiceContext} from './metadata';
 import {StackdriverHttpRequest as HttpRequest} from './http-request';
@@ -49,7 +49,7 @@ import {
   SeverityNames,
 } from './log';
 import {Sink} from './sink';
-import {Duplex} from 'stream';
+import {Duplex, PassThrough} from 'stream';
 import {AbortableDuplex} from '@google-cloud/common';
 import {google} from '../proto/logging';
 import {google as google_config} from '../proto/logging_config';
@@ -606,8 +606,11 @@ class Logging {
         (requestStream as AbortableDuplex).abort();
       }
     };
-    const toEntryStream = through.obj((entry, _, next) => {
-      next(null, Entry.fromApiResponse_(entry));
+    const toEntryStream = new Transform({
+      objectMode: true,
+      transform: (entry, _, next) => {
+        next(null, Entry.fromApiResponse_(entry));
+      },
     });
     userStream.once('reading', () => {
       this.auth.getProjectId().then(projectId => {
@@ -643,7 +646,7 @@ class Logging {
         );
 
         let gaxStream: ClientReadableStream<LogEntry>;
-        requestStream = streamEvents<Duplex>(through.obj());
+        requestStream = streamEvents(new PassThrough({objectMode: true}));
         (requestStream as AbortableDuplex).abort = () => {
           if (gaxStream && gaxStream.cancel) {
             gaxStream.cancel();
@@ -802,10 +805,13 @@ class Logging {
         (requestStream as AbortableDuplex).abort();
       }
     };
-    const toSinkStream = through.obj((sink, _, next) => {
-      const sinkInstance = self.sink(sink.name);
-      sinkInstance.metadata = sink;
-      next(null, sinkInstance);
+    const toSinkStream = new Transform({
+      objectMode: true,
+      transform: (sink, _, next) => {
+        const sinkInstance = self.sink(sink.name);
+        sinkInstance.metadata = sink;
+        next(null, sinkInstance);
+      },
     });
     userStream.once('reading', () => {
       this.auth.getProjectId().then(projectId => {
@@ -822,7 +828,11 @@ class Logging {
         );
 
         let gaxStream: ClientReadableStream<LogSink>;
-        requestStream = streamEvents<Duplex>(through.obj());
+        requestStream = streamEvents(
+          new PassThrough({
+            objectMode: true,
+          })
+        );
         (requestStream as AbortableDuplex).abort = () => {
           if (gaxStream && gaxStream.cancel) {
             gaxStream.cancel();
@@ -912,7 +922,11 @@ class Logging {
     let gaxStream: ClientReadableStream<LogSink | LogEntry>;
     let stream: Duplex;
     if (isStreamMode) {
-      stream = streamEvents<Duplex>(through.obj());
+      stream = streamEvents(
+        new PassThrough({
+          objectMode: true,
+        })
+      );
       (stream as AbortableDuplex).abort = () => {
         if (gaxStream && gaxStream.cancel) {
           gaxStream.cancel();
@@ -961,7 +975,9 @@ class Logging {
     function makeRequestStream() {
       // tslint:disable-next-line no-any
       if ((global as any).GCLOUD_SANDBOX_ENV) {
-        return through.obj();
+        return new PassThrough({
+          objectMode: true,
+        });
       }
       prepareGaxRequest((err, requestFn) => {
         if (err) {

@@ -20,11 +20,8 @@ import arrify = require('arrify');
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import * as through from 'through2';
 import {Logging as LOGGING} from '../src/index';
-
-import {GetEntriesCallback} from '../src/index';
-import {getOrInjectContext} from '../src/middleware/context';
+import {PassThrough} from 'stream';
 
 const {v2} = require('../src');
 const PKG = require('../../package.json');
@@ -557,7 +554,7 @@ describe('Logging', () => {
     const RESULT = {};
 
     beforeEach(() => {
-      GAX_STREAM = through.obj();
+      GAX_STREAM = new PassThrough({objectMode: true});
       GAX_STREAM.push(RESULT);
       logging.loggingService.listLogEntriesStream = () => GAX_STREAM;
       logging.auth.getProjectId = async () => PROJECT_ID;
@@ -571,15 +568,12 @@ describe('Logging', () => {
           a: 'b',
           c: 'd',
         });
-
         assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
           a: 'b',
           c: 'd',
         });
-
         setImmediate(done);
-
         return GAX_STREAM;
       };
 
@@ -824,7 +818,7 @@ describe('Logging', () => {
     };
 
     beforeEach(() => {
-      GAX_STREAM = through.obj();
+      GAX_STREAM = new PassThrough({objectMode: true});
       GAX_STREAM.push(RESULT);
       logging.configService.listSinksStream = () => GAX_STREAM;
       logging.auth.getProjectId = async () => {};
@@ -1099,8 +1093,7 @@ describe('Logging', () => {
       let GAX_STREAM;
 
       beforeEach(() => {
-        GAX_STREAM = through();
-
+        GAX_STREAM = new PassThrough();
         logging.api[CONFIG.client][CONFIG.method] = {
           bind() {
             return () => GAX_STREAM;
