@@ -69,12 +69,10 @@
     "pumpify": "^2.0.0",
     "snakecase-keys": "^3.0.0",
     "stream-events": "^1.0.4",
-    "through2": "^3.0.0",
-    "type-fest": "^0.5.0"
+    "through2": "^3.0.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
-    "@google-cloud/nodejs-repo-tools": "^3.3.0",
     "@google-cloud/pubsub": "^0.29.0",
     "@google-cloud/storage": "^2.2.0",
     "@types/extend": "^3.0.0",
@@ -91,7 +89,6 @@
     "@types/uuid": "^3.4.4",
     "assert-rejects": "^1.0.0",
     "bignumber.js": "^9.0.0",
-    "chai": "^4.2.0",
     "codecov": "^3.0.4",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^6.0.0",

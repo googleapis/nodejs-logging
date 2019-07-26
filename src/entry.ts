@@ -15,7 +15,6 @@
  */
 
 import {Service} from '@google-cloud/common-grpc';
-import {Merge} from 'type-fest';
 // tslint:disable-next-line variable-name
 const EventId = require('eventid');
 import * as extend from 'extend';
@@ -26,13 +25,10 @@ const eventId = new EventId();
 
 export type Timestamp = google.protobuf.ITimestamp | Date;
 export type LogSeverity = google.logging.type.LogSeverity | string;
-export type LogEntry = Merge<
-  google.logging.v2.ILogEntry,
-  {
+export type LogEntry = google.logging.v2.ILogEntry&{
     timestamp?: Timestamp | null;
     severity?: LogSeverity | null;
-  }
->;
+  };
 // tslint:disable-next-line no-any
 export type Data = any;
 
