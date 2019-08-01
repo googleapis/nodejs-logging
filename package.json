@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@google-cloud/common-grpc": "^1.0.0",
-    "@google-cloud/paginator": "^1.0.0",
+    "@google-cloud/paginator": "^2.0.0",
     "@google-cloud/projectify": "^1.0.0",
     "@google-cloud/promisify": "^1.0.0",
     "@opencensus/propagation-stackdriver": "0.0.14",
