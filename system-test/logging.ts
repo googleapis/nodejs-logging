@@ -39,7 +39,7 @@ nock(HOST_ADDRESS)
 describe('Logging', () => {
   let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
-  const WRITE_CONSISTENCY_DELAY_MS = 10000;
+  const WRITE_CONSISTENCY_DELAY_MS = 15000;
 
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
@@ -322,22 +322,25 @@ describe('Logging', () => {
     });
 
     describe('log-specific entries', () => {
-      const {log, logEntries} = getTestLog();
+      let logExpected, logEntriesExpected;
 
       before(done => {
+        const {log, logEntries} = getTestLog();
+        logExpected = log;
+        logEntriesExpected = logEntries;
         log.write(logEntries, options, done);
       });
 
       it('should list log entries', done => {
-        getEntriesFromLog(log, (err, entries) => {
+        getEntriesFromLog(logExpected, (err, entries) => {
           assert.ifError(err);
-          assert.strictEqual(entries.length, logEntries.length);
+          assert.strictEqual(entries.length, logEntriesExpected.length);
           done();
         });
       });
 
       it('should list log entries as a stream', done => {
-        const logstream = log
+        const logstream = logExpected
           .getEntriesStream({
             autoPaginate: false,
             pageSize: 1,
@@ -357,7 +360,7 @@ describe('Logging', () => {
 
     it('should write a single entry to a log as a Promise', async () => {
       const {log, logEntries} = getTestLog();
-      log.write(logEntries[1], options);
+      await log.write(logEntries[1], options);
     });
 
     it('should write multiple entries to a log', done => {
