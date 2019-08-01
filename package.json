@@ -98,6 +98,7 @@
     "eslint-plugin-node": "^9.0.0",
     "eslint-plugin-prettier": "^3.0.0",
     "google-proto-files": "^1.0.0",
+    "grpc": "^1.22.2",
     "gts": "^1.0.0",
     "intelli-espower-loader": "^1.0.1",
     "jsdoc": "^3.6.2",
