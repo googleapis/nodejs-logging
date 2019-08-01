@@ -39,7 +39,7 @@ nock(HOST_ADDRESS)
 describe('Logging', () => {
   let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
-  const WRITE_CONSISTENCY_DELAY_MS = 10000;
+  const WRITE_CONSISTENCY_DELAY_MS = 15000;
 
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
