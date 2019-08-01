@@ -53,10 +53,10 @@
   },
   "dependencies": {
     "@google-cloud/common-grpc": "^1.0.0",
-    "@google-cloud/paginator": "^1.0.0",
+    "@google-cloud/paginator": "^2.0.0",
     "@google-cloud/projectify": "^1.0.0",
     "@google-cloud/promisify": "^1.0.0",
-    "@opencensus/propagation-stackdriver": "0.0.14",
+    "@opencensus/propagation-stackdriver": "0.0.16",
     "arrify": "^2.0.0",
     "eventid": "^0.1.2",
     "extend": "^3.0.2",
@@ -70,13 +70,13 @@
     "snakecase-keys": "^3.0.0",
     "stream-events": "^1.0.4",
     "through2": "^3.0.0",
-    "type-fest": "^0.5.0"
+    "type-fest": "^0.6.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
     "@google-cloud/nodejs-repo-tools": "^3.3.0",
-    "@google-cloud/pubsub": "^0.29.0",
-    "@google-cloud/storage": "^2.2.0",
+    "@google-cloud/pubsub": "^0.30.2",
+    "@google-cloud/storage": "^3.0.4",
     "@types/extend": "^3.0.0",
     "@types/is": "0.0.21",
     "@types/mocha": "^5.2.5",
