@@ -87,29 +87,22 @@ async function quickstart(
 ```
 ## Batching Writes
 
-High throughput applications should consider batching writes, as it introduces signficant
-latency calling the upstream logging service for each request.
-
-Here's an example of how someone might achieve this:
+High throughput applications should avoid awaiting calls to the logger:
 
 ```js
-const {Logging} = require('@google-cloud/logging');
-
-// Creates a client
-const logging = new Logging({projectId});
-
-// Selects the log to write to
-const log = logging.log(logName);
-
-// maintain a global array of log lines that have not yet been written.
-const logEntries = [];
-logEntries.push({text: 'hello world', timestamp: new Date()});
-
-// we periodically drain the log entries.
-setInterval(async () => {
-  await log.write(logEntries.splice(0));
-}, 500);
+await log.write(logEntry1);
+await log.write(logEntry2);
 ```
+
+Rather, applications should use a _fire and forget_ approach:
+
+```js
+log.write(logEntry1);
+log.write(logEntry2);
+```
+
+The `@google-cloud/logging` library will handle batching and dispatching
+these log lines to the API.
 
 
 ## Samples
