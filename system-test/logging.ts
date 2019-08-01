@@ -39,7 +39,7 @@ nock(HOST_ADDRESS)
 describe('Logging', () => {
   let PROJECT_ID: string;
   const TESTS_PREFIX = 'gcloud-logging-test';
-  const WRITE_CONSISTENCY_DELAY_MS = 15000;
+  const WRITE_CONSISTENCY_DELAY_MS = 5000;
 
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
@@ -283,10 +283,21 @@ describe('Logging', () => {
     };
 
     after(async () => {
-      await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
-
       for (const log of logs) {
-        await log.delete();
+        // attempt to delete log entries multiple times, as they can
+        // take a variable amount of time to write to the API:
+        let retries = 0;
+        while (retries < 3) {
+          try {
+            await log.delete();
+          } catch (_err) {
+            retries++;
+            console.warn(`delete of ${log.name} failed retries = ${retries}`);
+            await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
+            continue;
+          }
+          break;
+        }
       }
     });
 
