@@ -311,6 +311,7 @@ class LoggingServiceV2Client {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
@@ -438,6 +439,7 @@ class LoggingServiceV2Client {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
 
     return this._innerApiCalls.writeLogEntries(request, options, callback);
@@ -563,6 +565,7 @@ class LoggingServiceV2Client {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
 
     return this._innerApiCalls.listLogEntries(request, options, callback);
@@ -735,6 +738,7 @@ class LoggingServiceV2Client {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
 
     return this._innerApiCalls.listMonitoredResourceDescriptors(
@@ -892,6 +896,7 @@ class LoggingServiceV2Client {
       callback = options;
       options = {};
     }
+    request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
