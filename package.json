@@ -70,7 +70,7 @@
     "snakecase-keys": "^3.0.0",
     "stream-events": "^1.0.4",
     "through2": "^3.0.0",
-    "type-fest": "^0.6.0"
+    "type-fest": "^0.7.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
