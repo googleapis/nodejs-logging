@@ -85,7 +85,24 @@ async function quickstart(
 }
 
 ```
+## Batching Writes
 
+High throughput applications should avoid awaiting calls to the logger:
+
+```js
+await log.write(logEntry1);
+await log.write(logEntry2);
+```
+
+Rather, applications should use a _fire and forget_ approach:
+
+```js
+log.write(logEntry1);
+log.write(logEntry2);
+```
+
+The `@google-cloud/logging` library will handle batching and dispatching
+these log lines to the API.
 
 
 ## Samples
