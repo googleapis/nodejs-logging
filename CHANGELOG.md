@@ -4,6 +4,17 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.2.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.2.0...v5.2.1) (2019-08-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/paginator to v2 ([#537](https://www.github.com/googleapis/nodejs-logging/issues/537)) ([ae14f59](https://www.github.com/googleapis/nodejs-logging/commit/ae14f59))
+* **deps:** update dependency google-auth-library to v5 ([#539](https://www.github.com/googleapis/nodejs-logging/issues/539)) ([b8351a7](https://www.github.com/googleapis/nodejs-logging/commit/b8351a7))
+* allow calls with no request, add JSON proto ([9313998](https://www.github.com/googleapis/nodejs-logging/commit/9313998))
+* **deps:** update dependency type-fest to ^0.7.0 ([#554](https://www.github.com/googleapis/nodejs-logging/issues/554)) ([62362e6](https://www.github.com/googleapis/nodejs-logging/commit/62362e6))
+* **docs:** add note about batching writes ([#528](https://www.github.com/googleapis/nodejs-logging/issues/528)) ([25ba962](https://www.github.com/googleapis/nodejs-logging/commit/25ba962))
+
 ## [5.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.1.3...v5.2.0) (2019-07-17)
 
 
