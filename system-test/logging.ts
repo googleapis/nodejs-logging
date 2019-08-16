@@ -28,8 +28,7 @@ import * as nock from 'nock';
 import {Duplex} from 'stream';
 import * as uuid from 'uuid';
 import * as http2spy from 'http2spy';
-const {Logging} = http2spy.require(require.resolve('../src'));
-import {Sink} from '../src';
+import {Logging, Sink} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -220,8 +219,8 @@ describe('Logging', () => {
     // tslint:disable-next-line no-any
     const logs: any[] = [];
 
-    function getTestLog() {
-      const log = logging.log(`system-test-logs-${uuid.v4()}`);
+    function getTestLog(loggingInstnce = null) {
+      const log = (loggingInstnce || logging).log(`system-test-logs-${uuid.v4()}`);
       logs.push(log);
 
       const logEntries = [
@@ -582,7 +581,8 @@ describe('Logging', () => {
     });
 
     it('should populate x-goog-api-client header', async () => {
-      const {log, logEntries} = getTestLog();
+      const {Logging} = http2spy.require(require.resolve('../src'));
+      const {log, logEntries} = getTestLog(new Logging());
       await log.write(logEntries[0], options);
       assert.ok(
         /gl-node\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gapic\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+/.test(
