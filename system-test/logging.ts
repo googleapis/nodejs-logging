@@ -220,7 +220,9 @@ describe('Logging', () => {
     const logs: any[] = [];
 
     function getTestLog(loggingInstnce = null) {
-      const log = (loggingInstnce || logging).log(`system-test-logs-${uuid.v4()}`);
+      const log = (loggingInstnce || logging).log(
+        `system-test-logs-${uuid.v4()}`
+      );
       logs.push(log);
 
       const logEntries = [
