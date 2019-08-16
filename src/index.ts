@@ -23,7 +23,7 @@ import * as extend from 'extend';
 import {GoogleAuth} from 'google-auth-library';
 import * as gax from 'google-gax';
 import {ClientReadableStream} from 'grpc';
-import * as request from 'request';
+import {Response} from 'teeny-request';
 
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
@@ -84,11 +84,7 @@ export interface CreateSinkRequest {
 }
 
 export interface CreateSinkCallback {
-  (
-    err: Error | null,
-    sink?: Sink | null,
-    resp?: LogSink | request.Response
-  ): void;
+  (err: Error | null, sink?: Sink | null, resp?: LogSink | Response): void;
 }
 
 export type GetEntriesResponse = [

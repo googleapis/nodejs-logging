@@ -27,8 +27,9 @@ import {HOST_ADDRESS} from 'gcp-metadata';
 import * as nock from 'nock';
 import {Duplex} from 'stream';
 import * as uuid from 'uuid';
-
-import {Logging, Sink} from '../src';
+import * as http2spy from 'http2spy';
+const {Logging} = http2spy.require(require.resolve('../src'));
+import {Sink} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -578,6 +579,16 @@ describe('Logging', () => {
     it('should write to a log with warning helper', done => {
       const {log, logEntries} = getTestLog();
       log.warning(logEntries, options, done);
+    });
+
+    it('should populate x-goog-api-client header', async () => {
+      const {log, logEntries} = getTestLog();
+      await log.write(logEntries[0], options);
+      assert.ok(
+        /gl-node\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gapic\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+/.test(
+          http2spy.requests[0]['x-goog-api-client'][0]
+        )
+      );
     });
   });
 

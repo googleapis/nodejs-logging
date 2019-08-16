@@ -19,7 +19,7 @@ import {callbackifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import {Response} from 'request';
+import {Response} from 'teeny-request';
 
 import {google} from '../proto/logging';
 
