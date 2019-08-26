@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.2.2](https://www.github.com/googleapis/nodejs-logging/compare/v5.2.1...v5.2.2) (2019-08-20)
+
+
+### Bug Fixes
+
+* add test for x-goog-api-client header ([#556](https://www.github.com/googleapis/nodejs-logging/issues/556)) ([f2cd5ea](https://www.github.com/googleapis/nodejs-logging/commit/f2cd5ea))
+* **deps:** update dependency yargs to v14 ([bd8da51](https://www.github.com/googleapis/nodejs-logging/commit/bd8da51))
+
 ### [5.2.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.2.0...v5.2.1) (2019-08-05)
 
 
