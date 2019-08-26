@@ -81,7 +81,7 @@ class MetricsServiceV2Client {
 
     // Determine the client header string.
     const clientHeader = [
-      `gl-node/${process.versions.node}`,
+      `gl-node/${process.version}`,
       `grpc/${gaxGrpc.grpcVersion}`,
       `gax/${gax.version}`,
       `gapic/${VERSION}`,
