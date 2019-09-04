@@ -44,6 +44,13 @@ describe('LoggingServiceV2Client', () => {
     assert(client);
   });
 
+  it('should create a client with gRPC fallback', () => {
+    const client = new loggingModule.v2.LoggingServiceV2Client({
+      fallback: true,
+    });
+    assert(client);
+  });
+
   describe('deleteLog', () => {
     it('invokes deleteLog without error', done => {
       const client = new loggingModule.v2.LoggingServiceV2Client({
@@ -360,6 +367,11 @@ describe('ConfigServiceV2Client', () => {
 
   it('should create a client with no options', () => {
     const client = new loggingModule.v2.ConfigServiceV2Client();
+    assert(client);
+  });
+
+  it('should create a client with gRPC fallback', () => {
+    const client = new loggingModule.v2.ConfigServiceV2Client({fallback: true});
     assert(client);
   });
 
@@ -1032,6 +1044,13 @@ describe('MetricsServiceV2Client', () => {
 
   it('should create a client with no options', () => {
     const client = new loggingModule.v2.MetricsServiceV2Client();
+    assert(client);
+  });
+
+  it('should create a client with gRPC fallback', () => {
+    const client = new loggingModule.v2.MetricsServiceV2Client({
+      fallback: true,
+    });
     assert(client);
   });
 

@@ -15,317 +15,6 @@
                 "php_namespace": "Google\\Cloud\\Logging\\V2"
               },
               "nested": {
-                "LoggingServiceV2": {
-                  "methods": {
-                    "DeleteLog": {
-                      "requestType": "DeleteLogRequest",
-                      "responseType": "google.protobuf.Empty",
-                      "options": {
-                        "(google.api.http).delete": "/v2/{log_name=projects/*/logs/*}",
-                        "(google.api.http).additional_bindings.delete": "/v2/{log_name=billingAccounts/*/logs/*}"
-                      }
-                    },
-                    "WriteLogEntries": {
-                      "requestType": "WriteLogEntriesRequest",
-                      "responseType": "WriteLogEntriesResponse",
-                      "options": {
-                        "(google.api.http).post": "/v2/entries:write",
-                        "(google.api.http).body": "*"
-                      }
-                    },
-                    "ListLogEntries": {
-                      "requestType": "ListLogEntriesRequest",
-                      "responseType": "ListLogEntriesResponse",
-                      "options": {
-                        "(google.api.http).post": "/v2/entries:list",
-                        "(google.api.http).body": "*"
-                      }
-                    },
-                    "ListMonitoredResourceDescriptors": {
-                      "requestType": "ListMonitoredResourceDescriptorsRequest",
-                      "responseType": "ListMonitoredResourceDescriptorsResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/monitoredResourceDescriptors"
-                      }
-                    },
-                    "ListLogs": {
-                      "requestType": "ListLogsRequest",
-                      "responseType": "ListLogsResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/{parent=*/*}/logs",
-                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/logs"
-                      }
-                    }
-                  }
-                },
-                "DeleteLogRequest": {
-                  "fields": {
-                    "logName": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "WriteLogEntriesRequest": {
-                  "fields": {
-                    "logName": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "resource": {
-                      "type": "google.api.MonitoredResource",
-                      "id": 2
-                    },
-                    "labels": {
-                      "keyType": "string",
-                      "type": "string",
-                      "id": 3
-                    },
-                    "entries": {
-                      "rule": "repeated",
-                      "type": "LogEntry",
-                      "id": 4
-                    },
-                    "partialSuccess": {
-                      "type": "bool",
-                      "id": 5
-                    },
-                    "dryRun": {
-                      "type": "bool",
-                      "id": 6
-                    }
-                  }
-                },
-                "WriteLogEntriesResponse": {
-                  "fields": {}
-                },
-                "WriteLogEntriesPartialErrors": {
-                  "fields": {
-                    "logEntryErrors": {
-                      "keyType": "int32",
-                      "type": "google.rpc.Status",
-                      "id": 1
-                    }
-                  }
-                },
-                "ListLogEntriesRequest": {
-                  "fields": {
-                    "projectIds": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 1,
-                      "options": {
-                        "deprecated": true
-                      }
-                    },
-                    "resourceNames": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 8
-                    },
-                    "filter": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "orderBy": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 4
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 5
-                    }
-                  }
-                },
-                "ListLogEntriesResponse": {
-                  "fields": {
-                    "entries": {
-                      "rule": "repeated",
-                      "type": "LogEntry",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "ListMonitoredResourceDescriptorsRequest": {
-                  "fields": {
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 1
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "ListMonitoredResourceDescriptorsResponse": {
-                  "fields": {
-                    "resourceDescriptors": {
-                      "rule": "repeated",
-                      "type": "google.api.MonitoredResourceDescriptor",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "ListLogsRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 2
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 3
-                    }
-                  }
-                },
-                "ListLogsResponse": {
-                  "fields": {
-                    "logNames": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 3
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "LogEntry": {
-                  "oneofs": {
-                    "payload": {
-                      "oneof": [
-                        "protoPayload",
-                        "textPayload",
-                        "jsonPayload"
-                      ]
-                    }
-                  },
-                  "fields": {
-                    "logName": {
-                      "type": "string",
-                      "id": 12
-                    },
-                    "resource": {
-                      "type": "google.api.MonitoredResource",
-                      "id": 8
-                    },
-                    "protoPayload": {
-                      "type": "google.protobuf.Any",
-                      "id": 2
-                    },
-                    "textPayload": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "jsonPayload": {
-                      "type": "google.protobuf.Struct",
-                      "id": 6
-                    },
-                    "timestamp": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 9
-                    },
-                    "receiveTimestamp": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 24
-                    },
-                    "severity": {
-                      "type": "google.logging.type.LogSeverity",
-                      "id": 10
-                    },
-                    "insertId": {
-                      "type": "string",
-                      "id": 4
-                    },
-                    "httpRequest": {
-                      "type": "google.logging.type.HttpRequest",
-                      "id": 7
-                    },
-                    "labels": {
-                      "keyType": "string",
-                      "type": "string",
-                      "id": 11
-                    },
-                    "metadata": {
-                      "type": "google.api.MonitoredResourceMetadata",
-                      "id": 25
-                    },
-                    "operation": {
-                      "type": "LogEntryOperation",
-                      "id": 15
-                    },
-                    "trace": {
-                      "type": "string",
-                      "id": 22
-                    },
-                    "spanId": {
-                      "type": "string",
-                      "id": 27
-                    },
-                    "traceSampled": {
-                      "type": "bool",
-                      "id": 30
-                    },
-                    "sourceLocation": {
-                      "type": "LogEntrySourceLocation",
-                      "id": 23
-                    }
-                  }
-                },
-                "LogEntryOperation": {
-                  "fields": {
-                    "id": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "producer": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "first": {
-                      "type": "bool",
-                      "id": 3
-                    },
-                    "last": {
-                      "type": "bool",
-                      "id": 4
-                    }
-                  }
-                },
-                "LogEntrySourceLocation": {
-                  "fields": {
-                    "file": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "line": {
-                      "type": "int64",
-                      "id": 2
-                    },
-                    "function": {
-                      "type": "string",
-                      "id": 3
-                    }
-                  }
-                },
                 "ConfigServiceV2": {
                   "methods": {
                     "ListSinks": {
@@ -644,6 +333,317 @@
                     "name": {
                       "type": "string",
                       "id": 1
+                    }
+                  }
+                },
+                "LoggingServiceV2": {
+                  "methods": {
+                    "DeleteLog": {
+                      "requestType": "DeleteLogRequest",
+                      "responseType": "google.protobuf.Empty",
+                      "options": {
+                        "(google.api.http).delete": "/v2/{log_name=projects/*/logs/*}",
+                        "(google.api.http).additional_bindings.delete": "/v2/{log_name=billingAccounts/*/logs/*}"
+                      }
+                    },
+                    "WriteLogEntries": {
+                      "requestType": "WriteLogEntriesRequest",
+                      "responseType": "WriteLogEntriesResponse",
+                      "options": {
+                        "(google.api.http).post": "/v2/entries:write",
+                        "(google.api.http).body": "*"
+                      }
+                    },
+                    "ListLogEntries": {
+                      "requestType": "ListLogEntriesRequest",
+                      "responseType": "ListLogEntriesResponse",
+                      "options": {
+                        "(google.api.http).post": "/v2/entries:list",
+                        "(google.api.http).body": "*"
+                      }
+                    },
+                    "ListMonitoredResourceDescriptors": {
+                      "requestType": "ListMonitoredResourceDescriptorsRequest",
+                      "responseType": "ListMonitoredResourceDescriptorsResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/monitoredResourceDescriptors"
+                      }
+                    },
+                    "ListLogs": {
+                      "requestType": "ListLogsRequest",
+                      "responseType": "ListLogsResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/{parent=*/*}/logs",
+                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/logs"
+                      }
+                    }
+                  }
+                },
+                "DeleteLogRequest": {
+                  "fields": {
+                    "logName": {
+                      "type": "string",
+                      "id": 1
+                    }
+                  }
+                },
+                "WriteLogEntriesRequest": {
+                  "fields": {
+                    "logName": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "resource": {
+                      "type": "google.api.MonitoredResource",
+                      "id": 2
+                    },
+                    "labels": {
+                      "keyType": "string",
+                      "type": "string",
+                      "id": 3
+                    },
+                    "entries": {
+                      "rule": "repeated",
+                      "type": "LogEntry",
+                      "id": 4
+                    },
+                    "partialSuccess": {
+                      "type": "bool",
+                      "id": 5
+                    },
+                    "dryRun": {
+                      "type": "bool",
+                      "id": 6
+                    }
+                  }
+                },
+                "WriteLogEntriesResponse": {
+                  "fields": {}
+                },
+                "WriteLogEntriesPartialErrors": {
+                  "fields": {
+                    "logEntryErrors": {
+                      "keyType": "int32",
+                      "type": "google.rpc.Status",
+                      "id": 1
+                    }
+                  }
+                },
+                "ListLogEntriesRequest": {
+                  "fields": {
+                    "projectIds": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "resourceNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 8
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "orderBy": {
+                      "type": "string",
+                      "id": 3
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 4
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 5
+                    }
+                  }
+                },
+                "ListLogEntriesResponse": {
+                  "fields": {
+                    "entries": {
+                      "rule": "repeated",
+                      "type": "LogEntry",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "ListMonitoredResourceDescriptorsRequest": {
+                  "fields": {
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 1
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "ListMonitoredResourceDescriptorsResponse": {
+                  "fields": {
+                    "resourceDescriptors": {
+                      "rule": "repeated",
+                      "type": "google.api.MonitoredResourceDescriptor",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "ListLogsRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 2
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 3
+                    }
+                  }
+                },
+                "ListLogsResponse": {
+                  "fields": {
+                    "logNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 3
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "LogEntry": {
+                  "oneofs": {
+                    "payload": {
+                      "oneof": [
+                        "protoPayload",
+                        "textPayload",
+                        "jsonPayload"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "logName": {
+                      "type": "string",
+                      "id": 12
+                    },
+                    "resource": {
+                      "type": "google.api.MonitoredResource",
+                      "id": 8
+                    },
+                    "protoPayload": {
+                      "type": "google.protobuf.Any",
+                      "id": 2
+                    },
+                    "textPayload": {
+                      "type": "string",
+                      "id": 3
+                    },
+                    "jsonPayload": {
+                      "type": "google.protobuf.Struct",
+                      "id": 6
+                    },
+                    "timestamp": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 9
+                    },
+                    "receiveTimestamp": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 24
+                    },
+                    "severity": {
+                      "type": "google.logging.type.LogSeverity",
+                      "id": 10
+                    },
+                    "insertId": {
+                      "type": "string",
+                      "id": 4
+                    },
+                    "httpRequest": {
+                      "type": "google.logging.type.HttpRequest",
+                      "id": 7
+                    },
+                    "labels": {
+                      "keyType": "string",
+                      "type": "string",
+                      "id": 11
+                    },
+                    "metadata": {
+                      "type": "google.api.MonitoredResourceMetadata",
+                      "id": 25
+                    },
+                    "operation": {
+                      "type": "LogEntryOperation",
+                      "id": 15
+                    },
+                    "trace": {
+                      "type": "string",
+                      "id": 22
+                    },
+                    "spanId": {
+                      "type": "string",
+                      "id": 27
+                    },
+                    "traceSampled": {
+                      "type": "bool",
+                      "id": 30
+                    },
+                    "sourceLocation": {
+                      "type": "LogEntrySourceLocation",
+                      "id": 23
+                    }
+                  }
+                },
+                "LogEntryOperation": {
+                  "fields": {
+                    "id": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "producer": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "first": {
+                      "type": "bool",
+                      "id": 3
+                    },
+                    "last": {
+                      "type": "bool",
+                      "id": 4
+                    }
+                  }
+                },
+                "LogEntrySourceLocation": {
+                  "fields": {
+                    "file": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "line": {
+                      "type": "int64",
+                      "id": 2
+                    },
+                    "function": {
+                      "type": "string",
+                      "id": 3
                     }
                   }
                 },
@@ -2209,6 +2209,30 @@
                 }
               }
             },
+            "Empty": {
+              "fields": {}
+            },
+            "FieldMask": {
+              "fields": {
+                "paths": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 1
+                }
+              }
+            },
+            "Timestamp": {
+              "fields": {
+                "seconds": {
+                  "type": "int64",
+                  "id": 1
+                },
+                "nanos": {
+                  "type": "int32",
+                  "id": 2
+                }
+              }
+            },
             "Struct": {
               "fields": {
                 "fields": {
@@ -2293,30 +2317,6 @@
                 "value": {
                   "type": "bytes",
                   "id": 2
-                }
-              }
-            },
-            "Timestamp": {
-              "fields": {
-                "seconds": {
-                  "type": "int64",
-                  "id": 1
-                },
-                "nanos": {
-                  "type": "int32",
-                  "id": 2
-                }
-              }
-            },
-            "Empty": {
-              "fields": {}
-            },
-            "FieldMask": {
-              "fields": {
-                "paths": {
-                  "rule": "repeated",
-                  "type": "string",
-                  "id": 1
                 }
               }
             }
