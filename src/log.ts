@@ -192,6 +192,10 @@ class Log implements LogSeverityFunctions {
    */
   critical(
     entry: Entry | Entry[],
+    options?: WriteOptions
+  ): Promise<ApiResponse>;
+  critical(
+    entry: Entry | Entry[],
     options: WriteOptions,
     callback: ApiResponseCallback
   ): void;
