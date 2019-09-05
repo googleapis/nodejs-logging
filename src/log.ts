@@ -190,6 +190,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
+  critical(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
   critical(
     entry: Entry | Entry[],
     options: WriteOptions,
