@@ -18,6 +18,7 @@ import synthtool as s
 import synthtool.gcp as gcp
 import logging
 import subprocess
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -59,7 +60,9 @@ s.replace('src/v2/doc/google/api/doc_distribution.js',
         r"Sum\[i=1\.\.n\]\(https:\/\/cloud\.google\.com\(x_i - mean\)\^2\)",
         "Sum\[i=1..n](x_1 - mean)^2")
 
-
+# No browser support for TypeScript libraries yet
+os.unlink("src/browser.js")
+os.unlink("webpack.config.js")
 
 # Node.js specific cleanup
 subprocess.run(["npm", "install"])

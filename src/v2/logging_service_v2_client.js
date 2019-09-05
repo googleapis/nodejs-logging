@@ -17,7 +17,6 @@
 const gapicConfig = require('./logging_service_v2_client_config.json');
 const gax = require('google-gax');
 const path = require('path');
-const protobuf = require('protobufjs');
 
 const VERSION = require('../../../package.json').version;
 
@@ -59,6 +58,16 @@ class LoggingServiceV2Client {
     opts = opts || {};
     this._descriptors = {};
 
+    if (global.isBrowser) {
+      // If we're in browser, we use gRPC fallback.
+      opts.fallback = true;
+    }
+
+    // If we are in browser, we are already using fallback because of the
+    // "browser" field in package.json.
+    // But if we were explicitly requested to use fallback, let's do it now.
+    const gaxModule = !global.isBrowser && opts.fallback ? gax.fallback : gax;
+
     const servicePath =
       opts.servicePath || opts.apiEndpoint || this.constructor.servicePath;
 
@@ -75,88 +84,98 @@ class LoggingServiceV2Client {
     // Create a `gaxGrpc` object, with any grpc-specific options
     // sent to the client.
     opts.scopes = this.constructor.scopes;
-    const gaxGrpc = new gax.GrpcClient(opts);
+    const gaxGrpc = new gaxModule.GrpcClient(opts);
 
     // Save the auth object to the client, for use by other methods.
     this.auth = gaxGrpc.auth;
 
     // Determine the client header string.
-    const clientHeader = [
-      `gl-node/${process.versions.node}`,
-      `grpc/${gaxGrpc.grpcVersion}`,
-      `gax/${gax.version}`,
-      `gapic/${VERSION}`,
-    ];
+    const clientHeader = [];
+
+    if (typeof process !== 'undefined' && 'versions' in process) {
+      clientHeader.push(`gl-node/${process.versions.node}`);
+    }
+    clientHeader.push(`gax/${gaxModule.version}`);
+    if (opts.fallback) {
+      clientHeader.push(`gl-web/${gaxModule.version}`);
+    } else {
+      clientHeader.push(`grpc/${gaxGrpc.grpcVersion}`);
+    }
+    clientHeader.push(`gapic/${VERSION}`);
     if (opts.libName && opts.libVersion) {
       clientHeader.push(`${opts.libName}/${opts.libVersion}`);
     }
 
     // Load the applicable protos.
+    // For Node.js, pass the path to JSON proto file.
+    // For browsers, pass the JSON content.
+
+    const nodejsProtoPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      'protos',
+      'protos.json'
+    );
     const protos = gaxGrpc.loadProto(
-      path.join(__dirname, '..', '..', 'protos'),
-      ['google/logging/v2/logging.proto']
+      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      billingPathTemplate: new gax.PathTemplate(
+      billingPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}'
       ),
-      billingLogPathTemplate: new gax.PathTemplate(
+      billingLogPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
-      folderPathTemplate: new gax.PathTemplate('folders/{folder}'),
-      folderLogPathTemplate: new gax.PathTemplate(
+      folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
+      folderLogPathTemplate: new gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
       ),
-      logPathTemplate: new gax.PathTemplate('projects/{project}/logs/{log}'),
-      organizationPathTemplate: new gax.PathTemplate(
+      logPathTemplate: new gaxModule.PathTemplate(
+        'projects/{project}/logs/{log}'
+      ),
+      organizationPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}'
       ),
-      organizationLogPathTemplate: new gax.PathTemplate(
+      organizationLogPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
-      projectPathTemplate: new gax.PathTemplate('projects/{project}'),
+      projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
     };
 
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
-      listLogEntries: new gax.PageDescriptor(
+      listLogEntries: new gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
         'entries'
       ),
-      listMonitoredResourceDescriptors: new gax.PageDescriptor(
+      listMonitoredResourceDescriptors: new gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
         'resourceDescriptors'
       ),
-      listLogs: new gax.PageDescriptor(
+      listLogs: new gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
         'logNames'
       ),
     };
-    let protoFilesRoot = new gax.GoogleProtoFilesRoot();
-    protoFilesRoot = protobuf.loadSync(
-      path.join(
-        __dirname,
-        '..',
-        '..',
-        'protos',
-        'google/logging/v2/logging.proto'
-      ),
-      protoFilesRoot
-    );
+
+    const protoFilesRoot = opts.fallback
+      ? gaxModule.protobuf.Root.fromJSON(require('../../protos/protos.json'))
+      : gaxModule.protobuf.loadSync(nodejsProtoPath);
 
     // Some methods on this API support automatically batching
     // requests; denote this.
     this._descriptors.batching = {
-      writeLogEntries: new gax.BundleDescriptor(
+      writeLogEntries: new gaxModule.BundleDescriptor(
         'entries',
         ['logName', 'resource', 'labels'],
         null,
@@ -182,7 +201,9 @@ class LoggingServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.LoggingServiceV2.
     const loggingServiceV2Stub = gaxGrpc.createStub(
-      protos.google.logging.v2.LoggingServiceV2,
+      opts.fallback
+        ? protos.lookupService('google.logging.v2.LoggingServiceV2')
+        : protos.google.logging.v2.LoggingServiceV2,
       opts
     );
 
@@ -196,18 +217,16 @@ class LoggingServiceV2Client {
       'listLogs',
     ];
     for (const methodName of loggingServiceV2StubMethods) {
-      this._innerApiCalls[methodName] = gax.createApiCall(
-        loggingServiceV2Stub.then(
-          stub =>
-            function() {
-              const args = Array.prototype.slice.call(arguments, 0);
-              return stub[methodName].apply(stub, args);
-            },
-          err =>
-            function() {
-              throw err;
-            }
-        ),
+      const innerCallPromise = loggingServiceV2Stub.then(
+        stub => (...args) => {
+          return stub[methodName].apply(stub, args);
+        },
+        err => () => {
+          throw err;
+        }
+      );
+      this._innerApiCalls[methodName] = gaxModule.createApiCall(
+        innerCallPromise,
         defaults[methodName],
         this._descriptors.page[methodName] ||
           this._descriptors.batching[methodName]

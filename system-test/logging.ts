@@ -587,7 +587,7 @@ describe('Logging', () => {
       const {log, logEntries} = getTestLog(new Logging());
       await log.write(logEntries[0], options);
       assert.ok(
-        /gl-node\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ gapic\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+/.test(
+        /gl-node\/[0-9]+\.[\w.-]+ gax\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+ gapic\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+/.test(
           http2spy.requests[0]['x-goog-api-client'][0]
         )
       );
