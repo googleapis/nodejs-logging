@@ -809,25 +809,39 @@ class Log implements LogSeverityFunctions {
     const options = opts ? (opts as WriteOptions) : {};
     const self = this;
 
-    if (options.resource) {
-      if (options.resource.labels) {
-        options.resource.labels = snakeCaseKeys(options.resource.labels);
-      }
-      return writeWithResource(options.resource);
-    } else if (this.logging.detectedResource) {
-      return writeWithResource(this.logging.detectedResource);
-    } else {
-      const resource = await getDefaultResource(this.logging.auth);
-      this.logging.detectedResource = resource;
-      return writeWithResource(resource);
+    let decoratedEntries;
+    try {
+      decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
+    } catch (err) {
+      // Ignore errors (the API will speak up if it has an issue).
     }
-    async function writeWithResource(resource: {} | null) {
-      let decoratedEntries;
+
+    const allEntriesHaveResources = decoratedEntries.every(r => {
+      return is.object(r.resource) && !is.empty(r.resource);
+    });
+
+    if (allEntriesHaveResources) {
+      return writeWithResource(null);
+    }
+
+    let defaultResource = options.resource;
+
+    if (defaultResource && defaultResource.labels) {
+      defaultResource.labels = snakeCaseKeys(defaultResource.labels);
+    }
+
+    if (!defaultResource && !is.defined(this.logging.detectedResource)) {
       try {
-        decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
-      } catch (err) {
-        // Ignore errors (the API will speak up if it has an issue).
+        this.logging.detectedResource = await getDefaultResource(this.logging.auth);
+      } catch (e) {
+        // Ignore the error. We don't need a resource to complete the request.
+        this.logging.detectedResource = null;
       }
+    }
+
+    return writeWithResource(defaultResource || this.logging.detectedResource);
+
+    async function writeWithResource(resource: {} | undefined | null) {
       const projectId = await self.logging.auth.getProjectId();
       self.formattedName_ = Log.formatName_(projectId, self.name);
       const reqOpts = extend(

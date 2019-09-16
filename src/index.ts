@@ -240,7 +240,7 @@ class Logging {
   auth: GoogleAuth;
   options: LoggingOptions;
   projectId: string;
-  detectedResource?: object;
+  detectedResource?: object | null;
   configService?: typeof v2.ConfigServiceV2Client;
   loggingService?: typeof v2.LoggingServiceV2Client;
 
