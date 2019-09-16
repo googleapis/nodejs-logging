@@ -71,7 +71,7 @@
     "stream-events": "^1.0.4",
     "teeny-request": "^5.2.1",
     "through2": "^3.0.0",
-    "type-fest": "^0.7.0"
+    "type-fest": "^0.8.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
