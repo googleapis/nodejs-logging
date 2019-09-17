@@ -4,6 +4,22 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.3.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.2.2...v5.3.0) (2019-09-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.17 ([#569](https://www.github.com/googleapis/nodejs-logging/issues/569)) ([7077e64](https://www.github.com/googleapis/nodejs-logging/commit/7077e64))
+* add missing function overload ([#573](https://www.github.com/googleapis/nodejs-logging/issues/573)) ([8cd073b](https://www.github.com/googleapis/nodejs-logging/commit/8cd073b))
+* use correct version for x-goog-api-client header ([#565](https://www.github.com/googleapis/nodejs-logging/issues/565)) ([7b60835](https://www.github.com/googleapis/nodejs-logging/commit/7b60835))
+* use process versions object for client header ([#563](https://www.github.com/googleapis/nodejs-logging/issues/563)) ([2ec8662](https://www.github.com/googleapis/nodejs-logging/commit/2ec8662))
+* **deps:** update dependency type-fest to ^0.8.0 ([#578](https://www.github.com/googleapis/nodejs-logging/issues/578)) ([422a0ed](https://www.github.com/googleapis/nodejs-logging/commit/422a0ed))
+
+
+### Features
+
+* load protos from JSON, grpc-fallback support ([#571](https://www.github.com/googleapis/nodejs-logging/issues/571)) ([41ef532](https://www.github.com/googleapis/nodejs-logging/commit/41ef532))
+
 ### [5.2.2](https://www.github.com/googleapis/nodejs-logging/compare/v5.2.1...v5.2.2) (2019-08-20)
 
 
