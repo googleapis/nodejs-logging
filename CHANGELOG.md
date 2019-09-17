@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.3.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.3.0...v5.3.1) (2019-09-17)
+
+
+### Bug Fixes
+
+* **deps:** updates to metadata check to better work in all environments ([#581](https://www.github.com/googleapis/nodejs-logging/issues/581)) ([24b97e4](https://www.github.com/googleapis/nodejs-logging/commit/24b97e4))
+
 ## [5.3.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.2.2...v5.3.0) (2019-09-16)
 
 
