@@ -22,332 +22,6 @@ const FAKE_STATUS_CODE = 1;
 const error = new Error();
 error.code = FAKE_STATUS_CODE;
 
-describe('LoggingServiceV2Client', () => {
-  it('has servicePath', () => {
-    const servicePath = loggingModule.v2.LoggingServiceV2Client.servicePath;
-    assert(servicePath);
-  });
-
-  it('has apiEndpoint', () => {
-    const apiEndpoint = loggingModule.v2.LoggingServiceV2Client.apiEndpoint;
-    assert(apiEndpoint);
-  });
-
-  it('has port', () => {
-    const port = loggingModule.v2.LoggingServiceV2Client.port;
-    assert(port);
-    assert(typeof port === 'number');
-  });
-
-  it('should create a client with no options', () => {
-    const client = new loggingModule.v2.LoggingServiceV2Client();
-    assert(client);
-  });
-
-  it('should create a client with gRPC fallback', () => {
-    const client = new loggingModule.v2.LoggingServiceV2Client({
-      fallback: true,
-    });
-    assert(client);
-  });
-
-  describe('deleteLog', () => {
-    it('invokes deleteLog without error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
-      const request = {
-        logName: formattedLogName,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(request);
-
-      client.deleteLog(request, err => {
-        assert.ifError(err);
-        done();
-      });
-    });
-
-    it('invokes deleteLog with error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
-      const request = {
-        logName: formattedLogName,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-
-      client.deleteLog(request, err => {
-        assert(err instanceof Error);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        done();
-      });
-    });
-  });
-
-  describe('writeLogEntries', () => {
-    it('invokes writeLogEntries without error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const entries = [];
-      const request = {
-        entries: entries,
-      };
-
-      // Mock response
-      const expectedResponse = {};
-
-      // Mock Grpc layer
-      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
-        request,
-        expectedResponse
-      );
-
-      client.writeLogEntries(request, (err, response) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes writeLogEntries with error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const entries = [];
-      const request = {
-        entries: entries,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-
-      client.writeLogEntries(request, (err, response) => {
-        assert(err instanceof Error);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-
-  describe('listLogEntries', () => {
-    it('invokes listLogEntries without error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const formattedResourceNames = [];
-      const request = {
-        resourceNames: formattedResourceNames,
-      };
-
-      // Mock response
-      const nextPageToken = '';
-      const entriesElement = {};
-      const entries = [entriesElement];
-      const expectedResponse = {
-        nextPageToken: nextPageToken,
-        entries: entries,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.listLogEntries = (
-        actualRequest,
-        options,
-        callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse.entries);
-      };
-
-      client.listLogEntries(request, (err, response) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse.entries);
-        done();
-      });
-    });
-
-    it('invokes listLogEntries with error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const formattedResourceNames = [];
-      const request = {
-        resourceNames: formattedResourceNames,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.listLogEntries = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-
-      client.listLogEntries(request, (err, response) => {
-        assert(err instanceof Error);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-
-  describe('listMonitoredResourceDescriptors', () => {
-    it('invokes listMonitoredResourceDescriptors without error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const request = {};
-
-      // Mock response
-      const nextPageToken = '';
-      const resourceDescriptorsElement = {};
-      const resourceDescriptors = [resourceDescriptorsElement];
-      const expectedResponse = {
-        nextPageToken: nextPageToken,
-        resourceDescriptors: resourceDescriptors,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors = (
-        actualRequest,
-        options,
-        callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse.resourceDescriptors);
-      };
-
-      client.listMonitoredResourceDescriptors(request, (err, response) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse.resourceDescriptors);
-        done();
-      });
-    });
-
-    it('invokes listMonitoredResourceDescriptors with error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const request = {};
-
-      // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-
-      client.listMonitoredResourceDescriptors(request, (err, response) => {
-        assert(err instanceof Error);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-
-  describe('listLogs', () => {
-    it('invokes listLogs without error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const formattedParent = client.projectPath('[PROJECT]');
-      const request = {
-        parent: formattedParent,
-      };
-
-      // Mock response
-      const nextPageToken = '';
-      const logNamesElement = 'logNamesElement-1079688374';
-      const logNames = [logNamesElement];
-      const expectedResponse = {
-        nextPageToken: nextPageToken,
-        logNames: logNames,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.listLogs = (actualRequest, options, callback) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse.logNames);
-      };
-
-      client.listLogs(request, (err, response) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse.logNames);
-        done();
-      });
-    });
-
-    it('invokes listLogs with error', done => {
-      const client = new loggingModule.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-
-      // Mock request
-      const formattedParent = client.projectPath('[PROJECT]');
-      const request = {
-        parent: formattedParent,
-      };
-
-      // Mock Grpc layer
-      client._innerApiCalls.listLogs = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-
-      client.listLogs(request, (err, response) => {
-        assert(err instanceof Error);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-});
 describe('ConfigServiceV2Client', () => {
   it('has servicePath', () => {
     const servicePath = loggingModule.v2.ConfigServiceV2Client.servicePath;
@@ -1020,6 +694,332 @@ describe('ConfigServiceV2Client', () => {
       client.deleteExclusion(request, err => {
         assert(err instanceof Error);
         assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        done();
+      });
+    });
+  });
+});
+describe('LoggingServiceV2Client', () => {
+  it('has servicePath', () => {
+    const servicePath = loggingModule.v2.LoggingServiceV2Client.servicePath;
+    assert(servicePath);
+  });
+
+  it('has apiEndpoint', () => {
+    const apiEndpoint = loggingModule.v2.LoggingServiceV2Client.apiEndpoint;
+    assert(apiEndpoint);
+  });
+
+  it('has port', () => {
+    const port = loggingModule.v2.LoggingServiceV2Client.port;
+    assert(port);
+    assert(typeof port === 'number');
+  });
+
+  it('should create a client with no options', () => {
+    const client = new loggingModule.v2.LoggingServiceV2Client();
+    assert(client);
+  });
+
+  it('should create a client with gRPC fallback', () => {
+    const client = new loggingModule.v2.LoggingServiceV2Client({
+      fallback: true,
+    });
+    assert(client);
+  });
+
+  describe('deleteLog', () => {
+    it('invokes deleteLog without error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+      const request = {
+        logName: formattedLogName,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(request);
+
+      client.deleteLog(request, err => {
+        assert.ifError(err);
+        done();
+      });
+    });
+
+    it('invokes deleteLog with error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+      const request = {
+        logName: formattedLogName,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.deleteLog(request, err => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        done();
+      });
+    });
+  });
+
+  describe('writeLogEntries', () => {
+    it('invokes writeLogEntries without error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const entries = [];
+      const request = {
+        entries: entries,
+      };
+
+      // Mock response
+      const expectedResponse = {};
+
+      // Mock Grpc layer
+      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
+
+      client.writeLogEntries(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse);
+        done();
+      });
+    });
+
+    it('invokes writeLogEntries with error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const entries = [];
+      const request = {
+        entries: entries,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.writeLogEntries(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
+        done();
+      });
+    });
+  });
+
+  describe('listLogEntries', () => {
+    it('invokes listLogEntries without error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const formattedResourceNames = [];
+      const request = {
+        resourceNames: formattedResourceNames,
+      };
+
+      // Mock response
+      const nextPageToken = '';
+      const entriesElement = {};
+      const entries = [entriesElement];
+      const expectedResponse = {
+        nextPageToken: nextPageToken,
+        entries: entries,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listLogEntries = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.entries);
+      };
+
+      client.listLogEntries(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse.entries);
+        done();
+      });
+    });
+
+    it('invokes listLogEntries with error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const formattedResourceNames = [];
+      const request = {
+        resourceNames: formattedResourceNames,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listLogEntries = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.listLogEntries(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
+        done();
+      });
+    });
+  });
+
+  describe('listMonitoredResourceDescriptors', () => {
+    it('invokes listMonitoredResourceDescriptors without error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const request = {};
+
+      // Mock response
+      const nextPageToken = '';
+      const resourceDescriptorsElement = {};
+      const resourceDescriptors = [resourceDescriptorsElement];
+      const expectedResponse = {
+        nextPageToken: nextPageToken,
+        resourceDescriptors: resourceDescriptors,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listMonitoredResourceDescriptors = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.resourceDescriptors);
+      };
+
+      client.listMonitoredResourceDescriptors(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse.resourceDescriptors);
+        done();
+      });
+    });
+
+    it('invokes listMonitoredResourceDescriptors with error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const request = {};
+
+      // Mock Grpc layer
+      client._innerApiCalls.listMonitoredResourceDescriptors = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.listMonitoredResourceDescriptors(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
+        done();
+      });
+    });
+  });
+
+  describe('listLogs', () => {
+    it('invokes listLogs without error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
+        parent: formattedParent,
+      };
+
+      // Mock response
+      const nextPageToken = '';
+      const logNamesElement = 'logNamesElement-1079688374';
+      const logNames = [logNamesElement];
+      const expectedResponse = {
+        nextPageToken: nextPageToken,
+        logNames: logNames,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listLogs = (actualRequest, options, callback) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.logNames);
+      };
+
+      client.listLogs(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse.logNames);
+        done();
+      });
+    });
+
+    it('invokes listLogs with error', done => {
+      const client = new loggingModule.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const formattedParent = client.projectPath('[PROJECT]');
+      const request = {
+        parent: formattedParent,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listLogs = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.listLogs(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
         done();
       });
     });
