@@ -18,13 +18,13 @@
 /**
  * Describes a sink used to export log entries to one of the following
  * destinations in any project: a Cloud Storage bucket, a BigQuery dataset, or a
- * Cloud Pub/Sub topic.  A logs filter controls which log entries are
- * exported. The sink must be created within a project, organization, billing
- * account, or folder.
+ * Cloud Pub/Sub topic. A logs filter controls which log entries are exported.
+ * The sink must be created within a project, organization, billing account, or
+ * folder.
  *
  * @property {string} name
  *   Required. The client-assigned sink identifier, unique within the
- *   project. Example: `"my-syslog-errors-to-pubsub"`.  Sink identifiers are
+ *   project. Example: `"my-syslog-errors-to-pubsub"`. Sink identifiers are
  *   limited to 100 characters and can include only the following characters:
  *   upper and lower-case alphanumeric characters, underscores, hyphens, and
  *   periods.
@@ -38,36 +38,35 @@
  *
  *   The sink's `writer_identity`, set when the sink is created, must
  *   have permission to write to the destination or else the log
- *   entries are not exported.  For more information, see
- *   [Exporting Logs With Sinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
+ *   entries are not exported. For more information, see
+ *   [Exporting Logs with Sinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
  * @property {string} filter
- *   Optional.
- *   An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters).  The only
+ *   Optional. An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced-queries). The only
  *   exported log entries are those that are in the resource owning the sink and
- *   that match the filter.  For example:
+ *   that match the filter. For example:
  *
  *       logName="projects/[PROJECT_ID]/logs/[LOG_ID]" AND severity>=ERROR
  *
  * @property {number} outputVersionFormat
  *   Deprecated. The log entry format to use for this sink's exported log
- *   entries.  The v2 format is used by default and cannot be changed.
+ *   entries. The v2 format is used by default and cannot be changed.
  *
  *   The number should be among the values of [VersionFormat]{@link google.logging.v2.VersionFormat}
  *
  * @property {string} writerIdentity
  *   Output only. An IAM identity&mdash;a service account or group&mdash;under
- *   which Logging writes the exported log entries to the sink's
- *   destination.  This field is set by
- *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
+ *   which Logging writes the exported log entries to the sink's destination.
+ *   This field is set by
+ *   sinks.create
  *   and
- *   [sinks.update](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/update),
- *   based on the setting of `unique_writer_identity` in those methods.
+ *   sinks.update
+ *   based on the value of `unique_writer_identity` in those methods.
  *
  *   Until you grant this identity write-access to the destination, log entry
  *   exports from this sink will fail. For more information,
- *   see [Granting access for a
- *   resource](https://cloud.google.com/iam/docs/granting-roles-to-service-accounts#granting_access_to_a_service_account_for_a_resource).
+ *   see [Granting Access for a
+ *   Resource](https://cloud.google.com/iam/docs/granting-roles-to-service-accounts#granting_access_to_a_service_account_for_a_resource).
  *   Consult the destination service's documentation to determine the
  *   appropriate IAM roles to assign to the identity.
  *
@@ -86,13 +85,22 @@
  *       logName:("projects/test-project1/" OR "projects/test-project2/") AND
  *       resource.type=gce_instance
  *
- * @property {Object} startTime
- *   Deprecated. This field is ignored when creating or updating sinks.
+ * @property {Object} bigqueryOptions
+ *   Optional. Options that affect sinks exporting data to BigQuery.
+ *
+ *   This object should have the same structure as [BigQueryOptions]{@link google.logging.v2.BigQueryOptions}
+ *
+ * @property {Object} createTime
+ *   Output only. The creation timestamp of the sink.
+ *
+ *   This field may not be present for older sinks.
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
- * @property {Object} endTime
- *   Deprecated. This field is ignored when creating or updating sinks.
+ * @property {Object} updateTime
+ *   Output only. The last update timestamp of the sink.
+ *
+ *   This field may not be present for older sinks.
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
@@ -131,6 +139,26 @@ const LogSink = {
 };
 
 /**
+ * Options that change functionality of a sink exporting data to BigQuery.
+ *
+ * @property {boolean} usePartitionedTables
+ *   Optional. Whether to use [BigQuery's partition
+ *   tables](https://cloud.google.com/bigquery/docs/partitioned-tables). By default, Logging
+ *   creates dated tables based on the log entries' timestamps, e.g.
+ *   syslog_20170523. With partitioned tables the date suffix is no longer
+ *   present and [special query
+ *   syntax](https://cloud.google.com/bigquery/docs/querying-partitioned-tables) has to be used instead.
+ *   In both cases, tables are sharded based on UTC timezone.
+ *
+ * @typedef BigQueryOptions
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.BigQueryOptions definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const BigQueryOptions = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
  * The parameters to `ListSinks`.
  *
  * @property {string} parent
@@ -143,13 +171,13 @@ const LogSink = {
  *
  * @property {string} pageToken
  *   Optional. If present, then retrieve the next batch of results from the
- *   preceding call to this method.  `pageToken` must be the value of
- *   `nextPageToken` from the previous response.  The values of other method
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
  *   parameters should be identical to those in the previous call.
  *
  * @property {number} pageSize
  *   Optional. The maximum number of results to return from this request.
- *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
  *   response indicates that more results might be available.
  *
  * @typedef ListSinksRequest
@@ -170,7 +198,7 @@ const ListSinksRequest = {
  *
  * @property {string} nextPageToken
  *   If there might be more results than appear in this response, then
- *   `nextPageToken` is included.  To get the next set of results, call the same
+ *   `nextPageToken` is included. To get the next set of results, call the same
  *   method again using the value of `nextPageToken` as `pageToken`.
  *
  * @typedef ListSinksResponse
@@ -223,17 +251,16 @@ const GetSinkRequest = {
  *
  * @property {boolean} uniqueWriterIdentity
  *   Optional. Determines the kind of IAM identity returned as `writer_identity`
- *   in the new sink.  If this value is omitted or set to false, and if the
+ *   in the new sink. If this value is omitted or set to false, and if the
  *   sink's parent is a project, then the value returned as `writer_identity` is
- *   the same group or service account used by Logging before the
- *   addition of writer identities to this API. The sink's destination must be
- *   in the same project as the sink itself.
+ *   the same group or service account used by Logging before the addition of
+ *   writer identities to this API. The sink's destination must be in the same
+ *   project as the sink itself.
  *
  *   If this field is set to true, or if the sink is owned by a non-project
  *   resource such as an organization, then the value of `writer_identity` will
- *   be a unique service account used only for exports from the new sink.  For
- *   more information, see `writer_identity` in
- *   LogSink.
+ *   be a unique service account used only for exports from the new sink. For
+ *   more information, see `writer_identity` in LogSink.
  *
  * @typedef CreateSinkRequest
  * @memberof google.logging.v2
@@ -264,9 +291,8 @@ const CreateSinkRequest = {
  *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
  *
  * @property {boolean} uniqueWriterIdentity
- *   Optional. See
- *   [sinks.create](https://cloud.google.com/logging/docs/api/reference/rest/v2/projects.sinks/create)
- *   for a description of this field.  When updating a sink, the effect of this
+ *   Optional. See sinks.create
+ *   for a description of this field. When updating a sink, the effect of this
  *   field on the value of `writer_identity` in the updated sink depends on both
  *   the old and new values of this field:
  *
@@ -280,7 +306,7 @@ const CreateSinkRequest = {
  * @property {Object} updateMask
  *   Optional. Field mask that specifies the fields in `sink` that need
  *   an update. A sink field will be overwritten if, and only if, it is
- *   in the update mask.  `name` and output only fields cannot be updated.
+ *   in the update mask. `name` and output only fields cannot be updated.
  *
  *   An empty updateMask is temporarily treated as using the following mask
  *   for backwards compatibility purposes:
@@ -327,11 +353,11 @@ const DeleteSinkRequest = {
 
 /**
  * Specifies a set of log entries that are not to be stored in
- * Logging. If your project receives a large volume of logs, you might be able
- * to use exclusions to reduce your chargeable logs. Exclusions are processed
- * after log sinks, so you can export log entries before they are excluded.
- * Audit log entries and log entries from Amazon Web Services are never
- * excluded.
+ * Logging. If your GCP resource receives a large volume of logs, you can
+ * use exclusions to reduce your chargeable logs. Exclusions are
+ * processed after log sinks, so you can export log entries before they are
+ * excluded. Note that organization-level and folder-level exclusions don't
+ * apply to child resources, and that you can't exclude audit log entries.
  *
  * @property {string} name
  *   Required. A client-assigned identifier, such as
@@ -342,21 +368,34 @@ const DeleteSinkRequest = {
  *   Optional. A description of this exclusion.
  *
  * @property {string} filter
- *   Required.
- *   An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters)
+ *   Required. An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced-queries)
  *   that matches the log entries to be excluded. By using the
- *   [sample function](https://cloud.google.com/logging/docs/view/advanced_filters#sample),
+ *   [sample function](https://cloud.google.com/logging/docs/view/advanced-queries#sample),
  *   you can exclude less than 100% of the matching log entries.
- *   For example, the following filter matches 99% of low-severity log
- *   entries from load balancers:
+ *   For example, the following query matches 99% of low-severity log
+ *   entries from Google Cloud Storage buckets:
  *
- *   `"resource.type=http_load_balancer severity<ERROR sample(insertId, 0.99)"`
+ *   `"resource.type=gcs_bucket severity<ERROR sample(insertId, 0.99)"`
  *
  * @property {boolean} disabled
  *   Optional. If set to True, then this exclusion is disabled and it does not
- *   exclude any log entries. You can use
- *   [exclusions.patch](https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.exclusions/patch)
- *   to change the value of this field.
+ *   exclude any log entries. You can update an
+ *   exclusion to change the
+ *   value of this field.
+ *
+ * @property {Object} createTime
+ *   Output only. The creation timestamp of the exclusion.
+ *
+ *   This field may not be present for older exclusions.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *
+ * @property {Object} updateTime
+ *   Output only. The last update timestamp of the exclusion.
+ *
+ *   This field may not be present for older exclusions.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
  * @typedef LogExclusion
  * @memberof google.logging.v2
@@ -379,13 +418,13 @@ const LogExclusion = {
  *
  * @property {string} pageToken
  *   Optional. If present, then retrieve the next batch of results from the
- *   preceding call to this method.  `pageToken` must be the value of
- *   `nextPageToken` from the previous response.  The values of other method
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
  *   parameters should be identical to those in the previous call.
  *
  * @property {number} pageSize
  *   Optional. The maximum number of results to return from this request.
- *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
  *   response indicates that more results might be available.
  *
  * @typedef ListExclusionsRequest
@@ -406,7 +445,7 @@ const ListExclusionsRequest = {
  *
  * @property {string} nextPageToken
  *   If there might be more results than appear in this response, then
- *   `nextPageToken` is included.  To get the next set of results, call the same
+ *   `nextPageToken` is included. To get the next set of results, call the same
  *   method again using the value of `nextPageToken` as `pageToken`.
  *
  * @typedef ListExclusionsResponse
@@ -485,11 +524,10 @@ const CreateExclusionRequest = {
  *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
  *
  * @property {Object} updateMask
- *   Required. A nonempty list of fields to change in the existing exclusion.
+ *   Required. A non-empty list of fields to change in the existing exclusion.
  *   New values for the fields are taken from the corresponding fields in the
- *   LogExclusion included in this request.
- *   Fields not mentioned in `update_mask` are not changed and are ignored in
- *   the request.
+ *   LogExclusion included in this request. Fields not mentioned in
+ *   `update_mask` are not changed and are ignored in the request.
  *
  *   For example, to change the filter and description of an exclusion,
  *   specify an `update_mask` of `"filter,description"`.

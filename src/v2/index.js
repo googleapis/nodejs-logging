@@ -14,10 +14,10 @@
 
 'use strict';
 
-const LoggingServiceV2Client = require('./logging_service_v2_client');
 const ConfigServiceV2Client = require('./config_service_v2_client');
+const LoggingServiceV2Client = require('./logging_service_v2_client');
 const MetricsServiceV2Client = require('./metrics_service_v2_client');
 
-module.exports.LoggingServiceV2Client = LoggingServiceV2Client;
 module.exports.ConfigServiceV2Client = ConfigServiceV2Client;
+module.exports.LoggingServiceV2Client = LoggingServiceV2Client;
 module.exports.MetricsServiceV2Client = MetricsServiceV2Client;
