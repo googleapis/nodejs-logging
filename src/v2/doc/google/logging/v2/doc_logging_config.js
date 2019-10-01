@@ -104,6 +104,16 @@
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
+ * @property {Object} startTime
+ *   Do not use. This field is ignored.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *
+ * @property {Object} endTime
+ *   Do not use. This field is ignored.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *
  * @typedef LogSink
  * @memberof google.logging.v2
  * @see [google.logging.v2.LogSink definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}

@@ -1163,6 +1163,20 @@
                     "updateTime": {
                       "type": "google.protobuf.Timestamp",
                       "id": 14
+                    },
+                    "startTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 10,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "endTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 11,
+                      "options": {
+                        "deprecated": true
+                      }
                     }
                   },
                   "nested": {
