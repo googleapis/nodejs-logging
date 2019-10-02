@@ -97,8 +97,8 @@ const DeleteLogRequest = {
  *   Log entries with timestamps that are more than the
  *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
  *   24 hours in the future will not be available when calling `entries.list`.
- *   However, those log entries can still be exported with
- *   [LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
+ *   However, those log entries can still be
+ *   [exported with LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
  *
  *   To improve throughput and to avoid exceeding the
  *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
@@ -144,9 +144,7 @@ const WriteLogEntriesResponse = {
  * @property {string[]} projectIds
  *   Deprecated. Use `resource_names` instead.  One or more project identifiers
  *   or project numbers from which to retrieve log entries.  Example:
- *   `"my-project-1A"`. If present, these project identifiers are converted to
- *   resource name format and added to the list of resources in
- *   `resource_names`.
+ *   `"my-project-1A"`.
  *
  * @property {string[]} resourceNames
  *   Required. Names of one or more parent resources from which to
@@ -156,6 +154,7 @@ const WriteLogEntriesResponse = {
  *       "organizations/[ORGANIZATION_ID]"
  *       "billingAccounts/[BILLING_ACCOUNT_ID]"
  *       "folders/[FOLDER_ID]"
+ *
  *
  *   Projects listed in the `project_ids` field are added to this list.
  *
@@ -303,8 +302,8 @@ const ListLogsRequest = {
  *
  * @property {string[]} logNames
  *   A list of log names. For example,
- *   `"projects/my-project/syslog"` or
- *   `"organizations/123/cloudresourcemanager.googleapis.com%2Factivity"`.
+ *   `"projects/my-project/logs/syslog"` or
+ *   `"organizations/123/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
  *
  * @property {string} nextPageToken
  *   If there might be more results than those appearing in this response, then
