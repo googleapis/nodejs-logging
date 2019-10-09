@@ -4,6 +4,19 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.4.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.3.1...v5.4.0) (2019-10-09)
+
+
+### Bug Fixes
+
+* use compatible version of google-gax ([7576ef2](https://www.github.com/googleapis/nodejs-logging/commit/7576ef2))
+* **deps:** gcp-metadata now handles ENETUNREACH ([#600](https://www.github.com/googleapis/nodejs-logging/issues/600)) ([e3ed1d6](https://www.github.com/googleapis/nodejs-logging/commit/e3ed1d6))
+
+
+### Features
+
+* introduces startTime and endTime ([4406446](https://www.github.com/googleapis/nodejs-logging/commit/4406446))
+
 ### [5.3.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.3.0...v5.3.1) (2019-09-17)
 
 
