@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.4.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.4.0...v5.4.1) (2019-10-10)
+
+
+### Bug Fixes
+
+* **deps:** pin to newer version of grpc ([#602](https://www.github.com/googleapis/nodejs-logging/issues/602)) ([23bda1d](https://www.github.com/googleapis/nodejs-logging/commit/23bda1d))
+
 ## [5.4.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.3.1...v5.4.0) (2019-10-09)
 
 
