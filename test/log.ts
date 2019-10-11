@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {util} from '@google-cloud/common-grpc';
+import {util} from '@google-cloud/common';
 import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';

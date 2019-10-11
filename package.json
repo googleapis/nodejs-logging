@@ -52,7 +52,7 @@
     "predocs-test": "npm run docs"
   },
   "dependencies": {
-    "@google-cloud/common-grpc": "^1.0.6",
+    "@google-cloud/common": "^2.2.2",
     "@google-cloud/paginator": "^2.0.0",
     "@google-cloud/projectify": "^1.0.0",
     "@google-cloud/promisify": "^1.0.0",
@@ -61,7 +61,6 @@
     "eventid": "^0.1.2",
     "extend": "^3.0.2",
     "gcp-metadata": "^3.1.0",
-    "google-auth-library": "^5.2.2",
     "google-gax": "^1.6.3",
     "is": "^3.2.1",
     "on-finished": "^2.3.0",
