@@ -909,7 +909,6 @@ class Log implements LogSeverityFunctions {
             Math.max(text.length - delta, 0)
           );
         }
-        console.info(JSON.stringify(entry));
       }
     });
   }
