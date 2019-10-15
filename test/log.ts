@@ -482,7 +482,7 @@ describe('Log', () => {
       await truncatingLogger.write(entry);
     });
 
-    it('should truncate object entry if maxEntrySize hit', async () => {
+    it('should truncate message field, on object entry, if maxEntrySize hit', async () => {
       const truncatingLogger = createLogger(200);
       const entry = new Entry(
         {},
