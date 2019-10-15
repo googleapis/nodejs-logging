@@ -895,16 +895,15 @@ class Log implements LogSeverityFunctions {
       } else {
         // Stackdriver Log Viewer picks up the summary line from the
         // 'message' field.
-        let text: string | null | undefined;
         if (
           entry.jsonPayload &&
           entry.jsonPayload.fields &&
-          entry.jsonPayload.fields.message
+          entry.jsonPayload.fields.message &&
+          entry.jsonPayload.fields.message.stringValue
         ) {
-          text = entry.jsonPayload.fields.message.stringValue;
-        }
-        if (text) {
-          entry!.jsonPayload!.fields!.message.stringValue = text.slice(
+          const text: string | null | undefined =
+            entry.jsonPayload.fields.message.stringValue;
+          entry.jsonPayload.fields.message.stringValue = text.slice(
             0,
             Math.max(text.length - delta, 0)
           );
