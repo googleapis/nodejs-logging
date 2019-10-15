@@ -453,17 +453,14 @@ describe('Log', () => {
     });
 
     it('should not truncate entries by default', async () => {
-      const truncatingLogger = createLogger();
+      const logger = createLogger();
       const entry = new Entry({}, 'hello world'.padEnd(300000, '.'));
 
-      truncatingLogger.logging.loggingService.writeLogEntries = (
-        reqOpts,
-        _gaxOpts
-      ) => {
+      logger.logging.loggingService.writeLogEntries = (reqOpts, _gaxOpts) => {
         assert.strictEqual(reqOpts.entries[0].textPayload.length, 300000);
       };
 
-      await truncatingLogger.write(entry);
+      await logger.write(entry);
     });
 
     it('should truncate string entry if maxEntrySize hit', async () => {
