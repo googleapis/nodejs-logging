@@ -24,7 +24,7 @@ import {Response} from 'teeny-request';
 import {google} from '../proto/logging';
 
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
-import {Entry, LogEntry} from './entry';
+import {Entry, EntryJson, LogEntry} from './entry';
 import {getDefaultResource} from './metadata';
 
 const snakeCaseKeys = require('snakecase-keys');
@@ -44,6 +44,7 @@ export interface GetEntriesRequest {
 
 export interface LogOptions {
   removeCircular?: boolean;
+  maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
 }
 
 export type ApiResponse = [Response];
@@ -103,12 +104,14 @@ type LogSeverityFunctions = {
 class Log implements LogSeverityFunctions {
   formattedName_: string;
   removeCircular_: boolean;
+  maxEntrySize?: number;
   logging: Logging;
   name: string;
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
+    this.maxEntrySize = options.maxEntrySize;
     this.logging = logging;
     /**
      * @name Log#name
@@ -828,6 +831,7 @@ class Log implements LogSeverityFunctions {
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
+      self.truncateEntries(decoratedEntries);
       const projectId = await self.logging.auth.getProjectId();
       self.formattedName_ = Log.formatName_(projectId, self.name);
       const reqOpts = extend(
@@ -855,7 +859,7 @@ class Log implements LogSeverityFunctions {
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  decorateEntries_(entries: Entry[]) {
+  decorateEntries_(entries: Entry[]): EntryJson[] {
     return entries.map(entry => {
       if (!(entry instanceof Entry)) {
         entry = this.entry(entry);
@@ -863,6 +867,48 @@ class Log implements LogSeverityFunctions {
       return entry.toJSON({
         removeCircular: this.removeCircular_,
       });
+    });
+  }
+
+  /**
+   * Truncate log entries at maxEntrySize, so that error is not thrown, see:
+   * https://cloud.google.com/logging/quotas
+   *
+   * @private
+   *
+   * @param {object|string} the JSON log entry.
+   * @returns {object|string} truncated JSON log entry.
+   */
+  private truncateEntries(entries: EntryJson[]) {
+    return entries.forEach(entry => {
+      if (this.maxEntrySize === undefined) return;
+
+      const payloadSize = JSON.stringify(entry).length;
+      if (payloadSize < this.maxEntrySize) return;
+
+      const delta = payloadSize - this.maxEntrySize;
+      if (entry.textPayload) {
+        entry.textPayload = entry.textPayload.slice(
+          0,
+          Math.max(entry.textPayload.length - delta, 0)
+        );
+      } else {
+        // Stackdriver Log Viewer picks up the summary line from the
+        // 'message' field.
+        if (
+          entry.jsonPayload &&
+          entry.jsonPayload.fields &&
+          entry.jsonPayload.fields.message &&
+          entry.jsonPayload.fields.message.stringValue
+        ) {
+          const text: string | null | undefined =
+            entry.jsonPayload.fields.message.stringValue;
+          entry.jsonPayload.fields.message.stringValue = text.slice(
+            0,
+            Math.max(text.length - delta, 0)
+          );
+        }
+      }
     });
   }
 
