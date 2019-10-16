@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.5.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.4.1...v5.5.0) (2019-10-16)
+
+
+### Features
+
+* introduce maxEntrySize, for enabling error message truncation ([#607](https://www.github.com/googleapis/nodejs-logging/issues/607)) ([49efd49](https://www.github.com/googleapis/nodejs-logging/commit/49efd491263b518ae5cd54c9a77e5603477f96d8))
+
 ### [5.4.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.4.0...v5.4.1) (2019-10-10)
 
 
