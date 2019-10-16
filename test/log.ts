@@ -33,6 +33,7 @@ const fakeCallbackify = extend({}, callbackify, {
 
 import {Entry} from '../src';
 import {EntryJson} from '../src/entry';
+import {LogOptions} from '../src/log';
 
 const originalGetDefaultResource = async () => {
   return 'very-fake-resource';
@@ -76,6 +77,10 @@ describe('Log', () => {
   });
 
   beforeEach(() => {
+    log = createLogger();
+  });
+
+  function createLogger(maxEntrySize?: number) {
     assignSeverityToEntriesOverride = null;
 
     LOGGING = {
@@ -86,8 +91,13 @@ describe('Log', () => {
       auth: util.noop,
     };
 
-    log = new Log(LOGGING, LOG_NAME);
-  });
+    const options: LogOptions = {};
+    if (maxEntrySize) {
+      options.maxEntrySize = maxEntrySize;
+    }
+
+    return new Log(LOGGING, LOG_NAME, options);
+  }
 
   describe('instantiation', () => {
     it('should callbackify all the things', () => {
@@ -440,6 +450,54 @@ describe('Log', () => {
       log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {};
 
       await log.write(ENTRY);
+    });
+
+    it('should not truncate entries by default', async () => {
+      const logger = createLogger();
+      const entry = new Entry({}, 'hello world'.padEnd(300000, '.'));
+
+      logger.logging.loggingService.writeLogEntries = (reqOpts, _gaxOpts) => {
+        assert.strictEqual(reqOpts.entries[0].textPayload.length, 300000);
+      };
+
+      await logger.write(entry);
+    });
+
+    it('should truncate string entry if maxEntrySize hit', async () => {
+      const truncatingLogger = createLogger(200);
+      const entry = new Entry({}, 'hello world'.padEnd(2000, '.'));
+
+      truncatingLogger.logging.loggingService.writeLogEntries = (
+        reqOpts,
+        _gaxOpts
+      ) => {
+        const text = reqOpts.entries[0].textPayload;
+        assert.ok(text.startsWith('hello world'));
+        assert.ok(text.length < 300);
+      };
+
+      await truncatingLogger.write(entry);
+    });
+
+    it('should truncate message field, on object entry, if maxEntrySize hit', async () => {
+      const truncatingLogger = createLogger(200);
+      const entry = new Entry(
+        {},
+        {
+          message: 'hello world'.padEnd(2000, '.'),
+        }
+      );
+
+      truncatingLogger.logging.loggingService.writeLogEntries = (
+        reqOpts,
+        _gaxOpts
+      ) => {
+        const text = reqOpts.entries[0].jsonPayload.fields.message.stringValue;
+        assert.ok(text.startsWith('hello world'));
+        assert.ok(text.length < 300);
+      };
+
+      await truncatingLogger.write(entry);
     });
   });
 
