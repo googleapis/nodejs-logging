@@ -499,6 +499,34 @@ describe('Log', () => {
 
       await truncatingLogger.write(entry);
     });
+
+    it('should truncate stack trace', async () => {
+      const truncatingLogger = createLogger(300);
+      const entry = new Entry(
+        {},
+        {
+          message: 'hello world'.padEnd(2000, '.'),
+          metadata: {
+            stack: 'hello world'.padEnd(2000, '.'),
+          },
+        }
+      );
+
+      truncatingLogger.logging.loggingService.writeLogEntries = (
+        reqOpts,
+        _gaxOpts
+      ) => {
+        const message =
+          reqOpts.entries[0].jsonPayload.fields.message.stringValue;
+        const stack = reqOpts.entries[0].jsonPayload.fields.metadata
+          .structValue!.fields!.stack.stringValue;
+        assert.strictEqual(stack, '');
+        assert.ok(message.startsWith('hello world'));
+        assert.ok(message.length < 400);
+      };
+
+      await truncatingLogger.write(entry);
+    });
   });
 
   describe('severity shortcuts', () => {
