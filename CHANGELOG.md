@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.5.1](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.0...v5.5.1) (2019-10-17)
+
+
+### Bug Fixes
+
+* truncate additional fields set by winston/bunyan ([#609](https://www.github.com/googleapis/nodejs-logging/issues/609)) ([27ac693](https://www.github.com/googleapis/nodejs-logging/commit/27ac693ec4f9afeec412e2edddf831226f2bcc60))
+
 ## [5.5.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.4.1...v5.5.0) (2019-10-16)
 
 
