@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {Service} from '@google-cloud/common-grpc';
 import {Merge} from 'type-fest';
 // tslint:disable-next-line variable-name
 const EventId = require('eventid');
 import * as extend from 'extend';
 import * as is from 'is';
 import {google} from '../proto/logging';
+import {objToStruct, structToObj} from './common';
 
 const eventId = new EventId();
 
@@ -148,8 +148,7 @@ class Entry {
   toJSON(options: ToJsonOptions = {}) {
     const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     if (is.object(this.data)) {
-      // tslint:disable-next-line no-any
-      entry.jsonPayload = (Service as any).objToStruct_(this.data, {
+      entry.jsonPayload = objToStruct(this.data, {
         removeCircular: !!options.removeCircular,
         stringify: true,
       });
@@ -179,8 +178,7 @@ class Entry {
   static fromApiResponse_(entry: google.logging.v2.LogEntry) {
     let data = entry[entry.payload!];
     if (entry.payload === 'jsonPayload') {
-      // tslint:disable-next-line no-any
-      data = (Service as any).structToObj_(data);
+      data = structToObj(data);
     }
     const serializedEntry = new Entry(entry, data);
     if (entry.timestamp) {

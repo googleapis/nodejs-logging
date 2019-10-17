@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import * as common from '@google-cloud/common-grpc';
+import * as common from '@google-cloud/common';
 import {paginator} from '@google-cloud/paginator';
 import {replaceProjectIdToken} from '@google-cloud/projectify';
 import {callbackifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
-import {GoogleAuth} from 'google-auth-library';
+import {GoogleAuth} from 'google-gax';
 import * as gax from 'google-gax';
 import {ClientReadableStream} from 'grpc';
 import {Response} from 'teeny-request';

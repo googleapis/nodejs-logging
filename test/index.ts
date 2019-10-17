@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {util} from '@google-cloud/common-grpc';
+import {util} from '@google-cloud/common';
 import {CallbackifyAllOptions} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as assert from 'assert';
@@ -22,9 +22,6 @@ import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
 import {Logging as LOGGING} from '../src/index';
-
-import {GetEntriesCallback} from '../src/index';
-import {getOrInjectContext} from '../src/middleware/context';
 
 const {v2} = require('../src');
 const PKG = require('../../package.json');
@@ -117,13 +114,13 @@ describe('Logging', () => {
 
   before(() => {
     Logging = proxyquire('../../', {
-      '@google-cloud/common-grpc': {
+      '@google-cloud/common': {
         util: fakeUtil,
       },
       '@google-cloud/promisify': fakeCallbackify,
       '@google-cloud/paginator': fakePaginator,
       '@google-cloud/projectify': fakeProjectify,
-      'google-auth-library': {
+      'google-gax': {
         GoogleAuth: fakeGoogleAuth,
       },
       './log': {Log: FakeLog},
