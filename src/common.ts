@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import * as is from 'is';
+
 export interface ObjectToStructConverterConfig {
   removeCircular?: boolean;
   stringify?: boolean;
