@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-import {Service, util} from '@google-cloud/common-grpc';
+import {util} from '@google-cloud/common';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import * as sinon from 'sinon';
 import * as entryTypes from '../src/entry';
-
-class FakeGrpcService {
-  static structToObj_?: Function;
-  static objToStruct_?: Function;
-}
+import * as common from '../src/common';
 
 let fakeEventIdNewOverride: Function | null;
 
@@ -34,6 +29,15 @@ class FakeEventId {
   }
 }
 
+let fakeObjToStruct: Function | null;
+let fakeStructToObj: Function | null;
+const objToStruct = (obj, opts) => {
+  return (fakeObjToStruct || common.objToStruct)(obj, opts);
+};
+const structToObj = struct => {
+  return (fakeStructToObj || common.structToObj)(struct);
+};
+
 describe('Entry', () => {
   // tslint:disable-next-line no-any variable-name
   let Entry: typeof entryTypes.Entry;
@@ -41,12 +45,12 @@ describe('Entry', () => {
 
   const METADATA = {};
   const DATA = {};
-  const sandbox = sinon.createSandbox();
 
   before(() => {
     Entry = proxyquire('../src/entry.js', {
-      '@google-cloud/common-grpc': {
-        Service: FakeGrpcService,
+      './common': {
+        objToStruct,
+        structToObj,
       },
       eventid: FakeEventId,
     }).Entry;
@@ -54,11 +58,13 @@ describe('Entry', () => {
 
   beforeEach(() => {
     fakeEventIdNewOverride = null;
-    extend(FakeGrpcService, Service);
     entry = new Entry(METADATA, DATA);
   });
 
-  afterEach(() => sandbox.restore());
+  afterEach(() => {
+    fakeObjToStruct = null;
+    fakeStructToObj = null;
+  });
 
   describe('instantiation', () => {
     it('should assign timestamp to metadata', () => {
@@ -107,7 +113,7 @@ describe('Entry', () => {
     beforeEach(() => {
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
-      FakeGrpcService.structToObj_ = data => data;
+      fakeStructToObj = data => data;
       entry = Entry.fromApiResponse_({
         resource: RESOURCE,
         payload: 'jsonPayload',
@@ -160,7 +166,7 @@ describe('Entry', () => {
 
   describe('toJSON', () => {
     beforeEach(() => {
-      FakeGrpcService.objToStruct_ = util.noop;
+      fakeObjToStruct = util.noop;
     });
 
     it('should not modify the original instance', () => {
@@ -174,16 +180,14 @@ describe('Entry', () => {
       const input = {};
       const converted = {};
 
-      sandbox
-        .stub(FakeGrpcService, 'objToStruct_')
-        .callsFake((obj, options) => {
-          assert.strictEqual(obj, input);
-          assert.deepStrictEqual(options, {
-            removeCircular: false,
-            stringify: true,
-          });
-          return converted;
+      fakeObjToStruct = (obj, options) => {
+        assert.strictEqual(obj, input);
+        assert.deepStrictEqual(options, {
+          removeCircular: false,
+          stringify: true,
         });
+        return converted;
+      };
 
       entry.data = input;
       const json = entry.toJSON();
@@ -191,12 +195,10 @@ describe('Entry', () => {
     });
 
     it('should pass removeCircular to objToStruct_', done => {
-      sandbox
-        .stub(FakeGrpcService, 'objToStruct_')
-        .callsFake((obj, options) => {
-          assert.strictEqual(options.removeCircular, true);
-          done();
-        });
+      fakeObjToStruct = (obj, options) => {
+        assert.strictEqual(options.removeCircular, true);
+        done();
+      };
       entry.data = {};
       entry.toJSON({removeCircular: true});
     });
