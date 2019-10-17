@@ -56,7 +56,7 @@
     "@google-cloud/paginator": "^2.0.0",
     "@google-cloud/projectify": "^1.0.0",
     "@google-cloud/promisify": "^1.0.0",
-    "@opencensus/propagation-stackdriver": "0.0.17",
+    "@opencensus/propagation-stackdriver": "0.0.18",
     "arrify": "^2.0.0",
     "dot-prop": "^5.1.0",
     "eventid": "^0.1.2",
