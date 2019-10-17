@@ -1,7 +1,7 @@
 {
   "name": "@google-cloud/logging",
   "description": "Stackdriver Logging Client Library for Node.js",
-  "version": "5.4.1",
+  "version": "5.5.1",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
@@ -58,6 +58,7 @@
     "@google-cloud/promisify": "^1.0.0",
     "@opencensus/propagation-stackdriver": "0.0.17",
     "arrify": "^2.0.0",
+    "dot-prop": "^5.1.0",
     "eventid": "^0.1.2",
     "extend": "^3.0.2",
     "gcp-metadata": "^3.1.0",

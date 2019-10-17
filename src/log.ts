@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import arrify = require('arrify');
 import {DeleteCallback} from '@google-cloud/common';
 import {callbackifyAll} from '@google-cloud/promisify';
-import arrify = require('arrify');
+import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {Response} from 'teeny-request';
@@ -886,27 +887,33 @@ class Log implements LogSeverityFunctions {
       const payloadSize = JSON.stringify(entry).length;
       if (payloadSize < this.maxEntrySize) return;
 
-      const delta = payloadSize - this.maxEntrySize;
+      let delta = payloadSize - this.maxEntrySize;
       if (entry.textPayload) {
         entry.textPayload = entry.textPayload.slice(
           0,
           Math.max(entry.textPayload.length - delta, 0)
         );
       } else {
-        // Stackdriver Log Viewer picks up the summary line from the
-        // 'message' field.
-        if (
-          entry.jsonPayload &&
-          entry.jsonPayload.fields &&
-          entry.jsonPayload.fields.message &&
-          entry.jsonPayload.fields.message.stringValue
-        ) {
-          const text: string | null | undefined =
-            entry.jsonPayload.fields.message.stringValue;
-          entry.jsonPayload.fields.message.stringValue = text.slice(
-            0,
-            Math.max(text.length - delta, 0)
-          );
+        const fieldsToTruncate = [
+          // Winston:
+          'jsonPayload.fields.metadata.structValue.fields.stack.stringValue',
+          // Bunyan:
+          'jsonPayload.fields.msg.stringValue',
+          'jsonPayload.fields.err.structValue.fields.stack.stringValue',
+          'jsonPayload.fields.err.structValue.fields.message.stringValue',
+          // All:
+          'jsonPayload.fields.message.stringValue',
+        ];
+        for (const field of fieldsToTruncate) {
+          const msg: string = dotProp.get(entry, field, '');
+          if (msg !== '') {
+            dotProp.set(
+              entry,
+              field,
+              msg.slice(0, Math.max(msg.length - delta, 0))
+            );
+            delta -= Math.min(msg.length, delta);
+          }
         }
       }
     });
