@@ -75,7 +75,7 @@
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
     "@google-cloud/pubsub": "^1.0.0",
-    "@google-cloud/storage": "^3.0.4",
+    "@google-cloud/storage": "^4.0.0",
     "@types/extend": "^3.0.0",
     "@types/is": "0.0.21",
     "@types/mocha": "^5.2.5",
