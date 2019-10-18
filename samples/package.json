@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@google-cloud/logging": "^5.5.2",
-    "@google-cloud/storage": "^2.0.2",
+    "@google-cloud/storage": "^4.0.0",
     "express": "^4.16.3",
     "fluent-logger": "^3.0.0",
     "yargs": "^14.0.0"
