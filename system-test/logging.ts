@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-if (process.env.GOOGLE_CLOUD_USE_GRPC_JS) {
-  process.exit(0);
-}
-
 import {BigQuery} from '@google-cloud/bigquery';
-import {ServiceObject} from '@google-cloud/common';
 import {PubSub} from '@google-cloud/pubsub';
 import {Storage} from '@google-cloud/storage';
 import * as assert from 'assert';
@@ -105,17 +100,14 @@ describe('Logging', () => {
       const [objects] = await method();
       return Promise.all(
         objects
-          .filter((o: ServiceObject) => {
-            // tslint:disable-next-line no-any
-            const name = (o as any).name || o.id;
-
+          .filter(o => {
+            const name = o.name || o.id;
             if (!name.startsWith(TESTS_PREFIX)) {
               return false;
             }
-
             return getDateFromGeneratedName(name) < oneHourAgo;
           })
-          .map((o: ServiceObject) => o.delete())
+          .map(o => o.delete())
       );
     }
   });

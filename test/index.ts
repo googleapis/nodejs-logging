@@ -26,6 +26,7 @@ import {Logging as LOGGING} from '../src/index';
 const {v2} = require('../src');
 const PKG = require('../../package.json');
 
+const noop = () => {};
 let extended = false;
 const fakePaginator = {
   paginator: {
@@ -45,7 +46,7 @@ const fakePaginator = {
 
 let googleAuthOverride: Function | null;
 function fakeGoogleAuth() {
-  return (googleAuthOverride || util.noop).apply(null, arguments);
+  return (googleAuthOverride || noop).apply(null, arguments);
 }
 
 let isCustomTypeOverride: Function | null;
@@ -236,14 +237,14 @@ describe('Logging', () => {
 
     it('should throw if a name is not provided', () => {
       const error = new Error('A sink name must be provided.');
-      logging.createSink().then(util.noop, err => {
+      logging.createSink().then(noop, err => {
         assert.deepStrictEqual(err, error);
       });
     });
 
     it('should throw if a config object is not provided', () => {
       const error = new Error('A sink configuration object must be provided.');
-      logging.createSink(SINK_NAME).then(util.noop, err => {
+      logging.createSink(SINK_NAME).then(noop, err => {
         assert.deepStrictEqual(err, error);
       });
     });
@@ -360,7 +361,7 @@ describe('Logging', () => {
 
           logging
             .createSink(SINK_NAME, {})
-            .then(util.noop, err => assert.deepStrictEqual(err, error));
+            .then(noop, err => assert.deepStrictEqual(err, error));
         });
       });
 
@@ -512,9 +513,7 @@ describe('Logging', () => {
       });
 
       it('should reject promise with error', () => {
-        logging
-          .getEntries()
-          .then(util.noop, err => assert.strictEqual(err, error));
+        logging.getEntries().then(noop, err => assert.strictEqual(err, error));
       });
     });
 
@@ -772,7 +771,7 @@ describe('Logging', () => {
         };
         logging
           .getSinks(OPTIONS)
-          .then(util.noop, err => assert.strictEqual(err, error));
+          .then(noop, err => assert.strictEqual(err, error));
       });
     });
 
@@ -954,7 +953,7 @@ describe('Logging', () => {
       };
 
       logging.api[CONFIG.client] = {
-        [CONFIG.method]: util.noop,
+        [CONFIG.method]: noop,
       };
     });
 
@@ -990,7 +989,7 @@ describe('Logging', () => {
 
       it('should initiate and cache the client', () => {
         const fakeClient = {
-          [CONFIG.method]: util.noop,
+          [CONFIG.method]: noop,
         };
         fakeV2[CONFIG.client] = class {
           constructor(options) {
@@ -1029,7 +1028,7 @@ describe('Logging', () => {
 
             setImmediate(done);
 
-            return util.noop;
+            return noop;
           },
         };
 
@@ -1061,7 +1060,7 @@ describe('Logging', () => {
 
             setImmediate(done);
 
-            return util.noop;
+            return noop;
           },
         };
 
@@ -1198,7 +1197,7 @@ describe('Logging', () => {
         name: 'bucket-name',
         acl: {
           owners: {
-            addGroup: util.noop,
+            addGroup: noop,
           },
         },
       };
@@ -1228,7 +1227,7 @@ describe('Logging', () => {
       it('should return error', () => {
         logging
           .setAclForBucket_(CONFIG)
-          .then(util.noop, err => assert.deepStrictEqual(err, error));
+          .then(noop, err => assert.deepStrictEqual(err, error));
       });
     });
 
@@ -1278,7 +1277,7 @@ describe('Logging', () => {
         it('should reject with error', () => {
           logging
             .setAclForDataset_(CONFIG)
-            .then(util.noop, err => assert.deepStrictEqual(err, error));
+            .then(noop, err => assert.deepStrictEqual(err, error));
         });
       });
 
@@ -1326,7 +1325,7 @@ describe('Logging', () => {
           it('should reject with error', () => {
             logging
               .setAclForDataset_(CONFIG)
-              .then(util.noop, err => assert.deepStrictEqual(err, error));
+              .then(noop, err => assert.deepStrictEqual(err, error));
           });
         });
 
@@ -1361,8 +1360,8 @@ describe('Logging', () => {
       topic = {
         name: 'topic-name',
         iam: {
-          getPolicy: util.noop,
-          setPolicy: util.noop,
+          getPolicy: noop,
+          setPolicy: noop,
         },
       };
 
@@ -1385,7 +1384,7 @@ describe('Logging', () => {
         it('should throw error', () => {
           logging
             .setAclForTopic_(CONFIG)
-            .then(util.noop, err => assert.deepStrictEqual(err, error));
+            .then(noop, err => assert.deepStrictEqual(err, error));
         });
       });
 
@@ -1433,7 +1432,7 @@ describe('Logging', () => {
           it('should throw error', () => {
             logging
               .setAclForTopic_(CONFIG)
-              .then(util.noop, err => assert.deepStrictEqual(err, error));
+              .then(noop, err => assert.deepStrictEqual(err, error));
           });
         });
 

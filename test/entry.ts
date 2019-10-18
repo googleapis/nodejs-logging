@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {util} from '@google-cloud/common';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
@@ -25,7 +24,7 @@ let fakeEventIdNewOverride: Function | null;
 
 class FakeEventId {
   new() {
-    return (fakeEventIdNewOverride || util.noop).apply(null, arguments);
+    return (fakeEventIdNewOverride || (() => {})).apply(null, arguments);
   }
 }
 
@@ -166,7 +165,7 @@ describe('Entry', () => {
 
   describe('toJSON', () => {
     beforeEach(() => {
-      fakeObjToStruct = util.noop;
+      fakeObjToStruct = () => {};
     });
 
     it('should not modify the original instance', () => {

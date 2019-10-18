@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {util} from '@google-cloud/common';
 import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
@@ -37,10 +36,10 @@ describe('Sink', () => {
   const PROJECT_ID = 'project-id';
 
   const LOGGING = {
-    createSink: util.noop,
+    createSink: () => {},
     projectId: '{{projectId}}',
-    auth: util.noop,
-    configService: util.noop,
+    auth: () => {},
+    configService: () => {},
   };
   const SINK_NAME = 'sink-name';
 
@@ -210,7 +209,7 @@ describe('Sink', () => {
 
       sink
         .setMetadata(METADATA)
-        .then(util.noop, err => assert.strictEqual(err, error));
+        .then(() => {}, err => assert.strictEqual(err, error));
     });
 
     it('should execute gax method', async () => {
