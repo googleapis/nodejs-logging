@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import {util} from '@google-cloud/common';
 import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+
+const noop = () => {};
 
 let callbackified = false;
 const fakeCallbackify = extend({}, callbackify, {
@@ -85,10 +86,10 @@ describe('Log', () => {
 
     LOGGING = {
       projectId: '{{project-id}}',
-      entry: util.noop,
-      request: util.noop,
-      loggingService: util.noop,
-      auth: util.noop,
+      entry: noop,
+      request: noop,
+      loggingService: noop,
+      auth: noop,
     };
 
     const options: LogOptions = {};
@@ -534,7 +535,7 @@ describe('Log', () => {
     const LABELS = [];
 
     beforeEach(() => {
-      log.write = util.noop;
+      log.write = noop;
     });
 
     describe('alert', () => {

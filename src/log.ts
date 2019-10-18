@@ -15,13 +15,10 @@
  */
 
 import arrify = require('arrify');
-import {DeleteCallback} from '@google-cloud/common';
 import {callbackifyAll} from '@google-cloud/promisify';
 import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import {Response} from 'teeny-request';
-
 import {google} from '../proto/logging';
 
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
@@ -48,10 +45,13 @@ export interface LogOptions {
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
 }
 
-export type ApiResponse = [Response];
+// tslint:disable-next-line no-any
+export type Metadata = any;
+export type ApiResponse = [Metadata];
 export interface ApiResponseCallback {
-  (err: Error | null, apiResponse?: Response): void;
+  (err: Error | null, apiResponse?: Metadata): void;
 }
+export type DeleteCallback = ApiResponseCallback;
 
 export type MonitoredResource = google.api.IMonitoredResource;
 export interface WriteOptions {

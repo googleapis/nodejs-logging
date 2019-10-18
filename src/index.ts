@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-import * as common from '@google-cloud/common';
+import {util} from '@google-cloud/common';
 import {paginator} from '@google-cloud/paginator';
 import {replaceProjectIdToken} from '@google-cloud/projectify';
 import {callbackifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
-import {GoogleAuth} from 'google-gax';
 import * as gax from 'google-gax';
-import {ClientReadableStream} from 'grpc';
-import {Response} from 'teeny-request';
+import {ClientReadableStream} from '@grpc/grpc-js';
 
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
@@ -50,7 +48,6 @@ import {
 } from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
-import {AbortableDuplex} from '@google-cloud/common';
 import {google} from '../proto/logging';
 import {google as google_config} from '../proto/logging_config';
 
@@ -72,6 +69,10 @@ export type DeleteResponse = google.protobuf.Empty;
 
 export type LogSink = google_config.logging.v2.ILogSink;
 
+export interface AbortableDuplex extends Duplex {
+  abort(): void;
+}
+
 export interface CreateSinkRequest {
   // destination: Bucket|Dataset|Topic|string;
   // tslint:disable-next-line no-any
@@ -84,7 +85,7 @@ export interface CreateSinkRequest {
 }
 
 export interface CreateSinkCallback {
-  (err: Error | null, sink?: Sink | null, resp?: LogSink | Response): void;
+  (err: Error | null, sink?: Sink | null, resp?: LogSink): void;
 }
 
 export type GetEntriesResponse = [
@@ -237,7 +238,7 @@ export interface ServiceContext {
  */
 class Logging {
   api: {[key: string]: gax.ClientStub};
-  auth: GoogleAuth;
+  auth: gax.GoogleAuth;
   options: LoggingOptions;
   projectId: string;
   detectedResource?: object;
@@ -269,7 +270,7 @@ class Logging {
       options
     );
     this.api = {};
-    this.auth = new GoogleAuth(options_);
+    this.auth = new gax.GoogleAuth(options_);
     this.options = options_;
     this.projectId = this.options.projectId || '{{projectId}}';
     this.configService = new v2.ConfigServiceV2Client(this.options);
@@ -370,13 +371,13 @@ class Logging {
     if (typeof config !== 'object') {
       throw new Error('A sink configuration object must be provided.');
     }
-    if (common.util.isCustomType(config.destination, 'bigquery/dataset')) {
+    if (util.isCustomType(config.destination, 'bigquery/dataset')) {
       await this.setAclForDataset_(config);
     }
-    if (common.util.isCustomType(config.destination, 'pubsub/topic')) {
+    if (util.isCustomType(config.destination, 'pubsub/topic')) {
       await this.setAclForTopic_(config);
     }
-    if (common.util.isCustomType(config.destination, 'storage/bucket')) {
+    if (util.isCustomType(config.destination, 'storage/bucket')) {
       await this.setAclForBucket_(config);
     }
     const reqOpts = {

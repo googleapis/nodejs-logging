@@ -69,13 +69,11 @@
     "pumpify": "^2.0.0",
     "snakecase-keys": "^3.0.0",
     "stream-events": "^1.0.4",
-    "teeny-request": "^5.2.1",
     "through2": "^3.0.0",
     "type-fest": "^0.8.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
-    "@google-cloud/nodejs-repo-tools": "^3.3.0",
     "@google-cloud/pubsub": "^1.0.0",
     "@google-cloud/storage": "^3.0.4",
     "@types/extend": "^3.0.0",
@@ -98,7 +96,6 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.0.0",
     "google-proto-files": "^1.0.0",
-    "grpc": "^1.22.2",
     "gts": "^1.0.0",
     "http2spy": "^1.1.0",
     "intelli-espower-loader": "^1.0.1",
