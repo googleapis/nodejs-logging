@@ -18,6 +18,8 @@ import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+import {Log as LOG, WriteOptions, GetEntriesRequest} from '../src/log';
+import {Logging} from '../src/index';
 
 const noop = () => {};
 
@@ -33,7 +35,7 @@ const fakeCallbackify = extend({}, callbackify, {
 });
 
 import {Entry} from '../src';
-import {EntryJson} from '../src/entry';
+import {EntryJson, LogEntry} from '../src/entry';
 import {LogOptions} from '../src/log';
 
 const originalGetDefaultResource = async () => {
@@ -45,9 +47,10 @@ const fakeMetadata = {
 };
 
 describe('Log', () => {
-  // tslint:disable-next-line no-any variable-name
-  let Log: any;
-  let log;
+  // tslint:disable-next-line variable-name
+  let Log: typeof LOG;
+  // tslint:disable-next-line no-any
+  let log: any;
 
   const PROJECT_ID = 'project-id';
   const LOG_NAME = 'escaping/required/for/this/log-name';
@@ -59,7 +62,7 @@ describe('Log', () => {
     LOG_NAME_ENCODED,
   ].join('/');
 
-  let LOGGING;
+  let LOGGING: Logging;
 
   let assignSeverityToEntriesOverride: Function | null = null;
 
@@ -84,13 +87,13 @@ describe('Log', () => {
   function createLogger(maxEntrySize?: number) {
     assignSeverityToEntriesOverride = null;
 
-    LOGGING = {
+    LOGGING = ({
       projectId: '{{project-id}}',
       entry: noop,
       request: noop,
       loggingService: noop,
       auth: noop,
-    };
+    } as {}) as Logging;
 
     const options: LogOptions = {};
     if (maxEntrySize) {
@@ -145,7 +148,11 @@ describe('Log', () => {
   describe('assignSeverityToEntries_', () => {
     const circular = {} as {circular: {}};
     circular.circular = circular;
-    const ENTRIES = [{data: {a: 'b'}}, {data: {c: 'd'}}, {data: {e: circular}}];
+    const ENTRIES = [
+      {data: {a: 'b'}},
+      {data: {c: 'd'}},
+      {data: {e: circular}},
+    ] as Entry[];
     const SEVERITY = 'severity';
 
     it('should assign severity to a single entry', () => {
@@ -204,7 +211,10 @@ describe('Log', () => {
     });
 
     it('should execute gax method', async () => {
-      log.logging.loggingService.deleteLog = async (reqOpts, gaxOpts) => {
+      log.logging.loggingService.deleteLog = async (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {
         assert.deepStrictEqual(reqOpts, {
           logName: log.formattedName_,
         });
@@ -218,7 +228,10 @@ describe('Log', () => {
     it('should accept gaxOptions', async () => {
       const gaxOptions = {};
 
-      log.logging.loggingService.deleteLog = async (reqOpts, gaxOpts) => {
+      log.logging.loggingService.deleteLog = async (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {
         assert.strictEqual(gaxOpts, gaxOptions);
       };
 
@@ -230,12 +243,12 @@ describe('Log', () => {
     it('should return an entry from Logging', () => {
       const metadata = {
         val: true,
-      };
+      } as LogEntry;
       const data = {};
 
       const entryObject = {};
 
-      log.logging.entry = (metadata_, data_) => {
+      log.logging.entry = (metadata_: {}, data_: {}) => {
         assert.deepStrictEqual(metadata_, metadata);
         assert.strictEqual(data_, data);
         return entryObject;
@@ -247,12 +260,10 @@ describe('Log', () => {
 
     it('should assume one argument means data', done => {
       const data = {};
-
-      log.logging.entry = (metadata, data_) => {
+      log.logging.entry = (metadata: {}, data_: {}) => {
         assert.strictEqual(data_, data);
         done();
       };
-
       log.entry(data);
     });
   });
@@ -267,10 +278,9 @@ describe('Log', () => {
     };
 
     it('should call Logging getEntries with defaults', async () => {
-      log.logging.getEntries = options => {
+      log.logging.getEntries = (options: GetEntriesRequest) => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
       };
-
       await log.getEntries();
     });
 
@@ -285,7 +295,7 @@ describe('Log', () => {
       const expectedOptions = extend({}, options);
       expectedOptions.filter = `(${options.filter}) AND logName="${log.formattedName_}"`;
 
-      log.logging.getEntries = options_ => {
+      log.logging.getEntries = (options_: {}) => {
         assert.notDeepStrictEqual(options_, options);
         assert.deepStrictEqual(options_, expectedOptions);
       };
@@ -301,7 +311,7 @@ describe('Log', () => {
     };
 
     it('should call Logging getEntriesStream with defaults', done => {
-      log.logging.getEntriesStream = options => {
+      log.logging.getEntriesStream = (options: {}) => {
         assert.deepStrictEqual(options, EXPECTED_OPTIONS);
         setImmediate(done);
         return fakeStream;
@@ -317,7 +327,7 @@ describe('Log', () => {
         filter: 'custom filter',
       };
 
-      log.logging.getEntriesStream = options_ => {
+      log.logging.getEntriesStream = (options_: {}) => {
         assert.deepStrictEqual(options_, extend({}, EXPECTED_OPTIONS, options));
         setImmediate(done);
         return fakeStream;
@@ -329,14 +339,12 @@ describe('Log', () => {
   });
 
   describe('write', () => {
-    const ENTRY = {};
+    const ENTRY = {} as Entry;
     const OPTIONS = {};
     const FAKE_RESOURCE = 'fake-resource';
 
     beforeEach(() => {
-      log.decorateEntries_ = entries => {
-        return entries;
-      };
+      log.decorateEntries_ = (entries: Entry[]) => entries;
       fakeMetadata.getDefaultResource = async () => {
         return FAKE_RESOURCE;
       };
@@ -347,9 +355,12 @@ describe('Log', () => {
       const CUSTOM_RESOURCE = 'custom-resource';
       const optionsWithResource = extend({}, OPTIONS, {
         resource: CUSTOM_RESOURCE,
-      });
+      }) as WriteOptions;
 
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {
+      log.logging.loggingService.writeLogEntries = (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {
         assert.deepStrictEqual(reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
@@ -364,29 +375,27 @@ describe('Log', () => {
 
     it('should cache a detected resource', async () => {
       const fakeResource = 'test-level-fake-resource';
-
       fakeMetadata.getDefaultResource = async () => {
         return fakeResource;
       };
-
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {
+      log.logging.loggingService.writeLogEntries = () => {
         assert.strictEqual(log.logging.detectedResource, fakeResource);
       };
-
       await log.write(ENTRY);
     });
 
     it('should re-use detected resource', async () => {
       log.logging.detectedResource = 'environment-default-resource';
-
       fakeMetadata.getDefaultResource = () => {
         throw new Error('Cached resource was not used.');
       };
-
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {
+      // tslint:disable-next-line no-any
+      log.logging.loggingService.writeLogEntries = (
+        // tslint:disable-next-line no-any
+        reqOpts: any
+      ) => {
         assert.strictEqual(reqOpts.resource, log.logging.detectedResource);
       };
-
       await log.write(ENTRY);
     });
 
@@ -405,7 +414,10 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {
+      log.logging.loggingService.writeLogEntries = (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {
         assert.deepStrictEqual(reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
@@ -419,7 +431,10 @@ describe('Log', () => {
     });
 
     it('should call gax method', async () => {
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {
+      log.logging.loggingService.writeLogEntries = (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {
         assert.deepStrictEqual(reqOpts, {
           logName: log.formattedName_,
           entries: [ENTRY],
@@ -433,14 +448,19 @@ describe('Log', () => {
     });
 
     it('should arrify & decorate the entries', async () => {
-      const decoratedEntries = [];
+      const decoratedEntries = [] as Entry[];
 
-      log.decorateEntries_ = entries => {
+      log.decorateEntries_ = (entries: Entry[]) => {
         assert.strictEqual(entries[0], ENTRY);
         return decoratedEntries;
       };
 
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {
+      // tslint:disable-next-line no-any
+      log.logging.loggingService.writeLogEntries = (
+        // tslint:disable-next-line no-any
+        reqOpts: any,
+        gaxOpts: {}
+      ) => {
         assert.strictEqual(reqOpts.entries, decoratedEntries);
       };
 
@@ -448,7 +468,10 @@ describe('Log', () => {
     });
 
     it('should not require options', async () => {
-      log.logging.loggingService.writeLogEntries = (reqOpts, gaxOpts) => {};
+      log.logging.loggingService.writeLogEntries = (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {};
 
       await log.write(ENTRY);
     });
@@ -456,8 +479,12 @@ describe('Log', () => {
     it('should not truncate entries by default', async () => {
       const logger = createLogger();
       const entry = new Entry({}, 'hello world'.padEnd(300000, '.'));
-
-      logger.logging.loggingService.writeLogEntries = (reqOpts, _gaxOpts) => {
+      // tslint:disable-next-line no-any
+      logger.logging.loggingService.writeLogEntries = (
+        // tslint:disable-next-line no-any
+        reqOpts: any,
+        _gaxOpts: {}
+      ) => {
         assert.strictEqual(reqOpts.entries[0].textPayload.length, 300000);
       };
 
@@ -469,8 +496,9 @@ describe('Log', () => {
       const entry = new Entry({}, 'hello world'.padEnd(2000, '.'));
 
       truncatingLogger.logging.loggingService.writeLogEntries = (
-        reqOpts,
-        _gaxOpts
+        // tslint:disable-next-line no-any
+        reqOpts: any,
+        _gaxOpts: {}
       ) => {
         const text = reqOpts.entries[0].textPayload;
         assert.ok(text.startsWith('hello world'));
@@ -490,8 +518,9 @@ describe('Log', () => {
       );
 
       truncatingLogger.logging.loggingService.writeLogEntries = (
-        reqOpts,
-        _gaxOpts
+        // tslint:disable-next-line no-any
+        reqOpts: any,
+        _gaxOpts: {}
       ) => {
         const text = reqOpts.entries[0].jsonPayload.fields.message.stringValue;
         assert.ok(text.startsWith('hello world'));
@@ -514,8 +543,9 @@ describe('Log', () => {
       );
 
       truncatingLogger.logging.loggingService.writeLogEntries = (
-        reqOpts,
-        _gaxOpts
+        // tslint:disable-next-line no-any
+        reqOpts: any,
+        _gaxOpts: {}
       ) => {
         const message =
           reqOpts.entries[0].jsonPayload.fields.message.stringValue;
@@ -531,8 +561,8 @@ describe('Log', () => {
   });
 
   describe('severity shortcuts', () => {
-    const ENTRY = {};
-    const LABELS = [];
+    const ENTRY = {} as Entry;
+    const LABELS = [] as WriteOptions;
 
     beforeEach(() => {
       log.write = noop;
@@ -540,7 +570,10 @@ describe('Log', () => {
 
     describe('alert', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'ALERT');
         };
@@ -548,9 +581,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -560,7 +593,10 @@ describe('Log', () => {
 
     describe('critical', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'CRITICAL');
         };
@@ -569,9 +605,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -581,7 +617,10 @@ describe('Log', () => {
 
     describe('debug', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'DEBUG');
         };
@@ -590,9 +629,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -602,7 +641,10 @@ describe('Log', () => {
 
     describe('emergency', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'EMERGENCY');
         };
@@ -611,9 +653,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -623,7 +665,10 @@ describe('Log', () => {
 
     describe('error', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'ERROR');
         };
@@ -631,13 +676,13 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
 
         assignSeverityToEntriesOverride = () => {
           return assignedEntries;
         };
 
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -648,7 +693,10 @@ describe('Log', () => {
 
     describe('info', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'INFO');
         };
@@ -657,13 +705,13 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
 
         assignSeverityToEntriesOverride = () => {
           return assignedEntries;
         };
 
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -674,7 +722,10 @@ describe('Log', () => {
 
     describe('notice', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'NOTICE');
         };
@@ -683,13 +734,13 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
 
         assignSeverityToEntriesOverride = () => {
           return assignedEntries;
         };
 
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -700,7 +751,10 @@ describe('Log', () => {
 
     describe('warning', () => {
       it('should format the entries', async () => {
-        assignSeverityToEntriesOverride = (entries, severity) => {
+        assignSeverityToEntriesOverride = (
+          entries: Entry[],
+          severity: string
+        ) => {
           assert.strictEqual(entries, ENTRY);
           assert.strictEqual(severity, 'WARNING');
         };
@@ -709,9 +763,9 @@ describe('Log', () => {
       });
 
       it('should pass correct arguments to write', async () => {
-        const assignedEntries = [];
+        const assignedEntries = [] as Entry[];
         assignSeverityToEntriesOverride = () => assignedEntries;
-        log.write = async (entry, labels) => {
+        log.write = async (entry: Entry, labels: WriteOptions) => {
           assert.strictEqual(entry, assignedEntries);
           assert.strictEqual(labels, LABELS);
         };
@@ -723,19 +777,22 @@ describe('Log', () => {
   describe('decorateEntries_', () => {
     const toJSONResponse = {};
 
-    function FakeEntry() {}
-    FakeEntry.prototype.toJSON = () => toJSONResponse;
+    class FakeEntry {
+      toJSON() {
+        return toJSONResponse;
+      }
+    }
 
     beforeEach(() => {
-      log.entry = () => new FakeEntry();
+      log.entry = () => new FakeEntry() as Entry;
     });
 
     it('should create an Entry object if one is not provided', () => {
       const entry = {};
 
-      log.entry = entry_ => {
+      log.entry = (entry_: Entry) => {
         assert.strictEqual(entry_, entry);
-        return new FakeEntry();
+        return new FakeEntry() as Entry;
       };
 
       const decoratedEntries = log.decorateEntries_([entry]);

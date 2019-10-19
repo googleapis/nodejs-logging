@@ -30,10 +30,10 @@ class FakeEventId {
 
 let fakeObjToStruct: Function | null;
 let fakeStructToObj: Function | null;
-const objToStruct = (obj, opts) => {
+const objToStruct = (obj: {}, opts: {}) => {
   return (fakeObjToStruct || common.objToStruct)(obj, opts);
 };
-const structToObj = struct => {
+const structToObj = (struct: {}) => {
   return (fakeStructToObj || common.structToObj)(struct);
 };
 
@@ -112,7 +112,7 @@ describe('Entry', () => {
     beforeEach(() => {
       const seconds = date.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
-      fakeStructToObj = data => data;
+      fakeStructToObj = (data: {}) => data;
       entry = Entry.fromApiResponse_({
         resource: RESOURCE,
         payload: 'jsonPayload',
@@ -179,7 +179,7 @@ describe('Entry', () => {
       const input = {};
       const converted = {};
 
-      fakeObjToStruct = (obj, options) => {
+      fakeObjToStruct = (obj: {}, options: {}) => {
         assert.strictEqual(obj, input);
         assert.deepStrictEqual(options, {
           removeCircular: false,
@@ -194,7 +194,10 @@ describe('Entry', () => {
     });
 
     it('should pass removeCircular to objToStruct_', done => {
-      fakeObjToStruct = (obj, options) => {
+      fakeObjToStruct = (
+        obj: {},
+        options: common.ObjectToStructConverterConfig
+      ) => {
         assert.strictEqual(options.removeCircular, true);
         done();
       };
