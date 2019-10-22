@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.5.3](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.2...v5.5.3) (2019-10-22)
+
+
+### Bug Fixes
+
+* **deps:** bump google-gax to 1.7.5 ([#616](https://www.github.com/googleapis/nodejs-logging/issues/616)) ([5d73a06](https://www.github.com/googleapis/nodejs-logging/commit/5d73a06083552db6aa03be4e6cb5f1de97620eec))
+* **deps:** update dependency @google-cloud/storage to v4 ([#613](https://www.github.com/googleapis/nodejs-logging/issues/613)) ([4ec4f18](https://www.github.com/googleapis/nodejs-logging/commit/4ec4f18a3e07b798882e5f17e642fae5d9f68912))
+
 ### [5.5.2](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.1...v5.5.2) (2019-10-17)
 
 
