@@ -89,7 +89,6 @@
     "@types/uuid": "^3.4.4",
     "assert-rejects": "^1.0.0",
     "bignumber.js": "^9.0.0",
-    "chai": "^4.2.0",
     "codecov": "^3.0.4",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^6.0.0",

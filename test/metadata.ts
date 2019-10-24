@@ -22,9 +22,9 @@ import * as proxyquire from 'proxyquire';
 
 import assertRejects = require('assert-rejects');
 
-let instanceOverride;
+let instanceOverride: {} | null;
 const fakeGcpMetadata = {
-  instance(path) {
+  instance(path: string) {
     if (instanceOverride) {
       const override = Array.isArray(instanceOverride)
         ? instanceOverride.find(entry => entry.path === path)
@@ -49,9 +49,9 @@ const fakeGcpMetadata = {
 
 const FAKE_READFILE_ERROR_MESSAGE = 'fake readFile error';
 const FAKE_READFILE_CONTENTS = 'fake readFile contents';
-let readFileShouldError;
+let readFileShouldError: boolean;
 const fakeFS = {
-  readFile: (filename, encoding, callback) => {
+  readFile: (filename: string, encoding: string, callback: Function) => {
     setImmediate(() => {
       if (readFileShouldError) {
         callback(new Error(FAKE_READFILE_ERROR_MESSAGE));
@@ -212,14 +212,16 @@ describe('metadata', () => {
       instanceOverride = {
         errorArg: FAKE_ERROR,
       };
-
-      assertRejects(metadata.getGKEDescriptor(), err => err === FAKE_ERROR);
+      assertRejects(
+        metadata.getGKEDescriptor(),
+        (err: Error) => err === FAKE_ERROR
+      );
     });
 
     it('should throw error when read of namespace file fails', async () => {
       readFileShouldError = true;
 
-      assertRejects(metadata.getGKEDescriptor(), err =>
+      assertRejects(metadata.getGKEDescriptor(), (err: Error) =>
         err.message.includes(FAKE_READFILE_ERROR_MESSAGE)
       );
     });

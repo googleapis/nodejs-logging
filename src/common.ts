@@ -67,7 +67,8 @@ export class ObjectToStructConverter {
    * //   }
    * // }
    */
-  convert(obj: {}) {
+  // tslint:disable-next-line no-any
+  convert(obj: any) {
     const convertedObject = {
       fields: {},
     };
@@ -78,7 +79,8 @@ export class ObjectToStructConverter {
         if (is.undefined(value)) {
           continue;
         }
-        convertedObject.fields[prop] = this.encodeValue_(value);
+        // tslint:disable-next-line no-any
+        (convertedObject as any).fields[prop] = this.encodeValue_(value);
       }
     }
     this.seenObjects.delete(obj);
@@ -99,7 +101,8 @@ export class ObjectToStructConverter {
    * //   stringValue: 'Hello!'
    * // }
    */
-  encodeValue_(value: {}) {
+  // tslint:disable-next-line no-any
+  encodeValue_(value: {} | null): any {
     let convertedValue;
 
     if (is.null(value)) {
@@ -123,7 +126,7 @@ export class ObjectToStructConverter {
         blobValue: value,
       };
     } else if (is.object(value)) {
-      if (this.seenObjects.has(value)) {
+      if (this.seenObjects.has(value!)) {
         // Circular reference.
         if (!this.removeCircular) {
           throw new Error(
@@ -138,7 +141,7 @@ export class ObjectToStructConverter {
         };
       } else {
         convertedValue = {
-          structValue: this.convert(value),
+          structValue: this.convert(value!),
         };
       }
     } else if (is.array(value)) {
@@ -180,8 +183,10 @@ export class ObjectToStructConverter {
  * //   name: 'Stephen'
  * // }
  */
-export function structToObj(struct) {
-  const convertedObject = {};
+// tslint:disable-next-line no-any
+export function structToObj(struct: any) {
+  // tslint:disable-next-line no-any
+  const convertedObject = {} as any;
   for (const prop in struct.fields) {
     if (struct.fields.hasOwnProperty(prop)) {
       const value = struct.fields[prop];
@@ -198,7 +203,8 @@ export function structToObj(struct) {
  * @param {object} value - A Struct's Field message.
  * @return {*} - The decoded value.
  */
-export function decodeValue(value) {
+// tslint:disable-next-line no-any
+export function decodeValue(value: any) {
   switch (value.kind) {
     case 'structValue': {
       return structToObj(value.structValue);

@@ -24,7 +24,7 @@ const OPTIONS = {
 } as ObjectToStructConverterConfig;
 
 describe('ObjectToStructConverter', () => {
-  let objectToStructConverter;
+  let objectToStructConverter: ObjectToStructConverter;
 
   beforeEach(() => {
     objectToStructConverter = new ObjectToStructConverter(OPTIONS);
@@ -68,7 +68,8 @@ describe('ObjectToStructConverter', () => {
         return convertedValue;
       };
 
-      const struct = objectToStructConverter.convert({
+      // tslint:disable-next-line no-any
+      const struct: any = objectToStructConverter.convert({
         a: inputValue,
       });
 
@@ -101,13 +102,14 @@ describe('ObjectToStructConverter', () => {
 
     it('should add seen objects to set then empty set', done => {
       const obj = {};
-      let objectAdded;
+      let objectAdded: {};
 
-      objectToStructConverter.seenObjects = {
-        add(obj) {
+      // tslint:disable-next-line no-any
+      (objectToStructConverter as any).seenObjects = {
+        add(obj: {}) {
           objectAdded = obj;
         },
-        delete(obj_) {
+        delete(obj_: {}) {
           assert.strictEqual(obj_, obj);
           assert.strictEqual(objectAdded, obj);
           done();
@@ -158,7 +160,8 @@ describe('ObjectToStructConverter', () => {
 
     it('should throw if a type is not recognized', () => {
       assert.throws(() => {
-        objectToStructConverter.encodeValue_();
+        // tslint:disable-next-line no-any
+        (objectToStructConverter as any).encodeValue_();
       }, /Value of type undefined not recognized./);
     });
 
@@ -168,10 +171,10 @@ describe('ObjectToStructConverter', () => {
 
       it('should convert objects', () => {
         const convertedValue = {};
-
         objectToStructConverter.convert = value => {
           assert.strictEqual(value, VALUE);
-          return convertedValue;
+          // tslint:disable-next-line no-any
+          return convertedValue as any;
         };
 
         assert.deepStrictEqual(objectToStructConverter.encodeValue_(VALUE), {
@@ -194,7 +197,7 @@ describe('ObjectToStructConverter', () => {
         });
 
         describe('options.removeCircular', () => {
-          let objectToStructConverter;
+          let objectToStructConverter: ObjectToStructConverter;
 
           beforeEach(() => {
             objectToStructConverter = new ObjectToStructConverter({
@@ -215,7 +218,7 @@ describe('ObjectToStructConverter', () => {
     });
 
     describe('options.stringify', () => {
-      let objectToStructConverter;
+      let objectToStructConverter: ObjectToStructConverter;
 
       beforeEach(() => {
         objectToStructConverter = new ObjectToStructConverter({
@@ -225,11 +228,9 @@ describe('ObjectToStructConverter', () => {
 
       it('should return a string if the value is not recognized', () => {
         const date = new Date();
-
-        assert.deepStrictEqual(
-          objectToStructConverter.encodeValue_(date, OPTIONS),
-          {stringValue: String(date)}
-        );
+        assert.deepStrictEqual(objectToStructConverter.encodeValue_(date), {
+          stringValue: String(date),
+        });
       });
     });
   });
