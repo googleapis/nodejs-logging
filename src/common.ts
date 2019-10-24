@@ -21,10 +21,6 @@ export interface ObjectToStructConverterConfig {
   stringify?: boolean;
 }
 
-export interface Struct {
-  fields: {};
-}
-
 export function objToStruct(obj: {}, options: ObjectToStructConverterConfig) {
   return new ObjectToStructConverter(options).convert(obj);
 }
