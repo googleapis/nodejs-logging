@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import * as execa from 'execa';
+import execa = require('execa');
 import * as mv from 'mv';
 import {ncp} from 'ncp';
 import * as tmp from 'tmp';
