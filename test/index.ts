@@ -335,8 +335,8 @@ describe('Logging', () => {
           name: SINK_NAME,
         });
 
-        // tslint:disable-next-line no-any
         logging.configService.createSink = async (
+          // tslint:disable-next-line no-any
           reqOpts: any,
           gaxOpts: {}
         ) => {
@@ -357,8 +357,8 @@ describe('Logging', () => {
           gaxOptions: {},
         } as {}) as CreateSinkRequest;
 
-        // tslint:disable-next-line no-any
         logging.configService.createSink = async (
+          // tslint:disable-next-line no-any
           reqOpts: any,
           gaxOpts: {}
         ) => {
@@ -526,8 +526,8 @@ describe('Logging', () => {
         },
       };
 
-      // tslint:disable-next-line no-any
       logging.loggingService.listLogEntries = async (
+        // tslint:disable-next-line no-any
         reqOpts: any,
         gaxOpts: {}
       ) => {
