@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.5.4](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.3...v5.5.4) (2019-10-25)
+
+
+### Bug Fixes
+
+* **package:** add missing dependency google-auth-library ([#620](https://www.github.com/googleapis/nodejs-logging/issues/620)) ([5ef2377](https://www.github.com/googleapis/nodejs-logging/commit/5ef2377aacac94551a74d386cbb8084f3d5a7b53))
+
 ### [5.5.3](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.2...v5.5.3) (2019-10-22)
 
 
