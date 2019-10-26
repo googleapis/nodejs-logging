@@ -69,7 +69,9 @@ class MetricsServiceV2Client {
     const gaxModule = !global.isBrowser && opts.fallback ? gax.fallback : gax;
 
     const servicePath =
-      opts.servicePath || opts.apiEndpoint || this.constructor.servicePath;
+      opts.servicePath ||
+      opts.apiEndpoint ||
+      this.constructor.servicePath;
 
     // Ensure that options include the service address and port.
     opts = Object.assign(
@@ -110,15 +112,11 @@ class MetricsServiceV2Client {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     const protos = gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback ?
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
@@ -128,14 +126,18 @@ class MetricsServiceV2Client {
       billingPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}'
       ),
-      folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
+      folderPathTemplate: new gaxModule.PathTemplate(
+        'folders/{folder}'
+      ),
       metricPathTemplate: new gaxModule.PathTemplate(
         'projects/{project}/metrics/{metric}'
       ),
       organizationPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}'
       ),
-      projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
+      projectPathTemplate: new gaxModule.PathTemplate(
+        'projects/{project}'
+      ),
     };
 
     // Some of the methods on this service return "paged" results,
@@ -165,9 +167,9 @@ class MetricsServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.MetricsServiceV2.
     const metricsServiceV2Stub = gaxGrpc.createStub(
-      opts.fallback
-        ? protos.lookupService('google.logging.v2.MetricsServiceV2')
-        : protos.google.logging.v2.MetricsServiceV2,
+      opts.fallback ?
+        protos.lookupService('google.logging.v2.MetricsServiceV2') :
+        protos.google.logging.v2.MetricsServiceV2,
       opts
     );
 
@@ -341,11 +343,10 @@ class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.listLogMetrics(request, options, callback);
   }
@@ -405,7 +406,7 @@ class MetricsServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Gets a logs-based metric.
@@ -454,11 +455,10 @@ class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'metric_name': request.metricName
+      });
 
     return this._innerApiCalls.getLogMetric(request, options, callback);
   }
@@ -522,11 +522,10 @@ class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.createLogMetric(request, options, callback);
   }
@@ -591,11 +590,10 @@ class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'metric_name': request.metricName
+      });
 
     return this._innerApiCalls.updateLogMetric(request, options, callback);
   }
@@ -639,11 +637,10 @@ class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'metric_name': request.metricName
+      });
 
     return this._innerApiCalls.deleteLogMetric(request, options, callback);
   }
@@ -722,7 +719,8 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the billing_account.
    */
   matchBillingAccountFromBillingName(billingName) {
-    return this._pathTemplates.billingPathTemplate.match(billingName)
+    return this._pathTemplates.billingPathTemplate
+      .match(billingName)
       .billing_account;
   }
 
@@ -734,7 +732,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the folder.
    */
   matchFolderFromFolderName(folderName) {
-    return this._pathTemplates.folderPathTemplate.match(folderName).folder;
+    return this._pathTemplates.folderPathTemplate
+      .match(folderName)
+      .folder;
   }
 
   /**
@@ -745,7 +745,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromMetricName(metricName) {
-    return this._pathTemplates.metricPathTemplate.match(metricName).project;
+    return this._pathTemplates.metricPathTemplate
+      .match(metricName)
+      .project;
   }
 
   /**
@@ -756,7 +758,9 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the metric.
    */
   matchMetricFromMetricName(metricName) {
-    return this._pathTemplates.metricPathTemplate.match(metricName).metric;
+    return this._pathTemplates.metricPathTemplate
+      .match(metricName)
+      .metric;
   }
 
   /**
@@ -767,7 +771,8 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the organization.
    */
   matchOrganizationFromOrganizationName(organizationName) {
-    return this._pathTemplates.organizationPathTemplate.match(organizationName)
+    return this._pathTemplates.organizationPathTemplate
+      .match(organizationName)
       .organization;
   }
 
@@ -779,8 +784,11 @@ class MetricsServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 }
+
 
 module.exports = MetricsServiceV2Client;
