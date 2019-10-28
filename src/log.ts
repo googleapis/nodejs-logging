@@ -826,19 +826,19 @@ class Log implements LogSeverityFunctions {
       return writeWithResource(resource);
     }
     async function writeWithResource(resource: {} | null) {
-      let decoratedEntries;
+      let decoratedEntries: EntryJson[];
       try {
         decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
-      self.truncateEntries(decoratedEntries);
+      self.truncateEntries(decoratedEntries!);
       const projectId = await self.logging.auth.getProjectId();
       self.formattedName_ = Log.formatName_(projectId, self.name);
       const reqOpts = extend(
         {
           logName: self.formattedName_,
-          entries: decoratedEntries,
+          entries: decoratedEntries!,
           resource,
         },
         options

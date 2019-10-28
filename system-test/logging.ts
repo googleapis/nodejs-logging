@@ -22,8 +22,8 @@ import {HOST_ADDRESS} from 'gcp-metadata';
 import * as nock from 'nock';
 import {Duplex} from 'stream';
 import * as uuid from 'uuid';
-import * as http2spy from 'http2spy';
-import {Logging, Sink} from '../src';
+const http2spy = require('http2spy');
+import {Logging, Sink, Log, Entry} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -99,7 +99,8 @@ describe('Logging', () => {
     async function getAndDelete(method: Function) {
       const [objects] = await method();
       return Promise.all(
-        objects
+        // tslint:disable-next-line no-any
+        (objects as any[])
           .filter(o => {
             const name = o.name || o.id;
             if (!name.startsWith(TESTS_PREFIX)) {
@@ -242,7 +243,10 @@ describe('Logging', () => {
       return {log, logEntries};
     }
 
-    function getEntriesFromLog(log, callback) {
+    function getEntriesFromLog(
+      log: Log,
+      callback: (err: Error | null, entries?: Entry[]) => void
+    ) {
       let numAttempts = 0;
 
       setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
@@ -303,7 +307,7 @@ describe('Logging', () => {
 
         getEntriesFromLog(log, (err, entries) => {
           assert.ifError(err);
-          assert.strictEqual(entries.length, logEntries.length);
+          assert.strictEqual(entries!.length, logEntries.length);
           done();
         });
       });
@@ -327,7 +331,8 @@ describe('Logging', () => {
     });
 
     describe('log-specific entries', () => {
-      let logExpected, logEntriesExpected;
+      let logExpected: Log;
+      let logEntriesExpected: Entry[];
 
       before(done => {
         const {log, logEntries} = getTestLog();
@@ -339,7 +344,7 @@ describe('Logging', () => {
       it('should list log entries', done => {
         getEntriesFromLog(logExpected, (err, entries) => {
           assert.ifError(err);
-          assert.strictEqual(entries.length, logEntriesExpected.length);
+          assert.strictEqual(entries!.length, logEntriesExpected.length);
           done();
         });
       });
@@ -377,7 +382,7 @@ describe('Logging', () => {
         getEntriesFromLog(log, (err, entries) => {
           assert.ifError(err);
 
-          assert.deepStrictEqual(entries.map(x => x.data).reverse(), [
+          assert.deepStrictEqual(entries!.map(x => x.data).reverse(), [
             'log entry 1',
             {delegate: 'my_username'},
             {
@@ -595,7 +600,7 @@ describe('Logging', () => {
   // Parse the time the resource was created using the resource id
   // Format 1: ${TESTS_PREFIX}-${date}-${uuid}
   // Format 2: ${TESTS_PREFIX}_${date}_${uuid}
-  function getDateFromGeneratedName(name) {
+  function getDateFromGeneratedName(name: string) {
     const timeCreated = name.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0];
     return new Date(Number(timeCreated));
   }
