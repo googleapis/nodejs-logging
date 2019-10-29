@@ -69,7 +69,9 @@ class LoggingServiceV2Client {
     const gaxModule = !global.isBrowser && opts.fallback ? gax.fallback : gax;
 
     const servicePath =
-      opts.servicePath || opts.apiEndpoint || this.constructor.servicePath;
+      opts.servicePath ||
+      opts.apiEndpoint ||
+      this.constructor.servicePath;
 
     // Ensure that options include the service address and port.
     opts = Object.assign(
@@ -110,15 +112,11 @@ class LoggingServiceV2Client {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     const protos = gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback ?
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
@@ -131,7 +129,9 @@ class LoggingServiceV2Client {
       billingLogPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
-      folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
+      folderPathTemplate: new gaxModule.PathTemplate(
+        'folders/{folder}'
+      ),
       folderLogPathTemplate: new gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
       ),
@@ -144,7 +144,9 @@ class LoggingServiceV2Client {
       organizationLogPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
-      projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
+      projectPathTemplate: new gaxModule.PathTemplate(
+        'projects/{project}'
+      ),
     };
 
     // Some of the methods on this service return "paged" results,
@@ -168,20 +170,22 @@ class LoggingServiceV2Client {
       ),
     };
 
-    const protoFilesRoot = opts.fallback
-      ? gaxModule.protobuf.Root.fromJSON(require('../../protos/protos.json'))
-      : gaxModule.protobuf.loadSync(nodejsProtoPath);
+    const protoFilesRoot = opts.fallback ?
+      gaxModule.protobuf.Root.fromJSON(require("../../protos/protos.json")) :
+      gaxModule.protobuf.loadSync(nodejsProtoPath);
 
     // Some methods on this API support automatically batching
     // requests; denote this.
     this._descriptors.batching = {
       writeLogEntries: new gaxModule.BundleDescriptor(
         'entries',
-        ['logName', 'resource', 'labels'],
+        [
+          'logName',
+          'resource',
+          'labels',
+        ],
         null,
-        gax.createByteLengthFunction(
-          protoFilesRoot.lookup('google.logging.v2.LogEntry')
-        )
+        gax.createByteLengthFunction(protoFilesRoot.lookup('google.logging.v2.LogEntry'))
       ),
     };
 
@@ -201,9 +205,9 @@ class LoggingServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.LoggingServiceV2.
     const loggingServiceV2Stub = gaxGrpc.createStub(
-      opts.fallback
-        ? protos.lookupService('google.logging.v2.LoggingServiceV2')
-        : protos.google.logging.v2.LoggingServiceV2,
+      opts.fallback ?
+        protos.lookupService('google.logging.v2.LoggingServiceV2') :
+        protos.google.logging.v2.LoggingServiceV2,
       opts
     );
 
@@ -228,8 +232,7 @@ class LoggingServiceV2Client {
       this._innerApiCalls[methodName] = gaxModule.createApiCall(
         innerCallPromise,
         defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.batching[methodName]
+        this._descriptors.page[methodName] || this._descriptors.batching[methodName]
       );
     }
   }
@@ -334,11 +337,10 @@ class LoggingServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      log_name: request.logName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'log_name': request.logName
+      });
 
     return this._innerApiCalls.deleteLog(request, options, callback);
   }
@@ -670,7 +672,7 @@ class LoggingServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Lists the descriptors for monitored resource types used by Logging.
@@ -758,11 +760,7 @@ class LoggingServiceV2Client {
     request = request || {};
     options = options || {};
 
-    return this._innerApiCalls.listMonitoredResourceDescriptors(
-      request,
-      options,
-      callback
-    );
+    return this._innerApiCalls.listMonitoredResourceDescriptors(request, options, callback);
   }
 
   /**
@@ -816,7 +814,7 @@ class LoggingServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Lists the logs in projects, organizations, folders, or billing accounts.
@@ -917,11 +915,10 @@ class LoggingServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.listLogs(request, options, callback);
   }
@@ -984,7 +981,7 @@ class LoggingServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   // --------------------
   // -- Path templates --
@@ -1102,7 +1099,8 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the billing_account.
    */
   matchBillingAccountFromBillingName(billingName) {
-    return this._pathTemplates.billingPathTemplate.match(billingName)
+    return this._pathTemplates.billingPathTemplate
+      .match(billingName)
       .billing_account;
   }
 
@@ -1114,7 +1112,8 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the billing_account.
    */
   matchBillingAccountFromBillingLogName(billingLogName) {
-    return this._pathTemplates.billingLogPathTemplate.match(billingLogName)
+    return this._pathTemplates.billingLogPathTemplate
+      .match(billingLogName)
       .billing_account;
   }
 
@@ -1126,7 +1125,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the log.
    */
   matchLogFromBillingLogName(billingLogName) {
-    return this._pathTemplates.billingLogPathTemplate.match(billingLogName).log;
+    return this._pathTemplates.billingLogPathTemplate
+      .match(billingLogName)
+      .log;
   }
 
   /**
@@ -1137,7 +1138,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the folder.
    */
   matchFolderFromFolderName(folderName) {
-    return this._pathTemplates.folderPathTemplate.match(folderName).folder;
+    return this._pathTemplates.folderPathTemplate
+      .match(folderName)
+      .folder;
   }
 
   /**
@@ -1148,7 +1151,8 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
+    return this._pathTemplates.folderLogPathTemplate
+      .match(folderLogName)
       .folder;
   }
 
@@ -1160,7 +1164,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this._pathTemplates.folderLogPathTemplate
+      .match(folderLogName)
+      .log;
   }
 
   /**
@@ -1171,7 +1177,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromLogName(logName) {
-    return this._pathTemplates.logPathTemplate.match(logName).project;
+    return this._pathTemplates.logPathTemplate
+      .match(logName)
+      .project;
   }
 
   /**
@@ -1182,7 +1190,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the log.
    */
   matchLogFromLogName(logName) {
-    return this._pathTemplates.logPathTemplate.match(logName).log;
+    return this._pathTemplates.logPathTemplate
+      .match(logName)
+      .log;
   }
 
   /**
@@ -1193,7 +1203,8 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the organization.
    */
   matchOrganizationFromOrganizationName(organizationName) {
-    return this._pathTemplates.organizationPathTemplate.match(organizationName)
+    return this._pathTemplates.organizationPathTemplate
+      .match(organizationName)
       .organization;
   }
 
@@ -1205,9 +1216,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).organization;
+    return this._pathTemplates.organizationLogPathTemplate
+      .match(organizationLogName)
+      .organization;
   }
 
   /**
@@ -1218,9 +1229,9 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).log;
+    return this._pathTemplates.organizationLogPathTemplate
+      .match(organizationLogName)
+      .log;
   }
 
   /**
@@ -1231,8 +1242,11 @@ class LoggingServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 }
+
 
 module.exports = LoggingServiceV2Client;
