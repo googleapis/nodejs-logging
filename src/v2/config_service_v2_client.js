@@ -69,7 +69,9 @@ class ConfigServiceV2Client {
     const gaxModule = !global.isBrowser && opts.fallback ? gax.fallback : gax;
 
     const servicePath =
-      opts.servicePath || opts.apiEndpoint || this.constructor.servicePath;
+      opts.servicePath ||
+      opts.apiEndpoint ||
+      this.constructor.servicePath;
 
     // Ensure that options include the service address and port.
     opts = Object.assign(
@@ -110,15 +112,11 @@ class ConfigServiceV2Client {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     const protos = gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback ?
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
@@ -137,7 +135,9 @@ class ConfigServiceV2Client {
       exclusionPathTemplate: new gaxModule.PathTemplate(
         'projects/{project}/exclusions/{exclusion}'
       ),
-      folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
+      folderPathTemplate: new gaxModule.PathTemplate(
+        'folders/{folder}'
+      ),
       folderExclusionPathTemplate: new gaxModule.PathTemplate(
         'folders/{folder}/exclusions/{exclusion}'
       ),
@@ -153,7 +153,9 @@ class ConfigServiceV2Client {
       organizationSinkPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}/sinks/{sink}'
       ),
-      projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
+      projectPathTemplate: new gaxModule.PathTemplate(
+        'projects/{project}'
+      ),
       sinkPathTemplate: new gaxModule.PathTemplate(
         'projects/{project}/sinks/{sink}'
       ),
@@ -191,9 +193,9 @@ class ConfigServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.ConfigServiceV2.
     const configServiceV2Stub = gaxGrpc.createStub(
-      opts.fallback
-        ? protos.lookupService('google.logging.v2.ConfigServiceV2')
-        : protos.google.logging.v2.ConfigServiceV2,
+      opts.fallback ?
+        protos.lookupService('google.logging.v2.ConfigServiceV2') :
+        protos.google.logging.v2.ConfigServiceV2,
       opts
     );
 
@@ -375,11 +377,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.listSinks(request, options, callback);
   }
@@ -442,7 +443,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Gets a sink.
@@ -496,11 +497,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      sink_name: request.sinkName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'sink_name': request.sinkName
+      });
 
     return this._innerApiCalls.getSink(request, options, callback);
   }
@@ -582,11 +582,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.createSink(request, options, callback);
   }
@@ -687,11 +686,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      sink_name: request.sinkName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'sink_name': request.sinkName
+      });
 
     return this._innerApiCalls.updateSink(request, options, callback);
   }
@@ -742,11 +740,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      sink_name: request.sinkName,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'sink_name': request.sinkName
+      });
 
     return this._innerApiCalls.deleteSink(request, options, callback);
   }
@@ -849,11 +846,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.listExclusions(request, options, callback);
   }
@@ -916,7 +912,7 @@ class ConfigServiceV2Client {
       request,
       options
     );
-  }
+  };
 
   /**
    * Gets the description of an exclusion.
@@ -970,11 +966,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      name: request.name,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'name': request.name
+      });
 
     return this._innerApiCalls.getExclusion(request, options, callback);
   }
@@ -1043,11 +1038,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'parent': request.parent
+      });
 
     return this._innerApiCalls.createExclusion(request, options, callback);
   }
@@ -1126,11 +1120,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      name: request.name,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'name': request.name
+      });
 
     return this._innerApiCalls.updateExclusion(request, options, callback);
   }
@@ -1179,11 +1172,10 @@ class ConfigServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      name: request.name,
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        'name': request.name
+      });
 
     return this._innerApiCalls.deleteExclusion(request, options, callback);
   }
@@ -1360,7 +1352,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the billing_account.
    */
   matchBillingAccountFromBillingName(billingName) {
-    return this._pathTemplates.billingPathTemplate.match(billingName)
+    return this._pathTemplates.billingPathTemplate
+      .match(billingName)
       .billing_account;
   }
 
@@ -1372,9 +1365,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the billing_account.
    */
   matchBillingAccountFromBillingExclusionName(billingExclusionName) {
-    return this._pathTemplates.billingExclusionPathTemplate.match(
-      billingExclusionName
-    ).billing_account;
+    return this._pathTemplates.billingExclusionPathTemplate
+      .match(billingExclusionName)
+      .billing_account;
   }
 
   /**
@@ -1385,9 +1378,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the exclusion.
    */
   matchExclusionFromBillingExclusionName(billingExclusionName) {
-    return this._pathTemplates.billingExclusionPathTemplate.match(
-      billingExclusionName
-    ).exclusion;
+    return this._pathTemplates.billingExclusionPathTemplate
+      .match(billingExclusionName)
+      .exclusion;
   }
 
   /**
@@ -1398,7 +1391,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the billing_account.
    */
   matchBillingAccountFromBillingSinkName(billingSinkName) {
-    return this._pathTemplates.billingSinkPathTemplate.match(billingSinkName)
+    return this._pathTemplates.billingSinkPathTemplate
+      .match(billingSinkName)
       .billing_account;
   }
 
@@ -1410,7 +1404,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the sink.
    */
   matchSinkFromBillingSinkName(billingSinkName) {
-    return this._pathTemplates.billingSinkPathTemplate.match(billingSinkName)
+    return this._pathTemplates.billingSinkPathTemplate
+      .match(billingSinkName)
       .sink;
   }
 
@@ -1422,7 +1417,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
+    return this._pathTemplates.exclusionPathTemplate
+      .match(exclusionName)
       .project;
   }
 
@@ -1434,7 +1430,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the exclusion.
    */
   matchExclusionFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
+    return this._pathTemplates.exclusionPathTemplate
+      .match(exclusionName)
       .exclusion;
   }
 
@@ -1446,7 +1443,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the folder.
    */
   matchFolderFromFolderName(folderName) {
-    return this._pathTemplates.folderPathTemplate.match(folderName).folder;
+    return this._pathTemplates.folderPathTemplate
+      .match(folderName)
+      .folder;
   }
 
   /**
@@ -1457,9 +1456,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).folder;
+    return this._pathTemplates.folderExclusionPathTemplate
+      .match(folderExclusionName)
+      .folder;
   }
 
   /**
@@ -1470,9 +1469,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).exclusion;
+    return this._pathTemplates.folderExclusionPathTemplate
+      .match(folderExclusionName)
+      .exclusion;
   }
 
   /**
@@ -1483,7 +1482,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+    return this._pathTemplates.folderSinkPathTemplate
+      .match(folderSinkName)
       .folder;
   }
 
@@ -1495,7 +1495,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+    return this._pathTemplates.folderSinkPathTemplate
+      .match(folderSinkName)
       .sink;
   }
 
@@ -1507,7 +1508,8 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the organization.
    */
   matchOrganizationFromOrganizationName(organizationName) {
-    return this._pathTemplates.organizationPathTemplate.match(organizationName)
+    return this._pathTemplates.organizationPathTemplate
+      .match(organizationName)
       .organization;
   }
 
@@ -1519,9 +1521,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the organization.
    */
   matchOrganizationFromOrganizationExclusionName(organizationExclusionName) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).organization;
+    return this._pathTemplates.organizationExclusionPathTemplate
+      .match(organizationExclusionName)
+      .organization;
   }
 
   /**
@@ -1532,9 +1534,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the exclusion.
    */
   matchExclusionFromOrganizationExclusionName(organizationExclusionName) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).exclusion;
+    return this._pathTemplates.organizationExclusionPathTemplate
+      .match(organizationExclusionName)
+      .exclusion;
   }
 
   /**
@@ -1545,9 +1547,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).organization;
+    return this._pathTemplates.organizationSinkPathTemplate
+      .match(organizationSinkName)
+      .organization;
   }
 
   /**
@@ -1558,9 +1560,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).sink;
+    return this._pathTemplates.organizationSinkPathTemplate
+      .match(organizationSinkName)
+      .sink;
   }
 
   /**
@@ -1571,7 +1573,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromProjectName(projectName) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this._pathTemplates.projectPathTemplate
+      .match(projectName)
+      .project;
   }
 
   /**
@@ -1582,7 +1586,9 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the project.
    */
   matchProjectFromSinkName(sinkName) {
-    return this._pathTemplates.sinkPathTemplate.match(sinkName).project;
+    return this._pathTemplates.sinkPathTemplate
+      .match(sinkName)
+      .project;
   }
 
   /**
@@ -1593,8 +1599,11 @@ class ConfigServiceV2Client {
    * @returns {String} - A string representing the sink.
    */
   matchSinkFromSinkName(sinkName) {
-    return this._pathTemplates.sinkPathTemplate.match(sinkName).sink;
+    return this._pathTemplates.sinkPathTemplate
+      .match(sinkName)
+      .sink;
   }
 }
+
 
 module.exports = ConfigServiceV2Client;
