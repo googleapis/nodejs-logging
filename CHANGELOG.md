@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.4...v5.5.5) (2019-11-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eventid to v1 ([#628](https://www.github.com/googleapis/nodejs-logging/issues/628)) ([2128ef1](https://www.github.com/googleapis/nodejs-logging/commit/2128ef195538e8149d32a0c7cbb1ee5723b161d3))
+
 ### [5.5.4](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.3...v5.5.4) (2019-10-25)
 
 
