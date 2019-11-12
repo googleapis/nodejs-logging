@@ -417,7 +417,10 @@ describe('Logging', () => {
 
           getEntriesFromLog(log, (err, entries) => {
             assert.ifError(err);
-            assert.deepStrictEqual(entries!.map(x => x.data), ['3', '2', '1']);
+            assert.deepStrictEqual(
+              entries!.map(x => x.data),
+              ['3', '2', '1']
+            );
             done();
           });
         });
@@ -434,7 +437,10 @@ describe('Logging', () => {
 
       getEntriesFromLog(log, (err, entries) => {
         assert.ifError(err);
-        assert.deepStrictEqual(entries!.reverse().map(x => x.data), messages);
+        assert.deepStrictEqual(
+          entries!.reverse().map(x => x.data),
+          messages
+        );
         done();
       });
     });
