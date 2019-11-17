@@ -59,7 +59,7 @@
     "extend": "^3.0.2",
     "gcp-metadata": "^3.1.0",
     "google-auth-library": "^5.2.2",
-    "google-gax": "^1.7.5",
+    "google-gax": "^1.11.0",
     "is": "^3.3.0",
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.0",
