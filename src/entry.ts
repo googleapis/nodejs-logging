@@ -19,7 +19,7 @@ import {Merge} from 'type-fest';
 const EventId = require('eventid');
 import * as extend from 'extend';
 import * as is from 'is';
-import {google} from '../proto/logging';
+import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
 
 const eventId = new EventId();

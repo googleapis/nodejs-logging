@@ -19,7 +19,7 @@ import {callbackifyAll} from '@google-cloud/promisify';
 import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import {google} from '../proto/logging';
+import {google} from '../protos/protos';
 
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';

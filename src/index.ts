@@ -48,8 +48,7 @@ import {
 } from './log';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
-import {google} from '../proto/logging';
-import {google as google_config} from '../proto/logging_config';
+import {google} from '../protos/protos';
 
 import {Bucket} from '@google-cloud/storage'; // types only
 import {Dataset, BigQuery} from '@google-cloud/bigquery'; // types only
@@ -67,7 +66,7 @@ export interface DeleteCallback {
 
 export type DeleteResponse = google.protobuf.Empty;
 
-export type LogSink = google_config.logging.v2.ILogSink;
+export type LogSink = google.logging.v2.ILogSink;
 
 export interface AbortableDuplex extends Duplex {
   abort(): void;
@@ -80,7 +79,7 @@ export interface CreateSinkRequest {
   filter?: string;
   includeChildren?: boolean;
   name?: string;
-  outputVersionFormat?: google_config.logging.v2.LogSink.VersionFormat;
+  outputVersionFormat?: google.logging.v2.LogSink.VersionFormat;
   gaxOptions?: gax.CallOptions;
 }
 
@@ -114,16 +113,16 @@ export interface GetSinksRequest {
 
 export type GetSinksResponse = [
   Sink[],
-  google_config.logging.v2.IListSinksRequest,
-  google_config.logging.v2.IListSinksResponse
+  google.logging.v2.IListSinksRequest,
+  google.logging.v2.IListSinksResponse
 ];
 
 export interface GetSinksCallback {
   (
     err: Error | null,
     entries?: Sink[],
-    request?: google_config.logging.v2.IListSinksRequest,
-    apiResponse?: google_config.logging.v2.IListSinksResponse
+    request?: google.logging.v2.IListSinksRequest,
+    apiResponse?: google.logging.v2.IListSinksResponse
   ): void;
 }
 export type Client = string;
