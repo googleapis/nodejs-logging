@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [5.5.6](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.5...v5.5.6) (2019-11-25)
+
+
+### Bug Fixes
+
+* **docs:** snippets are now replaced in jsdoc comments ([#634](https://www.github.com/googleapis/nodejs-logging/issues/634)) ([687fc81](https://www.github.com/googleapis/nodejs-logging/commit/687fc815c572adbab2611d3f08f7259bb91de8e6))
+
 ### [5.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.4...v5.5.5) (2019-11-08)
 
 
