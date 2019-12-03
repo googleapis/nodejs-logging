@@ -42,7 +42,9 @@ describe('middleware/express/make-middleware', () => {
   describe('makeMiddleware', () => {
     const {makeMiddleware} = proxyquire(
       '../../../src/middleware/express/make-middleware',
-      {'../context': FAKE_CONTEXT}
+      {
+        '../context': FAKE_CONTEXT,
+      }
     );
 
     it('should return a function accepting 3 arguments', () => {

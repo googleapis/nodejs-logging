@@ -14,6 +14,7 @@ monitor, and alert on log data and events from Google Cloud Platform and Amazon 
 * [Before you begin](#before-you-begin)
 * [Samples](#samples)
   * [Fluent](#fluent)
+  * [Log HTTP Request](#log-http-request)
   * [Logs](#logs)
   * [Quickstart](#quickstart)
   * [Sinks](#sinks)
@@ -37,6 +38,25 @@ __Usage:__
 
 
 `node fluent.js`
+
+
+-----
+
+
+
+
+### Log HTTP Request
+
+Log a message with httpRequest metadata.
+
+View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/http-request.js).
+
+[![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/http-request.js,samples/README.md)
+
+__Usage:__
+
+
+`node http-request my-project-id`
 
 
 -----
