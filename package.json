@@ -30,12 +30,11 @@
     "stackdriver"
   ],
   "scripts": {
-    "test": "c8 mocha build/test/*.js build/test/**/*.js build/test/**/**/*.js",
+    "test": "c8 mocha --recursive ./build/test",
     "docs": "jsdoc -c .jsdoc.js",
     "presystem-test": "npm run compile",
     "system-test": "c8 mocha build/system-test --timeout 600000",
-    "samples-test": "c8 npm run run-samples-tests",
-    "run-samples-tests": "cd samples/ && npm test && cd ../",
+    "samples-test": "cd samples/ && c8 npm test && cd ../",
     "lint": "gts check && eslint '**/*.js'",
     "check": "gts check",
     "clean": "gts clean",
