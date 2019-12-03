@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [5.6.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.5...v5.6.0) (2019-12-03)
+
+
+### Features
+
+* **samples:** add example of including httpRequest metadata in log ([#650](https://www.github.com/googleapis/nodejs-logging/issues/650)) ([e6d293e](https://www.github.com/googleapis/nodejs-logging/commit/e6d293eab1294d4e3434dceade1f45b53060767b))
+
+
+### Bug Fixes
+
+* **docs:** snippets are now replaced in jsdoc comments ([#634](https://www.github.com/googleapis/nodejs-logging/issues/634)) ([687fc81](https://www.github.com/googleapis/nodejs-logging/commit/687fc815c572adbab2611d3f08f7259bb91de8e6))
+
 ### [5.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.4...v5.5.5) (2019-11-08)
 
 
