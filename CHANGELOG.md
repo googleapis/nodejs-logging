@@ -4,6 +4,25 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [6.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.5...v6.0.0) (2019-12-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* properly depend on Long in protos (#640)
+
+### Features
+
+* **samples:** add example of including httpRequest metadata in log ([#650](https://www.github.com/googleapis/nodejs-logging/issues/650)) ([e6d293e](https://www.github.com/googleapis/nodejs-logging/commit/e6d293eab1294d4e3434dceade1f45b53060767b))
+
+
+### Bug Fixes
+
+* properly depend on Long in protos ([#640](https://www.github.com/googleapis/nodejs-logging/issues/640)) ([e22b695](https://www.github.com/googleapis/nodejs-logging/commit/e22b6959f81155989f7507c9450b5a93506bc83a))
+* **deps:** TypeScript 3.7.0 causes breaking change in typings ([#654](https://www.github.com/googleapis/nodejs-logging/issues/654)) ([432fe5d](https://www.github.com/googleapis/nodejs-logging/commit/432fe5d8cf19f4bd6b3e9863fb995db8e35ae8d8))
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.19 ([#644](https://www.github.com/googleapis/nodejs-logging/issues/644)) ([3eaca43](https://www.github.com/googleapis/nodejs-logging/commit/3eaca4367263d6302c3dbd53109c7ed5dd4367d3))
+* **docs:** snippets are now replaced in jsdoc comments ([#634](https://www.github.com/googleapis/nodejs-logging/issues/634)) ([687fc81](https://www.github.com/googleapis/nodejs-logging/commit/687fc815c572adbab2611d3f08f7259bb91de8e6))
+
 ### [5.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.4...v5.5.5) (2019-11-08)
 
 
