@@ -200,10 +200,9 @@ describe('Sink', () => {
       sink.getMetadata = async () => {
         throw error;
       };
-      sink.setMetadata(METADATA).then(
-        () => {},
-        err => assert.strictEqual(err, error)
-      );
+      sink
+        .setMetadata(METADATA)
+        .then(() => {}, err => assert.strictEqual(err, error));
     });
 
     it('should execute gax method', async () => {
