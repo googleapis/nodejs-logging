@@ -627,7 +627,7 @@ describe('Logging', () => {
       );
       assert.strictEqual(
         'my-fake-billing-project',
-        http2spy.requests[0]['x-goog-user-project'][0]
+        http2spy.requests[http2spy.requests.length - 1]['x-goog-user-project'][0]
       );
     });
   });
