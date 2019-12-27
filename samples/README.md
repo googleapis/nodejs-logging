@@ -24,6 +24,12 @@ monitor, and alert on log data and events from Google Cloud Platform and Amazon 
 Before running the samples, make sure you've followed the steps outlined in
 [Using the client library](https://github.com/googleapis/nodejs-logging#using-the-client-library).
 
+`cd samples`
+
+`npm install`
+
+`cd ..`
+
 ## Samples
 
 
@@ -37,7 +43,7 @@ View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/
 __Usage:__
 
 
-`node fluent.js`
+`node samples/fluent.js`
 
 
 -----
@@ -73,7 +79,7 @@ View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/
 __Usage:__
 
 
-`node logs.js`
+`node samples/logs.js`
 
 
 -----
@@ -90,7 +96,7 @@ View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/
 __Usage:__
 
 
-`node quickstart.js`
+`node samples/quickstart.js`
 
 
 -----
@@ -107,7 +113,7 @@ View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/
 __Usage:__
 
 
-`node sinks.js`
+`node samples/sinks.js`
 
 
 
