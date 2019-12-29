@@ -15,6 +15,7 @@
 'use strict';
 
 const {assert} = require('chai');
+const {describe, it} = require('mocha');
 const uuid = require('uuid');
 const {Logging} = require('@google-cloud/logging');
 const cp = require('child_process');

@@ -16,6 +16,7 @@ import {util} from '@google-cloud/common';
 import {CallbackifyAllOptions} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as assert from 'assert';
+import {describe, it} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';

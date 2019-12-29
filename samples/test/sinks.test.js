@@ -17,6 +17,7 @@
 const {Logging} = new require('@google-cloud/logging');
 const {Storage} = new require('@google-cloud/storage');
 const {assert} = require('chai');
+const {describe, it} = require('mocha');
 assert.rejects = require('assert').rejects;
 const cp = require('child_process');
 const uuid = require(`uuid`);

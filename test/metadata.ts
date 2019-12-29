@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as assert from 'assert';
+import {describe, it} from 'mocha';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
 import {GCPEnv} from 'google-auth-library';
