@@ -15,6 +15,7 @@
  */
 
 import * as assert from 'assert';
+import {describe, it} from 'mocha';
 import * as http from 'http';
 import * as proxyquire from 'proxyquire';
 import {makeHeaderWrapper} from '../../src/middleware/context';

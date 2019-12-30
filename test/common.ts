@@ -17,6 +17,7 @@ import {
   ObjectToStructConverterConfig,
 } from '../src/common';
 import * as assert from 'assert';
+import {describe, it} from 'mocha';
 const OPTIONS = {
   maxRetries: 3,
 } as ObjectToStructConverterConfig;

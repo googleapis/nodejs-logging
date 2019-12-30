@@ -17,6 +17,7 @@
 const proxyquire = require('proxyquire');
 const request = require('supertest');
 const {assert} = require('chai');
+const {describe, it} = require('mocha');
 
 describe('fluent', () => {
   it('should log error', done => {

@@ -14,6 +14,7 @@
 
 import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
+import {describe, it} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';

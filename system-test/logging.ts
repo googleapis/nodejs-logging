@@ -18,6 +18,7 @@ import {BigQuery} from '@google-cloud/bigquery';
 import {PubSub} from '@google-cloud/pubsub';
 import {Storage} from '@google-cloud/storage';
 import * as assert from 'assert';
+import {describe, it} from 'mocha';
 import {HOST_ADDRESS} from 'gcp-metadata';
 import * as nock from 'nock';
 import {Duplex} from 'stream';
