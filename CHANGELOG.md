@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [6.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v6.0.0...v6.1.0) (2020-01-06)
+
+
+### Features
+
+* **samples:** increase logging client scope ([#670](https://www.github.com/googleapis/nodejs-logging/issues/670)) ([5f35601](https://www.github.com/googleapis/nodejs-logging/commit/5f356014d72a523fc7061caf7bd0143166af6c91))
+
 ## [6.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.5...v6.0.0) (2019-12-06)
 
 
