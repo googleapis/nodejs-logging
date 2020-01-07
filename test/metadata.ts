@@ -198,10 +198,10 @@ describe('metadata', () => {
 
       const descriptor = await metadata.getGKEDescriptor();
       assert.deepStrictEqual(descriptor, {
-        type: 'container',
+        type: 'k8s_container',
         labels: {
           cluster_name: CLUSTER_NAME,
-          namespace_id: FAKE_READFILE_CONTENTS,
+          namespace_name: FAKE_READFILE_CONTENTS,
         },
       });
     });
@@ -383,10 +383,10 @@ describe('metadata', () => {
 
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
           assert.deepStrictEqual(defaultResource, {
-            type: 'container',
+            type: 'k8s_container',
             labels: {
               cluster_name: CLUSTER_NAME,
-              namespace_id: FAKE_READFILE_CONTENTS,
+              namespace_name: FAKE_READFILE_CONTENTS,
             },
           });
         });

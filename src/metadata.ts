@@ -120,10 +120,10 @@ export async function getGKEDescriptor() {
   }
 
   return {
-    type: 'container',
+    type: 'k8s_container',
     labels: {
       cluster_name: resp,
-      namespace_id: namespace,
+      namespace_name: namespace,
     },
   };
 }

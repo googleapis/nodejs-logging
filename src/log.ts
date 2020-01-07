@@ -812,7 +812,6 @@ class Log implements LogSeverityFunctions {
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
     const self = this;
-
     if (options.resource) {
       if (options.resource.labels) {
         options.resource.labels = snakeCaseKeys(options.resource.labels);
