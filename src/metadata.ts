@@ -119,13 +119,17 @@ export async function getGKEDescriptor() {
     );
   }
 
-  return {
-    type: 'container',
+  const resource = {
+    type: 'k8s_container',
     labels: {
       cluster_name: resp,
-      namespace_id: namespace,
+      namespace_name: namespace,
     },
   };
+  if (process.env.HOSTNAME) {
+    Object.assign(resource.labels, {pod_name: process.env.HOSTNAME});
+  }
+  return resource;
 }
 
 /**

@@ -812,8 +812,6 @@ class Log implements LogSeverityFunctions {
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
     const self = this;
-
-    console.info('ABOUT TO DETECT RESOURCE')
     if (options.resource) {
       if (options.resource.labels) {
         options.resource.labels = snakeCaseKeys(options.resource.labels);
@@ -824,7 +822,6 @@ class Log implements LogSeverityFunctions {
     } else {
       const resource = await getDefaultResource(this.logging.auth);
       this.logging.detectedResource = resource;
-      console.info(JSON.stringify(resource, null, 2));
       return writeWithResource(resource);
     }
     async function writeWithResource(resource: {} | null) {
