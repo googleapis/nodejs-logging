@@ -55,13 +55,13 @@ npm install @google-cloud/logging
 ### Using the client library
 
 ```javascript
+// Imports the Google Cloud client library
+const {Logging} = require('@google-cloud/logging');
+
 async function quickstart(
   projectId = 'YOUR_PROJECT_ID', // Your Google Cloud Platform project ID
   logName = 'my-log' // The name of the log to write to
 ) {
-  // Imports the Google Cloud client library
-  const {Logging} = require('@google-cloud/logging');
-
   // Creates a client
   const logging = new Logging({projectId});
 
