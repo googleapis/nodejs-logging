@@ -54,7 +54,7 @@ import {Bucket} from '@google-cloud/storage'; // types only
 import {Dataset, BigQuery} from '@google-cloud/bigquery'; // types only
 import {Topic} from '@google-cloud/pubsub'; // types only
 
-export interface LoggingOptions extends gax.GoogleAuthOptions {
+export interface LoggingOptions extends gax.GrpcClientOptions {
   autoRetry?: boolean;
   maxRetries?: number;
   apiEndpoint?: string;
