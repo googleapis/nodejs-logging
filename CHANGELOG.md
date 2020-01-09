@@ -4,6 +4,24 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [7.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v6.0.0...v7.0.0) (2020-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* if using GKE, "Kubernetes Container" type is now properly populated, and logs will be grouped accordingly.
+
+### Features
+
+* **samples:** increase logging client scope ([#670](https://www.github.com/googleapis/nodejs-logging/issues/670)) ([5f35601](https://www.github.com/googleapis/nodejs-logging/commit/5f356014d72a523fc7061caf7bd0143166af6c91))
+
+
+### Bug Fixes
+
+* populate k8s_container rather than container ([#674](https://www.github.com/googleapis/nodejs-logging/issues/674)) ([fa32048](https://www.github.com/googleapis/nodejs-logging/commit/fa3204877cf6f6b943950994d49c0f7d7def5096))
+* **docs:** point folks towards the appropriate client instantiation ([091d7dd](https://www.github.com/googleapis/nodejs-logging/commit/091d7dd28d5f50cb0cf274bb370b36cdf612d42a))
+* **types:** extend constructor options from gax ([#676](https://www.github.com/googleapis/nodejs-logging/issues/676)) ([5156538](https://www.github.com/googleapis/nodejs-logging/commit/51565388f25ef16d7ab9c20c1d96e2a4adb78149))
+
 ## [6.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v5.5.5...v6.0.0) (2019-12-06)
 
 
