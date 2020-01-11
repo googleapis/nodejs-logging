@@ -21,6 +21,7 @@ import subprocess
 import os
 
 logging.basicConfig(level=logging.DEBUG)
+s.metadata.set_track_obsolete_files(True)
 
 gapic = gcp.GAPICGenerator()
 # tasks has two product names, and a poorly named artman yaml
