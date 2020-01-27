@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [7.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v7.0.0...v7.0.1) (2020-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency type-fest to ^0.9.0 ([#682](https://www.github.com/googleapis/nodejs-logging/issues/682)) ([e39c401](https://www.github.com/googleapis/nodejs-logging/commit/e39c401513327292c0cb8fef0a2aa9bb4e90287d))
+
 ## [7.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v6.0.0...v7.0.0) (2020-01-09)
 
 
