@@ -1,0 +1,467 @@
+{
+  "updateTime": "2020-01-28T12:25:20.168811Z",
+  "sources": [
+    {
+      "generator": {
+        "name": "artman",
+        "version": "0.44.3",
+        "dockerImage": "googleapis/artman@sha256:62b8b29acaae54b06a4183aa772e65b106e92d4bc466eb4db07953ab78bdb90c"
+      }
+    },
+    {
+      "git": {
+        "name": "googleapis",
+        "remote": "https://github.com/googleapis/googleapis.git",
+        "sha": "8e981acfd9b97ea2f312f11bbaa7b6c16e412dea",
+        "internalRef": "291821782"
+      }
+    },
+    {
+      "template": {
+        "name": "node_library",
+        "origin": "synthtool.gcp",
+        "version": "2019.10.17"
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "client": {
+        "source": "googleapis",
+        "apiName": "logging",
+        "apiVersion": "v2",
+        "language": "nodejs",
+        "generator": "gapic",
+        "config": "google/logging/artman_logging.yaml"
+      }
+    }
+  ],
+  "newFiles": [
+    {
+      "path": ".eslintignore"
+    },
+    {
+      "path": ".eslintrc.yml"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/support_request.md"
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "path": ".github/release-please.yml"
+    },
+    {
+      "path": ".gitignore"
+    },
+    {
+      "path": ".jsdoc.js"
+    },
+    {
+      "path": ".kokoro/.gitattributes"
+    },
+    {
+      "path": ".kokoro/common.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node10/common.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node10/docs.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node10/lint.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node10/samples-test.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node10/system-test.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node10/test.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node12/common.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node12/test.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node8/common.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/node8/test.cfg"
+    },
+    {
+      "path": ".kokoro/docs.sh"
+    },
+    {
+      "path": ".kokoro/lint.sh"
+    },
+    {
+      "path": ".kokoro/presubmit/node10/common.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node10/docs.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node10/lint.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node10/samples-test.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node10/system-test.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node10/test.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node12/common.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node12/test.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node8/common.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/node8/test.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/windows/common.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/windows/test.cfg"
+    },
+    {
+      "path": ".kokoro/publish.sh"
+    },
+    {
+      "path": ".kokoro/release/common.cfg"
+    },
+    {
+      "path": ".kokoro/release/docs.cfg"
+    },
+    {
+      "path": ".kokoro/release/docs.sh"
+    },
+    {
+      "path": ".kokoro/release/publish.cfg"
+    },
+    {
+      "path": ".kokoro/samples-test.sh"
+    },
+    {
+      "path": ".kokoro/system-test.sh"
+    },
+    {
+      "path": ".kokoro/test.bat"
+    },
+    {
+      "path": ".kokoro/test.sh"
+    },
+    {
+      "path": ".kokoro/trampoline.sh"
+    },
+    {
+      "path": ".nycrc"
+    },
+    {
+      "path": ".prettierignore"
+    },
+    {
+      "path": ".prettierrc"
+    },
+    {
+      "path": ".readme-partials.yml"
+    },
+    {
+      "path": ".repo-metadata.json"
+    },
+    {
+      "path": "CHANGELOG.md"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md"
+    },
+    {
+      "path": "CONTRIBUTING.md"
+    },
+    {
+      "path": "LICENSE"
+    },
+    {
+      "path": "README.md"
+    },
+    {
+      "path": "codecov.yaml"
+    },
+    {
+      "path": "linkinator.config.json"
+    },
+    {
+      "path": "package.json"
+    },
+    {
+      "path": "protos/google/logging/type/http_request.proto"
+    },
+    {
+      "path": "protos/google/logging/type/log_severity.proto"
+    },
+    {
+      "path": "protos/google/logging/v2/log_entry.proto"
+    },
+    {
+      "path": "protos/google/logging/v2/logging.proto"
+    },
+    {
+      "path": "protos/google/logging/v2/logging_config.proto"
+    },
+    {
+      "path": "protos/google/logging/v2/logging_metrics.proto"
+    },
+    {
+      "path": "protos/protos.d.ts"
+    },
+    {
+      "path": "protos/protos.js"
+    },
+    {
+      "path": "protos/protos.json"
+    },
+    {
+      "path": "renovate.json"
+    },
+    {
+      "path": "samples/.eslintrc.yml"
+    },
+    {
+      "path": "samples/README.md"
+    },
+    {
+      "path": "samples/fluent.js"
+    },
+    {
+      "path": "samples/http-request.js"
+    },
+    {
+      "path": "samples/logs.js"
+    },
+    {
+      "path": "samples/package.json"
+    },
+    {
+      "path": "samples/quickstart.js"
+    },
+    {
+      "path": "samples/sinks.js"
+    },
+    {
+      "path": "samples/test/fluent.test.js"
+    },
+    {
+      "path": "samples/test/http-request.test.js"
+    },
+    {
+      "path": "samples/test/logs.test.js"
+    },
+    {
+      "path": "samples/test/quickstart.test.js"
+    },
+    {
+      "path": "samples/test/sinks.test.js"
+    },
+    {
+      "path": "smoke-test/.eslintrc.yml"
+    },
+    {
+      "path": "smoke-test/logging_service_v2_smoke_test.js"
+    },
+    {
+      "path": "src/common.ts"
+    },
+    {
+      "path": "src/entry.ts"
+    },
+    {
+      "path": "src/http-request.ts"
+    },
+    {
+      "path": "src/index.ts"
+    },
+    {
+      "path": "src/log.ts"
+    },
+    {
+      "path": "src/metadata.ts"
+    },
+    {
+      "path": "src/middleware/context.ts"
+    },
+    {
+      "path": "src/middleware/express/index.ts"
+    },
+    {
+      "path": "src/middleware/express/make-http-request.ts"
+    },
+    {
+      "path": "src/middleware/express/make-middleware.ts"
+    },
+    {
+      "path": "src/middleware/index.ts"
+    },
+    {
+      "path": "src/service_proto_list.json"
+    },
+    {
+      "path": "src/sink.ts"
+    },
+    {
+      "path": "src/v2/.eslintrc.yml"
+    },
+    {
+      "path": "src/v2/config_service_v2_client.js"
+    },
+    {
+      "path": "src/v2/config_service_v2_client_config.json"
+    },
+    {
+      "path": "src/v2/config_service_v2_proto_list.json"
+    },
+    {
+      "path": "src/v2/doc/google/api/doc_distribution.js"
+    },
+    {
+      "path": "src/v2/doc/google/api/doc_label.js"
+    },
+    {
+      "path": "src/v2/doc/google/api/doc_metric.js"
+    },
+    {
+      "path": "src/v2/doc/google/api/doc_monitored_resource.js"
+    },
+    {
+      "path": "src/v2/doc/google/logging/type/doc_http_request.js"
+    },
+    {
+      "path": "src/v2/doc/google/logging/v2/doc_log_entry.js"
+    },
+    {
+      "path": "src/v2/doc/google/logging/v2/doc_logging.js"
+    },
+    {
+      "path": "src/v2/doc/google/logging/v2/doc_logging_config.js"
+    },
+    {
+      "path": "src/v2/doc/google/logging/v2/doc_logging_metrics.js"
+    },
+    {
+      "path": "src/v2/doc/google/protobuf/doc_any.js"
+    },
+    {
+      "path": "src/v2/doc/google/protobuf/doc_duration.js"
+    },
+    {
+      "path": "src/v2/doc/google/protobuf/doc_empty.js"
+    },
+    {
+      "path": "src/v2/doc/google/protobuf/doc_field_mask.js"
+    },
+    {
+      "path": "src/v2/doc/google/protobuf/doc_struct.js"
+    },
+    {
+      "path": "src/v2/doc/google/protobuf/doc_timestamp.js"
+    },
+    {
+      "path": "src/v2/index.js"
+    },
+    {
+      "path": "src/v2/logging_service_v2_client.js"
+    },
+    {
+      "path": "src/v2/logging_service_v2_client_config.json"
+    },
+    {
+      "path": "src/v2/logging_service_v2_proto_list.json"
+    },
+    {
+      "path": "src/v2/metrics_service_v2_client.js"
+    },
+    {
+      "path": "src/v2/metrics_service_v2_client_config.json"
+    },
+    {
+      "path": "src/v2/metrics_service_v2_proto_list.json"
+    },
+    {
+      "path": "synth.py"
+    },
+    {
+      "path": "system-test/fixtures/sample/package.json"
+    },
+    {
+      "path": "system-test/fixtures/sample/src/index.ts"
+    },
+    {
+      "path": "system-test/fixtures/sample/tsconfig.json"
+    },
+    {
+      "path": "system-test/install.ts"
+    },
+    {
+      "path": "system-test/logging.ts"
+    },
+    {
+      "path": "test/.eslintrc.yml"
+    },
+    {
+      "path": "test/common.ts"
+    },
+    {
+      "path": "test/entry.ts"
+    },
+    {
+      "path": "test/gapic-v2.js"
+    },
+    {
+      "path": "test/index.ts"
+    },
+    {
+      "path": "test/log.ts"
+    },
+    {
+      "path": "test/metadata.ts"
+    },
+    {
+      "path": "test/middleware/express/test-make-http-request.ts"
+    },
+    {
+      "path": "test/middleware/express/test-make-middleware.ts"
+    },
+    {
+      "path": "test/middleware/test-context.ts"
+    },
+    {
+      "path": "test/mocha.opts"
+    },
+    {
+      "path": "test/sink.ts"
+    },
+    {
+      "path": "tsconfig.json"
+    },
+    {
+      "path": "tslint.json"
+    }
+  ]
+}
