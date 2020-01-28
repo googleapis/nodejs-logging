@@ -349,6 +349,28 @@ describe('Logging', () => {
         await logging.createSink(SINK_NAME, config);
       });
 
+      it('should accept uniqueWriterIdentity', async () => {
+        const config = {
+          destination: '...',
+          uniqueWriterIdentity: '...',
+        };
+
+        logging.configService.createSink = async (
+          // tslint:disable-next-line no-any
+          reqOpts: any,
+          gaxOpts: {}
+        ) => {
+          assert.strictEqual(
+            reqOpts.uniqueWriterIdentity,
+            config.uniqueWriterIdentity
+          );
+          assert.strictEqual(reqOpts.sink.uniqueWriterIdentity, undefined);
+          return [{}];
+        };
+
+        await logging.createSink(SINK_NAME, config);
+      });
+
       it('should accept GAX options', async () => {
         const config = ({
           a: 'b',
