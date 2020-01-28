@@ -23,6 +23,8 @@ import * as through from 'through2';
 import {
   Logging as LOGGING,
   LoggingOptions,
+  GetLogsRequest,
+  Log,
   CreateSinkRequest,
   GetSinksRequest,
   Sink,
@@ -51,7 +53,7 @@ const fakePaginator = {
       }
       extended = true;
       methods = arrify(methods);
-      assert.deepStrictEqual(methods, ['getEntries', 'getSinks']);
+      assert.deepStrictEqual(methods, ['getEntries', 'getLogs', 'getSinks']);
     },
     streamify(methodName: string) {
       return methodName;
@@ -790,6 +792,177 @@ describe('Logging', () => {
       assert.doesNotThrow(() => {
         const stream = logging.getEntriesStream();
         stream.emit('reading');
+      });
+    });
+  });
+
+  describe('getLogs', () => {
+    beforeEach(() => {
+      (logging.auth.getProjectId as Function) = async () => {};
+    });
+    const OPTIONS = {
+      a: 'b',
+      c: 'd',
+      gaxOptions: {
+        a: 'b',
+        c: 'd',
+      },
+    } as GetLogsRequest;
+
+    it('should exec without options', async () => {
+      logging.loggingService.listLogs = async (reqOpts: {}, gaxOpts: {}) => {
+        assert.deepStrictEqual(gaxOpts, {autoPaginate: undefined});
+        return [[]];
+      };
+      await logging.getLogs();
+    });
+
+    it('should call gax method', async () => {
+      logging.loggingService.listLogs = async (reqOpts: {}, gaxOpts: {}) => {
+        assert.deepStrictEqual(reqOpts, {
+          parent: 'projects/' + logging.projectId,
+          a: 'b',
+          c: 'd',
+        });
+
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+          a: 'b',
+          c: 'd',
+        });
+
+        return [[]];
+      };
+
+      await logging.getLogs(OPTIONS);
+    });
+
+    describe('error', () => {
+      it('should reject promise with error', () => {
+        const error = new Error('Error.');
+        logging.loggingService.listLogs = async () => {
+          throw error;
+        };
+        logging
+          .getLogs(OPTIONS)
+          .then(noop, err => assert.strictEqual(err, error));
+      });
+    });
+
+    describe('success', () => {
+      const RESPONSE = ['log1'];
+
+      beforeEach(() => {
+        logging.loggingService.listLogs = async () => {
+          return [RESPONSE];
+        };
+      });
+
+      it('should resolve promise with Logs & API resp', async () => {
+        const logInstance = {} as Log;
+        logging.log = name => {
+          assert.strictEqual(name, RESPONSE[0]);
+          return logInstance;
+        };
+        const [logs] = await logging.getLogs(OPTIONS);
+        assert.strictEqual(logs[0], logInstance);
+      });
+    });
+  });
+
+  describe('getLogsStream', () => {
+    const OPTIONS = {
+      a: 'b',
+      c: 'd',
+      gaxOptions: {
+        a: 'b',
+        c: 'd',
+      },
+    } as GetLogsRequest;
+
+    let GAX_STREAM: AbortableDuplex;
+    const RESPONSE = ['log1'];
+
+    beforeEach(() => {
+      GAX_STREAM = (through.obj() as {}) as AbortableDuplex;
+      GAX_STREAM.push(RESPONSE[0]);
+      logging.loggingService.listLogsStream = () => GAX_STREAM;
+      (logging.auth.getProjectId as Function) = async () => {};
+    });
+
+    it('should make request once reading', done => {
+      logging.loggingService.listLogsStream = (reqOpts: {}, gaxOpts: {}) => {
+        assert.deepStrictEqual(reqOpts, {
+          parent: 'projects/' + logging.projectId,
+          a: 'b',
+          c: 'd',
+        });
+
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+          a: 'b',
+          c: 'd',
+        });
+
+        setImmediate(done);
+
+        return GAX_STREAM;
+      };
+
+      const stream = logging.getLogsStream(OPTIONS);
+      stream.emit('reading');
+    });
+
+    it('should destroy request stream if gax fails', done => {
+      const error = new Error('Error.');
+      logging.loggingService.listLogsStream = () => {
+        throw error;
+      };
+      const stream = logging.getLogsStream(OPTIONS);
+      stream.emit('reading');
+      stream.once('error', err => {
+        assert.strictEqual(err, error);
+        done();
+      });
+    });
+
+    it('should destroy request stream if gaxStream catches error', done => {
+      const error = new Error('Error.');
+      const stream = logging.getLogsStream(OPTIONS);
+      stream.emit('reading');
+      stream.on('error', err => {
+        assert.strictEqual(err, error);
+        done();
+      });
+      setImmediate(() => {
+        GAX_STREAM.emit('error', error);
+      });
+    });
+
+    it('should convert results from request to Log', done => {
+      const stream = logging.getLogsStream(OPTIONS);
+
+      const logInstance = {} as Log;
+
+      logging.log = (name: string) => {
+        assert.strictEqual(name, RESPONSE[0]);
+        return logInstance;
+      };
+
+      stream.on('data', log => {
+        assert.strictEqual(log, logInstance);
+        done();
+      });
+
+      stream.emit('reading');
+    });
+
+    it('should expose abort function', done => {
+      GAX_STREAM.cancel = done;
+      const stream = logging.getLogsStream(OPTIONS) as AbortableDuplex;
+      stream.emit('reading');
+      setImmediate(() => {
+        stream.abort();
       });
     });
   });

@@ -103,6 +103,30 @@ export interface GetEntriesCallback {
   ): void;
 }
 
+export interface GetLogsRequest {
+  autoPaginate?: boolean;
+  gaxOptions?: gax.CallOptions;
+  maxApiCalls?: number;
+  maxResults?: number;
+  pageSize?: number;
+  pageToken?: string;
+}
+
+export type GetLogsResponse = [
+  Sink[],
+  google.logging.v2.IListLogsRequest,
+  google.logging.v2.IListLogsResponse
+];
+
+export interface GetLogsCallback {
+  (
+    err: Error | null,
+    entries?: Sink[],
+    request?: google.logging.v2.IListLogsRequest,
+    apiResponse?: google.logging.v2.IListLogsResponse
+  ): void;
+}
+
 export interface GetSinksRequest {
   autoPaginate?: boolean;
   gaxOptions?: gax.CallOptions;
@@ -678,6 +702,186 @@ class Logging {
   }
 
   /**
+   * Query object for listing entries.
+   *
+   * @typedef {object} GetLogsRequest
+   * @property {boolean} [autoPaginate=true] Have pagination handled
+   *     automatically.
+   * @property {object} [gaxOptions] Request configuration options, outlined
+   *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+   * @property {number} [maxApiCalls] Maximum number of API calls to make.
+   * @property {number} [maxResults] Maximum number of items plus prefixes to
+   *     return.
+   * @property {number} [pageSize] Maximum number of logs to return.
+   * @property {string} [pageToken] A previously-returned page token
+   *     representing part of the larger set of results to view.
+   */
+  /**
+   * @typedef {array} GetLogsResponse
+   * @property {Log[]} 0 Array of {@link Log} instances.
+   * @property {object} 1 The full API response.
+   */
+  /**
+   * @callback GetLogsCallback
+   * @param {?Error} err Request error, if any.
+   * @param {Log[]} logs Array of {@link Log} instances.
+   * @param {object} apiResponse The full API response.
+   */
+  /**
+   * List the entries in your logs.
+   *
+   * @see [logs.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/logs/list}
+   *
+   * @param {GetLogsRequest} [query] Query object for listing entries.
+   * @param {GetLogsCallback} [callback] Callback function.
+   * @returns {Promise<GetLogsResponse>}
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   *
+   * logging.getLogs((err, logs) => {
+   *   // `logs` is an array of Stackdriver Logging log objects.
+   * });
+   *
+   * //-
+   * // To control how many API requests are made and page through the results
+   * // manually, set `autoPaginate` to `false`.
+   * //-
+   * function callback(err, entries, nextQuery, apiResponse) {
+   *   if (nextQuery) {
+   *     // More results exist.
+   *     logging.getLogs(nextQuery, callback);
+   *   }
+   * }
+   *
+   * logging.getLogs({
+   *   autoPaginate: false
+   * }, callback);
+   *
+   * //-
+   * // If the callback is omitted, we'll return a Promise.
+   * //-
+   * logging.getLogs().then(data => {
+   *   const entries = data[0];
+   * });
+   *
+   * @example <caption>include:samples/logs.js</caption>
+   * region_tag:logging_list_logs
+   * Another example:
+   */
+  getLogs(options?: GetLogsRequest): Promise<GetLogsResponse>;
+  getLogs(callback: GetLogsCallback): void;
+  getLogs(options: GetLogsRequest, callback: GetLogsCallback): void;
+  async getLogs(
+    opts?: GetLogsRequest | GetLogsCallback
+  ): Promise<GetLogsResponse> {
+    const options = opts ? (opts as GetSinksRequest) : {};
+    this.projectId = await this.auth.getProjectId();
+    const reqOpts = extend({}, options, {
+      parent: 'projects/' + this.projectId,
+    });
+    delete reqOpts.autoPaginate;
+    delete reqOpts.gaxOptions;
+    const gaxOptions = extend(
+      {
+        autoPaginate: options.autoPaginate,
+      },
+      options.gaxOptions
+    );
+    const resp = await this.loggingService.listLogs(reqOpts, gaxOptions);
+    const [logs] = resp;
+    if (logs) {
+      resp[0] = logs.map((logName: string) => this.log(logName));
+    }
+    return resp;
+  }
+
+  /**
+   * List the {@link Log} objects in your project as a readable object stream.
+   *
+   * @method Logging#getLogsStream
+   * @param {GetLogsRequest} [query] Query object for listing entries.
+   * @returns {ReadableStream} A readable stream that emits {@link Log}
+   *     instances.
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   *
+   * logging.getLogsStream()
+   *   .on('error', console.error)
+   *   .on('data', log => {
+   *     // `log` is a Stackdriver Logging log object.
+   *   })
+   *   .on('end', function() {
+   *     // All logs retrieved.
+   *   });
+   *
+   * //-
+   * // If you anticipate many results, you can end a stream early to prevent
+   * // unnecessary processing and API requests.
+   * //-
+   * logging.getLogsStream()
+   *   .on('data', log => {
+   *     this.end();
+   *   });
+   */
+  getLogsStream(options: GetLogsRequest = {}) {
+    options = options || {};
+    let requestStream: Duplex;
+    const userStream = streamEvents<Duplex>(pumpify.obj());
+    (userStream as AbortableDuplex).abort = () => {
+      if (requestStream) {
+        (requestStream as AbortableDuplex).abort();
+      }
+    };
+    const toLogStream = through.obj((logName, _, next) => {
+      next(null, this.log(logName));
+    });
+    userStream.once('reading', () => {
+      this.auth.getProjectId().then(projectId => {
+        this.projectId = projectId;
+        const reqOpts = extend({}, options, {
+          parent: 'projects/' + this.projectId,
+        });
+        delete reqOpts.gaxOptions;
+        const gaxOptions = extend(
+          {
+            autoPaginate: options.autoPaginate,
+          },
+          options.gaxOptions
+        );
+
+        let gaxStream: ClientReadableStream<Log>;
+        requestStream = streamEvents<Duplex>(through.obj());
+        (requestStream as AbortableDuplex).abort = () => {
+          if (gaxStream && gaxStream.cancel) {
+            gaxStream.cancel();
+          }
+        };
+        requestStream.once('reading', () => {
+          try {
+            gaxStream = this.loggingService.listLogsStream(reqOpts, gaxOptions);
+          } catch (error) {
+            requestStream.destroy(error);
+            return;
+          }
+          gaxStream
+            .on('error', err => {
+              requestStream.destroy(err);
+            })
+            .pipe(requestStream);
+          return;
+        });
+        // tslint:disable-next-line no-any
+        (userStream as any).setPipeline(requestStream, toLogStream);
+      });
+    });
+    return userStream;
+  }
+
+  /**
    * Query object for listing sinks.
    *
    * @typedef {object} GetSinksRequest
@@ -1067,7 +1271,7 @@ callbackifyAll(Logging, {
  *
  * These methods can be auto-paginated.
  */
-paginator.extend(Logging, ['getEntries', 'getSinks']);
+paginator.extend(Logging, ['getEntries', 'getLogs', 'getSinks']);
 
 /**
  * {@link Entry} class.

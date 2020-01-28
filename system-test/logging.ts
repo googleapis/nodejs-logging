@@ -34,7 +34,7 @@ nock(HOST_ADDRESS)
 
 describe('Logging', () => {
   let PROJECT_ID: string;
-  const TESTS_PREFIX = 'gcloud-logging-test';
+  const TESTS_PREFIX = 'ndoejs-logging-system-test';
   const WRITE_CONSISTENCY_DELAY_MS = 5000;
 
   const bigQuery = new BigQuery();
@@ -67,6 +67,7 @@ describe('Logging', () => {
       deleteDatasets(),
       deleteTopics(),
       deleteSinks(),
+      deleteLogs(),
     ]);
 
     async function deleteBuckets() {
@@ -95,6 +96,20 @@ describe('Logging', () => {
 
     async function deleteSinks() {
       await getAndDelete(logging.getSinks.bind(logging));
+    }
+
+    async function deleteLogs() {
+      const [logs] = await logging.getLogs();
+      const logsToDelete = logs.filter(log => {
+        return (
+          log.name.includes(TESTS_PREFIX) &&
+          getDateFromGeneratedName(log.name) < oneHourAgo
+        );
+      });
+
+      for (const log of logsToDelete) {
+        await log.delete();
+      }
     }
 
     async function getAndDelete(method: Function) {
@@ -210,14 +225,8 @@ describe('Logging', () => {
   });
 
   describe('logs', () => {
-    // tslint:disable-next-line no-any
-    const logs: any[] = [];
-
     function getTestLog(loggingInstnce = null) {
-      const log = (loggingInstnce || logging).log(
-        `system-test-logs-${uuid.v4()}`
-      );
-      logs.push(log);
+      const log = (loggingInstnce || logging).log(generateName());
 
       const logEntries = [
         // string data
@@ -281,29 +290,26 @@ describe('Logging', () => {
       },
     };
 
-    after(async () => {
-      for (const log of logs) {
-        // attempt to delete log entries multiple times, as they can
-        // take a variable amount of time to write to the API:
-        let retries = 0;
-        while (retries < 3) {
-          try {
-            await log.delete();
-          } catch (_err) {
-            if (_err.code === 5) {
-              break;
-            }
-            retries++;
-            console.warn(
-              `delete of ${log.name} failed retries = ${retries}`,
-              _err.message
-            );
-            await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
-            continue;
-          }
-          break;
-        }
-      }
+    describe('listing logs', () => {
+      before(async () => {
+        const {log, logEntries} = getTestLog();
+        await log.write(logEntries, options);
+      });
+
+      it('should list logs', async () => {
+        const [logs] = await logging.getLogs();
+        assert(logs.length > 0);
+      });
+
+      it('should list logs as a stream', done => {
+        const stream: Duplex = logging
+          .getLogsStream({pageSize: 1})
+          .on('error', done)
+          .once('data', () => {
+            stream.end();
+            done();
+          });
+      });
     });
 
     it('should list log entries', done => {

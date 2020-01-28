@@ -88,6 +88,23 @@ async function writeLogEntryAdvanced(logName, options) {
   // [END logging_write_log_entry_advanced]
 }
 
+async function listLogs() {
+  // [START logging_list_logs]
+  // Imports the Google Cloud client library
+  const {Logging} = require('@google-cloud/logging');
+
+  // Creates a client
+  const logging = new Logging();
+
+  const [logs] = await logging.getLogs();
+  console.log('Logs:');
+  logs.forEach(log => {
+    console.log(log.name);
+  });
+
+  // [END logging_list_logs]
+}
+
 async function listLogEntries(logName) {
   // [START logging_list_log_entries]
   // Imports the Google Cloud client library
@@ -208,6 +225,7 @@ async function main() {
         listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
       }
     )
+    .command('list-logs', 'Lists logs in your project.', {}, listLogs)
     .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
       listLogEntries(opts.logName)
     )
