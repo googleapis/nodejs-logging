@@ -80,6 +80,7 @@ export interface CreateSinkRequest {
   includeChildren?: boolean;
   name?: string;
   outputVersionFormat?: google.logging.v2.LogSink.VersionFormat;
+  uniqueWriterIdentity?: string;
   gaxOptions?: gax.CallOptions;
 }
 
@@ -295,6 +296,8 @@ class Logging {
    * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
    * @property {string} [filter] An advanced logs filter. Only log entries
    *     matching the filter are written.
+   * @property {string} [uniqueWriterIdentity] Determines the kind of IAM
+   *     identity returned as `writerIdentity` in the new sink. See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create#query-parameters}.
    */
   /**
    * @typedef {array} CreateSinkResponse
@@ -382,8 +385,10 @@ class Logging {
     const reqOpts = {
       parent: 'projects/' + this.projectId,
       sink: extend({}, config, {name}),
+      uniqueWriterIdentity: config.uniqueWriterIdentity,
     };
     delete reqOpts.sink.gaxOptions;
+    delete reqOpts.sink.uniqueWriterIdentity;
     await this.setProjectId(reqOpts);
     const [resp] = await this.configService.createSink(
       reqOpts,
