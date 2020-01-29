@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [7.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.0.1...v7.1.0) (2020-01-29)
+
+
+### Features
+
+* support uniqueWriterIdentity in Sink.create ([#686](https://www.github.com/googleapis/nodejs-logging/issues/686)) ([41c0346](https://www.github.com/googleapis/nodejs-logging/commit/41c0346199c2afba8a00b434f0eda886ebbaa5fa))
+
+
+### Bug Fixes
+
+* enum, bytes, and Long types now accept strings ([6605067](https://www.github.com/googleapis/nodejs-logging/commit/6605067b6570983b9fcedc1e971663795e6bc11d))
+
 ### [7.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v7.0.0...v7.0.1) (2020-01-24)
 
 
