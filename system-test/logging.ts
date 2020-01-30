@@ -290,8 +290,14 @@ describe('Logging', () => {
           try {
             await log.delete();
           } catch (_err) {
+            if (_err.code === 5) {
+              break;
+            }
             retries++;
-            console.warn(`delete of ${log.name} failed retries = ${retries}`);
+            console.warn(
+              `delete of ${log.name} failed retries = ${retries}`,
+              _err.message
+            );
             await new Promise(r => setTimeout(r, WRITE_CONSISTENCY_DELAY_MS));
             continue;
           }
