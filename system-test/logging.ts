@@ -34,7 +34,7 @@ nock(HOST_ADDRESS)
 
 describe('Logging', () => {
   let PROJECT_ID: string;
-  const TESTS_PREFIX = 'ndoejs-logging-system-test';
+  const TESTS_PREFIX = 'nodejs-logging-system-test';
   const WRITE_CONSISTENCY_DELAY_MS = 5000;
 
   const bigQuery = new BigQuery();
