@@ -72,7 +72,7 @@
     "@google-cloud/storage": "^4.0.0",
     "@types/extend": "^3.0.0",
     "@types/is": "0.0.21",
-    "@types/mocha": "^5.2.5",
+    "@types/mocha": "^7.0.0",
     "@types/mv": "^2.1.0",
     "@types/ncp": "^2.0.1",
     "@types/on-finished": "^2.3.1",
