@@ -96,14 +96,14 @@ async function listLogs() {
   // Creates a client
   const logging = new Logging();
 
-  async function listLogs() {
+  async function printLogNames() {
     const [logs] = await logging.getLogs();
     console.log('Logs:');
     logs.forEach(log => {
       console.log(log.name);
     });
   }
-  listLogs();
+  printLogNames();
   // [END logging_list_logs]
 }
 
