@@ -50,11 +50,13 @@ async function writeLogEntry(logName) {
     }
   );
 
-  // Save the two log entries. You can write entries one at a time, but it is
-  // best to write multiple entires together in a batch.
-  await log.write([entry, secondEntry]);
-  console.log(`Wrote to ${logName}`);
-
+  async function writeLogEntry() {
+    // Save the two log entries. You can write entries one at a time, but it is
+    // best to write multiple entires together in a batch.
+    await log.write([entry, secondEntry]);
+    console.log(`Wrote to ${logName}`);
+  }
+  writeLogEntry();
   // [END logging_write_log_entry]
 }
 
@@ -80,11 +82,13 @@ async function writeLogEntryAdvanced(logName, options) {
   // Prepare the entry
   const entry = log.entry({resource: options.resource}, options.entry);
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=write
-  await log.write(entry);
-  console.log(`Wrote to ${logName}`);
-
+  async function writeLogEntry() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=write
+    await log.write(entry);
+    console.log(`Wrote to ${logName}`);
+  }
+  writeLogEntry();
   // [END logging_write_log_entry_advanced]
 }
 
@@ -122,16 +126,18 @@ async function listLogEntries(logName) {
 
   const log = logging.log(logName);
 
-  // List the most recent entries for a given log
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
-  const [entries] = await log.getEntries();
-  console.log('Logs:');
-  entries.forEach(entry => {
-    const metadata = entry.metadata;
-    console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
-  });
-
+  async function printEntryMetadata() {
+    // List the most recent entries for a given log
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
+    const [entries] = await log.getEntries();
+    console.log('Logs:');
+    entries.forEach(entry => {
+      const metadata = entry.metadata;
+      console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
+    });
+  }
+  printEntryMetadata();
   // [END logging_list_log_entries]
 }
 
@@ -160,15 +166,17 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
     orderBy: orderBy,
   };
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
-  const [entries] = await logging.getEntries(options);
-  console.log('Logs:');
-  entries.forEach(entry => {
-    const metadata = entry.metadata;
-    console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
-  });
-
+  async function printEntryMetadata() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
+    const [entries] = await logging.getEntries(options);
+    console.log('Logs:');
+    entries.forEach(entry => {
+      const metadata = entry.metadata;
+      console.log(`${metadata.timestamp}:`, metadata[metadata.payload]);
+    });
+  }
+  printEntryMetadata();
   // [START logging_list_log_entries_advanced]
 }
 
@@ -187,13 +195,15 @@ async function deleteLog(logName) {
 
   const log = logging.log(logName);
 
-  // Deletes a logger and all its entries.
-  // Note that a deletion can take several minutes to take effect.
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=delete
-  await log.delete();
-  console.log(`Deleted log: ${logName}`);
-
+  async function deleteLog() {
+    // Deletes a logger and all its entries.
+    // Note that a deletion can take several minutes to take effect.
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=delete
+    await log.delete();
+    console.log(`Deleted log: ${logName}`);
+  }
+  deleteLog();
   // [END logging_delete_log]
 }
 

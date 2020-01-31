@@ -50,11 +50,13 @@ async function createSink(sinkName, bucketName, filter) {
     filter: filter,
   };
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=create
-  await sink.create(config);
-  console.log(`Created sink ${sinkName} to ${bucketName}`);
-
+  async function createSink() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=create
+    await sink.create(config);
+    console.log(`Created sink ${sinkName} to ${bucketName}`);
+  }
+  createSink();
   // [END logging_create_sink]
 }
 
@@ -73,13 +75,15 @@ async function getSinkMetadata(sinkName) {
 
   const sink = logging.sink(sinkName);
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=getMetadata
-  const [metadata] = await sink.getMetadata();
-  console.log(`Name: ${metadata.name}`);
-  console.log(`Destination: ${metadata.destination}`);
-  console.log(`Filter: ${metadata.filter}`);
-
+  async function printSinkMetadata() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=getMetadata
+    const [metadata] = await sink.getMetadata();
+    console.log(`Name: ${metadata.name}`);
+    console.log(`Destination: ${metadata.destination}`);
+    console.log(`Filter: ${metadata.filter}`);
+  }
+  printSinkMetadata();
   // [END logging_get_sink]
 }
 
@@ -91,16 +95,18 @@ async function listSinks() {
   // Creates a client
   const logging = new Logging();
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getSinks
-  const [sinks] = await logging.getSinks();
-  console.log('Sinks:');
-  sinks.forEach(sink => {
-    console.log(sink.name);
-    console.log(`  Destination: ${sink.metadata.destination}`);
-    console.log(`  Filter: ${sink.metadata.filter}`);
-  });
-
+  async function printSinkMetadata() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getSinks
+    const [sinks] = await logging.getSinks();
+    console.log('Sinks:');
+    sinks.forEach(sink => {
+      console.log(sink.name);
+      console.log(`  Destination: ${sink.metadata.destination}`);
+      console.log(`  Filter: ${sink.metadata.filter}`);
+    });
+  }
+  printSinkMetadata();
   // [END logging_list_sinks]
 }
 
@@ -131,11 +137,13 @@ async function updateSink(sinkName, filter) {
     filter: filter,
   };
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=setMetadata
-  const [metadata] = await sink.setMetadata(metadataInfo);
-  console.log(`Sink ${sinkName} updated.`, metadata);
-
+  async function updateSink() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=setMetadata
+    const [metadata] = await sink.setMetadata(metadataInfo);
+    console.log(`Sink ${sinkName} updated.`, metadata);
+  }
+  updateSink();
   // [END logging_update_sink]
 }
 
@@ -154,11 +162,13 @@ async function deleteSink(sinkName) {
 
   const sink = logging.sink(sinkName);
 
-  // See
-  // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=delete
-  await sink.delete();
-  console.log(`Sink ${sinkName} deleted.`);
-
+  async function deleteSink() {
+    // See
+    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=delete
+    await sink.delete();
+    console.log(`Sink ${sinkName} deleted.`);
+  }
+  deleteSink();
   // [END logging_delete_sink]
 }
 
