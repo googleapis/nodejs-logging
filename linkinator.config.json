@@ -3,6 +3,7 @@
   "skip": [
     "https://codecov.io/gh/googleapis/",
     "www.googleapis.com",
-    "https://github.com/googleapis/nodejs-logging/blob/master/samples/http-request.js"
+    "https://github.com/googleapis/nodejs-logging/blob/master/samples/http-request.js",
+    "img.shields.io"
   ]
 }
