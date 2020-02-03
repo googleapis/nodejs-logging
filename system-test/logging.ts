@@ -100,7 +100,7 @@ describe('Logging', () => {
 
     async function deleteLogs() {
       const [logs] = await logging.getLogs({
-        pageSize: 1000,
+        pageSize: 10000,
       });
       const logsToDelete = logs.filter(log => {
         return (
