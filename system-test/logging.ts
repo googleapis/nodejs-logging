@@ -99,7 +99,9 @@ describe('Logging', () => {
     }
 
     async function deleteLogs() {
-      const [logs] = await logging.getLogs();
+      const [logs] = await logging.getLogs({
+        pageSize: 1000,
+      });
       const logsToDelete = logs.filter(log => {
         return (
           log.name.includes(TESTS_PREFIX) &&
