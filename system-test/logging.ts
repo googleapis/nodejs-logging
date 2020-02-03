@@ -110,7 +110,13 @@ describe('Logging', () => {
       });
 
       for (const log of logsToDelete) {
-        await log.delete();
+        try {
+          await log.delete();
+        } catch (e) {
+          if (e.code !== 5) {
+            console.warn(`Deleting ${log.name} failed:`, e.message);
+          }
+        }
       }
     }
 
