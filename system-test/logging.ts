@@ -122,7 +122,7 @@ describe('Logging', () => {
 
           // A one second gap is preferred between delete calls to avoid rate
           // limiting.
-          let timeoutMs = 1000;
+          let timeoutMs = 500;
           if (numLogsDeleted * 1000 > maxPatienceMs) {
             // This is taking too long. If we hit the rate limit, we'll
             // hopefully scoop up the stragglers on a future test run.
