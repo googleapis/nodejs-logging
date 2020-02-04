@@ -29,20 +29,20 @@
     "stackdriver"
   ],
   "scripts": {
-    "test": "exit 0; c8 mocha --recursive ./build/test",
-    "docs": "exit 0; jsdoc -c .jsdoc.js",
+    "test": "c8 mocha --recursive ./build/test",
+    "docs": "jsdoc -c .jsdoc.js",
     "presystem-test": "npm run compile",
     "system-test": "c8 mocha build/system-test --timeout 600000",
-    "samples-test": "exit 0; cd samples/ && c8 npm test && cd ../",
-    "lint": "exit 0; gts check && eslint '**/*.js'",
+    "samples-test": "cd samples/ && c8 npm test && cd ../",
+    "lint": "gts check && eslint '**/*.js'",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p . && cp -r src/v2 build/src/v2 && cp -r protos build && cp test/*.js build/test",
     "fix": "gts fix && eslint --fix '**/*.js'",
     "prepare": "npm run compile",
-    "pretest": "exit 0; npm run compile",
-    "posttest": "exit 0; npm run check",
-    "docs-test": "exit 0; linkinator docs",
+    "pretest": "npm run compile",
+    "posttest": "npm run check",
+    "docs-test": "linkinator docs",
     "predocs-test": "npm run docs"
   },
   "dependencies": {

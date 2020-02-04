@@ -117,7 +117,6 @@ describe('Logging', () => {
       let numLogsDeleted = 0;
       for (const log of logsToDelete) {
         try {
-          console.log('Deleting log', log.name);
           await log.delete();
           numLogsDeleted++;
 
