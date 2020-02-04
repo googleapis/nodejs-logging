@@ -98,7 +98,8 @@ describe('Logging', () => {
       await getAndDelete(logging.getSinks.bind(logging));
     }
 
-    async function deleteLogs() {
+    async function deleteLogs(options?: {shouldRetry?: boolean}) {
+      options = options || {shouldRetry: true};
       const [logs] = await logging.getLogs({
         pageSize: 10000,
       });
@@ -109,11 +110,25 @@ describe('Logging', () => {
         );
       });
 
+      if (logs.length > 0) {
+        console.log('Deleting', logsToDelete.length, 'test logs');
+      }
+
       for (const log of logsToDelete) {
         try {
           await log.delete();
         } catch (e) {
+          if (e.code === 8 && options.shouldRetry) {
+            // Rate limit reached. Try one more time after a quick pause.
+            await new Promise(res => setTimeout(res, 2000));
+            try {
+              await deleteLogs({shouldRetry: false});
+            } catch (e) {
+              console.warn('Deleting test logs failed due to rate limiting');
+            }
+          }
           if (e.code !== 5) {
+            // Log exists, but couldn't be deleted.
             console.warn(`Deleting ${log.name} failed:`, e.message);
           }
         }
