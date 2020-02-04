@@ -99,7 +99,9 @@ describe('Logging', () => {
     }
 
     async function deleteLogs() {
-      const [logs] = await logging.getLogs();
+      const [logs] = await logging.getLogs({
+        pageSize: 10000,
+      });
       const logsToDelete = logs.filter(log => {
         return (
           log.name.includes(TESTS_PREFIX) &&
@@ -108,7 +110,13 @@ describe('Logging', () => {
       });
 
       for (const log of logsToDelete) {
-        await log.delete();
+        try {
+          await log.delete();
+        } catch (e) {
+          if (e.code !== 5) {
+            console.warn(`Deleting ${log.name} failed:`, e.message);
+          }
+        }
       }
     }
 
