@@ -117,10 +117,11 @@ describe('Logging', () => {
       for (const log of logsToDelete) {
         try {
           await log.delete();
+          await new Promise(res => setTimeout(res, 1000));
         } catch (e) {
           if (e.code === 8 && options.shouldRetry) {
             // Rate limit reached. Try one more time after a minute pause.
-            await new Promise(res => setTimeout(res, 60000));
+            // await new Promise(res => setTimeout(res, 120000));
             try {
               await deleteLogs({shouldRetry: false});
             } catch (e) {
