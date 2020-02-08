@@ -220,7 +220,7 @@ const ListLogMetricsResponse = {
  * The parameters to GetLogMetric.
  *
  * @property {string} metricName
- *   The resource name of the desired metric:
+ *   Required. The resource name of the desired metric:
  *
  *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
  *
@@ -236,14 +236,14 @@ const GetLogMetricRequest = {
  * The parameters to CreateLogMetric.
  *
  * @property {string} parent
- *   The resource name of the project in which to create the metric:
+ *   Required. The resource name of the project in which to create the metric:
  *
  *       "projects/[PROJECT_ID]"
  *
  *   The new metric must be provided in the request.
  *
  * @property {Object} metric
- *   The new logs-based metric, which must not have an identifier that
+ *   Required. The new logs-based metric, which must not have an identifier that
  *   already exists.
  *
  *   This object should have the same structure as [LogMetric]{@link google.logging.v2.LogMetric}
@@ -260,7 +260,7 @@ const CreateLogMetricRequest = {
  * The parameters to UpdateLogMetric.
  *
  * @property {string} metricName
- *   The resource name of the metric to update:
+ *   Required. The resource name of the metric to update:
  *
  *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
  *
@@ -269,7 +269,7 @@ const CreateLogMetricRequest = {
  *   does not exist in `[PROJECT_ID]`, then a new metric is created.
  *
  * @property {Object} metric
- *   The updated metric.
+ *   Required. The updated metric.
  *
  *   This object should have the same structure as [LogMetric]{@link google.logging.v2.LogMetric}
  *
@@ -285,7 +285,7 @@ const UpdateLogMetricRequest = {
  * The parameters to DeleteLogMetric.
  *
  * @property {string} metricName
- *   The resource name of the metric to delete:
+ *   Required. The resource name of the metric to delete:
  *
  *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
  *

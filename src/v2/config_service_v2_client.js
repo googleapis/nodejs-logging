@@ -210,6 +210,8 @@ class ConfigServiceV2Client {
       'createExclusion',
       'updateExclusion',
       'deleteExclusion',
+      'getCmekSettings',
+      'updateCmekSettings',
     ];
     for (const methodName of configServiceV2StubMethods) {
       const innerCallPromise = configServiceV2Stub.then(
@@ -1186,6 +1188,173 @@ class ConfigServiceV2Client {
     });
 
     return this._innerApiCalls.deleteExclusion(request, options, callback);
+  }
+
+  /**
+   * Gets the Logs Router CMEK settings for the given resource.
+   *
+   * Note: CMEK for the Logs Router can currently only be configured for GCP
+   * organizations. Once configured, it applies to all projects and folders in
+   * the GCP organization.
+   *
+   * See [Enabling CMEK for Logs
+   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} [request.name]
+   *   Required. The resource for which to retrieve CMEK settings.
+   *
+   *       "projects/[PROJECT_ID]/cmekSettings"
+   *       "organizations/[ORGANIZATION_ID]/cmekSettings"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+   *       "folders/[FOLDER_ID]/cmekSettings"
+   *
+   *   Example: `"organizations/12345/cmekSettings"`.
+   *
+   *   Note: CMEK for the Logs Router can currently only be configured for GCP
+   *   organizations. Once configured, it applies to all projects and folders in
+   *   the GCP organization.
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @param {function(?Error, ?Object)} [callback]
+   *   The function which will be called with the result of the API call.
+   *
+   *   The second parameter to the callback is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.ConfigServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   *
+   * client.getCmekSettings({})
+   *   .then(responses => {
+   *     const response = responses[0];
+   *     // doThingsWith(response)
+   *   })
+   *   .catch(err => {
+   *     console.error(err);
+   *   });
+   */
+  getCmekSettings(request, options, callback) {
+    if (options instanceof Function && callback === undefined) {
+      callback = options;
+      options = {};
+    }
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name,
+    });
+
+    return this._innerApiCalls.getCmekSettings(request, options, callback);
+  }
+
+  /**
+   * Updates the Logs Router CMEK settings for the given resource.
+   *
+   * Note: CMEK for the Logs Router can currently only be configured for GCP
+   * organizations. Once configured, it applies to all projects and folders in
+   * the GCP organization.
+   *
+   * UpdateCmekSettings
+   * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
+   * account does not have the required
+   * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
+   * 3) access to the key is disabled.
+   *
+   * See [Enabling CMEK for Logs
+   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} [request.name]
+   *   Required. The resource name for the CMEK settings to update.
+   *
+   *       "projects/[PROJECT_ID]/cmekSettings"
+   *       "organizations/[ORGANIZATION_ID]/cmekSettings"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+   *       "folders/[FOLDER_ID]/cmekSettings"
+   *
+   *   Example: `"organizations/12345/cmekSettings"`.
+   *
+   *   Note: CMEK for the Logs Router can currently only be configured for GCP
+   *   organizations. Once configured, it applies to all projects and folders in
+   *   the GCP organization.
+   * @param {Object} [request.cmekSettings]
+   *   Required. The CMEK settings to update.
+   *
+   *   See [Enabling CMEK for Logs
+   *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+   *
+   *   This object should have the same structure as [CmekSettings]{@link google.logging.v2.CmekSettings}
+   * @param {Object} [request.updateMask]
+   *   Optional. Field mask identifying which fields from `cmek_settings` should
+   *   be updated. A field will be overwritten if and only if it is in the update
+   *   mask. Output only fields cannot be updated.
+   *
+   *   See FieldMask for more information.
+   *
+   *   Example: `"updateMask=kmsKeyName"`
+   *
+   *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @param {function(?Error, ?Object)} [callback]
+   *   The function which will be called with the result of the API call.
+   *
+   *   The second parameter to the callback is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.ConfigServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   *
+   * client.updateCmekSettings({})
+   *   .then(responses => {
+   *     const response = responses[0];
+   *     // doThingsWith(response)
+   *   })
+   *   .catch(err => {
+   *     console.error(err);
+   *   });
+   */
+  updateCmekSettings(request, options, callback) {
+    if (options instanceof Function && callback === undefined) {
+      callback = options;
+      options = {};
+    }
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name,
+    });
+
+    return this._innerApiCalls.updateCmekSettings(request, options, callback);
   }
 
   // --------------------

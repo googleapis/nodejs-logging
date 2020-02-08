@@ -27,7 +27,7 @@
  *   project. Example: `"my-syslog-errors-to-pubsub"`. Sink identifiers are
  *   limited to 100 characters and can include only the following characters:
  *   upper and lower-case alphanumeric characters, underscores, hyphens, and
- *   periods.
+ *   periods. First character has to be alphanumeric.
  *
  * @property {string} destination
  *   Required. The export destination:
@@ -47,6 +47,14 @@
  *   that match the filter. For example:
  *
  *       logName="projects/[PROJECT_ID]/logs/[LOG_ID]" AND severity>=ERROR
+ *
+ * @property {string} description
+ *   Optional. A description of this sink.
+ *   The maximum length of the description is 8000 characters.
+ *
+ * @property {boolean} disabled
+ *   Optional. If set to True, then this sink is disabled and it does not
+ *   export any log entries.
  *
  * @property {number} outputVersionFormat
  *   Deprecated. The log entry format to use for this sink's exported log
@@ -159,6 +167,14 @@ const LogSink = {
  *   present and [special query
  *   syntax](https://cloud.google.com/bigquery/docs/querying-partitioned-tables) has to be used instead.
  *   In both cases, tables are sharded based on UTC timezone.
+ *
+ * @property {boolean} usesTimestampColumnPartitioning
+ *   Output only. True if new timestamp column based partitioning is in use,
+ *   false if legacy ingestion-time partitioning is in use.
+ *   All new sinks will have this field set true and will use timestamp column
+ *   based partitioning. If use_partitioned_tables is false, this value has no
+ *   meaning and will be false. Legacy sinks using partitioned tables will have
+ *   this field set to false.
  *
  * @typedef BigQueryOptions
  * @memberof google.logging.v2
@@ -373,6 +389,7 @@ const DeleteSinkRequest = {
  *   Required. A client-assigned identifier, such as
  *   `"load-balancer-exclusion"`. Identifiers are limited to 100 characters and
  *   can include only letters, digits, underscores, hyphens, and periods.
+ *   First character has to be alphanumeric.
  *
  * @property {string} description
  *   Optional. A description of this exclusion.
@@ -570,5 +587,143 @@ const UpdateExclusionRequest = {
  * @see [google.logging.v2.DeleteExclusionRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const DeleteExclusionRequest = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * The parameters to
+ * GetCmekSettings.
+ *
+ * See [Enabling CMEK for Logs Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+ * for more information.
+ *
+ * @property {string} name
+ *   Required. The resource for which to retrieve CMEK settings.
+ *
+ *       "projects/[PROJECT_ID]/cmekSettings"
+ *       "organizations/[ORGANIZATION_ID]/cmekSettings"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+ *       "folders/[FOLDER_ID]/cmekSettings"
+ *
+ *   Example: `"organizations/12345/cmekSettings"`.
+ *
+ *   Note: CMEK for the Logs Router can currently only be configured for GCP
+ *   organizations. Once configured, it applies to all projects and folders in
+ *   the GCP organization.
+ *
+ * @typedef GetCmekSettingsRequest
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.GetCmekSettingsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const GetCmekSettingsRequest = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * The parameters to
+ * UpdateCmekSettings.
+ *
+ * See [Enabling CMEK for Logs Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+ * for more information.
+ *
+ * @property {string} name
+ *   Required. The resource name for the CMEK settings to update.
+ *
+ *       "projects/[PROJECT_ID]/cmekSettings"
+ *       "organizations/[ORGANIZATION_ID]/cmekSettings"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+ *       "folders/[FOLDER_ID]/cmekSettings"
+ *
+ *   Example: `"organizations/12345/cmekSettings"`.
+ *
+ *   Note: CMEK for the Logs Router can currently only be configured for GCP
+ *   organizations. Once configured, it applies to all projects and folders in
+ *   the GCP organization.
+ *
+ * @property {Object} cmekSettings
+ *   Required. The CMEK settings to update.
+ *
+ *   See [Enabling CMEK for Logs
+ *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+ *
+ *   This object should have the same structure as [CmekSettings]{@link google.logging.v2.CmekSettings}
+ *
+ * @property {Object} updateMask
+ *   Optional. Field mask identifying which fields from `cmek_settings` should
+ *   be updated. A field will be overwritten if and only if it is in the update
+ *   mask. Output only fields cannot be updated.
+ *
+ *   See FieldMask for more information.
+ *
+ *   Example: `"updateMask=kmsKeyName"`
+ *
+ *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
+ *
+ * @typedef UpdateCmekSettingsRequest
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.UpdateCmekSettingsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const UpdateCmekSettingsRequest = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * Describes the customer-managed encryption key (CMEK) settings associated with
+ * a project, folder, organization, billing account, or flexible resource.
+ *
+ * Note: CMEK for the Logs Router can currently only be configured for GCP
+ * organizations. Once configured, it applies to all projects and folders in the
+ * GCP organization.
+ *
+ * See [Enabling CMEK for Logs Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+ * for more information.
+ *
+ * @property {string} name
+ *   Output Only. The resource name of the CMEK settings.
+ *
+ * @property {string} kmsKeyName
+ *   The resource name for the configured Cloud KMS key.
+ *
+ *   KMS key name format:
+ *       "projects/[PROJECT_ID]/locations/[LOCATION]/keyRings/[KEYRING]/cryptoKeys/[KEY]"
+ *
+ *   For example:
+ *       `"projects/my-project-id/locations/my-region/keyRings/key-ring-name/cryptoKeys/key-name"`
+ *
+ *
+ *
+ *   To enable CMEK for the Logs Router, set this field to a valid
+ *   `kms_key_name` for which the associated service account has the required
+ *   `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key.
+ *
+ *   The Cloud KMS key used by the Log Router can be updated by changing the
+ *   `kms_key_name` to a new valid key name. Encryption operations that are in
+ *   progress will be completed with the key that was in use when they started.
+ *   Decryption operations will be completed using the key that was used at the
+ *   time of encryption unless access to that key has been revoked.
+ *
+ *   To disable CMEK for the Logs Router, set this field to an empty string.
+ *
+ *   See [Enabling CMEK for Logs
+ *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+ *
+ * @property {string} serviceAccountId
+ *   Output Only. The service account that will be used by the Logs Router to
+ *   access your Cloud KMS key.
+ *
+ *   Before enabling CMEK for Logs Router, you must first assign the role
+ *   `roles/cloudkms.cryptoKeyEncrypterDecrypter` to the service account that
+ *   the Logs Router will use to access your Cloud KMS key. Use
+ *   GetCmekSettings to
+ *   obtain the service account ID.
+ *
+ *   See [Enabling CMEK for Logs
+ *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+ *
+ * @typedef CmekSettings
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.CmekSettings definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const CmekSettings = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
