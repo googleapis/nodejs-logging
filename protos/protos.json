@@ -2,6 +2,1693 @@
   "nested": {
     "google": {
       "nested": {
+        "logging": {
+          "nested": {
+            "v2": {
+              "options": {
+                "cc_enable_arenas": true,
+                "csharp_namespace": "Google.Cloud.Logging.V2",
+                "go_package": "google.golang.org/genproto/googleapis/logging/v2;logging",
+                "java_multiple_files": true,
+                "java_outer_classname": "LoggingMetricsProto",
+                "java_package": "com.google.logging.v2",
+                "php_namespace": "Google\\Cloud\\Logging\\V2"
+              },
+              "nested": {
+                "ConfigServiceV2": {
+                  "options": {
+                    "(google.api.default_host)": "logging.googleapis.com",
+                    "(google.api.oauth_scopes)": "https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read"
+                  },
+                  "methods": {
+                    "ListSinks": {
+                      "requestType": "ListSinksRequest",
+                      "responseType": "ListSinksResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/{parent=*/*}/sinks",
+                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/sinks",
+                        "(google.api.method_signature)": "parent"
+                      }
+                    },
+                    "GetSink": {
+                      "requestType": "GetSinkRequest",
+                      "responseType": "LogSink",
+                      "options": {
+                        "(google.api.http).get": "/v2/{sink_name=*/*/sinks/*}",
+                        "(google.api.http).additional_bindings.get": "/v2/{sink_name=billingAccounts/*/sinks/*}",
+                        "(google.api.method_signature)": "sink_name"
+                      }
+                    },
+                    "CreateSink": {
+                      "requestType": "CreateSinkRequest",
+                      "responseType": "LogSink",
+                      "options": {
+                        "(google.api.http).post": "/v2/{parent=*/*}/sinks",
+                        "(google.api.http).body": "sink",
+                        "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*}/sinks",
+                        "(google.api.http).additional_bindings.body": "sink",
+                        "(google.api.method_signature)": "parent,sink"
+                      }
+                    },
+                    "UpdateSink": {
+                      "requestType": "UpdateSinkRequest",
+                      "responseType": "LogSink",
+                      "options": {
+                        "(google.api.http).put": "/v2/{sink_name=*/*/sinks/*}",
+                        "(google.api.http).body": "sink",
+                        "(google.api.http).additional_bindings.put": "/v2/{sink_name=billingAccounts/*/sinks/*}",
+                        "(google.api.http).additional_bindings.body": "sink",
+                        "(google.api.http).additional_bindings.patch": "/v2/{sink_name=billingAccounts/*/sinks/*}",
+                        "(google.api.method_signature)": "sink_name,sink"
+                      }
+                    },
+                    "DeleteSink": {
+                      "requestType": "DeleteSinkRequest",
+                      "responseType": "google.protobuf.Empty",
+                      "options": {
+                        "(google.api.http).delete": "/v2/{sink_name=*/*/sinks/*}",
+                        "(google.api.http).additional_bindings.delete": "/v2/{sink_name=billingAccounts/*/sinks/*}",
+                        "(google.api.method_signature)": "sink_name"
+                      }
+                    },
+                    "ListExclusions": {
+                      "requestType": "ListExclusionsRequest",
+                      "responseType": "ListExclusionsResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/{parent=*/*}/exclusions",
+                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/exclusions",
+                        "(google.api.method_signature)": "parent"
+                      }
+                    },
+                    "GetExclusion": {
+                      "requestType": "GetExclusionRequest",
+                      "responseType": "LogExclusion",
+                      "options": {
+                        "(google.api.http).get": "/v2/{name=*/*/exclusions/*}",
+                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/exclusions/*}",
+                        "(google.api.method_signature)": "name"
+                      }
+                    },
+                    "CreateExclusion": {
+                      "requestType": "CreateExclusionRequest",
+                      "responseType": "LogExclusion",
+                      "options": {
+                        "(google.api.http).post": "/v2/{parent=*/*}/exclusions",
+                        "(google.api.http).body": "exclusion",
+                        "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*}/exclusions",
+                        "(google.api.http).additional_bindings.body": "exclusion",
+                        "(google.api.method_signature)": "parent,exclusion"
+                      }
+                    },
+                    "UpdateExclusion": {
+                      "requestType": "UpdateExclusionRequest",
+                      "responseType": "LogExclusion",
+                      "options": {
+                        "(google.api.http).patch": "/v2/{name=*/*/exclusions/*}",
+                        "(google.api.http).body": "exclusion",
+                        "(google.api.http).additional_bindings.patch": "/v2/{name=billingAccounts/*/exclusions/*}",
+                        "(google.api.http).additional_bindings.body": "exclusion",
+                        "(google.api.method_signature)": "name,exclusion,update_mask"
+                      }
+                    },
+                    "DeleteExclusion": {
+                      "requestType": "DeleteExclusionRequest",
+                      "responseType": "google.protobuf.Empty",
+                      "options": {
+                        "(google.api.http).delete": "/v2/{name=*/*/exclusions/*}",
+                        "(google.api.http).additional_bindings.delete": "/v2/{name=billingAccounts/*/exclusions/*}",
+                        "(google.api.method_signature)": "name"
+                      }
+                    },
+                    "GetCmekSettings": {
+                      "requestType": "GetCmekSettingsRequest",
+                      "responseType": "CmekSettings",
+                      "options": {
+                        "(google.api.http).get": "/v2/{name=*/*}/cmekSettings",
+                        "(google.api.http).additional_bindings.get": "/v2/{name=organizations/*}/cmekSettings"
+                      }
+                    },
+                    "UpdateCmekSettings": {
+                      "requestType": "UpdateCmekSettingsRequest",
+                      "responseType": "CmekSettings",
+                      "options": {
+                        "(google.api.http).patch": "/v2/{name=*/*}/cmekSettings",
+                        "(google.api.http).body": "cmek_settings",
+                        "(google.api.http).additional_bindings.patch": "/v2/{name=organizations/*}/cmekSettings",
+                        "(google.api.http).additional_bindings.body": "cmek_settings"
+                      }
+                    }
+                  }
+                },
+                "LogSink": {
+                  "options": {
+                    "(google.api.resource).type": "logging.googleapis.com/Sink",
+                    "(google.api.resource).pattern": "billingAccounts/{billing_account}/sinks/{sink}"
+                  },
+                  "oneofs": {
+                    "options": {
+                      "oneof": [
+                        "bigqueryOptions"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "destination": {
+                      "type": "string",
+                      "id": 3,
+                      "options": {
+                        "(google.api.resource_reference).type": "*"
+                      }
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 5
+                    },
+                    "description": {
+                      "type": "string",
+                      "id": 18
+                    },
+                    "disabled": {
+                      "type": "bool",
+                      "id": 19
+                    },
+                    "outputVersionFormat": {
+                      "type": "VersionFormat",
+                      "id": 6,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "writerIdentity": {
+                      "type": "string",
+                      "id": 8,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    },
+                    "includeChildren": {
+                      "type": "bool",
+                      "id": 9
+                    },
+                    "bigqueryOptions": {
+                      "type": "BigQueryOptions",
+                      "id": 12
+                    },
+                    "createTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 13,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    },
+                    "updateTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 14,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    },
+                    "startTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 10,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "endTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 11,
+                      "options": {
+                        "deprecated": true
+                      }
+                    }
+                  },
+                  "nested": {
+                    "VersionFormat": {
+                      "values": {
+                        "VERSION_FORMAT_UNSPECIFIED": 0,
+                        "V2": 1,
+                        "V1": 2
+                      }
+                    }
+                  }
+                },
+                "BigQueryOptions": {
+                  "fields": {
+                    "usePartitionedTables": {
+                      "type": "bool",
+                      "id": 1
+                    },
+                    "usesTimestampColumnPartitioning": {
+                      "type": "bool",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    }
+                  }
+                },
+                "ListSinksRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Sink"
+                      }
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 3
+                    }
+                  }
+                },
+                "ListSinksResponse": {
+                  "fields": {
+                    "sinks": {
+                      "rule": "repeated",
+                      "type": "LogSink",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetSinkRequest": {
+                  "fields": {
+                    "sinkName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Sink"
+                      }
+                    }
+                  }
+                },
+                "CreateSinkRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Sink"
+                      }
+                    },
+                    "sink": {
+                      "type": "LogSink",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "uniqueWriterIdentity": {
+                      "type": "bool",
+                      "id": 3
+                    }
+                  }
+                },
+                "UpdateSinkRequest": {
+                  "fields": {
+                    "sinkName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Sink"
+                      }
+                    },
+                    "sink": {
+                      "type": "LogSink",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "uniqueWriterIdentity": {
+                      "type": "bool",
+                      "id": 3
+                    },
+                    "updateMask": {
+                      "type": "google.protobuf.FieldMask",
+                      "id": 4
+                    }
+                  }
+                },
+                "DeleteSinkRequest": {
+                  "fields": {
+                    "sinkName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Sink"
+                      }
+                    }
+                  }
+                },
+                "LogExclusion": {
+                  "options": {
+                    "(google.api.resource).type": "logging.googleapis.com/Exclusion",
+                    "(google.api.resource).pattern": "billingAccounts/{billing_account}/exclusions/{exclusion}"
+                  },
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "description": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 3
+                    },
+                    "disabled": {
+                      "type": "bool",
+                      "id": 4
+                    },
+                    "createTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 5
+                    },
+                    "updateTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 6
+                    }
+                  }
+                },
+                "ListExclusionsRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Exclusion"
+                      }
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 3
+                    }
+                  }
+                },
+                "ListExclusionsResponse": {
+                  "fields": {
+                    "exclusions": {
+                      "rule": "repeated",
+                      "type": "LogExclusion",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetExclusionRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Exclusion"
+                      }
+                    }
+                  }
+                },
+                "CreateExclusionRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Exclusion"
+                      }
+                    },
+                    "exclusion": {
+                      "type": "LogExclusion",
+                      "id": 2
+                    }
+                  }
+                },
+                "UpdateExclusionRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Exclusion"
+                      }
+                    },
+                    "exclusion": {
+                      "type": "LogExclusion",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "updateMask": {
+                      "type": "google.protobuf.FieldMask",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    }
+                  }
+                },
+                "DeleteExclusionRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Exclusion"
+                      }
+                    }
+                  }
+                },
+                "GetCmekSettingsRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    }
+                  }
+                },
+                "UpdateCmekSettingsRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "cmekSettings": {
+                      "type": "CmekSettings",
+                      "id": 2
+                    },
+                    "updateMask": {
+                      "type": "google.protobuf.FieldMask",
+                      "id": 3
+                    }
+                  }
+                },
+                "CmekSettings": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "kmsKeyName": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "serviceAccountId": {
+                      "type": "string",
+                      "id": 3
+                    }
+                  }
+                },
+                "LoggingServiceV2": {
+                  "options": {
+                    "(google.api.default_host)": "logging.googleapis.com",
+                    "(google.api.oauth_scopes)": "https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write"
+                  },
+                  "methods": {
+                    "DeleteLog": {
+                      "requestType": "DeleteLogRequest",
+                      "responseType": "google.protobuf.Empty",
+                      "options": {
+                        "(google.api.http).delete": "/v2/{log_name=projects/*/logs/*}",
+                        "(google.api.http).additional_bindings.delete": "/v2/{log_name=billingAccounts/*/logs/*}",
+                        "(google.api.method_signature)": "log_name"
+                      }
+                    },
+                    "WriteLogEntries": {
+                      "requestType": "WriteLogEntriesRequest",
+                      "responseType": "WriteLogEntriesResponse",
+                      "options": {
+                        "(google.api.http).post": "/v2/entries:write",
+                        "(google.api.http).body": "*",
+                        "(google.api.method_signature)": "log_name,resource,labels,entries"
+                      }
+                    },
+                    "ListLogEntries": {
+                      "requestType": "ListLogEntriesRequest",
+                      "responseType": "ListLogEntriesResponse",
+                      "options": {
+                        "(google.api.http).post": "/v2/entries:list",
+                        "(google.api.http).body": "*"
+                      }
+                    },
+                    "ListMonitoredResourceDescriptors": {
+                      "requestType": "ListMonitoredResourceDescriptorsRequest",
+                      "responseType": "ListMonitoredResourceDescriptorsResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/monitoredResourceDescriptors"
+                      }
+                    },
+                    "ListLogs": {
+                      "requestType": "ListLogsRequest",
+                      "responseType": "ListLogsResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/{parent=*/*}/logs",
+                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/logs",
+                        "(google.api.method_signature)": "parent"
+                      }
+                    }
+                  }
+                },
+                "DeleteLogRequest": {
+                  "fields": {
+                    "logName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
+                      }
+                    }
+                  }
+                },
+                "WriteLogEntriesRequest": {
+                  "fields": {
+                    "logName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Log"
+                      }
+                    },
+                    "resource": {
+                      "type": "google.api.MonitoredResource",
+                      "id": 2
+                    },
+                    "labels": {
+                      "keyType": "string",
+                      "type": "string",
+                      "id": 3
+                    },
+                    "entries": {
+                      "rule": "repeated",
+                      "type": "LogEntry",
+                      "id": 4,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "partialSuccess": {
+                      "type": "bool",
+                      "id": 5
+                    },
+                    "dryRun": {
+                      "type": "bool",
+                      "id": 6
+                    }
+                  }
+                },
+                "WriteLogEntriesResponse": {
+                  "fields": {}
+                },
+                "WriteLogEntriesPartialErrors": {
+                  "fields": {
+                    "logEntryErrors": {
+                      "keyType": "int32",
+                      "type": "google.rpc.Status",
+                      "id": 1
+                    }
+                  }
+                },
+                "ListLogEntriesRequest": {
+                  "fields": {
+                    "projectIds": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "resourceNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 8,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
+                      }
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "orderBy": {
+                      "type": "string",
+                      "id": 3
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 4
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 5
+                    }
+                  }
+                },
+                "ListLogEntriesResponse": {
+                  "fields": {
+                    "entries": {
+                      "rule": "repeated",
+                      "type": "LogEntry",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "ListMonitoredResourceDescriptorsRequest": {
+                  "fields": {
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 1
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "ListMonitoredResourceDescriptorsResponse": {
+                  "fields": {
+                    "resourceDescriptors": {
+                      "rule": "repeated",
+                      "type": "google.api.MonitoredResourceDescriptor",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "ListLogsRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
+                      }
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 2
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 3
+                    }
+                  }
+                },
+                "ListLogsResponse": {
+                  "fields": {
+                    "logNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 3
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "LogEntry": {
+                  "options": {
+                    "(google.api.resource).type": "logging.googleapis.com/Log",
+                    "(google.api.resource).pattern": "billingAccounts/{billing_account}/logs/{log}",
+                    "(google.api.resource).name_field": "log_name"
+                  },
+                  "oneofs": {
+                    "payload": {
+                      "oneof": [
+                        "protoPayload",
+                        "textPayload",
+                        "jsonPayload"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "logName": {
+                      "type": "string",
+                      "id": 12
+                    },
+                    "resource": {
+                      "type": "google.api.MonitoredResource",
+                      "id": 8
+                    },
+                    "protoPayload": {
+                      "type": "google.protobuf.Any",
+                      "id": 2
+                    },
+                    "textPayload": {
+                      "type": "string",
+                      "id": 3
+                    },
+                    "jsonPayload": {
+                      "type": "google.protobuf.Struct",
+                      "id": 6
+                    },
+                    "timestamp": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 9
+                    },
+                    "receiveTimestamp": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 24
+                    },
+                    "severity": {
+                      "type": "google.logging.type.LogSeverity",
+                      "id": 10
+                    },
+                    "insertId": {
+                      "type": "string",
+                      "id": 4
+                    },
+                    "httpRequest": {
+                      "type": "google.logging.type.HttpRequest",
+                      "id": 7
+                    },
+                    "labels": {
+                      "keyType": "string",
+                      "type": "string",
+                      "id": 11
+                    },
+                    "metadata": {
+                      "type": "google.api.MonitoredResourceMetadata",
+                      "id": 25,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "operation": {
+                      "type": "LogEntryOperation",
+                      "id": 15
+                    },
+                    "trace": {
+                      "type": "string",
+                      "id": 22
+                    },
+                    "spanId": {
+                      "type": "string",
+                      "id": 27
+                    },
+                    "traceSampled": {
+                      "type": "bool",
+                      "id": 30
+                    },
+                    "sourceLocation": {
+                      "type": "LogEntrySourceLocation",
+                      "id": 23
+                    }
+                  }
+                },
+                "LogEntryOperation": {
+                  "fields": {
+                    "id": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "producer": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "first": {
+                      "type": "bool",
+                      "id": 3
+                    },
+                    "last": {
+                      "type": "bool",
+                      "id": 4
+                    }
+                  }
+                },
+                "LogEntrySourceLocation": {
+                  "fields": {
+                    "file": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "line": {
+                      "type": "int64",
+                      "id": 2
+                    },
+                    "function": {
+                      "type": "string",
+                      "id": 3
+                    }
+                  }
+                },
+                "MetricsServiceV2": {
+                  "options": {
+                    "(google.api.default_host)": "logging.googleapis.com",
+                    "(google.api.oauth_scopes)": "https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write"
+                  },
+                  "methods": {
+                    "ListLogMetrics": {
+                      "requestType": "ListLogMetricsRequest",
+                      "responseType": "ListLogMetricsResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/{parent=projects/*}/metrics",
+                        "(google.api.method_signature)": "parent"
+                      }
+                    },
+                    "GetLogMetric": {
+                      "requestType": "GetLogMetricRequest",
+                      "responseType": "LogMetric",
+                      "options": {
+                        "(google.api.http).get": "/v2/{metric_name=projects/*/metrics/*}",
+                        "(google.api.method_signature)": "metric_name"
+                      }
+                    },
+                    "CreateLogMetric": {
+                      "requestType": "CreateLogMetricRequest",
+                      "responseType": "LogMetric",
+                      "options": {
+                        "(google.api.http).post": "/v2/{parent=projects/*}/metrics",
+                        "(google.api.http).body": "metric",
+                        "(google.api.method_signature)": "parent,metric"
+                      }
+                    },
+                    "UpdateLogMetric": {
+                      "requestType": "UpdateLogMetricRequest",
+                      "responseType": "LogMetric",
+                      "options": {
+                        "(google.api.http).put": "/v2/{metric_name=projects/*/metrics/*}",
+                        "(google.api.http).body": "metric",
+                        "(google.api.method_signature)": "metric_name,metric"
+                      }
+                    },
+                    "DeleteLogMetric": {
+                      "requestType": "DeleteLogMetricRequest",
+                      "responseType": "google.protobuf.Empty",
+                      "options": {
+                        "(google.api.http).delete": "/v2/{metric_name=projects/*/metrics/*}",
+                        "(google.api.method_signature)": "metric_name"
+                      }
+                    }
+                  }
+                },
+                "LogMetric": {
+                  "options": {
+                    "(google.api.resource).type": "logging.googleapis.com/Metric",
+                    "(google.api.resource).pattern": "projects/{project}/metrics/{metric}"
+                  },
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "description": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 3
+                    },
+                    "metricDescriptor": {
+                      "type": "google.api.MetricDescriptor",
+                      "id": 5
+                    },
+                    "valueExtractor": {
+                      "type": "string",
+                      "id": 6
+                    },
+                    "labelExtractors": {
+                      "keyType": "string",
+                      "type": "string",
+                      "id": 7
+                    },
+                    "bucketOptions": {
+                      "type": "google.api.Distribution.BucketOptions",
+                      "id": 8
+                    },
+                    "createTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 9
+                    },
+                    "updateTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 10
+                    },
+                    "version": {
+                      "type": "ApiVersion",
+                      "id": 4,
+                      "options": {
+                        "deprecated": true
+                      }
+                    }
+                  },
+                  "nested": {
+                    "ApiVersion": {
+                      "values": {
+                        "V2": 0,
+                        "V1": 1
+                      }
+                    }
+                  }
+                },
+                "ListLogMetricsRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "cloudresourcemanager.googleapis.com/Project"
+                      }
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 3
+                    }
+                  }
+                },
+                "ListLogMetricsResponse": {
+                  "fields": {
+                    "metrics": {
+                      "rule": "repeated",
+                      "type": "LogMetric",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetLogMetricRequest": {
+                  "fields": {
+                    "metricName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Metric"
+                      }
+                    }
+                  }
+                },
+                "CreateLogMetricRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "cloudresourcemanager.googleapis.com/Metric"
+                      }
+                    },
+                    "metric": {
+                      "type": "LogMetric",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    }
+                  }
+                },
+                "UpdateLogMetricRequest": {
+                  "fields": {
+                    "metricName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Metric"
+                      }
+                    },
+                    "metric": {
+                      "type": "LogMetric",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    }
+                  }
+                },
+                "DeleteLogMetricRequest": {
+                  "fields": {
+                    "metricName": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Metric"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "type": {
+              "options": {
+                "csharp_namespace": "Google.Cloud.Logging.Type",
+                "go_package": "google.golang.org/genproto/googleapis/logging/type;ltype",
+                "java_multiple_files": true,
+                "java_outer_classname": "LogSeverityProto",
+                "java_package": "com.google.logging.type",
+                "php_namespace": "Google\\Cloud\\Logging\\Type"
+              },
+              "nested": {
+                "HttpRequest": {
+                  "fields": {
+                    "requestMethod": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "requestUrl": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "requestSize": {
+                      "type": "int64",
+                      "id": 3
+                    },
+                    "status": {
+                      "type": "int32",
+                      "id": 4
+                    },
+                    "responseSize": {
+                      "type": "int64",
+                      "id": 5
+                    },
+                    "userAgent": {
+                      "type": "string",
+                      "id": 6
+                    },
+                    "remoteIp": {
+                      "type": "string",
+                      "id": 7
+                    },
+                    "serverIp": {
+                      "type": "string",
+                      "id": 13
+                    },
+                    "referer": {
+                      "type": "string",
+                      "id": 8
+                    },
+                    "latency": {
+                      "type": "google.protobuf.Duration",
+                      "id": 14
+                    },
+                    "cacheLookup": {
+                      "type": "bool",
+                      "id": 11
+                    },
+                    "cacheHit": {
+                      "type": "bool",
+                      "id": 9
+                    },
+                    "cacheValidatedWithOriginServer": {
+                      "type": "bool",
+                      "id": 10
+                    },
+                    "cacheFillBytes": {
+                      "type": "int64",
+                      "id": 12
+                    },
+                    "protocol": {
+                      "type": "string",
+                      "id": 15
+                    }
+                  }
+                },
+                "LogSeverity": {
+                  "values": {
+                    "DEFAULT": 0,
+                    "DEBUG": 100,
+                    "INFO": 200,
+                    "NOTICE": 300,
+                    "WARNING": 400,
+                    "ERROR": 500,
+                    "CRITICAL": 600,
+                    "ALERT": 700,
+                    "EMERGENCY": 800
+                  }
+                }
+              }
+            }
+          }
+        },
+        "api": {
+          "options": {
+            "go_package": "google.golang.org/genproto/googleapis/api/metric;metric",
+            "java_multiple_files": true,
+            "java_outer_classname": "MetricProto",
+            "java_package": "com.google.api",
+            "objc_class_prefix": "GAPI",
+            "cc_enable_arenas": true
+          },
+          "nested": {
+            "methodSignature": {
+              "rule": "repeated",
+              "type": "string",
+              "id": 1051,
+              "extend": "google.protobuf.MethodOptions"
+            },
+            "defaultHost": {
+              "type": "string",
+              "id": 1049,
+              "extend": "google.protobuf.ServiceOptions"
+            },
+            "oauthScopes": {
+              "type": "string",
+              "id": 1050,
+              "extend": "google.protobuf.ServiceOptions"
+            },
+            "fieldBehavior": {
+              "rule": "repeated",
+              "type": "google.api.FieldBehavior",
+              "id": 1052,
+              "extend": "google.protobuf.FieldOptions"
+            },
+            "FieldBehavior": {
+              "values": {
+                "FIELD_BEHAVIOR_UNSPECIFIED": 0,
+                "OPTIONAL": 1,
+                "REQUIRED": 2,
+                "OUTPUT_ONLY": 3,
+                "INPUT_ONLY": 4,
+                "IMMUTABLE": 5
+              }
+            },
+            "resourceReference": {
+              "type": "google.api.ResourceReference",
+              "id": 1055,
+              "extend": "google.protobuf.FieldOptions"
+            },
+            "resourceDefinition": {
+              "rule": "repeated",
+              "type": "google.api.ResourceDescriptor",
+              "id": 1053,
+              "extend": "google.protobuf.FileOptions"
+            },
+            "resource": {
+              "type": "google.api.ResourceDescriptor",
+              "id": 1053,
+              "extend": "google.protobuf.MessageOptions"
+            },
+            "ResourceDescriptor": {
+              "fields": {
+                "type": {
+                  "type": "string",
+                  "id": 1
+                },
+                "pattern": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 2
+                },
+                "nameField": {
+                  "type": "string",
+                  "id": 3
+                },
+                "history": {
+                  "type": "History",
+                  "id": 4
+                },
+                "plural": {
+                  "type": "string",
+                  "id": 5
+                },
+                "singular": {
+                  "type": "string",
+                  "id": 6
+                }
+              },
+              "nested": {
+                "History": {
+                  "values": {
+                    "HISTORY_UNSPECIFIED": 0,
+                    "ORIGINALLY_SINGLE_PATTERN": 1,
+                    "FUTURE_MULTI_PATTERN": 2
+                  }
+                }
+              }
+            },
+            "ResourceReference": {
+              "fields": {
+                "type": {
+                  "type": "string",
+                  "id": 1
+                },
+                "childType": {
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            },
+            "http": {
+              "type": "HttpRule",
+              "id": 72295728,
+              "extend": "google.protobuf.MethodOptions"
+            },
+            "Http": {
+              "fields": {
+                "rules": {
+                  "rule": "repeated",
+                  "type": "HttpRule",
+                  "id": 1
+                },
+                "fullyDecodeReservedExpansion": {
+                  "type": "bool",
+                  "id": 2
+                }
+              }
+            },
+            "HttpRule": {
+              "oneofs": {
+                "pattern": {
+                  "oneof": [
+                    "get",
+                    "put",
+                    "post",
+                    "delete",
+                    "patch",
+                    "custom"
+                  ]
+                }
+              },
+              "fields": {
+                "selector": {
+                  "type": "string",
+                  "id": 1
+                },
+                "get": {
+                  "type": "string",
+                  "id": 2
+                },
+                "put": {
+                  "type": "string",
+                  "id": 3
+                },
+                "post": {
+                  "type": "string",
+                  "id": 4
+                },
+                "delete": {
+                  "type": "string",
+                  "id": 5
+                },
+                "patch": {
+                  "type": "string",
+                  "id": 6
+                },
+                "custom": {
+                  "type": "CustomHttpPattern",
+                  "id": 8
+                },
+                "body": {
+                  "type": "string",
+                  "id": 7
+                },
+                "responseBody": {
+                  "type": "string",
+                  "id": 12
+                },
+                "additionalBindings": {
+                  "rule": "repeated",
+                  "type": "HttpRule",
+                  "id": 11
+                }
+              }
+            },
+            "CustomHttpPattern": {
+              "fields": {
+                "kind": {
+                  "type": "string",
+                  "id": 1
+                },
+                "path": {
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            },
+            "MonitoredResourceDescriptor": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 5
+                },
+                "type": {
+                  "type": "string",
+                  "id": 1
+                },
+                "displayName": {
+                  "type": "string",
+                  "id": 2
+                },
+                "description": {
+                  "type": "string",
+                  "id": 3
+                },
+                "labels": {
+                  "rule": "repeated",
+                  "type": "LabelDescriptor",
+                  "id": 4
+                },
+                "launchStage": {
+                  "type": "LaunchStage",
+                  "id": 7
+                }
+              }
+            },
+            "MonitoredResource": {
+              "fields": {
+                "type": {
+                  "type": "string",
+                  "id": 1
+                },
+                "labels": {
+                  "keyType": "string",
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            },
+            "MonitoredResourceMetadata": {
+              "fields": {
+                "systemLabels": {
+                  "type": "google.protobuf.Struct",
+                  "id": 1
+                },
+                "userLabels": {
+                  "keyType": "string",
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            },
+            "LabelDescriptor": {
+              "fields": {
+                "key": {
+                  "type": "string",
+                  "id": 1
+                },
+                "valueType": {
+                  "type": "ValueType",
+                  "id": 2
+                },
+                "description": {
+                  "type": "string",
+                  "id": 3
+                }
+              },
+              "nested": {
+                "ValueType": {
+                  "values": {
+                    "STRING": 0,
+                    "BOOL": 1,
+                    "INT64": 2
+                  }
+                }
+              }
+            },
+            "LaunchStage": {
+              "values": {
+                "LAUNCH_STAGE_UNSPECIFIED": 0,
+                "EARLY_ACCESS": 1,
+                "ALPHA": 2,
+                "BETA": 3,
+                "GA": 4,
+                "DEPRECATED": 5
+              }
+            },
+            "Distribution": {
+              "fields": {
+                "count": {
+                  "type": "int64",
+                  "id": 1
+                },
+                "mean": {
+                  "type": "double",
+                  "id": 2
+                },
+                "sumOfSquaredDeviation": {
+                  "type": "double",
+                  "id": 3
+                },
+                "range": {
+                  "type": "Range",
+                  "id": 4
+                },
+                "bucketOptions": {
+                  "type": "BucketOptions",
+                  "id": 6
+                },
+                "bucketCounts": {
+                  "rule": "repeated",
+                  "type": "int64",
+                  "id": 7
+                },
+                "exemplars": {
+                  "rule": "repeated",
+                  "type": "Exemplar",
+                  "id": 10
+                }
+              },
+              "nested": {
+                "Range": {
+                  "fields": {
+                    "min": {
+                      "type": "double",
+                      "id": 1
+                    },
+                    "max": {
+                      "type": "double",
+                      "id": 2
+                    }
+                  }
+                },
+                "BucketOptions": {
+                  "oneofs": {
+                    "options": {
+                      "oneof": [
+                        "linearBuckets",
+                        "exponentialBuckets",
+                        "explicitBuckets"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "linearBuckets": {
+                      "type": "Linear",
+                      "id": 1
+                    },
+                    "exponentialBuckets": {
+                      "type": "Exponential",
+                      "id": 2
+                    },
+                    "explicitBuckets": {
+                      "type": "Explicit",
+                      "id": 3
+                    }
+                  },
+                  "nested": {
+                    "Linear": {
+                      "fields": {
+                        "numFiniteBuckets": {
+                          "type": "int32",
+                          "id": 1
+                        },
+                        "width": {
+                          "type": "double",
+                          "id": 2
+                        },
+                        "offset": {
+                          "type": "double",
+                          "id": 3
+                        }
+                      }
+                    },
+                    "Exponential": {
+                      "fields": {
+                        "numFiniteBuckets": {
+                          "type": "int32",
+                          "id": 1
+                        },
+                        "growthFactor": {
+                          "type": "double",
+                          "id": 2
+                        },
+                        "scale": {
+                          "type": "double",
+                          "id": 3
+                        }
+                      }
+                    },
+                    "Explicit": {
+                      "fields": {
+                        "bounds": {
+                          "rule": "repeated",
+                          "type": "double",
+                          "id": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "Exemplar": {
+                  "fields": {
+                    "value": {
+                      "type": "double",
+                      "id": 1
+                    },
+                    "timestamp": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 2
+                    },
+                    "attachments": {
+                      "rule": "repeated",
+                      "type": "google.protobuf.Any",
+                      "id": 3
+                    }
+                  }
+                }
+              }
+            },
+            "MetricDescriptor": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1
+                },
+                "type": {
+                  "type": "string",
+                  "id": 8
+                },
+                "labels": {
+                  "rule": "repeated",
+                  "type": "LabelDescriptor",
+                  "id": 2
+                },
+                "metricKind": {
+                  "type": "MetricKind",
+                  "id": 3
+                },
+                "valueType": {
+                  "type": "ValueType",
+                  "id": 4
+                },
+                "unit": {
+                  "type": "string",
+                  "id": 5
+                },
+                "description": {
+                  "type": "string",
+                  "id": 6
+                },
+                "displayName": {
+                  "type": "string",
+                  "id": 7
+                },
+                "metadata": {
+                  "type": "MetricDescriptorMetadata",
+                  "id": 10
+                },
+                "launchStage": {
+                  "type": "LaunchStage",
+                  "id": 12
+                }
+              },
+              "nested": {
+                "MetricDescriptorMetadata": {
+                  "fields": {
+                    "launchStage": {
+                      "type": "LaunchStage",
+                      "id": 1,
+                      "options": {
+                        "deprecated": true
+                      }
+                    },
+                    "samplePeriod": {
+                      "type": "google.protobuf.Duration",
+                      "id": 2
+                    },
+                    "ingestDelay": {
+                      "type": "google.protobuf.Duration",
+                      "id": 3
+                    }
+                  }
+                },
+                "MetricKind": {
+                  "values": {
+                    "METRIC_KIND_UNSPECIFIED": 0,
+                    "GAUGE": 1,
+                    "DELTA": 2,
+                    "CUMULATIVE": 3
+                  }
+                },
+                "ValueType": {
+                  "values": {
+                    "VALUE_TYPE_UNSPECIFIED": 0,
+                    "BOOL": 1,
+                    "INT64": 2,
+                    "DOUBLE": 3,
+                    "STRING": 4,
+                    "DISTRIBUTION": 5,
+                    "MONEY": 6
+                  }
+                }
+              }
+            },
+            "Metric": {
+              "fields": {
+                "type": {
+                  "type": "string",
+                  "id": 3
+                },
+                "labels": {
+                  "keyType": "string",
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
         "protobuf": {
           "options": {
             "go_package": "github.com/golang/protobuf/protoc-gen-go/descriptor;descriptor",
@@ -13,42 +1700,6 @@
             "optimize_for": "SPEED"
           },
           "nested": {
-            "Duration": {
-              "fields": {
-                "seconds": {
-                  "type": "int64",
-                  "id": 1
-                },
-                "nanos": {
-                  "type": "int32",
-                  "id": 2
-                }
-              }
-            },
-            "Empty": {
-              "fields": {}
-            },
-            "FieldMask": {
-              "fields": {
-                "paths": {
-                  "rule": "repeated",
-                  "type": "string",
-                  "id": 1
-                }
-              }
-            },
-            "Timestamp": {
-              "fields": {
-                "seconds": {
-                  "type": "int64",
-                  "id": 1
-                },
-                "nanos": {
-                  "type": "int32",
-                  "id": 2
-                }
-              }
-            },
             "FileDescriptorSet": {
               "fields": {
                 "file": {
@@ -929,6 +2580,42 @@
                 }
               }
             },
+            "Duration": {
+              "fields": {
+                "seconds": {
+                  "type": "int64",
+                  "id": 1
+                },
+                "nanos": {
+                  "type": "int32",
+                  "id": 2
+                }
+              }
+            },
+            "Empty": {
+              "fields": {}
+            },
+            "FieldMask": {
+              "fields": {
+                "paths": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 1
+                }
+              }
+            },
+            "Timestamp": {
+              "fields": {
+                "seconds": {
+                  "type": "int64",
+                  "id": 1
+                },
+                "nanos": {
+                  "type": "int32",
+                  "id": 2
+                }
+              }
+            },
             "Struct": {
               "fields": {
                 "fields": {
@@ -1000,1396 +2687,6 @@
                 },
                 "value": {
                   "type": "bytes",
-                  "id": 2
-                }
-              }
-            }
-          }
-        },
-        "logging": {
-          "nested": {
-            "v2": {
-              "options": {
-                "cc_enable_arenas": true,
-                "csharp_namespace": "Google.Cloud.Logging.V2",
-                "go_package": "google.golang.org/genproto/googleapis/logging/v2;logging",
-                "java_multiple_files": true,
-                "java_outer_classname": "LoggingMetricsProto",
-                "java_package": "com.google.logging.v2",
-                "php_namespace": "Google\\Cloud\\Logging\\V2"
-              },
-              "nested": {
-                "ConfigServiceV2": {
-                  "options": {
-                    "(google.api.default_host)": "logging.googleapis.com",
-                    "(google.api.oauth_scopes)": "https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read"
-                  },
-                  "methods": {
-                    "ListSinks": {
-                      "requestType": "ListSinksRequest",
-                      "responseType": "ListSinksResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/{parent=*/*}/sinks",
-                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/sinks"
-                      }
-                    },
-                    "GetSink": {
-                      "requestType": "GetSinkRequest",
-                      "responseType": "LogSink",
-                      "options": {
-                        "(google.api.http).get": "/v2/{sink_name=*/*/sinks/*}",
-                        "(google.api.http).additional_bindings.get": "/v2/{sink_name=billingAccounts/*/sinks/*}"
-                      }
-                    },
-                    "CreateSink": {
-                      "requestType": "CreateSinkRequest",
-                      "responseType": "LogSink",
-                      "options": {
-                        "(google.api.http).post": "/v2/{parent=*/*}/sinks",
-                        "(google.api.http).body": "sink",
-                        "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*}/sinks",
-                        "(google.api.http).additional_bindings.body": "sink"
-                      }
-                    },
-                    "UpdateSink": {
-                      "requestType": "UpdateSinkRequest",
-                      "responseType": "LogSink",
-                      "options": {
-                        "(google.api.http).put": "/v2/{sink_name=*/*/sinks/*}",
-                        "(google.api.http).body": "sink",
-                        "(google.api.http).additional_bindings.put": "/v2/{sink_name=billingAccounts/*/sinks/*}",
-                        "(google.api.http).additional_bindings.body": "sink",
-                        "(google.api.http).additional_bindings.patch": "/v2/{sink_name=billingAccounts/*/sinks/*}"
-                      }
-                    },
-                    "DeleteSink": {
-                      "requestType": "DeleteSinkRequest",
-                      "responseType": "google.protobuf.Empty",
-                      "options": {
-                        "(google.api.http).delete": "/v2/{sink_name=*/*/sinks/*}",
-                        "(google.api.http).additional_bindings.delete": "/v2/{sink_name=billingAccounts/*/sinks/*}"
-                      }
-                    },
-                    "ListExclusions": {
-                      "requestType": "ListExclusionsRequest",
-                      "responseType": "ListExclusionsResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/{parent=*/*}/exclusions",
-                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/exclusions"
-                      }
-                    },
-                    "GetExclusion": {
-                      "requestType": "GetExclusionRequest",
-                      "responseType": "LogExclusion",
-                      "options": {
-                        "(google.api.http).get": "/v2/{name=*/*/exclusions/*}",
-                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/exclusions/*}"
-                      }
-                    },
-                    "CreateExclusion": {
-                      "requestType": "CreateExclusionRequest",
-                      "responseType": "LogExclusion",
-                      "options": {
-                        "(google.api.http).post": "/v2/{parent=*/*}/exclusions",
-                        "(google.api.http).body": "exclusion",
-                        "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*}/exclusions",
-                        "(google.api.http).additional_bindings.body": "exclusion"
-                      }
-                    },
-                    "UpdateExclusion": {
-                      "requestType": "UpdateExclusionRequest",
-                      "responseType": "LogExclusion",
-                      "options": {
-                        "(google.api.http).patch": "/v2/{name=*/*/exclusions/*}",
-                        "(google.api.http).body": "exclusion",
-                        "(google.api.http).additional_bindings.patch": "/v2/{name=billingAccounts/*/exclusions/*}",
-                        "(google.api.http).additional_bindings.body": "exclusion"
-                      }
-                    },
-                    "DeleteExclusion": {
-                      "requestType": "DeleteExclusionRequest",
-                      "responseType": "google.protobuf.Empty",
-                      "options": {
-                        "(google.api.http).delete": "/v2/{name=*/*/exclusions/*}",
-                        "(google.api.http).additional_bindings.delete": "/v2/{name=billingAccounts/*/exclusions/*}"
-                      }
-                    }
-                  }
-                },
-                "LogSink": {
-                  "oneofs": {
-                    "options": {
-                      "oneof": [
-                        "bigqueryOptions"
-                      ]
-                    }
-                  },
-                  "fields": {
-                    "name": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "destination": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "filter": {
-                      "type": "string",
-                      "id": 5
-                    },
-                    "outputVersionFormat": {
-                      "type": "VersionFormat",
-                      "id": 6,
-                      "options": {
-                        "deprecated": true
-                      }
-                    },
-                    "writerIdentity": {
-                      "type": "string",
-                      "id": 8
-                    },
-                    "includeChildren": {
-                      "type": "bool",
-                      "id": 9
-                    },
-                    "bigqueryOptions": {
-                      "type": "BigQueryOptions",
-                      "id": 12
-                    },
-                    "createTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 13
-                    },
-                    "updateTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 14
-                    },
-                    "startTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 10,
-                      "options": {
-                        "deprecated": true
-                      }
-                    },
-                    "endTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 11,
-                      "options": {
-                        "deprecated": true
-                      }
-                    }
-                  },
-                  "nested": {
-                    "VersionFormat": {
-                      "values": {
-                        "VERSION_FORMAT_UNSPECIFIED": 0,
-                        "V2": 1,
-                        "V1": 2
-                      }
-                    }
-                  }
-                },
-                "BigQueryOptions": {
-                  "fields": {
-                    "usePartitionedTables": {
-                      "type": "bool",
-                      "id": 1
-                    }
-                  }
-                },
-                "ListSinksRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 3
-                    }
-                  }
-                },
-                "ListSinksResponse": {
-                  "fields": {
-                    "sinks": {
-                      "rule": "repeated",
-                      "type": "LogSink",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "GetSinkRequest": {
-                  "fields": {
-                    "sinkName": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "CreateSinkRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "sink": {
-                      "type": "LogSink",
-                      "id": 2
-                    },
-                    "uniqueWriterIdentity": {
-                      "type": "bool",
-                      "id": 3
-                    }
-                  }
-                },
-                "UpdateSinkRequest": {
-                  "fields": {
-                    "sinkName": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "sink": {
-                      "type": "LogSink",
-                      "id": 2
-                    },
-                    "uniqueWriterIdentity": {
-                      "type": "bool",
-                      "id": 3
-                    },
-                    "updateMask": {
-                      "type": "google.protobuf.FieldMask",
-                      "id": 4
-                    }
-                  }
-                },
-                "DeleteSinkRequest": {
-                  "fields": {
-                    "sinkName": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "LogExclusion": {
-                  "fields": {
-                    "name": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "description": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "filter": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "disabled": {
-                      "type": "bool",
-                      "id": 4
-                    },
-                    "createTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 5
-                    },
-                    "updateTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 6
-                    }
-                  }
-                },
-                "ListExclusionsRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 3
-                    }
-                  }
-                },
-                "ListExclusionsResponse": {
-                  "fields": {
-                    "exclusions": {
-                      "rule": "repeated",
-                      "type": "LogExclusion",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "GetExclusionRequest": {
-                  "fields": {
-                    "name": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "CreateExclusionRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "exclusion": {
-                      "type": "LogExclusion",
-                      "id": 2
-                    }
-                  }
-                },
-                "UpdateExclusionRequest": {
-                  "fields": {
-                    "name": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "exclusion": {
-                      "type": "LogExclusion",
-                      "id": 2
-                    },
-                    "updateMask": {
-                      "type": "google.protobuf.FieldMask",
-                      "id": 3
-                    }
-                  }
-                },
-                "DeleteExclusionRequest": {
-                  "fields": {
-                    "name": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "LoggingServiceV2": {
-                  "options": {
-                    "(google.api.default_host)": "logging.googleapis.com",
-                    "(google.api.oauth_scopes)": "https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write"
-                  },
-                  "methods": {
-                    "DeleteLog": {
-                      "requestType": "DeleteLogRequest",
-                      "responseType": "google.protobuf.Empty",
-                      "options": {
-                        "(google.api.http).delete": "/v2/{log_name=projects/*/logs/*}",
-                        "(google.api.http).additional_bindings.delete": "/v2/{log_name=billingAccounts/*/logs/*}"
-                      }
-                    },
-                    "WriteLogEntries": {
-                      "requestType": "WriteLogEntriesRequest",
-                      "responseType": "WriteLogEntriesResponse",
-                      "options": {
-                        "(google.api.http).post": "/v2/entries:write",
-                        "(google.api.http).body": "*"
-                      }
-                    },
-                    "ListLogEntries": {
-                      "requestType": "ListLogEntriesRequest",
-                      "responseType": "ListLogEntriesResponse",
-                      "options": {
-                        "(google.api.http).post": "/v2/entries:list",
-                        "(google.api.http).body": "*"
-                      }
-                    },
-                    "ListMonitoredResourceDescriptors": {
-                      "requestType": "ListMonitoredResourceDescriptorsRequest",
-                      "responseType": "ListMonitoredResourceDescriptorsResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/monitoredResourceDescriptors"
-                      }
-                    },
-                    "ListLogs": {
-                      "requestType": "ListLogsRequest",
-                      "responseType": "ListLogsResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/{parent=*/*}/logs",
-                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/logs"
-                      }
-                    }
-                  }
-                },
-                "DeleteLogRequest": {
-                  "fields": {
-                    "logName": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "WriteLogEntriesRequest": {
-                  "fields": {
-                    "logName": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "resource": {
-                      "type": "google.api.MonitoredResource",
-                      "id": 2
-                    },
-                    "labels": {
-                      "keyType": "string",
-                      "type": "string",
-                      "id": 3
-                    },
-                    "entries": {
-                      "rule": "repeated",
-                      "type": "LogEntry",
-                      "id": 4
-                    },
-                    "partialSuccess": {
-                      "type": "bool",
-                      "id": 5
-                    },
-                    "dryRun": {
-                      "type": "bool",
-                      "id": 6
-                    }
-                  }
-                },
-                "WriteLogEntriesResponse": {
-                  "fields": {}
-                },
-                "WriteLogEntriesPartialErrors": {
-                  "fields": {
-                    "logEntryErrors": {
-                      "keyType": "int32",
-                      "type": "google.rpc.Status",
-                      "id": 1
-                    }
-                  }
-                },
-                "ListLogEntriesRequest": {
-                  "fields": {
-                    "projectIds": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 1,
-                      "options": {
-                        "deprecated": true
-                      }
-                    },
-                    "resourceNames": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 8
-                    },
-                    "filter": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "orderBy": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 4
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 5
-                    }
-                  }
-                },
-                "ListLogEntriesResponse": {
-                  "fields": {
-                    "entries": {
-                      "rule": "repeated",
-                      "type": "LogEntry",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "ListMonitoredResourceDescriptorsRequest": {
-                  "fields": {
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 1
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "ListMonitoredResourceDescriptorsResponse": {
-                  "fields": {
-                    "resourceDescriptors": {
-                      "rule": "repeated",
-                      "type": "google.api.MonitoredResourceDescriptor",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "ListLogsRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 2
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 3
-                    }
-                  }
-                },
-                "ListLogsResponse": {
-                  "fields": {
-                    "logNames": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 3
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "LogEntry": {
-                  "oneofs": {
-                    "payload": {
-                      "oneof": [
-                        "protoPayload",
-                        "textPayload",
-                        "jsonPayload"
-                      ]
-                    }
-                  },
-                  "fields": {
-                    "logName": {
-                      "type": "string",
-                      "id": 12
-                    },
-                    "resource": {
-                      "type": "google.api.MonitoredResource",
-                      "id": 8
-                    },
-                    "protoPayload": {
-                      "type": "google.protobuf.Any",
-                      "id": 2
-                    },
-                    "textPayload": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "jsonPayload": {
-                      "type": "google.protobuf.Struct",
-                      "id": 6
-                    },
-                    "timestamp": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 9
-                    },
-                    "receiveTimestamp": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 24
-                    },
-                    "severity": {
-                      "type": "google.logging.type.LogSeverity",
-                      "id": 10
-                    },
-                    "insertId": {
-                      "type": "string",
-                      "id": 4
-                    },
-                    "httpRequest": {
-                      "type": "google.logging.type.HttpRequest",
-                      "id": 7
-                    },
-                    "labels": {
-                      "keyType": "string",
-                      "type": "string",
-                      "id": 11
-                    },
-                    "metadata": {
-                      "type": "google.api.MonitoredResourceMetadata",
-                      "id": 25,
-                      "options": {
-                        "deprecated": true
-                      }
-                    },
-                    "operation": {
-                      "type": "LogEntryOperation",
-                      "id": 15
-                    },
-                    "trace": {
-                      "type": "string",
-                      "id": 22
-                    },
-                    "spanId": {
-                      "type": "string",
-                      "id": 27
-                    },
-                    "traceSampled": {
-                      "type": "bool",
-                      "id": 30
-                    },
-                    "sourceLocation": {
-                      "type": "LogEntrySourceLocation",
-                      "id": 23
-                    }
-                  }
-                },
-                "LogEntryOperation": {
-                  "fields": {
-                    "id": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "producer": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "first": {
-                      "type": "bool",
-                      "id": 3
-                    },
-                    "last": {
-                      "type": "bool",
-                      "id": 4
-                    }
-                  }
-                },
-                "LogEntrySourceLocation": {
-                  "fields": {
-                    "file": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "line": {
-                      "type": "int64",
-                      "id": 2
-                    },
-                    "function": {
-                      "type": "string",
-                      "id": 3
-                    }
-                  }
-                },
-                "MetricsServiceV2": {
-                  "options": {
-                    "(google.api.default_host)": "logging.googleapis.com",
-                    "(google.api.oauth_scopes)": "https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/cloud-platform.read-only,https://www.googleapis.com/auth/logging.admin,https://www.googleapis.com/auth/logging.read,https://www.googleapis.com/auth/logging.write"
-                  },
-                  "methods": {
-                    "ListLogMetrics": {
-                      "requestType": "ListLogMetricsRequest",
-                      "responseType": "ListLogMetricsResponse",
-                      "options": {
-                        "(google.api.http).get": "/v2/{parent=projects/*}/metrics"
-                      }
-                    },
-                    "GetLogMetric": {
-                      "requestType": "GetLogMetricRequest",
-                      "responseType": "LogMetric",
-                      "options": {
-                        "(google.api.http).get": "/v2/{metric_name=projects/*/metrics/*}"
-                      }
-                    },
-                    "CreateLogMetric": {
-                      "requestType": "CreateLogMetricRequest",
-                      "responseType": "LogMetric",
-                      "options": {
-                        "(google.api.http).post": "/v2/{parent=projects/*}/metrics",
-                        "(google.api.http).body": "metric"
-                      }
-                    },
-                    "UpdateLogMetric": {
-                      "requestType": "UpdateLogMetricRequest",
-                      "responseType": "LogMetric",
-                      "options": {
-                        "(google.api.http).put": "/v2/{metric_name=projects/*/metrics/*}",
-                        "(google.api.http).body": "metric"
-                      }
-                    },
-                    "DeleteLogMetric": {
-                      "requestType": "DeleteLogMetricRequest",
-                      "responseType": "google.protobuf.Empty",
-                      "options": {
-                        "(google.api.http).delete": "/v2/{metric_name=projects/*/metrics/*}"
-                      }
-                    }
-                  }
-                },
-                "LogMetric": {
-                  "fields": {
-                    "name": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "description": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "filter": {
-                      "type": "string",
-                      "id": 3
-                    },
-                    "metricDescriptor": {
-                      "type": "google.api.MetricDescriptor",
-                      "id": 5
-                    },
-                    "valueExtractor": {
-                      "type": "string",
-                      "id": 6
-                    },
-                    "labelExtractors": {
-                      "keyType": "string",
-                      "type": "string",
-                      "id": 7
-                    },
-                    "bucketOptions": {
-                      "type": "google.api.Distribution.BucketOptions",
-                      "id": 8
-                    },
-                    "createTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 9
-                    },
-                    "updateTime": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 10
-                    },
-                    "version": {
-                      "type": "ApiVersion",
-                      "id": 4,
-                      "options": {
-                        "deprecated": true
-                      }
-                    }
-                  },
-                  "nested": {
-                    "ApiVersion": {
-                      "values": {
-                        "V2": 0,
-                        "V1": 1
-                      }
-                    }
-                  }
-                },
-                "ListLogMetricsRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "pageToken": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "pageSize": {
-                      "type": "int32",
-                      "id": 3
-                    }
-                  }
-                },
-                "ListLogMetricsResponse": {
-                  "fields": {
-                    "metrics": {
-                      "rule": "repeated",
-                      "type": "LogMetric",
-                      "id": 1
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "id": 2
-                    }
-                  }
-                },
-                "GetLogMetricRequest": {
-                  "fields": {
-                    "metricName": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                },
-                "CreateLogMetricRequest": {
-                  "fields": {
-                    "parent": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "metric": {
-                      "type": "LogMetric",
-                      "id": 2
-                    }
-                  }
-                },
-                "UpdateLogMetricRequest": {
-                  "fields": {
-                    "metricName": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "metric": {
-                      "type": "LogMetric",
-                      "id": 2
-                    }
-                  }
-                },
-                "DeleteLogMetricRequest": {
-                  "fields": {
-                    "metricName": {
-                      "type": "string",
-                      "id": 1
-                    }
-                  }
-                }
-              }
-            },
-            "type": {
-              "options": {
-                "csharp_namespace": "Google.Cloud.Logging.Type",
-                "go_package": "google.golang.org/genproto/googleapis/logging/type;ltype",
-                "java_multiple_files": true,
-                "java_outer_classname": "LogSeverityProto",
-                "java_package": "com.google.logging.type",
-                "php_namespace": "Google\\Cloud\\Logging\\Type"
-              },
-              "nested": {
-                "HttpRequest": {
-                  "fields": {
-                    "requestMethod": {
-                      "type": "string",
-                      "id": 1
-                    },
-                    "requestUrl": {
-                      "type": "string",
-                      "id": 2
-                    },
-                    "requestSize": {
-                      "type": "int64",
-                      "id": 3
-                    },
-                    "status": {
-                      "type": "int32",
-                      "id": 4
-                    },
-                    "responseSize": {
-                      "type": "int64",
-                      "id": 5
-                    },
-                    "userAgent": {
-                      "type": "string",
-                      "id": 6
-                    },
-                    "remoteIp": {
-                      "type": "string",
-                      "id": 7
-                    },
-                    "serverIp": {
-                      "type": "string",
-                      "id": 13
-                    },
-                    "referer": {
-                      "type": "string",
-                      "id": 8
-                    },
-                    "latency": {
-                      "type": "google.protobuf.Duration",
-                      "id": 14
-                    },
-                    "cacheLookup": {
-                      "type": "bool",
-                      "id": 11
-                    },
-                    "cacheHit": {
-                      "type": "bool",
-                      "id": 9
-                    },
-                    "cacheValidatedWithOriginServer": {
-                      "type": "bool",
-                      "id": 10
-                    },
-                    "cacheFillBytes": {
-                      "type": "int64",
-                      "id": 12
-                    },
-                    "protocol": {
-                      "type": "string",
-                      "id": 15
-                    }
-                  }
-                },
-                "LogSeverity": {
-                  "values": {
-                    "DEFAULT": 0,
-                    "DEBUG": 100,
-                    "INFO": 200,
-                    "NOTICE": 300,
-                    "WARNING": 400,
-                    "ERROR": 500,
-                    "CRITICAL": 600,
-                    "ALERT": 700,
-                    "EMERGENCY": 800
-                  }
-                }
-              }
-            }
-          }
-        },
-        "api": {
-          "options": {
-            "go_package": "google.golang.org/genproto/googleapis/api/metric;metric",
-            "java_multiple_files": true,
-            "java_outer_classname": "MetricProto",
-            "java_package": "com.google.api",
-            "objc_class_prefix": "GAPI",
-            "cc_enable_arenas": true
-          },
-          "nested": {
-            "http": {
-              "type": "HttpRule",
-              "id": 72295728,
-              "extend": "google.protobuf.MethodOptions"
-            },
-            "Http": {
-              "fields": {
-                "rules": {
-                  "rule": "repeated",
-                  "type": "HttpRule",
-                  "id": 1
-                },
-                "fullyDecodeReservedExpansion": {
-                  "type": "bool",
-                  "id": 2
-                }
-              }
-            },
-            "HttpRule": {
-              "oneofs": {
-                "pattern": {
-                  "oneof": [
-                    "get",
-                    "put",
-                    "post",
-                    "delete",
-                    "patch",
-                    "custom"
-                  ]
-                }
-              },
-              "fields": {
-                "selector": {
-                  "type": "string",
-                  "id": 1
-                },
-                "get": {
-                  "type": "string",
-                  "id": 2
-                },
-                "put": {
-                  "type": "string",
-                  "id": 3
-                },
-                "post": {
-                  "type": "string",
-                  "id": 4
-                },
-                "delete": {
-                  "type": "string",
-                  "id": 5
-                },
-                "patch": {
-                  "type": "string",
-                  "id": 6
-                },
-                "custom": {
-                  "type": "CustomHttpPattern",
-                  "id": 8
-                },
-                "body": {
-                  "type": "string",
-                  "id": 7
-                },
-                "responseBody": {
-                  "type": "string",
-                  "id": 12
-                },
-                "additionalBindings": {
-                  "rule": "repeated",
-                  "type": "HttpRule",
-                  "id": 11
-                }
-              }
-            },
-            "CustomHttpPattern": {
-              "fields": {
-                "kind": {
-                  "type": "string",
-                  "id": 1
-                },
-                "path": {
-                  "type": "string",
-                  "id": 2
-                }
-              }
-            },
-            "methodSignature": {
-              "rule": "repeated",
-              "type": "string",
-              "id": 1051,
-              "extend": "google.protobuf.MethodOptions"
-            },
-            "defaultHost": {
-              "type": "string",
-              "id": 1049,
-              "extend": "google.protobuf.ServiceOptions"
-            },
-            "oauthScopes": {
-              "type": "string",
-              "id": 1050,
-              "extend": "google.protobuf.ServiceOptions"
-            },
-            "MonitoredResourceDescriptor": {
-              "fields": {
-                "name": {
-                  "type": "string",
-                  "id": 5
-                },
-                "type": {
-                  "type": "string",
-                  "id": 1
-                },
-                "displayName": {
-                  "type": "string",
-                  "id": 2
-                },
-                "description": {
-                  "type": "string",
-                  "id": 3
-                },
-                "labels": {
-                  "rule": "repeated",
-                  "type": "LabelDescriptor",
-                  "id": 4
-                },
-                "launchStage": {
-                  "type": "LaunchStage",
-                  "id": 7
-                }
-              }
-            },
-            "MonitoredResource": {
-              "fields": {
-                "type": {
-                  "type": "string",
-                  "id": 1
-                },
-                "labels": {
-                  "keyType": "string",
-                  "type": "string",
-                  "id": 2
-                }
-              }
-            },
-            "MonitoredResourceMetadata": {
-              "fields": {
-                "systemLabels": {
-                  "type": "google.protobuf.Struct",
-                  "id": 1
-                },
-                "userLabels": {
-                  "keyType": "string",
-                  "type": "string",
-                  "id": 2
-                }
-              }
-            },
-            "LabelDescriptor": {
-              "fields": {
-                "key": {
-                  "type": "string",
-                  "id": 1
-                },
-                "valueType": {
-                  "type": "ValueType",
-                  "id": 2
-                },
-                "description": {
-                  "type": "string",
-                  "id": 3
-                }
-              },
-              "nested": {
-                "ValueType": {
-                  "values": {
-                    "STRING": 0,
-                    "BOOL": 1,
-                    "INT64": 2
-                  }
-                }
-              }
-            },
-            "LaunchStage": {
-              "values": {
-                "LAUNCH_STAGE_UNSPECIFIED": 0,
-                "EARLY_ACCESS": 1,
-                "ALPHA": 2,
-                "BETA": 3,
-                "GA": 4,
-                "DEPRECATED": 5
-              }
-            },
-            "Distribution": {
-              "fields": {
-                "count": {
-                  "type": "int64",
-                  "id": 1
-                },
-                "mean": {
-                  "type": "double",
-                  "id": 2
-                },
-                "sumOfSquaredDeviation": {
-                  "type": "double",
-                  "id": 3
-                },
-                "range": {
-                  "type": "Range",
-                  "id": 4
-                },
-                "bucketOptions": {
-                  "type": "BucketOptions",
-                  "id": 6
-                },
-                "bucketCounts": {
-                  "rule": "repeated",
-                  "type": "int64",
-                  "id": 7
-                },
-                "exemplars": {
-                  "rule": "repeated",
-                  "type": "Exemplar",
-                  "id": 10
-                }
-              },
-              "nested": {
-                "Range": {
-                  "fields": {
-                    "min": {
-                      "type": "double",
-                      "id": 1
-                    },
-                    "max": {
-                      "type": "double",
-                      "id": 2
-                    }
-                  }
-                },
-                "BucketOptions": {
-                  "oneofs": {
-                    "options": {
-                      "oneof": [
-                        "linearBuckets",
-                        "exponentialBuckets",
-                        "explicitBuckets"
-                      ]
-                    }
-                  },
-                  "fields": {
-                    "linearBuckets": {
-                      "type": "Linear",
-                      "id": 1
-                    },
-                    "exponentialBuckets": {
-                      "type": "Exponential",
-                      "id": 2
-                    },
-                    "explicitBuckets": {
-                      "type": "Explicit",
-                      "id": 3
-                    }
-                  },
-                  "nested": {
-                    "Linear": {
-                      "fields": {
-                        "numFiniteBuckets": {
-                          "type": "int32",
-                          "id": 1
-                        },
-                        "width": {
-                          "type": "double",
-                          "id": 2
-                        },
-                        "offset": {
-                          "type": "double",
-                          "id": 3
-                        }
-                      }
-                    },
-                    "Exponential": {
-                      "fields": {
-                        "numFiniteBuckets": {
-                          "type": "int32",
-                          "id": 1
-                        },
-                        "growthFactor": {
-                          "type": "double",
-                          "id": 2
-                        },
-                        "scale": {
-                          "type": "double",
-                          "id": 3
-                        }
-                      }
-                    },
-                    "Explicit": {
-                      "fields": {
-                        "bounds": {
-                          "rule": "repeated",
-                          "type": "double",
-                          "id": 1
-                        }
-                      }
-                    }
-                  }
-                },
-                "Exemplar": {
-                  "fields": {
-                    "value": {
-                      "type": "double",
-                      "id": 1
-                    },
-                    "timestamp": {
-                      "type": "google.protobuf.Timestamp",
-                      "id": 2
-                    },
-                    "attachments": {
-                      "rule": "repeated",
-                      "type": "google.protobuf.Any",
-                      "id": 3
-                    }
-                  }
-                }
-              }
-            },
-            "MetricDescriptor": {
-              "fields": {
-                "name": {
-                  "type": "string",
-                  "id": 1
-                },
-                "type": {
-                  "type": "string",
-                  "id": 8
-                },
-                "labels": {
-                  "rule": "repeated",
-                  "type": "LabelDescriptor",
-                  "id": 2
-                },
-                "metricKind": {
-                  "type": "MetricKind",
-                  "id": 3
-                },
-                "valueType": {
-                  "type": "ValueType",
-                  "id": 4
-                },
-                "unit": {
-                  "type": "string",
-                  "id": 5
-                },
-                "description": {
-                  "type": "string",
-                  "id": 6
-                },
-                "displayName": {
-                  "type": "string",
-                  "id": 7
-                },
-                "metadata": {
-                  "type": "MetricDescriptorMetadata",
-                  "id": 10
-                },
-                "launchStage": {
-                  "type": "LaunchStage",
-                  "id": 12
-                }
-              },
-              "nested": {
-                "MetricDescriptorMetadata": {
-                  "fields": {
-                    "launchStage": {
-                      "type": "LaunchStage",
-                      "id": 1,
-                      "options": {
-                        "deprecated": true
-                      }
-                    },
-                    "samplePeriod": {
-                      "type": "google.protobuf.Duration",
-                      "id": 2
-                    },
-                    "ingestDelay": {
-                      "type": "google.protobuf.Duration",
-                      "id": 3
-                    }
-                  }
-                },
-                "MetricKind": {
-                  "values": {
-                    "METRIC_KIND_UNSPECIFIED": 0,
-                    "GAUGE": 1,
-                    "DELTA": 2,
-                    "CUMULATIVE": 3
-                  }
-                },
-                "ValueType": {
-                  "values": {
-                    "VALUE_TYPE_UNSPECIFIED": 0,
-                    "BOOL": 1,
-                    "INT64": 2,
-                    "DOUBLE": 3,
-                    "STRING": 4,
-                    "DISTRIBUTION": 5,
-                    "MONEY": 6
-                  }
-                }
-              }
-            },
-            "Metric": {
-              "fields": {
-                "type": {
-                  "type": "string",
-                  "id": 3
-                },
-                "labels": {
-                  "keyType": "string",
-                  "type": "string",
                   "id": 2
                 }
               }
