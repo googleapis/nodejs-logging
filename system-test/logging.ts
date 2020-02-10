@@ -99,16 +99,42 @@ describe('Logging', () => {
     }
 
     async function deleteLogs() {
-      const [logs] = await logging.getLogs();
+      const maxPatienceMs = 300000; // 5 minutes.
+      const [logs] = await logging.getLogs({
+        pageSize: 10000,
+      });
       const logsToDelete = logs.filter(log => {
         return (
-          log.name.includes(TESTS_PREFIX) &&
+          log.name.startsWith(TESTS_PREFIX) &&
           getDateFromGeneratedName(log.name) < oneHourAgo
         );
       });
 
+      if (logsToDelete.length > 0) {
+        console.log('Deleting', logsToDelete.length, 'test logs');
+      }
+
+      let numLogsDeleted = 0;
       for (const log of logsToDelete) {
-        await log.delete();
+        try {
+          await log.delete();
+          numLogsDeleted++;
+
+          // A one second gap is preferred between delete calls to avoid rate
+          // limiting.
+          let timeoutMs = 1000;
+          if (numLogsDeleted * 1000 > maxPatienceMs) {
+            // This is taking too long. If we hit the rate limit, we'll
+            // hopefully scoop up the stragglers on a future test run.
+            timeoutMs = 10;
+          }
+          await new Promise(res => setTimeout(res, timeoutMs));
+        } catch (e) {
+          if (e.code !== 5) {
+            // Log exists, but couldn't be deleted.
+            console.warn(`Deleting ${log.name} failed:`, e.message);
+          }
+        }
       }
     }
 
