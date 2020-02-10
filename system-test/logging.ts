@@ -100,9 +100,20 @@ describe('Logging', () => {
 
     async function deleteLogs() {
       const maxPatienceMs = 300000; // 5 minutes.
-      const [logs] = await logging.getLogs({
-        pageSize: 10000,
-      });
+      let logs;
+
+      try {
+        [logs] = await logging.getLogs({
+          pageSize: 10000,
+        });
+      } catch (e) {
+        // We'll ignore rate-limiting errors. The next test run can try again.
+        if (e.code !== 8) {
+          console.warn(e.message);
+        }
+        return;
+      }
+
       const logsToDelete = logs.filter(log => {
         return (
           log.name.startsWith(TESTS_PREFIX) &&
