@@ -144,7 +144,6 @@ describe('Logging', () => {
             console.warn(
               'Rate limit reached. The next test run will attempt to delete the rest'
             );
-            // Rate limit reached. We'll try to finish cleaning up next time.
             break;
           }
           if (e.code !== 5) {
