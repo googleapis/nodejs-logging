@@ -107,10 +107,9 @@ describe('Logging', () => {
           pageSize: 10000,
         });
       } catch (e) {
-        // We'll ignore rate-limiting errors. The next test run can try again.
-        if (e.code !== 8) {
-          console.warn(e.message);
-        }
+        console.warn('Error retrieving logs:');
+        console.warn(`  ${e.message}`);
+        console.warn('No test logs were deleted');
         return;
       }
 
