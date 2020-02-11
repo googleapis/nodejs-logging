@@ -147,6 +147,10 @@ describe('Logging', () => {
           }
         }
       }
+
+      if (logsToDelete.length > 0) {
+        console.log(`${numLogsDeleted}/${logsToDelete.length} logs deleted`);
+      }
     }
 
     async function getAndDelete(method: Function) {
