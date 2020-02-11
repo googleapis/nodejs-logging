@@ -121,7 +121,7 @@ describe('Logging', () => {
       });
 
       if (logsToDelete.length > 0) {
-        console.log('Deleting', logsToDelete.length, 'test logs');
+        console.log('Deleting', logsToDelete.length, 'test logs...');
       }
 
       let numLogsDeleted = 0;
@@ -141,6 +141,9 @@ describe('Logging', () => {
           await new Promise(res => setTimeout(res, timeoutMs));
         } catch (e) {
           if (e.code === 8) {
+            console.warn(
+              'Rate limit reached. The next test run will attempt to delete the rest'
+            );
             // Rate limit reached. We'll try to finish cleaning up next time.
             break;
           }
