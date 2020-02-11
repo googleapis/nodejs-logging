@@ -559,7 +559,8 @@
                       "responseType": "ListLogEntriesResponse",
                       "options": {
                         "(google.api.http).post": "/v2/entries:list",
-                        "(google.api.http).body": "*"
+                        "(google.api.http).body": "*",
+                        "(google.api.method_signature)": "resource_names,filter,order_by"
                       }
                     },
                     "ListMonitoredResourceDescriptors": {
@@ -1035,7 +1036,7 @@
                       "id": 1,
                       "options": {
                         "(google.api.field_behavior)": "REQUIRED",
-                        "(google.api.resource_reference).type": "cloudresourcemanager.googleapis.com/Metric"
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Metric"
                       }
                     },
                     "metric": {
