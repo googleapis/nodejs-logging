@@ -100,9 +100,19 @@ describe('Logging', () => {
 
     async function deleteLogs() {
       const maxPatienceMs = 300000; // 5 minutes.
-      const [logs] = await logging.getLogs({
-        pageSize: 10000,
-      });
+      let logs;
+
+      try {
+        [logs] = await logging.getLogs({
+          pageSize: 10000,
+        });
+      } catch (e) {
+        console.warn('Error retrieving logs:');
+        console.warn(`  ${e.message}`);
+        console.warn('No test logs were deleted');
+        return;
+      }
+
       const logsToDelete = logs.filter(log => {
         return (
           log.name.startsWith(TESTS_PREFIX) &&
@@ -111,7 +121,7 @@ describe('Logging', () => {
       });
 
       if (logsToDelete.length > 0) {
-        console.log('Deleting', logsToDelete.length, 'test logs');
+        console.log('Deleting', logsToDelete.length, 'test logs...');
       }
 
       let numLogsDeleted = 0;
@@ -130,11 +140,21 @@ describe('Logging', () => {
           }
           await new Promise(res => setTimeout(res, timeoutMs));
         } catch (e) {
+          if (e.code === 8) {
+            console.warn(
+              'Rate limit reached. The next test run will attempt to delete the rest'
+            );
+            break;
+          }
           if (e.code !== 5) {
             // Log exists, but couldn't be deleted.
             console.warn(`Deleting ${log.name} failed:`, e.message);
           }
         }
+      }
+
+      if (logsToDelete.length > 0) {
+        console.log(`${numLogsDeleted}/${logsToDelete.length} logs deleted`);
       }
     }
 
