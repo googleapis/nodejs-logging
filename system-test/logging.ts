@@ -140,6 +140,10 @@ describe('Logging', () => {
           }
           await new Promise(res => setTimeout(res, timeoutMs));
         } catch (e) {
+          if (e.code === 8) {
+            // Rate limit reached. We'll try to finish cleaning up next time.
+            break;
+          }
           if (e.code !== 5) {
             // Log exists, but couldn't be deleted.
             console.warn(`Deleting ${log.name} failed:`, e.message);
