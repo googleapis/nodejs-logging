@@ -48,8 +48,20 @@ describe('Logging', () => {
   const topic = pubsub.topic(generateName());
 
   before(async () => {
+    const serviceAccount = (await storage.authClient.getCredentials())
+      .client_email;
+
     await Promise.all([
-      bucket.create(),
+      bucket.create().then(() => {
+        return bucket.iam.setPolicy({
+          bindings: [
+            {
+              role: 'roles/storage.admin',
+              members: [`serviceAccount:${serviceAccount}`],
+            },
+          ],
+        });
+      }),
       dataset.create(),
       topic.create(),
       logging.auth.getProjectId().then(projectId => {
