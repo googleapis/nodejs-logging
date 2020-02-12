@@ -32,43 +32,35 @@ nock(HOST_ADDRESS)
   .replyWithError({code: 'ENOTFOUND'})
   .persist();
 
-describe('Logging', () => {
-  let PROJECT_ID: string;
-  const TESTS_PREFIX = 'nodejs-logging-system-test';
-  const WRITE_CONSISTENCY_DELAY_MS = 5000;
-
+describe('Logging', async () => {
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
   const storage = new Storage();
   const logging = new Logging();
+
+  const PROJECT_ID = await logging.auth.getProjectId();
+  const TESTS_PREFIX = 'nodejs-logging-system-test';
+  const WRITE_CONSISTENCY_DELAY_MS = 5000;
 
   // Create the possible destinations for sinks that we will create.
   const bucket = storage.bucket(generateName());
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
   const topic = pubsub.topic(generateName());
 
-  before(async () => {
-    const serviceAccount = (await storage.authClient.getCredentials())
-      .client_email;
+  const serviceAccount = (await logging.auth.getCredentials())
+    .client_email;
 
-    await Promise.all([
-      bucket.create().then(() => {
-        return bucket.iam.setPolicy({
-          bindings: [
-            {
-              role: 'roles/storage.admin',
-              members: [`serviceAccount:${serviceAccount}`],
-            },
-          ],
-        });
-      }),
-      dataset.create(),
-      topic.create(),
-      logging.auth.getProjectId().then(projectId => {
-        PROJECT_ID = projectId;
-      }),
-    ]);
+  await bucket.create();
+  await bucket.iam.setPolicy({
+    bindings: [
+      {
+        role: 'roles/storage.admin',
+        members: [`serviceAccount:${serviceAccount}`],
+      },
+    ],
   });
+  await dataset.create();
+  await topic.create();
 
   after(async () => {
     const oneHourAgo = new Date();
@@ -83,19 +75,15 @@ describe('Logging', () => {
     ]);
 
     async function deleteBuckets() {
-      const [buckets] = await storage.getBuckets({
-        prefix: TESTS_PREFIX,
+      const [buckets] = await storage.getBuckets({prefix: TESTS_PREFIX});
+      const bucketsToDelete = buckets.filter(bucket => {
+        return new Date(bucket.metadata.timeCreated) < oneHourAgo;
       });
-      return Promise.all(
-        buckets
-          .filter(bucket => {
-            return new Date(bucket.metadata.timeCreated) < oneHourAgo;
-          })
-          .map(async bucket => {
-            await bucket.deleteFiles();
-            await bucket.delete();
-          })
-      );
+
+      for (const bucket of bucketsToDelete) {
+        await bucket.deleteFiles();
+        await bucket.delete();
+      }
     }
 
     async function deleteDatasets() {
