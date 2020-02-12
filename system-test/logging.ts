@@ -47,8 +47,7 @@ describe('Logging', async () => {
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
   const topic = pubsub.topic(generateName());
 
-  const serviceAccount = (await logging.auth.getCredentials())
-    .client_email;
+  const serviceAccount = (await logging.auth.getCredentials()).client_email;
 
   await bucket.create();
   await bucket.iam.setPolicy({
