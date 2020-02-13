@@ -75,8 +75,8 @@ async function logHttpRequest(
     await log.write(entry);
     console.log(`Logged: ${text}`);
   }
-  // [END logging_quickstart]
   writeLog();
+  // [END logging_quickstart]
 }
 
 const args = process.argv.slice(2);
