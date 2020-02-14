@@ -79,9 +79,12 @@ async function quickstart(
   // Prepares a log entry
   const entry = log.entry(metadata, text);
 
-  // Writes the log entry
-  await log.write(entry);
-  console.log(`Logged: ${text}`);
+  async function writeLog() {
+    // Writes the log entry
+    await log.write(entry);
+    console.log(`Logged: ${text}`);
+  }
+  writeLog();
 }
 
 ```
