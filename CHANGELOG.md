@@ -4,6 +4,22 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [7.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.1.0...v7.2.0) (2020-02-19)
+
+
+### Features
+
+* add CMEK config and update grpc config logic ([#700](https://www.github.com/googleapis/nodejs-logging/issues/700)) ([a3fb0f3](https://www.github.com/googleapis/nodejs-logging/commit/a3fb0f3b55583220883fb83504f94f57cf907267))
+* add getLogs() and getLogsStream() ([#692](https://www.github.com/googleapis/nodejs-logging/issues/692)) ([d582eeb](https://www.github.com/googleapis/nodejs-logging/commit/d582eebb79d183a5fa1403764fc72816f2939b87))
+
+
+### Bug Fixes
+
+* **deps:** update dependency type-fest to ^0.10.0 ([#697](https://www.github.com/googleapis/nodejs-logging/issues/697)) ([395a31d](https://www.github.com/googleapis/nodejs-logging/commit/395a31db786bd416c9387e5b893803c839b39ae7))
+* use logging api resource for metric ([#704](https://www.github.com/googleapis/nodejs-logging/issues/704)) ([0239b81](https://www.github.com/googleapis/nodejs-logging/commit/0239b81ed816412e2a06bcfaaa347552cb00dc29))
+* **docs:** orderby samples and documentation ([#713](https://www.github.com/googleapis/nodejs-logging/issues/713)) ([e703c23](https://www.github.com/googleapis/nodejs-logging/commit/e703c23c4f4c9a49878a50013e6208e2f9aae2cf))
+* **types:** write options dryRun and partialSuccess ([#711](https://www.github.com/googleapis/nodejs-logging/issues/711)) ([#712](https://www.github.com/googleapis/nodejs-logging/issues/712)) ([56a8ed8](https://www.github.com/googleapis/nodejs-logging/commit/56a8ed84ab5d9bad137e8b5ac779a2f1e24aed6a))
+
 ## [7.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.0.1...v7.1.0) (2020-01-29)
 
 
