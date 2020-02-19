@@ -491,7 +491,7 @@ class Logging {
    * @property {number} [maxResults] Maximum number of items plus prefixes to
    *     return.
    * @property {string} [orderBy] How the results should be sorted,
-   *     `timestamp` (oldest first) and `timestamp desc` (newest first,
+   *     `timestamp asc` (oldest first) and `timestamp desc` (newest first,
    *     **default**).
    * @property {number} [pageSize] Maximum number of logs to return.
    * @property {string} [pageToken] A previously-returned page token

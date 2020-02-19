@@ -158,7 +158,7 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
    */
   // const filter = 'severity=ERROR';
   // const pageSize = 5;
-  // const orderBy = 'timestamp';
+  // const orderBy = 'timestamp desc';
 
   const options = {
     filter: filter,
