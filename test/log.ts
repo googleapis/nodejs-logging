@@ -475,6 +475,18 @@ describe('Log', () => {
       await log.write(ENTRY);
     });
 
+    it('should pass through additional options', async () => {
+      log.logging.loggingService.writeLogEntries = (
+        reqOpts: WriteOptions,
+        gaxOpts: {}
+      ) => {
+        assert.strictEqual(reqOpts.dryRun, true);
+        assert.strictEqual(reqOpts.partialSuccess, false);
+      };
+
+      await log.write(ENTRY, {dryRun: true, partialSuccess: false});
+    });
+
     it('should not truncate entries by default', async () => {
       const logger = createLogger();
       const entry = new Entry({}, 'hello world'.padEnd(300000, '.'));
