@@ -55,8 +55,10 @@ export type DeleteCallback = ApiResponseCallback;
 
 export type MonitoredResource = google.api.IMonitoredResource;
 export interface WriteOptions {
+  dryRun?: boolean;
   gaxOptions?: CallOptions;
   labels?: {[index: string]: string};
+  partialSuccess?: boolean;
   resource?: MonitoredResource;
 }
 
@@ -721,9 +723,14 @@ class Log implements LogSeverityFunctions {
    * Write options.
    *
    * @typedef {object} WriteOptions
+   * @property {boolean} [dryRun] If true, the request should expect normal
+   *     response, but the entries won't be persisted nor exported.
    * @property {object} gaxOptions Request configuration options, outlined here:
    *     https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
    * @property {object[]} labels Labels to set on the log.
+   * @property {boolean} [partialSuccess] Whether valid entries should be
+   *     written even if some other entries fail due to INVALID_ARGUMENT
+   *     or PERMISSION_DENIED errors.
    * @property {object} resource A default monitored resource for entries where
    *     one isn't specified.
    */
