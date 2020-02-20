@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [7.2.1](https://www.github.com/googleapis/nodejs-logging/compare/v7.2.0...v7.2.1) (2020-02-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.20 ([#714](https://www.github.com/googleapis/nodejs-logging/issues/714)) ([865b19f](https://www.github.com/googleapis/nodejs-logging/commit/865b19f95af7e541dbe215cdf72bf34df2c6567d))
+
 ## [7.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.1.0...v7.2.0) (2020-02-19)
 
 
