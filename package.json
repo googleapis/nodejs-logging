@@ -1,7 +1,7 @@
 {
   "name": "@google-cloud/logging",
   "description": "Stackdriver Logging Client Library for Node.js",
-  "version": "7.2.0",
+  "version": "7.2.1",
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "engines": {
@@ -51,7 +51,7 @@
     "@google-cloud/paginator": "^2.0.0",
     "@google-cloud/projectify": "^1.0.0",
     "@google-cloud/promisify": "^1.0.0",
-    "@opencensus/propagation-stackdriver": "0.0.19",
+    "@opencensus/propagation-stackdriver": "0.0.20",
     "arrify": "^2.0.0",
     "dot-prop": "^5.1.0",
     "eventid": "^1.0.0",
@@ -65,7 +65,7 @@
     "snakecase-keys": "^3.0.0",
     "stream-events": "^1.0.4",
     "through2": "^3.0.0",
-    "type-fest": "^0.10.0"
+    "type-fest": "^0.11.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^4.0.0",
@@ -101,10 +101,10 @@
     "mocha": "^7.0.0",
     "mv": "^2.1.1",
     "ncp": "^2.0.0",
-    "nock": "^11.3.2",
+    "nock": "^12.0.0",
     "prettier": "^1.15.1",
     "proxyquire": "^2.1.0",
-    "sinon": "^8.0.0",
+    "sinon": "^9.0.0",
     "typescript": "3.6.4",
     "uuid": "^3.3.2"
   }
