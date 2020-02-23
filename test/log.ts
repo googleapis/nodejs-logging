@@ -17,6 +17,7 @@ import * as assert from 'assert';
 import {describe, it} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
+import * as sinon from 'sinon';
 import {Log as LOG, WriteOptions, GetEntriesRequest} from '../src/log';
 import {Logging} from '../src/index';
 
@@ -341,13 +342,39 @@ describe('Log', () => {
     const ENTRY = {} as Entry;
     const OPTIONS = {};
     const FAKE_RESOURCE = 'fake-resource';
+    let decorateEntriesStub: sinon.SinonStub;
+    let fakeResourceStub: sinon.SinonStub;
+    let projectIdStub: sinon.SinonStub;
+    let writeLogStub: sinon.SinonStub;
+    let origDetectedResource: string;
 
     beforeEach(() => {
-      log.decorateEntries_ = (entries: Entry[]) => entries;
-      fakeMetadata.getDefaultResource = async () => {
-        return FAKE_RESOURCE;
-      };
-      log.logging.auth.getProjectId = async () => PROJECT_ID;
+      decorateEntriesStub = sinon.stub(log, 'decorateEntries_').returnsArg(0);
+      fakeResourceStub = sinon
+        .stub(fakeMetadata, 'getDefaultResource')
+        .resolves(FAKE_RESOURCE);
+      projectIdStub = sinon.stub().resolves(PROJECT_ID);
+      writeLogStub = sinon.stub();
+
+      // loggingService and auth are fixtures defined in the root suite
+      // they don't have these methods, but we need them for this sub suite
+      log.logging.auth.getProjectId = projectIdStub;
+      log.logging.loggingService.writeLogEntries = writeLogStub;
+
+      // primitives used in the coming tests must be cached and swapped
+      // to avoid carrying state to latter tests
+      origDetectedResource = log.logging.detectedResource;
+    });
+
+    afterEach(() => {
+      decorateEntriesStub.restore();
+      fakeResourceStub.restore();
+      log.logging.detectedResource = origDetectedResource;
+    });
+
+    after(() => {
+      delete log.logging.auth.getProjectId;
+      delete log.logging.loggingService.writeLogEntries;
     });
 
     it('should forward options.resource to request', async () => {
@@ -356,46 +383,41 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       }) as WriteOptions;
 
-      log.logging.loggingService.writeLogEntries = (
-        reqOpts: {},
-        gaxOpts: {}
-      ) => {
-        assert.deepStrictEqual(reqOpts, {
-          logName: log.formattedName_,
-          entries: [ENTRY],
-          resource: CUSTOM_RESOURCE,
-        });
-
-        assert.strictEqual(gaxOpts, undefined);
-      };
-
       await log.write(ENTRY, optionsWithResource);
+      assert(
+        writeLogStub.calledOnceWithExactly(
+          {
+            logName: log.formattedName_,
+            entries: [ENTRY],
+            resource: CUSTOM_RESOURCE,
+          },
+          undefined
+        )
+      );
     });
 
     it('should cache a detected resource', async () => {
       const fakeResource = 'test-level-fake-resource';
-      fakeMetadata.getDefaultResource = async () => {
-        return fakeResource;
-      };
-      log.logging.loggingService.writeLogEntries = () => {
-        assert.strictEqual(log.logging.detectedResource, fakeResource);
-      };
+      fakeResourceStub.resolves(fakeResource);
+
       await log.write(ENTRY);
+      assert(writeLogStub.calledOnce);
+      assert.strictEqual(log.logging.detectedResource, fakeResource);
     });
 
     it('should re-use detected resource', async () => {
-      log.logging.detectedResource = 'environment-default-resource';
-      fakeMetadata.getDefaultResource = () => {
-        throw new Error('Cached resource was not used.');
-      };
-      // tslint:disable-next-line no-any
-      log.logging.loggingService.writeLogEntries = (
-        // tslint:disable-next-line no-any
-        reqOpts: any
-      ) => {
-        assert.strictEqual(reqOpts.resource, log.logging.detectedResource);
-      };
+      const reusableDetectedResource = 'environment-default-resource';
+      log.logging.detectedResource = reusableDetectedResource;
+      fakeResourceStub.throws('Cached resource was not used.');
+
       await log.write(ENTRY);
+      assert(
+        writeLogStub.calledOnceWith(
+          sinon.match({
+            resource: reusableDetectedResource,
+          })
+        )
+      );
     });
 
     it('should transform camelcase label keys to snake case', async () => {
@@ -413,161 +435,157 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      log.logging.loggingService.writeLogEntries = (
-        reqOpts: {},
-        gaxOpts: {}
-      ) => {
-        assert.deepStrictEqual(reqOpts, {
-          logName: log.formattedName_,
-          entries: [ENTRY],
-          resource: EXPECTED_RESOURCE,
-        });
-
-        assert.strictEqual(gaxOpts, undefined);
-      };
-
       await log.write(ENTRY, optionsWithResource);
+      assert(
+        writeLogStub.calledOnceWithExactly(
+          {
+            logName: log.formattedName_,
+            entries: [ENTRY],
+            resource: EXPECTED_RESOURCE,
+          },
+          undefined
+        )
+      );
     });
 
     it('should call gax method', async () => {
-      log.logging.loggingService.writeLogEntries = (
-        reqOpts: {},
-        gaxOpts: {}
-      ) => {
-        assert.deepStrictEqual(reqOpts, {
-          logName: log.formattedName_,
-          entries: [ENTRY],
-          resource: FAKE_RESOURCE,
-        });
-
-        assert.strictEqual(gaxOpts, undefined);
-      };
-
       await log.write(ENTRY, OPTIONS);
+      assert(
+        writeLogStub.calledOnceWithExactly(
+          {
+            logName: log.formattedName_,
+            entries: [ENTRY],
+            resource: FAKE_RESOURCE,
+          },
+          undefined
+        )
+      );
     });
 
     it('should arrify & decorate the entries', async () => {
       const decoratedEntries = [] as Entry[];
-
-      log.decorateEntries_ = (entries: Entry[]) => {
-        assert.strictEqual(entries[0], ENTRY);
-        return decoratedEntries;
-      };
-
-      // tslint:disable-next-line no-any
-      log.logging.loggingService.writeLogEntries = (
-        // tslint:disable-next-line no-any
-        reqOpts: any,
-        gaxOpts: {}
-      ) => {
-        assert.strictEqual(reqOpts.entries, decoratedEntries);
-      };
+      decorateEntriesStub.returns(decoratedEntries);
+      const arrifiedEntries = [ENTRY] as Entry[];
 
       await log.write(ENTRY, OPTIONS);
+      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries));
+      assert(
+        writeLogStub.calledOnceWith(
+          sinon.match({
+            entries: arrifiedEntries,
+          })
+        )
+      );
     });
 
     it('should not require options', async () => {
-      log.logging.loggingService.writeLogEntries = (
-        reqOpts: {},
-        gaxOpts: {}
-      ) => {};
-
       await log.write(ENTRY);
+      assert(writeLogStub.calledOnceWithExactly(sinon.match.object, undefined));
     });
 
     it('should pass through additional options', async () => {
-      log.logging.loggingService.writeLogEntries = (
-        reqOpts: WriteOptions,
-        gaxOpts: {}
-      ) => {
-        assert.strictEqual(reqOpts.dryRun, true);
-        assert.strictEqual(reqOpts.partialSuccess, false);
-      };
-
       await log.write(ENTRY, {dryRun: true, partialSuccess: false});
+      assert(
+        writeLogStub.calledOnceWith(
+          sinon.match({
+            dryRun: true,
+            partialSuccess: false,
+          })
+        )
+      );
     });
 
-    it('should not truncate entries by default', async () => {
-      const logger = createLogger();
-      const entry = new Entry({}, 'hello world'.padEnd(300000, '.'));
-      // tslint:disable-next-line no-any
-      logger.logging.loggingService.writeLogEntries = (
-        // tslint:disable-next-line no-any
-        reqOpts: any,
-        _gaxOpts: {}
-      ) => {
-        assert.strictEqual(reqOpts.entries[0].textPayload.length, 300000);
-      };
+    describe('truncateEntries', () => {
+      const entryMetaMaxLength = 100;
 
-      await logger.write(entry);
-    });
+      // this suite requires `decorateEntries_` for `truncateEntries` integration tests
+      // need to unstub that call
+      beforeEach(() => {
+        decorateEntriesStub.restore();
+      });
 
-    it('should truncate string entry if maxEntrySize hit', async () => {
-      const truncatingLogger = createLogger(200);
-      const entry = new Entry({}, 'hello world'.padEnd(2000, '.'));
+      it('should not truncate entries by default', async () => {
+        const longEntry = 'hello world'.padEnd(3e5, '.');
+        const entry = new Entry({}, longEntry);
 
-      truncatingLogger.logging.loggingService.writeLogEntries = (
-        // tslint:disable-next-line no-any
-        reqOpts: any,
-        _gaxOpts: {}
-      ) => {
+        assert.strictEqual(log.maxEntrySize, undefined);
+        await log.write(entry);
+        assert(writeLogStub.calledOnce);
+
+        const reqOpts = writeLogStub.firstCall.args[0];
+        const text = reqOpts.entries[0].textPayload;
+        assert.ok(text, longEntry);
+      });
+
+      it('should truncate string entry if maxEntrySize hit', async () => {
+        const maxSize = 2e2;
+        const longEntry = 'hello world'.padEnd(maxSize * 10, '.');
+        const entry = new Entry({}, longEntry);
+
+        log.maxEntrySize = maxSize;
+        await log.write(entry);
+        assert(writeLogStub.calledOnce);
+
+        const reqOpts = writeLogStub.firstCall.args[0];
         const text = reqOpts.entries[0].textPayload;
         assert.ok(text.startsWith('hello world'));
-        assert.ok(text.length < 300);
-      };
+        assert.ok(text.length < maxSize + entryMetaMaxLength);
+      });
 
-      await truncatingLogger.write(entry);
-    });
+      it('should not truncate string entry if less than maxEntrySize', async () => {
+        const maxSize = 2e3; // something greater than message length and entry overhead
+        const shortEntry = 'hello world';
+        const entry = new Entry({}, shortEntry);
 
-    it('should truncate message field, on object entry, if maxEntrySize hit', async () => {
-      const truncatingLogger = createLogger(200);
-      const entry = new Entry(
-        {},
-        {
-          message: 'hello world'.padEnd(2000, '.'),
-        }
-      );
+        log.maxEntrySize = maxSize;
+        await log.write(entry);
+        assert(writeLogStub.calledOnce);
 
-      truncatingLogger.logging.loggingService.writeLogEntries = (
-        // tslint:disable-next-line no-any
-        reqOpts: any,
-        _gaxOpts: {}
-      ) => {
+        const reqOpts = writeLogStub.firstCall.args[0];
+        const text = reqOpts.entries[0].textPayload;
+        assert.strictEqual(text, shortEntry);
+      });
+
+      it('should truncate message field, on object entry, if maxEntrySize hit', async () => {
+        const maxSize = 2e2;
+        const longEntry = 'hello world'.padEnd(maxSize * 10, '.');
+        const entry = new Entry({}, {message: longEntry});
+
+        log.maxEntrySize = maxSize;
+        await log.write(entry);
+        assert(writeLogStub.calledOnce);
+
+        const reqOpts = writeLogStub.firstCall.args[0];
         const text = reqOpts.entries[0].jsonPayload.fields.message.stringValue;
         assert.ok(text.startsWith('hello world'));
-        assert.ok(text.length < 300);
-      };
+        assert.ok(text.length < maxSize + entryMetaMaxLength);
+      });
 
-      await truncatingLogger.write(entry);
-    });
+      it('should truncate stack trace', async () => {
+        const maxSize = 300;
+        const entry = new Entry(
+          {},
+          {
+            message: 'hello world'.padEnd(2000, '.'),
+            metadata: {
+              stack: 'hello world'.padEnd(2000, '.'),
+            },
+          }
+        );
 
-    it('should truncate stack trace', async () => {
-      const truncatingLogger = createLogger(300);
-      const entry = new Entry(
-        {},
-        {
-          message: 'hello world'.padEnd(2000, '.'),
-          metadata: {
-            stack: 'hello world'.padEnd(2000, '.'),
-          },
-        }
-      );
+        log.maxEntrySize = maxSize;
+        await log.write(entry);
+        assert(writeLogStub.calledOnce);
 
-      truncatingLogger.logging.loggingService.writeLogEntries = (
-        // tslint:disable-next-line no-any
-        reqOpts: any,
-        _gaxOpts: {}
-      ) => {
+        const reqOpts = writeLogStub.firstCall.args[0];
         const message =
           reqOpts.entries[0].jsonPayload.fields.message.stringValue;
         const stack = reqOpts.entries[0].jsonPayload.fields.metadata
           .structValue!.fields!.stack.stringValue;
         assert.strictEqual(stack, '');
         assert.ok(message.startsWith('hello world'));
-        assert.ok(message.length < 400);
-      };
-
-      await truncatingLogger.write(entry);
+        assert.ok(message.length < maxSize + entryMetaMaxLength);
+      });
     });
   });
 
