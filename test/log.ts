@@ -35,7 +35,7 @@ const fakeCallbackify = extend({}, callbackify, {
 });
 
 import {Entry} from '../src';
-import {EntryJson, LogEntry} from '../src/entry';
+import {Data, EntryJson, LogEntry} from '../src/entry';
 import {LogOptions} from '../src/log';
 
 const originalGetDefaultResource = async () => {
@@ -142,6 +142,10 @@ describe('Log', () => {
 
     it('should localize the name', () => {
       assert.strictEqual(log.name, LOG_NAME_FORMATTED.split('/').pop());
+    });
+
+    it('should default to no max entry size', () => {
+      assert.strictEqual(log.maxEntrySize, undefined);
     });
   });
 
@@ -339,9 +343,11 @@ describe('Log', () => {
   });
 
   describe('write', () => {
-    const ENTRY = {} as Entry;
-    const OPTIONS = {};
+    let ENTRY: Entry;
+    let ENTRIES: Entry[];
+    let OPTIONS: WriteOptions;
     const FAKE_RESOURCE = 'fake-resource';
+    let truncateEntriesStub: sinon.SinonStub;
     let decorateEntriesStub: sinon.SinonStub;
     let fakeResourceStub: sinon.SinonStub;
     let projectIdStub: sinon.SinonStub;
@@ -349,7 +355,11 @@ describe('Log', () => {
     let origDetectedResource: string;
 
     beforeEach(() => {
+      ENTRY = {} as Entry;
+      ENTRIES = [ENTRY] as Entry[];
+      OPTIONS = {} as WriteOptions;
       decorateEntriesStub = sinon.stub(log, 'decorateEntries_').returnsArg(0);
+      truncateEntriesStub = sinon.stub(log, 'truncateEntries').returnsArg(0);
       fakeResourceStub = sinon
         .stub(fakeMetadata, 'getDefaultResource')
         .resolves(FAKE_RESOURCE);
@@ -368,13 +378,13 @@ describe('Log', () => {
 
     afterEach(() => {
       decorateEntriesStub.restore();
+      truncateEntriesStub.restore();
       fakeResourceStub.restore();
-      log.logging.detectedResource = origDetectedResource;
-    });
 
-    after(() => {
       delete log.logging.auth.getProjectId;
       delete log.logging.loggingService.writeLogEntries;
+
+      log.logging.detectedResource = origDetectedResource;
     });
 
     it('should forward options.resource to request', async () => {
@@ -383,12 +393,12 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       }) as WriteOptions;
 
-      await log.write(ENTRY, optionsWithResource);
+      await log.write(ENTRIES, optionsWithResource);
       assert(
         writeLogStub.calledOnceWithExactly(
           {
             logName: log.formattedName_,
-            entries: [ENTRY],
+            entries: ENTRIES,
             resource: CUSTOM_RESOURCE,
           },
           undefined
@@ -400,7 +410,7 @@ describe('Log', () => {
       const fakeResource = 'test-level-fake-resource';
       fakeResourceStub.resolves(fakeResource);
 
-      await log.write(ENTRY);
+      await log.write(ENTRIES);
       assert(writeLogStub.calledOnce);
       assert.strictEqual(log.logging.detectedResource, fakeResource);
     });
@@ -410,7 +420,7 @@ describe('Log', () => {
       log.logging.detectedResource = reusableDetectedResource;
       fakeResourceStub.throws('Cached resource was not used.');
 
-      await log.write(ENTRY);
+      await log.write(ENTRIES);
       assert(
         writeLogStub.calledOnceWith(
           sinon.match({
@@ -435,12 +445,12 @@ describe('Log', () => {
         resource: CUSTOM_RESOURCE,
       });
 
-      await log.write(ENTRY, optionsWithResource);
+      await log.write(ENTRIES, optionsWithResource);
       assert(
         writeLogStub.calledOnceWithExactly(
           {
             logName: log.formattedName_,
-            entries: [ENTRY],
+            entries: ENTRIES,
             resource: EXPECTED_RESOURCE,
           },
           undefined
@@ -449,12 +459,12 @@ describe('Log', () => {
     });
 
     it('should call gax method', async () => {
-      await log.write(ENTRY, OPTIONS);
+      await log.write(ENTRIES, OPTIONS);
       assert(
         writeLogStub.calledOnceWithExactly(
           {
             logName: log.formattedName_,
-            entries: [ENTRY],
+            entries: ENTRIES,
             resource: FAKE_RESOURCE,
           },
           undefined
@@ -462,10 +472,23 @@ describe('Log', () => {
       );
     });
 
-    it('should arrify & decorate the entries', async () => {
-      const decoratedEntries = [] as Entry[];
-      decorateEntriesStub.returns(decoratedEntries);
-      const arrifiedEntries = [ENTRY] as Entry[];
+    it('should decorate the entries', async () => {
+      decorateEntriesStub.resetBehavior();
+      decorateEntriesStub.returns('decorated entries');
+
+      await log.write(ENTRIES, OPTIONS);
+      assert(decorateEntriesStub.calledOnceWithExactly(ENTRIES));
+      assert(
+        writeLogStub.calledOnceWith(
+          sinon.match({
+            entries: 'decorated entries',
+          })
+        )
+      );
+    });
+
+    it('should arrify the entries', async () => {
+      const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
       assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries));
@@ -473,6 +496,19 @@ describe('Log', () => {
         writeLogStub.calledOnceWith(
           sinon.match({
             entries: arrifiedEntries,
+          })
+        )
+      );
+    });
+
+    it('should truncate the entries after decorating', async () => {
+      await log.write(ENTRIES, OPTIONS);
+      assert(truncateEntriesStub.calledAfter(decorateEntriesStub));
+      assert(truncateEntriesStub.calledOnceWithExactly(ENTRIES));
+      assert(
+        writeLogStub.calledOnceWith(
+          sinon.match({
+            entries: ENTRIES,
           })
         )
       );
@@ -494,98 +530,81 @@ describe('Log', () => {
         )
       );
     });
+  });
 
-    describe('truncateEntries', () => {
-      const entryMetaMaxLength = 100;
+  describe('truncateEntries', () => {
+    const entryMetaMaxLength = 100;
 
-      // this suite requires `decorateEntries_` for `truncateEntries` integration tests
-      // need to unstub that call
-      beforeEach(() => {
-        decorateEntriesStub.restore();
+    function entriesFactory(message: Data): EntryJson[] {
+      return [new Entry({}, message).toJSON()];
+    }
+
+    it('should not truncate entries by default', () => {
+      const longEntry = 'hello world'.padEnd(3e5, '.');
+      const entries = entriesFactory(longEntry);
+
+      log.truncateEntries(entries);
+      const text = entries[0].textPayload;
+      assert.ok(text, longEntry);
+    });
+
+    it('should truncate string entry if maxEntrySize hit', () => {
+      const maxSize = 2e2;
+      const longEntry = 'hello world'.padEnd(maxSize * 10, '.');
+      const entries = entriesFactory(longEntry);
+
+      log.maxEntrySize = maxSize;
+      log.truncateEntries(entries);
+
+      const text: string = entries[0].textPayload!;
+      assert.ok(text.startsWith('hello world'));
+      assert.ok(text.length < maxSize + entryMetaMaxLength);
+    });
+
+    it('should not truncate string entry if less than maxEntrySize', () => {
+      const maxSize = 2e3; // something greater than message length and entry overhead
+      const shortEntry = 'hello world';
+      const entries = entriesFactory(shortEntry);
+
+      log.maxEntrySize = maxSize;
+      log.truncateEntries(entries);
+
+      const text: string = entries[0].textPayload!;
+      assert.strictEqual(text, shortEntry);
+    });
+
+    it('should truncate message field, on object entry, if maxEntrySize hit', () => {
+      const maxSize = 2e2;
+      const longEntry = 'hello world'.padEnd(maxSize * 10, '.');
+      const entries = entriesFactory({message: longEntry});
+
+      log.maxEntrySize = maxSize;
+      log.truncateEntries(entries);
+
+      const text: string = entries[0].jsonPayload!.fields!.message.stringValue!;
+      assert.ok(text.startsWith('hello world'));
+      assert.ok(text.length < maxSize + entryMetaMaxLength);
+    });
+
+    it('should truncate stack trace', async () => {
+      const maxSize = 300;
+      const entries = entriesFactory({
+        message: 'hello world'.padEnd(2000, '.'),
+        metadata: {
+          stack: 'hello world'.padEnd(2000, '.'),
+        },
       });
 
-      it('should not truncate entries by default', async () => {
-        const longEntry = 'hello world'.padEnd(3e5, '.');
-        const entry = new Entry({}, longEntry);
+      log.maxEntrySize = maxSize;
+      log.truncateEntries(entries);
 
-        assert.strictEqual(log.maxEntrySize, undefined);
-        await log.write(entry);
-        assert(writeLogStub.calledOnce);
-
-        const reqOpts = writeLogStub.firstCall.args[0];
-        const text = reqOpts.entries[0].textPayload;
-        assert.ok(text, longEntry);
-      });
-
-      it('should truncate string entry if maxEntrySize hit', async () => {
-        const maxSize = 2e2;
-        const longEntry = 'hello world'.padEnd(maxSize * 10, '.');
-        const entry = new Entry({}, longEntry);
-
-        log.maxEntrySize = maxSize;
-        await log.write(entry);
-        assert(writeLogStub.calledOnce);
-
-        const reqOpts = writeLogStub.firstCall.args[0];
-        const text = reqOpts.entries[0].textPayload;
-        assert.ok(text.startsWith('hello world'));
-        assert.ok(text.length < maxSize + entryMetaMaxLength);
-      });
-
-      it('should not truncate string entry if less than maxEntrySize', async () => {
-        const maxSize = 2e3; // something greater than message length and entry overhead
-        const shortEntry = 'hello world';
-        const entry = new Entry({}, shortEntry);
-
-        log.maxEntrySize = maxSize;
-        await log.write(entry);
-        assert(writeLogStub.calledOnce);
-
-        const reqOpts = writeLogStub.firstCall.args[0];
-        const text = reqOpts.entries[0].textPayload;
-        assert.strictEqual(text, shortEntry);
-      });
-
-      it('should truncate message field, on object entry, if maxEntrySize hit', async () => {
-        const maxSize = 2e2;
-        const longEntry = 'hello world'.padEnd(maxSize * 10, '.');
-        const entry = new Entry({}, {message: longEntry});
-
-        log.maxEntrySize = maxSize;
-        await log.write(entry);
-        assert(writeLogStub.calledOnce);
-
-        const reqOpts = writeLogStub.firstCall.args[0];
-        const text = reqOpts.entries[0].jsonPayload.fields.message.stringValue;
-        assert.ok(text.startsWith('hello world'));
-        assert.ok(text.length < maxSize + entryMetaMaxLength);
-      });
-
-      it('should truncate stack trace', async () => {
-        const maxSize = 300;
-        const entry = new Entry(
-          {},
-          {
-            message: 'hello world'.padEnd(2000, '.'),
-            metadata: {
-              stack: 'hello world'.padEnd(2000, '.'),
-            },
-          }
-        );
-
-        log.maxEntrySize = maxSize;
-        await log.write(entry);
-        assert(writeLogStub.calledOnce);
-
-        const reqOpts = writeLogStub.firstCall.args[0];
-        const message =
-          reqOpts.entries[0].jsonPayload.fields.message.stringValue;
-        const stack = reqOpts.entries[0].jsonPayload.fields.metadata
-          .structValue!.fields!.stack.stringValue;
-        assert.strictEqual(stack, '');
-        assert.ok(message.startsWith('hello world'));
-        assert.ok(message.length < maxSize + entryMetaMaxLength);
-      });
+      const message: string = entries[0].jsonPayload!.fields!.message
+        .stringValue!;
+      const stack: string = entries[0].jsonPayload!.fields!.metadata
+        .structValue!.fields!.stack.stringValue!;
+      assert.strictEqual(stack, '');
+      assert.ok(message.startsWith('hello world'));
+      assert.ok(message.length < maxSize + entryMetaMaxLength);
     });
   });
 
