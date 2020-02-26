@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [7.2.3](https://www.github.com/googleapis/nodejs-logging/compare/v7.2.2...v7.2.3) (2020-02-26)
+
+
+### Bug Fixes
+
+* **docs:** writeLog should be in async function ([498a2c3](https://www.github.com/googleapis/nodejs-logging/commit/498a2c3825644b2f6a71ac3e314ba2e3de9fac62)), closes [#693](https://www.github.com/googleapis/nodejs-logging/issues/693)
+
 ### [7.2.2](https://www.github.com/googleapis/nodejs-logging/compare/v7.2.1...v7.2.2) (2020-02-20)
 
 
