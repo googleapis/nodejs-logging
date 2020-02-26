@@ -1361,3 +1361,5 @@ export {Logging};
  *   Reference to {@link v2.MetricsServiceV2Client}
  */
 module.exports.v2 = v2;
+import * as protos from '../protos/protos';
+export {protos};
