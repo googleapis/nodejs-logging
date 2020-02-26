@@ -369,9 +369,14 @@ class Log implements LogSeverityFunctions {
   /**
    * Create an entry object for this log.
    *
-   * Note that using this method will not itself make any API requests. You will
-   * use the object returned in other API calls, such as
+   * Using this method will not itself make any API requests. You will use
+   * the object returned in other API calls, such as
    * {@link Log#write}.
+   *
+   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * dictates that the maximum log entry size, including all
+   * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
+   * cannot exceed _approximately_ 256 KB.
    *
    * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
    *
@@ -743,6 +748,11 @@ class Log implements LogSeverityFunctions {
    */
   /**
    * Write log entries to Stackdriver Logging.
+   *
+   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * dictates that the maximum cumulative size of all entries per write,
+   * including all [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
+   * cannot exceed _approximately_ 10 MB.
    *
    * @see [entries.write API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write}
    *

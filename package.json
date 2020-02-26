@@ -31,6 +31,7 @@
   "scripts": {
     "test": "c8 mocha --recursive ./build/test",
     "docs": "jsdoc -c .jsdoc.js",
+    "predocs": "npm run compile",
     "presystem-test": "npm run compile",
     "system-test": "c8 mocha build/system-test --timeout 600000",
     "samples-test": "cd samples/ && c8 npm test && cd ../",

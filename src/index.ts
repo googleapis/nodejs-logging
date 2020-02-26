@@ -427,9 +427,14 @@ class Logging {
   /**
    * Create an entry object.
    *
-   * Note that using this method will not itself make any API requests. You will
-   * use the object returned in other API calls, such as
+   * Using this method will not itself make any API requests. You will use
+   * the object returned in other API calls, such as
    * {@link Log#write}.
+   *
+   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * dictates that the maximum log entry size, including all
+   * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
+   * cannot exceed _approximately_ 256 KB.
    *
    * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
    *
