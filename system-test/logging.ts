@@ -668,13 +668,4 @@ describe('Logging', async () => {
     const timeCreated = name.substr(TESTS_PREFIX.length + 1).split(/-|_/g)[0];
     return new Date(Number(timeCreated));
   }
-
-  it('fails in continuous (system)', () => {
-    if (
-      process.env.KOKORO_BUILD_ARTIFACTS_SUBDIR &&
-      process.env.KOKORO_BUILD_ARTIFACTS_SUBDIR.includes('continuous')
-    ) {
-      assert.strictEqual(true, false);
-    }
-  });
 });
