@@ -669,13 +669,4 @@ describe('Log', () => {
       }, 'Error.');
     });
   });
-
-  it('fails in continuous (unit)', () => {
-    if (
-      process.env.KOKORO_BUILD_ARTIFACTS_SUBDIR &&
-      process.env.KOKORO_BUILD_ARTIFACTS_SUBDIR.includes('continuous')
-    ) {
-      assert.strictEqual(true, false);
-    }
-  });
 });
