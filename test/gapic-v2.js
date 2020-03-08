@@ -50,6 +50,209 @@ describe('ConfigServiceV2Client', () => {
     assert(client);
   });
 
+  describe('listBuckets', () => {
+    it('invokes listBuckets without error', done => {
+      const client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const parent = 'parent-995424086';
+      const request = {
+        parent: parent,
+      };
+
+      // Mock response
+      const nextPageToken = '';
+      const bucketsElement = {};
+      const buckets = [bucketsElement];
+      const expectedResponse = {
+        nextPageToken: nextPageToken,
+        buckets: buckets,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listBuckets = (
+        actualRequest,
+        options,
+        callback
+      ) => {
+        assert.deepStrictEqual(actualRequest, request);
+        callback(null, expectedResponse.buckets);
+      };
+
+      client.listBuckets(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse.buckets);
+        done();
+      });
+    });
+
+    it('invokes listBuckets with error', done => {
+      const client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const parent = 'parent-995424086';
+      const request = {
+        parent: parent,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.listBuckets = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.listBuckets(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
+        done();
+      });
+    });
+  });
+
+  describe('getBucket', () => {
+    it('invokes getBucket without error', done => {
+      const client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const name = 'name3373707';
+      const request = {
+        name: name,
+      };
+
+      // Mock response
+      const name2 = 'name2-1052831874';
+      const description = 'description-1724546052';
+      const retentionDays = 1544391896;
+      const expectedResponse = {
+        name: name2,
+        description: description,
+        retentionDays: retentionDays,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.getBucket = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
+
+      client.getBucket(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse);
+        done();
+      });
+    });
+
+    it('invokes getBucket with error', done => {
+      const client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const name = 'name3373707';
+      const request = {
+        name: name,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.getBucket = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.getBucket(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
+        done();
+      });
+    });
+  });
+
+  describe('updateBucket', () => {
+    it('invokes updateBucket without error', done => {
+      const client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const name = 'name3373707';
+      const bucket = {};
+      const updateMask = {};
+      const request = {
+        name: name,
+        bucket: bucket,
+        updateMask: updateMask,
+      };
+
+      // Mock response
+      const name2 = 'name2-1052831874';
+      const description = 'description-1724546052';
+      const retentionDays = 1544391896;
+      const expectedResponse = {
+        name: name2,
+        description: description,
+        retentionDays: retentionDays,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.updateBucket = mockSimpleGrpcMethod(
+        request,
+        expectedResponse
+      );
+
+      client.updateBucket(request, (err, response) => {
+        assert.ifError(err);
+        assert.deepStrictEqual(response, expectedResponse);
+        done();
+      });
+    });
+
+    it('invokes updateBucket with error', done => {
+      const client = new loggingModule.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+
+      // Mock request
+      const name = 'name3373707';
+      const bucket = {};
+      const updateMask = {};
+      const request = {
+        name: name,
+        bucket: bucket,
+        updateMask: updateMask,
+      };
+
+      // Mock Grpc layer
+      client._innerApiCalls.updateBucket = mockSimpleGrpcMethod(
+        request,
+        null,
+        error
+      );
+
+      client.updateBucket(request, (err, response) => {
+        assert(err instanceof Error);
+        assert.strictEqual(err.code, FAKE_STATUS_CODE);
+        assert(typeof response === 'undefined');
+        done();
+      });
+    });
+  });
+
   describe('listSinks', () => {
     it('invokes listSinks without error', done => {
       const client = new loggingModule.v2.ConfigServiceV2Client({
@@ -121,9 +324,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sinkName = 'sinkName-1391757129';
       const request = {
-        sinkName: formattedSinkName,
+        sinkName: sinkName,
       };
 
       // Mock response
@@ -164,9 +367,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sinkName = 'sinkName-1391757129';
       const request = {
-        sinkName: formattedSinkName,
+        sinkName: sinkName,
       };
 
       // Mock Grpc layer
@@ -269,10 +472,10 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sinkName = 'sinkName-1391757129';
       const sink = {};
       const request = {
-        sinkName: formattedSinkName,
+        sinkName: sinkName,
         sink: sink,
       };
 
@@ -314,10 +517,10 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sinkName = 'sinkName-1391757129';
       const sink = {};
       const request = {
-        sinkName: formattedSinkName,
+        sinkName: sinkName,
         sink: sink,
       };
 
@@ -345,9 +548,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sinkName = 'sinkName-1391757129';
       const request = {
-        sinkName: formattedSinkName,
+        sinkName: sinkName,
       };
 
       // Mock Grpc layer
@@ -366,9 +569,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+      const sinkName = 'sinkName-1391757129';
       const request = {
-        sinkName: formattedSinkName,
+        sinkName: sinkName,
       };
 
       // Mock Grpc layer
@@ -461,9 +664,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const name = 'name3373707';
       const request = {
-        name: formattedName,
+        name: name,
       };
 
       // Mock response
@@ -498,9 +701,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const name = 'name3373707';
       const request = {
-        name: formattedName,
+        name: name,
       };
 
       // Mock Grpc layer
@@ -597,11 +800,11 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const name = 'name3373707';
       const exclusion = {};
       const updateMask = {};
       const request = {
-        name: formattedName,
+        name: name,
         exclusion: exclusion,
         updateMask: updateMask,
       };
@@ -638,11 +841,11 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const name = 'name3373707';
       const exclusion = {};
       const updateMask = {};
       const request = {
-        name: formattedName,
+        name: name,
         exclusion: exclusion,
         updateMask: updateMask,
       };
@@ -671,9 +874,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const name = 'name3373707';
       const request = {
-        name: formattedName,
+        name: name,
       };
 
       // Mock Grpc layer
@@ -692,9 +895,9 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+      const name = 'name3373707';
       const request = {
-        name: formattedName,
+        name: name,
       };
 
       // Mock Grpc layer
@@ -720,14 +923,17 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const request = {};
+      const name = 'name3373707';
+      const request = {
+        name: name,
+      };
 
       // Mock response
-      const name = 'name3373707';
+      const name2 = 'name2-1052831874';
       const kmsKeyName = 'kmsKeyName2094986649';
       const serviceAccountId = 'serviceAccountId-111486921';
       const expectedResponse = {
-        name: name,
+        name: name2,
         kmsKeyName: kmsKeyName,
         serviceAccountId: serviceAccountId,
       };
@@ -752,7 +958,10 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const request = {};
+      const name = 'name3373707';
+      const request = {
+        name: name,
+      };
 
       // Mock Grpc layer
       client._innerApiCalls.getCmekSettings = mockSimpleGrpcMethod(
@@ -778,14 +987,19 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const request = {};
+      const name = 'name3373707';
+      const cmekSettings = {};
+      const request = {
+        name: name,
+        cmekSettings: cmekSettings,
+      };
 
       // Mock response
-      const name = 'name3373707';
+      const name2 = 'name2-1052831874';
       const kmsKeyName = 'kmsKeyName2094986649';
       const serviceAccountId = 'serviceAccountId-111486921';
       const expectedResponse = {
-        name: name,
+        name: name2,
         kmsKeyName: kmsKeyName,
         serviceAccountId: serviceAccountId,
       };
@@ -810,7 +1024,12 @@ describe('ConfigServiceV2Client', () => {
       });
 
       // Mock request
-      const request = {};
+      const name = 'name3373707';
+      const cmekSettings = {};
+      const request = {
+        name: name,
+        cmekSettings: cmekSettings,
+      };
 
       // Mock Grpc layer
       client._innerApiCalls.updateCmekSettings = mockSimpleGrpcMethod(
@@ -865,9 +1084,9 @@ describe('LoggingServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+      const logName = 'logName2013526694';
       const request = {
-        logName: formattedLogName,
+        logName: logName,
       };
 
       // Mock Grpc layer
@@ -886,9 +1105,9 @@ describe('LoggingServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
+      const logName = 'logName2013526694';
       const request = {
-        logName: formattedLogName,
+        logName: logName,
       };
 
       // Mock Grpc layer
@@ -1258,7 +1477,7 @@ describe('MetricsServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
       const request = {
         metricName: formattedMetricName,
       };
@@ -1295,7 +1514,7 @@ describe('MetricsServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
       const request = {
         metricName: formattedMetricName,
       };
@@ -1394,7 +1613,7 @@ describe('MetricsServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
       const metric = {};
       const request = {
         metricName: formattedMetricName,
@@ -1433,7 +1652,7 @@ describe('MetricsServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
       const metric = {};
       const request = {
         metricName: formattedMetricName,
@@ -1464,7 +1683,7 @@ describe('MetricsServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
       const request = {
         metricName: formattedMetricName,
       };
@@ -1485,7 +1704,7 @@ describe('MetricsServiceV2Client', () => {
       });
 
       // Mock request
-      const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+      const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
       const request = {
         metricName: formattedMetricName,
       };

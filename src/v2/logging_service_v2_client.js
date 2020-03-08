@@ -125,24 +125,12 @@ class LoggingServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      billingPathTemplate: new gaxModule.PathTemplate(
+      billingAccountPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}'
       ),
-      billingLogPathTemplate: new gaxModule.PathTemplate(
-        'billingAccounts/{billing_account}/logs/{log}'
-      ),
       folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
-      folderLogPathTemplate: new gaxModule.PathTemplate(
-        'folders/{folder}/logs/{log}'
-      ),
-      logPathTemplate: new gaxModule.PathTemplate(
-        'projects/{project}/logs/{log}'
-      ),
       organizationPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}'
-      ),
-      organizationLogPathTemplate: new gaxModule.PathTemplate(
-        'organizations/{organization}/logs/{log}'
       ),
       projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
     };
@@ -165,23 +153,6 @@ class LoggingServiceV2Client {
         'pageToken',
         'nextPageToken',
         'logNames'
-      ),
-    };
-
-    const protoFilesRoot = opts.fallback
-      ? gaxModule.protobuf.Root.fromJSON(require('../../protos/protos.json'))
-      : gaxModule.protobuf.loadSync(nodejsProtoPath);
-
-    // Some methods on this API support automatically batching
-    // requests; denote this.
-    this._descriptors.batching = {
-      writeLogEntries: new gaxModule.BundleDescriptor(
-        'entries',
-        ['logName', 'resource', 'labels'],
-        null,
-        gax.createByteLengthFunction(
-          protoFilesRoot.lookup('google.logging.v2.LogEntry')
-        )
       ),
     };
 
@@ -228,8 +199,7 @@ class LoggingServiceV2Client {
       this._innerApiCalls[methodName] = gaxModule.createApiCall(
         innerCallPromise,
         defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.batching[methodName]
+        this._descriptors.page[methodName]
       );
     }
   }
@@ -320,8 +290,8 @@ class LoggingServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedLogName = client.logPath('[PROJECT]', '[LOG]');
-   * client.deleteLog({logName: formattedLogName}).catch(err => {
+   * const logName = '';
+   * client.deleteLog({logName: logName}).catch(err => {
    *   console.error(err);
    * });
    */
@@ -394,10 +364,10 @@ class LoggingServiceV2Client {
    *       "projects/my-project-id/logs/syslog"
    *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
    *
-   *   The permission <code>logging.logEntries.create</code> is needed on each
-   *   project, organization, billing account, or folder that is receiving
-   *   new log entries, whether the resource is specified in
-   *   <code>logName</code> or in an individual log entry.
+   *   The permission `logging.logEntries.create` is needed on each project,
+   *   organization, billing account, or folder that is receiving new log
+   *   entries, whether the resource is specified in `logName` or in an
+   *   individual log entry.
    * @param {Object} [request.resource]
    *   Optional. A default monitored resource object that is assigned to all log
    *   entries in `entries` that do not specify a value for `resource`. Example:
@@ -482,10 +452,6 @@ class LoggingServiceV2Client {
    *
    *
    *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string[]} [request.projectIds]
-   *   Deprecated. Use `resource_names` instead.  One or more project identifiers
-   *   or project numbers from which to retrieve log entries.  Example:
-   *   `"my-project-1A"`.
    * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
    *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
@@ -615,10 +581,6 @@ class LoggingServiceV2Client {
    *
    *
    *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string[]} [request.projectIds]
-   *   Deprecated. Use `resource_names` instead.  One or more project identifiers
-   *   or project numbers from which to retrieve log entries.  Example:
-   *   `"my-project-1A"`.
    * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
    *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
@@ -991,28 +953,14 @@ class LoggingServiceV2Client {
   // --------------------
 
   /**
-   * Return a fully-qualified billing resource name string.
+   * Return a fully-qualified billing_account resource name string.
    *
    * @param {String} billingAccount
    * @returns {String}
    */
-  billingPath(billingAccount) {
-    return this._pathTemplates.billingPathTemplate.render({
+  billingAccountPath(billingAccount) {
+    return this._pathTemplates.billingAccountPathTemplate.render({
       billing_account: billingAccount,
-    });
-  }
-
-  /**
-   * Return a fully-qualified billing_log resource name string.
-   *
-   * @param {String} billingAccount
-   * @param {String} log
-   * @returns {String}
-   */
-  billingLogPath(billingAccount, log) {
-    return this._pathTemplates.billingLogPathTemplate.render({
-      billing_account: billingAccount,
-      log: log,
     });
   }
 
@@ -1029,34 +977,6 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * Return a fully-qualified folder_log resource name string.
-   *
-   * @param {String} folder
-   * @param {String} log
-   * @returns {String}
-   */
-  folderLogPath(folder, log) {
-    return this._pathTemplates.folderLogPathTemplate.render({
-      folder: folder,
-      log: log,
-    });
-  }
-
-  /**
-   * Return a fully-qualified log resource name string.
-   *
-   * @param {String} project
-   * @param {String} log
-   * @returns {String}
-   */
-  logPath(project, log) {
-    return this._pathTemplates.logPathTemplate.render({
-      project: project,
-      log: log,
-    });
-  }
-
-  /**
    * Return a fully-qualified organization resource name string.
    *
    * @param {String} organization
@@ -1065,20 +985,6 @@ class LoggingServiceV2Client {
   organizationPath(organization) {
     return this._pathTemplates.organizationPathTemplate.render({
       organization: organization,
-    });
-  }
-
-  /**
-   * Return a fully-qualified organization_log resource name string.
-   *
-   * @param {String} organization
-   * @param {String} log
-   * @returns {String}
-   */
-  organizationLogPath(organization, log) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
-      organization: organization,
-      log: log,
     });
   }
 
@@ -1095,38 +1001,16 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * Parse the billingName from a billing resource.
+   * Parse the billingAccountName from a billing_account resource.
    *
-   * @param {String} billingName
-   *   A fully-qualified path representing a billing resources.
+   * @param {String} billingAccountName
+   *   A fully-qualified path representing a billing_account resources.
    * @returns {String} - A string representing the billing_account.
    */
-  matchBillingAccountFromBillingName(billingName) {
-    return this._pathTemplates.billingPathTemplate.match(billingName)
-      .billing_account;
-  }
-
-  /**
-   * Parse the billingLogName from a billing_log resource.
-   *
-   * @param {String} billingLogName
-   *   A fully-qualified path representing a billing_log resources.
-   * @returns {String} - A string representing the billing_account.
-   */
-  matchBillingAccountFromBillingLogName(billingLogName) {
-    return this._pathTemplates.billingLogPathTemplate.match(billingLogName)
-      .billing_account;
-  }
-
-  /**
-   * Parse the billingLogName from a billing_log resource.
-   *
-   * @param {String} billingLogName
-   *   A fully-qualified path representing a billing_log resources.
-   * @returns {String} - A string representing the log.
-   */
-  matchLogFromBillingLogName(billingLogName) {
-    return this._pathTemplates.billingLogPathTemplate.match(billingLogName).log;
+  matchBillingAccountFromBillingAccountName(billingAccountName) {
+    return this._pathTemplates.billingAccountPathTemplate.match(
+      billingAccountName
+    ).billing_account;
   }
 
   /**
@@ -1141,51 +1025,6 @@ class LoggingServiceV2Client {
   }
 
   /**
-   * Parse the folderLogName from a folder_log resource.
-   *
-   * @param {String} folderLogName
-   *   A fully-qualified path representing a folder_log resources.
-   * @returns {String} - A string representing the folder.
-   */
-  matchFolderFromFolderLogName(folderLogName) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
-  }
-
-  /**
-   * Parse the folderLogName from a folder_log resource.
-   *
-   * @param {String} folderLogName
-   *   A fully-qualified path representing a folder_log resources.
-   * @returns {String} - A string representing the log.
-   */
-  matchLogFromFolderLogName(folderLogName) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
-  }
-
-  /**
-   * Parse the logName from a log resource.
-   *
-   * @param {String} logName
-   *   A fully-qualified path representing a log resources.
-   * @returns {String} - A string representing the project.
-   */
-  matchProjectFromLogName(logName) {
-    return this._pathTemplates.logPathTemplate.match(logName).project;
-  }
-
-  /**
-   * Parse the logName from a log resource.
-   *
-   * @param {String} logName
-   *   A fully-qualified path representing a log resources.
-   * @returns {String} - A string representing the log.
-   */
-  matchLogFromLogName(logName) {
-    return this._pathTemplates.logPathTemplate.match(logName).log;
-  }
-
-  /**
    * Parse the organizationName from a organization resource.
    *
    * @param {String} organizationName
@@ -1195,32 +1034,6 @@ class LoggingServiceV2Client {
   matchOrganizationFromOrganizationName(organizationName) {
     return this._pathTemplates.organizationPathTemplate.match(organizationName)
       .organization;
-  }
-
-  /**
-   * Parse the organizationLogName from a organization_log resource.
-   *
-   * @param {String} organizationLogName
-   *   A fully-qualified path representing a organization_log resources.
-   * @returns {String} - A string representing the organization.
-   */
-  matchOrganizationFromOrganizationLogName(organizationLogName) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).organization;
-  }
-
-  /**
-   * Parse the organizationLogName from a organization_log resource.
-   *
-   * @param {String} organizationLogName
-   *   A fully-qualified path representing a organization_log resources.
-   * @returns {String} - A string representing the log.
-   */
-  matchLogFromOrganizationLogName(organizationLogName) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).log;
   }
 
   /**

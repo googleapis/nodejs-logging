@@ -57,10 +57,10 @@ const DeleteLogRequest = {
  *       "projects/my-project-id/logs/syslog"
  *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
  *
- *   The permission <code>logging.logEntries.create</code> is needed on each
- *   project, organization, billing account, or folder that is receiving
- *   new log entries, whether the resource is specified in
- *   <code>logName</code> or in an individual log entry.
+ *   The permission `logging.logEntries.create` is needed on each project,
+ *   organization, billing account, or folder that is receiving new log
+ *   entries, whether the resource is specified in `logName` or in an
+ *   individual log entry.
  *
  * @property {Object} resource
  *   Optional. A default monitored resource object that is assigned to all log
@@ -129,7 +129,6 @@ const WriteLogEntriesRequest = {
 
 /**
  * Result returned from WriteLogEntries.
- * empty
  * @typedef WriteLogEntriesResponse
  * @memberof google.logging.v2
  * @see [google.logging.v2.WriteLogEntriesResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging.proto}
@@ -140,11 +139,6 @@ const WriteLogEntriesResponse = {
 
 /**
  * The parameters to `ListLogEntries`.
- *
- * @property {string[]} projectIds
- *   Deprecated. Use `resource_names` instead.  One or more project identifiers
- *   or project numbers from which to retrieve log entries.  Example:
- *   `"my-project-1A"`.
  *
  * @property {string[]} resourceNames
  *   Required. Names of one or more parent resources from which to

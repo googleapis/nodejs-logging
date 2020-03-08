@@ -44,8 +44,8 @@
  *   The maximum length of the description is 8000 characters.
  *
  * @property {string} filter
- *   Required. An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters)
- *   which is used to match log entries.
+ *   Required. An [advanced logs filter](https://cloud.google.com/logging/docs/view/advanced_filters) which is
+ *   used to match log entries.
  *   Example:
  *
  *       "resource.type=gae_app AND severity>=ERROR"
