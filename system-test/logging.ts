@@ -50,14 +50,12 @@ describe('Logging', async () => {
   const serviceAccount = (await logging.auth.getCredentials()).client_email;
 
   await bucket.create();
-  await bucket.iam.setPolicy({
-    bindings: [
-      {
-        role: 'roles/storage.admin',
-        members: [`serviceAccount:${serviceAccount}`],
-      },
-    ],
-  });
+  const iamPolicy = (await bucket.iam.getPolicy({requestedPolicyVersion: 3}));
+  iamPolicy.bindings.push({
+      role: 'roles/storage.admin',
+      members: [`serviceAccount:${serviceAccount}`],
+    });
+  await bucket.iam.setPolicy(iamPolicy);
   await dataset.create();
   await topic.create();
 
