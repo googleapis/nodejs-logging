@@ -48,7 +48,8 @@ describe('Logging', async () => {
   const topic = pubsub.topic(generateName());
 
   const serviceAccount = (await logging.auth.getCredentials()).client_email;
-
+  const gcsServiceAccount = (await storage.auth.getCredentials()).client_email;
+  assert.strictEqual(serviceAccount, gcsServiceAccount);
   await bucket.create();
   const [iamPolicy] = (await bucket.iam.getPolicy({requestedPolicyVersion: 3}));
   iamPolicy.bindings.push({
