@@ -867,6 +867,7 @@ class Log implements LogSeverityFunctions {
     }
   }
 
+  // TODO proper signature of `private decorateEntries` (sans underscore suffix)
   /**
    * All entries are passed through here in order to get them serialized.
    *
@@ -887,6 +888,7 @@ class Log implements LogSeverityFunctions {
     });
   }
 
+  // TODO consider refactoring `truncateEntries` so that it does not mutate
   /**
    * Truncate log entries at maxEntrySize, so that error is not thrown, see:
    * https://cloud.google.com/logging/quotas
