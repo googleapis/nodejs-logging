@@ -22,7 +22,7 @@ import {describe, it} from 'mocha';
 import {HOST_ADDRESS} from 'gcp-metadata';
 import * as nock from 'nock';
 import {Duplex} from 'stream';
-import * as uuid from 'uuid';
+import {v4} from 'uuid';
 const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry} from '../src';
 
@@ -656,7 +656,7 @@ describe('Logging', async () => {
   });
 
   function generateName() {
-    return `${TESTS_PREFIX}-${Date.now()}-${uuid()
+    return `${TESTS_PREFIX}-${Date.now()}-${v4()
       .split('-')
       .pop()}`;
   }
