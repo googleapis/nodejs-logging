@@ -16,6 +16,54 @@
 // to be loaded as the JS file.
 
 /**
+ * Describes a repository of logs (Beta).
+ *
+ * @property {string} name
+ *   The resource name of the bucket.
+ *   For example:
+ *   "projects/my-project-id/locations/my-location/buckets/my-bucket-id The
+ *   supported locations are:
+ *     "global"
+ *     "us-central1"
+ *
+ *   For the location of `global` it is unspecified where logs are actually
+ *   stored.
+ *   Once a bucket has been created, the location can not be changed.
+ *
+ * @property {string} description
+ *   Describes this bucket.
+ *
+ * @property {Object} createTime
+ *   Output only. The creation timestamp of the bucket. This is not set for any of the
+ *   default buckets.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *
+ * @property {Object} updateTime
+ *   Output only. The last update timestamp of the bucket.
+ *
+ *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
+ *
+ * @property {number} retentionDays
+ *   Logs will be retained by default for this amount of time, after which they
+ *   will automatically be deleted. The minimum retention period is 1 day.
+ *   If this value is set to zero at bucket creation time, the default time of
+ *   30 days will be used.
+ *
+ * @property {number} lifecycleState
+ *   Output only. The bucket lifecycle state.
+ *
+ *   The number should be among the values of [LifecycleState]{@link google.logging.v2.LifecycleState}
+ *
+ * @typedef LogBucket
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.LogBucket definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const LogBucket = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
  * Describes a sink used to export log entries to one of the following
  * destinations in any project: a Cloud Storage bucket, a BigQuery dataset, or a
  * Cloud Pub/Sub topic. A logs filter controls which log entries are exported.
@@ -23,11 +71,11 @@
  * folder.
  *
  * @property {string} name
- *   Required. The client-assigned sink identifier, unique within the
- *   project. Example: `"my-syslog-errors-to-pubsub"`. Sink identifiers are
- *   limited to 100 characters and can include only the following characters:
- *   upper and lower-case alphanumeric characters, underscores, hyphens, and
- *   periods. First character has to be alphanumeric.
+ *   Required. The client-assigned sink identifier, unique within the project. Example:
+ *   `"my-syslog-errors-to-pubsub"`. Sink identifiers are limited to 100
+ *   characters and can include only the following characters: upper and
+ *   lower-case alphanumeric characters, underscores, hyphens, and periods.
+ *   First character has to be alphanumeric.
  *
  * @property {string} destination
  *   Required. The export destination:
@@ -63,13 +111,11 @@
  *   The number should be among the values of [VersionFormat]{@link google.logging.v2.VersionFormat}
  *
  * @property {string} writerIdentity
- *   Output only. An IAM identity&mdash;a service account or group&mdash;under
- *   which Logging writes the exported log entries to the sink's destination.
- *   This field is set by
- *   sinks.create
- *   and
- *   sinks.update
- *   based on the value of `unique_writer_identity` in those methods.
+ *   Output only. An IAM identity–a service account or group&mdash;under which Logging
+ *   writes the exported log entries to the sink's destination. This field is
+ *   set by sinks.create and
+ *   sinks.update based on the
+ *   value of `unique_writer_identity` in those methods.
  *
  *   Until you grant this identity write-access to the destination, log entry
  *   exports from this sink will fail. For more information,
@@ -109,16 +155,6 @@
  *   Output only. The last update timestamp of the sink.
  *
  *   This field may not be present for older sinks.
- *
- *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
- *
- * @property {Object} startTime
- *   Do not use. This field is ignored.
- *
- *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
- *
- * @property {Object} endTime
- *   Do not use. This field is ignored.
  *
  *   This object should have the same structure as [Timestamp]{@link google.protobuf.Timestamp}
  *
@@ -181,6 +217,124 @@ const LogSink = {
  * @see [google.logging.v2.BigQueryOptions definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
  */
 const BigQueryOptions = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * The parameters to `ListBuckets` (Beta).
+ *
+ * @property {string} parent
+ *   Required. The parent resource whose buckets are to be listed:
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+ *
+ *   Note: The locations portion of the resource must be specified, but
+ *   supplying the character `-` in place of [LOCATION_ID] will return all
+ *   buckets.
+ *
+ * @property {string} pageToken
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ *
+ * @property {number} pageSize
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ *
+ * @typedef ListBucketsRequest
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.ListBucketsRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const ListBucketsRequest = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * The response from ListBuckets (Beta).
+ *
+ * @property {Object[]} buckets
+ *   A list of buckets.
+ *
+ *   This object should have the same structure as [LogBucket]{@link google.logging.v2.LogBucket}
+ *
+ * @property {string} nextPageToken
+ *   If there might be more results than appear in this response, then
+ *   `nextPageToken` is included. To get the next set of results, call the same
+ *   method again using the value of `nextPageToken` as `pageToken`.
+ *
+ * @typedef ListBucketsResponse
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.ListBucketsResponse definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const ListBucketsResponse = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * The parameters to `UpdateBucket` (Beta).
+ *
+ * @property {string} name
+ *   Required. The full resource name of the bucket to update.
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *
+ *   Example:
+ *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`. Also
+ *   requires permission "resourcemanager.projects.updateLiens" to set the
+ *   locked property
+ *
+ * @property {Object} bucket
+ *   Required. The updated bucket.
+ *
+ *   This object should have the same structure as [LogBucket]{@link google.logging.v2.LogBucket}
+ *
+ * @property {Object} updateMask
+ *   Required. Field mask that specifies the fields in `bucket` that need an update. A
+ *   bucket field will be overwritten if, and only if, it is in the update
+ *   mask. `name` and output only fields cannot be updated.
+ *
+ *   For a detailed `FieldMask` definition, see
+ *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+ *
+ *   Example: `updateMask=retention_days`.
+ *
+ *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
+ *
+ * @typedef UpdateBucketRequest
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.UpdateBucketRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const UpdateBucketRequest = {
+  // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * The parameters to `GetBucket` (Beta).
+ *
+ * @property {string} name
+ *   Required. The resource name of the bucket:
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *
+ *   Example:
+ *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+ *
+ * @typedef GetBucketRequest
+ * @memberof google.logging.v2
+ * @see [google.logging.v2.GetBucketRequest definition in proto format]{@link https://github.com/googleapis/googleapis/blob/master/google/logging/v2/logging_config.proto}
+ */
+const GetBucketRequest = {
   // This is for documentation. Actual contents will be loaded by gRPC.
 };
 
@@ -300,8 +454,8 @@ const CreateSinkRequest = {
  * The parameters to `UpdateSink`.
  *
  * @property {string} sinkName
- *   Required. The full resource name of the sink to update, including the
- *   parent resource and the sink identifier:
+ *   Required. The full resource name of the sink to update, including the parent
+ *   resource and the sink identifier:
  *
  *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
  *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
@@ -311,8 +465,8 @@ const CreateSinkRequest = {
  *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
  *
  * @property {Object} sink
- *   Required. The updated sink, whose name is the same identifier that appears
- *   as part of `sink_name`.
+ *   Required. The updated sink, whose name is the same identifier that appears as part
+ *   of `sink_name`.
  *
  *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
  *
@@ -359,8 +513,8 @@ const UpdateSinkRequest = {
  * The parameters to `DeleteSink`.
  *
  * @property {string} sinkName
- *   Required. The full resource name of the sink to delete, including the
- *   parent resource and the sink identifier:
+ *   Required. The full resource name of the sink to delete, including the parent
+ *   resource and the sink identifier:
  *
  *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
  *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
@@ -386,10 +540,10 @@ const DeleteSinkRequest = {
  * apply to child resources, and that you can't exclude audit log entries.
  *
  * @property {string} name
- *   Required. A client-assigned identifier, such as
- *   `"load-balancer-exclusion"`. Identifiers are limited to 100 characters and
- *   can include only letters, digits, underscores, hyphens, and periods.
- *   First character has to be alphanumeric.
+ *   Required. A client-assigned identifier, such as `"load-balancer-exclusion"`.
+ *   Identifiers are limited to 100 characters and can include only letters,
+ *   digits, underscores, hyphens, and periods. First character has to be
+ *   alphanumeric.
  *
  * @property {string} description
  *   Optional. A description of this exclusion.
@@ -545,14 +699,14 @@ const CreateExclusionRequest = {
  *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
  *
  * @property {Object} exclusion
- *   Required. New values for the existing exclusion. Only the fields specified
- *   in `update_mask` are relevant.
+ *   Required. New values for the existing exclusion. Only the fields specified in
+ *   `update_mask` are relevant.
  *
  *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
  *
  * @property {Object} updateMask
- *   Required. A non-empty list of fields to change in the existing exclusion.
- *   New values for the fields are taken from the corresponding fields in the
+ *   Required. A non-empty list of fields to change in the existing exclusion. New values
+ *   for the fields are taken from the corresponding fields in the
  *   LogExclusion included in this request. Fields not mentioned in
  *   `update_mask` are not changed and are ignored in the request.
  *
@@ -679,7 +833,7 @@ const UpdateCmekSettingsRequest = {
  * for more information.
  *
  * @property {string} name
- *   Output Only. The resource name of the CMEK settings.
+ *   Output only. The resource name of the CMEK settings.
  *
  * @property {string} kmsKeyName
  *   The resource name for the configured Cloud KMS key.
@@ -708,8 +862,8 @@ const UpdateCmekSettingsRequest = {
  *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
  *
  * @property {string} serviceAccountId
- *   Output Only. The service account that will be used by the Logs Router to
- *   access your Cloud KMS key.
+ *   Output only. The service account that will be used by the Logs Router to access your
+ *   Cloud KMS key.
  *
  *   Before enabling CMEK for Logs Router, you must first assign the role
  *   `roles/cloudkms.cryptoKeyEncrypterDecrypter` to the service account that
@@ -726,4 +880,29 @@ const UpdateCmekSettingsRequest = {
  */
 const CmekSettings = {
   // This is for documentation. Actual contents will be loaded by gRPC.
+};
+
+/**
+ * LogBucket lifecycle states (Beta).
+ *
+ * @enum {number}
+ * @memberof google.logging.v2
+ */
+const LifecycleState = {
+
+  /**
+   * Unspecified state.  This is only used/useful for distinguishing
+   * unset values.
+   */
+  LIFECYCLE_STATE_UNSPECIFIED: 0,
+
+  /**
+   * The normal and active state.
+   */
+  ACTIVE: 1,
+
+  /**
+   * The bucket has been marked for deletion by the user.
+   */
+  DELETE_REQUESTED: 2
 };

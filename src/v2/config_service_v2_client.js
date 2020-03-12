@@ -125,44 +125,25 @@ class ConfigServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      billingPathTemplate: new gaxModule.PathTemplate(
+      billingAccountPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}'
       ),
-      billingExclusionPathTemplate: new gaxModule.PathTemplate(
-        'billingAccounts/{billing_account}/exclusions/{exclusion}'
-      ),
-      billingSinkPathTemplate: new gaxModule.PathTemplate(
-        'billingAccounts/{billing_account}/sinks/{sink}'
-      ),
-      exclusionPathTemplate: new gaxModule.PathTemplate(
-        'projects/{project}/exclusions/{exclusion}'
-      ),
       folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
-      folderExclusionPathTemplate: new gaxModule.PathTemplate(
-        'folders/{folder}/exclusions/{exclusion}'
-      ),
-      folderSinkPathTemplate: new gaxModule.PathTemplate(
-        'folders/{folder}/sinks/{sink}'
-      ),
       organizationPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}'
       ),
-      organizationExclusionPathTemplate: new gaxModule.PathTemplate(
-        'organizations/{organization}/exclusions/{exclusion}'
-      ),
-      organizationSinkPathTemplate: new gaxModule.PathTemplate(
-        'organizations/{organization}/sinks/{sink}'
-      ),
       projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
-      sinkPathTemplate: new gaxModule.PathTemplate(
-        'projects/{project}/sinks/{sink}'
-      ),
     };
 
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this._descriptors.page = {
+      listBuckets: new gaxModule.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'buckets'
+      ),
       listSinks: new gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -200,6 +181,9 @@ class ConfigServiceV2Client {
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
     const configServiceV2StubMethods = [
+      'listBuckets',
+      'getBucket',
+      'updateBucket',
       'listSinks',
       'getSink',
       'createSink',
@@ -278,6 +262,339 @@ class ConfigServiceV2Client {
   // -------------------
   // -- Service calls --
   // -------------------
+
+  /**
+   * Lists buckets (Beta).
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose buckets are to be listed:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+   *
+   *   Note: The locations portion of the resource must be specified, but
+   *   supplying the character `-` in place of [LOCATION_ID] will return all
+   *   buckets.
+   * @param {number} [request.pageSize]
+   *   The maximum number of resources contained in the underlying API
+   *   response. If page streaming is performed per-resource, this
+   *   parameter does not affect the return value. If page streaming is
+   *   performed per-page, this determines the maximum number of
+   *   resources in a page.
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @param {function(?Error, ?Array, ?Object, ?Object)} [callback]
+   *   The function which will be called with the result of the API call.
+   *
+   *   The second parameter to the callback is Array of [LogBucket]{@link google.logging.v2.LogBucket}.
+   *
+   *   When autoPaginate: false is specified through options, it contains the result
+   *   in a single response. If the response indicates the next page exists, the third
+   *   parameter is set to be used for the next request object. The fourth parameter keeps
+   *   the raw response object of an object representing [ListBucketsResponse]{@link google.logging.v2.ListBucketsResponse}.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is Array of [LogBucket]{@link google.logging.v2.LogBucket}.
+   *
+   *   When autoPaginate: false is specified through options, the array has three elements.
+   *   The first element is Array of [LogBucket]{@link google.logging.v2.LogBucket} in a single response.
+   *   The second element is the next request object if the response
+   *   indicates the next page exists, or null. The third element is
+   *   an object representing [ListBucketsResponse]{@link google.logging.v2.ListBucketsResponse}.
+   *
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.ConfigServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   * // Iterate over all elements.
+   * const parent = '';
+   *
+   * client.listBuckets({parent: parent})
+   *   .then(responses => {
+   *     const resources = responses[0];
+   *     for (const resource of resources) {
+   *       // doThingsWith(resource)
+   *     }
+   *   })
+   *   .catch(err => {
+   *     console.error(err);
+   *   });
+   *
+   * // Or obtain the paged response.
+   * const parent = '';
+   *
+   *
+   * const options = {autoPaginate: false};
+   * const callback = responses => {
+   *   // The actual resources in a response.
+   *   const resources = responses[0];
+   *   // The next request if the response shows that there are more responses.
+   *   const nextRequest = responses[1];
+   *   // The actual response object, if necessary.
+   *   // const rawResponse = responses[2];
+   *   for (const resource of resources) {
+   *     // doThingsWith(resource);
+   *   }
+   *   if (nextRequest) {
+   *     // Fetch the next page.
+   *     return client.listBuckets(nextRequest, options).then(callback);
+   *   }
+   * }
+   * client.listBuckets({parent: parent}, options)
+   *   .then(callback)
+   *   .catch(err => {
+   *     console.error(err);
+   *   });
+   */
+  listBuckets(request, options, callback) {
+    if (options instanceof Function && callback === undefined) {
+      callback = options;
+      options = {};
+    }
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent,
+    });
+
+    return this._innerApiCalls.listBuckets(request, options, callback);
+  }
+
+  /**
+   * Equivalent to {@link listBuckets}, but returns a NodeJS Stream object.
+   *
+   * This fetches the paged responses for {@link listBuckets} continuously
+   * and invokes the callback registered for 'data' event for each element in the
+   * responses.
+   *
+   * The returned object has 'end' method when no more elements are required.
+   *
+   * autoPaginate option will be ignored.
+   *
+   * @see {@link https://nodejs.org/api/stream.html}
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose buckets are to be listed:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+   *
+   *   Note: The locations portion of the resource must be specified, but
+   *   supplying the character `-` in place of [LOCATION_ID] will return all
+   *   buckets.
+   * @param {number} [request.pageSize]
+   *   The maximum number of resources contained in the underlying API
+   *   response. If page streaming is performed per-resource, this
+   *   parameter does not affect the return value. If page streaming is
+   *   performed per-page, this determines the maximum number of
+   *   resources in a page.
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @returns {Stream}
+   *   An object stream which emits an object representing [LogBucket]{@link google.logging.v2.LogBucket} on 'data' event.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.ConfigServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   * const parent = '';
+   * client.listBucketsStream({parent: parent})
+   *   .on('data', element => {
+   *     // doThingsWith(element)
+   *   }).on('error', err => {
+   *     console.log(err);
+   *   });
+   */
+  listBucketsStream(request, options) {
+    options = options || {};
+
+    return this._descriptors.page.listBuckets.createStream(
+      this._innerApiCalls.listBuckets,
+      request,
+      options
+    );
+  }
+
+  /**
+   * Gets a bucket (Beta).
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The resource name of the bucket:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *
+   *   Example:
+   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @param {function(?Error, ?Object)} [callback]
+   *   The function which will be called with the result of the API call.
+   *
+   *   The second parameter to the callback is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.ConfigServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   * const name = '';
+   * client.getBucket({name: name})
+   *   .then(responses => {
+   *     const response = responses[0];
+   *     // doThingsWith(response)
+   *   })
+   *   .catch(err => {
+   *     console.error(err);
+   *   });
+   */
+  getBucket(request, options, callback) {
+    if (options instanceof Function && callback === undefined) {
+      callback = options;
+      options = {};
+    }
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name,
+    });
+
+    return this._innerApiCalls.getBucket(request, options, callback);
+  }
+
+  /**
+   * Updates a bucket. This method replaces the following fields in the
+   * existing bucket with values from the new bucket: `retention_period`
+   *
+   * If the retention period is decreased and the bucket is locked,
+   * FAILED_PRECONDITION will be returned.
+   *
+   * If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION
+   * will be returned.
+   *
+   * A buckets region may not be modified after it is created.
+   * This method is in Beta.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the bucket to update.
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *
+   *   Example:
+   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`. Also
+   *   requires permission "resourcemanager.projects.updateLiens" to set the
+   *   locked property
+   * @param {Object} request.bucket
+   *   Required. The updated bucket.
+   *
+   *   This object should have the same structure as [LogBucket]{@link google.logging.v2.LogBucket}
+   * @param {Object} request.updateMask
+   *   Required. Field mask that specifies the fields in `bucket` that need an update. A
+   *   bucket field will be overwritten if, and only if, it is in the update
+   *   mask. `name` and output only fields cannot be updated.
+   *
+   *   For a detailed `FieldMask` definition, see
+   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+   *
+   *   Example: `updateMask=retention_days`.
+   *
+   *   This object should have the same structure as [FieldMask]{@link google.protobuf.FieldMask}
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @param {function(?Error, ?Object)} [callback]
+   *   The function which will be called with the result of the API call.
+   *
+   *   The second parameter to the callback is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.ConfigServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   * const name = '';
+   * const bucket = {};
+   * const updateMask = {};
+   * const request = {
+   *   name: name,
+   *   bucket: bucket,
+   *   updateMask: updateMask,
+   * };
+   * client.updateBucket(request)
+   *   .then(responses => {
+   *     const response = responses[0];
+   *     // doThingsWith(response)
+   *   })
+   *   .catch(err => {
+   *     console.error(err);
+   *   });
+   */
+  updateBucket(request, options, callback) {
+    if (options instanceof Function && callback === undefined) {
+      callback = options;
+      options = {};
+    }
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name,
+    });
+
+    return this._innerApiCalls.updateBucket(request, options, callback);
+  }
 
   /**
    * Lists sinks.
@@ -479,8 +796,8 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-   * client.getSink({sinkName: formattedSinkName})
+   * const sinkName = '';
+   * client.getSink({sinkName: sinkName})
    *   .then(responses => {
    *     const response = responses[0];
    *     // doThingsWith(response)
@@ -603,8 +920,8 @@ class ConfigServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.sinkName
-   *   Required. The full resource name of the sink to update, including the
-   *   parent resource and the sink identifier:
+   *   Required. The full resource name of the sink to update, including the parent
+   *   resource and the sink identifier:
    *
    *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
    *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
@@ -613,8 +930,8 @@ class ConfigServiceV2Client {
    *
    *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
    * @param {Object} request.sink
-   *   Required. The updated sink, whose name is the same identifier that appears
-   *   as part of `sink_name`.
+   *   Required. The updated sink, whose name is the same identifier that appears as part
+   *   of `sink_name`.
    *
    *   This object should have the same structure as [LogSink]{@link google.logging.v2.LogSink}
    * @param {boolean} [request.uniqueWriterIdentity]
@@ -665,10 +982,10 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
+   * const sinkName = '';
    * const sink = {};
    * const request = {
-   *   sinkName: formattedSinkName,
+   *   sinkName: sinkName,
    *   sink: sink,
    * };
    * client.updateSink(request)
@@ -705,8 +1022,8 @@ class ConfigServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.sinkName
-   *   Required. The full resource name of the sink to delete, including the
-   *   parent resource and the sink identifier:
+   *   Required. The full resource name of the sink to delete, including the parent
+   *   resource and the sink identifier:
    *
    *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
    *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
@@ -730,8 +1047,8 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedSinkName = client.sinkPath('[PROJECT]', '[SINK]');
-   * client.deleteSink({sinkName: formattedSinkName}).catch(err => {
+   * const sinkName = '';
+   * client.deleteSink({sinkName: sinkName}).catch(err => {
    *   console.error(err);
    * });
    */
@@ -953,8 +1270,8 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-   * client.getExclusion({name: formattedName})
+   * const name = '';
+   * client.getExclusion({name: name})
    *   .then(responses => {
    *     const response = responses[0];
    *     // doThingsWith(response)
@@ -1069,13 +1386,13 @@ class ConfigServiceV2Client {
    *
    *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
    * @param {Object} request.exclusion
-   *   Required. New values for the existing exclusion. Only the fields specified
-   *   in `update_mask` are relevant.
+   *   Required. New values for the existing exclusion. Only the fields specified in
+   *   `update_mask` are relevant.
    *
    *   This object should have the same structure as [LogExclusion]{@link google.logging.v2.LogExclusion}
    * @param {Object} request.updateMask
-   *   Required. A non-empty list of fields to change in the existing exclusion.
-   *   New values for the fields are taken from the corresponding fields in the
+   *   Required. A non-empty list of fields to change in the existing exclusion. New values
+   *   for the fields are taken from the corresponding fields in the
    *   LogExclusion included in this request. Fields not mentioned in
    *   `update_mask` are not changed and are ignored in the request.
    *
@@ -1102,11 +1419,11 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
+   * const name = '';
    * const exclusion = {};
    * const updateMask = {};
    * const request = {
-   *   name: formattedName,
+   *   name: name,
    *   exclusion: exclusion,
    *   updateMask: updateMask,
    * };
@@ -1167,8 +1484,8 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedName = client.exclusionPath('[PROJECT]', '[EXCLUSION]');
-   * client.deleteExclusion({name: formattedName}).catch(err => {
+   * const name = '';
+   * client.deleteExclusion({name: name}).catch(err => {
    *   console.error(err);
    * });
    */
@@ -1202,7 +1519,7 @@ class ConfigServiceV2Client {
    *
    * @param {Object} request
    *   The request object that will be sent.
-   * @param {string} [request.name]
+   * @param {string} request.name
    *   Required. The resource for which to retrieve CMEK settings.
    *
    *       "projects/[PROJECT_ID]/cmekSettings"
@@ -1234,8 +1551,8 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   *
-   * client.getCmekSettings({})
+   * const name = '';
+   * client.getCmekSettings({name: name})
    *   .then(responses => {
    *     const response = responses[0];
    *     // doThingsWith(response)
@@ -1280,7 +1597,7 @@ class ConfigServiceV2Client {
    *
    * @param {Object} request
    *   The request object that will be sent.
-   * @param {string} [request.name]
+   * @param {string} request.name
    *   Required. The resource name for the CMEK settings to update.
    *
    *       "projects/[PROJECT_ID]/cmekSettings"
@@ -1293,7 +1610,7 @@ class ConfigServiceV2Client {
    *   Note: CMEK for the Logs Router can currently only be configured for GCP
    *   organizations. Once configured, it applies to all projects and folders in
    *   the GCP organization.
-   * @param {Object} [request.cmekSettings]
+   * @param {Object} request.cmekSettings
    *   Required. The CMEK settings to update.
    *
    *   See [Enabling CMEK for Logs
@@ -1329,8 +1646,13 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   *
-   * client.updateCmekSettings({})
+   * const name = '';
+   * const cmekSettings = {};
+   * const request = {
+   *   name: name,
+   *   cmekSettings: cmekSettings,
+   * };
+   * client.updateCmekSettings(request)
    *   .then(responses => {
    *     const response = responses[0];
    *     // doThingsWith(response)
@@ -1362,56 +1684,14 @@ class ConfigServiceV2Client {
   // --------------------
 
   /**
-   * Return a fully-qualified billing resource name string.
+   * Return a fully-qualified billing_account resource name string.
    *
    * @param {String} billingAccount
    * @returns {String}
    */
-  billingPath(billingAccount) {
-    return this._pathTemplates.billingPathTemplate.render({
+  billingAccountPath(billingAccount) {
+    return this._pathTemplates.billingAccountPathTemplate.render({
       billing_account: billingAccount,
-    });
-  }
-
-  /**
-   * Return a fully-qualified billing_exclusion resource name string.
-   *
-   * @param {String} billingAccount
-   * @param {String} exclusion
-   * @returns {String}
-   */
-  billingExclusionPath(billingAccount, exclusion) {
-    return this._pathTemplates.billingExclusionPathTemplate.render({
-      billing_account: billingAccount,
-      exclusion: exclusion,
-    });
-  }
-
-  /**
-   * Return a fully-qualified billing_sink resource name string.
-   *
-   * @param {String} billingAccount
-   * @param {String} sink
-   * @returns {String}
-   */
-  billingSinkPath(billingAccount, sink) {
-    return this._pathTemplates.billingSinkPathTemplate.render({
-      billing_account: billingAccount,
-      sink: sink,
-    });
-  }
-
-  /**
-   * Return a fully-qualified exclusion resource name string.
-   *
-   * @param {String} project
-   * @param {String} exclusion
-   * @returns {String}
-   */
-  exclusionPath(project, exclusion) {
-    return this._pathTemplates.exclusionPathTemplate.render({
-      project: project,
-      exclusion: exclusion,
     });
   }
 
@@ -1428,34 +1708,6 @@ class ConfigServiceV2Client {
   }
 
   /**
-   * Return a fully-qualified folder_exclusion resource name string.
-   *
-   * @param {String} folder
-   * @param {String} exclusion
-   * @returns {String}
-   */
-  folderExclusionPath(folder, exclusion) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
-      folder: folder,
-      exclusion: exclusion,
-    });
-  }
-
-  /**
-   * Return a fully-qualified folder_sink resource name string.
-   *
-   * @param {String} folder
-   * @param {String} sink
-   * @returns {String}
-   */
-  folderSinkPath(folder, sink) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
-      folder: folder,
-      sink: sink,
-    });
-  }
-
-  /**
    * Return a fully-qualified organization resource name string.
    *
    * @param {String} organization
@@ -1464,34 +1716,6 @@ class ConfigServiceV2Client {
   organizationPath(organization) {
     return this._pathTemplates.organizationPathTemplate.render({
       organization: organization,
-    });
-  }
-
-  /**
-   * Return a fully-qualified organization_exclusion resource name string.
-   *
-   * @param {String} organization
-   * @param {String} exclusion
-   * @returns {String}
-   */
-  organizationExclusionPath(organization, exclusion) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
-      organization: organization,
-      exclusion: exclusion,
-    });
-  }
-
-  /**
-   * Return a fully-qualified organization_sink resource name string.
-   *
-   * @param {String} organization
-   * @param {String} sink
-   * @returns {String}
-   */
-  organizationSinkPath(organization, sink) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
-      organization: organization,
-      sink: sink,
     });
   }
 
@@ -1508,103 +1732,16 @@ class ConfigServiceV2Client {
   }
 
   /**
-   * Return a fully-qualified sink resource name string.
+   * Parse the billingAccountName from a billing_account resource.
    *
-   * @param {String} project
-   * @param {String} sink
-   * @returns {String}
-   */
-  sinkPath(project, sink) {
-    return this._pathTemplates.sinkPathTemplate.render({
-      project: project,
-      sink: sink,
-    });
-  }
-
-  /**
-   * Parse the billingName from a billing resource.
-   *
-   * @param {String} billingName
-   *   A fully-qualified path representing a billing resources.
+   * @param {String} billingAccountName
+   *   A fully-qualified path representing a billing_account resources.
    * @returns {String} - A string representing the billing_account.
    */
-  matchBillingAccountFromBillingName(billingName) {
-    return this._pathTemplates.billingPathTemplate.match(billingName)
-      .billing_account;
-  }
-
-  /**
-   * Parse the billingExclusionName from a billing_exclusion resource.
-   *
-   * @param {String} billingExclusionName
-   *   A fully-qualified path representing a billing_exclusion resources.
-   * @returns {String} - A string representing the billing_account.
-   */
-  matchBillingAccountFromBillingExclusionName(billingExclusionName) {
-    return this._pathTemplates.billingExclusionPathTemplate.match(
-      billingExclusionName
+  matchBillingAccountFromBillingAccountName(billingAccountName) {
+    return this._pathTemplates.billingAccountPathTemplate.match(
+      billingAccountName
     ).billing_account;
-  }
-
-  /**
-   * Parse the billingExclusionName from a billing_exclusion resource.
-   *
-   * @param {String} billingExclusionName
-   *   A fully-qualified path representing a billing_exclusion resources.
-   * @returns {String} - A string representing the exclusion.
-   */
-  matchExclusionFromBillingExclusionName(billingExclusionName) {
-    return this._pathTemplates.billingExclusionPathTemplate.match(
-      billingExclusionName
-    ).exclusion;
-  }
-
-  /**
-   * Parse the billingSinkName from a billing_sink resource.
-   *
-   * @param {String} billingSinkName
-   *   A fully-qualified path representing a billing_sink resources.
-   * @returns {String} - A string representing the billing_account.
-   */
-  matchBillingAccountFromBillingSinkName(billingSinkName) {
-    return this._pathTemplates.billingSinkPathTemplate.match(billingSinkName)
-      .billing_account;
-  }
-
-  /**
-   * Parse the billingSinkName from a billing_sink resource.
-   *
-   * @param {String} billingSinkName
-   *   A fully-qualified path representing a billing_sink resources.
-   * @returns {String} - A string representing the sink.
-   */
-  matchSinkFromBillingSinkName(billingSinkName) {
-    return this._pathTemplates.billingSinkPathTemplate.match(billingSinkName)
-      .sink;
-  }
-
-  /**
-   * Parse the exclusionName from a exclusion resource.
-   *
-   * @param {String} exclusionName
-   *   A fully-qualified path representing a exclusion resources.
-   * @returns {String} - A string representing the project.
-   */
-  matchProjectFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
-      .project;
-  }
-
-  /**
-   * Parse the exclusionName from a exclusion resource.
-   *
-   * @param {String} exclusionName
-   *   A fully-qualified path representing a exclusion resources.
-   * @returns {String} - A string representing the exclusion.
-   */
-  matchExclusionFromExclusionName(exclusionName) {
-    return this._pathTemplates.exclusionPathTemplate.match(exclusionName)
-      .exclusion;
   }
 
   /**
@@ -1616,56 +1753,6 @@ class ConfigServiceV2Client {
    */
   matchFolderFromFolderName(folderName) {
     return this._pathTemplates.folderPathTemplate.match(folderName).folder;
-  }
-
-  /**
-   * Parse the folderExclusionName from a folder_exclusion resource.
-   *
-   * @param {String} folderExclusionName
-   *   A fully-qualified path representing a folder_exclusion resources.
-   * @returns {String} - A string representing the folder.
-   */
-  matchFolderFromFolderExclusionName(folderExclusionName) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).folder;
-  }
-
-  /**
-   * Parse the folderExclusionName from a folder_exclusion resource.
-   *
-   * @param {String} folderExclusionName
-   *   A fully-qualified path representing a folder_exclusion resources.
-   * @returns {String} - A string representing the exclusion.
-   */
-  matchExclusionFromFolderExclusionName(folderExclusionName) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).exclusion;
-  }
-
-  /**
-   * Parse the folderSinkName from a folder_sink resource.
-   *
-   * @param {String} folderSinkName
-   *   A fully-qualified path representing a folder_sink resources.
-   * @returns {String} - A string representing the folder.
-   */
-  matchFolderFromFolderSinkName(folderSinkName) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .folder;
-  }
-
-  /**
-   * Parse the folderSinkName from a folder_sink resource.
-   *
-   * @param {String} folderSinkName
-   *   A fully-qualified path representing a folder_sink resources.
-   * @returns {String} - A string representing the sink.
-   */
-  matchSinkFromFolderSinkName(folderSinkName) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
   }
 
   /**
@@ -1681,58 +1768,6 @@ class ConfigServiceV2Client {
   }
 
   /**
-   * Parse the organizationExclusionName from a organization_exclusion resource.
-   *
-   * @param {String} organizationExclusionName
-   *   A fully-qualified path representing a organization_exclusion resources.
-   * @returns {String} - A string representing the organization.
-   */
-  matchOrganizationFromOrganizationExclusionName(organizationExclusionName) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).organization;
-  }
-
-  /**
-   * Parse the organizationExclusionName from a organization_exclusion resource.
-   *
-   * @param {String} organizationExclusionName
-   *   A fully-qualified path representing a organization_exclusion resources.
-   * @returns {String} - A string representing the exclusion.
-   */
-  matchExclusionFromOrganizationExclusionName(organizationExclusionName) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).exclusion;
-  }
-
-  /**
-   * Parse the organizationSinkName from a organization_sink resource.
-   *
-   * @param {String} organizationSinkName
-   *   A fully-qualified path representing a organization_sink resources.
-   * @returns {String} - A string representing the organization.
-   */
-  matchOrganizationFromOrganizationSinkName(organizationSinkName) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).organization;
-  }
-
-  /**
-   * Parse the organizationSinkName from a organization_sink resource.
-   *
-   * @param {String} organizationSinkName
-   *   A fully-qualified path representing a organization_sink resources.
-   * @returns {String} - A string representing the sink.
-   */
-  matchSinkFromOrganizationSinkName(organizationSinkName) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).sink;
-  }
-
-  /**
    * Parse the projectName from a project resource.
    *
    * @param {String} projectName
@@ -1741,28 +1776,6 @@ class ConfigServiceV2Client {
    */
   matchProjectFromProjectName(projectName) {
     return this._pathTemplates.projectPathTemplate.match(projectName).project;
-  }
-
-  /**
-   * Parse the sinkName from a sink resource.
-   *
-   * @param {String} sinkName
-   *   A fully-qualified path representing a sink resources.
-   * @returns {String} - A string representing the project.
-   */
-  matchProjectFromSinkName(sinkName) {
-    return this._pathTemplates.sinkPathTemplate.match(sinkName).project;
-  }
-
-  /**
-   * Parse the sinkName from a sink resource.
-   *
-   * @param {String} sinkName
-   *   A fully-qualified path representing a sink resources.
-   * @returns {String} - A string representing the sink.
-   */
-  matchSinkFromSinkName(sinkName) {
-    return this._pathTemplates.sinkPathTemplate.match(sinkName).sink;
   }
 }
 

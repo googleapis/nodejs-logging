@@ -44,6 +44,48 @@ export namespace google {
                 public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): ConfigServiceV2;
 
                 /**
+                 * Calls ListBuckets.
+                 * @param request ListBucketsRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListBucketsResponse
+                 */
+                public listBuckets(request: google.logging.v2.IListBucketsRequest, callback: google.logging.v2.ConfigServiceV2.ListBucketsCallback): void;
+
+                /**
+                 * Calls ListBuckets.
+                 * @param request ListBucketsRequest message or plain object
+                 * @returns Promise
+                 */
+                public listBuckets(request: google.logging.v2.IListBucketsRequest): Promise<google.logging.v2.ListBucketsResponse>;
+
+                /**
+                 * Calls GetBucket.
+                 * @param request GetBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and LogBucket
+                 */
+                public getBucket(request: google.logging.v2.IGetBucketRequest, callback: google.logging.v2.ConfigServiceV2.GetBucketCallback): void;
+
+                /**
+                 * Calls GetBucket.
+                 * @param request GetBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public getBucket(request: google.logging.v2.IGetBucketRequest): Promise<google.logging.v2.LogBucket>;
+
+                /**
+                 * Calls UpdateBucket.
+                 * @param request UpdateBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and LogBucket
+                 */
+                public updateBucket(request: google.logging.v2.IUpdateBucketRequest, callback: google.logging.v2.ConfigServiceV2.UpdateBucketCallback): void;
+
+                /**
+                 * Calls UpdateBucket.
+                 * @param request UpdateBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public updateBucket(request: google.logging.v2.IUpdateBucketRequest): Promise<google.logging.v2.LogBucket>;
+
+                /**
                  * Calls ListSinks.
                  * @param request ListSinksRequest message or plain object
                  * @param callback Node-style callback called with the error, if any, and ListSinksResponse
@@ -215,6 +257,27 @@ export namespace google {
             namespace ConfigServiceV2 {
 
                 /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#listBuckets}.
+                 * @param error Error, if any
+                 * @param [response] ListBucketsResponse
+                 */
+                type ListBucketsCallback = (error: (Error|null), response?: google.logging.v2.ListBucketsResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#getBucket}.
+                 * @param error Error, if any
+                 * @param [response] LogBucket
+                 */
+                type GetBucketCallback = (error: (Error|null), response?: google.logging.v2.LogBucket) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#updateBucket}.
+                 * @param error Error, if any
+                 * @param [response] LogBucket
+                 */
+                type UpdateBucketCallback = (error: (Error|null), response?: google.logging.v2.LogBucket) => void;
+
+                /**
                  * Callback as used by {@link google.logging.v2.ConfigServiceV2#listSinks}.
                  * @param error Error, if any
                  * @param [response] ListSinksResponse
@@ -299,6 +362,126 @@ export namespace google {
                 type UpdateCmekSettingsCallback = (error: (Error|null), response?: google.logging.v2.CmekSettings) => void;
             }
 
+            /** Properties of a LogBucket. */
+            interface ILogBucket {
+
+                /** LogBucket name */
+                name?: (string|null);
+
+                /** LogBucket description */
+                description?: (string|null);
+
+                /** LogBucket createTime */
+                createTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogBucket updateTime */
+                updateTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogBucket retentionDays */
+                retentionDays?: (number|null);
+
+                /** LogBucket lifecycleState */
+                lifecycleState?: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState|null);
+            }
+
+            /** Represents a LogBucket. */
+            class LogBucket implements ILogBucket {
+
+                /**
+                 * Constructs a new LogBucket.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILogBucket);
+
+                /** LogBucket name. */
+                public name: string;
+
+                /** LogBucket description. */
+                public description: string;
+
+                /** LogBucket createTime. */
+                public createTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogBucket updateTime. */
+                public updateTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogBucket retentionDays. */
+                public retentionDays: number;
+
+                /** LogBucket lifecycleState. */
+                public lifecycleState: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState);
+
+                /**
+                 * Creates a new LogBucket instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LogBucket instance
+                 */
+                public static create(properties?: google.logging.v2.ILogBucket): google.logging.v2.LogBucket;
+
+                /**
+                 * Encodes the specified LogBucket message. Does not implicitly {@link google.logging.v2.LogBucket.verify|verify} messages.
+                 * @param message LogBucket message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILogBucket, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LogBucket message, length delimited. Does not implicitly {@link google.logging.v2.LogBucket.verify|verify} messages.
+                 * @param message LogBucket message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILogBucket, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LogBucket message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LogBucket
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogBucket;
+
+                /**
+                 * Decodes a LogBucket message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LogBucket
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogBucket;
+
+                /**
+                 * Verifies a LogBucket message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LogBucket message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LogBucket
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogBucket;
+
+                /**
+                 * Creates a plain object from a LogBucket message. Also converts values to other types if specified.
+                 * @param message LogBucket
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LogBucket, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LogBucket to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
             /** Properties of a LogSink. */
             interface ILogSink {
 
@@ -334,12 +517,6 @@ export namespace google {
 
                 /** LogSink updateTime */
                 updateTime?: (google.protobuf.ITimestamp|null);
-
-                /** LogSink startTime */
-                startTime?: (google.protobuf.ITimestamp|null);
-
-                /** LogSink endTime */
-                endTime?: (google.protobuf.ITimestamp|null);
             }
 
             /** Represents a LogSink. */
@@ -383,12 +560,6 @@ export namespace google {
 
                 /** LogSink updateTime. */
                 public updateTime?: (google.protobuf.ITimestamp|null);
-
-                /** LogSink startTime. */
-                public startTime?: (google.protobuf.ITimestamp|null);
-
-                /** LogSink endTime. */
-                public endTime?: (google.protobuf.ITimestamp|null);
 
                 /** LogSink options. */
                 public options?: "bigqueryOptions";
@@ -565,6 +736,403 @@ export namespace google {
 
                 /**
                  * Converts this BigQueryOptions to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** LifecycleState enum. */
+            enum LifecycleState {
+                LIFECYCLE_STATE_UNSPECIFIED = 0,
+                ACTIVE = 1,
+                DELETE_REQUESTED = 2
+            }
+
+            /** Properties of a ListBucketsRequest. */
+            interface IListBucketsRequest {
+
+                /** ListBucketsRequest parent */
+                parent?: (string|null);
+
+                /** ListBucketsRequest pageToken */
+                pageToken?: (string|null);
+
+                /** ListBucketsRequest pageSize */
+                pageSize?: (number|null);
+            }
+
+            /** Represents a ListBucketsRequest. */
+            class ListBucketsRequest implements IListBucketsRequest {
+
+                /**
+                 * Constructs a new ListBucketsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListBucketsRequest);
+
+                /** ListBucketsRequest parent. */
+                public parent: string;
+
+                /** ListBucketsRequest pageToken. */
+                public pageToken: string;
+
+                /** ListBucketsRequest pageSize. */
+                public pageSize: number;
+
+                /**
+                 * Creates a new ListBucketsRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListBucketsRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IListBucketsRequest): google.logging.v2.ListBucketsRequest;
+
+                /**
+                 * Encodes the specified ListBucketsRequest message. Does not implicitly {@link google.logging.v2.ListBucketsRequest.verify|verify} messages.
+                 * @param message ListBucketsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListBucketsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListBucketsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListBucketsRequest.verify|verify} messages.
+                 * @param message ListBucketsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListBucketsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListBucketsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListBucketsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListBucketsRequest;
+
+                /**
+                 * Decodes a ListBucketsRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListBucketsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListBucketsRequest;
+
+                /**
+                 * Verifies a ListBucketsRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListBucketsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListBucketsRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListBucketsRequest;
+
+                /**
+                 * Creates a plain object from a ListBucketsRequest message. Also converts values to other types if specified.
+                 * @param message ListBucketsRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListBucketsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListBucketsRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListBucketsResponse. */
+            interface IListBucketsResponse {
+
+                /** ListBucketsResponse buckets */
+                buckets?: (google.logging.v2.ILogBucket[]|null);
+
+                /** ListBucketsResponse nextPageToken */
+                nextPageToken?: (string|null);
+            }
+
+            /** Represents a ListBucketsResponse. */
+            class ListBucketsResponse implements IListBucketsResponse {
+
+                /**
+                 * Constructs a new ListBucketsResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListBucketsResponse);
+
+                /** ListBucketsResponse buckets. */
+                public buckets: google.logging.v2.ILogBucket[];
+
+                /** ListBucketsResponse nextPageToken. */
+                public nextPageToken: string;
+
+                /**
+                 * Creates a new ListBucketsResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListBucketsResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IListBucketsResponse): google.logging.v2.ListBucketsResponse;
+
+                /**
+                 * Encodes the specified ListBucketsResponse message. Does not implicitly {@link google.logging.v2.ListBucketsResponse.verify|verify} messages.
+                 * @param message ListBucketsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListBucketsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListBucketsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListBucketsResponse.verify|verify} messages.
+                 * @param message ListBucketsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListBucketsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListBucketsResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListBucketsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListBucketsResponse;
+
+                /**
+                 * Decodes a ListBucketsResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListBucketsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListBucketsResponse;
+
+                /**
+                 * Verifies a ListBucketsResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListBucketsResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListBucketsResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListBucketsResponse;
+
+                /**
+                 * Creates a plain object from a ListBucketsResponse message. Also converts values to other types if specified.
+                 * @param message ListBucketsResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListBucketsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListBucketsResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of an UpdateBucketRequest. */
+            interface IUpdateBucketRequest {
+
+                /** UpdateBucketRequest name */
+                name?: (string|null);
+
+                /** UpdateBucketRequest bucket */
+                bucket?: (google.logging.v2.ILogBucket|null);
+
+                /** UpdateBucketRequest updateMask */
+                updateMask?: (google.protobuf.IFieldMask|null);
+            }
+
+            /** Represents an UpdateBucketRequest. */
+            class UpdateBucketRequest implements IUpdateBucketRequest {
+
+                /**
+                 * Constructs a new UpdateBucketRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IUpdateBucketRequest);
+
+                /** UpdateBucketRequest name. */
+                public name: string;
+
+                /** UpdateBucketRequest bucket. */
+                public bucket?: (google.logging.v2.ILogBucket|null);
+
+                /** UpdateBucketRequest updateMask. */
+                public updateMask?: (google.protobuf.IFieldMask|null);
+
+                /**
+                 * Creates a new UpdateBucketRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UpdateBucketRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IUpdateBucketRequest): google.logging.v2.UpdateBucketRequest;
+
+                /**
+                 * Encodes the specified UpdateBucketRequest message. Does not implicitly {@link google.logging.v2.UpdateBucketRequest.verify|verify} messages.
+                 * @param message UpdateBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IUpdateBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified UpdateBucketRequest message, length delimited. Does not implicitly {@link google.logging.v2.UpdateBucketRequest.verify|verify} messages.
+                 * @param message UpdateBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IUpdateBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an UpdateBucketRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UpdateBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.UpdateBucketRequest;
+
+                /**
+                 * Decodes an UpdateBucketRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns UpdateBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.UpdateBucketRequest;
+
+                /**
+                 * Verifies an UpdateBucketRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates an UpdateBucketRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns UpdateBucketRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.UpdateBucketRequest;
+
+                /**
+                 * Creates a plain object from an UpdateBucketRequest message. Also converts values to other types if specified.
+                 * @param message UpdateBucketRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.UpdateBucketRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this UpdateBucketRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a GetBucketRequest. */
+            interface IGetBucketRequest {
+
+                /** GetBucketRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a GetBucketRequest. */
+            class GetBucketRequest implements IGetBucketRequest {
+
+                /**
+                 * Constructs a new GetBucketRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IGetBucketRequest);
+
+                /** GetBucketRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new GetBucketRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns GetBucketRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IGetBucketRequest): google.logging.v2.GetBucketRequest;
+
+                /**
+                 * Encodes the specified GetBucketRequest message. Does not implicitly {@link google.logging.v2.GetBucketRequest.verify|verify} messages.
+                 * @param message GetBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IGetBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified GetBucketRequest message, length delimited. Does not implicitly {@link google.logging.v2.GetBucketRequest.verify|verify} messages.
+                 * @param message GetBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IGetBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a GetBucketRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns GetBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.GetBucketRequest;
+
+                /**
+                 * Decodes a GetBucketRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns GetBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.GetBucketRequest;
+
+                /**
+                 * Verifies a GetBucketRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a GetBucketRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns GetBucketRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.GetBucketRequest;
+
+                /**
+                 * Creates a plain object from a GetBucketRequest message. Also converts values to other types if specified.
+                 * @param message GetBucketRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.GetBucketRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this GetBucketRequest to JSON.
                  * @returns JSON object
                  */
                 public toJSON(): { [k: string]: any };
@@ -2664,9 +3232,6 @@ export namespace google {
             /** Properties of a ListLogEntriesRequest. */
             interface IListLogEntriesRequest {
 
-                /** ListLogEntriesRequest projectIds */
-                projectIds?: (string[]|null);
-
                 /** ListLogEntriesRequest resourceNames */
                 resourceNames?: (string[]|null);
 
@@ -2691,9 +3256,6 @@ export namespace google {
                  * @param [properties] Properties to set
                  */
                 constructor(properties?: google.logging.v2.IListLogEntriesRequest);
-
-                /** ListLogEntriesRequest projectIds. */
-                public projectIds: string[];
 
                 /** ListLogEntriesRequest resourceNames. */
                 public resourceNames: string[];
@@ -3303,9 +3865,6 @@ export namespace google {
                 /** LogEntry labels */
                 labels?: ({ [k: string]: string }|null);
 
-                /** LogEntry metadata */
-                metadata?: (google.api.IMonitoredResourceMetadata|null);
-
                 /** LogEntry operation */
                 operation?: (google.logging.v2.ILogEntryOperation|null);
 
@@ -3363,9 +3922,6 @@ export namespace google {
 
                 /** LogEntry labels. */
                 public labels: { [k: string]: string };
-
-                /** LogEntry metadata. */
-                public metadata?: (google.api.IMonitoredResourceMetadata|null);
 
                 /** LogEntry operation. */
                 public operation?: (google.logging.v2.ILogEntryOperation|null);

@@ -125,15 +125,8 @@ class MetricsServiceV2Client {
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
     this._pathTemplates = {
-      billingPathTemplate: new gaxModule.PathTemplate(
-        'billingAccounts/{billing_account}'
-      ),
-      folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
-      metricPathTemplate: new gaxModule.PathTemplate(
+      logMetricPathTemplate: new gaxModule.PathTemplate(
         'projects/{project}/metrics/{metric}'
-      ),
-      organizationPathTemplate: new gaxModule.PathTemplate(
-        'organizations/{organization}'
       ),
       projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
     };
@@ -435,7 +428,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+   * const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
    * client.getLogMetric({metricName: formattedMetricName})
    *   .then(responses => {
    *     const response = responses[0];
@@ -567,7 +560,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+   * const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
    * const metric = {};
    * const request = {
    *   metricName: formattedMetricName,
@@ -625,7 +618,7 @@ class MetricsServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const formattedMetricName = client.metricPath('[PROJECT]', '[METRIC]');
+   * const formattedMetricName = client.logMetricPath('[PROJECT]', '[METRIC]');
    * client.deleteLogMetric({metricName: formattedMetricName}).catch(err => {
    *   console.error(err);
    * });
@@ -653,52 +646,16 @@ class MetricsServiceV2Client {
   // --------------------
 
   /**
-   * Return a fully-qualified billing resource name string.
-   *
-   * @param {String} billingAccount
-   * @returns {String}
-   */
-  billingPath(billingAccount) {
-    return this._pathTemplates.billingPathTemplate.render({
-      billing_account: billingAccount,
-    });
-  }
-
-  /**
-   * Return a fully-qualified folder resource name string.
-   *
-   * @param {String} folder
-   * @returns {String}
-   */
-  folderPath(folder) {
-    return this._pathTemplates.folderPathTemplate.render({
-      folder: folder,
-    });
-  }
-
-  /**
-   * Return a fully-qualified metric resource name string.
+   * Return a fully-qualified log_metric resource name string.
    *
    * @param {String} project
    * @param {String} metric
    * @returns {String}
    */
-  metricPath(project, metric) {
-    return this._pathTemplates.metricPathTemplate.render({
+  logMetricPath(project, metric) {
+    return this._pathTemplates.logMetricPathTemplate.render({
       project: project,
       metric: metric,
-    });
-  }
-
-  /**
-   * Return a fully-qualified organization resource name string.
-   *
-   * @param {String} organization
-   * @returns {String}
-   */
-  organizationPath(organization) {
-    return this._pathTemplates.organizationPathTemplate.render({
-      organization: organization,
     });
   }
 
@@ -715,60 +672,27 @@ class MetricsServiceV2Client {
   }
 
   /**
-   * Parse the billingName from a billing resource.
+   * Parse the logMetricName from a log_metric resource.
    *
-   * @param {String} billingName
-   *   A fully-qualified path representing a billing resources.
-   * @returns {String} - A string representing the billing_account.
-   */
-  matchBillingAccountFromBillingName(billingName) {
-    return this._pathTemplates.billingPathTemplate.match(billingName)
-      .billing_account;
-  }
-
-  /**
-   * Parse the folderName from a folder resource.
-   *
-   * @param {String} folderName
-   *   A fully-qualified path representing a folder resources.
-   * @returns {String} - A string representing the folder.
-   */
-  matchFolderFromFolderName(folderName) {
-    return this._pathTemplates.folderPathTemplate.match(folderName).folder;
-  }
-
-  /**
-   * Parse the metricName from a metric resource.
-   *
-   * @param {String} metricName
-   *   A fully-qualified path representing a metric resources.
+   * @param {String} logMetricName
+   *   A fully-qualified path representing a log_metric resources.
    * @returns {String} - A string representing the project.
    */
-  matchProjectFromMetricName(metricName) {
-    return this._pathTemplates.metricPathTemplate.match(metricName).project;
+  matchProjectFromLogMetricName(logMetricName) {
+    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
+      .project;
   }
 
   /**
-   * Parse the metricName from a metric resource.
+   * Parse the logMetricName from a log_metric resource.
    *
-   * @param {String} metricName
-   *   A fully-qualified path representing a metric resources.
+   * @param {String} logMetricName
+   *   A fully-qualified path representing a log_metric resources.
    * @returns {String} - A string representing the metric.
    */
-  matchMetricFromMetricName(metricName) {
-    return this._pathTemplates.metricPathTemplate.match(metricName).metric;
-  }
-
-  /**
-   * Parse the organizationName from a organization resource.
-   *
-   * @param {String} organizationName
-   *   A fully-qualified path representing a organization resources.
-   * @returns {String} - A string representing the organization.
-   */
-  matchOrganizationFromOrganizationName(organizationName) {
-    return this._pathTemplates.organizationPathTemplate.match(organizationName)
-      .organization;
+  matchMetricFromLogMetricName(logMetricName) {
+    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
+      .metric;
   }
 
   /**
