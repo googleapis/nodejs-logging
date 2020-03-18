@@ -128,9 +128,21 @@ class ConfigServiceV2Client {
       billingAccountPathTemplate: new gaxModule.PathTemplate(
         'billingAccounts/{billing_account}'
       ),
+      billingAccountLocationPathTemplate: new gaxModule.PathTemplate(
+        'billingAccounts/{billing_account}/locations/{location}'
+      ),
       folderPathTemplate: new gaxModule.PathTemplate('folders/{folder}'),
+      folderLocationPathTemplate: new gaxModule.PathTemplate(
+        'folders/{folder}/locations/{location}'
+      ),
+      locationPathTemplate: new gaxModule.PathTemplate(
+        'projects/{project}/locations/{location}'
+      ),
       organizationPathTemplate: new gaxModule.PathTemplate(
         'organizations/{organization}'
+      ),
+      organizationLocationPathTemplate: new gaxModule.PathTemplate(
+        'organizations/{organization}/locations/{location}'
       ),
       projectPathTemplate: new gaxModule.PathTemplate('projects/{project}'),
     };
@@ -317,9 +329,9 @@ class ConfigServiceV2Client {
    * });
    *
    * // Iterate over all elements.
-   * const parent = '';
+   * const formattedParent = client.locationPath('[PROJECT]', '[LOCATION]');
    *
-   * client.listBuckets({parent: parent})
+   * client.listBuckets({parent: formattedParent})
    *   .then(responses => {
    *     const resources = responses[0];
    *     for (const resource of resources) {
@@ -331,7 +343,7 @@ class ConfigServiceV2Client {
    *   });
    *
    * // Or obtain the paged response.
-   * const parent = '';
+   * const formattedParent = client.locationPath('[PROJECT]', '[LOCATION]');
    *
    *
    * const options = {autoPaginate: false};
@@ -350,7 +362,7 @@ class ConfigServiceV2Client {
    *     return client.listBuckets(nextRequest, options).then(callback);
    *   }
    * }
-   * client.listBuckets({parent: parent}, options)
+   * client.listBuckets({parent: formattedParent}, options)
    *   .then(callback)
    *   .catch(err => {
    *     console.error(err);
@@ -420,8 +432,8 @@ class ConfigServiceV2Client {
    *   // optional auth parameters.
    * });
    *
-   * const parent = '';
-   * client.listBucketsStream({parent: parent})
+   * const formattedParent = client.locationPath('[PROJECT]', '[LOCATION]');
+   * client.listBucketsStream({parent: formattedParent})
    *   .on('data', element => {
    *     // doThingsWith(element)
    *   }).on('error', err => {
@@ -1696,6 +1708,20 @@ class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified billing_account_location resource name string.
+   *
+   * @param {String} billingAccount
+   * @param {String} location
+   * @returns {String}
+   */
+  billingAccountLocationPath(billingAccount, location) {
+    return this._pathTemplates.billingAccountLocationPathTemplate.render({
+      billing_account: billingAccount,
+      location: location,
+    });
+  }
+
+  /**
    * Return a fully-qualified folder resource name string.
    *
    * @param {String} folder
@@ -1708,6 +1734,34 @@ class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified folder_location resource name string.
+   *
+   * @param {String} folder
+   * @param {String} location
+   * @returns {String}
+   */
+  folderLocationPath(folder, location) {
+    return this._pathTemplates.folderLocationPathTemplate.render({
+      folder: folder,
+      location: location,
+    });
+  }
+
+  /**
+   * Return a fully-qualified location resource name string.
+   *
+   * @param {String} project
+   * @param {String} location
+   * @returns {String}
+   */
+  locationPath(project, location) {
+    return this._pathTemplates.locationPathTemplate.render({
+      project: project,
+      location: location,
+    });
+  }
+
+  /**
    * Return a fully-qualified organization resource name string.
    *
    * @param {String} organization
@@ -1716,6 +1770,20 @@ class ConfigServiceV2Client {
   organizationPath(organization) {
     return this._pathTemplates.organizationPathTemplate.render({
       organization: organization,
+    });
+  }
+
+  /**
+   * Return a fully-qualified organization_location resource name string.
+   *
+   * @param {String} organization
+   * @param {String} location
+   * @returns {String}
+   */
+  organizationLocationPath(organization, location) {
+    return this._pathTemplates.organizationLocationPathTemplate.render({
+      organization: organization,
+      location: location,
     });
   }
 
@@ -1745,6 +1813,34 @@ class ConfigServiceV2Client {
   }
 
   /**
+   * Parse the billingAccountLocationName from a billing_account_location resource.
+   *
+   * @param {String} billingAccountLocationName
+   *   A fully-qualified path representing a billing_account_location resources.
+   * @returns {String} - A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountLocationName(
+    billingAccountLocationName
+  ) {
+    return this._pathTemplates.billingAccountLocationPathTemplate.match(
+      billingAccountLocationName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the billingAccountLocationName from a billing_account_location resource.
+   *
+   * @param {String} billingAccountLocationName
+   *   A fully-qualified path representing a billing_account_location resources.
+   * @returns {String} - A string representing the location.
+   */
+  matchLocationFromBillingAccountLocationName(billingAccountLocationName) {
+    return this._pathTemplates.billingAccountLocationPathTemplate.match(
+      billingAccountLocationName
+    ).location;
+  }
+
+  /**
    * Parse the folderName from a folder resource.
    *
    * @param {String} folderName
@@ -1753,6 +1849,55 @@ class ConfigServiceV2Client {
    */
   matchFolderFromFolderName(folderName) {
     return this._pathTemplates.folderPathTemplate.match(folderName).folder;
+  }
+
+  /**
+   * Parse the folderLocationName from a folder_location resource.
+   *
+   * @param {String} folderLocationName
+   *   A fully-qualified path representing a folder_location resources.
+   * @returns {String} - A string representing the folder.
+   */
+  matchFolderFromFolderLocationName(folderLocationName) {
+    return this._pathTemplates.folderLocationPathTemplate.match(
+      folderLocationName
+    ).folder;
+  }
+
+  /**
+   * Parse the folderLocationName from a folder_location resource.
+   *
+   * @param {String} folderLocationName
+   *   A fully-qualified path representing a folder_location resources.
+   * @returns {String} - A string representing the location.
+   */
+  matchLocationFromFolderLocationName(folderLocationName) {
+    return this._pathTemplates.folderLocationPathTemplate.match(
+      folderLocationName
+    ).location;
+  }
+
+  /**
+   * Parse the locationName from a location resource.
+   *
+   * @param {String} locationName
+   *   A fully-qualified path representing a location resources.
+   * @returns {String} - A string representing the project.
+   */
+  matchProjectFromLocationName(locationName) {
+    return this._pathTemplates.locationPathTemplate.match(locationName).project;
+  }
+
+  /**
+   * Parse the locationName from a location resource.
+   *
+   * @param {String} locationName
+   *   A fully-qualified path representing a location resources.
+   * @returns {String} - A string representing the location.
+   */
+  matchLocationFromLocationName(locationName) {
+    return this._pathTemplates.locationPathTemplate.match(locationName)
+      .location;
   }
 
   /**
@@ -1765,6 +1910,32 @@ class ConfigServiceV2Client {
   matchOrganizationFromOrganizationName(organizationName) {
     return this._pathTemplates.organizationPathTemplate.match(organizationName)
       .organization;
+  }
+
+  /**
+   * Parse the organizationLocationName from a organization_location resource.
+   *
+   * @param {String} organizationLocationName
+   *   A fully-qualified path representing a organization_location resources.
+   * @returns {String} - A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationName(organizationLocationName) {
+    return this._pathTemplates.organizationLocationPathTemplate.match(
+      organizationLocationName
+    ).organization;
+  }
+
+  /**
+   * Parse the organizationLocationName from a organization_location resource.
+   *
+   * @param {String} organizationLocationName
+   *   A fully-qualified path representing a organization_location resources.
+   * @returns {String} - A string representing the location.
+   */
+  matchLocationFromOrganizationLocationName(organizationLocationName) {
+    return this._pathTemplates.organizationLocationPathTemplate.match(
+      organizationLocationName
+    ).location;
   }
 
   /**
