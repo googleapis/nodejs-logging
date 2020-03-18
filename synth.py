@@ -23,48 +23,28 @@ import os
 logging.basicConfig(level=logging.DEBUG)
 s.metadata.set_track_obsolete_files(True)
 
-gapic = gcp.GAPICGenerator()
+gapic = gcp.GAPICMicrogenerator()
 # tasks has two product names, and a poorly named artman yaml
-v2_library = gapic.node_library(
+v2_library = gapic.typescript_library(
     "logging",
     "v2",
-    config_path="/google/logging/artman_logging.yaml",
-    artman_output_name="logging-v2",
+    generator_args={
+        "grpc-service-config": f"google/logging/{version}/logging_grpc_service_config.json",
+        "package-name": f"@google-cloud/logging",
+        "main-service": f"logging"
+        },
+        proto_path=f'/google/logging/{version}',
+        extra_proto_files=['google/cloud/common_resources.proto'],
+    )
 )
-s.copy(v2_library, excludes=["src/index.js", "README.md", "package.json"])
-s.replace(
-    [
-        "src/v2/config_service_v2_client.js",
-        "src/v2/logging_service_v2_client.js",
-        "src/v2/metrics_service_v2_client.js",
-    ],
-    "../../package.json",
-    "../../../package.json",
-)
+s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json"])
 
 # Copy in templated files
 common_templates = gcp.CommonTemplates()
 templates = common_templates.node_library(source_location='build/src')
 s.copy(templates)
 
-# [START fix-dead-link]
-s.replace('**/doc/google/protobuf/doc_timestamp.js',
-        'https:\/\/cloud\.google\.com[\s\*]*http:\/\/(.*)[\s\*]*\)',
-        r"https://\1)")
-
-s.replace('**/doc/google/protobuf/doc_timestamp.js',
-        'toISOString\]',
-        'toISOString)')
-# [END fix-dead-link]
-
-s.replace('src/v2/doc/google/api/doc_distribution.js',
-        r"Sum\[i=1\.\.n\]\(https:\/\/cloud\.google\.com\(x_i - mean\)\^2\)",
-        "Sum\[i=1..n](x_1 - mean)^2")
-
-# No browser support for TypeScript libraries yet
-os.unlink("src/browser.js")
-os.unlink("webpack.config.js")
-
 # Node.js specific cleanup
 subprocess.run(["npm", "install"])
 subprocess.run(["npm", "run", "fix"])
+subprocess.run(["npx", "compileProtos", "src"])
