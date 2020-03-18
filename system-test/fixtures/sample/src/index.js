@@ -16,12 +16,14 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-import {ConfigServiceV2Client, LoggingServiceV2Client, MetricsServiceV2Client} from 'logging';
+
+/* eslint-disable node/no-missing-require, no-unused-vars */
+const logging = require('logging');
 
 function main() {
-  const configServiceV2Client = new ConfigServiceV2Client();
-  const loggingServiceV2Client = new LoggingServiceV2Client();
-  const metricsServiceV2Client = new MetricsServiceV2Client();
+  const configServiceV2Client = new logging.ConfigServiceV2Client();
+  const loggingServiceV2Client = new logging.LoggingServiceV2Client();
+  const metricsServiceV2Client = new logging.MetricsServiceV2Client();
 }
 
 main();
