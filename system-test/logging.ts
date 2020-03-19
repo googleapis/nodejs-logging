@@ -300,9 +300,12 @@ describe('Logging', async () => {
 
     function getEntriesFromLog(
       log: Log,
+      config: {numExpectedMessages: number},
       callback: (err: Error | null, entries?: Entry[]) => void
     ) {
       let numAttempts = 0;
+
+      const numExpectedMessages = config.numExpectedMessages;
 
       setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
 
@@ -315,7 +318,7 @@ describe('Logging', async () => {
             return;
           }
 
-          if (entries!.length === 0 && numAttempts < 8) {
+          if (entries!.length < numExpectedMessages && numAttempts < 8) {
             setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
             return;
           }
@@ -363,11 +366,15 @@ describe('Logging', async () => {
       log.write(logEntries, options, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, (err, entries) => {
-          assert.ifError(err);
-          assert.strictEqual(entries!.length, logEntries.length);
-          done();
-        });
+        getEntriesFromLog(
+          log,
+          {numExpectedMessages: logEntries.length},
+          (err, entries) => {
+            assert.ifError(err);
+            assert.strictEqual(entries!.length, logEntries.length);
+            done();
+          }
+        );
       });
     });
 
@@ -400,11 +407,15 @@ describe('Logging', async () => {
       });
 
       it('should list log entries', done => {
-        getEntriesFromLog(logExpected, (err, entries) => {
-          assert.ifError(err);
-          assert.strictEqual(entries!.length, logEntriesExpected.length);
-          done();
-        });
+        getEntriesFromLog(
+          logExpected,
+          {numExpectedMessages: logEntriesExpected.length},
+          (err, entries) => {
+            assert.ifError(err);
+            assert.strictEqual(entries!.length, logEntriesExpected.length);
+            done();
+          }
+        );
       });
 
       it('should list log entries as a stream', done => {
@@ -437,26 +448,30 @@ describe('Logging', async () => {
       log.write(logEntries, options, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, (err, entries) => {
-          assert.ifError(err);
+        getEntriesFromLog(
+          log,
+          {numExpectedMessages: logEntries.length},
+          (err, entries) => {
+            assert.ifError(err);
 
-          assert.deepStrictEqual(entries!.map(x => x.data).reverse(), [
-            'log entry 1',
-            {delegate: 'my_username'},
-            {
-              nonValue: null,
-              boolValue: true,
-              arrayValue: [1, 2, 3],
-            },
-            {
-              nested: {
-                delegate: 'my_username',
+            assert.deepStrictEqual(entries!.map(x => x.data).reverse(), [
+              'log entry 1',
+              {delegate: 'my_username'},
+              {
+                nonValue: null,
+                boolValue: true,
+                arrayValue: [1, 2, 3],
               },
-            },
-          ]);
+              {
+                nested: {
+                  delegate: 'my_username',
+                },
+              },
+            ]);
 
-          done();
-        });
+            done();
+          }
+        );
       });
     });
 
@@ -473,7 +488,7 @@ describe('Logging', async () => {
         log.write([entry2, entry3, entry1], options, err => {
           assert.ifError(err);
 
-          getEntriesFromLog(log, (err, entries) => {
+          getEntriesFromLog(log, {numExpectedMessages: 3}, (err, entries) => {
             assert.ifError(err);
             assert.deepStrictEqual(
               entries!.map(x => x.data),
@@ -489,18 +504,24 @@ describe('Logging', async () => {
       const {log} = getTestLog();
       const messages = ['1', '2', '3', '4', '5'];
 
-      messages.forEach(message => {
-        log.write(log.entry(message), options);
-      });
+      (async () => {
+        for (const message of messages) {
+          await log.write(log.entry(message), options);
+        }
 
-      getEntriesFromLog(log, (err, entries) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(
-          entries!.reverse().map(x => x.data),
-          messages
+        getEntriesFromLog(
+          log,
+          {numExpectedMessages: messages.length},
+          (err, entries) => {
+            assert.ifError(err);
+            assert.deepStrictEqual(
+              entries!.reverse().map(x => x.data),
+              messages
+            );
+            done();
+          }
         );
-        done();
-      });
+      })();
     });
 
     it('should write an entry with primitive values', done => {
@@ -516,7 +537,7 @@ describe('Logging', async () => {
       log.write(logEntry, options, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, (err, entries) => {
+        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
 
           const entry = entries![0];
@@ -548,7 +569,7 @@ describe('Logging', async () => {
       log.write(logEntry, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, (err, entries) => {
+        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
 
           const entry = entries![0];
@@ -568,7 +589,7 @@ describe('Logging', async () => {
       log.write(entry, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, (err, entries) => {
+        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
 
           const entry = entries![0];
