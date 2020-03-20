@@ -33,43 +33,53 @@
           "retry_params_name": "default"
         },
         "ListSinks": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "GetSink": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "CreateSink": {
+          "timeout_millis": 120000,
           "retry_codes_name": "non_idempotent",
           "retry_params_name": "default"
         },
         "UpdateSink": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "DeleteSink": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "ListExclusions": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "GetExclusion": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "CreateExclusion": {
+          "timeout_millis": 120000,
           "retry_codes_name": "non_idempotent",
           "retry_params_name": "default"
         },
         "UpdateExclusion": {
+          "timeout_millis": 120000,
           "retry_codes_name": "non_idempotent",
           "retry_params_name": "default"
         },
         "DeleteExclusion": {
-          "retry_codes_name": "non_idempotent",
+          "timeout_millis": 60000,
+          "retry_codes_name": "idempotent",
           "retry_params_name": "default"
         },
         "GetCmekSettings": {

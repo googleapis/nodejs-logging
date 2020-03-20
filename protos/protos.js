@@ -57,6 +57,3703 @@
                  */
                 var v2 = {};
     
+                v2.LogEntry = (function() {
+    
+                    /**
+                     * Properties of a LogEntry.
+                     * @memberof google.logging.v2
+                     * @interface ILogEntry
+                     * @property {string|null} [logName] LogEntry logName
+                     * @property {google.api.IMonitoredResource|null} [resource] LogEntry resource
+                     * @property {google.protobuf.IAny|null} [protoPayload] LogEntry protoPayload
+                     * @property {string|null} [textPayload] LogEntry textPayload
+                     * @property {google.protobuf.IStruct|null} [jsonPayload] LogEntry jsonPayload
+                     * @property {google.protobuf.ITimestamp|null} [timestamp] LogEntry timestamp
+                     * @property {google.protobuf.ITimestamp|null} [receiveTimestamp] LogEntry receiveTimestamp
+                     * @property {google.logging.type.LogSeverity|null} [severity] LogEntry severity
+                     * @property {string|null} [insertId] LogEntry insertId
+                     * @property {google.logging.type.IHttpRequest|null} [httpRequest] LogEntry httpRequest
+                     * @property {Object.<string,string>|null} [labels] LogEntry labels
+                     * @property {google.logging.v2.ILogEntryOperation|null} [operation] LogEntry operation
+                     * @property {string|null} [trace] LogEntry trace
+                     * @property {string|null} [spanId] LogEntry spanId
+                     * @property {boolean|null} [traceSampled] LogEntry traceSampled
+                     * @property {google.logging.v2.ILogEntrySourceLocation|null} [sourceLocation] LogEntry sourceLocation
+                     */
+    
+                    /**
+                     * Constructs a new LogEntry.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a LogEntry.
+                     * @implements ILogEntry
+                     * @constructor
+                     * @param {google.logging.v2.ILogEntry=} [properties] Properties to set
+                     */
+                    function LogEntry(properties) {
+                        this.labels = {};
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * LogEntry logName.
+                     * @member {string} logName
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.logName = "";
+    
+                    /**
+                     * LogEntry resource.
+                     * @member {google.api.IMonitoredResource|null|undefined} resource
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.resource = null;
+    
+                    /**
+                     * LogEntry protoPayload.
+                     * @member {google.protobuf.IAny|null|undefined} protoPayload
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.protoPayload = null;
+    
+                    /**
+                     * LogEntry textPayload.
+                     * @member {string} textPayload
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.textPayload = "";
+    
+                    /**
+                     * LogEntry jsonPayload.
+                     * @member {google.protobuf.IStruct|null|undefined} jsonPayload
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.jsonPayload = null;
+    
+                    /**
+                     * LogEntry timestamp.
+                     * @member {google.protobuf.ITimestamp|null|undefined} timestamp
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.timestamp = null;
+    
+                    /**
+                     * LogEntry receiveTimestamp.
+                     * @member {google.protobuf.ITimestamp|null|undefined} receiveTimestamp
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.receiveTimestamp = null;
+    
+                    /**
+                     * LogEntry severity.
+                     * @member {google.logging.type.LogSeverity} severity
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.severity = 0;
+    
+                    /**
+                     * LogEntry insertId.
+                     * @member {string} insertId
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.insertId = "";
+    
+                    /**
+                     * LogEntry httpRequest.
+                     * @member {google.logging.type.IHttpRequest|null|undefined} httpRequest
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.httpRequest = null;
+    
+                    /**
+                     * LogEntry labels.
+                     * @member {Object.<string,string>} labels
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.labels = $util.emptyObject;
+    
+                    /**
+                     * LogEntry operation.
+                     * @member {google.logging.v2.ILogEntryOperation|null|undefined} operation
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.operation = null;
+    
+                    /**
+                     * LogEntry trace.
+                     * @member {string} trace
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.trace = "";
+    
+                    /**
+                     * LogEntry spanId.
+                     * @member {string} spanId
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.spanId = "";
+    
+                    /**
+                     * LogEntry traceSampled.
+                     * @member {boolean} traceSampled
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.traceSampled = false;
+    
+                    /**
+                     * LogEntry sourceLocation.
+                     * @member {google.logging.v2.ILogEntrySourceLocation|null|undefined} sourceLocation
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.sourceLocation = null;
+    
+                    // OneOf field names bound to virtual getters and setters
+                    var $oneOfFields;
+    
+                    /**
+                     * LogEntry payload.
+                     * @member {"protoPayload"|"textPayload"|"jsonPayload"|undefined} payload
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    Object.defineProperty(LogEntry.prototype, "payload", {
+                        get: $util.oneOfGetter($oneOfFields = ["protoPayload", "textPayload", "jsonPayload"]),
+                        set: $util.oneOfSetter($oneOfFields)
+                    });
+    
+                    /**
+                     * Creates a new LogEntry instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {google.logging.v2.ILogEntry=} [properties] Properties to set
+                     * @returns {google.logging.v2.LogEntry} LogEntry instance
+                     */
+                    LogEntry.create = function create(properties) {
+                        return new LogEntry(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified LogEntry message. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {google.logging.v2.ILogEntry} message LogEntry message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogEntry.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.protoPayload != null && message.hasOwnProperty("protoPayload"))
+                            $root.google.protobuf.Any.encode(message.protoPayload, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        if (message.textPayload != null && message.hasOwnProperty("textPayload"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.textPayload);
+                        if (message.insertId != null && message.hasOwnProperty("insertId"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.insertId);
+                        if (message.jsonPayload != null && message.hasOwnProperty("jsonPayload"))
+                            $root.google.protobuf.Struct.encode(message.jsonPayload, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        if (message.httpRequest != null && message.hasOwnProperty("httpRequest"))
+                            $root.google.logging.type.HttpRequest.encode(message.httpRequest, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                        if (message.resource != null && message.hasOwnProperty("resource"))
+                            $root.google.api.MonitoredResource.encode(message.resource, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+                        if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                            $root.google.protobuf.Timestamp.encode(message.timestamp, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                        if (message.severity != null && message.hasOwnProperty("severity"))
+                            writer.uint32(/* id 10, wireType 0 =*/80).int32(message.severity);
+                        if (message.labels != null && message.hasOwnProperty("labels"))
+                            for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
+                                writer.uint32(/* id 11, wireType 2 =*/90).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            writer.uint32(/* id 12, wireType 2 =*/98).string(message.logName);
+                        if (message.operation != null && message.hasOwnProperty("operation"))
+                            $root.google.logging.v2.LogEntryOperation.encode(message.operation, writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
+                        if (message.trace != null && message.hasOwnProperty("trace"))
+                            writer.uint32(/* id 22, wireType 2 =*/178).string(message.trace);
+                        if (message.sourceLocation != null && message.hasOwnProperty("sourceLocation"))
+                            $root.google.logging.v2.LogEntrySourceLocation.encode(message.sourceLocation, writer.uint32(/* id 23, wireType 2 =*/186).fork()).ldelim();
+                        if (message.receiveTimestamp != null && message.hasOwnProperty("receiveTimestamp"))
+                            $root.google.protobuf.Timestamp.encode(message.receiveTimestamp, writer.uint32(/* id 24, wireType 2 =*/194).fork()).ldelim();
+                        if (message.spanId != null && message.hasOwnProperty("spanId"))
+                            writer.uint32(/* id 27, wireType 2 =*/218).string(message.spanId);
+                        if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
+                            writer.uint32(/* id 30, wireType 0 =*/240).bool(message.traceSampled);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified LogEntry message, length delimited. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {google.logging.v2.ILogEntry} message LogEntry message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogEntry.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a LogEntry message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.LogEntry} LogEntry
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogEntry.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogEntry(), key;
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 12:
+                                message.logName = reader.string();
+                                break;
+                            case 8:
+                                message.resource = $root.google.api.MonitoredResource.decode(reader, reader.uint32());
+                                break;
+                            case 2:
+                                message.protoPayload = $root.google.protobuf.Any.decode(reader, reader.uint32());
+                                break;
+                            case 3:
+                                message.textPayload = reader.string();
+                                break;
+                            case 6:
+                                message.jsonPayload = $root.google.protobuf.Struct.decode(reader, reader.uint32());
+                                break;
+                            case 9:
+                                message.timestamp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                break;
+                            case 24:
+                                message.receiveTimestamp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                break;
+                            case 10:
+                                message.severity = reader.int32();
+                                break;
+                            case 4:
+                                message.insertId = reader.string();
+                                break;
+                            case 7:
+                                message.httpRequest = $root.google.logging.type.HttpRequest.decode(reader, reader.uint32());
+                                break;
+                            case 11:
+                                reader.skip().pos++;
+                                if (message.labels === $util.emptyObject)
+                                    message.labels = {};
+                                key = reader.string();
+                                reader.pos++;
+                                message.labels[key] = reader.string();
+                                break;
+                            case 15:
+                                message.operation = $root.google.logging.v2.LogEntryOperation.decode(reader, reader.uint32());
+                                break;
+                            case 22:
+                                message.trace = reader.string();
+                                break;
+                            case 27:
+                                message.spanId = reader.string();
+                                break;
+                            case 30:
+                                message.traceSampled = reader.bool();
+                                break;
+                            case 23:
+                                message.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a LogEntry message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.LogEntry} LogEntry
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogEntry.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a LogEntry message.
+                     * @function verify
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    LogEntry.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        var properties = {};
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            if (!$util.isString(message.logName))
+                                return "logName: string expected";
+                        if (message.resource != null && message.hasOwnProperty("resource")) {
+                            var error = $root.google.api.MonitoredResource.verify(message.resource);
+                            if (error)
+                                return "resource." + error;
+                        }
+                        if (message.protoPayload != null && message.hasOwnProperty("protoPayload")) {
+                            properties.payload = 1;
+                            {
+                                var error = $root.google.protobuf.Any.verify(message.protoPayload);
+                                if (error)
+                                    return "protoPayload." + error;
+                            }
+                        }
+                        if (message.textPayload != null && message.hasOwnProperty("textPayload")) {
+                            if (properties.payload === 1)
+                                return "payload: multiple values";
+                            properties.payload = 1;
+                            if (!$util.isString(message.textPayload))
+                                return "textPayload: string expected";
+                        }
+                        if (message.jsonPayload != null && message.hasOwnProperty("jsonPayload")) {
+                            if (properties.payload === 1)
+                                return "payload: multiple values";
+                            properties.payload = 1;
+                            {
+                                var error = $root.google.protobuf.Struct.verify(message.jsonPayload);
+                                if (error)
+                                    return "jsonPayload." + error;
+                            }
+                        }
+                        if (message.timestamp != null && message.hasOwnProperty("timestamp")) {
+                            var error = $root.google.protobuf.Timestamp.verify(message.timestamp);
+                            if (error)
+                                return "timestamp." + error;
+                        }
+                        if (message.receiveTimestamp != null && message.hasOwnProperty("receiveTimestamp")) {
+                            var error = $root.google.protobuf.Timestamp.verify(message.receiveTimestamp);
+                            if (error)
+                                return "receiveTimestamp." + error;
+                        }
+                        if (message.severity != null && message.hasOwnProperty("severity"))
+                            switch (message.severity) {
+                            default:
+                                return "severity: enum value expected";
+                            case 0:
+                            case 100:
+                            case 200:
+                            case 300:
+                            case 400:
+                            case 500:
+                            case 600:
+                            case 700:
+                            case 800:
+                                break;
+                            }
+                        if (message.insertId != null && message.hasOwnProperty("insertId"))
+                            if (!$util.isString(message.insertId))
+                                return "insertId: string expected";
+                        if (message.httpRequest != null && message.hasOwnProperty("httpRequest")) {
+                            var error = $root.google.logging.type.HttpRequest.verify(message.httpRequest);
+                            if (error)
+                                return "httpRequest." + error;
+                        }
+                        if (message.labels != null && message.hasOwnProperty("labels")) {
+                            if (!$util.isObject(message.labels))
+                                return "labels: object expected";
+                            var key = Object.keys(message.labels);
+                            for (var i = 0; i < key.length; ++i)
+                                if (!$util.isString(message.labels[key[i]]))
+                                    return "labels: string{k:string} expected";
+                        }
+                        if (message.operation != null && message.hasOwnProperty("operation")) {
+                            var error = $root.google.logging.v2.LogEntryOperation.verify(message.operation);
+                            if (error)
+                                return "operation." + error;
+                        }
+                        if (message.trace != null && message.hasOwnProperty("trace"))
+                            if (!$util.isString(message.trace))
+                                return "trace: string expected";
+                        if (message.spanId != null && message.hasOwnProperty("spanId"))
+                            if (!$util.isString(message.spanId))
+                                return "spanId: string expected";
+                        if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
+                            if (typeof message.traceSampled !== "boolean")
+                                return "traceSampled: boolean expected";
+                        if (message.sourceLocation != null && message.hasOwnProperty("sourceLocation")) {
+                            var error = $root.google.logging.v2.LogEntrySourceLocation.verify(message.sourceLocation);
+                            if (error)
+                                return "sourceLocation." + error;
+                        }
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a LogEntry message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.LogEntry} LogEntry
+                     */
+                    LogEntry.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.LogEntry)
+                            return object;
+                        var message = new $root.google.logging.v2.LogEntry();
+                        if (object.logName != null)
+                            message.logName = String(object.logName);
+                        if (object.resource != null) {
+                            if (typeof object.resource !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.resource: object expected");
+                            message.resource = $root.google.api.MonitoredResource.fromObject(object.resource);
+                        }
+                        if (object.protoPayload != null) {
+                            if (typeof object.protoPayload !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.protoPayload: object expected");
+                            message.protoPayload = $root.google.protobuf.Any.fromObject(object.protoPayload);
+                        }
+                        if (object.textPayload != null)
+                            message.textPayload = String(object.textPayload);
+                        if (object.jsonPayload != null) {
+                            if (typeof object.jsonPayload !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.jsonPayload: object expected");
+                            message.jsonPayload = $root.google.protobuf.Struct.fromObject(object.jsonPayload);
+                        }
+                        if (object.timestamp != null) {
+                            if (typeof object.timestamp !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.timestamp: object expected");
+                            message.timestamp = $root.google.protobuf.Timestamp.fromObject(object.timestamp);
+                        }
+                        if (object.receiveTimestamp != null) {
+                            if (typeof object.receiveTimestamp !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.receiveTimestamp: object expected");
+                            message.receiveTimestamp = $root.google.protobuf.Timestamp.fromObject(object.receiveTimestamp);
+                        }
+                        switch (object.severity) {
+                        case "DEFAULT":
+                        case 0:
+                            message.severity = 0;
+                            break;
+                        case "DEBUG":
+                        case 100:
+                            message.severity = 100;
+                            break;
+                        case "INFO":
+                        case 200:
+                            message.severity = 200;
+                            break;
+                        case "NOTICE":
+                        case 300:
+                            message.severity = 300;
+                            break;
+                        case "WARNING":
+                        case 400:
+                            message.severity = 400;
+                            break;
+                        case "ERROR":
+                        case 500:
+                            message.severity = 500;
+                            break;
+                        case "CRITICAL":
+                        case 600:
+                            message.severity = 600;
+                            break;
+                        case "ALERT":
+                        case 700:
+                            message.severity = 700;
+                            break;
+                        case "EMERGENCY":
+                        case 800:
+                            message.severity = 800;
+                            break;
+                        }
+                        if (object.insertId != null)
+                            message.insertId = String(object.insertId);
+                        if (object.httpRequest != null) {
+                            if (typeof object.httpRequest !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.httpRequest: object expected");
+                            message.httpRequest = $root.google.logging.type.HttpRequest.fromObject(object.httpRequest);
+                        }
+                        if (object.labels) {
+                            if (typeof object.labels !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.labels: object expected");
+                            message.labels = {};
+                            for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
+                                message.labels[keys[i]] = String(object.labels[keys[i]]);
+                        }
+                        if (object.operation != null) {
+                            if (typeof object.operation !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.operation: object expected");
+                            message.operation = $root.google.logging.v2.LogEntryOperation.fromObject(object.operation);
+                        }
+                        if (object.trace != null)
+                            message.trace = String(object.trace);
+                        if (object.spanId != null)
+                            message.spanId = String(object.spanId);
+                        if (object.traceSampled != null)
+                            message.traceSampled = Boolean(object.traceSampled);
+                        if (object.sourceLocation != null) {
+                            if (typeof object.sourceLocation !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.sourceLocation: object expected");
+                            message.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.fromObject(object.sourceLocation);
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a LogEntry message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.LogEntry
+                     * @static
+                     * @param {google.logging.v2.LogEntry} message LogEntry
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    LogEntry.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.objects || options.defaults)
+                            object.labels = {};
+                        if (options.defaults) {
+                            object.insertId = "";
+                            object.httpRequest = null;
+                            object.resource = null;
+                            object.timestamp = null;
+                            object.severity = options.enums === String ? "DEFAULT" : 0;
+                            object.logName = "";
+                            object.operation = null;
+                            object.trace = "";
+                            object.sourceLocation = null;
+                            object.receiveTimestamp = null;
+                            object.spanId = "";
+                            object.traceSampled = false;
+                        }
+                        if (message.protoPayload != null && message.hasOwnProperty("protoPayload")) {
+                            object.protoPayload = $root.google.protobuf.Any.toObject(message.protoPayload, options);
+                            if (options.oneofs)
+                                object.payload = "protoPayload";
+                        }
+                        if (message.textPayload != null && message.hasOwnProperty("textPayload")) {
+                            object.textPayload = message.textPayload;
+                            if (options.oneofs)
+                                object.payload = "textPayload";
+                        }
+                        if (message.insertId != null && message.hasOwnProperty("insertId"))
+                            object.insertId = message.insertId;
+                        if (message.jsonPayload != null && message.hasOwnProperty("jsonPayload")) {
+                            object.jsonPayload = $root.google.protobuf.Struct.toObject(message.jsonPayload, options);
+                            if (options.oneofs)
+                                object.payload = "jsonPayload";
+                        }
+                        if (message.httpRequest != null && message.hasOwnProperty("httpRequest"))
+                            object.httpRequest = $root.google.logging.type.HttpRequest.toObject(message.httpRequest, options);
+                        if (message.resource != null && message.hasOwnProperty("resource"))
+                            object.resource = $root.google.api.MonitoredResource.toObject(message.resource, options);
+                        if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                            object.timestamp = $root.google.protobuf.Timestamp.toObject(message.timestamp, options);
+                        if (message.severity != null && message.hasOwnProperty("severity"))
+                            object.severity = options.enums === String ? $root.google.logging.type.LogSeverity[message.severity] : message.severity;
+                        var keys2;
+                        if (message.labels && (keys2 = Object.keys(message.labels)).length) {
+                            object.labels = {};
+                            for (var j = 0; j < keys2.length; ++j)
+                                object.labels[keys2[j]] = message.labels[keys2[j]];
+                        }
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            object.logName = message.logName;
+                        if (message.operation != null && message.hasOwnProperty("operation"))
+                            object.operation = $root.google.logging.v2.LogEntryOperation.toObject(message.operation, options);
+                        if (message.trace != null && message.hasOwnProperty("trace"))
+                            object.trace = message.trace;
+                        if (message.sourceLocation != null && message.hasOwnProperty("sourceLocation"))
+                            object.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.toObject(message.sourceLocation, options);
+                        if (message.receiveTimestamp != null && message.hasOwnProperty("receiveTimestamp"))
+                            object.receiveTimestamp = $root.google.protobuf.Timestamp.toObject(message.receiveTimestamp, options);
+                        if (message.spanId != null && message.hasOwnProperty("spanId"))
+                            object.spanId = message.spanId;
+                        if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
+                            object.traceSampled = message.traceSampled;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this LogEntry to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    LogEntry.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return LogEntry;
+                })();
+    
+                v2.LogEntryOperation = (function() {
+    
+                    /**
+                     * Properties of a LogEntryOperation.
+                     * @memberof google.logging.v2
+                     * @interface ILogEntryOperation
+                     * @property {string|null} [id] LogEntryOperation id
+                     * @property {string|null} [producer] LogEntryOperation producer
+                     * @property {boolean|null} [first] LogEntryOperation first
+                     * @property {boolean|null} [last] LogEntryOperation last
+                     */
+    
+                    /**
+                     * Constructs a new LogEntryOperation.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a LogEntryOperation.
+                     * @implements ILogEntryOperation
+                     * @constructor
+                     * @param {google.logging.v2.ILogEntryOperation=} [properties] Properties to set
+                     */
+                    function LogEntryOperation(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * LogEntryOperation id.
+                     * @member {string} id
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @instance
+                     */
+                    LogEntryOperation.prototype.id = "";
+    
+                    /**
+                     * LogEntryOperation producer.
+                     * @member {string} producer
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @instance
+                     */
+                    LogEntryOperation.prototype.producer = "";
+    
+                    /**
+                     * LogEntryOperation first.
+                     * @member {boolean} first
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @instance
+                     */
+                    LogEntryOperation.prototype.first = false;
+    
+                    /**
+                     * LogEntryOperation last.
+                     * @member {boolean} last
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @instance
+                     */
+                    LogEntryOperation.prototype.last = false;
+    
+                    /**
+                     * Creates a new LogEntryOperation instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {google.logging.v2.ILogEntryOperation=} [properties] Properties to set
+                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation instance
+                     */
+                    LogEntryOperation.create = function create(properties) {
+                        return new LogEntryOperation(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified LogEntryOperation message. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {google.logging.v2.ILogEntryOperation} message LogEntryOperation message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogEntryOperation.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.id != null && message.hasOwnProperty("id"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
+                        if (message.producer != null && message.hasOwnProperty("producer"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.producer);
+                        if (message.first != null && message.hasOwnProperty("first"))
+                            writer.uint32(/* id 3, wireType 0 =*/24).bool(message.first);
+                        if (message.last != null && message.hasOwnProperty("last"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).bool(message.last);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified LogEntryOperation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {google.logging.v2.ILogEntryOperation} message LogEntryOperation message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogEntryOperation.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a LogEntryOperation message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogEntryOperation.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogEntryOperation();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.id = reader.string();
+                                break;
+                            case 2:
+                                message.producer = reader.string();
+                                break;
+                            case 3:
+                                message.first = reader.bool();
+                                break;
+                            case 4:
+                                message.last = reader.bool();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a LogEntryOperation message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogEntryOperation.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a LogEntryOperation message.
+                     * @function verify
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    LogEntryOperation.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.id != null && message.hasOwnProperty("id"))
+                            if (!$util.isString(message.id))
+                                return "id: string expected";
+                        if (message.producer != null && message.hasOwnProperty("producer"))
+                            if (!$util.isString(message.producer))
+                                return "producer: string expected";
+                        if (message.first != null && message.hasOwnProperty("first"))
+                            if (typeof message.first !== "boolean")
+                                return "first: boolean expected";
+                        if (message.last != null && message.hasOwnProperty("last"))
+                            if (typeof message.last !== "boolean")
+                                return "last: boolean expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a LogEntryOperation message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation
+                     */
+                    LogEntryOperation.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.LogEntryOperation)
+                            return object;
+                        var message = new $root.google.logging.v2.LogEntryOperation();
+                        if (object.id != null)
+                            message.id = String(object.id);
+                        if (object.producer != null)
+                            message.producer = String(object.producer);
+                        if (object.first != null)
+                            message.first = Boolean(object.first);
+                        if (object.last != null)
+                            message.last = Boolean(object.last);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a LogEntryOperation message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @static
+                     * @param {google.logging.v2.LogEntryOperation} message LogEntryOperation
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    LogEntryOperation.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.id = "";
+                            object.producer = "";
+                            object.first = false;
+                            object.last = false;
+                        }
+                        if (message.id != null && message.hasOwnProperty("id"))
+                            object.id = message.id;
+                        if (message.producer != null && message.hasOwnProperty("producer"))
+                            object.producer = message.producer;
+                        if (message.first != null && message.hasOwnProperty("first"))
+                            object.first = message.first;
+                        if (message.last != null && message.hasOwnProperty("last"))
+                            object.last = message.last;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this LogEntryOperation to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.LogEntryOperation
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    LogEntryOperation.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return LogEntryOperation;
+                })();
+    
+                v2.LogEntrySourceLocation = (function() {
+    
+                    /**
+                     * Properties of a LogEntrySourceLocation.
+                     * @memberof google.logging.v2
+                     * @interface ILogEntrySourceLocation
+                     * @property {string|null} [file] LogEntrySourceLocation file
+                     * @property {number|Long|null} [line] LogEntrySourceLocation line
+                     * @property {string|null} ["function"] LogEntrySourceLocation function
+                     */
+    
+                    /**
+                     * Constructs a new LogEntrySourceLocation.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a LogEntrySourceLocation.
+                     * @implements ILogEntrySourceLocation
+                     * @constructor
+                     * @param {google.logging.v2.ILogEntrySourceLocation=} [properties] Properties to set
+                     */
+                    function LogEntrySourceLocation(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * LogEntrySourceLocation file.
+                     * @member {string} file
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @instance
+                     */
+                    LogEntrySourceLocation.prototype.file = "";
+    
+                    /**
+                     * LogEntrySourceLocation line.
+                     * @member {number|Long} line
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @instance
+                     */
+                    LogEntrySourceLocation.prototype.line = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+                    /**
+                     * LogEntrySourceLocation function.
+                     * @member {string} function
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @instance
+                     */
+                    LogEntrySourceLocation.prototype["function"] = "";
+    
+                    /**
+                     * Creates a new LogEntrySourceLocation instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {google.logging.v2.ILogEntrySourceLocation=} [properties] Properties to set
+                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation instance
+                     */
+                    LogEntrySourceLocation.create = function create(properties) {
+                        return new LogEntrySourceLocation(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified LogEntrySourceLocation message. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {google.logging.v2.ILogEntrySourceLocation} message LogEntrySourceLocation message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogEntrySourceLocation.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.file != null && message.hasOwnProperty("file"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.file);
+                        if (message.line != null && message.hasOwnProperty("line"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).int64(message.line);
+                        if (message["function"] != null && message.hasOwnProperty("function"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message["function"]);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified LogEntrySourceLocation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {google.logging.v2.ILogEntrySourceLocation} message LogEntrySourceLocation message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogEntrySourceLocation.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a LogEntrySourceLocation message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogEntrySourceLocation.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogEntrySourceLocation();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.file = reader.string();
+                                break;
+                            case 2:
+                                message.line = reader.int64();
+                                break;
+                            case 3:
+                                message["function"] = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a LogEntrySourceLocation message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogEntrySourceLocation.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a LogEntrySourceLocation message.
+                     * @function verify
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    LogEntrySourceLocation.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.file != null && message.hasOwnProperty("file"))
+                            if (!$util.isString(message.file))
+                                return "file: string expected";
+                        if (message.line != null && message.hasOwnProperty("line"))
+                            if (!$util.isInteger(message.line) && !(message.line && $util.isInteger(message.line.low) && $util.isInteger(message.line.high)))
+                                return "line: integer|Long expected";
+                        if (message["function"] != null && message.hasOwnProperty("function"))
+                            if (!$util.isString(message["function"]))
+                                return "function: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a LogEntrySourceLocation message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation
+                     */
+                    LogEntrySourceLocation.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.LogEntrySourceLocation)
+                            return object;
+                        var message = new $root.google.logging.v2.LogEntrySourceLocation();
+                        if (object.file != null)
+                            message.file = String(object.file);
+                        if (object.line != null)
+                            if ($util.Long)
+                                (message.line = $util.Long.fromValue(object.line)).unsigned = false;
+                            else if (typeof object.line === "string")
+                                message.line = parseInt(object.line, 10);
+                            else if (typeof object.line === "number")
+                                message.line = object.line;
+                            else if (typeof object.line === "object")
+                                message.line = new $util.LongBits(object.line.low >>> 0, object.line.high >>> 0).toNumber();
+                        if (object["function"] != null)
+                            message["function"] = String(object["function"]);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a LogEntrySourceLocation message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @static
+                     * @param {google.logging.v2.LogEntrySourceLocation} message LogEntrySourceLocation
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    LogEntrySourceLocation.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.file = "";
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.line = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.line = options.longs === String ? "0" : 0;
+                            object["function"] = "";
+                        }
+                        if (message.file != null && message.hasOwnProperty("file"))
+                            object.file = message.file;
+                        if (message.line != null && message.hasOwnProperty("line"))
+                            if (typeof message.line === "number")
+                                object.line = options.longs === String ? String(message.line) : message.line;
+                            else
+                                object.line = options.longs === String ? $util.Long.prototype.toString.call(message.line) : options.longs === Number ? new $util.LongBits(message.line.low >>> 0, message.line.high >>> 0).toNumber() : message.line;
+                        if (message["function"] != null && message.hasOwnProperty("function"))
+                            object["function"] = message["function"];
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this LogEntrySourceLocation to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.LogEntrySourceLocation
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    LogEntrySourceLocation.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return LogEntrySourceLocation;
+                })();
+    
+                v2.LoggingServiceV2 = (function() {
+    
+                    /**
+                     * Constructs a new LoggingServiceV2 service.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a LoggingServiceV2
+                     * @extends $protobuf.rpc.Service
+                     * @constructor
+                     * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
+                     * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
+                     * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+                     */
+                    function LoggingServiceV2(rpcImpl, requestDelimited, responseDelimited) {
+                        $protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
+                    }
+    
+                    (LoggingServiceV2.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = LoggingServiceV2;
+    
+                    /**
+                     * Creates new LoggingServiceV2 service using the specified rpc implementation.
+                     * @function create
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @static
+                     * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
+                     * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
+                     * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+                     * @returns {LoggingServiceV2} RPC service. Useful where requests and/or responses are streamed.
+                     */
+                    LoggingServiceV2.create = function create(rpcImpl, requestDelimited, responseDelimited) {
+                        return new this(rpcImpl, requestDelimited, responseDelimited);
+                    };
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#deleteLog}.
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @typedef DeleteLogCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.protobuf.Empty} [response] Empty
+                     */
+    
+                    /**
+                     * Calls DeleteLog.
+                     * @function deleteLog
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IDeleteLogRequest} request DeleteLogRequest message or plain object
+                     * @param {google.logging.v2.LoggingServiceV2.DeleteLogCallback} callback Node-style callback called with the error, if any, and Empty
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(LoggingServiceV2.prototype.deleteLog = function deleteLog(request, callback) {
+                        return this.rpcCall(deleteLog, $root.google.logging.v2.DeleteLogRequest, $root.google.protobuf.Empty, request, callback);
+                    }, "name", { value: "DeleteLog" });
+    
+                    /**
+                     * Calls DeleteLog.
+                     * @function deleteLog
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IDeleteLogRequest} request DeleteLogRequest message or plain object
+                     * @returns {Promise<google.protobuf.Empty>} Promise
+                     * @variation 2
+                     */
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#writeLogEntries}.
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @typedef WriteLogEntriesCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.WriteLogEntriesResponse} [response] WriteLogEntriesResponse
+                     */
+    
+                    /**
+                     * Calls WriteLogEntries.
+                     * @function writeLogEntries
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IWriteLogEntriesRequest} request WriteLogEntriesRequest message or plain object
+                     * @param {google.logging.v2.LoggingServiceV2.WriteLogEntriesCallback} callback Node-style callback called with the error, if any, and WriteLogEntriesResponse
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(LoggingServiceV2.prototype.writeLogEntries = function writeLogEntries(request, callback) {
+                        return this.rpcCall(writeLogEntries, $root.google.logging.v2.WriteLogEntriesRequest, $root.google.logging.v2.WriteLogEntriesResponse, request, callback);
+                    }, "name", { value: "WriteLogEntries" });
+    
+                    /**
+                     * Calls WriteLogEntries.
+                     * @function writeLogEntries
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IWriteLogEntriesRequest} request WriteLogEntriesRequest message or plain object
+                     * @returns {Promise<google.logging.v2.WriteLogEntriesResponse>} Promise
+                     * @variation 2
+                     */
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogEntries}.
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @typedef ListLogEntriesCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.ListLogEntriesResponse} [response] ListLogEntriesResponse
+                     */
+    
+                    /**
+                     * Calls ListLogEntries.
+                     * @function listLogEntries
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IListLogEntriesRequest} request ListLogEntriesRequest message or plain object
+                     * @param {google.logging.v2.LoggingServiceV2.ListLogEntriesCallback} callback Node-style callback called with the error, if any, and ListLogEntriesResponse
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(LoggingServiceV2.prototype.listLogEntries = function listLogEntries(request, callback) {
+                        return this.rpcCall(listLogEntries, $root.google.logging.v2.ListLogEntriesRequest, $root.google.logging.v2.ListLogEntriesResponse, request, callback);
+                    }, "name", { value: "ListLogEntries" });
+    
+                    /**
+                     * Calls ListLogEntries.
+                     * @function listLogEntries
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IListLogEntriesRequest} request ListLogEntriesRequest message or plain object
+                     * @returns {Promise<google.logging.v2.ListLogEntriesResponse>} Promise
+                     * @variation 2
+                     */
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#listMonitoredResourceDescriptors}.
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @typedef ListMonitoredResourceDescriptorsCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.ListMonitoredResourceDescriptorsResponse} [response] ListMonitoredResourceDescriptorsResponse
+                     */
+    
+                    /**
+                     * Calls ListMonitoredResourceDescriptors.
+                     * @function listMonitoredResourceDescriptors
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} request ListMonitoredResourceDescriptorsRequest message or plain object
+                     * @param {google.logging.v2.LoggingServiceV2.ListMonitoredResourceDescriptorsCallback} callback Node-style callback called with the error, if any, and ListMonitoredResourceDescriptorsResponse
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(LoggingServiceV2.prototype.listMonitoredResourceDescriptors = function listMonitoredResourceDescriptors(request, callback) {
+                        return this.rpcCall(listMonitoredResourceDescriptors, $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest, $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse, request, callback);
+                    }, "name", { value: "ListMonitoredResourceDescriptors" });
+    
+                    /**
+                     * Calls ListMonitoredResourceDescriptors.
+                     * @function listMonitoredResourceDescriptors
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} request ListMonitoredResourceDescriptorsRequest message or plain object
+                     * @returns {Promise<google.logging.v2.ListMonitoredResourceDescriptorsResponse>} Promise
+                     * @variation 2
+                     */
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogs}.
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @typedef ListLogsCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.ListLogsResponse} [response] ListLogsResponse
+                     */
+    
+                    /**
+                     * Calls ListLogs.
+                     * @function listLogs
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IListLogsRequest} request ListLogsRequest message or plain object
+                     * @param {google.logging.v2.LoggingServiceV2.ListLogsCallback} callback Node-style callback called with the error, if any, and ListLogsResponse
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(LoggingServiceV2.prototype.listLogs = function listLogs(request, callback) {
+                        return this.rpcCall(listLogs, $root.google.logging.v2.ListLogsRequest, $root.google.logging.v2.ListLogsResponse, request, callback);
+                    }, "name", { value: "ListLogs" });
+    
+                    /**
+                     * Calls ListLogs.
+                     * @function listLogs
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IListLogsRequest} request ListLogsRequest message or plain object
+                     * @returns {Promise<google.logging.v2.ListLogsResponse>} Promise
+                     * @variation 2
+                     */
+    
+                    return LoggingServiceV2;
+                })();
+    
+                v2.DeleteLogRequest = (function() {
+    
+                    /**
+                     * Properties of a DeleteLogRequest.
+                     * @memberof google.logging.v2
+                     * @interface IDeleteLogRequest
+                     * @property {string|null} [logName] DeleteLogRequest logName
+                     */
+    
+                    /**
+                     * Constructs a new DeleteLogRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a DeleteLogRequest.
+                     * @implements IDeleteLogRequest
+                     * @constructor
+                     * @param {google.logging.v2.IDeleteLogRequest=} [properties] Properties to set
+                     */
+                    function DeleteLogRequest(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * DeleteLogRequest logName.
+                     * @member {string} logName
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @instance
+                     */
+                    DeleteLogRequest.prototype.logName = "";
+    
+                    /**
+                     * Creates a new DeleteLogRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {google.logging.v2.IDeleteLogRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest instance
+                     */
+                    DeleteLogRequest.create = function create(properties) {
+                        return new DeleteLogRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified DeleteLogRequest message. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {google.logging.v2.IDeleteLogRequest} message DeleteLogRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    DeleteLogRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.logName);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified DeleteLogRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {google.logging.v2.IDeleteLogRequest} message DeleteLogRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    DeleteLogRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a DeleteLogRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    DeleteLogRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.DeleteLogRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.logName = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a DeleteLogRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    DeleteLogRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a DeleteLogRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    DeleteLogRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            if (!$util.isString(message.logName))
+                                return "logName: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a DeleteLogRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest
+                     */
+                    DeleteLogRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.DeleteLogRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.DeleteLogRequest();
+                        if (object.logName != null)
+                            message.logName = String(object.logName);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a DeleteLogRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @static
+                     * @param {google.logging.v2.DeleteLogRequest} message DeleteLogRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    DeleteLogRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults)
+                            object.logName = "";
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            object.logName = message.logName;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this DeleteLogRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.DeleteLogRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    DeleteLogRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return DeleteLogRequest;
+                })();
+    
+                v2.WriteLogEntriesRequest = (function() {
+    
+                    /**
+                     * Properties of a WriteLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @interface IWriteLogEntriesRequest
+                     * @property {string|null} [logName] WriteLogEntriesRequest logName
+                     * @property {google.api.IMonitoredResource|null} [resource] WriteLogEntriesRequest resource
+                     * @property {Object.<string,string>|null} [labels] WriteLogEntriesRequest labels
+                     * @property {Array.<google.logging.v2.ILogEntry>|null} [entries] WriteLogEntriesRequest entries
+                     * @property {boolean|null} [partialSuccess] WriteLogEntriesRequest partialSuccess
+                     * @property {boolean|null} [dryRun] WriteLogEntriesRequest dryRun
+                     */
+    
+                    /**
+                     * Constructs a new WriteLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a WriteLogEntriesRequest.
+                     * @implements IWriteLogEntriesRequest
+                     * @constructor
+                     * @param {google.logging.v2.IWriteLogEntriesRequest=} [properties] Properties to set
+                     */
+                    function WriteLogEntriesRequest(properties) {
+                        this.labels = {};
+                        this.entries = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * WriteLogEntriesRequest logName.
+                     * @member {string} logName
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     */
+                    WriteLogEntriesRequest.prototype.logName = "";
+    
+                    /**
+                     * WriteLogEntriesRequest resource.
+                     * @member {google.api.IMonitoredResource|null|undefined} resource
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     */
+                    WriteLogEntriesRequest.prototype.resource = null;
+    
+                    /**
+                     * WriteLogEntriesRequest labels.
+                     * @member {Object.<string,string>} labels
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     */
+                    WriteLogEntriesRequest.prototype.labels = $util.emptyObject;
+    
+                    /**
+                     * WriteLogEntriesRequest entries.
+                     * @member {Array.<google.logging.v2.ILogEntry>} entries
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     */
+                    WriteLogEntriesRequest.prototype.entries = $util.emptyArray;
+    
+                    /**
+                     * WriteLogEntriesRequest partialSuccess.
+                     * @member {boolean} partialSuccess
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     */
+                    WriteLogEntriesRequest.prototype.partialSuccess = false;
+    
+                    /**
+                     * WriteLogEntriesRequest dryRun.
+                     * @member {boolean} dryRun
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     */
+                    WriteLogEntriesRequest.prototype.dryRun = false;
+    
+                    /**
+                     * Creates a new WriteLogEntriesRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest instance
+                     */
+                    WriteLogEntriesRequest.create = function create(properties) {
+                        return new WriteLogEntriesRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified WriteLogEntriesRequest message. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesRequest} message WriteLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WriteLogEntriesRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.logName);
+                        if (message.resource != null && message.hasOwnProperty("resource"))
+                            $root.google.api.MonitoredResource.encode(message.resource, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        if (message.labels != null && message.hasOwnProperty("labels"))
+                            for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
+                                writer.uint32(/* id 3, wireType 2 =*/26).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
+                        if (message.entries != null && message.entries.length)
+                            for (var i = 0; i < message.entries.length; ++i)
+                                $root.google.logging.v2.LogEntry.encode(message.entries[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                        if (message.partialSuccess != null && message.hasOwnProperty("partialSuccess"))
+                            writer.uint32(/* id 5, wireType 0 =*/40).bool(message.partialSuccess);
+                        if (message.dryRun != null && message.hasOwnProperty("dryRun"))
+                            writer.uint32(/* id 6, wireType 0 =*/48).bool(message.dryRun);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified WriteLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesRequest} message WriteLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WriteLogEntriesRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a WriteLogEntriesRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WriteLogEntriesRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.WriteLogEntriesRequest(), key;
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.logName = reader.string();
+                                break;
+                            case 2:
+                                message.resource = $root.google.api.MonitoredResource.decode(reader, reader.uint32());
+                                break;
+                            case 3:
+                                reader.skip().pos++;
+                                if (message.labels === $util.emptyObject)
+                                    message.labels = {};
+                                key = reader.string();
+                                reader.pos++;
+                                message.labels[key] = reader.string();
+                                break;
+                            case 4:
+                                if (!(message.entries && message.entries.length))
+                                    message.entries = [];
+                                message.entries.push($root.google.logging.v2.LogEntry.decode(reader, reader.uint32()));
+                                break;
+                            case 5:
+                                message.partialSuccess = reader.bool();
+                                break;
+                            case 6:
+                                message.dryRun = reader.bool();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a WriteLogEntriesRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WriteLogEntriesRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a WriteLogEntriesRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    WriteLogEntriesRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            if (!$util.isString(message.logName))
+                                return "logName: string expected";
+                        if (message.resource != null && message.hasOwnProperty("resource")) {
+                            var error = $root.google.api.MonitoredResource.verify(message.resource);
+                            if (error)
+                                return "resource." + error;
+                        }
+                        if (message.labels != null && message.hasOwnProperty("labels")) {
+                            if (!$util.isObject(message.labels))
+                                return "labels: object expected";
+                            var key = Object.keys(message.labels);
+                            for (var i = 0; i < key.length; ++i)
+                                if (!$util.isString(message.labels[key[i]]))
+                                    return "labels: string{k:string} expected";
+                        }
+                        if (message.entries != null && message.hasOwnProperty("entries")) {
+                            if (!Array.isArray(message.entries))
+                                return "entries: array expected";
+                            for (var i = 0; i < message.entries.length; ++i) {
+                                var error = $root.google.logging.v2.LogEntry.verify(message.entries[i]);
+                                if (error)
+                                    return "entries." + error;
+                            }
+                        }
+                        if (message.partialSuccess != null && message.hasOwnProperty("partialSuccess"))
+                            if (typeof message.partialSuccess !== "boolean")
+                                return "partialSuccess: boolean expected";
+                        if (message.dryRun != null && message.hasOwnProperty("dryRun"))
+                            if (typeof message.dryRun !== "boolean")
+                                return "dryRun: boolean expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a WriteLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest
+                     */
+                    WriteLogEntriesRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.WriteLogEntriesRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.WriteLogEntriesRequest();
+                        if (object.logName != null)
+                            message.logName = String(object.logName);
+                        if (object.resource != null) {
+                            if (typeof object.resource !== "object")
+                                throw TypeError(".google.logging.v2.WriteLogEntriesRequest.resource: object expected");
+                            message.resource = $root.google.api.MonitoredResource.fromObject(object.resource);
+                        }
+                        if (object.labels) {
+                            if (typeof object.labels !== "object")
+                                throw TypeError(".google.logging.v2.WriteLogEntriesRequest.labels: object expected");
+                            message.labels = {};
+                            for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
+                                message.labels[keys[i]] = String(object.labels[keys[i]]);
+                        }
+                        if (object.entries) {
+                            if (!Array.isArray(object.entries))
+                                throw TypeError(".google.logging.v2.WriteLogEntriesRequest.entries: array expected");
+                            message.entries = [];
+                            for (var i = 0; i < object.entries.length; ++i) {
+                                if (typeof object.entries[i] !== "object")
+                                    throw TypeError(".google.logging.v2.WriteLogEntriesRequest.entries: object expected");
+                                message.entries[i] = $root.google.logging.v2.LogEntry.fromObject(object.entries[i]);
+                            }
+                        }
+                        if (object.partialSuccess != null)
+                            message.partialSuccess = Boolean(object.partialSuccess);
+                        if (object.dryRun != null)
+                            message.dryRun = Boolean(object.dryRun);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a WriteLogEntriesRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.WriteLogEntriesRequest} message WriteLogEntriesRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    WriteLogEntriesRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.entries = [];
+                        if (options.objects || options.defaults)
+                            object.labels = {};
+                        if (options.defaults) {
+                            object.logName = "";
+                            object.resource = null;
+                            object.partialSuccess = false;
+                            object.dryRun = false;
+                        }
+                        if (message.logName != null && message.hasOwnProperty("logName"))
+                            object.logName = message.logName;
+                        if (message.resource != null && message.hasOwnProperty("resource"))
+                            object.resource = $root.google.api.MonitoredResource.toObject(message.resource, options);
+                        var keys2;
+                        if (message.labels && (keys2 = Object.keys(message.labels)).length) {
+                            object.labels = {};
+                            for (var j = 0; j < keys2.length; ++j)
+                                object.labels[keys2[j]] = message.labels[keys2[j]];
+                        }
+                        if (message.entries && message.entries.length) {
+                            object.entries = [];
+                            for (var j = 0; j < message.entries.length; ++j)
+                                object.entries[j] = $root.google.logging.v2.LogEntry.toObject(message.entries[j], options);
+                        }
+                        if (message.partialSuccess != null && message.hasOwnProperty("partialSuccess"))
+                            object.partialSuccess = message.partialSuccess;
+                        if (message.dryRun != null && message.hasOwnProperty("dryRun"))
+                            object.dryRun = message.dryRun;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this WriteLogEntriesRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.WriteLogEntriesRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    WriteLogEntriesRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return WriteLogEntriesRequest;
+                })();
+    
+                v2.WriteLogEntriesResponse = (function() {
+    
+                    /**
+                     * Properties of a WriteLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @interface IWriteLogEntriesResponse
+                     */
+    
+                    /**
+                     * Constructs a new WriteLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a WriteLogEntriesResponse.
+                     * @implements IWriteLogEntriesResponse
+                     * @constructor
+                     * @param {google.logging.v2.IWriteLogEntriesResponse=} [properties] Properties to set
+                     */
+                    function WriteLogEntriesResponse(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * Creates a new WriteLogEntriesResponse instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesResponse=} [properties] Properties to set
+                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse instance
+                     */
+                    WriteLogEntriesResponse.create = function create(properties) {
+                        return new WriteLogEntriesResponse(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified WriteLogEntriesResponse message. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesResponse} message WriteLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WriteLogEntriesResponse.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified WriteLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesResponse} message WriteLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WriteLogEntriesResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a WriteLogEntriesResponse message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WriteLogEntriesResponse.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.WriteLogEntriesResponse();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a WriteLogEntriesResponse message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WriteLogEntriesResponse.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a WriteLogEntriesResponse message.
+                     * @function verify
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    WriteLogEntriesResponse.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a WriteLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse
+                     */
+                    WriteLogEntriesResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.WriteLogEntriesResponse)
+                            return object;
+                        return new $root.google.logging.v2.WriteLogEntriesResponse();
+                    };
+    
+                    /**
+                     * Creates a plain object from a WriteLogEntriesResponse message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.WriteLogEntriesResponse} message WriteLogEntriesResponse
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    WriteLogEntriesResponse.toObject = function toObject() {
+                        return {};
+                    };
+    
+                    /**
+                     * Converts this WriteLogEntriesResponse to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.WriteLogEntriesResponse
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    WriteLogEntriesResponse.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return WriteLogEntriesResponse;
+                })();
+    
+                v2.WriteLogEntriesPartialErrors = (function() {
+    
+                    /**
+                     * Properties of a WriteLogEntriesPartialErrors.
+                     * @memberof google.logging.v2
+                     * @interface IWriteLogEntriesPartialErrors
+                     * @property {Object.<string,google.rpc.IStatus>|null} [logEntryErrors] WriteLogEntriesPartialErrors logEntryErrors
+                     */
+    
+                    /**
+                     * Constructs a new WriteLogEntriesPartialErrors.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a WriteLogEntriesPartialErrors.
+                     * @implements IWriteLogEntriesPartialErrors
+                     * @constructor
+                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors=} [properties] Properties to set
+                     */
+                    function WriteLogEntriesPartialErrors(properties) {
+                        this.logEntryErrors = {};
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * WriteLogEntriesPartialErrors logEntryErrors.
+                     * @member {Object.<string,google.rpc.IStatus>} logEntryErrors
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @instance
+                     */
+                    WriteLogEntriesPartialErrors.prototype.logEntryErrors = $util.emptyObject;
+    
+                    /**
+                     * Creates a new WriteLogEntriesPartialErrors instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors=} [properties] Properties to set
+                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors instance
+                     */
+                    WriteLogEntriesPartialErrors.create = function create(properties) {
+                        return new WriteLogEntriesPartialErrors(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified WriteLogEntriesPartialErrors message. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors} message WriteLogEntriesPartialErrors message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WriteLogEntriesPartialErrors.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.logEntryErrors != null && message.hasOwnProperty("logEntryErrors"))
+                            for (var keys = Object.keys(message.logEntryErrors), i = 0; i < keys.length; ++i) {
+                                writer.uint32(/* id 1, wireType 2 =*/10).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]);
+                                $root.google.rpc.Status.encode(message.logEntryErrors[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                            }
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified WriteLogEntriesPartialErrors message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors} message WriteLogEntriesPartialErrors message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WriteLogEntriesPartialErrors.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WriteLogEntriesPartialErrors.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.WriteLogEntriesPartialErrors(), key;
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                reader.skip().pos++;
+                                if (message.logEntryErrors === $util.emptyObject)
+                                    message.logEntryErrors = {};
+                                key = reader.int32();
+                                reader.pos++;
+                                message.logEntryErrors[key] = $root.google.rpc.Status.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WriteLogEntriesPartialErrors.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a WriteLogEntriesPartialErrors message.
+                     * @function verify
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    WriteLogEntriesPartialErrors.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.logEntryErrors != null && message.hasOwnProperty("logEntryErrors")) {
+                            if (!$util.isObject(message.logEntryErrors))
+                                return "logEntryErrors: object expected";
+                            var key = Object.keys(message.logEntryErrors);
+                            for (var i = 0; i < key.length; ++i) {
+                                if (!$util.key32Re.test(key[i]))
+                                    return "logEntryErrors: integer key{k:int32} expected";
+                                {
+                                    var error = $root.google.rpc.Status.verify(message.logEntryErrors[key[i]]);
+                                    if (error)
+                                        return "logEntryErrors." + error;
+                                }
+                            }
+                        }
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a WriteLogEntriesPartialErrors message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors
+                     */
+                    WriteLogEntriesPartialErrors.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.WriteLogEntriesPartialErrors)
+                            return object;
+                        var message = new $root.google.logging.v2.WriteLogEntriesPartialErrors();
+                        if (object.logEntryErrors) {
+                            if (typeof object.logEntryErrors !== "object")
+                                throw TypeError(".google.logging.v2.WriteLogEntriesPartialErrors.logEntryErrors: object expected");
+                            message.logEntryErrors = {};
+                            for (var keys = Object.keys(object.logEntryErrors), i = 0; i < keys.length; ++i) {
+                                if (typeof object.logEntryErrors[keys[i]] !== "object")
+                                    throw TypeError(".google.logging.v2.WriteLogEntriesPartialErrors.logEntryErrors: object expected");
+                                message.logEntryErrors[keys[i]] = $root.google.rpc.Status.fromObject(object.logEntryErrors[keys[i]]);
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a WriteLogEntriesPartialErrors message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @static
+                     * @param {google.logging.v2.WriteLogEntriesPartialErrors} message WriteLogEntriesPartialErrors
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    WriteLogEntriesPartialErrors.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.objects || options.defaults)
+                            object.logEntryErrors = {};
+                        var keys2;
+                        if (message.logEntryErrors && (keys2 = Object.keys(message.logEntryErrors)).length) {
+                            object.logEntryErrors = {};
+                            for (var j = 0; j < keys2.length; ++j)
+                                object.logEntryErrors[keys2[j]] = $root.google.rpc.Status.toObject(message.logEntryErrors[keys2[j]], options);
+                        }
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this WriteLogEntriesPartialErrors to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    WriteLogEntriesPartialErrors.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return WriteLogEntriesPartialErrors;
+                })();
+    
+                v2.ListLogEntriesRequest = (function() {
+    
+                    /**
+                     * Properties of a ListLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @interface IListLogEntriesRequest
+                     * @property {Array.<string>|null} [resourceNames] ListLogEntriesRequest resourceNames
+                     * @property {string|null} [filter] ListLogEntriesRequest filter
+                     * @property {string|null} [orderBy] ListLogEntriesRequest orderBy
+                     * @property {number|null} [pageSize] ListLogEntriesRequest pageSize
+                     * @property {string|null} [pageToken] ListLogEntriesRequest pageToken
+                     */
+    
+                    /**
+                     * Constructs a new ListLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a ListLogEntriesRequest.
+                     * @implements IListLogEntriesRequest
+                     * @constructor
+                     * @param {google.logging.v2.IListLogEntriesRequest=} [properties] Properties to set
+                     */
+                    function ListLogEntriesRequest(properties) {
+                        this.resourceNames = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * ListLogEntriesRequest resourceNames.
+                     * @member {Array.<string>} resourceNames
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @instance
+                     */
+                    ListLogEntriesRequest.prototype.resourceNames = $util.emptyArray;
+    
+                    /**
+                     * ListLogEntriesRequest filter.
+                     * @member {string} filter
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @instance
+                     */
+                    ListLogEntriesRequest.prototype.filter = "";
+    
+                    /**
+                     * ListLogEntriesRequest orderBy.
+                     * @member {string} orderBy
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @instance
+                     */
+                    ListLogEntriesRequest.prototype.orderBy = "";
+    
+                    /**
+                     * ListLogEntriesRequest pageSize.
+                     * @member {number} pageSize
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @instance
+                     */
+                    ListLogEntriesRequest.prototype.pageSize = 0;
+    
+                    /**
+                     * ListLogEntriesRequest pageToken.
+                     * @member {string} pageToken
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @instance
+                     */
+                    ListLogEntriesRequest.prototype.pageToken = "";
+    
+                    /**
+                     * Creates a new ListLogEntriesRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.IListLogEntriesRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest instance
+                     */
+                    ListLogEntriesRequest.create = function create(properties) {
+                        return new ListLogEntriesRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogEntriesRequest message. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.IListLogEntriesRequest} message ListLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogEntriesRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.filter);
+                        if (message.orderBy != null && message.hasOwnProperty("orderBy"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.orderBy);
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.pageSize);
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.pageToken);
+                        if (message.resourceNames != null && message.resourceNames.length)
+                            for (var i = 0; i < message.resourceNames.length; ++i)
+                                writer.uint32(/* id 8, wireType 2 =*/66).string(message.resourceNames[i]);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.IListLogEntriesRequest} message ListLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogEntriesRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a ListLogEntriesRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogEntriesRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogEntriesRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 8:
+                                if (!(message.resourceNames && message.resourceNames.length))
+                                    message.resourceNames = [];
+                                message.resourceNames.push(reader.string());
+                                break;
+                            case 2:
+                                message.filter = reader.string();
+                                break;
+                            case 3:
+                                message.orderBy = reader.string();
+                                break;
+                            case 4:
+                                message.pageSize = reader.int32();
+                                break;
+                            case 5:
+                                message.pageToken = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a ListLogEntriesRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogEntriesRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a ListLogEntriesRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    ListLogEntriesRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.resourceNames != null && message.hasOwnProperty("resourceNames")) {
+                            if (!Array.isArray(message.resourceNames))
+                                return "resourceNames: array expected";
+                            for (var i = 0; i < message.resourceNames.length; ++i)
+                                if (!$util.isString(message.resourceNames[i]))
+                                    return "resourceNames: string[] expected";
+                        }
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            if (!$util.isString(message.filter))
+                                return "filter: string expected";
+                        if (message.orderBy != null && message.hasOwnProperty("orderBy"))
+                            if (!$util.isString(message.orderBy))
+                                return "orderBy: string expected";
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            if (!$util.isInteger(message.pageSize))
+                                return "pageSize: integer expected";
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            if (!$util.isString(message.pageToken))
+                                return "pageToken: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a ListLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest
+                     */
+                    ListLogEntriesRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.ListLogEntriesRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.ListLogEntriesRequest();
+                        if (object.resourceNames) {
+                            if (!Array.isArray(object.resourceNames))
+                                throw TypeError(".google.logging.v2.ListLogEntriesRequest.resourceNames: array expected");
+                            message.resourceNames = [];
+                            for (var i = 0; i < object.resourceNames.length; ++i)
+                                message.resourceNames[i] = String(object.resourceNames[i]);
+                        }
+                        if (object.filter != null)
+                            message.filter = String(object.filter);
+                        if (object.orderBy != null)
+                            message.orderBy = String(object.orderBy);
+                        if (object.pageSize != null)
+                            message.pageSize = object.pageSize | 0;
+                        if (object.pageToken != null)
+                            message.pageToken = String(object.pageToken);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a ListLogEntriesRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ListLogEntriesRequest} message ListLogEntriesRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    ListLogEntriesRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.resourceNames = [];
+                        if (options.defaults) {
+                            object.filter = "";
+                            object.orderBy = "";
+                            object.pageSize = 0;
+                            object.pageToken = "";
+                        }
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            object.filter = message.filter;
+                        if (message.orderBy != null && message.hasOwnProperty("orderBy"))
+                            object.orderBy = message.orderBy;
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            object.pageSize = message.pageSize;
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            object.pageToken = message.pageToken;
+                        if (message.resourceNames && message.resourceNames.length) {
+                            object.resourceNames = [];
+                            for (var j = 0; j < message.resourceNames.length; ++j)
+                                object.resourceNames[j] = message.resourceNames[j];
+                        }
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this ListLogEntriesRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.ListLogEntriesRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    ListLogEntriesRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return ListLogEntriesRequest;
+                })();
+    
+                v2.ListLogEntriesResponse = (function() {
+    
+                    /**
+                     * Properties of a ListLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @interface IListLogEntriesResponse
+                     * @property {Array.<google.logging.v2.ILogEntry>|null} [entries] ListLogEntriesResponse entries
+                     * @property {string|null} [nextPageToken] ListLogEntriesResponse nextPageToken
+                     */
+    
+                    /**
+                     * Constructs a new ListLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a ListLogEntriesResponse.
+                     * @implements IListLogEntriesResponse
+                     * @constructor
+                     * @param {google.logging.v2.IListLogEntriesResponse=} [properties] Properties to set
+                     */
+                    function ListLogEntriesResponse(properties) {
+                        this.entries = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * ListLogEntriesResponse entries.
+                     * @member {Array.<google.logging.v2.ILogEntry>} entries
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @instance
+                     */
+                    ListLogEntriesResponse.prototype.entries = $util.emptyArray;
+    
+                    /**
+                     * ListLogEntriesResponse nextPageToken.
+                     * @member {string} nextPageToken
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @instance
+                     */
+                    ListLogEntriesResponse.prototype.nextPageToken = "";
+    
+                    /**
+                     * Creates a new ListLogEntriesResponse instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.IListLogEntriesResponse=} [properties] Properties to set
+                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse instance
+                     */
+                    ListLogEntriesResponse.create = function create(properties) {
+                        return new ListLogEntriesResponse(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogEntriesResponse message. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.IListLogEntriesResponse} message ListLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogEntriesResponse.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.entries != null && message.entries.length)
+                            for (var i = 0; i < message.entries.length; ++i)
+                                $root.google.logging.v2.LogEntry.encode(message.entries[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.IListLogEntriesResponse} message ListLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogEntriesResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a ListLogEntriesResponse message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogEntriesResponse.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogEntriesResponse();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                if (!(message.entries && message.entries.length))
+                                    message.entries = [];
+                                message.entries.push($root.google.logging.v2.LogEntry.decode(reader, reader.uint32()));
+                                break;
+                            case 2:
+                                message.nextPageToken = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a ListLogEntriesResponse message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogEntriesResponse.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a ListLogEntriesResponse message.
+                     * @function verify
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    ListLogEntriesResponse.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.entries != null && message.hasOwnProperty("entries")) {
+                            if (!Array.isArray(message.entries))
+                                return "entries: array expected";
+                            for (var i = 0; i < message.entries.length; ++i) {
+                                var error = $root.google.logging.v2.LogEntry.verify(message.entries[i]);
+                                if (error)
+                                    return "entries." + error;
+                            }
+                        }
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            if (!$util.isString(message.nextPageToken))
+                                return "nextPageToken: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a ListLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse
+                     */
+                    ListLogEntriesResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.ListLogEntriesResponse)
+                            return object;
+                        var message = new $root.google.logging.v2.ListLogEntriesResponse();
+                        if (object.entries) {
+                            if (!Array.isArray(object.entries))
+                                throw TypeError(".google.logging.v2.ListLogEntriesResponse.entries: array expected");
+                            message.entries = [];
+                            for (var i = 0; i < object.entries.length; ++i) {
+                                if (typeof object.entries[i] !== "object")
+                                    throw TypeError(".google.logging.v2.ListLogEntriesResponse.entries: object expected");
+                                message.entries[i] = $root.google.logging.v2.LogEntry.fromObject(object.entries[i]);
+                            }
+                        }
+                        if (object.nextPageToken != null)
+                            message.nextPageToken = String(object.nextPageToken);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a ListLogEntriesResponse message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ListLogEntriesResponse} message ListLogEntriesResponse
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    ListLogEntriesResponse.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.entries = [];
+                        if (options.defaults)
+                            object.nextPageToken = "";
+                        if (message.entries && message.entries.length) {
+                            object.entries = [];
+                            for (var j = 0; j < message.entries.length; ++j)
+                                object.entries[j] = $root.google.logging.v2.LogEntry.toObject(message.entries[j], options);
+                        }
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            object.nextPageToken = message.nextPageToken;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this ListLogEntriesResponse to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.ListLogEntriesResponse
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    ListLogEntriesResponse.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return ListLogEntriesResponse;
+                })();
+    
+                v2.ListMonitoredResourceDescriptorsRequest = (function() {
+    
+                    /**
+                     * Properties of a ListMonitoredResourceDescriptorsRequest.
+                     * @memberof google.logging.v2
+                     * @interface IListMonitoredResourceDescriptorsRequest
+                     * @property {number|null} [pageSize] ListMonitoredResourceDescriptorsRequest pageSize
+                     * @property {string|null} [pageToken] ListMonitoredResourceDescriptorsRequest pageToken
+                     */
+    
+                    /**
+                     * Constructs a new ListMonitoredResourceDescriptorsRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a ListMonitoredResourceDescriptorsRequest.
+                     * @implements IListMonitoredResourceDescriptorsRequest
+                     * @constructor
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest=} [properties] Properties to set
+                     */
+                    function ListMonitoredResourceDescriptorsRequest(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * ListMonitoredResourceDescriptorsRequest pageSize.
+                     * @member {number} pageSize
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @instance
+                     */
+                    ListMonitoredResourceDescriptorsRequest.prototype.pageSize = 0;
+    
+                    /**
+                     * ListMonitoredResourceDescriptorsRequest pageToken.
+                     * @member {string} pageToken
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @instance
+                     */
+                    ListMonitoredResourceDescriptorsRequest.prototype.pageToken = "";
+    
+                    /**
+                     * Creates a new ListMonitoredResourceDescriptorsRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest instance
+                     */
+                    ListMonitoredResourceDescriptorsRequest.create = function create(properties) {
+                        return new ListMonitoredResourceDescriptorsRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified ListMonitoredResourceDescriptorsRequest message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} message ListMonitoredResourceDescriptorsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListMonitoredResourceDescriptorsRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.pageSize);
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.pageToken);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified ListMonitoredResourceDescriptorsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} message ListMonitoredResourceDescriptorsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListMonitoredResourceDescriptorsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListMonitoredResourceDescriptorsRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.pageSize = reader.int32();
+                                break;
+                            case 2:
+                                message.pageToken = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListMonitoredResourceDescriptorsRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a ListMonitoredResourceDescriptorsRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    ListMonitoredResourceDescriptorsRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            if (!$util.isInteger(message.pageSize))
+                                return "pageSize: integer expected";
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            if (!$util.isString(message.pageToken))
+                                return "pageToken: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a ListMonitoredResourceDescriptorsRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest
+                     */
+                    ListMonitoredResourceDescriptorsRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest();
+                        if (object.pageSize != null)
+                            message.pageSize = object.pageSize | 0;
+                        if (object.pageToken != null)
+                            message.pageToken = String(object.pageToken);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a ListMonitoredResourceDescriptorsRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @static
+                     * @param {google.logging.v2.ListMonitoredResourceDescriptorsRequest} message ListMonitoredResourceDescriptorsRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    ListMonitoredResourceDescriptorsRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.pageSize = 0;
+                            object.pageToken = "";
+                        }
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            object.pageSize = message.pageSize;
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            object.pageToken = message.pageToken;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this ListMonitoredResourceDescriptorsRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    ListMonitoredResourceDescriptorsRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return ListMonitoredResourceDescriptorsRequest;
+                })();
+    
+                v2.ListMonitoredResourceDescriptorsResponse = (function() {
+    
+                    /**
+                     * Properties of a ListMonitoredResourceDescriptorsResponse.
+                     * @memberof google.logging.v2
+                     * @interface IListMonitoredResourceDescriptorsResponse
+                     * @property {Array.<google.api.IMonitoredResourceDescriptor>|null} [resourceDescriptors] ListMonitoredResourceDescriptorsResponse resourceDescriptors
+                     * @property {string|null} [nextPageToken] ListMonitoredResourceDescriptorsResponse nextPageToken
+                     */
+    
+                    /**
+                     * Constructs a new ListMonitoredResourceDescriptorsResponse.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a ListMonitoredResourceDescriptorsResponse.
+                     * @implements IListMonitoredResourceDescriptorsResponse
+                     * @constructor
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse=} [properties] Properties to set
+                     */
+                    function ListMonitoredResourceDescriptorsResponse(properties) {
+                        this.resourceDescriptors = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * ListMonitoredResourceDescriptorsResponse resourceDescriptors.
+                     * @member {Array.<google.api.IMonitoredResourceDescriptor>} resourceDescriptors
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @instance
+                     */
+                    ListMonitoredResourceDescriptorsResponse.prototype.resourceDescriptors = $util.emptyArray;
+    
+                    /**
+                     * ListMonitoredResourceDescriptorsResponse nextPageToken.
+                     * @member {string} nextPageToken
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @instance
+                     */
+                    ListMonitoredResourceDescriptorsResponse.prototype.nextPageToken = "";
+    
+                    /**
+                     * Creates a new ListMonitoredResourceDescriptorsResponse instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse=} [properties] Properties to set
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse instance
+                     */
+                    ListMonitoredResourceDescriptorsResponse.create = function create(properties) {
+                        return new ListMonitoredResourceDescriptorsResponse(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified ListMonitoredResourceDescriptorsResponse message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse} message ListMonitoredResourceDescriptorsResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListMonitoredResourceDescriptorsResponse.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.resourceDescriptors != null && message.resourceDescriptors.length)
+                            for (var i = 0; i < message.resourceDescriptors.length; ++i)
+                                $root.google.api.MonitoredResourceDescriptor.encode(message.resourceDescriptors[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified ListMonitoredResourceDescriptorsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse} message ListMonitoredResourceDescriptorsResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListMonitoredResourceDescriptorsResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListMonitoredResourceDescriptorsResponse.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                if (!(message.resourceDescriptors && message.resourceDescriptors.length))
+                                    message.resourceDescriptors = [];
+                                message.resourceDescriptors.push($root.google.api.MonitoredResourceDescriptor.decode(reader, reader.uint32()));
+                                break;
+                            case 2:
+                                message.nextPageToken = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListMonitoredResourceDescriptorsResponse.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a ListMonitoredResourceDescriptorsResponse message.
+                     * @function verify
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    ListMonitoredResourceDescriptorsResponse.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.resourceDescriptors != null && message.hasOwnProperty("resourceDescriptors")) {
+                            if (!Array.isArray(message.resourceDescriptors))
+                                return "resourceDescriptors: array expected";
+                            for (var i = 0; i < message.resourceDescriptors.length; ++i) {
+                                var error = $root.google.api.MonitoredResourceDescriptor.verify(message.resourceDescriptors[i]);
+                                if (error)
+                                    return "resourceDescriptors." + error;
+                            }
+                        }
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            if (!$util.isString(message.nextPageToken))
+                                return "nextPageToken: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a ListMonitoredResourceDescriptorsResponse message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse
+                     */
+                    ListMonitoredResourceDescriptorsResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse)
+                            return object;
+                        var message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse();
+                        if (object.resourceDescriptors) {
+                            if (!Array.isArray(object.resourceDescriptors))
+                                throw TypeError(".google.logging.v2.ListMonitoredResourceDescriptorsResponse.resourceDescriptors: array expected");
+                            message.resourceDescriptors = [];
+                            for (var i = 0; i < object.resourceDescriptors.length; ++i) {
+                                if (typeof object.resourceDescriptors[i] !== "object")
+                                    throw TypeError(".google.logging.v2.ListMonitoredResourceDescriptorsResponse.resourceDescriptors: object expected");
+                                message.resourceDescriptors[i] = $root.google.api.MonitoredResourceDescriptor.fromObject(object.resourceDescriptors[i]);
+                            }
+                        }
+                        if (object.nextPageToken != null)
+                            message.nextPageToken = String(object.nextPageToken);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a ListMonitoredResourceDescriptorsResponse message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @static
+                     * @param {google.logging.v2.ListMonitoredResourceDescriptorsResponse} message ListMonitoredResourceDescriptorsResponse
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    ListMonitoredResourceDescriptorsResponse.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.resourceDescriptors = [];
+                        if (options.defaults)
+                            object.nextPageToken = "";
+                        if (message.resourceDescriptors && message.resourceDescriptors.length) {
+                            object.resourceDescriptors = [];
+                            for (var j = 0; j < message.resourceDescriptors.length; ++j)
+                                object.resourceDescriptors[j] = $root.google.api.MonitoredResourceDescriptor.toObject(message.resourceDescriptors[j], options);
+                        }
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            object.nextPageToken = message.nextPageToken;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this ListMonitoredResourceDescriptorsResponse to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    ListMonitoredResourceDescriptorsResponse.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return ListMonitoredResourceDescriptorsResponse;
+                })();
+    
+                v2.ListLogsRequest = (function() {
+    
+                    /**
+                     * Properties of a ListLogsRequest.
+                     * @memberof google.logging.v2
+                     * @interface IListLogsRequest
+                     * @property {string|null} [parent] ListLogsRequest parent
+                     * @property {number|null} [pageSize] ListLogsRequest pageSize
+                     * @property {string|null} [pageToken] ListLogsRequest pageToken
+                     */
+    
+                    /**
+                     * Constructs a new ListLogsRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a ListLogsRequest.
+                     * @implements IListLogsRequest
+                     * @constructor
+                     * @param {google.logging.v2.IListLogsRequest=} [properties] Properties to set
+                     */
+                    function ListLogsRequest(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * ListLogsRequest parent.
+                     * @member {string} parent
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @instance
+                     */
+                    ListLogsRequest.prototype.parent = "";
+    
+                    /**
+                     * ListLogsRequest pageSize.
+                     * @member {number} pageSize
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @instance
+                     */
+                    ListLogsRequest.prototype.pageSize = 0;
+    
+                    /**
+                     * ListLogsRequest pageToken.
+                     * @member {string} pageToken
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @instance
+                     */
+                    ListLogsRequest.prototype.pageToken = "";
+    
+                    /**
+                     * Creates a new ListLogsRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {google.logging.v2.IListLogsRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest instance
+                     */
+                    ListLogsRequest.create = function create(properties) {
+                        return new ListLogsRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogsRequest message. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {google.logging.v2.IListLogsRequest} message ListLogsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogsRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.parent != null && message.hasOwnProperty("parent"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.parent);
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.pageSize);
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.pageToken);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {google.logging.v2.IListLogsRequest} message ListLogsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a ListLogsRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogsRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogsRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.parent = reader.string();
+                                break;
+                            case 2:
+                                message.pageSize = reader.int32();
+                                break;
+                            case 3:
+                                message.pageToken = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a ListLogsRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogsRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a ListLogsRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    ListLogsRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.parent != null && message.hasOwnProperty("parent"))
+                            if (!$util.isString(message.parent))
+                                return "parent: string expected";
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            if (!$util.isInteger(message.pageSize))
+                                return "pageSize: integer expected";
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            if (!$util.isString(message.pageToken))
+                                return "pageToken: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a ListLogsRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest
+                     */
+                    ListLogsRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.ListLogsRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.ListLogsRequest();
+                        if (object.parent != null)
+                            message.parent = String(object.parent);
+                        if (object.pageSize != null)
+                            message.pageSize = object.pageSize | 0;
+                        if (object.pageToken != null)
+                            message.pageToken = String(object.pageToken);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a ListLogsRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @static
+                     * @param {google.logging.v2.ListLogsRequest} message ListLogsRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    ListLogsRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.parent = "";
+                            object.pageSize = 0;
+                            object.pageToken = "";
+                        }
+                        if (message.parent != null && message.hasOwnProperty("parent"))
+                            object.parent = message.parent;
+                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                            object.pageSize = message.pageSize;
+                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                            object.pageToken = message.pageToken;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this ListLogsRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    ListLogsRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return ListLogsRequest;
+                })();
+    
+                v2.ListLogsResponse = (function() {
+    
+                    /**
+                     * Properties of a ListLogsResponse.
+                     * @memberof google.logging.v2
+                     * @interface IListLogsResponse
+                     * @property {Array.<string>|null} [logNames] ListLogsResponse logNames
+                     * @property {string|null} [nextPageToken] ListLogsResponse nextPageToken
+                     */
+    
+                    /**
+                     * Constructs a new ListLogsResponse.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a ListLogsResponse.
+                     * @implements IListLogsResponse
+                     * @constructor
+                     * @param {google.logging.v2.IListLogsResponse=} [properties] Properties to set
+                     */
+                    function ListLogsResponse(properties) {
+                        this.logNames = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * ListLogsResponse logNames.
+                     * @member {Array.<string>} logNames
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @instance
+                     */
+                    ListLogsResponse.prototype.logNames = $util.emptyArray;
+    
+                    /**
+                     * ListLogsResponse nextPageToken.
+                     * @member {string} nextPageToken
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @instance
+                     */
+                    ListLogsResponse.prototype.nextPageToken = "";
+    
+                    /**
+                     * Creates a new ListLogsResponse instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {google.logging.v2.IListLogsResponse=} [properties] Properties to set
+                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse instance
+                     */
+                    ListLogsResponse.create = function create(properties) {
+                        return new ListLogsResponse(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogsResponse message. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {google.logging.v2.IListLogsResponse} message ListLogsResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogsResponse.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
+                        if (message.logNames != null && message.logNames.length)
+                            for (var i = 0; i < message.logNames.length; ++i)
+                                writer.uint32(/* id 3, wireType 2 =*/26).string(message.logNames[i]);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified ListLogsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {google.logging.v2.IListLogsResponse} message ListLogsResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    ListLogsResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a ListLogsResponse message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogsResponse.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogsResponse();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 3:
+                                if (!(message.logNames && message.logNames.length))
+                                    message.logNames = [];
+                                message.logNames.push(reader.string());
+                                break;
+                            case 2:
+                                message.nextPageToken = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a ListLogsResponse message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    ListLogsResponse.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a ListLogsResponse message.
+                     * @function verify
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    ListLogsResponse.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.logNames != null && message.hasOwnProperty("logNames")) {
+                            if (!Array.isArray(message.logNames))
+                                return "logNames: array expected";
+                            for (var i = 0; i < message.logNames.length; ++i)
+                                if (!$util.isString(message.logNames[i]))
+                                    return "logNames: string[] expected";
+                        }
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            if (!$util.isString(message.nextPageToken))
+                                return "nextPageToken: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a ListLogsResponse message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse
+                     */
+                    ListLogsResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.ListLogsResponse)
+                            return object;
+                        var message = new $root.google.logging.v2.ListLogsResponse();
+                        if (object.logNames) {
+                            if (!Array.isArray(object.logNames))
+                                throw TypeError(".google.logging.v2.ListLogsResponse.logNames: array expected");
+                            message.logNames = [];
+                            for (var i = 0; i < object.logNames.length; ++i)
+                                message.logNames[i] = String(object.logNames[i]);
+                        }
+                        if (object.nextPageToken != null)
+                            message.nextPageToken = String(object.nextPageToken);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a ListLogsResponse message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @static
+                     * @param {google.logging.v2.ListLogsResponse} message ListLogsResponse
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    ListLogsResponse.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.logNames = [];
+                        if (options.defaults)
+                            object.nextPageToken = "";
+                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                            object.nextPageToken = message.nextPageToken;
+                        if (message.logNames && message.logNames.length) {
+                            object.logNames = [];
+                            for (var j = 0; j < message.logNames.length; ++j)
+                                object.logNames[j] = message.logNames[j];
+                        }
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this ListLogsResponse to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.ListLogsResponse
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    ListLogsResponse.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return ListLogsResponse;
+                })();
+    
                 v2.ConfigServiceV2 = (function() {
     
                     /**
@@ -6109,3703 +9806,6 @@
                     return CmekSettings;
                 })();
     
-                v2.LoggingServiceV2 = (function() {
-    
-                    /**
-                     * Constructs a new LoggingServiceV2 service.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a LoggingServiceV2
-                     * @extends $protobuf.rpc.Service
-                     * @constructor
-                     * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
-                     * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
-                     * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
-                     */
-                    function LoggingServiceV2(rpcImpl, requestDelimited, responseDelimited) {
-                        $protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
-                    }
-    
-                    (LoggingServiceV2.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = LoggingServiceV2;
-    
-                    /**
-                     * Creates new LoggingServiceV2 service using the specified rpc implementation.
-                     * @function create
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @static
-                     * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
-                     * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
-                     * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
-                     * @returns {LoggingServiceV2} RPC service. Useful where requests and/or responses are streamed.
-                     */
-                    LoggingServiceV2.create = function create(rpcImpl, requestDelimited, responseDelimited) {
-                        return new this(rpcImpl, requestDelimited, responseDelimited);
-                    };
-    
-                    /**
-                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#deleteLog}.
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @typedef DeleteLogCallback
-                     * @type {function}
-                     * @param {Error|null} error Error, if any
-                     * @param {google.protobuf.Empty} [response] Empty
-                     */
-    
-                    /**
-                     * Calls DeleteLog.
-                     * @function deleteLog
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IDeleteLogRequest} request DeleteLogRequest message or plain object
-                     * @param {google.logging.v2.LoggingServiceV2.DeleteLogCallback} callback Node-style callback called with the error, if any, and Empty
-                     * @returns {undefined}
-                     * @variation 1
-                     */
-                    Object.defineProperty(LoggingServiceV2.prototype.deleteLog = function deleteLog(request, callback) {
-                        return this.rpcCall(deleteLog, $root.google.logging.v2.DeleteLogRequest, $root.google.protobuf.Empty, request, callback);
-                    }, "name", { value: "DeleteLog" });
-    
-                    /**
-                     * Calls DeleteLog.
-                     * @function deleteLog
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IDeleteLogRequest} request DeleteLogRequest message or plain object
-                     * @returns {Promise<google.protobuf.Empty>} Promise
-                     * @variation 2
-                     */
-    
-                    /**
-                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#writeLogEntries}.
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @typedef WriteLogEntriesCallback
-                     * @type {function}
-                     * @param {Error|null} error Error, if any
-                     * @param {google.logging.v2.WriteLogEntriesResponse} [response] WriteLogEntriesResponse
-                     */
-    
-                    /**
-                     * Calls WriteLogEntries.
-                     * @function writeLogEntries
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IWriteLogEntriesRequest} request WriteLogEntriesRequest message or plain object
-                     * @param {google.logging.v2.LoggingServiceV2.WriteLogEntriesCallback} callback Node-style callback called with the error, if any, and WriteLogEntriesResponse
-                     * @returns {undefined}
-                     * @variation 1
-                     */
-                    Object.defineProperty(LoggingServiceV2.prototype.writeLogEntries = function writeLogEntries(request, callback) {
-                        return this.rpcCall(writeLogEntries, $root.google.logging.v2.WriteLogEntriesRequest, $root.google.logging.v2.WriteLogEntriesResponse, request, callback);
-                    }, "name", { value: "WriteLogEntries" });
-    
-                    /**
-                     * Calls WriteLogEntries.
-                     * @function writeLogEntries
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IWriteLogEntriesRequest} request WriteLogEntriesRequest message or plain object
-                     * @returns {Promise<google.logging.v2.WriteLogEntriesResponse>} Promise
-                     * @variation 2
-                     */
-    
-                    /**
-                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogEntries}.
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @typedef ListLogEntriesCallback
-                     * @type {function}
-                     * @param {Error|null} error Error, if any
-                     * @param {google.logging.v2.ListLogEntriesResponse} [response] ListLogEntriesResponse
-                     */
-    
-                    /**
-                     * Calls ListLogEntries.
-                     * @function listLogEntries
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IListLogEntriesRequest} request ListLogEntriesRequest message or plain object
-                     * @param {google.logging.v2.LoggingServiceV2.ListLogEntriesCallback} callback Node-style callback called with the error, if any, and ListLogEntriesResponse
-                     * @returns {undefined}
-                     * @variation 1
-                     */
-                    Object.defineProperty(LoggingServiceV2.prototype.listLogEntries = function listLogEntries(request, callback) {
-                        return this.rpcCall(listLogEntries, $root.google.logging.v2.ListLogEntriesRequest, $root.google.logging.v2.ListLogEntriesResponse, request, callback);
-                    }, "name", { value: "ListLogEntries" });
-    
-                    /**
-                     * Calls ListLogEntries.
-                     * @function listLogEntries
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IListLogEntriesRequest} request ListLogEntriesRequest message or plain object
-                     * @returns {Promise<google.logging.v2.ListLogEntriesResponse>} Promise
-                     * @variation 2
-                     */
-    
-                    /**
-                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#listMonitoredResourceDescriptors}.
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @typedef ListMonitoredResourceDescriptorsCallback
-                     * @type {function}
-                     * @param {Error|null} error Error, if any
-                     * @param {google.logging.v2.ListMonitoredResourceDescriptorsResponse} [response] ListMonitoredResourceDescriptorsResponse
-                     */
-    
-                    /**
-                     * Calls ListMonitoredResourceDescriptors.
-                     * @function listMonitoredResourceDescriptors
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} request ListMonitoredResourceDescriptorsRequest message or plain object
-                     * @param {google.logging.v2.LoggingServiceV2.ListMonitoredResourceDescriptorsCallback} callback Node-style callback called with the error, if any, and ListMonitoredResourceDescriptorsResponse
-                     * @returns {undefined}
-                     * @variation 1
-                     */
-                    Object.defineProperty(LoggingServiceV2.prototype.listMonitoredResourceDescriptors = function listMonitoredResourceDescriptors(request, callback) {
-                        return this.rpcCall(listMonitoredResourceDescriptors, $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest, $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse, request, callback);
-                    }, "name", { value: "ListMonitoredResourceDescriptors" });
-    
-                    /**
-                     * Calls ListMonitoredResourceDescriptors.
-                     * @function listMonitoredResourceDescriptors
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} request ListMonitoredResourceDescriptorsRequest message or plain object
-                     * @returns {Promise<google.logging.v2.ListMonitoredResourceDescriptorsResponse>} Promise
-                     * @variation 2
-                     */
-    
-                    /**
-                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogs}.
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @typedef ListLogsCallback
-                     * @type {function}
-                     * @param {Error|null} error Error, if any
-                     * @param {google.logging.v2.ListLogsResponse} [response] ListLogsResponse
-                     */
-    
-                    /**
-                     * Calls ListLogs.
-                     * @function listLogs
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IListLogsRequest} request ListLogsRequest message or plain object
-                     * @param {google.logging.v2.LoggingServiceV2.ListLogsCallback} callback Node-style callback called with the error, if any, and ListLogsResponse
-                     * @returns {undefined}
-                     * @variation 1
-                     */
-                    Object.defineProperty(LoggingServiceV2.prototype.listLogs = function listLogs(request, callback) {
-                        return this.rpcCall(listLogs, $root.google.logging.v2.ListLogsRequest, $root.google.logging.v2.ListLogsResponse, request, callback);
-                    }, "name", { value: "ListLogs" });
-    
-                    /**
-                     * Calls ListLogs.
-                     * @function listLogs
-                     * @memberof google.logging.v2.LoggingServiceV2
-                     * @instance
-                     * @param {google.logging.v2.IListLogsRequest} request ListLogsRequest message or plain object
-                     * @returns {Promise<google.logging.v2.ListLogsResponse>} Promise
-                     * @variation 2
-                     */
-    
-                    return LoggingServiceV2;
-                })();
-    
-                v2.DeleteLogRequest = (function() {
-    
-                    /**
-                     * Properties of a DeleteLogRequest.
-                     * @memberof google.logging.v2
-                     * @interface IDeleteLogRequest
-                     * @property {string|null} [logName] DeleteLogRequest logName
-                     */
-    
-                    /**
-                     * Constructs a new DeleteLogRequest.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a DeleteLogRequest.
-                     * @implements IDeleteLogRequest
-                     * @constructor
-                     * @param {google.logging.v2.IDeleteLogRequest=} [properties] Properties to set
-                     */
-                    function DeleteLogRequest(properties) {
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * DeleteLogRequest logName.
-                     * @member {string} logName
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @instance
-                     */
-                    DeleteLogRequest.prototype.logName = "";
-    
-                    /**
-                     * Creates a new DeleteLogRequest instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {google.logging.v2.IDeleteLogRequest=} [properties] Properties to set
-                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest instance
-                     */
-                    DeleteLogRequest.create = function create(properties) {
-                        return new DeleteLogRequest(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified DeleteLogRequest message. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {google.logging.v2.IDeleteLogRequest} message DeleteLogRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    DeleteLogRequest.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.logName);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified DeleteLogRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {google.logging.v2.IDeleteLogRequest} message DeleteLogRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    DeleteLogRequest.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a DeleteLogRequest message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    DeleteLogRequest.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.DeleteLogRequest();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.logName = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a DeleteLogRequest message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    DeleteLogRequest.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a DeleteLogRequest message.
-                     * @function verify
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    DeleteLogRequest.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            if (!$util.isString(message.logName))
-                                return "logName: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a DeleteLogRequest message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.DeleteLogRequest} DeleteLogRequest
-                     */
-                    DeleteLogRequest.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.DeleteLogRequest)
-                            return object;
-                        var message = new $root.google.logging.v2.DeleteLogRequest();
-                        if (object.logName != null)
-                            message.logName = String(object.logName);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a DeleteLogRequest message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @static
-                     * @param {google.logging.v2.DeleteLogRequest} message DeleteLogRequest
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    DeleteLogRequest.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.defaults)
-                            object.logName = "";
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            object.logName = message.logName;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this DeleteLogRequest to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.DeleteLogRequest
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    DeleteLogRequest.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return DeleteLogRequest;
-                })();
-    
-                v2.WriteLogEntriesRequest = (function() {
-    
-                    /**
-                     * Properties of a WriteLogEntriesRequest.
-                     * @memberof google.logging.v2
-                     * @interface IWriteLogEntriesRequest
-                     * @property {string|null} [logName] WriteLogEntriesRequest logName
-                     * @property {google.api.IMonitoredResource|null} [resource] WriteLogEntriesRequest resource
-                     * @property {Object.<string,string>|null} [labels] WriteLogEntriesRequest labels
-                     * @property {Array.<google.logging.v2.ILogEntry>|null} [entries] WriteLogEntriesRequest entries
-                     * @property {boolean|null} [partialSuccess] WriteLogEntriesRequest partialSuccess
-                     * @property {boolean|null} [dryRun] WriteLogEntriesRequest dryRun
-                     */
-    
-                    /**
-                     * Constructs a new WriteLogEntriesRequest.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a WriteLogEntriesRequest.
-                     * @implements IWriteLogEntriesRequest
-                     * @constructor
-                     * @param {google.logging.v2.IWriteLogEntriesRequest=} [properties] Properties to set
-                     */
-                    function WriteLogEntriesRequest(properties) {
-                        this.labels = {};
-                        this.entries = [];
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * WriteLogEntriesRequest logName.
-                     * @member {string} logName
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     */
-                    WriteLogEntriesRequest.prototype.logName = "";
-    
-                    /**
-                     * WriteLogEntriesRequest resource.
-                     * @member {google.api.IMonitoredResource|null|undefined} resource
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     */
-                    WriteLogEntriesRequest.prototype.resource = null;
-    
-                    /**
-                     * WriteLogEntriesRequest labels.
-                     * @member {Object.<string,string>} labels
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     */
-                    WriteLogEntriesRequest.prototype.labels = $util.emptyObject;
-    
-                    /**
-                     * WriteLogEntriesRequest entries.
-                     * @member {Array.<google.logging.v2.ILogEntry>} entries
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     */
-                    WriteLogEntriesRequest.prototype.entries = $util.emptyArray;
-    
-                    /**
-                     * WriteLogEntriesRequest partialSuccess.
-                     * @member {boolean} partialSuccess
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     */
-                    WriteLogEntriesRequest.prototype.partialSuccess = false;
-    
-                    /**
-                     * WriteLogEntriesRequest dryRun.
-                     * @member {boolean} dryRun
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     */
-                    WriteLogEntriesRequest.prototype.dryRun = false;
-    
-                    /**
-                     * Creates a new WriteLogEntriesRequest instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesRequest=} [properties] Properties to set
-                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest instance
-                     */
-                    WriteLogEntriesRequest.create = function create(properties) {
-                        return new WriteLogEntriesRequest(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified WriteLogEntriesRequest message. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesRequest} message WriteLogEntriesRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    WriteLogEntriesRequest.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.logName);
-                        if (message.resource != null && message.hasOwnProperty("resource"))
-                            $root.google.api.MonitoredResource.encode(message.resource, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.labels != null && message.hasOwnProperty("labels"))
-                            for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
-                                writer.uint32(/* id 3, wireType 2 =*/26).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
-                        if (message.entries != null && message.entries.length)
-                            for (var i = 0; i < message.entries.length; ++i)
-                                $root.google.logging.v2.LogEntry.encode(message.entries[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                        if (message.partialSuccess != null && message.hasOwnProperty("partialSuccess"))
-                            writer.uint32(/* id 5, wireType 0 =*/40).bool(message.partialSuccess);
-                        if (message.dryRun != null && message.hasOwnProperty("dryRun"))
-                            writer.uint32(/* id 6, wireType 0 =*/48).bool(message.dryRun);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified WriteLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesRequest} message WriteLogEntriesRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    WriteLogEntriesRequest.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a WriteLogEntriesRequest message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    WriteLogEntriesRequest.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.WriteLogEntriesRequest(), key;
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.logName = reader.string();
-                                break;
-                            case 2:
-                                message.resource = $root.google.api.MonitoredResource.decode(reader, reader.uint32());
-                                break;
-                            case 3:
-                                reader.skip().pos++;
-                                if (message.labels === $util.emptyObject)
-                                    message.labels = {};
-                                key = reader.string();
-                                reader.pos++;
-                                message.labels[key] = reader.string();
-                                break;
-                            case 4:
-                                if (!(message.entries && message.entries.length))
-                                    message.entries = [];
-                                message.entries.push($root.google.logging.v2.LogEntry.decode(reader, reader.uint32()));
-                                break;
-                            case 5:
-                                message.partialSuccess = reader.bool();
-                                break;
-                            case 6:
-                                message.dryRun = reader.bool();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a WriteLogEntriesRequest message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    WriteLogEntriesRequest.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a WriteLogEntriesRequest message.
-                     * @function verify
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    WriteLogEntriesRequest.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            if (!$util.isString(message.logName))
-                                return "logName: string expected";
-                        if (message.resource != null && message.hasOwnProperty("resource")) {
-                            var error = $root.google.api.MonitoredResource.verify(message.resource);
-                            if (error)
-                                return "resource." + error;
-                        }
-                        if (message.labels != null && message.hasOwnProperty("labels")) {
-                            if (!$util.isObject(message.labels))
-                                return "labels: object expected";
-                            var key = Object.keys(message.labels);
-                            for (var i = 0; i < key.length; ++i)
-                                if (!$util.isString(message.labels[key[i]]))
-                                    return "labels: string{k:string} expected";
-                        }
-                        if (message.entries != null && message.hasOwnProperty("entries")) {
-                            if (!Array.isArray(message.entries))
-                                return "entries: array expected";
-                            for (var i = 0; i < message.entries.length; ++i) {
-                                var error = $root.google.logging.v2.LogEntry.verify(message.entries[i]);
-                                if (error)
-                                    return "entries." + error;
-                            }
-                        }
-                        if (message.partialSuccess != null && message.hasOwnProperty("partialSuccess"))
-                            if (typeof message.partialSuccess !== "boolean")
-                                return "partialSuccess: boolean expected";
-                        if (message.dryRun != null && message.hasOwnProperty("dryRun"))
-                            if (typeof message.dryRun !== "boolean")
-                                return "dryRun: boolean expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a WriteLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.WriteLogEntriesRequest} WriteLogEntriesRequest
-                     */
-                    WriteLogEntriesRequest.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.WriteLogEntriesRequest)
-                            return object;
-                        var message = new $root.google.logging.v2.WriteLogEntriesRequest();
-                        if (object.logName != null)
-                            message.logName = String(object.logName);
-                        if (object.resource != null) {
-                            if (typeof object.resource !== "object")
-                                throw TypeError(".google.logging.v2.WriteLogEntriesRequest.resource: object expected");
-                            message.resource = $root.google.api.MonitoredResource.fromObject(object.resource);
-                        }
-                        if (object.labels) {
-                            if (typeof object.labels !== "object")
-                                throw TypeError(".google.logging.v2.WriteLogEntriesRequest.labels: object expected");
-                            message.labels = {};
-                            for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
-                                message.labels[keys[i]] = String(object.labels[keys[i]]);
-                        }
-                        if (object.entries) {
-                            if (!Array.isArray(object.entries))
-                                throw TypeError(".google.logging.v2.WriteLogEntriesRequest.entries: array expected");
-                            message.entries = [];
-                            for (var i = 0; i < object.entries.length; ++i) {
-                                if (typeof object.entries[i] !== "object")
-                                    throw TypeError(".google.logging.v2.WriteLogEntriesRequest.entries: object expected");
-                                message.entries[i] = $root.google.logging.v2.LogEntry.fromObject(object.entries[i]);
-                            }
-                        }
-                        if (object.partialSuccess != null)
-                            message.partialSuccess = Boolean(object.partialSuccess);
-                        if (object.dryRun != null)
-                            message.dryRun = Boolean(object.dryRun);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a WriteLogEntriesRequest message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.WriteLogEntriesRequest} message WriteLogEntriesRequest
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    WriteLogEntriesRequest.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.arrays || options.defaults)
-                            object.entries = [];
-                        if (options.objects || options.defaults)
-                            object.labels = {};
-                        if (options.defaults) {
-                            object.logName = "";
-                            object.resource = null;
-                            object.partialSuccess = false;
-                            object.dryRun = false;
-                        }
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            object.logName = message.logName;
-                        if (message.resource != null && message.hasOwnProperty("resource"))
-                            object.resource = $root.google.api.MonitoredResource.toObject(message.resource, options);
-                        var keys2;
-                        if (message.labels && (keys2 = Object.keys(message.labels)).length) {
-                            object.labels = {};
-                            for (var j = 0; j < keys2.length; ++j)
-                                object.labels[keys2[j]] = message.labels[keys2[j]];
-                        }
-                        if (message.entries && message.entries.length) {
-                            object.entries = [];
-                            for (var j = 0; j < message.entries.length; ++j)
-                                object.entries[j] = $root.google.logging.v2.LogEntry.toObject(message.entries[j], options);
-                        }
-                        if (message.partialSuccess != null && message.hasOwnProperty("partialSuccess"))
-                            object.partialSuccess = message.partialSuccess;
-                        if (message.dryRun != null && message.hasOwnProperty("dryRun"))
-                            object.dryRun = message.dryRun;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this WriteLogEntriesRequest to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.WriteLogEntriesRequest
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    WriteLogEntriesRequest.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return WriteLogEntriesRequest;
-                })();
-    
-                v2.WriteLogEntriesResponse = (function() {
-    
-                    /**
-                     * Properties of a WriteLogEntriesResponse.
-                     * @memberof google.logging.v2
-                     * @interface IWriteLogEntriesResponse
-                     */
-    
-                    /**
-                     * Constructs a new WriteLogEntriesResponse.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a WriteLogEntriesResponse.
-                     * @implements IWriteLogEntriesResponse
-                     * @constructor
-                     * @param {google.logging.v2.IWriteLogEntriesResponse=} [properties] Properties to set
-                     */
-                    function WriteLogEntriesResponse(properties) {
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * Creates a new WriteLogEntriesResponse instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesResponse=} [properties] Properties to set
-                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse instance
-                     */
-                    WriteLogEntriesResponse.create = function create(properties) {
-                        return new WriteLogEntriesResponse(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified WriteLogEntriesResponse message. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesResponse} message WriteLogEntriesResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    WriteLogEntriesResponse.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified WriteLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesResponse} message WriteLogEntriesResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    WriteLogEntriesResponse.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a WriteLogEntriesResponse message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    WriteLogEntriesResponse.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.WriteLogEntriesResponse();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a WriteLogEntriesResponse message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    WriteLogEntriesResponse.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a WriteLogEntriesResponse message.
-                     * @function verify
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    WriteLogEntriesResponse.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a WriteLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.WriteLogEntriesResponse} WriteLogEntriesResponse
-                     */
-                    WriteLogEntriesResponse.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.WriteLogEntriesResponse)
-                            return object;
-                        return new $root.google.logging.v2.WriteLogEntriesResponse();
-                    };
-    
-                    /**
-                     * Creates a plain object from a WriteLogEntriesResponse message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.WriteLogEntriesResponse} message WriteLogEntriesResponse
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    WriteLogEntriesResponse.toObject = function toObject() {
-                        return {};
-                    };
-    
-                    /**
-                     * Converts this WriteLogEntriesResponse to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.WriteLogEntriesResponse
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    WriteLogEntriesResponse.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return WriteLogEntriesResponse;
-                })();
-    
-                v2.WriteLogEntriesPartialErrors = (function() {
-    
-                    /**
-                     * Properties of a WriteLogEntriesPartialErrors.
-                     * @memberof google.logging.v2
-                     * @interface IWriteLogEntriesPartialErrors
-                     * @property {Object.<string,google.rpc.IStatus>|null} [logEntryErrors] WriteLogEntriesPartialErrors logEntryErrors
-                     */
-    
-                    /**
-                     * Constructs a new WriteLogEntriesPartialErrors.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a WriteLogEntriesPartialErrors.
-                     * @implements IWriteLogEntriesPartialErrors
-                     * @constructor
-                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors=} [properties] Properties to set
-                     */
-                    function WriteLogEntriesPartialErrors(properties) {
-                        this.logEntryErrors = {};
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * WriteLogEntriesPartialErrors logEntryErrors.
-                     * @member {Object.<string,google.rpc.IStatus>} logEntryErrors
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @instance
-                     */
-                    WriteLogEntriesPartialErrors.prototype.logEntryErrors = $util.emptyObject;
-    
-                    /**
-                     * Creates a new WriteLogEntriesPartialErrors instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors=} [properties] Properties to set
-                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors instance
-                     */
-                    WriteLogEntriesPartialErrors.create = function create(properties) {
-                        return new WriteLogEntriesPartialErrors(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified WriteLogEntriesPartialErrors message. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors} message WriteLogEntriesPartialErrors message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    WriteLogEntriesPartialErrors.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.logEntryErrors != null && message.hasOwnProperty("logEntryErrors"))
-                            for (var keys = Object.keys(message.logEntryErrors), i = 0; i < keys.length; ++i) {
-                                writer.uint32(/* id 1, wireType 2 =*/10).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]);
-                                $root.google.rpc.Status.encode(message.logEntryErrors[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
-                            }
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified WriteLogEntriesPartialErrors message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {google.logging.v2.IWriteLogEntriesPartialErrors} message WriteLogEntriesPartialErrors message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    WriteLogEntriesPartialErrors.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    WriteLogEntriesPartialErrors.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.WriteLogEntriesPartialErrors(), key;
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                reader.skip().pos++;
-                                if (message.logEntryErrors === $util.emptyObject)
-                                    message.logEntryErrors = {};
-                                key = reader.int32();
-                                reader.pos++;
-                                message.logEntryErrors[key] = $root.google.rpc.Status.decode(reader, reader.uint32());
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    WriteLogEntriesPartialErrors.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a WriteLogEntriesPartialErrors message.
-                     * @function verify
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    WriteLogEntriesPartialErrors.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.logEntryErrors != null && message.hasOwnProperty("logEntryErrors")) {
-                            if (!$util.isObject(message.logEntryErrors))
-                                return "logEntryErrors: object expected";
-                            var key = Object.keys(message.logEntryErrors);
-                            for (var i = 0; i < key.length; ++i) {
-                                if (!$util.key32Re.test(key[i]))
-                                    return "logEntryErrors: integer key{k:int32} expected";
-                                {
-                                    var error = $root.google.rpc.Status.verify(message.logEntryErrors[key[i]]);
-                                    if (error)
-                                        return "logEntryErrors." + error;
-                                }
-                            }
-                        }
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a WriteLogEntriesPartialErrors message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.WriteLogEntriesPartialErrors} WriteLogEntriesPartialErrors
-                     */
-                    WriteLogEntriesPartialErrors.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.WriteLogEntriesPartialErrors)
-                            return object;
-                        var message = new $root.google.logging.v2.WriteLogEntriesPartialErrors();
-                        if (object.logEntryErrors) {
-                            if (typeof object.logEntryErrors !== "object")
-                                throw TypeError(".google.logging.v2.WriteLogEntriesPartialErrors.logEntryErrors: object expected");
-                            message.logEntryErrors = {};
-                            for (var keys = Object.keys(object.logEntryErrors), i = 0; i < keys.length; ++i) {
-                                if (typeof object.logEntryErrors[keys[i]] !== "object")
-                                    throw TypeError(".google.logging.v2.WriteLogEntriesPartialErrors.logEntryErrors: object expected");
-                                message.logEntryErrors[keys[i]] = $root.google.rpc.Status.fromObject(object.logEntryErrors[keys[i]]);
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a WriteLogEntriesPartialErrors message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @static
-                     * @param {google.logging.v2.WriteLogEntriesPartialErrors} message WriteLogEntriesPartialErrors
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    WriteLogEntriesPartialErrors.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.objects || options.defaults)
-                            object.logEntryErrors = {};
-                        var keys2;
-                        if (message.logEntryErrors && (keys2 = Object.keys(message.logEntryErrors)).length) {
-                            object.logEntryErrors = {};
-                            for (var j = 0; j < keys2.length; ++j)
-                                object.logEntryErrors[keys2[j]] = $root.google.rpc.Status.toObject(message.logEntryErrors[keys2[j]], options);
-                        }
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this WriteLogEntriesPartialErrors to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.WriteLogEntriesPartialErrors
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    WriteLogEntriesPartialErrors.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return WriteLogEntriesPartialErrors;
-                })();
-    
-                v2.ListLogEntriesRequest = (function() {
-    
-                    /**
-                     * Properties of a ListLogEntriesRequest.
-                     * @memberof google.logging.v2
-                     * @interface IListLogEntriesRequest
-                     * @property {Array.<string>|null} [resourceNames] ListLogEntriesRequest resourceNames
-                     * @property {string|null} [filter] ListLogEntriesRequest filter
-                     * @property {string|null} [orderBy] ListLogEntriesRequest orderBy
-                     * @property {number|null} [pageSize] ListLogEntriesRequest pageSize
-                     * @property {string|null} [pageToken] ListLogEntriesRequest pageToken
-                     */
-    
-                    /**
-                     * Constructs a new ListLogEntriesRequest.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a ListLogEntriesRequest.
-                     * @implements IListLogEntriesRequest
-                     * @constructor
-                     * @param {google.logging.v2.IListLogEntriesRequest=} [properties] Properties to set
-                     */
-                    function ListLogEntriesRequest(properties) {
-                        this.resourceNames = [];
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * ListLogEntriesRequest resourceNames.
-                     * @member {Array.<string>} resourceNames
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @instance
-                     */
-                    ListLogEntriesRequest.prototype.resourceNames = $util.emptyArray;
-    
-                    /**
-                     * ListLogEntriesRequest filter.
-                     * @member {string} filter
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @instance
-                     */
-                    ListLogEntriesRequest.prototype.filter = "";
-    
-                    /**
-                     * ListLogEntriesRequest orderBy.
-                     * @member {string} orderBy
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @instance
-                     */
-                    ListLogEntriesRequest.prototype.orderBy = "";
-    
-                    /**
-                     * ListLogEntriesRequest pageSize.
-                     * @member {number} pageSize
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @instance
-                     */
-                    ListLogEntriesRequest.prototype.pageSize = 0;
-    
-                    /**
-                     * ListLogEntriesRequest pageToken.
-                     * @member {string} pageToken
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @instance
-                     */
-                    ListLogEntriesRequest.prototype.pageToken = "";
-    
-                    /**
-                     * Creates a new ListLogEntriesRequest instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.IListLogEntriesRequest=} [properties] Properties to set
-                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest instance
-                     */
-                    ListLogEntriesRequest.create = function create(properties) {
-                        return new ListLogEntriesRequest(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogEntriesRequest message. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.IListLogEntriesRequest} message ListLogEntriesRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogEntriesRequest.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.filter != null && message.hasOwnProperty("filter"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.filter);
-                        if (message.orderBy != null && message.hasOwnProperty("orderBy"))
-                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.orderBy);
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.pageSize);
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.pageToken);
-                        if (message.resourceNames != null && message.resourceNames.length)
-                            for (var i = 0; i < message.resourceNames.length; ++i)
-                                writer.uint32(/* id 8, wireType 2 =*/66).string(message.resourceNames[i]);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.IListLogEntriesRequest} message ListLogEntriesRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogEntriesRequest.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a ListLogEntriesRequest message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogEntriesRequest.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogEntriesRequest();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 8:
-                                if (!(message.resourceNames && message.resourceNames.length))
-                                    message.resourceNames = [];
-                                message.resourceNames.push(reader.string());
-                                break;
-                            case 2:
-                                message.filter = reader.string();
-                                break;
-                            case 3:
-                                message.orderBy = reader.string();
-                                break;
-                            case 4:
-                                message.pageSize = reader.int32();
-                                break;
-                            case 5:
-                                message.pageToken = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a ListLogEntriesRequest message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogEntriesRequest.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a ListLogEntriesRequest message.
-                     * @function verify
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    ListLogEntriesRequest.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.resourceNames != null && message.hasOwnProperty("resourceNames")) {
-                            if (!Array.isArray(message.resourceNames))
-                                return "resourceNames: array expected";
-                            for (var i = 0; i < message.resourceNames.length; ++i)
-                                if (!$util.isString(message.resourceNames[i]))
-                                    return "resourceNames: string[] expected";
-                        }
-                        if (message.filter != null && message.hasOwnProperty("filter"))
-                            if (!$util.isString(message.filter))
-                                return "filter: string expected";
-                        if (message.orderBy != null && message.hasOwnProperty("orderBy"))
-                            if (!$util.isString(message.orderBy))
-                                return "orderBy: string expected";
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            if (!$util.isInteger(message.pageSize))
-                                return "pageSize: integer expected";
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            if (!$util.isString(message.pageToken))
-                                return "pageToken: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a ListLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.ListLogEntriesRequest} ListLogEntriesRequest
-                     */
-                    ListLogEntriesRequest.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.ListLogEntriesRequest)
-                            return object;
-                        var message = new $root.google.logging.v2.ListLogEntriesRequest();
-                        if (object.resourceNames) {
-                            if (!Array.isArray(object.resourceNames))
-                                throw TypeError(".google.logging.v2.ListLogEntriesRequest.resourceNames: array expected");
-                            message.resourceNames = [];
-                            for (var i = 0; i < object.resourceNames.length; ++i)
-                                message.resourceNames[i] = String(object.resourceNames[i]);
-                        }
-                        if (object.filter != null)
-                            message.filter = String(object.filter);
-                        if (object.orderBy != null)
-                            message.orderBy = String(object.orderBy);
-                        if (object.pageSize != null)
-                            message.pageSize = object.pageSize | 0;
-                        if (object.pageToken != null)
-                            message.pageToken = String(object.pageToken);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a ListLogEntriesRequest message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @static
-                     * @param {google.logging.v2.ListLogEntriesRequest} message ListLogEntriesRequest
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    ListLogEntriesRequest.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.arrays || options.defaults)
-                            object.resourceNames = [];
-                        if (options.defaults) {
-                            object.filter = "";
-                            object.orderBy = "";
-                            object.pageSize = 0;
-                            object.pageToken = "";
-                        }
-                        if (message.filter != null && message.hasOwnProperty("filter"))
-                            object.filter = message.filter;
-                        if (message.orderBy != null && message.hasOwnProperty("orderBy"))
-                            object.orderBy = message.orderBy;
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            object.pageSize = message.pageSize;
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            object.pageToken = message.pageToken;
-                        if (message.resourceNames && message.resourceNames.length) {
-                            object.resourceNames = [];
-                            for (var j = 0; j < message.resourceNames.length; ++j)
-                                object.resourceNames[j] = message.resourceNames[j];
-                        }
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this ListLogEntriesRequest to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.ListLogEntriesRequest
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    ListLogEntriesRequest.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return ListLogEntriesRequest;
-                })();
-    
-                v2.ListLogEntriesResponse = (function() {
-    
-                    /**
-                     * Properties of a ListLogEntriesResponse.
-                     * @memberof google.logging.v2
-                     * @interface IListLogEntriesResponse
-                     * @property {Array.<google.logging.v2.ILogEntry>|null} [entries] ListLogEntriesResponse entries
-                     * @property {string|null} [nextPageToken] ListLogEntriesResponse nextPageToken
-                     */
-    
-                    /**
-                     * Constructs a new ListLogEntriesResponse.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a ListLogEntriesResponse.
-                     * @implements IListLogEntriesResponse
-                     * @constructor
-                     * @param {google.logging.v2.IListLogEntriesResponse=} [properties] Properties to set
-                     */
-                    function ListLogEntriesResponse(properties) {
-                        this.entries = [];
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * ListLogEntriesResponse entries.
-                     * @member {Array.<google.logging.v2.ILogEntry>} entries
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @instance
-                     */
-                    ListLogEntriesResponse.prototype.entries = $util.emptyArray;
-    
-                    /**
-                     * ListLogEntriesResponse nextPageToken.
-                     * @member {string} nextPageToken
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @instance
-                     */
-                    ListLogEntriesResponse.prototype.nextPageToken = "";
-    
-                    /**
-                     * Creates a new ListLogEntriesResponse instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.IListLogEntriesResponse=} [properties] Properties to set
-                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse instance
-                     */
-                    ListLogEntriesResponse.create = function create(properties) {
-                        return new ListLogEntriesResponse(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogEntriesResponse message. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.IListLogEntriesResponse} message ListLogEntriesResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogEntriesResponse.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.entries != null && message.entries.length)
-                            for (var i = 0; i < message.entries.length; ++i)
-                                $root.google.logging.v2.LogEntry.encode(message.entries[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.IListLogEntriesResponse} message ListLogEntriesResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogEntriesResponse.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a ListLogEntriesResponse message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogEntriesResponse.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogEntriesResponse();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                if (!(message.entries && message.entries.length))
-                                    message.entries = [];
-                                message.entries.push($root.google.logging.v2.LogEntry.decode(reader, reader.uint32()));
-                                break;
-                            case 2:
-                                message.nextPageToken = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a ListLogEntriesResponse message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogEntriesResponse.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a ListLogEntriesResponse message.
-                     * @function verify
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    ListLogEntriesResponse.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.entries != null && message.hasOwnProperty("entries")) {
-                            if (!Array.isArray(message.entries))
-                                return "entries: array expected";
-                            for (var i = 0; i < message.entries.length; ++i) {
-                                var error = $root.google.logging.v2.LogEntry.verify(message.entries[i]);
-                                if (error)
-                                    return "entries." + error;
-                            }
-                        }
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            if (!$util.isString(message.nextPageToken))
-                                return "nextPageToken: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a ListLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.ListLogEntriesResponse} ListLogEntriesResponse
-                     */
-                    ListLogEntriesResponse.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.ListLogEntriesResponse)
-                            return object;
-                        var message = new $root.google.logging.v2.ListLogEntriesResponse();
-                        if (object.entries) {
-                            if (!Array.isArray(object.entries))
-                                throw TypeError(".google.logging.v2.ListLogEntriesResponse.entries: array expected");
-                            message.entries = [];
-                            for (var i = 0; i < object.entries.length; ++i) {
-                                if (typeof object.entries[i] !== "object")
-                                    throw TypeError(".google.logging.v2.ListLogEntriesResponse.entries: object expected");
-                                message.entries[i] = $root.google.logging.v2.LogEntry.fromObject(object.entries[i]);
-                            }
-                        }
-                        if (object.nextPageToken != null)
-                            message.nextPageToken = String(object.nextPageToken);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a ListLogEntriesResponse message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @static
-                     * @param {google.logging.v2.ListLogEntriesResponse} message ListLogEntriesResponse
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    ListLogEntriesResponse.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.arrays || options.defaults)
-                            object.entries = [];
-                        if (options.defaults)
-                            object.nextPageToken = "";
-                        if (message.entries && message.entries.length) {
-                            object.entries = [];
-                            for (var j = 0; j < message.entries.length; ++j)
-                                object.entries[j] = $root.google.logging.v2.LogEntry.toObject(message.entries[j], options);
-                        }
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            object.nextPageToken = message.nextPageToken;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this ListLogEntriesResponse to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.ListLogEntriesResponse
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    ListLogEntriesResponse.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return ListLogEntriesResponse;
-                })();
-    
-                v2.ListMonitoredResourceDescriptorsRequest = (function() {
-    
-                    /**
-                     * Properties of a ListMonitoredResourceDescriptorsRequest.
-                     * @memberof google.logging.v2
-                     * @interface IListMonitoredResourceDescriptorsRequest
-                     * @property {number|null} [pageSize] ListMonitoredResourceDescriptorsRequest pageSize
-                     * @property {string|null} [pageToken] ListMonitoredResourceDescriptorsRequest pageToken
-                     */
-    
-                    /**
-                     * Constructs a new ListMonitoredResourceDescriptorsRequest.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a ListMonitoredResourceDescriptorsRequest.
-                     * @implements IListMonitoredResourceDescriptorsRequest
-                     * @constructor
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest=} [properties] Properties to set
-                     */
-                    function ListMonitoredResourceDescriptorsRequest(properties) {
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * ListMonitoredResourceDescriptorsRequest pageSize.
-                     * @member {number} pageSize
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @instance
-                     */
-                    ListMonitoredResourceDescriptorsRequest.prototype.pageSize = 0;
-    
-                    /**
-                     * ListMonitoredResourceDescriptorsRequest pageToken.
-                     * @member {string} pageToken
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @instance
-                     */
-                    ListMonitoredResourceDescriptorsRequest.prototype.pageToken = "";
-    
-                    /**
-                     * Creates a new ListMonitoredResourceDescriptorsRequest instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest=} [properties] Properties to set
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest instance
-                     */
-                    ListMonitoredResourceDescriptorsRequest.create = function create(properties) {
-                        return new ListMonitoredResourceDescriptorsRequest(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified ListMonitoredResourceDescriptorsRequest message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} message ListMonitoredResourceDescriptorsRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListMonitoredResourceDescriptorsRequest.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.pageSize);
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.pageToken);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified ListMonitoredResourceDescriptorsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsRequest} message ListMonitoredResourceDescriptorsRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListMonitoredResourceDescriptorsRequest.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListMonitoredResourceDescriptorsRequest.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.pageSize = reader.int32();
-                                break;
-                            case 2:
-                                message.pageToken = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListMonitoredResourceDescriptorsRequest.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a ListMonitoredResourceDescriptorsRequest message.
-                     * @function verify
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    ListMonitoredResourceDescriptorsRequest.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            if (!$util.isInteger(message.pageSize))
-                                return "pageSize: integer expected";
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            if (!$util.isString(message.pageToken))
-                                return "pageToken: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a ListMonitoredResourceDescriptorsRequest message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsRequest} ListMonitoredResourceDescriptorsRequest
-                     */
-                    ListMonitoredResourceDescriptorsRequest.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest)
-                            return object;
-                        var message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsRequest();
-                        if (object.pageSize != null)
-                            message.pageSize = object.pageSize | 0;
-                        if (object.pageToken != null)
-                            message.pageToken = String(object.pageToken);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a ListMonitoredResourceDescriptorsRequest message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @static
-                     * @param {google.logging.v2.ListMonitoredResourceDescriptorsRequest} message ListMonitoredResourceDescriptorsRequest
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    ListMonitoredResourceDescriptorsRequest.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.defaults) {
-                            object.pageSize = 0;
-                            object.pageToken = "";
-                        }
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            object.pageSize = message.pageSize;
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            object.pageToken = message.pageToken;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this ListMonitoredResourceDescriptorsRequest to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsRequest
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    ListMonitoredResourceDescriptorsRequest.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return ListMonitoredResourceDescriptorsRequest;
-                })();
-    
-                v2.ListMonitoredResourceDescriptorsResponse = (function() {
-    
-                    /**
-                     * Properties of a ListMonitoredResourceDescriptorsResponse.
-                     * @memberof google.logging.v2
-                     * @interface IListMonitoredResourceDescriptorsResponse
-                     * @property {Array.<google.api.IMonitoredResourceDescriptor>|null} [resourceDescriptors] ListMonitoredResourceDescriptorsResponse resourceDescriptors
-                     * @property {string|null} [nextPageToken] ListMonitoredResourceDescriptorsResponse nextPageToken
-                     */
-    
-                    /**
-                     * Constructs a new ListMonitoredResourceDescriptorsResponse.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a ListMonitoredResourceDescriptorsResponse.
-                     * @implements IListMonitoredResourceDescriptorsResponse
-                     * @constructor
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse=} [properties] Properties to set
-                     */
-                    function ListMonitoredResourceDescriptorsResponse(properties) {
-                        this.resourceDescriptors = [];
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * ListMonitoredResourceDescriptorsResponse resourceDescriptors.
-                     * @member {Array.<google.api.IMonitoredResourceDescriptor>} resourceDescriptors
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @instance
-                     */
-                    ListMonitoredResourceDescriptorsResponse.prototype.resourceDescriptors = $util.emptyArray;
-    
-                    /**
-                     * ListMonitoredResourceDescriptorsResponse nextPageToken.
-                     * @member {string} nextPageToken
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @instance
-                     */
-                    ListMonitoredResourceDescriptorsResponse.prototype.nextPageToken = "";
-    
-                    /**
-                     * Creates a new ListMonitoredResourceDescriptorsResponse instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse=} [properties] Properties to set
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse instance
-                     */
-                    ListMonitoredResourceDescriptorsResponse.create = function create(properties) {
-                        return new ListMonitoredResourceDescriptorsResponse(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified ListMonitoredResourceDescriptorsResponse message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse} message ListMonitoredResourceDescriptorsResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListMonitoredResourceDescriptorsResponse.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.resourceDescriptors != null && message.resourceDescriptors.length)
-                            for (var i = 0; i < message.resourceDescriptors.length; ++i)
-                                $root.google.api.MonitoredResourceDescriptor.encode(message.resourceDescriptors[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified ListMonitoredResourceDescriptorsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {google.logging.v2.IListMonitoredResourceDescriptorsResponse} message ListMonitoredResourceDescriptorsResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListMonitoredResourceDescriptorsResponse.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListMonitoredResourceDescriptorsResponse.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                if (!(message.resourceDescriptors && message.resourceDescriptors.length))
-                                    message.resourceDescriptors = [];
-                                message.resourceDescriptors.push($root.google.api.MonitoredResourceDescriptor.decode(reader, reader.uint32()));
-                                break;
-                            case 2:
-                                message.nextPageToken = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListMonitoredResourceDescriptorsResponse.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a ListMonitoredResourceDescriptorsResponse message.
-                     * @function verify
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    ListMonitoredResourceDescriptorsResponse.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.resourceDescriptors != null && message.hasOwnProperty("resourceDescriptors")) {
-                            if (!Array.isArray(message.resourceDescriptors))
-                                return "resourceDescriptors: array expected";
-                            for (var i = 0; i < message.resourceDescriptors.length; ++i) {
-                                var error = $root.google.api.MonitoredResourceDescriptor.verify(message.resourceDescriptors[i]);
-                                if (error)
-                                    return "resourceDescriptors." + error;
-                            }
-                        }
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            if (!$util.isString(message.nextPageToken))
-                                return "nextPageToken: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a ListMonitoredResourceDescriptorsResponse message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.ListMonitoredResourceDescriptorsResponse} ListMonitoredResourceDescriptorsResponse
-                     */
-                    ListMonitoredResourceDescriptorsResponse.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse)
-                            return object;
-                        var message = new $root.google.logging.v2.ListMonitoredResourceDescriptorsResponse();
-                        if (object.resourceDescriptors) {
-                            if (!Array.isArray(object.resourceDescriptors))
-                                throw TypeError(".google.logging.v2.ListMonitoredResourceDescriptorsResponse.resourceDescriptors: array expected");
-                            message.resourceDescriptors = [];
-                            for (var i = 0; i < object.resourceDescriptors.length; ++i) {
-                                if (typeof object.resourceDescriptors[i] !== "object")
-                                    throw TypeError(".google.logging.v2.ListMonitoredResourceDescriptorsResponse.resourceDescriptors: object expected");
-                                message.resourceDescriptors[i] = $root.google.api.MonitoredResourceDescriptor.fromObject(object.resourceDescriptors[i]);
-                            }
-                        }
-                        if (object.nextPageToken != null)
-                            message.nextPageToken = String(object.nextPageToken);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a ListMonitoredResourceDescriptorsResponse message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @static
-                     * @param {google.logging.v2.ListMonitoredResourceDescriptorsResponse} message ListMonitoredResourceDescriptorsResponse
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    ListMonitoredResourceDescriptorsResponse.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.arrays || options.defaults)
-                            object.resourceDescriptors = [];
-                        if (options.defaults)
-                            object.nextPageToken = "";
-                        if (message.resourceDescriptors && message.resourceDescriptors.length) {
-                            object.resourceDescriptors = [];
-                            for (var j = 0; j < message.resourceDescriptors.length; ++j)
-                                object.resourceDescriptors[j] = $root.google.api.MonitoredResourceDescriptor.toObject(message.resourceDescriptors[j], options);
-                        }
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            object.nextPageToken = message.nextPageToken;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this ListMonitoredResourceDescriptorsResponse to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.ListMonitoredResourceDescriptorsResponse
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    ListMonitoredResourceDescriptorsResponse.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return ListMonitoredResourceDescriptorsResponse;
-                })();
-    
-                v2.ListLogsRequest = (function() {
-    
-                    /**
-                     * Properties of a ListLogsRequest.
-                     * @memberof google.logging.v2
-                     * @interface IListLogsRequest
-                     * @property {string|null} [parent] ListLogsRequest parent
-                     * @property {number|null} [pageSize] ListLogsRequest pageSize
-                     * @property {string|null} [pageToken] ListLogsRequest pageToken
-                     */
-    
-                    /**
-                     * Constructs a new ListLogsRequest.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a ListLogsRequest.
-                     * @implements IListLogsRequest
-                     * @constructor
-                     * @param {google.logging.v2.IListLogsRequest=} [properties] Properties to set
-                     */
-                    function ListLogsRequest(properties) {
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * ListLogsRequest parent.
-                     * @member {string} parent
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @instance
-                     */
-                    ListLogsRequest.prototype.parent = "";
-    
-                    /**
-                     * ListLogsRequest pageSize.
-                     * @member {number} pageSize
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @instance
-                     */
-                    ListLogsRequest.prototype.pageSize = 0;
-    
-                    /**
-                     * ListLogsRequest pageToken.
-                     * @member {string} pageToken
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @instance
-                     */
-                    ListLogsRequest.prototype.pageToken = "";
-    
-                    /**
-                     * Creates a new ListLogsRequest instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {google.logging.v2.IListLogsRequest=} [properties] Properties to set
-                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest instance
-                     */
-                    ListLogsRequest.create = function create(properties) {
-                        return new ListLogsRequest(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogsRequest message. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {google.logging.v2.IListLogsRequest} message ListLogsRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogsRequest.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.parent != null && message.hasOwnProperty("parent"))
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.parent);
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.pageSize);
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.pageToken);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {google.logging.v2.IListLogsRequest} message ListLogsRequest message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogsRequest.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a ListLogsRequest message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogsRequest.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogsRequest();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.parent = reader.string();
-                                break;
-                            case 2:
-                                message.pageSize = reader.int32();
-                                break;
-                            case 3:
-                                message.pageToken = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a ListLogsRequest message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogsRequest.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a ListLogsRequest message.
-                     * @function verify
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    ListLogsRequest.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.parent != null && message.hasOwnProperty("parent"))
-                            if (!$util.isString(message.parent))
-                                return "parent: string expected";
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            if (!$util.isInteger(message.pageSize))
-                                return "pageSize: integer expected";
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            if (!$util.isString(message.pageToken))
-                                return "pageToken: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a ListLogsRequest message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.ListLogsRequest} ListLogsRequest
-                     */
-                    ListLogsRequest.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.ListLogsRequest)
-                            return object;
-                        var message = new $root.google.logging.v2.ListLogsRequest();
-                        if (object.parent != null)
-                            message.parent = String(object.parent);
-                        if (object.pageSize != null)
-                            message.pageSize = object.pageSize | 0;
-                        if (object.pageToken != null)
-                            message.pageToken = String(object.pageToken);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a ListLogsRequest message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @static
-                     * @param {google.logging.v2.ListLogsRequest} message ListLogsRequest
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    ListLogsRequest.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.defaults) {
-                            object.parent = "";
-                            object.pageSize = 0;
-                            object.pageToken = "";
-                        }
-                        if (message.parent != null && message.hasOwnProperty("parent"))
-                            object.parent = message.parent;
-                        if (message.pageSize != null && message.hasOwnProperty("pageSize"))
-                            object.pageSize = message.pageSize;
-                        if (message.pageToken != null && message.hasOwnProperty("pageToken"))
-                            object.pageToken = message.pageToken;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this ListLogsRequest to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.ListLogsRequest
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    ListLogsRequest.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return ListLogsRequest;
-                })();
-    
-                v2.ListLogsResponse = (function() {
-    
-                    /**
-                     * Properties of a ListLogsResponse.
-                     * @memberof google.logging.v2
-                     * @interface IListLogsResponse
-                     * @property {Array.<string>|null} [logNames] ListLogsResponse logNames
-                     * @property {string|null} [nextPageToken] ListLogsResponse nextPageToken
-                     */
-    
-                    /**
-                     * Constructs a new ListLogsResponse.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a ListLogsResponse.
-                     * @implements IListLogsResponse
-                     * @constructor
-                     * @param {google.logging.v2.IListLogsResponse=} [properties] Properties to set
-                     */
-                    function ListLogsResponse(properties) {
-                        this.logNames = [];
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * ListLogsResponse logNames.
-                     * @member {Array.<string>} logNames
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @instance
-                     */
-                    ListLogsResponse.prototype.logNames = $util.emptyArray;
-    
-                    /**
-                     * ListLogsResponse nextPageToken.
-                     * @member {string} nextPageToken
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @instance
-                     */
-                    ListLogsResponse.prototype.nextPageToken = "";
-    
-                    /**
-                     * Creates a new ListLogsResponse instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {google.logging.v2.IListLogsResponse=} [properties] Properties to set
-                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse instance
-                     */
-                    ListLogsResponse.create = function create(properties) {
-                        return new ListLogsResponse(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogsResponse message. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {google.logging.v2.IListLogsResponse} message ListLogsResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogsResponse.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
-                        if (message.logNames != null && message.logNames.length)
-                            for (var i = 0; i < message.logNames.length; ++i)
-                                writer.uint32(/* id 3, wireType 2 =*/26).string(message.logNames[i]);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified ListLogsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {google.logging.v2.IListLogsResponse} message ListLogsResponse message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    ListLogsResponse.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a ListLogsResponse message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogsResponse.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.ListLogsResponse();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 3:
-                                if (!(message.logNames && message.logNames.length))
-                                    message.logNames = [];
-                                message.logNames.push(reader.string());
-                                break;
-                            case 2:
-                                message.nextPageToken = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a ListLogsResponse message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    ListLogsResponse.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a ListLogsResponse message.
-                     * @function verify
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    ListLogsResponse.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.logNames != null && message.hasOwnProperty("logNames")) {
-                            if (!Array.isArray(message.logNames))
-                                return "logNames: array expected";
-                            for (var i = 0; i < message.logNames.length; ++i)
-                                if (!$util.isString(message.logNames[i]))
-                                    return "logNames: string[] expected";
-                        }
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            if (!$util.isString(message.nextPageToken))
-                                return "nextPageToken: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a ListLogsResponse message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.ListLogsResponse} ListLogsResponse
-                     */
-                    ListLogsResponse.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.ListLogsResponse)
-                            return object;
-                        var message = new $root.google.logging.v2.ListLogsResponse();
-                        if (object.logNames) {
-                            if (!Array.isArray(object.logNames))
-                                throw TypeError(".google.logging.v2.ListLogsResponse.logNames: array expected");
-                            message.logNames = [];
-                            for (var i = 0; i < object.logNames.length; ++i)
-                                message.logNames[i] = String(object.logNames[i]);
-                        }
-                        if (object.nextPageToken != null)
-                            message.nextPageToken = String(object.nextPageToken);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a ListLogsResponse message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @static
-                     * @param {google.logging.v2.ListLogsResponse} message ListLogsResponse
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    ListLogsResponse.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.arrays || options.defaults)
-                            object.logNames = [];
-                        if (options.defaults)
-                            object.nextPageToken = "";
-                        if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
-                            object.nextPageToken = message.nextPageToken;
-                        if (message.logNames && message.logNames.length) {
-                            object.logNames = [];
-                            for (var j = 0; j < message.logNames.length; ++j)
-                                object.logNames[j] = message.logNames[j];
-                        }
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this ListLogsResponse to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.ListLogsResponse
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    ListLogsResponse.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return ListLogsResponse;
-                })();
-    
-                v2.LogEntry = (function() {
-    
-                    /**
-                     * Properties of a LogEntry.
-                     * @memberof google.logging.v2
-                     * @interface ILogEntry
-                     * @property {string|null} [logName] LogEntry logName
-                     * @property {google.api.IMonitoredResource|null} [resource] LogEntry resource
-                     * @property {google.protobuf.IAny|null} [protoPayload] LogEntry protoPayload
-                     * @property {string|null} [textPayload] LogEntry textPayload
-                     * @property {google.protobuf.IStruct|null} [jsonPayload] LogEntry jsonPayload
-                     * @property {google.protobuf.ITimestamp|null} [timestamp] LogEntry timestamp
-                     * @property {google.protobuf.ITimestamp|null} [receiveTimestamp] LogEntry receiveTimestamp
-                     * @property {google.logging.type.LogSeverity|null} [severity] LogEntry severity
-                     * @property {string|null} [insertId] LogEntry insertId
-                     * @property {google.logging.type.IHttpRequest|null} [httpRequest] LogEntry httpRequest
-                     * @property {Object.<string,string>|null} [labels] LogEntry labels
-                     * @property {google.logging.v2.ILogEntryOperation|null} [operation] LogEntry operation
-                     * @property {string|null} [trace] LogEntry trace
-                     * @property {string|null} [spanId] LogEntry spanId
-                     * @property {boolean|null} [traceSampled] LogEntry traceSampled
-                     * @property {google.logging.v2.ILogEntrySourceLocation|null} [sourceLocation] LogEntry sourceLocation
-                     */
-    
-                    /**
-                     * Constructs a new LogEntry.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a LogEntry.
-                     * @implements ILogEntry
-                     * @constructor
-                     * @param {google.logging.v2.ILogEntry=} [properties] Properties to set
-                     */
-                    function LogEntry(properties) {
-                        this.labels = {};
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * LogEntry logName.
-                     * @member {string} logName
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.logName = "";
-    
-                    /**
-                     * LogEntry resource.
-                     * @member {google.api.IMonitoredResource|null|undefined} resource
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.resource = null;
-    
-                    /**
-                     * LogEntry protoPayload.
-                     * @member {google.protobuf.IAny|null|undefined} protoPayload
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.protoPayload = null;
-    
-                    /**
-                     * LogEntry textPayload.
-                     * @member {string} textPayload
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.textPayload = "";
-    
-                    /**
-                     * LogEntry jsonPayload.
-                     * @member {google.protobuf.IStruct|null|undefined} jsonPayload
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.jsonPayload = null;
-    
-                    /**
-                     * LogEntry timestamp.
-                     * @member {google.protobuf.ITimestamp|null|undefined} timestamp
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.timestamp = null;
-    
-                    /**
-                     * LogEntry receiveTimestamp.
-                     * @member {google.protobuf.ITimestamp|null|undefined} receiveTimestamp
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.receiveTimestamp = null;
-    
-                    /**
-                     * LogEntry severity.
-                     * @member {google.logging.type.LogSeverity} severity
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.severity = 0;
-    
-                    /**
-                     * LogEntry insertId.
-                     * @member {string} insertId
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.insertId = "";
-    
-                    /**
-                     * LogEntry httpRequest.
-                     * @member {google.logging.type.IHttpRequest|null|undefined} httpRequest
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.httpRequest = null;
-    
-                    /**
-                     * LogEntry labels.
-                     * @member {Object.<string,string>} labels
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.labels = $util.emptyObject;
-    
-                    /**
-                     * LogEntry operation.
-                     * @member {google.logging.v2.ILogEntryOperation|null|undefined} operation
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.operation = null;
-    
-                    /**
-                     * LogEntry trace.
-                     * @member {string} trace
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.trace = "";
-    
-                    /**
-                     * LogEntry spanId.
-                     * @member {string} spanId
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.spanId = "";
-    
-                    /**
-                     * LogEntry traceSampled.
-                     * @member {boolean} traceSampled
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.traceSampled = false;
-    
-                    /**
-                     * LogEntry sourceLocation.
-                     * @member {google.logging.v2.ILogEntrySourceLocation|null|undefined} sourceLocation
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    LogEntry.prototype.sourceLocation = null;
-    
-                    // OneOf field names bound to virtual getters and setters
-                    var $oneOfFields;
-    
-                    /**
-                     * LogEntry payload.
-                     * @member {"protoPayload"|"textPayload"|"jsonPayload"|undefined} payload
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     */
-                    Object.defineProperty(LogEntry.prototype, "payload", {
-                        get: $util.oneOfGetter($oneOfFields = ["protoPayload", "textPayload", "jsonPayload"]),
-                        set: $util.oneOfSetter($oneOfFields)
-                    });
-    
-                    /**
-                     * Creates a new LogEntry instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {google.logging.v2.ILogEntry=} [properties] Properties to set
-                     * @returns {google.logging.v2.LogEntry} LogEntry instance
-                     */
-                    LogEntry.create = function create(properties) {
-                        return new LogEntry(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified LogEntry message. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {google.logging.v2.ILogEntry} message LogEntry message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    LogEntry.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.protoPayload != null && message.hasOwnProperty("protoPayload"))
-                            $root.google.protobuf.Any.encode(message.protoPayload, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.textPayload != null && message.hasOwnProperty("textPayload"))
-                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.textPayload);
-                        if (message.insertId != null && message.hasOwnProperty("insertId"))
-                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.insertId);
-                        if (message.jsonPayload != null && message.hasOwnProperty("jsonPayload"))
-                            $root.google.protobuf.Struct.encode(message.jsonPayload, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                        if (message.httpRequest != null && message.hasOwnProperty("httpRequest"))
-                            $root.google.logging.type.HttpRequest.encode(message.httpRequest, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                        if (message.resource != null && message.hasOwnProperty("resource"))
-                            $root.google.api.MonitoredResource.encode(message.resource, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                        if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                            $root.google.protobuf.Timestamp.encode(message.timestamp, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-                        if (message.severity != null && message.hasOwnProperty("severity"))
-                            writer.uint32(/* id 10, wireType 0 =*/80).int32(message.severity);
-                        if (message.labels != null && message.hasOwnProperty("labels"))
-                            for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
-                                writer.uint32(/* id 11, wireType 2 =*/90).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            writer.uint32(/* id 12, wireType 2 =*/98).string(message.logName);
-                        if (message.operation != null && message.hasOwnProperty("operation"))
-                            $root.google.logging.v2.LogEntryOperation.encode(message.operation, writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
-                        if (message.trace != null && message.hasOwnProperty("trace"))
-                            writer.uint32(/* id 22, wireType 2 =*/178).string(message.trace);
-                        if (message.sourceLocation != null && message.hasOwnProperty("sourceLocation"))
-                            $root.google.logging.v2.LogEntrySourceLocation.encode(message.sourceLocation, writer.uint32(/* id 23, wireType 2 =*/186).fork()).ldelim();
-                        if (message.receiveTimestamp != null && message.hasOwnProperty("receiveTimestamp"))
-                            $root.google.protobuf.Timestamp.encode(message.receiveTimestamp, writer.uint32(/* id 24, wireType 2 =*/194).fork()).ldelim();
-                        if (message.spanId != null && message.hasOwnProperty("spanId"))
-                            writer.uint32(/* id 27, wireType 2 =*/218).string(message.spanId);
-                        if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
-                            writer.uint32(/* id 30, wireType 0 =*/240).bool(message.traceSampled);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified LogEntry message, length delimited. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {google.logging.v2.ILogEntry} message LogEntry message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    LogEntry.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a LogEntry message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.LogEntry} LogEntry
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    LogEntry.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogEntry(), key;
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 12:
-                                message.logName = reader.string();
-                                break;
-                            case 8:
-                                message.resource = $root.google.api.MonitoredResource.decode(reader, reader.uint32());
-                                break;
-                            case 2:
-                                message.protoPayload = $root.google.protobuf.Any.decode(reader, reader.uint32());
-                                break;
-                            case 3:
-                                message.textPayload = reader.string();
-                                break;
-                            case 6:
-                                message.jsonPayload = $root.google.protobuf.Struct.decode(reader, reader.uint32());
-                                break;
-                            case 9:
-                                message.timestamp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
-                                break;
-                            case 24:
-                                message.receiveTimestamp = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
-                                break;
-                            case 10:
-                                message.severity = reader.int32();
-                                break;
-                            case 4:
-                                message.insertId = reader.string();
-                                break;
-                            case 7:
-                                message.httpRequest = $root.google.logging.type.HttpRequest.decode(reader, reader.uint32());
-                                break;
-                            case 11:
-                                reader.skip().pos++;
-                                if (message.labels === $util.emptyObject)
-                                    message.labels = {};
-                                key = reader.string();
-                                reader.pos++;
-                                message.labels[key] = reader.string();
-                                break;
-                            case 15:
-                                message.operation = $root.google.logging.v2.LogEntryOperation.decode(reader, reader.uint32());
-                                break;
-                            case 22:
-                                message.trace = reader.string();
-                                break;
-                            case 27:
-                                message.spanId = reader.string();
-                                break;
-                            case 30:
-                                message.traceSampled = reader.bool();
-                                break;
-                            case 23:
-                                message.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.decode(reader, reader.uint32());
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a LogEntry message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.LogEntry} LogEntry
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    LogEntry.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a LogEntry message.
-                     * @function verify
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    LogEntry.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        var properties = {};
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            if (!$util.isString(message.logName))
-                                return "logName: string expected";
-                        if (message.resource != null && message.hasOwnProperty("resource")) {
-                            var error = $root.google.api.MonitoredResource.verify(message.resource);
-                            if (error)
-                                return "resource." + error;
-                        }
-                        if (message.protoPayload != null && message.hasOwnProperty("protoPayload")) {
-                            properties.payload = 1;
-                            {
-                                var error = $root.google.protobuf.Any.verify(message.protoPayload);
-                                if (error)
-                                    return "protoPayload." + error;
-                            }
-                        }
-                        if (message.textPayload != null && message.hasOwnProperty("textPayload")) {
-                            if (properties.payload === 1)
-                                return "payload: multiple values";
-                            properties.payload = 1;
-                            if (!$util.isString(message.textPayload))
-                                return "textPayload: string expected";
-                        }
-                        if (message.jsonPayload != null && message.hasOwnProperty("jsonPayload")) {
-                            if (properties.payload === 1)
-                                return "payload: multiple values";
-                            properties.payload = 1;
-                            {
-                                var error = $root.google.protobuf.Struct.verify(message.jsonPayload);
-                                if (error)
-                                    return "jsonPayload." + error;
-                            }
-                        }
-                        if (message.timestamp != null && message.hasOwnProperty("timestamp")) {
-                            var error = $root.google.protobuf.Timestamp.verify(message.timestamp);
-                            if (error)
-                                return "timestamp." + error;
-                        }
-                        if (message.receiveTimestamp != null && message.hasOwnProperty("receiveTimestamp")) {
-                            var error = $root.google.protobuf.Timestamp.verify(message.receiveTimestamp);
-                            if (error)
-                                return "receiveTimestamp." + error;
-                        }
-                        if (message.severity != null && message.hasOwnProperty("severity"))
-                            switch (message.severity) {
-                            default:
-                                return "severity: enum value expected";
-                            case 0:
-                            case 100:
-                            case 200:
-                            case 300:
-                            case 400:
-                            case 500:
-                            case 600:
-                            case 700:
-                            case 800:
-                                break;
-                            }
-                        if (message.insertId != null && message.hasOwnProperty("insertId"))
-                            if (!$util.isString(message.insertId))
-                                return "insertId: string expected";
-                        if (message.httpRequest != null && message.hasOwnProperty("httpRequest")) {
-                            var error = $root.google.logging.type.HttpRequest.verify(message.httpRequest);
-                            if (error)
-                                return "httpRequest." + error;
-                        }
-                        if (message.labels != null && message.hasOwnProperty("labels")) {
-                            if (!$util.isObject(message.labels))
-                                return "labels: object expected";
-                            var key = Object.keys(message.labels);
-                            for (var i = 0; i < key.length; ++i)
-                                if (!$util.isString(message.labels[key[i]]))
-                                    return "labels: string{k:string} expected";
-                        }
-                        if (message.operation != null && message.hasOwnProperty("operation")) {
-                            var error = $root.google.logging.v2.LogEntryOperation.verify(message.operation);
-                            if (error)
-                                return "operation." + error;
-                        }
-                        if (message.trace != null && message.hasOwnProperty("trace"))
-                            if (!$util.isString(message.trace))
-                                return "trace: string expected";
-                        if (message.spanId != null && message.hasOwnProperty("spanId"))
-                            if (!$util.isString(message.spanId))
-                                return "spanId: string expected";
-                        if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
-                            if (typeof message.traceSampled !== "boolean")
-                                return "traceSampled: boolean expected";
-                        if (message.sourceLocation != null && message.hasOwnProperty("sourceLocation")) {
-                            var error = $root.google.logging.v2.LogEntrySourceLocation.verify(message.sourceLocation);
-                            if (error)
-                                return "sourceLocation." + error;
-                        }
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a LogEntry message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.LogEntry} LogEntry
-                     */
-                    LogEntry.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.LogEntry)
-                            return object;
-                        var message = new $root.google.logging.v2.LogEntry();
-                        if (object.logName != null)
-                            message.logName = String(object.logName);
-                        if (object.resource != null) {
-                            if (typeof object.resource !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.resource: object expected");
-                            message.resource = $root.google.api.MonitoredResource.fromObject(object.resource);
-                        }
-                        if (object.protoPayload != null) {
-                            if (typeof object.protoPayload !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.protoPayload: object expected");
-                            message.protoPayload = $root.google.protobuf.Any.fromObject(object.protoPayload);
-                        }
-                        if (object.textPayload != null)
-                            message.textPayload = String(object.textPayload);
-                        if (object.jsonPayload != null) {
-                            if (typeof object.jsonPayload !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.jsonPayload: object expected");
-                            message.jsonPayload = $root.google.protobuf.Struct.fromObject(object.jsonPayload);
-                        }
-                        if (object.timestamp != null) {
-                            if (typeof object.timestamp !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.timestamp: object expected");
-                            message.timestamp = $root.google.protobuf.Timestamp.fromObject(object.timestamp);
-                        }
-                        if (object.receiveTimestamp != null) {
-                            if (typeof object.receiveTimestamp !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.receiveTimestamp: object expected");
-                            message.receiveTimestamp = $root.google.protobuf.Timestamp.fromObject(object.receiveTimestamp);
-                        }
-                        switch (object.severity) {
-                        case "DEFAULT":
-                        case 0:
-                            message.severity = 0;
-                            break;
-                        case "DEBUG":
-                        case 100:
-                            message.severity = 100;
-                            break;
-                        case "INFO":
-                        case 200:
-                            message.severity = 200;
-                            break;
-                        case "NOTICE":
-                        case 300:
-                            message.severity = 300;
-                            break;
-                        case "WARNING":
-                        case 400:
-                            message.severity = 400;
-                            break;
-                        case "ERROR":
-                        case 500:
-                            message.severity = 500;
-                            break;
-                        case "CRITICAL":
-                        case 600:
-                            message.severity = 600;
-                            break;
-                        case "ALERT":
-                        case 700:
-                            message.severity = 700;
-                            break;
-                        case "EMERGENCY":
-                        case 800:
-                            message.severity = 800;
-                            break;
-                        }
-                        if (object.insertId != null)
-                            message.insertId = String(object.insertId);
-                        if (object.httpRequest != null) {
-                            if (typeof object.httpRequest !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.httpRequest: object expected");
-                            message.httpRequest = $root.google.logging.type.HttpRequest.fromObject(object.httpRequest);
-                        }
-                        if (object.labels) {
-                            if (typeof object.labels !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.labels: object expected");
-                            message.labels = {};
-                            for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
-                                message.labels[keys[i]] = String(object.labels[keys[i]]);
-                        }
-                        if (object.operation != null) {
-                            if (typeof object.operation !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.operation: object expected");
-                            message.operation = $root.google.logging.v2.LogEntryOperation.fromObject(object.operation);
-                        }
-                        if (object.trace != null)
-                            message.trace = String(object.trace);
-                        if (object.spanId != null)
-                            message.spanId = String(object.spanId);
-                        if (object.traceSampled != null)
-                            message.traceSampled = Boolean(object.traceSampled);
-                        if (object.sourceLocation != null) {
-                            if (typeof object.sourceLocation !== "object")
-                                throw TypeError(".google.logging.v2.LogEntry.sourceLocation: object expected");
-                            message.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.fromObject(object.sourceLocation);
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a LogEntry message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.LogEntry
-                     * @static
-                     * @param {google.logging.v2.LogEntry} message LogEntry
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    LogEntry.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.objects || options.defaults)
-                            object.labels = {};
-                        if (options.defaults) {
-                            object.insertId = "";
-                            object.httpRequest = null;
-                            object.resource = null;
-                            object.timestamp = null;
-                            object.severity = options.enums === String ? "DEFAULT" : 0;
-                            object.logName = "";
-                            object.operation = null;
-                            object.trace = "";
-                            object.sourceLocation = null;
-                            object.receiveTimestamp = null;
-                            object.spanId = "";
-                            object.traceSampled = false;
-                        }
-                        if (message.protoPayload != null && message.hasOwnProperty("protoPayload")) {
-                            object.protoPayload = $root.google.protobuf.Any.toObject(message.protoPayload, options);
-                            if (options.oneofs)
-                                object.payload = "protoPayload";
-                        }
-                        if (message.textPayload != null && message.hasOwnProperty("textPayload")) {
-                            object.textPayload = message.textPayload;
-                            if (options.oneofs)
-                                object.payload = "textPayload";
-                        }
-                        if (message.insertId != null && message.hasOwnProperty("insertId"))
-                            object.insertId = message.insertId;
-                        if (message.jsonPayload != null && message.hasOwnProperty("jsonPayload")) {
-                            object.jsonPayload = $root.google.protobuf.Struct.toObject(message.jsonPayload, options);
-                            if (options.oneofs)
-                                object.payload = "jsonPayload";
-                        }
-                        if (message.httpRequest != null && message.hasOwnProperty("httpRequest"))
-                            object.httpRequest = $root.google.logging.type.HttpRequest.toObject(message.httpRequest, options);
-                        if (message.resource != null && message.hasOwnProperty("resource"))
-                            object.resource = $root.google.api.MonitoredResource.toObject(message.resource, options);
-                        if (message.timestamp != null && message.hasOwnProperty("timestamp"))
-                            object.timestamp = $root.google.protobuf.Timestamp.toObject(message.timestamp, options);
-                        if (message.severity != null && message.hasOwnProperty("severity"))
-                            object.severity = options.enums === String ? $root.google.logging.type.LogSeverity[message.severity] : message.severity;
-                        var keys2;
-                        if (message.labels && (keys2 = Object.keys(message.labels)).length) {
-                            object.labels = {};
-                            for (var j = 0; j < keys2.length; ++j)
-                                object.labels[keys2[j]] = message.labels[keys2[j]];
-                        }
-                        if (message.logName != null && message.hasOwnProperty("logName"))
-                            object.logName = message.logName;
-                        if (message.operation != null && message.hasOwnProperty("operation"))
-                            object.operation = $root.google.logging.v2.LogEntryOperation.toObject(message.operation, options);
-                        if (message.trace != null && message.hasOwnProperty("trace"))
-                            object.trace = message.trace;
-                        if (message.sourceLocation != null && message.hasOwnProperty("sourceLocation"))
-                            object.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.toObject(message.sourceLocation, options);
-                        if (message.receiveTimestamp != null && message.hasOwnProperty("receiveTimestamp"))
-                            object.receiveTimestamp = $root.google.protobuf.Timestamp.toObject(message.receiveTimestamp, options);
-                        if (message.spanId != null && message.hasOwnProperty("spanId"))
-                            object.spanId = message.spanId;
-                        if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
-                            object.traceSampled = message.traceSampled;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this LogEntry to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.LogEntry
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    LogEntry.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return LogEntry;
-                })();
-    
-                v2.LogEntryOperation = (function() {
-    
-                    /**
-                     * Properties of a LogEntryOperation.
-                     * @memberof google.logging.v2
-                     * @interface ILogEntryOperation
-                     * @property {string|null} [id] LogEntryOperation id
-                     * @property {string|null} [producer] LogEntryOperation producer
-                     * @property {boolean|null} [first] LogEntryOperation first
-                     * @property {boolean|null} [last] LogEntryOperation last
-                     */
-    
-                    /**
-                     * Constructs a new LogEntryOperation.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a LogEntryOperation.
-                     * @implements ILogEntryOperation
-                     * @constructor
-                     * @param {google.logging.v2.ILogEntryOperation=} [properties] Properties to set
-                     */
-                    function LogEntryOperation(properties) {
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * LogEntryOperation id.
-                     * @member {string} id
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @instance
-                     */
-                    LogEntryOperation.prototype.id = "";
-    
-                    /**
-                     * LogEntryOperation producer.
-                     * @member {string} producer
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @instance
-                     */
-                    LogEntryOperation.prototype.producer = "";
-    
-                    /**
-                     * LogEntryOperation first.
-                     * @member {boolean} first
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @instance
-                     */
-                    LogEntryOperation.prototype.first = false;
-    
-                    /**
-                     * LogEntryOperation last.
-                     * @member {boolean} last
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @instance
-                     */
-                    LogEntryOperation.prototype.last = false;
-    
-                    /**
-                     * Creates a new LogEntryOperation instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {google.logging.v2.ILogEntryOperation=} [properties] Properties to set
-                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation instance
-                     */
-                    LogEntryOperation.create = function create(properties) {
-                        return new LogEntryOperation(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified LogEntryOperation message. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {google.logging.v2.ILogEntryOperation} message LogEntryOperation message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    LogEntryOperation.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.id != null && message.hasOwnProperty("id"))
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.id);
-                        if (message.producer != null && message.hasOwnProperty("producer"))
-                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.producer);
-                        if (message.first != null && message.hasOwnProperty("first"))
-                            writer.uint32(/* id 3, wireType 0 =*/24).bool(message.first);
-                        if (message.last != null && message.hasOwnProperty("last"))
-                            writer.uint32(/* id 4, wireType 0 =*/32).bool(message.last);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified LogEntryOperation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {google.logging.v2.ILogEntryOperation} message LogEntryOperation message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    LogEntryOperation.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a LogEntryOperation message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    LogEntryOperation.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogEntryOperation();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.id = reader.string();
-                                break;
-                            case 2:
-                                message.producer = reader.string();
-                                break;
-                            case 3:
-                                message.first = reader.bool();
-                                break;
-                            case 4:
-                                message.last = reader.bool();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a LogEntryOperation message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    LogEntryOperation.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a LogEntryOperation message.
-                     * @function verify
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    LogEntryOperation.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.id != null && message.hasOwnProperty("id"))
-                            if (!$util.isString(message.id))
-                                return "id: string expected";
-                        if (message.producer != null && message.hasOwnProperty("producer"))
-                            if (!$util.isString(message.producer))
-                                return "producer: string expected";
-                        if (message.first != null && message.hasOwnProperty("first"))
-                            if (typeof message.first !== "boolean")
-                                return "first: boolean expected";
-                        if (message.last != null && message.hasOwnProperty("last"))
-                            if (typeof message.last !== "boolean")
-                                return "last: boolean expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a LogEntryOperation message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.LogEntryOperation} LogEntryOperation
-                     */
-                    LogEntryOperation.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.LogEntryOperation)
-                            return object;
-                        var message = new $root.google.logging.v2.LogEntryOperation();
-                        if (object.id != null)
-                            message.id = String(object.id);
-                        if (object.producer != null)
-                            message.producer = String(object.producer);
-                        if (object.first != null)
-                            message.first = Boolean(object.first);
-                        if (object.last != null)
-                            message.last = Boolean(object.last);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a LogEntryOperation message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @static
-                     * @param {google.logging.v2.LogEntryOperation} message LogEntryOperation
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    LogEntryOperation.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.defaults) {
-                            object.id = "";
-                            object.producer = "";
-                            object.first = false;
-                            object.last = false;
-                        }
-                        if (message.id != null && message.hasOwnProperty("id"))
-                            object.id = message.id;
-                        if (message.producer != null && message.hasOwnProperty("producer"))
-                            object.producer = message.producer;
-                        if (message.first != null && message.hasOwnProperty("first"))
-                            object.first = message.first;
-                        if (message.last != null && message.hasOwnProperty("last"))
-                            object.last = message.last;
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this LogEntryOperation to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.LogEntryOperation
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    LogEntryOperation.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return LogEntryOperation;
-                })();
-    
-                v2.LogEntrySourceLocation = (function() {
-    
-                    /**
-                     * Properties of a LogEntrySourceLocation.
-                     * @memberof google.logging.v2
-                     * @interface ILogEntrySourceLocation
-                     * @property {string|null} [file] LogEntrySourceLocation file
-                     * @property {number|Long|null} [line] LogEntrySourceLocation line
-                     * @property {string|null} ["function"] LogEntrySourceLocation function
-                     */
-    
-                    /**
-                     * Constructs a new LogEntrySourceLocation.
-                     * @memberof google.logging.v2
-                     * @classdesc Represents a LogEntrySourceLocation.
-                     * @implements ILogEntrySourceLocation
-                     * @constructor
-                     * @param {google.logging.v2.ILogEntrySourceLocation=} [properties] Properties to set
-                     */
-                    function LogEntrySourceLocation(properties) {
-                        if (properties)
-                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                if (properties[keys[i]] != null)
-                                    this[keys[i]] = properties[keys[i]];
-                    }
-    
-                    /**
-                     * LogEntrySourceLocation file.
-                     * @member {string} file
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @instance
-                     */
-                    LogEntrySourceLocation.prototype.file = "";
-    
-                    /**
-                     * LogEntrySourceLocation line.
-                     * @member {number|Long} line
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @instance
-                     */
-                    LogEntrySourceLocation.prototype.line = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
-                    /**
-                     * LogEntrySourceLocation function.
-                     * @member {string} function
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @instance
-                     */
-                    LogEntrySourceLocation.prototype["function"] = "";
-    
-                    /**
-                     * Creates a new LogEntrySourceLocation instance using the specified properties.
-                     * @function create
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {google.logging.v2.ILogEntrySourceLocation=} [properties] Properties to set
-                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation instance
-                     */
-                    LogEntrySourceLocation.create = function create(properties) {
-                        return new LogEntrySourceLocation(properties);
-                    };
-    
-                    /**
-                     * Encodes the specified LogEntrySourceLocation message. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
-                     * @function encode
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {google.logging.v2.ILogEntrySourceLocation} message LogEntrySourceLocation message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    LogEntrySourceLocation.encode = function encode(message, writer) {
-                        if (!writer)
-                            writer = $Writer.create();
-                        if (message.file != null && message.hasOwnProperty("file"))
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.file);
-                        if (message.line != null && message.hasOwnProperty("line"))
-                            writer.uint32(/* id 2, wireType 0 =*/16).int64(message.line);
-                        if (message["function"] != null && message.hasOwnProperty("function"))
-                            writer.uint32(/* id 3, wireType 2 =*/26).string(message["function"]);
-                        return writer;
-                    };
-    
-                    /**
-                     * Encodes the specified LogEntrySourceLocation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
-                     * @function encodeDelimited
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {google.logging.v2.ILogEntrySourceLocation} message LogEntrySourceLocation message or plain object to encode
-                     * @param {$protobuf.Writer} [writer] Writer to encode to
-                     * @returns {$protobuf.Writer} Writer
-                     */
-                    LogEntrySourceLocation.encodeDelimited = function encodeDelimited(message, writer) {
-                        return this.encode(message, writer).ldelim();
-                    };
-    
-                    /**
-                     * Decodes a LogEntrySourceLocation message from the specified reader or buffer.
-                     * @function decode
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @param {number} [length] Message length if known beforehand
-                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    LogEntrySourceLocation.decode = function decode(reader, length) {
-                        if (!(reader instanceof $Reader))
-                            reader = $Reader.create(reader);
-                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogEntrySourceLocation();
-                        while (reader.pos < end) {
-                            var tag = reader.uint32();
-                            switch (tag >>> 3) {
-                            case 1:
-                                message.file = reader.string();
-                                break;
-                            case 2:
-                                message.line = reader.int64();
-                                break;
-                            case 3:
-                                message["function"] = reader.string();
-                                break;
-                            default:
-                                reader.skipType(tag & 7);
-                                break;
-                            }
-                        }
-                        return message;
-                    };
-    
-                    /**
-                     * Decodes a LogEntrySourceLocation message from the specified reader or buffer, length delimited.
-                     * @function decodeDelimited
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    LogEntrySourceLocation.decodeDelimited = function decodeDelimited(reader) {
-                        if (!(reader instanceof $Reader))
-                            reader = new $Reader(reader);
-                        return this.decode(reader, reader.uint32());
-                    };
-    
-                    /**
-                     * Verifies a LogEntrySourceLocation message.
-                     * @function verify
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {Object.<string,*>} message Plain object to verify
-                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                     */
-                    LogEntrySourceLocation.verify = function verify(message) {
-                        if (typeof message !== "object" || message === null)
-                            return "object expected";
-                        if (message.file != null && message.hasOwnProperty("file"))
-                            if (!$util.isString(message.file))
-                                return "file: string expected";
-                        if (message.line != null && message.hasOwnProperty("line"))
-                            if (!$util.isInteger(message.line) && !(message.line && $util.isInteger(message.line.low) && $util.isInteger(message.line.high)))
-                                return "line: integer|Long expected";
-                        if (message["function"] != null && message.hasOwnProperty("function"))
-                            if (!$util.isString(message["function"]))
-                                return "function: string expected";
-                        return null;
-                    };
-    
-                    /**
-                     * Creates a LogEntrySourceLocation message from a plain object. Also converts values to their respective internal types.
-                     * @function fromObject
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {Object.<string,*>} object Plain object
-                     * @returns {google.logging.v2.LogEntrySourceLocation} LogEntrySourceLocation
-                     */
-                    LogEntrySourceLocation.fromObject = function fromObject(object) {
-                        if (object instanceof $root.google.logging.v2.LogEntrySourceLocation)
-                            return object;
-                        var message = new $root.google.logging.v2.LogEntrySourceLocation();
-                        if (object.file != null)
-                            message.file = String(object.file);
-                        if (object.line != null)
-                            if ($util.Long)
-                                (message.line = $util.Long.fromValue(object.line)).unsigned = false;
-                            else if (typeof object.line === "string")
-                                message.line = parseInt(object.line, 10);
-                            else if (typeof object.line === "number")
-                                message.line = object.line;
-                            else if (typeof object.line === "object")
-                                message.line = new $util.LongBits(object.line.low >>> 0, object.line.high >>> 0).toNumber();
-                        if (object["function"] != null)
-                            message["function"] = String(object["function"]);
-                        return message;
-                    };
-    
-                    /**
-                     * Creates a plain object from a LogEntrySourceLocation message. Also converts values to other types if specified.
-                     * @function toObject
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @static
-                     * @param {google.logging.v2.LogEntrySourceLocation} message LogEntrySourceLocation
-                     * @param {$protobuf.IConversionOptions} [options] Conversion options
-                     * @returns {Object.<string,*>} Plain object
-                     */
-                    LogEntrySourceLocation.toObject = function toObject(message, options) {
-                        if (!options)
-                            options = {};
-                        var object = {};
-                        if (options.defaults) {
-                            object.file = "";
-                            if ($util.Long) {
-                                var long = new $util.Long(0, 0, false);
-                                object.line = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                            } else
-                                object.line = options.longs === String ? "0" : 0;
-                            object["function"] = "";
-                        }
-                        if (message.file != null && message.hasOwnProperty("file"))
-                            object.file = message.file;
-                        if (message.line != null && message.hasOwnProperty("line"))
-                            if (typeof message.line === "number")
-                                object.line = options.longs === String ? String(message.line) : message.line;
-                            else
-                                object.line = options.longs === String ? $util.Long.prototype.toString.call(message.line) : options.longs === Number ? new $util.LongBits(message.line.low >>> 0, message.line.high >>> 0).toNumber() : message.line;
-                        if (message["function"] != null && message.hasOwnProperty("function"))
-                            object["function"] = message["function"];
-                        return object;
-                    };
-    
-                    /**
-                     * Converts this LogEntrySourceLocation to JSON.
-                     * @function toJSON
-                     * @memberof google.logging.v2.LogEntrySourceLocation
-                     * @instance
-                     * @returns {Object.<string,*>} JSON object
-                     */
-                    LogEntrySourceLocation.prototype.toJSON = function toJSON() {
-                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                    };
-    
-                    return LogEntrySourceLocation;
-                })();
-    
                 v2.MetricsServiceV2 = (function() {
     
                     /**
@@ -12348,6 +12348,1114 @@
                 return values;
             })();
     
+            api.MonitoredResourceDescriptor = (function() {
+    
+                /**
+                 * Properties of a MonitoredResourceDescriptor.
+                 * @memberof google.api
+                 * @interface IMonitoredResourceDescriptor
+                 * @property {string|null} [name] MonitoredResourceDescriptor name
+                 * @property {string|null} [type] MonitoredResourceDescriptor type
+                 * @property {string|null} [displayName] MonitoredResourceDescriptor displayName
+                 * @property {string|null} [description] MonitoredResourceDescriptor description
+                 * @property {Array.<google.api.ILabelDescriptor>|null} [labels] MonitoredResourceDescriptor labels
+                 * @property {google.api.LaunchStage|null} [launchStage] MonitoredResourceDescriptor launchStage
+                 */
+    
+                /**
+                 * Constructs a new MonitoredResourceDescriptor.
+                 * @memberof google.api
+                 * @classdesc Represents a MonitoredResourceDescriptor.
+                 * @implements IMonitoredResourceDescriptor
+                 * @constructor
+                 * @param {google.api.IMonitoredResourceDescriptor=} [properties] Properties to set
+                 */
+                function MonitoredResourceDescriptor(properties) {
+                    this.labels = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * MonitoredResourceDescriptor name.
+                 * @member {string} name
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 */
+                MonitoredResourceDescriptor.prototype.name = "";
+    
+                /**
+                 * MonitoredResourceDescriptor type.
+                 * @member {string} type
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 */
+                MonitoredResourceDescriptor.prototype.type = "";
+    
+                /**
+                 * MonitoredResourceDescriptor displayName.
+                 * @member {string} displayName
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 */
+                MonitoredResourceDescriptor.prototype.displayName = "";
+    
+                /**
+                 * MonitoredResourceDescriptor description.
+                 * @member {string} description
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 */
+                MonitoredResourceDescriptor.prototype.description = "";
+    
+                /**
+                 * MonitoredResourceDescriptor labels.
+                 * @member {Array.<google.api.ILabelDescriptor>} labels
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 */
+                MonitoredResourceDescriptor.prototype.labels = $util.emptyArray;
+    
+                /**
+                 * MonitoredResourceDescriptor launchStage.
+                 * @member {google.api.LaunchStage} launchStage
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 */
+                MonitoredResourceDescriptor.prototype.launchStage = 0;
+    
+                /**
+                 * Creates a new MonitoredResourceDescriptor instance using the specified properties.
+                 * @function create
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {google.api.IMonitoredResourceDescriptor=} [properties] Properties to set
+                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor instance
+                 */
+                MonitoredResourceDescriptor.create = function create(properties) {
+                    return new MonitoredResourceDescriptor(properties);
+                };
+    
+                /**
+                 * Encodes the specified MonitoredResourceDescriptor message. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {google.api.IMonitoredResourceDescriptor} message MonitoredResourceDescriptor message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                MonitoredResourceDescriptor.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.type);
+                    if (message.displayName != null && message.hasOwnProperty("displayName"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.displayName);
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.description);
+                    if (message.labels != null && message.labels.length)
+                        for (var i = 0; i < message.labels.length; ++i)
+                            $root.google.api.LabelDescriptor.encode(message.labels[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.name);
+                    if (message.launchStage != null && message.hasOwnProperty("launchStage"))
+                        writer.uint32(/* id 7, wireType 0 =*/56).int32(message.launchStage);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified MonitoredResourceDescriptor message, length delimited. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {google.api.IMonitoredResourceDescriptor} message MonitoredResourceDescriptor message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                MonitoredResourceDescriptor.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                MonitoredResourceDescriptor.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.MonitoredResourceDescriptor();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 5:
+                            message.name = reader.string();
+                            break;
+                        case 1:
+                            message.type = reader.string();
+                            break;
+                        case 2:
+                            message.displayName = reader.string();
+                            break;
+                        case 3:
+                            message.description = reader.string();
+                            break;
+                        case 4:
+                            if (!(message.labels && message.labels.length))
+                                message.labels = [];
+                            message.labels.push($root.google.api.LabelDescriptor.decode(reader, reader.uint32()));
+                            break;
+                        case 7:
+                            message.launchStage = reader.int32();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                MonitoredResourceDescriptor.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a MonitoredResourceDescriptor message.
+                 * @function verify
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                MonitoredResourceDescriptor.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        if (!$util.isString(message.type))
+                            return "type: string expected";
+                    if (message.displayName != null && message.hasOwnProperty("displayName"))
+                        if (!$util.isString(message.displayName))
+                            return "displayName: string expected";
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        if (!$util.isString(message.description))
+                            return "description: string expected";
+                    if (message.labels != null && message.hasOwnProperty("labels")) {
+                        if (!Array.isArray(message.labels))
+                            return "labels: array expected";
+                        for (var i = 0; i < message.labels.length; ++i) {
+                            var error = $root.google.api.LabelDescriptor.verify(message.labels[i]);
+                            if (error)
+                                return "labels." + error;
+                        }
+                    }
+                    if (message.launchStage != null && message.hasOwnProperty("launchStage"))
+                        switch (message.launchStage) {
+                        default:
+                            return "launchStage: enum value expected";
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            break;
+                        }
+                    return null;
+                };
+    
+                /**
+                 * Creates a MonitoredResourceDescriptor message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor
+                 */
+                MonitoredResourceDescriptor.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.api.MonitoredResourceDescriptor)
+                        return object;
+                    var message = new $root.google.api.MonitoredResourceDescriptor();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    if (object.type != null)
+                        message.type = String(object.type);
+                    if (object.displayName != null)
+                        message.displayName = String(object.displayName);
+                    if (object.description != null)
+                        message.description = String(object.description);
+                    if (object.labels) {
+                        if (!Array.isArray(object.labels))
+                            throw TypeError(".google.api.MonitoredResourceDescriptor.labels: array expected");
+                        message.labels = [];
+                        for (var i = 0; i < object.labels.length; ++i) {
+                            if (typeof object.labels[i] !== "object")
+                                throw TypeError(".google.api.MonitoredResourceDescriptor.labels: object expected");
+                            message.labels[i] = $root.google.api.LabelDescriptor.fromObject(object.labels[i]);
+                        }
+                    }
+                    switch (object.launchStage) {
+                    case "LAUNCH_STAGE_UNSPECIFIED":
+                    case 0:
+                        message.launchStage = 0;
+                        break;
+                    case "EARLY_ACCESS":
+                    case 1:
+                        message.launchStage = 1;
+                        break;
+                    case "ALPHA":
+                    case 2:
+                        message.launchStage = 2;
+                        break;
+                    case "BETA":
+                    case 3:
+                        message.launchStage = 3;
+                        break;
+                    case "GA":
+                    case 4:
+                        message.launchStage = 4;
+                        break;
+                    case "DEPRECATED":
+                    case 5:
+                        message.launchStage = 5;
+                        break;
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a MonitoredResourceDescriptor message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @static
+                 * @param {google.api.MonitoredResourceDescriptor} message MonitoredResourceDescriptor
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                MonitoredResourceDescriptor.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.arrays || options.defaults)
+                        object.labels = [];
+                    if (options.defaults) {
+                        object.type = "";
+                        object.displayName = "";
+                        object.description = "";
+                        object.name = "";
+                        object.launchStage = options.enums === String ? "LAUNCH_STAGE_UNSPECIFIED" : 0;
+                    }
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        object.type = message.type;
+                    if (message.displayName != null && message.hasOwnProperty("displayName"))
+                        object.displayName = message.displayName;
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        object.description = message.description;
+                    if (message.labels && message.labels.length) {
+                        object.labels = [];
+                        for (var j = 0; j < message.labels.length; ++j)
+                            object.labels[j] = $root.google.api.LabelDescriptor.toObject(message.labels[j], options);
+                    }
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    if (message.launchStage != null && message.hasOwnProperty("launchStage"))
+                        object.launchStage = options.enums === String ? $root.google.api.LaunchStage[message.launchStage] : message.launchStage;
+                    return object;
+                };
+    
+                /**
+                 * Converts this MonitoredResourceDescriptor to JSON.
+                 * @function toJSON
+                 * @memberof google.api.MonitoredResourceDescriptor
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                MonitoredResourceDescriptor.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return MonitoredResourceDescriptor;
+            })();
+    
+            api.MonitoredResource = (function() {
+    
+                /**
+                 * Properties of a MonitoredResource.
+                 * @memberof google.api
+                 * @interface IMonitoredResource
+                 * @property {string|null} [type] MonitoredResource type
+                 * @property {Object.<string,string>|null} [labels] MonitoredResource labels
+                 */
+    
+                /**
+                 * Constructs a new MonitoredResource.
+                 * @memberof google.api
+                 * @classdesc Represents a MonitoredResource.
+                 * @implements IMonitoredResource
+                 * @constructor
+                 * @param {google.api.IMonitoredResource=} [properties] Properties to set
+                 */
+                function MonitoredResource(properties) {
+                    this.labels = {};
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * MonitoredResource type.
+                 * @member {string} type
+                 * @memberof google.api.MonitoredResource
+                 * @instance
+                 */
+                MonitoredResource.prototype.type = "";
+    
+                /**
+                 * MonitoredResource labels.
+                 * @member {Object.<string,string>} labels
+                 * @memberof google.api.MonitoredResource
+                 * @instance
+                 */
+                MonitoredResource.prototype.labels = $util.emptyObject;
+    
+                /**
+                 * Creates a new MonitoredResource instance using the specified properties.
+                 * @function create
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {google.api.IMonitoredResource=} [properties] Properties to set
+                 * @returns {google.api.MonitoredResource} MonitoredResource instance
+                 */
+                MonitoredResource.create = function create(properties) {
+                    return new MonitoredResource(properties);
+                };
+    
+                /**
+                 * Encodes the specified MonitoredResource message. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {google.api.IMonitoredResource} message MonitoredResource message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                MonitoredResource.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.type);
+                    if (message.labels != null && message.hasOwnProperty("labels"))
+                        for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
+                            writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified MonitoredResource message, length delimited. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {google.api.IMonitoredResource} message MonitoredResource message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                MonitoredResource.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a MonitoredResource message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.api.MonitoredResource} MonitoredResource
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                MonitoredResource.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.MonitoredResource(), key;
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.type = reader.string();
+                            break;
+                        case 2:
+                            reader.skip().pos++;
+                            if (message.labels === $util.emptyObject)
+                                message.labels = {};
+                            key = reader.string();
+                            reader.pos++;
+                            message.labels[key] = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a MonitoredResource message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.api.MonitoredResource} MonitoredResource
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                MonitoredResource.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a MonitoredResource message.
+                 * @function verify
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                MonitoredResource.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        if (!$util.isString(message.type))
+                            return "type: string expected";
+                    if (message.labels != null && message.hasOwnProperty("labels")) {
+                        if (!$util.isObject(message.labels))
+                            return "labels: object expected";
+                        var key = Object.keys(message.labels);
+                        for (var i = 0; i < key.length; ++i)
+                            if (!$util.isString(message.labels[key[i]]))
+                                return "labels: string{k:string} expected";
+                    }
+                    return null;
+                };
+    
+                /**
+                 * Creates a MonitoredResource message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.api.MonitoredResource} MonitoredResource
+                 */
+                MonitoredResource.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.api.MonitoredResource)
+                        return object;
+                    var message = new $root.google.api.MonitoredResource();
+                    if (object.type != null)
+                        message.type = String(object.type);
+                    if (object.labels) {
+                        if (typeof object.labels !== "object")
+                            throw TypeError(".google.api.MonitoredResource.labels: object expected");
+                        message.labels = {};
+                        for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
+                            message.labels[keys[i]] = String(object.labels[keys[i]]);
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a MonitoredResource message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.api.MonitoredResource
+                 * @static
+                 * @param {google.api.MonitoredResource} message MonitoredResource
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                MonitoredResource.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.objects || options.defaults)
+                        object.labels = {};
+                    if (options.defaults)
+                        object.type = "";
+                    if (message.type != null && message.hasOwnProperty("type"))
+                        object.type = message.type;
+                    var keys2;
+                    if (message.labels && (keys2 = Object.keys(message.labels)).length) {
+                        object.labels = {};
+                        for (var j = 0; j < keys2.length; ++j)
+                            object.labels[keys2[j]] = message.labels[keys2[j]];
+                    }
+                    return object;
+                };
+    
+                /**
+                 * Converts this MonitoredResource to JSON.
+                 * @function toJSON
+                 * @memberof google.api.MonitoredResource
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                MonitoredResource.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return MonitoredResource;
+            })();
+    
+            api.MonitoredResourceMetadata = (function() {
+    
+                /**
+                 * Properties of a MonitoredResourceMetadata.
+                 * @memberof google.api
+                 * @interface IMonitoredResourceMetadata
+                 * @property {google.protobuf.IStruct|null} [systemLabels] MonitoredResourceMetadata systemLabels
+                 * @property {Object.<string,string>|null} [userLabels] MonitoredResourceMetadata userLabels
+                 */
+    
+                /**
+                 * Constructs a new MonitoredResourceMetadata.
+                 * @memberof google.api
+                 * @classdesc Represents a MonitoredResourceMetadata.
+                 * @implements IMonitoredResourceMetadata
+                 * @constructor
+                 * @param {google.api.IMonitoredResourceMetadata=} [properties] Properties to set
+                 */
+                function MonitoredResourceMetadata(properties) {
+                    this.userLabels = {};
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * MonitoredResourceMetadata systemLabels.
+                 * @member {google.protobuf.IStruct|null|undefined} systemLabels
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @instance
+                 */
+                MonitoredResourceMetadata.prototype.systemLabels = null;
+    
+                /**
+                 * MonitoredResourceMetadata userLabels.
+                 * @member {Object.<string,string>} userLabels
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @instance
+                 */
+                MonitoredResourceMetadata.prototype.userLabels = $util.emptyObject;
+    
+                /**
+                 * Creates a new MonitoredResourceMetadata instance using the specified properties.
+                 * @function create
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {google.api.IMonitoredResourceMetadata=} [properties] Properties to set
+                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata instance
+                 */
+                MonitoredResourceMetadata.create = function create(properties) {
+                    return new MonitoredResourceMetadata(properties);
+                };
+    
+                /**
+                 * Encodes the specified MonitoredResourceMetadata message. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {google.api.IMonitoredResourceMetadata} message MonitoredResourceMetadata message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                MonitoredResourceMetadata.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.systemLabels != null && message.hasOwnProperty("systemLabels"))
+                        $root.google.protobuf.Struct.encode(message.systemLabels, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.userLabels != null && message.hasOwnProperty("userLabels"))
+                        for (var keys = Object.keys(message.userLabels), i = 0; i < keys.length; ++i)
+                            writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.userLabels[keys[i]]).ldelim();
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified MonitoredResourceMetadata message, length delimited. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {google.api.IMonitoredResourceMetadata} message MonitoredResourceMetadata message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                MonitoredResourceMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a MonitoredResourceMetadata message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                MonitoredResourceMetadata.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.MonitoredResourceMetadata(), key;
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.systemLabels = $root.google.protobuf.Struct.decode(reader, reader.uint32());
+                            break;
+                        case 2:
+                            reader.skip().pos++;
+                            if (message.userLabels === $util.emptyObject)
+                                message.userLabels = {};
+                            key = reader.string();
+                            reader.pos++;
+                            message.userLabels[key] = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a MonitoredResourceMetadata message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                MonitoredResourceMetadata.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a MonitoredResourceMetadata message.
+                 * @function verify
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                MonitoredResourceMetadata.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.systemLabels != null && message.hasOwnProperty("systemLabels")) {
+                        var error = $root.google.protobuf.Struct.verify(message.systemLabels);
+                        if (error)
+                            return "systemLabels." + error;
+                    }
+                    if (message.userLabels != null && message.hasOwnProperty("userLabels")) {
+                        if (!$util.isObject(message.userLabels))
+                            return "userLabels: object expected";
+                        var key = Object.keys(message.userLabels);
+                        for (var i = 0; i < key.length; ++i)
+                            if (!$util.isString(message.userLabels[key[i]]))
+                                return "userLabels: string{k:string} expected";
+                    }
+                    return null;
+                };
+    
+                /**
+                 * Creates a MonitoredResourceMetadata message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata
+                 */
+                MonitoredResourceMetadata.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.api.MonitoredResourceMetadata)
+                        return object;
+                    var message = new $root.google.api.MonitoredResourceMetadata();
+                    if (object.systemLabels != null) {
+                        if (typeof object.systemLabels !== "object")
+                            throw TypeError(".google.api.MonitoredResourceMetadata.systemLabels: object expected");
+                        message.systemLabels = $root.google.protobuf.Struct.fromObject(object.systemLabels);
+                    }
+                    if (object.userLabels) {
+                        if (typeof object.userLabels !== "object")
+                            throw TypeError(".google.api.MonitoredResourceMetadata.userLabels: object expected");
+                        message.userLabels = {};
+                        for (var keys = Object.keys(object.userLabels), i = 0; i < keys.length; ++i)
+                            message.userLabels[keys[i]] = String(object.userLabels[keys[i]]);
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a MonitoredResourceMetadata message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @static
+                 * @param {google.api.MonitoredResourceMetadata} message MonitoredResourceMetadata
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                MonitoredResourceMetadata.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.objects || options.defaults)
+                        object.userLabels = {};
+                    if (options.defaults)
+                        object.systemLabels = null;
+                    if (message.systemLabels != null && message.hasOwnProperty("systemLabels"))
+                        object.systemLabels = $root.google.protobuf.Struct.toObject(message.systemLabels, options);
+                    var keys2;
+                    if (message.userLabels && (keys2 = Object.keys(message.userLabels)).length) {
+                        object.userLabels = {};
+                        for (var j = 0; j < keys2.length; ++j)
+                            object.userLabels[keys2[j]] = message.userLabels[keys2[j]];
+                    }
+                    return object;
+                };
+    
+                /**
+                 * Converts this MonitoredResourceMetadata to JSON.
+                 * @function toJSON
+                 * @memberof google.api.MonitoredResourceMetadata
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                MonitoredResourceMetadata.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return MonitoredResourceMetadata;
+            })();
+    
+            api.LabelDescriptor = (function() {
+    
+                /**
+                 * Properties of a LabelDescriptor.
+                 * @memberof google.api
+                 * @interface ILabelDescriptor
+                 * @property {string|null} [key] LabelDescriptor key
+                 * @property {google.api.LabelDescriptor.ValueType|null} [valueType] LabelDescriptor valueType
+                 * @property {string|null} [description] LabelDescriptor description
+                 */
+    
+                /**
+                 * Constructs a new LabelDescriptor.
+                 * @memberof google.api
+                 * @classdesc Represents a LabelDescriptor.
+                 * @implements ILabelDescriptor
+                 * @constructor
+                 * @param {google.api.ILabelDescriptor=} [properties] Properties to set
+                 */
+                function LabelDescriptor(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * LabelDescriptor key.
+                 * @member {string} key
+                 * @memberof google.api.LabelDescriptor
+                 * @instance
+                 */
+                LabelDescriptor.prototype.key = "";
+    
+                /**
+                 * LabelDescriptor valueType.
+                 * @member {google.api.LabelDescriptor.ValueType} valueType
+                 * @memberof google.api.LabelDescriptor
+                 * @instance
+                 */
+                LabelDescriptor.prototype.valueType = 0;
+    
+                /**
+                 * LabelDescriptor description.
+                 * @member {string} description
+                 * @memberof google.api.LabelDescriptor
+                 * @instance
+                 */
+                LabelDescriptor.prototype.description = "";
+    
+                /**
+                 * Creates a new LabelDescriptor instance using the specified properties.
+                 * @function create
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {google.api.ILabelDescriptor=} [properties] Properties to set
+                 * @returns {google.api.LabelDescriptor} LabelDescriptor instance
+                 */
+                LabelDescriptor.create = function create(properties) {
+                    return new LabelDescriptor(properties);
+                };
+    
+                /**
+                 * Encodes the specified LabelDescriptor message. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {google.api.ILabelDescriptor} message LabelDescriptor message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                LabelDescriptor.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.key != null && message.hasOwnProperty("key"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.key);
+                    if (message.valueType != null && message.hasOwnProperty("valueType"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.valueType);
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.description);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified LabelDescriptor message, length delimited. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {google.api.ILabelDescriptor} message LabelDescriptor message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                LabelDescriptor.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a LabelDescriptor message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.api.LabelDescriptor} LabelDescriptor
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                LabelDescriptor.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.LabelDescriptor();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.key = reader.string();
+                            break;
+                        case 2:
+                            message.valueType = reader.int32();
+                            break;
+                        case 3:
+                            message.description = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a LabelDescriptor message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.api.LabelDescriptor} LabelDescriptor
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                LabelDescriptor.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a LabelDescriptor message.
+                 * @function verify
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                LabelDescriptor.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.key != null && message.hasOwnProperty("key"))
+                        if (!$util.isString(message.key))
+                            return "key: string expected";
+                    if (message.valueType != null && message.hasOwnProperty("valueType"))
+                        switch (message.valueType) {
+                        default:
+                            return "valueType: enum value expected";
+                        case 0:
+                        case 1:
+                        case 2:
+                            break;
+                        }
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        if (!$util.isString(message.description))
+                            return "description: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a LabelDescriptor message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.api.LabelDescriptor} LabelDescriptor
+                 */
+                LabelDescriptor.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.api.LabelDescriptor)
+                        return object;
+                    var message = new $root.google.api.LabelDescriptor();
+                    if (object.key != null)
+                        message.key = String(object.key);
+                    switch (object.valueType) {
+                    case "STRING":
+                    case 0:
+                        message.valueType = 0;
+                        break;
+                    case "BOOL":
+                    case 1:
+                        message.valueType = 1;
+                        break;
+                    case "INT64":
+                    case 2:
+                        message.valueType = 2;
+                        break;
+                    }
+                    if (object.description != null)
+                        message.description = String(object.description);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a LabelDescriptor message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.api.LabelDescriptor
+                 * @static
+                 * @param {google.api.LabelDescriptor} message LabelDescriptor
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                LabelDescriptor.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.key = "";
+                        object.valueType = options.enums === String ? "STRING" : 0;
+                        object.description = "";
+                    }
+                    if (message.key != null && message.hasOwnProperty("key"))
+                        object.key = message.key;
+                    if (message.valueType != null && message.hasOwnProperty("valueType"))
+                        object.valueType = options.enums === String ? $root.google.api.LabelDescriptor.ValueType[message.valueType] : message.valueType;
+                    if (message.description != null && message.hasOwnProperty("description"))
+                        object.description = message.description;
+                    return object;
+                };
+    
+                /**
+                 * Converts this LabelDescriptor to JSON.
+                 * @function toJSON
+                 * @memberof google.api.LabelDescriptor
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                LabelDescriptor.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                /**
+                 * ValueType enum.
+                 * @name google.api.LabelDescriptor.ValueType
+                 * @enum {string}
+                 * @property {number} STRING=0 STRING value
+                 * @property {number} BOOL=1 BOOL value
+                 * @property {number} INT64=2 INT64 value
+                 */
+                LabelDescriptor.ValueType = (function() {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "STRING"] = 0;
+                    values[valuesById[1] = "BOOL"] = 1;
+                    values[valuesById[2] = "INT64"] = 2;
+                    return values;
+                })();
+    
+                return LabelDescriptor;
+            })();
+    
+            /**
+             * LaunchStage enum.
+             * @name google.api.LaunchStage
+             * @enum {string}
+             * @property {number} LAUNCH_STAGE_UNSPECIFIED=0 LAUNCH_STAGE_UNSPECIFIED value
+             * @property {number} EARLY_ACCESS=1 EARLY_ACCESS value
+             * @property {number} ALPHA=2 ALPHA value
+             * @property {number} BETA=3 BETA value
+             * @property {number} GA=4 GA value
+             * @property {number} DEPRECATED=5 DEPRECATED value
+             */
+            api.LaunchStage = (function() {
+                var valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "LAUNCH_STAGE_UNSPECIFIED"] = 0;
+                values[valuesById[1] = "EARLY_ACCESS"] = 1;
+                values[valuesById[2] = "ALPHA"] = 2;
+                values[valuesById[3] = "BETA"] = 3;
+                values[valuesById[4] = "GA"] = 4;
+                values[valuesById[5] = "DEPRECATED"] = 5;
+                return values;
+            })();
+    
             api.ResourceDescriptor = (function() {
     
                 /**
@@ -13809,1114 +14917,6 @@
                 };
     
                 return CustomHttpPattern;
-            })();
-    
-            api.MonitoredResourceDescriptor = (function() {
-    
-                /**
-                 * Properties of a MonitoredResourceDescriptor.
-                 * @memberof google.api
-                 * @interface IMonitoredResourceDescriptor
-                 * @property {string|null} [name] MonitoredResourceDescriptor name
-                 * @property {string|null} [type] MonitoredResourceDescriptor type
-                 * @property {string|null} [displayName] MonitoredResourceDescriptor displayName
-                 * @property {string|null} [description] MonitoredResourceDescriptor description
-                 * @property {Array.<google.api.ILabelDescriptor>|null} [labels] MonitoredResourceDescriptor labels
-                 * @property {google.api.LaunchStage|null} [launchStage] MonitoredResourceDescriptor launchStage
-                 */
-    
-                /**
-                 * Constructs a new MonitoredResourceDescriptor.
-                 * @memberof google.api
-                 * @classdesc Represents a MonitoredResourceDescriptor.
-                 * @implements IMonitoredResourceDescriptor
-                 * @constructor
-                 * @param {google.api.IMonitoredResourceDescriptor=} [properties] Properties to set
-                 */
-                function MonitoredResourceDescriptor(properties) {
-                    this.labels = [];
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * MonitoredResourceDescriptor name.
-                 * @member {string} name
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 */
-                MonitoredResourceDescriptor.prototype.name = "";
-    
-                /**
-                 * MonitoredResourceDescriptor type.
-                 * @member {string} type
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 */
-                MonitoredResourceDescriptor.prototype.type = "";
-    
-                /**
-                 * MonitoredResourceDescriptor displayName.
-                 * @member {string} displayName
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 */
-                MonitoredResourceDescriptor.prototype.displayName = "";
-    
-                /**
-                 * MonitoredResourceDescriptor description.
-                 * @member {string} description
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 */
-                MonitoredResourceDescriptor.prototype.description = "";
-    
-                /**
-                 * MonitoredResourceDescriptor labels.
-                 * @member {Array.<google.api.ILabelDescriptor>} labels
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 */
-                MonitoredResourceDescriptor.prototype.labels = $util.emptyArray;
-    
-                /**
-                 * MonitoredResourceDescriptor launchStage.
-                 * @member {google.api.LaunchStage} launchStage
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 */
-                MonitoredResourceDescriptor.prototype.launchStage = 0;
-    
-                /**
-                 * Creates a new MonitoredResourceDescriptor instance using the specified properties.
-                 * @function create
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {google.api.IMonitoredResourceDescriptor=} [properties] Properties to set
-                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor instance
-                 */
-                MonitoredResourceDescriptor.create = function create(properties) {
-                    return new MonitoredResourceDescriptor(properties);
-                };
-    
-                /**
-                 * Encodes the specified MonitoredResourceDescriptor message. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {google.api.IMonitoredResourceDescriptor} message MonitoredResourceDescriptor message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MonitoredResourceDescriptor.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.type != null && message.hasOwnProperty("type"))
-                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.type);
-                    if (message.displayName != null && message.hasOwnProperty("displayName"))
-                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.displayName);
-                    if (message.description != null && message.hasOwnProperty("description"))
-                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.description);
-                    if (message.labels != null && message.labels.length)
-                        for (var i = 0; i < message.labels.length; ++i)
-                            $root.google.api.LabelDescriptor.encode(message.labels[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.name != null && message.hasOwnProperty("name"))
-                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.name);
-                    if (message.launchStage != null && message.hasOwnProperty("launchStage"))
-                        writer.uint32(/* id 7, wireType 0 =*/56).int32(message.launchStage);
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified MonitoredResourceDescriptor message, length delimited. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {google.api.IMonitoredResourceDescriptor} message MonitoredResourceDescriptor message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MonitoredResourceDescriptor.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MonitoredResourceDescriptor.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.MonitoredResourceDescriptor();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 5:
-                            message.name = reader.string();
-                            break;
-                        case 1:
-                            message.type = reader.string();
-                            break;
-                        case 2:
-                            message.displayName = reader.string();
-                            break;
-                        case 3:
-                            message.description = reader.string();
-                            break;
-                        case 4:
-                            if (!(message.labels && message.labels.length))
-                                message.labels = [];
-                            message.labels.push($root.google.api.LabelDescriptor.decode(reader, reader.uint32()));
-                            break;
-                        case 7:
-                            message.launchStage = reader.int32();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MonitoredResourceDescriptor.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a MonitoredResourceDescriptor message.
-                 * @function verify
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                MonitoredResourceDescriptor.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.name != null && message.hasOwnProperty("name"))
-                        if (!$util.isString(message.name))
-                            return "name: string expected";
-                    if (message.type != null && message.hasOwnProperty("type"))
-                        if (!$util.isString(message.type))
-                            return "type: string expected";
-                    if (message.displayName != null && message.hasOwnProperty("displayName"))
-                        if (!$util.isString(message.displayName))
-                            return "displayName: string expected";
-                    if (message.description != null && message.hasOwnProperty("description"))
-                        if (!$util.isString(message.description))
-                            return "description: string expected";
-                    if (message.labels != null && message.hasOwnProperty("labels")) {
-                        if (!Array.isArray(message.labels))
-                            return "labels: array expected";
-                        for (var i = 0; i < message.labels.length; ++i) {
-                            var error = $root.google.api.LabelDescriptor.verify(message.labels[i]);
-                            if (error)
-                                return "labels." + error;
-                        }
-                    }
-                    if (message.launchStage != null && message.hasOwnProperty("launchStage"))
-                        switch (message.launchStage) {
-                        default:
-                            return "launchStage: enum value expected";
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                            break;
-                        }
-                    return null;
-                };
-    
-                /**
-                 * Creates a MonitoredResourceDescriptor message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.api.MonitoredResourceDescriptor} MonitoredResourceDescriptor
-                 */
-                MonitoredResourceDescriptor.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.api.MonitoredResourceDescriptor)
-                        return object;
-                    var message = new $root.google.api.MonitoredResourceDescriptor();
-                    if (object.name != null)
-                        message.name = String(object.name);
-                    if (object.type != null)
-                        message.type = String(object.type);
-                    if (object.displayName != null)
-                        message.displayName = String(object.displayName);
-                    if (object.description != null)
-                        message.description = String(object.description);
-                    if (object.labels) {
-                        if (!Array.isArray(object.labels))
-                            throw TypeError(".google.api.MonitoredResourceDescriptor.labels: array expected");
-                        message.labels = [];
-                        for (var i = 0; i < object.labels.length; ++i) {
-                            if (typeof object.labels[i] !== "object")
-                                throw TypeError(".google.api.MonitoredResourceDescriptor.labels: object expected");
-                            message.labels[i] = $root.google.api.LabelDescriptor.fromObject(object.labels[i]);
-                        }
-                    }
-                    switch (object.launchStage) {
-                    case "LAUNCH_STAGE_UNSPECIFIED":
-                    case 0:
-                        message.launchStage = 0;
-                        break;
-                    case "EARLY_ACCESS":
-                    case 1:
-                        message.launchStage = 1;
-                        break;
-                    case "ALPHA":
-                    case 2:
-                        message.launchStage = 2;
-                        break;
-                    case "BETA":
-                    case 3:
-                        message.launchStage = 3;
-                        break;
-                    case "GA":
-                    case 4:
-                        message.launchStage = 4;
-                        break;
-                    case "DEPRECATED":
-                    case 5:
-                        message.launchStage = 5;
-                        break;
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a MonitoredResourceDescriptor message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @static
-                 * @param {google.api.MonitoredResourceDescriptor} message MonitoredResourceDescriptor
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                MonitoredResourceDescriptor.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.arrays || options.defaults)
-                        object.labels = [];
-                    if (options.defaults) {
-                        object.type = "";
-                        object.displayName = "";
-                        object.description = "";
-                        object.name = "";
-                        object.launchStage = options.enums === String ? "LAUNCH_STAGE_UNSPECIFIED" : 0;
-                    }
-                    if (message.type != null && message.hasOwnProperty("type"))
-                        object.type = message.type;
-                    if (message.displayName != null && message.hasOwnProperty("displayName"))
-                        object.displayName = message.displayName;
-                    if (message.description != null && message.hasOwnProperty("description"))
-                        object.description = message.description;
-                    if (message.labels && message.labels.length) {
-                        object.labels = [];
-                        for (var j = 0; j < message.labels.length; ++j)
-                            object.labels[j] = $root.google.api.LabelDescriptor.toObject(message.labels[j], options);
-                    }
-                    if (message.name != null && message.hasOwnProperty("name"))
-                        object.name = message.name;
-                    if (message.launchStage != null && message.hasOwnProperty("launchStage"))
-                        object.launchStage = options.enums === String ? $root.google.api.LaunchStage[message.launchStage] : message.launchStage;
-                    return object;
-                };
-    
-                /**
-                 * Converts this MonitoredResourceDescriptor to JSON.
-                 * @function toJSON
-                 * @memberof google.api.MonitoredResourceDescriptor
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                MonitoredResourceDescriptor.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return MonitoredResourceDescriptor;
-            })();
-    
-            api.MonitoredResource = (function() {
-    
-                /**
-                 * Properties of a MonitoredResource.
-                 * @memberof google.api
-                 * @interface IMonitoredResource
-                 * @property {string|null} [type] MonitoredResource type
-                 * @property {Object.<string,string>|null} [labels] MonitoredResource labels
-                 */
-    
-                /**
-                 * Constructs a new MonitoredResource.
-                 * @memberof google.api
-                 * @classdesc Represents a MonitoredResource.
-                 * @implements IMonitoredResource
-                 * @constructor
-                 * @param {google.api.IMonitoredResource=} [properties] Properties to set
-                 */
-                function MonitoredResource(properties) {
-                    this.labels = {};
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * MonitoredResource type.
-                 * @member {string} type
-                 * @memberof google.api.MonitoredResource
-                 * @instance
-                 */
-                MonitoredResource.prototype.type = "";
-    
-                /**
-                 * MonitoredResource labels.
-                 * @member {Object.<string,string>} labels
-                 * @memberof google.api.MonitoredResource
-                 * @instance
-                 */
-                MonitoredResource.prototype.labels = $util.emptyObject;
-    
-                /**
-                 * Creates a new MonitoredResource instance using the specified properties.
-                 * @function create
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {google.api.IMonitoredResource=} [properties] Properties to set
-                 * @returns {google.api.MonitoredResource} MonitoredResource instance
-                 */
-                MonitoredResource.create = function create(properties) {
-                    return new MonitoredResource(properties);
-                };
-    
-                /**
-                 * Encodes the specified MonitoredResource message. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {google.api.IMonitoredResource} message MonitoredResource message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MonitoredResource.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.type != null && message.hasOwnProperty("type"))
-                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.type);
-                    if (message.labels != null && message.hasOwnProperty("labels"))
-                        for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
-                            writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified MonitoredResource message, length delimited. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {google.api.IMonitoredResource} message MonitoredResource message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MonitoredResource.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a MonitoredResource message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.api.MonitoredResource} MonitoredResource
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MonitoredResource.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.MonitoredResource(), key;
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.type = reader.string();
-                            break;
-                        case 2:
-                            reader.skip().pos++;
-                            if (message.labels === $util.emptyObject)
-                                message.labels = {};
-                            key = reader.string();
-                            reader.pos++;
-                            message.labels[key] = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a MonitoredResource message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.api.MonitoredResource} MonitoredResource
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MonitoredResource.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a MonitoredResource message.
-                 * @function verify
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                MonitoredResource.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.type != null && message.hasOwnProperty("type"))
-                        if (!$util.isString(message.type))
-                            return "type: string expected";
-                    if (message.labels != null && message.hasOwnProperty("labels")) {
-                        if (!$util.isObject(message.labels))
-                            return "labels: object expected";
-                        var key = Object.keys(message.labels);
-                        for (var i = 0; i < key.length; ++i)
-                            if (!$util.isString(message.labels[key[i]]))
-                                return "labels: string{k:string} expected";
-                    }
-                    return null;
-                };
-    
-                /**
-                 * Creates a MonitoredResource message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.api.MonitoredResource} MonitoredResource
-                 */
-                MonitoredResource.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.api.MonitoredResource)
-                        return object;
-                    var message = new $root.google.api.MonitoredResource();
-                    if (object.type != null)
-                        message.type = String(object.type);
-                    if (object.labels) {
-                        if (typeof object.labels !== "object")
-                            throw TypeError(".google.api.MonitoredResource.labels: object expected");
-                        message.labels = {};
-                        for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
-                            message.labels[keys[i]] = String(object.labels[keys[i]]);
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a MonitoredResource message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.api.MonitoredResource
-                 * @static
-                 * @param {google.api.MonitoredResource} message MonitoredResource
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                MonitoredResource.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.objects || options.defaults)
-                        object.labels = {};
-                    if (options.defaults)
-                        object.type = "";
-                    if (message.type != null && message.hasOwnProperty("type"))
-                        object.type = message.type;
-                    var keys2;
-                    if (message.labels && (keys2 = Object.keys(message.labels)).length) {
-                        object.labels = {};
-                        for (var j = 0; j < keys2.length; ++j)
-                            object.labels[keys2[j]] = message.labels[keys2[j]];
-                    }
-                    return object;
-                };
-    
-                /**
-                 * Converts this MonitoredResource to JSON.
-                 * @function toJSON
-                 * @memberof google.api.MonitoredResource
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                MonitoredResource.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return MonitoredResource;
-            })();
-    
-            api.MonitoredResourceMetadata = (function() {
-    
-                /**
-                 * Properties of a MonitoredResourceMetadata.
-                 * @memberof google.api
-                 * @interface IMonitoredResourceMetadata
-                 * @property {google.protobuf.IStruct|null} [systemLabels] MonitoredResourceMetadata systemLabels
-                 * @property {Object.<string,string>|null} [userLabels] MonitoredResourceMetadata userLabels
-                 */
-    
-                /**
-                 * Constructs a new MonitoredResourceMetadata.
-                 * @memberof google.api
-                 * @classdesc Represents a MonitoredResourceMetadata.
-                 * @implements IMonitoredResourceMetadata
-                 * @constructor
-                 * @param {google.api.IMonitoredResourceMetadata=} [properties] Properties to set
-                 */
-                function MonitoredResourceMetadata(properties) {
-                    this.userLabels = {};
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * MonitoredResourceMetadata systemLabels.
-                 * @member {google.protobuf.IStruct|null|undefined} systemLabels
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @instance
-                 */
-                MonitoredResourceMetadata.prototype.systemLabels = null;
-    
-                /**
-                 * MonitoredResourceMetadata userLabels.
-                 * @member {Object.<string,string>} userLabels
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @instance
-                 */
-                MonitoredResourceMetadata.prototype.userLabels = $util.emptyObject;
-    
-                /**
-                 * Creates a new MonitoredResourceMetadata instance using the specified properties.
-                 * @function create
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {google.api.IMonitoredResourceMetadata=} [properties] Properties to set
-                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata instance
-                 */
-                MonitoredResourceMetadata.create = function create(properties) {
-                    return new MonitoredResourceMetadata(properties);
-                };
-    
-                /**
-                 * Encodes the specified MonitoredResourceMetadata message. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {google.api.IMonitoredResourceMetadata} message MonitoredResourceMetadata message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MonitoredResourceMetadata.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.systemLabels != null && message.hasOwnProperty("systemLabels"))
-                        $root.google.protobuf.Struct.encode(message.systemLabels, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.userLabels != null && message.hasOwnProperty("userLabels"))
-                        for (var keys = Object.keys(message.userLabels), i = 0; i < keys.length; ++i)
-                            writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.userLabels[keys[i]]).ldelim();
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified MonitoredResourceMetadata message, length delimited. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {google.api.IMonitoredResourceMetadata} message MonitoredResourceMetadata message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MonitoredResourceMetadata.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a MonitoredResourceMetadata message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MonitoredResourceMetadata.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.MonitoredResourceMetadata(), key;
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.systemLabels = $root.google.protobuf.Struct.decode(reader, reader.uint32());
-                            break;
-                        case 2:
-                            reader.skip().pos++;
-                            if (message.userLabels === $util.emptyObject)
-                                message.userLabels = {};
-                            key = reader.string();
-                            reader.pos++;
-                            message.userLabels[key] = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a MonitoredResourceMetadata message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MonitoredResourceMetadata.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a MonitoredResourceMetadata message.
-                 * @function verify
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                MonitoredResourceMetadata.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.systemLabels != null && message.hasOwnProperty("systemLabels")) {
-                        var error = $root.google.protobuf.Struct.verify(message.systemLabels);
-                        if (error)
-                            return "systemLabels." + error;
-                    }
-                    if (message.userLabels != null && message.hasOwnProperty("userLabels")) {
-                        if (!$util.isObject(message.userLabels))
-                            return "userLabels: object expected";
-                        var key = Object.keys(message.userLabels);
-                        for (var i = 0; i < key.length; ++i)
-                            if (!$util.isString(message.userLabels[key[i]]))
-                                return "userLabels: string{k:string} expected";
-                    }
-                    return null;
-                };
-    
-                /**
-                 * Creates a MonitoredResourceMetadata message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.api.MonitoredResourceMetadata} MonitoredResourceMetadata
-                 */
-                MonitoredResourceMetadata.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.api.MonitoredResourceMetadata)
-                        return object;
-                    var message = new $root.google.api.MonitoredResourceMetadata();
-                    if (object.systemLabels != null) {
-                        if (typeof object.systemLabels !== "object")
-                            throw TypeError(".google.api.MonitoredResourceMetadata.systemLabels: object expected");
-                        message.systemLabels = $root.google.protobuf.Struct.fromObject(object.systemLabels);
-                    }
-                    if (object.userLabels) {
-                        if (typeof object.userLabels !== "object")
-                            throw TypeError(".google.api.MonitoredResourceMetadata.userLabels: object expected");
-                        message.userLabels = {};
-                        for (var keys = Object.keys(object.userLabels), i = 0; i < keys.length; ++i)
-                            message.userLabels[keys[i]] = String(object.userLabels[keys[i]]);
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a MonitoredResourceMetadata message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @static
-                 * @param {google.api.MonitoredResourceMetadata} message MonitoredResourceMetadata
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                MonitoredResourceMetadata.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.objects || options.defaults)
-                        object.userLabels = {};
-                    if (options.defaults)
-                        object.systemLabels = null;
-                    if (message.systemLabels != null && message.hasOwnProperty("systemLabels"))
-                        object.systemLabels = $root.google.protobuf.Struct.toObject(message.systemLabels, options);
-                    var keys2;
-                    if (message.userLabels && (keys2 = Object.keys(message.userLabels)).length) {
-                        object.userLabels = {};
-                        for (var j = 0; j < keys2.length; ++j)
-                            object.userLabels[keys2[j]] = message.userLabels[keys2[j]];
-                    }
-                    return object;
-                };
-    
-                /**
-                 * Converts this MonitoredResourceMetadata to JSON.
-                 * @function toJSON
-                 * @memberof google.api.MonitoredResourceMetadata
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                MonitoredResourceMetadata.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return MonitoredResourceMetadata;
-            })();
-    
-            api.LabelDescriptor = (function() {
-    
-                /**
-                 * Properties of a LabelDescriptor.
-                 * @memberof google.api
-                 * @interface ILabelDescriptor
-                 * @property {string|null} [key] LabelDescriptor key
-                 * @property {google.api.LabelDescriptor.ValueType|null} [valueType] LabelDescriptor valueType
-                 * @property {string|null} [description] LabelDescriptor description
-                 */
-    
-                /**
-                 * Constructs a new LabelDescriptor.
-                 * @memberof google.api
-                 * @classdesc Represents a LabelDescriptor.
-                 * @implements ILabelDescriptor
-                 * @constructor
-                 * @param {google.api.ILabelDescriptor=} [properties] Properties to set
-                 */
-                function LabelDescriptor(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * LabelDescriptor key.
-                 * @member {string} key
-                 * @memberof google.api.LabelDescriptor
-                 * @instance
-                 */
-                LabelDescriptor.prototype.key = "";
-    
-                /**
-                 * LabelDescriptor valueType.
-                 * @member {google.api.LabelDescriptor.ValueType} valueType
-                 * @memberof google.api.LabelDescriptor
-                 * @instance
-                 */
-                LabelDescriptor.prototype.valueType = 0;
-    
-                /**
-                 * LabelDescriptor description.
-                 * @member {string} description
-                 * @memberof google.api.LabelDescriptor
-                 * @instance
-                 */
-                LabelDescriptor.prototype.description = "";
-    
-                /**
-                 * Creates a new LabelDescriptor instance using the specified properties.
-                 * @function create
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {google.api.ILabelDescriptor=} [properties] Properties to set
-                 * @returns {google.api.LabelDescriptor} LabelDescriptor instance
-                 */
-                LabelDescriptor.create = function create(properties) {
-                    return new LabelDescriptor(properties);
-                };
-    
-                /**
-                 * Encodes the specified LabelDescriptor message. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {google.api.ILabelDescriptor} message LabelDescriptor message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                LabelDescriptor.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.key != null && message.hasOwnProperty("key"))
-                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.key);
-                    if (message.valueType != null && message.hasOwnProperty("valueType"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.valueType);
-                    if (message.description != null && message.hasOwnProperty("description"))
-                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.description);
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified LabelDescriptor message, length delimited. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {google.api.ILabelDescriptor} message LabelDescriptor message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                LabelDescriptor.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a LabelDescriptor message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.api.LabelDescriptor} LabelDescriptor
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                LabelDescriptor.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.api.LabelDescriptor();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.key = reader.string();
-                            break;
-                        case 2:
-                            message.valueType = reader.int32();
-                            break;
-                        case 3:
-                            message.description = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a LabelDescriptor message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.api.LabelDescriptor} LabelDescriptor
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                LabelDescriptor.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a LabelDescriptor message.
-                 * @function verify
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                LabelDescriptor.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.key != null && message.hasOwnProperty("key"))
-                        if (!$util.isString(message.key))
-                            return "key: string expected";
-                    if (message.valueType != null && message.hasOwnProperty("valueType"))
-                        switch (message.valueType) {
-                        default:
-                            return "valueType: enum value expected";
-                        case 0:
-                        case 1:
-                        case 2:
-                            break;
-                        }
-                    if (message.description != null && message.hasOwnProperty("description"))
-                        if (!$util.isString(message.description))
-                            return "description: string expected";
-                    return null;
-                };
-    
-                /**
-                 * Creates a LabelDescriptor message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.api.LabelDescriptor} LabelDescriptor
-                 */
-                LabelDescriptor.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.api.LabelDescriptor)
-                        return object;
-                    var message = new $root.google.api.LabelDescriptor();
-                    if (object.key != null)
-                        message.key = String(object.key);
-                    switch (object.valueType) {
-                    case "STRING":
-                    case 0:
-                        message.valueType = 0;
-                        break;
-                    case "BOOL":
-                    case 1:
-                        message.valueType = 1;
-                        break;
-                    case "INT64":
-                    case 2:
-                        message.valueType = 2;
-                        break;
-                    }
-                    if (object.description != null)
-                        message.description = String(object.description);
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a LabelDescriptor message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.api.LabelDescriptor
-                 * @static
-                 * @param {google.api.LabelDescriptor} message LabelDescriptor
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                LabelDescriptor.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.defaults) {
-                        object.key = "";
-                        object.valueType = options.enums === String ? "STRING" : 0;
-                        object.description = "";
-                    }
-                    if (message.key != null && message.hasOwnProperty("key"))
-                        object.key = message.key;
-                    if (message.valueType != null && message.hasOwnProperty("valueType"))
-                        object.valueType = options.enums === String ? $root.google.api.LabelDescriptor.ValueType[message.valueType] : message.valueType;
-                    if (message.description != null && message.hasOwnProperty("description"))
-                        object.description = message.description;
-                    return object;
-                };
-    
-                /**
-                 * Converts this LabelDescriptor to JSON.
-                 * @function toJSON
-                 * @memberof google.api.LabelDescriptor
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                LabelDescriptor.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                /**
-                 * ValueType enum.
-                 * @name google.api.LabelDescriptor.ValueType
-                 * @enum {string}
-                 * @property {number} STRING=0 STRING value
-                 * @property {number} BOOL=1 BOOL value
-                 * @property {number} INT64=2 INT64 value
-                 */
-                LabelDescriptor.ValueType = (function() {
-                    var valuesById = {}, values = Object.create(valuesById);
-                    values[valuesById[0] = "STRING"] = 0;
-                    values[valuesById[1] = "BOOL"] = 1;
-                    values[valuesById[2] = "INT64"] = 2;
-                    return values;
-                })();
-    
-                return LabelDescriptor;
-            })();
-    
-            /**
-             * LaunchStage enum.
-             * @name google.api.LaunchStage
-             * @enum {string}
-             * @property {number} LAUNCH_STAGE_UNSPECIFIED=0 LAUNCH_STAGE_UNSPECIFIED value
-             * @property {number} EARLY_ACCESS=1 EARLY_ACCESS value
-             * @property {number} ALPHA=2 ALPHA value
-             * @property {number} BETA=3 BETA value
-             * @property {number} GA=4 GA value
-             * @property {number} DEPRECATED=5 DEPRECATED value
-             */
-            api.LaunchStage = (function() {
-                var valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "LAUNCH_STAGE_UNSPECIFIED"] = 0;
-                values[valuesById[1] = "EARLY_ACCESS"] = 1;
-                values[valuesById[2] = "ALPHA"] = 2;
-                values[valuesById[3] = "BETA"] = 3;
-                values[valuesById[4] = "GA"] = 4;
-                values[valuesById[5] = "DEPRECATED"] = 5;
-                return values;
             })();
     
             api.Distribution = (function() {
@@ -24492,8 +24492,8 @@
                  * @property {boolean|null} [deprecated] MethodOptions deprecated
                  * @property {google.protobuf.MethodOptions.IdempotencyLevel|null} [idempotencyLevel] MethodOptions idempotencyLevel
                  * @property {Array.<google.protobuf.IUninterpretedOption>|null} [uninterpretedOption] MethodOptions uninterpretedOption
-                 * @property {Array.<string>|null} [".google.api.methodSignature"] MethodOptions .google.api.methodSignature
                  * @property {google.api.IHttpRule|null} [".google.api.http"] MethodOptions .google.api.http
+                 * @property {Array.<string>|null} [".google.api.methodSignature"] MethodOptions .google.api.methodSignature
                  */
     
                 /**
@@ -24538,20 +24538,20 @@
                 MethodOptions.prototype.uninterpretedOption = $util.emptyArray;
     
                 /**
-                 * MethodOptions .google.api.methodSignature.
-                 * @member {Array.<string>} .google.api.methodSignature
-                 * @memberof google.protobuf.MethodOptions
-                 * @instance
-                 */
-                MethodOptions.prototype[".google.api.methodSignature"] = $util.emptyArray;
-    
-                /**
                  * MethodOptions .google.api.http.
                  * @member {google.api.IHttpRule|null|undefined} .google.api.http
                  * @memberof google.protobuf.MethodOptions
                  * @instance
                  */
                 MethodOptions.prototype[".google.api.http"] = null;
+    
+                /**
+                 * MethodOptions .google.api.methodSignature.
+                 * @member {Array.<string>} .google.api.methodSignature
+                 * @memberof google.protobuf.MethodOptions
+                 * @instance
+                 */
+                MethodOptions.prototype[".google.api.methodSignature"] = $util.emptyArray;
     
                 /**
                  * Creates a new MethodOptions instance using the specified properties.
@@ -24634,13 +24634,13 @@
                                 message.uninterpretedOption = [];
                             message.uninterpretedOption.push($root.google.protobuf.UninterpretedOption.decode(reader, reader.uint32()));
                             break;
+                        case 72295728:
+                            message[".google.api.http"] = $root.google.api.HttpRule.decode(reader, reader.uint32());
+                            break;
                         case 1051:
                             if (!(message[".google.api.methodSignature"] && message[".google.api.methodSignature"].length))
                                 message[".google.api.methodSignature"] = [];
                             message[".google.api.methodSignature"].push(reader.string());
-                            break;
-                        case 72295728:
-                            message[".google.api.http"] = $root.google.api.HttpRule.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -24698,17 +24698,17 @@
                                 return "uninterpretedOption." + error;
                         }
                     }
+                    if (message[".google.api.http"] != null && message.hasOwnProperty(".google.api.http")) {
+                        var error = $root.google.api.HttpRule.verify(message[".google.api.http"]);
+                        if (error)
+                            return ".google.api.http." + error;
+                    }
                     if (message[".google.api.methodSignature"] != null && message.hasOwnProperty(".google.api.methodSignature")) {
                         if (!Array.isArray(message[".google.api.methodSignature"]))
                             return ".google.api.methodSignature: array expected";
                         for (var i = 0; i < message[".google.api.methodSignature"].length; ++i)
                             if (!$util.isString(message[".google.api.methodSignature"][i]))
                                 return ".google.api.methodSignature: string[] expected";
-                    }
-                    if (message[".google.api.http"] != null && message.hasOwnProperty(".google.api.http")) {
-                        var error = $root.google.api.HttpRule.verify(message[".google.api.http"]);
-                        if (error)
-                            return ".google.api.http." + error;
                     }
                     return null;
                 };
@@ -24751,17 +24751,17 @@
                             message.uninterpretedOption[i] = $root.google.protobuf.UninterpretedOption.fromObject(object.uninterpretedOption[i]);
                         }
                     }
+                    if (object[".google.api.http"] != null) {
+                        if (typeof object[".google.api.http"] !== "object")
+                            throw TypeError(".google.protobuf.MethodOptions..google.api.http: object expected");
+                        message[".google.api.http"] = $root.google.api.HttpRule.fromObject(object[".google.api.http"]);
+                    }
                     if (object[".google.api.methodSignature"]) {
                         if (!Array.isArray(object[".google.api.methodSignature"]))
                             throw TypeError(".google.protobuf.MethodOptions..google.api.methodSignature: array expected");
                         message[".google.api.methodSignature"] = [];
                         for (var i = 0; i < object[".google.api.methodSignature"].length; ++i)
                             message[".google.api.methodSignature"][i] = String(object[".google.api.methodSignature"][i]);
-                    }
-                    if (object[".google.api.http"] != null) {
-                        if (typeof object[".google.api.http"] !== "object")
-                            throw TypeError(".google.protobuf.MethodOptions..google.api.http: object expected");
-                        message[".google.api.http"] = $root.google.api.HttpRule.fromObject(object[".google.api.http"]);
                     }
                     return message;
                 };
@@ -26463,817 +26463,6 @@
                 return GeneratedCodeInfo;
             })();
     
-            protobuf.Duration = (function() {
-    
-                /**
-                 * Properties of a Duration.
-                 * @memberof google.protobuf
-                 * @interface IDuration
-                 * @property {number|Long|null} [seconds] Duration seconds
-                 * @property {number|null} [nanos] Duration nanos
-                 */
-    
-                /**
-                 * Constructs a new Duration.
-                 * @memberof google.protobuf
-                 * @classdesc Represents a Duration.
-                 * @implements IDuration
-                 * @constructor
-                 * @param {google.protobuf.IDuration=} [properties] Properties to set
-                 */
-                function Duration(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * Duration seconds.
-                 * @member {number|Long} seconds
-                 * @memberof google.protobuf.Duration
-                 * @instance
-                 */
-                Duration.prototype.seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
-                /**
-                 * Duration nanos.
-                 * @member {number} nanos
-                 * @memberof google.protobuf.Duration
-                 * @instance
-                 */
-                Duration.prototype.nanos = 0;
-    
-                /**
-                 * Creates a new Duration instance using the specified properties.
-                 * @function create
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {google.protobuf.IDuration=} [properties] Properties to set
-                 * @returns {google.protobuf.Duration} Duration instance
-                 */
-                Duration.create = function create(properties) {
-                    return new Duration(properties);
-                };
-    
-                /**
-                 * Encodes the specified Duration message. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {google.protobuf.IDuration} message Duration message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Duration.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.seconds != null && message.hasOwnProperty("seconds"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.seconds);
-                    if (message.nanos != null && message.hasOwnProperty("nanos"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.nanos);
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified Duration message, length delimited. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {google.protobuf.IDuration} message Duration message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Duration.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a Duration message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.protobuf.Duration} Duration
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Duration.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Duration();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.seconds = reader.int64();
-                            break;
-                        case 2:
-                            message.nanos = reader.int32();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a Duration message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.protobuf.Duration} Duration
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Duration.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a Duration message.
-                 * @function verify
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                Duration.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.seconds != null && message.hasOwnProperty("seconds"))
-                        if (!$util.isInteger(message.seconds) && !(message.seconds && $util.isInteger(message.seconds.low) && $util.isInteger(message.seconds.high)))
-                            return "seconds: integer|Long expected";
-                    if (message.nanos != null && message.hasOwnProperty("nanos"))
-                        if (!$util.isInteger(message.nanos))
-                            return "nanos: integer expected";
-                    return null;
-                };
-    
-                /**
-                 * Creates a Duration message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.protobuf.Duration} Duration
-                 */
-                Duration.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.protobuf.Duration)
-                        return object;
-                    var message = new $root.google.protobuf.Duration();
-                    if (object.seconds != null)
-                        if ($util.Long)
-                            (message.seconds = $util.Long.fromValue(object.seconds)).unsigned = false;
-                        else if (typeof object.seconds === "string")
-                            message.seconds = parseInt(object.seconds, 10);
-                        else if (typeof object.seconds === "number")
-                            message.seconds = object.seconds;
-                        else if (typeof object.seconds === "object")
-                            message.seconds = new $util.LongBits(object.seconds.low >>> 0, object.seconds.high >>> 0).toNumber();
-                    if (object.nanos != null)
-                        message.nanos = object.nanos | 0;
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a Duration message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.protobuf.Duration
-                 * @static
-                 * @param {google.protobuf.Duration} message Duration
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                Duration.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.defaults) {
-                        if ($util.Long) {
-                            var long = new $util.Long(0, 0, false);
-                            object.seconds = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                        } else
-                            object.seconds = options.longs === String ? "0" : 0;
-                        object.nanos = 0;
-                    }
-                    if (message.seconds != null && message.hasOwnProperty("seconds"))
-                        if (typeof message.seconds === "number")
-                            object.seconds = options.longs === String ? String(message.seconds) : message.seconds;
-                        else
-                            object.seconds = options.longs === String ? $util.Long.prototype.toString.call(message.seconds) : options.longs === Number ? new $util.LongBits(message.seconds.low >>> 0, message.seconds.high >>> 0).toNumber() : message.seconds;
-                    if (message.nanos != null && message.hasOwnProperty("nanos"))
-                        object.nanos = message.nanos;
-                    return object;
-                };
-    
-                /**
-                 * Converts this Duration to JSON.
-                 * @function toJSON
-                 * @memberof google.protobuf.Duration
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                Duration.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return Duration;
-            })();
-    
-            protobuf.Empty = (function() {
-    
-                /**
-                 * Properties of an Empty.
-                 * @memberof google.protobuf
-                 * @interface IEmpty
-                 */
-    
-                /**
-                 * Constructs a new Empty.
-                 * @memberof google.protobuf
-                 * @classdesc Represents an Empty.
-                 * @implements IEmpty
-                 * @constructor
-                 * @param {google.protobuf.IEmpty=} [properties] Properties to set
-                 */
-                function Empty(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * Creates a new Empty instance using the specified properties.
-                 * @function create
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {google.protobuf.IEmpty=} [properties] Properties to set
-                 * @returns {google.protobuf.Empty} Empty instance
-                 */
-                Empty.create = function create(properties) {
-                    return new Empty(properties);
-                };
-    
-                /**
-                 * Encodes the specified Empty message. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {google.protobuf.IEmpty} message Empty message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Empty.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified Empty message, length delimited. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {google.protobuf.IEmpty} message Empty message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Empty.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes an Empty message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.protobuf.Empty} Empty
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Empty.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Empty();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes an Empty message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.protobuf.Empty} Empty
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Empty.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies an Empty message.
-                 * @function verify
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                Empty.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    return null;
-                };
-    
-                /**
-                 * Creates an Empty message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.protobuf.Empty} Empty
-                 */
-                Empty.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.protobuf.Empty)
-                        return object;
-                    return new $root.google.protobuf.Empty();
-                };
-    
-                /**
-                 * Creates a plain object from an Empty message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.protobuf.Empty
-                 * @static
-                 * @param {google.protobuf.Empty} message Empty
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                Empty.toObject = function toObject() {
-                    return {};
-                };
-    
-                /**
-                 * Converts this Empty to JSON.
-                 * @function toJSON
-                 * @memberof google.protobuf.Empty
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                Empty.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return Empty;
-            })();
-    
-            protobuf.FieldMask = (function() {
-    
-                /**
-                 * Properties of a FieldMask.
-                 * @memberof google.protobuf
-                 * @interface IFieldMask
-                 * @property {Array.<string>|null} [paths] FieldMask paths
-                 */
-    
-                /**
-                 * Constructs a new FieldMask.
-                 * @memberof google.protobuf
-                 * @classdesc Represents a FieldMask.
-                 * @implements IFieldMask
-                 * @constructor
-                 * @param {google.protobuf.IFieldMask=} [properties] Properties to set
-                 */
-                function FieldMask(properties) {
-                    this.paths = [];
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * FieldMask paths.
-                 * @member {Array.<string>} paths
-                 * @memberof google.protobuf.FieldMask
-                 * @instance
-                 */
-                FieldMask.prototype.paths = $util.emptyArray;
-    
-                /**
-                 * Creates a new FieldMask instance using the specified properties.
-                 * @function create
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {google.protobuf.IFieldMask=} [properties] Properties to set
-                 * @returns {google.protobuf.FieldMask} FieldMask instance
-                 */
-                FieldMask.create = function create(properties) {
-                    return new FieldMask(properties);
-                };
-    
-                /**
-                 * Encodes the specified FieldMask message. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {google.protobuf.IFieldMask} message FieldMask message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                FieldMask.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.paths != null && message.paths.length)
-                        for (var i = 0; i < message.paths.length; ++i)
-                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.paths[i]);
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified FieldMask message, length delimited. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {google.protobuf.IFieldMask} message FieldMask message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                FieldMask.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a FieldMask message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.protobuf.FieldMask} FieldMask
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                FieldMask.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.FieldMask();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.paths && message.paths.length))
-                                message.paths = [];
-                            message.paths.push(reader.string());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a FieldMask message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.protobuf.FieldMask} FieldMask
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                FieldMask.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a FieldMask message.
-                 * @function verify
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                FieldMask.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.paths != null && message.hasOwnProperty("paths")) {
-                        if (!Array.isArray(message.paths))
-                            return "paths: array expected";
-                        for (var i = 0; i < message.paths.length; ++i)
-                            if (!$util.isString(message.paths[i]))
-                                return "paths: string[] expected";
-                    }
-                    return null;
-                };
-    
-                /**
-                 * Creates a FieldMask message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.protobuf.FieldMask} FieldMask
-                 */
-                FieldMask.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.protobuf.FieldMask)
-                        return object;
-                    var message = new $root.google.protobuf.FieldMask();
-                    if (object.paths) {
-                        if (!Array.isArray(object.paths))
-                            throw TypeError(".google.protobuf.FieldMask.paths: array expected");
-                        message.paths = [];
-                        for (var i = 0; i < object.paths.length; ++i)
-                            message.paths[i] = String(object.paths[i]);
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a FieldMask message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.protobuf.FieldMask
-                 * @static
-                 * @param {google.protobuf.FieldMask} message FieldMask
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                FieldMask.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.arrays || options.defaults)
-                        object.paths = [];
-                    if (message.paths && message.paths.length) {
-                        object.paths = [];
-                        for (var j = 0; j < message.paths.length; ++j)
-                            object.paths[j] = message.paths[j];
-                    }
-                    return object;
-                };
-    
-                /**
-                 * Converts this FieldMask to JSON.
-                 * @function toJSON
-                 * @memberof google.protobuf.FieldMask
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                FieldMask.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return FieldMask;
-            })();
-    
-            protobuf.Timestamp = (function() {
-    
-                /**
-                 * Properties of a Timestamp.
-                 * @memberof google.protobuf
-                 * @interface ITimestamp
-                 * @property {number|Long|null} [seconds] Timestamp seconds
-                 * @property {number|null} [nanos] Timestamp nanos
-                 */
-    
-                /**
-                 * Constructs a new Timestamp.
-                 * @memberof google.protobuf
-                 * @classdesc Represents a Timestamp.
-                 * @implements ITimestamp
-                 * @constructor
-                 * @param {google.protobuf.ITimestamp=} [properties] Properties to set
-                 */
-                function Timestamp(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-    
-                /**
-                 * Timestamp seconds.
-                 * @member {number|Long} seconds
-                 * @memberof google.protobuf.Timestamp
-                 * @instance
-                 */
-                Timestamp.prototype.seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
-    
-                /**
-                 * Timestamp nanos.
-                 * @member {number} nanos
-                 * @memberof google.protobuf.Timestamp
-                 * @instance
-                 */
-                Timestamp.prototype.nanos = 0;
-    
-                /**
-                 * Creates a new Timestamp instance using the specified properties.
-                 * @function create
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {google.protobuf.ITimestamp=} [properties] Properties to set
-                 * @returns {google.protobuf.Timestamp} Timestamp instance
-                 */
-                Timestamp.create = function create(properties) {
-                    return new Timestamp(properties);
-                };
-    
-                /**
-                 * Encodes the specified Timestamp message. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
-                 * @function encode
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {google.protobuf.ITimestamp} message Timestamp message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Timestamp.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.seconds != null && message.hasOwnProperty("seconds"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.seconds);
-                    if (message.nanos != null && message.hasOwnProperty("nanos"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.nanos);
-                    return writer;
-                };
-    
-                /**
-                 * Encodes the specified Timestamp message, length delimited. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
-                 * @function encodeDelimited
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {google.protobuf.ITimestamp} message Timestamp message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Timestamp.encodeDelimited = function encodeDelimited(message, writer) {
-                    return this.encode(message, writer).ldelim();
-                };
-    
-                /**
-                 * Decodes a Timestamp message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {google.protobuf.Timestamp} Timestamp
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Timestamp.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Timestamp();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.seconds = reader.int64();
-                            break;
-                        case 2:
-                            message.nanos = reader.int32();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-    
-                /**
-                 * Decodes a Timestamp message from the specified reader or buffer, length delimited.
-                 * @function decodeDelimited
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @returns {google.protobuf.Timestamp} Timestamp
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Timestamp.decodeDelimited = function decodeDelimited(reader) {
-                    if (!(reader instanceof $Reader))
-                        reader = new $Reader(reader);
-                    return this.decode(reader, reader.uint32());
-                };
-    
-                /**
-                 * Verifies a Timestamp message.
-                 * @function verify
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {Object.<string,*>} message Plain object to verify
-                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                 */
-                Timestamp.verify = function verify(message) {
-                    if (typeof message !== "object" || message === null)
-                        return "object expected";
-                    if (message.seconds != null && message.hasOwnProperty("seconds"))
-                        if (!$util.isInteger(message.seconds) && !(message.seconds && $util.isInteger(message.seconds.low) && $util.isInteger(message.seconds.high)))
-                            return "seconds: integer|Long expected";
-                    if (message.nanos != null && message.hasOwnProperty("nanos"))
-                        if (!$util.isInteger(message.nanos))
-                            return "nanos: integer expected";
-                    return null;
-                };
-    
-                /**
-                 * Creates a Timestamp message from a plain object. Also converts values to their respective internal types.
-                 * @function fromObject
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {Object.<string,*>} object Plain object
-                 * @returns {google.protobuf.Timestamp} Timestamp
-                 */
-                Timestamp.fromObject = function fromObject(object) {
-                    if (object instanceof $root.google.protobuf.Timestamp)
-                        return object;
-                    var message = new $root.google.protobuf.Timestamp();
-                    if (object.seconds != null)
-                        if ($util.Long)
-                            (message.seconds = $util.Long.fromValue(object.seconds)).unsigned = false;
-                        else if (typeof object.seconds === "string")
-                            message.seconds = parseInt(object.seconds, 10);
-                        else if (typeof object.seconds === "number")
-                            message.seconds = object.seconds;
-                        else if (typeof object.seconds === "object")
-                            message.seconds = new $util.LongBits(object.seconds.low >>> 0, object.seconds.high >>> 0).toNumber();
-                    if (object.nanos != null)
-                        message.nanos = object.nanos | 0;
-                    return message;
-                };
-    
-                /**
-                 * Creates a plain object from a Timestamp message. Also converts values to other types if specified.
-                 * @function toObject
-                 * @memberof google.protobuf.Timestamp
-                 * @static
-                 * @param {google.protobuf.Timestamp} message Timestamp
-                 * @param {$protobuf.IConversionOptions} [options] Conversion options
-                 * @returns {Object.<string,*>} Plain object
-                 */
-                Timestamp.toObject = function toObject(message, options) {
-                    if (!options)
-                        options = {};
-                    var object = {};
-                    if (options.defaults) {
-                        if ($util.Long) {
-                            var long = new $util.Long(0, 0, false);
-                            object.seconds = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                        } else
-                            object.seconds = options.longs === String ? "0" : 0;
-                        object.nanos = 0;
-                    }
-                    if (message.seconds != null && message.hasOwnProperty("seconds"))
-                        if (typeof message.seconds === "number")
-                            object.seconds = options.longs === String ? String(message.seconds) : message.seconds;
-                        else
-                            object.seconds = options.longs === String ? $util.Long.prototype.toString.call(message.seconds) : options.longs === Number ? new $util.LongBits(message.seconds.low >>> 0, message.seconds.high >>> 0).toNumber() : message.seconds;
-                    if (message.nanos != null && message.hasOwnProperty("nanos"))
-                        object.nanos = message.nanos;
-                    return object;
-                };
-    
-                /**
-                 * Converts this Timestamp to JSON.
-                 * @function toJSON
-                 * @memberof google.protobuf.Timestamp
-                 * @instance
-                 * @returns {Object.<string,*>} JSON object
-                 */
-                Timestamp.prototype.toJSON = function toJSON() {
-                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                };
-    
-                return Timestamp;
-            })();
-    
             protobuf.Struct = (function() {
     
                 /**
@@ -28074,6 +27263,230 @@
                 return ListValue;
             })();
     
+            protobuf.Duration = (function() {
+    
+                /**
+                 * Properties of a Duration.
+                 * @memberof google.protobuf
+                 * @interface IDuration
+                 * @property {number|Long|null} [seconds] Duration seconds
+                 * @property {number|null} [nanos] Duration nanos
+                 */
+    
+                /**
+                 * Constructs a new Duration.
+                 * @memberof google.protobuf
+                 * @classdesc Represents a Duration.
+                 * @implements IDuration
+                 * @constructor
+                 * @param {google.protobuf.IDuration=} [properties] Properties to set
+                 */
+                function Duration(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * Duration seconds.
+                 * @member {number|Long} seconds
+                 * @memberof google.protobuf.Duration
+                 * @instance
+                 */
+                Duration.prototype.seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+                /**
+                 * Duration nanos.
+                 * @member {number} nanos
+                 * @memberof google.protobuf.Duration
+                 * @instance
+                 */
+                Duration.prototype.nanos = 0;
+    
+                /**
+                 * Creates a new Duration instance using the specified properties.
+                 * @function create
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {google.protobuf.IDuration=} [properties] Properties to set
+                 * @returns {google.protobuf.Duration} Duration instance
+                 */
+                Duration.create = function create(properties) {
+                    return new Duration(properties);
+                };
+    
+                /**
+                 * Encodes the specified Duration message. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {google.protobuf.IDuration} message Duration message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Duration.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.seconds != null && message.hasOwnProperty("seconds"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.seconds);
+                    if (message.nanos != null && message.hasOwnProperty("nanos"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.nanos);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified Duration message, length delimited. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {google.protobuf.IDuration} message Duration message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Duration.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a Duration message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.protobuf.Duration} Duration
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Duration.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Duration();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.seconds = reader.int64();
+                            break;
+                        case 2:
+                            message.nanos = reader.int32();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a Duration message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.protobuf.Duration} Duration
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Duration.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a Duration message.
+                 * @function verify
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Duration.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.seconds != null && message.hasOwnProperty("seconds"))
+                        if (!$util.isInteger(message.seconds) && !(message.seconds && $util.isInteger(message.seconds.low) && $util.isInteger(message.seconds.high)))
+                            return "seconds: integer|Long expected";
+                    if (message.nanos != null && message.hasOwnProperty("nanos"))
+                        if (!$util.isInteger(message.nanos))
+                            return "nanos: integer expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a Duration message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.protobuf.Duration} Duration
+                 */
+                Duration.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.protobuf.Duration)
+                        return object;
+                    var message = new $root.google.protobuf.Duration();
+                    if (object.seconds != null)
+                        if ($util.Long)
+                            (message.seconds = $util.Long.fromValue(object.seconds)).unsigned = false;
+                        else if (typeof object.seconds === "string")
+                            message.seconds = parseInt(object.seconds, 10);
+                        else if (typeof object.seconds === "number")
+                            message.seconds = object.seconds;
+                        else if (typeof object.seconds === "object")
+                            message.seconds = new $util.LongBits(object.seconds.low >>> 0, object.seconds.high >>> 0).toNumber();
+                    if (object.nanos != null)
+                        message.nanos = object.nanos | 0;
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a Duration message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.protobuf.Duration
+                 * @static
+                 * @param {google.protobuf.Duration} message Duration
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Duration.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, false);
+                            object.seconds = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                        } else
+                            object.seconds = options.longs === String ? "0" : 0;
+                        object.nanos = 0;
+                    }
+                    if (message.seconds != null && message.hasOwnProperty("seconds"))
+                        if (typeof message.seconds === "number")
+                            object.seconds = options.longs === String ? String(message.seconds) : message.seconds;
+                        else
+                            object.seconds = options.longs === String ? $util.Long.prototype.toString.call(message.seconds) : options.longs === Number ? new $util.LongBits(message.seconds.low >>> 0, message.seconds.high >>> 0).toNumber() : message.seconds;
+                    if (message.nanos != null && message.hasOwnProperty("nanos"))
+                        object.nanos = message.nanos;
+                    return object;
+                };
+    
+                /**
+                 * Converts this Duration to JSON.
+                 * @function toJSON
+                 * @memberof google.protobuf.Duration
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Duration.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return Duration;
+            })();
+    
             protobuf.Any = (function() {
     
                 /**
@@ -28291,6 +27704,593 @@
                 };
     
                 return Any;
+            })();
+    
+            protobuf.Timestamp = (function() {
+    
+                /**
+                 * Properties of a Timestamp.
+                 * @memberof google.protobuf
+                 * @interface ITimestamp
+                 * @property {number|Long|null} [seconds] Timestamp seconds
+                 * @property {number|null} [nanos] Timestamp nanos
+                 */
+    
+                /**
+                 * Constructs a new Timestamp.
+                 * @memberof google.protobuf
+                 * @classdesc Represents a Timestamp.
+                 * @implements ITimestamp
+                 * @constructor
+                 * @param {google.protobuf.ITimestamp=} [properties] Properties to set
+                 */
+                function Timestamp(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * Timestamp seconds.
+                 * @member {number|Long} seconds
+                 * @memberof google.protobuf.Timestamp
+                 * @instance
+                 */
+                Timestamp.prototype.seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+                /**
+                 * Timestamp nanos.
+                 * @member {number} nanos
+                 * @memberof google.protobuf.Timestamp
+                 * @instance
+                 */
+                Timestamp.prototype.nanos = 0;
+    
+                /**
+                 * Creates a new Timestamp instance using the specified properties.
+                 * @function create
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {google.protobuf.ITimestamp=} [properties] Properties to set
+                 * @returns {google.protobuf.Timestamp} Timestamp instance
+                 */
+                Timestamp.create = function create(properties) {
+                    return new Timestamp(properties);
+                };
+    
+                /**
+                 * Encodes the specified Timestamp message. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {google.protobuf.ITimestamp} message Timestamp message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Timestamp.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.seconds != null && message.hasOwnProperty("seconds"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.seconds);
+                    if (message.nanos != null && message.hasOwnProperty("nanos"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.nanos);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified Timestamp message, length delimited. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {google.protobuf.ITimestamp} message Timestamp message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Timestamp.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a Timestamp message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.protobuf.Timestamp} Timestamp
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Timestamp.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Timestamp();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.seconds = reader.int64();
+                            break;
+                        case 2:
+                            message.nanos = reader.int32();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a Timestamp message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.protobuf.Timestamp} Timestamp
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Timestamp.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a Timestamp message.
+                 * @function verify
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Timestamp.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.seconds != null && message.hasOwnProperty("seconds"))
+                        if (!$util.isInteger(message.seconds) && !(message.seconds && $util.isInteger(message.seconds.low) && $util.isInteger(message.seconds.high)))
+                            return "seconds: integer|Long expected";
+                    if (message.nanos != null && message.hasOwnProperty("nanos"))
+                        if (!$util.isInteger(message.nanos))
+                            return "nanos: integer expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a Timestamp message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.protobuf.Timestamp} Timestamp
+                 */
+                Timestamp.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.protobuf.Timestamp)
+                        return object;
+                    var message = new $root.google.protobuf.Timestamp();
+                    if (object.seconds != null)
+                        if ($util.Long)
+                            (message.seconds = $util.Long.fromValue(object.seconds)).unsigned = false;
+                        else if (typeof object.seconds === "string")
+                            message.seconds = parseInt(object.seconds, 10);
+                        else if (typeof object.seconds === "number")
+                            message.seconds = object.seconds;
+                        else if (typeof object.seconds === "object")
+                            message.seconds = new $util.LongBits(object.seconds.low >>> 0, object.seconds.high >>> 0).toNumber();
+                    if (object.nanos != null)
+                        message.nanos = object.nanos | 0;
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a Timestamp message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.protobuf.Timestamp
+                 * @static
+                 * @param {google.protobuf.Timestamp} message Timestamp
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Timestamp.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        if ($util.Long) {
+                            var long = new $util.Long(0, 0, false);
+                            object.seconds = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                        } else
+                            object.seconds = options.longs === String ? "0" : 0;
+                        object.nanos = 0;
+                    }
+                    if (message.seconds != null && message.hasOwnProperty("seconds"))
+                        if (typeof message.seconds === "number")
+                            object.seconds = options.longs === String ? String(message.seconds) : message.seconds;
+                        else
+                            object.seconds = options.longs === String ? $util.Long.prototype.toString.call(message.seconds) : options.longs === Number ? new $util.LongBits(message.seconds.low >>> 0, message.seconds.high >>> 0).toNumber() : message.seconds;
+                    if (message.nanos != null && message.hasOwnProperty("nanos"))
+                        object.nanos = message.nanos;
+                    return object;
+                };
+    
+                /**
+                 * Converts this Timestamp to JSON.
+                 * @function toJSON
+                 * @memberof google.protobuf.Timestamp
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Timestamp.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return Timestamp;
+            })();
+    
+            protobuf.Empty = (function() {
+    
+                /**
+                 * Properties of an Empty.
+                 * @memberof google.protobuf
+                 * @interface IEmpty
+                 */
+    
+                /**
+                 * Constructs a new Empty.
+                 * @memberof google.protobuf
+                 * @classdesc Represents an Empty.
+                 * @implements IEmpty
+                 * @constructor
+                 * @param {google.protobuf.IEmpty=} [properties] Properties to set
+                 */
+                function Empty(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * Creates a new Empty instance using the specified properties.
+                 * @function create
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {google.protobuf.IEmpty=} [properties] Properties to set
+                 * @returns {google.protobuf.Empty} Empty instance
+                 */
+                Empty.create = function create(properties) {
+                    return new Empty(properties);
+                };
+    
+                /**
+                 * Encodes the specified Empty message. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {google.protobuf.IEmpty} message Empty message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Empty.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified Empty message, length delimited. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {google.protobuf.IEmpty} message Empty message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Empty.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes an Empty message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.protobuf.Empty} Empty
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Empty.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.Empty();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes an Empty message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.protobuf.Empty} Empty
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Empty.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies an Empty message.
+                 * @function verify
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Empty.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates an Empty message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.protobuf.Empty} Empty
+                 */
+                Empty.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.protobuf.Empty)
+                        return object;
+                    return new $root.google.protobuf.Empty();
+                };
+    
+                /**
+                 * Creates a plain object from an Empty message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.protobuf.Empty
+                 * @static
+                 * @param {google.protobuf.Empty} message Empty
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Empty.toObject = function toObject() {
+                    return {};
+                };
+    
+                /**
+                 * Converts this Empty to JSON.
+                 * @function toJSON
+                 * @memberof google.protobuf.Empty
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Empty.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return Empty;
+            })();
+    
+            protobuf.FieldMask = (function() {
+    
+                /**
+                 * Properties of a FieldMask.
+                 * @memberof google.protobuf
+                 * @interface IFieldMask
+                 * @property {Array.<string>|null} [paths] FieldMask paths
+                 */
+    
+                /**
+                 * Constructs a new FieldMask.
+                 * @memberof google.protobuf
+                 * @classdesc Represents a FieldMask.
+                 * @implements IFieldMask
+                 * @constructor
+                 * @param {google.protobuf.IFieldMask=} [properties] Properties to set
+                 */
+                function FieldMask(properties) {
+                    this.paths = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * FieldMask paths.
+                 * @member {Array.<string>} paths
+                 * @memberof google.protobuf.FieldMask
+                 * @instance
+                 */
+                FieldMask.prototype.paths = $util.emptyArray;
+    
+                /**
+                 * Creates a new FieldMask instance using the specified properties.
+                 * @function create
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {google.protobuf.IFieldMask=} [properties] Properties to set
+                 * @returns {google.protobuf.FieldMask} FieldMask instance
+                 */
+                FieldMask.create = function create(properties) {
+                    return new FieldMask(properties);
+                };
+    
+                /**
+                 * Encodes the specified FieldMask message. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {google.protobuf.IFieldMask} message FieldMask message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                FieldMask.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.paths != null && message.paths.length)
+                        for (var i = 0; i < message.paths.length; ++i)
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.paths[i]);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified FieldMask message, length delimited. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {google.protobuf.IFieldMask} message FieldMask message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                FieldMask.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a FieldMask message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.protobuf.FieldMask} FieldMask
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                FieldMask.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.protobuf.FieldMask();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            if (!(message.paths && message.paths.length))
+                                message.paths = [];
+                            message.paths.push(reader.string());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a FieldMask message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.protobuf.FieldMask} FieldMask
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                FieldMask.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a FieldMask message.
+                 * @function verify
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                FieldMask.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.paths != null && message.hasOwnProperty("paths")) {
+                        if (!Array.isArray(message.paths))
+                            return "paths: array expected";
+                        for (var i = 0; i < message.paths.length; ++i)
+                            if (!$util.isString(message.paths[i]))
+                                return "paths: string[] expected";
+                    }
+                    return null;
+                };
+    
+                /**
+                 * Creates a FieldMask message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.protobuf.FieldMask} FieldMask
+                 */
+                FieldMask.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.protobuf.FieldMask)
+                        return object;
+                    var message = new $root.google.protobuf.FieldMask();
+                    if (object.paths) {
+                        if (!Array.isArray(object.paths))
+                            throw TypeError(".google.protobuf.FieldMask.paths: array expected");
+                        message.paths = [];
+                        for (var i = 0; i < object.paths.length; ++i)
+                            message.paths[i] = String(object.paths[i]);
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a FieldMask message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.protobuf.FieldMask
+                 * @static
+                 * @param {google.protobuf.FieldMask} message FieldMask
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                FieldMask.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.arrays || options.defaults)
+                        object.paths = [];
+                    if (message.paths && message.paths.length) {
+                        object.paths = [];
+                        for (var j = 0; j < message.paths.length; ++j)
+                            object.paths[j] = message.paths[j];
+                    }
+                    return object;
+                };
+    
+                /**
+                 * Converts this FieldMask to JSON.
+                 * @function toJSON
+                 * @memberof google.protobuf.FieldMask
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                FieldMask.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return FieldMask;
             })();
     
             return protobuf;

@@ -24,18 +24,19 @@ logging.basicConfig(level=logging.DEBUG)
 s.metadata.set_track_obsolete_files(True)
 
 gapic = gcp.GAPICMicrogenerator()
+version='v2'
 # tasks has two product names, and a poorly named artman yaml
 v2_library = gapic.typescript_library(
     "logging",
-    "v2",
+    version,
     generator_args={
         "grpc-service-config": f"google/logging/{version}/logging_grpc_service_config.json",
         "package-name": f"@google-cloud/logging",
-        "main-service": f"logging"
+        "main-service": f"logging",
+        "bundle-config": f"google/logging/{version}/logging_gapic.yaml"
         },
         proto_path=f'/google/logging/{version}',
         extra_proto_files=['google/cloud/common_resources.proto'],
-    )
 )
 s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json"])
 
