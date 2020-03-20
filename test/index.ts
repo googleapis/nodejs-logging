@@ -131,7 +131,7 @@ describe('Logging', () => {
   const PROJECT_ID = 'project-id';
 
   before(() => {
-    Logging = proxyquire('../../', {
+    Logging = proxyquire('../src', {
       '@google-cloud/common': {
         util: fakeUtil,
       },
@@ -216,10 +216,12 @@ describe('Logging', () => {
       const options = {
         a: 'b',
         c: 'd',
+        clientConfig: {},
+        port: 443,
+        servicePath: 'logging.googleapis.com',
       } as LoggingOptions;
 
       const logging = new Logging(options);
-
       assert.notStrictEqual(logging.options, options);
 
       assert.deepStrictEqual(
