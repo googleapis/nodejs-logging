@@ -1309,7 +1309,7 @@ export class ConfigServiceV2Client {
    * the GCP organization.
    *
    * See [Enabling CMEK for Logs
-   * Router](/logging/docs/routing/managed-encryption) for more information.
+   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1405,7 +1405,7 @@ export class ConfigServiceV2Client {
    * 3) access to the key is disabled.
    *
    * See [Enabling CMEK for Logs
-   * Router](/logging/docs/routing/managed-encryption) for more information.
+   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1426,7 +1426,7 @@ export class ConfigServiceV2Client {
    *   Required. The CMEK settings to update.
    *
    *   See [Enabling CMEK for Logs
-   *   Router](/logging/docs/routing/managed-encryption) for more information.
+   *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
    * @param {google.protobuf.FieldMask} [request.updateMask]
    *   Optional. Field mask identifying which fields from `cmek_settings` should
    *   be updated. A field will be overwritten if and only if it is in the update

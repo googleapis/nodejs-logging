@@ -40,8 +40,9 @@ v2_library = gapic.typescript_library(
 )
 s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json"])
 # fix incorrect docs link
-s.replace('src/v2/config_service_client.ts', '/logging/docs/routing/managed-encryption', 'https://cloud.google.com/logging/docs/routing/managed-encryption')
-s.replace('src/v2/logging_service_client.ts', '/logging/docs/', 'https://cloud.google.com/logging/docs/')
+s.replace('src/v2/config_service_v2_client.ts', '/logging/docs/routing/managed-encryption', 'https://cloud.google.com/logging/docs/routing/managed-encryption')
+s.replace('src/v2/logging_service_v2_client.ts', '/logging/docs/', 'https://cloud.google.com/logging/docs/')
+s.replace('src/v2/logging_service_v2_client.ts', '/logging/quota-policy', 'https://cloud.google.com/logging/quota-policy')
 
 # Copy in templated files
 common_templates = gcp.CommonTemplates()
