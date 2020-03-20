@@ -35,7 +35,7 @@ async function quickstart(
   const metadata = {
     resource: {type: 'global'},
     // See: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#logseverity
-    severity: 'INFO'
+    severity: 'INFO',
   };
 
   // Prepares a log entry
