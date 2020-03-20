@@ -39,6 +39,9 @@ v2_library = gapic.typescript_library(
         extra_proto_files=['google/cloud/common_resources.proto'],
 )
 s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json"])
+# fix incorrect docs link
+s.replace('src/v2/config_service_client.ts', '/logging/docs/routing/managed-encryption', 'https://cloud.google.com/logging/docs/routing/managed-encryption')
+s.replace('src/v2/logging_service_client.ts', '/logging/docs/', 'https://cloud.google.com/logging/docs/')
 
 # Copy in templated files
 common_templates = gcp.CommonTemplates()
