@@ -16,7 +16,7 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-import * as Logging from '@google-cloud/logging';
+import {Logging} from '@google-cloud/logging';
 
 function main() {
   const loggingClient = new Logging();
