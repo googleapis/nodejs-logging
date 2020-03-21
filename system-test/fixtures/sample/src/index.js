@@ -20,9 +20,9 @@
 const logging = require('@google-cloud/logging');
 
 function main() {
-  const configServiceV2Client = new logging.ConfigServiceV2Client();
-  const loggingServiceV2Client = new logging.LoggingServiceV2Client();
-  const metricsServiceV2Client = new logging.MetricsServiceV2Client();
+  const configServiceV2Client = new logging.v2.ConfigServiceV2Client();
+  const loggingServiceV2Client = new logging.v2.LoggingServiceV2Client();
+  const metricsServiceV2Client = new logging.v2.MetricsServiceV2Client();
 }
 
 main();

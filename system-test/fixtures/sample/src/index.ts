@@ -16,12 +16,12 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-import {ConfigServiceV2Client, LoggingServiceV2Client, MetricsServiceV2Client} from '@google-cloud/logging';
+import * as Logging from '@google-cloud/logging';
 
 function main() {
-  const configServiceV2Client = new ConfigServiceV2Client();
-  const loggingServiceV2Client = new LoggingServiceV2Client();
-  const metricsServiceV2Client = new MetricsServiceV2Client();
+  const configServiceV2Client = new Logging.v2.ConfigServiceV2Client();
+  const loggingServiceV2Client = new Logging.v2.LoggingServiceV2Client();
+  const metricsServiceV2Client = new Logging.v2.MetricsServiceV2Client();
 }
 
 main();
