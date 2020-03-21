@@ -19,9 +19,7 @@
 import * as Logging from '@google-cloud/logging';
 
 function main() {
-  const configServiceV2Client = new Logging.v2.ConfigServiceV2Client();
-  const loggingServiceV2Client = new Logging.v2.LoggingServiceV2Client();
-  const metricsServiceV2Client = new Logging.v2.MetricsServiceV2Client();
+  const loggingClient = new Logging();
 }
 
 main();

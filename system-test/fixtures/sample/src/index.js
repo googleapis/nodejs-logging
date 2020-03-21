@@ -17,12 +17,10 @@
 // ** All changes to this file may be overwritten. **
 
 /* eslint-disable node/no-missing-require, no-unused-vars */
-const logging = require('@google-cloud/logging');
+const Logging = require('@google-cloud/logging');
 
 function main() {
-  const configServiceV2Client = new logging.v2.ConfigServiceV2Client();
-  const loggingServiceV2Client = new logging.v2.LoggingServiceV2Client();
-  const metricsServiceV2Client = new logging.v2.MetricsServiceV2Client();
+  const loggingClient = new Logging();
 }
 
 main();
