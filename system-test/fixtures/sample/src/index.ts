@@ -16,10 +16,10 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-import {Sink} from '@google-cloud/logging';
+import {Logging} from '@google-cloud/logging';
 
 function main() {
-  const loggingServiceV2Client = new Sink();
+  const loggingServiceV2Client = new Logging();
 }
 
 main();

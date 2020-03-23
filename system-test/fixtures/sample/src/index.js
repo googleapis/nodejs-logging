@@ -20,7 +20,7 @@
 const logging = require('@google-cloud/logging');
 
 function main() {
-  const client = new logging.Sink();
+  const client = new logging.Logging();
 }
 
 main();
