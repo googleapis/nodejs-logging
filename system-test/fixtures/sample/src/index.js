@@ -17,10 +17,10 @@
 // ** All changes to this file may be overwritten. **
 
 /* eslint-disable node/no-missing-require, no-unused-vars */
-const {Logging} = require('@google-cloud/logging');
+const logging = require('@google-cloud/logging');
 
 function main() {
-  const loggingClient = new Logging();
+  const client = new logging.Sink();
 }
 
 main();

@@ -291,7 +291,8 @@ export class MetricsServiceV2Client {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
           }
-          return stub[methodName].apply(stub, args);
+          const func = stub[methodName];
+          return func.apply(stub, args);
         },
         (err: Error | null | undefined) => () => {
           throw err;

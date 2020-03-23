@@ -36,7 +36,7 @@ import {Dataset} from '@google-cloud/bigquery';
 import {Bucket} from '@google-cloud/storage';
 
 const {v2} = require('../src');
-const PKG = require('../../package.json');
+const version = require('../../package.json').version;
 
 interface AbortableDuplex extends Duplex {
   cancel: Function;
@@ -199,7 +199,7 @@ describe('Logging', () => {
           extend(
             {
               libName: 'gccl',
-              libVersion: PKG.version,
+              libVersion: version,
               scopes: EXPECTED_SCOPES,
             },
             options
@@ -229,7 +229,7 @@ describe('Logging', () => {
         extend(
           {
             libName: 'gccl',
-            libVersion: PKG.version,
+            libVersion: version,
             scopes: EXPECTED_SCOPES,
           },
           options

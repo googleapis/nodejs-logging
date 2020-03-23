@@ -83,6 +83,9 @@ async function quickstart(
 
   async function writeLog() {
     // Writes the log entry
+    console.warn('metadata: ', metadata);
+    console.warn('test: ', text);
+    console.warn('writing log, entry is  : ', entry);
     await log.write(entry);
     console.log(`Logged: ${text}`);
   }
