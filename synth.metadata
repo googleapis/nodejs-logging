@@ -1,13 +1,12 @@
 {
-  "updateTime": "2020-03-22T00:01:43.986356Z",
+  "updateTime": "2020-03-23T19:52:03.983833Z",
   "sources": [
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
         "sha": "0be7105dc52590fa9a24e784052298ae37ce53aa",
-        "internalRef": "302154871",
-        "log": "0be7105dc52590fa9a24e784052298ae37ce53aa\nAdd BUILD.bazel file to asset/v1p1beta1\n\nPiperOrigin-RevId: 302154871\n\n"
+        "internalRef": "302154871"
       }
     },
     {
