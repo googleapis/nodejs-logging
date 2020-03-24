@@ -74,6 +74,8 @@ async function quickstart(
   // The metadata associated with the entry
   const metadata = {
     resource: {type: 'global'},
+    // See: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#logseverity
+    severity: 'INFO',
   };
 
   // Prepares a log entry
@@ -125,6 +127,27 @@ has instructions for running the samples.
 
 The [Stackdriver Logging Node.js Client API Reference][client-docs] documentation
 also contains samples.
+
+## Supported Node.js Versions
+
+Our client libraries follow the [Node.js release schedule](https://nodejs.org/en/about/releases/).
+Libraries are compatible with all current _active_ and _maintenance_ versions of
+Node.js.
+
+Client libraries targetting some end-of-life versions of Node.js are available, and
+can be installed via npm [dist-tags](https://docs.npmjs.com/cli/dist-tag).
+The dist-tags follow the naming convention `legacy-(version)`.
+
+_Legacy Node.js versions are supported as a best effort:_
+
+* Legacy versions will not be tested in continuous integration.
+* Some security patches may not be able to be backported.
+* Dependencies will not be kept up-to-date, and features will not be backported.
+
+#### Legacy tags available
+
+* `legacy-8`: install client libraries from this dist-tag for versions
+  compatible with Node.js 8.
 
 ## Versioning
 
