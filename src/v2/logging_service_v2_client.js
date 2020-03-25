@@ -156,6 +156,23 @@ class LoggingServiceV2Client {
       ),
     };
 
+    const protoFilesRoot = opts.fallback
+      ? gaxModule.protobuf.Root.fromJSON(require('../../protos/protos.json'))
+      : gaxModule.protobuf.loadSync(nodejsProtoPath);
+
+    // Some methods on this API support automatically batching
+    // requests; denote this.
+    this._descriptors.batching = {
+      writeLogEntries: new gaxModule.BundleDescriptor(
+        'entries',
+        ['logName', 'resource', 'labels'],
+        null,
+        gax.createByteLengthFunction(
+          protoFilesRoot.lookup('google.logging.v2.LogEntry')
+        )
+      ),
+    };
+
     // Put together the default options sent with requests.
     const defaults = gaxGrpc.constructSettings(
       'google.logging.v2.LoggingServiceV2',
@@ -181,8 +198,8 @@ class LoggingServiceV2Client {
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
     const loggingServiceV2StubMethods = [
-      'deleteLog',
       'writeLogEntries',
+      'deleteLog',
       'listLogEntries',
       'listMonitoredResourceDescriptors',
       'listLogs',
@@ -199,7 +216,8 @@ class LoggingServiceV2Client {
       this._innerApiCalls[methodName] = gaxModule.createApiCall(
         innerCallPromise,
         defaults[methodName],
-        this._descriptors.page[methodName]
+        this._descriptors.page[methodName] ||
+          this._descriptors.batching[methodName]
       );
     }
   }
@@ -252,66 +270,6 @@ class LoggingServiceV2Client {
   // -------------------
   // -- Service calls --
   // -------------------
-
-  /**
-   * Deletes all the log entries in a log. The log reappears if it receives new
-   * entries. Log entries written shortly before the delete operation might not
-   * be deleted. Entries received after the delete operation with a timestamp
-   * before the operation will be deleted.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.logName
-   *   Required. The resource name of the log to delete:
-   *
-   *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
-   *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-   *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
-   *
-   *   `[LOG_ID]` must be URL-encoded. For example,
-   *   `"projects/my-project-id/logs/syslog"`,
-   *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-   *   For more information about log names, see
-   *   LogEntry.
-   * @param {Object} [options]
-   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
-   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
-   * @param {function(?Error)} [callback]
-   *   The function which will be called with the result of the API call.
-   * @returns {Promise} - The promise which resolves when API call finishes.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   *
-   * @example
-   *
-   * const logging = require('@google-cloud/logging');
-   *
-   * const client = new logging.v2.LoggingServiceV2Client({
-   *   // optional auth parameters.
-   * });
-   *
-   * const logName = '';
-   * client.deleteLog({logName: logName}).catch(err => {
-   *   console.error(err);
-   * });
-   */
-  deleteLog(request, options, callback) {
-    if (options instanceof Function && callback === undefined) {
-      callback = options;
-      options = {};
-    }
-    request = request || {};
-    options = options || {};
-    options.otherArgs = options.otherArgs || {};
-    options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      log_name: request.logName,
-    });
-
-    return this._innerApiCalls.deleteLog(request, options, callback);
-  }
 
   /**
    * Writes log entries to Logging. This API method is the
@@ -432,6 +390,66 @@ class LoggingServiceV2Client {
     options = options || {};
 
     return this._innerApiCalls.writeLogEntries(request, options, callback);
+  }
+
+  /**
+   * Deletes all the log entries in a log. The log reappears if it receives new
+   * entries. Log entries written shortly before the delete operation might not
+   * be deleted. Entries received after the delete operation with a timestamp
+   * before the operation will be deleted.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.logName
+   *   Required. The resource name of the log to delete:
+   *
+   *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
+   *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+   *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
+   *
+   *   `[LOG_ID]` must be URL-encoded. For example,
+   *   `"projects/my-project-id/logs/syslog"`,
+   *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+   *   For more information about log names, see
+   *   LogEntry.
+   * @param {Object} [options]
+   *   Optional parameters. You can override the default settings for this call, e.g, timeout,
+   *   retries, paginations, etc. See [gax.CallOptions]{@link https://googleapis.github.io/gax-nodejs/interfaces/CallOptions.html} for the details.
+   * @param {function(?Error)} [callback]
+   *   The function which will be called with the result of the API call.
+   * @returns {Promise} - The promise which resolves when API call finishes.
+   *   The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   *
+   * const logging = require('@google-cloud/logging');
+   *
+   * const client = new logging.v2.LoggingServiceV2Client({
+   *   // optional auth parameters.
+   * });
+   *
+   * const logName = '';
+   * client.deleteLog({logName: logName}).catch(err => {
+   *   console.error(err);
+   * });
+   */
+  deleteLog(request, options, callback) {
+    if (options instanceof Function && callback === undefined) {
+      callback = options;
+      options = {};
+    }
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      log_name: request.logName,
+    });
+
+    return this._innerApiCalls.deleteLog(request, options, callback);
   }
 
   /**
