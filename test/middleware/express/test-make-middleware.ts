@@ -26,7 +26,7 @@ function makeFakeRequest() {
 }
 
 function makeFakeResponse() {
-  const ee = new EventEmitter();
+  const ee = new EventEmitter.EventEmitter();
   // tslint:disable-next-line:no-any
   (ee as any).getHeader = (name: string) => {};
   return ee;

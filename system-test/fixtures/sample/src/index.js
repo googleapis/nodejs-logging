@@ -16,10 +16,11 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-import {Logging} from '@google-cloud/logging';
+/* eslint-disable node/no-missing-require, no-unused-vars */
+const logging = require('@google-cloud/logging');
 
 function main() {
-  const loggingServiceV2Client = new Logging();
+  const client = new logging.Logging();
 }
 
 main();

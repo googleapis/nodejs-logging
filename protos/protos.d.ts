@@ -23,6 +23,1512 @@ export namespace google {
         /** Namespace v2. */
         namespace v2 {
 
+            /** Properties of a LogEntry. */
+            interface ILogEntry {
+
+                /** LogEntry logName */
+                logName?: (string|null);
+
+                /** LogEntry resource */
+                resource?: (google.api.IMonitoredResource|null);
+
+                /** LogEntry protoPayload */
+                protoPayload?: (google.protobuf.IAny|null);
+
+                /** LogEntry textPayload */
+                textPayload?: (string|null);
+
+                /** LogEntry jsonPayload */
+                jsonPayload?: (google.protobuf.IStruct|null);
+
+                /** LogEntry timestamp */
+                timestamp?: (google.protobuf.ITimestamp|null);
+
+                /** LogEntry receiveTimestamp */
+                receiveTimestamp?: (google.protobuf.ITimestamp|null);
+
+                /** LogEntry severity */
+                severity?: (google.logging.type.LogSeverity|keyof typeof google.logging.type.LogSeverity|null);
+
+                /** LogEntry insertId */
+                insertId?: (string|null);
+
+                /** LogEntry httpRequest */
+                httpRequest?: (google.logging.type.IHttpRequest|null);
+
+                /** LogEntry labels */
+                labels?: ({ [k: string]: string }|null);
+
+                /** LogEntry operation */
+                operation?: (google.logging.v2.ILogEntryOperation|null);
+
+                /** LogEntry trace */
+                trace?: (string|null);
+
+                /** LogEntry spanId */
+                spanId?: (string|null);
+
+                /** LogEntry traceSampled */
+                traceSampled?: (boolean|null);
+
+                /** LogEntry sourceLocation */
+                sourceLocation?: (google.logging.v2.ILogEntrySourceLocation|null);
+            }
+
+            /** Represents a LogEntry. */
+            class LogEntry implements ILogEntry {
+
+                /**
+                 * Constructs a new LogEntry.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILogEntry);
+
+                /** LogEntry logName. */
+                public logName: string;
+
+                /** LogEntry resource. */
+                public resource?: (google.api.IMonitoredResource|null);
+
+                /** LogEntry protoPayload. */
+                public protoPayload?: (google.protobuf.IAny|null);
+
+                /** LogEntry textPayload. */
+                public textPayload: string;
+
+                /** LogEntry jsonPayload. */
+                public jsonPayload?: (google.protobuf.IStruct|null);
+
+                /** LogEntry timestamp. */
+                public timestamp?: (google.protobuf.ITimestamp|null);
+
+                /** LogEntry receiveTimestamp. */
+                public receiveTimestamp?: (google.protobuf.ITimestamp|null);
+
+                /** LogEntry severity. */
+                public severity: (google.logging.type.LogSeverity|keyof typeof google.logging.type.LogSeverity);
+
+                /** LogEntry insertId. */
+                public insertId: string;
+
+                /** LogEntry httpRequest. */
+                public httpRequest?: (google.logging.type.IHttpRequest|null);
+
+                /** LogEntry labels. */
+                public labels: { [k: string]: string };
+
+                /** LogEntry operation. */
+                public operation?: (google.logging.v2.ILogEntryOperation|null);
+
+                /** LogEntry trace. */
+                public trace: string;
+
+                /** LogEntry spanId. */
+                public spanId: string;
+
+                /** LogEntry traceSampled. */
+                public traceSampled: boolean;
+
+                /** LogEntry sourceLocation. */
+                public sourceLocation?: (google.logging.v2.ILogEntrySourceLocation|null);
+
+                /** LogEntry payload. */
+                public payload?: ("protoPayload"|"textPayload"|"jsonPayload");
+
+                /**
+                 * Creates a new LogEntry instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LogEntry instance
+                 */
+                public static create(properties?: google.logging.v2.ILogEntry): google.logging.v2.LogEntry;
+
+                /**
+                 * Encodes the specified LogEntry message. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
+                 * @param message LogEntry message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILogEntry, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LogEntry message, length delimited. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
+                 * @param message LogEntry message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILogEntry, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LogEntry message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LogEntry
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogEntry;
+
+                /**
+                 * Decodes a LogEntry message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LogEntry
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogEntry;
+
+                /**
+                 * Verifies a LogEntry message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LogEntry message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LogEntry
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogEntry;
+
+                /**
+                 * Creates a plain object from a LogEntry message. Also converts values to other types if specified.
+                 * @param message LogEntry
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LogEntry, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LogEntry to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a LogEntryOperation. */
+            interface ILogEntryOperation {
+
+                /** LogEntryOperation id */
+                id?: (string|null);
+
+                /** LogEntryOperation producer */
+                producer?: (string|null);
+
+                /** LogEntryOperation first */
+                first?: (boolean|null);
+
+                /** LogEntryOperation last */
+                last?: (boolean|null);
+            }
+
+            /** Represents a LogEntryOperation. */
+            class LogEntryOperation implements ILogEntryOperation {
+
+                /**
+                 * Constructs a new LogEntryOperation.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILogEntryOperation);
+
+                /** LogEntryOperation id. */
+                public id: string;
+
+                /** LogEntryOperation producer. */
+                public producer: string;
+
+                /** LogEntryOperation first. */
+                public first: boolean;
+
+                /** LogEntryOperation last. */
+                public last: boolean;
+
+                /**
+                 * Creates a new LogEntryOperation instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LogEntryOperation instance
+                 */
+                public static create(properties?: google.logging.v2.ILogEntryOperation): google.logging.v2.LogEntryOperation;
+
+                /**
+                 * Encodes the specified LogEntryOperation message. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
+                 * @param message LogEntryOperation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILogEntryOperation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LogEntryOperation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
+                 * @param message LogEntryOperation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILogEntryOperation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LogEntryOperation message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LogEntryOperation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogEntryOperation;
+
+                /**
+                 * Decodes a LogEntryOperation message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LogEntryOperation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogEntryOperation;
+
+                /**
+                 * Verifies a LogEntryOperation message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LogEntryOperation message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LogEntryOperation
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogEntryOperation;
+
+                /**
+                 * Creates a plain object from a LogEntryOperation message. Also converts values to other types if specified.
+                 * @param message LogEntryOperation
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LogEntryOperation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LogEntryOperation to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a LogEntrySourceLocation. */
+            interface ILogEntrySourceLocation {
+
+                /** LogEntrySourceLocation file */
+                file?: (string|null);
+
+                /** LogEntrySourceLocation line */
+                line?: (number|Long|string|null);
+
+                /** LogEntrySourceLocation function */
+                "function"?: (string|null);
+            }
+
+            /** Represents a LogEntrySourceLocation. */
+            class LogEntrySourceLocation implements ILogEntrySourceLocation {
+
+                /**
+                 * Constructs a new LogEntrySourceLocation.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILogEntrySourceLocation);
+
+                /** LogEntrySourceLocation file. */
+                public file: string;
+
+                /** LogEntrySourceLocation line. */
+                public line: (number|Long|string);
+
+                /** LogEntrySourceLocation function. */
+                public function: string;
+
+                /**
+                 * Creates a new LogEntrySourceLocation instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LogEntrySourceLocation instance
+                 */
+                public static create(properties?: google.logging.v2.ILogEntrySourceLocation): google.logging.v2.LogEntrySourceLocation;
+
+                /**
+                 * Encodes the specified LogEntrySourceLocation message. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
+                 * @param message LogEntrySourceLocation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILogEntrySourceLocation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LogEntrySourceLocation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
+                 * @param message LogEntrySourceLocation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILogEntrySourceLocation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LogEntrySourceLocation message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LogEntrySourceLocation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogEntrySourceLocation;
+
+                /**
+                 * Decodes a LogEntrySourceLocation message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LogEntrySourceLocation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogEntrySourceLocation;
+
+                /**
+                 * Verifies a LogEntrySourceLocation message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LogEntrySourceLocation message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LogEntrySourceLocation
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogEntrySourceLocation;
+
+                /**
+                 * Creates a plain object from a LogEntrySourceLocation message. Also converts values to other types if specified.
+                 * @param message LogEntrySourceLocation
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LogEntrySourceLocation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LogEntrySourceLocation to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Represents a LoggingServiceV2 */
+            class LoggingServiceV2 extends $protobuf.rpc.Service {
+
+                /**
+                 * Constructs a new LoggingServiceV2 service.
+                 * @param rpcImpl RPC implementation
+                 * @param [requestDelimited=false] Whether requests are length-delimited
+                 * @param [responseDelimited=false] Whether responses are length-delimited
+                 */
+                constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+
+                /**
+                 * Creates new LoggingServiceV2 service using the specified rpc implementation.
+                 * @param rpcImpl RPC implementation
+                 * @param [requestDelimited=false] Whether requests are length-delimited
+                 * @param [responseDelimited=false] Whether responses are length-delimited
+                 * @returns RPC service. Useful where requests and/or responses are streamed.
+                 */
+                public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): LoggingServiceV2;
+
+                /**
+                 * Calls DeleteLog.
+                 * @param request DeleteLogRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Empty
+                 */
+                public deleteLog(request: google.logging.v2.IDeleteLogRequest, callback: google.logging.v2.LoggingServiceV2.DeleteLogCallback): void;
+
+                /**
+                 * Calls DeleteLog.
+                 * @param request DeleteLogRequest message or plain object
+                 * @returns Promise
+                 */
+                public deleteLog(request: google.logging.v2.IDeleteLogRequest): Promise<google.protobuf.Empty>;
+
+                /**
+                 * Calls WriteLogEntries.
+                 * @param request WriteLogEntriesRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and WriteLogEntriesResponse
+                 */
+                public writeLogEntries(request: google.logging.v2.IWriteLogEntriesRequest, callback: google.logging.v2.LoggingServiceV2.WriteLogEntriesCallback): void;
+
+                /**
+                 * Calls WriteLogEntries.
+                 * @param request WriteLogEntriesRequest message or plain object
+                 * @returns Promise
+                 */
+                public writeLogEntries(request: google.logging.v2.IWriteLogEntriesRequest): Promise<google.logging.v2.WriteLogEntriesResponse>;
+
+                /**
+                 * Calls ListLogEntries.
+                 * @param request ListLogEntriesRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListLogEntriesResponse
+                 */
+                public listLogEntries(request: google.logging.v2.IListLogEntriesRequest, callback: google.logging.v2.LoggingServiceV2.ListLogEntriesCallback): void;
+
+                /**
+                 * Calls ListLogEntries.
+                 * @param request ListLogEntriesRequest message or plain object
+                 * @returns Promise
+                 */
+                public listLogEntries(request: google.logging.v2.IListLogEntriesRequest): Promise<google.logging.v2.ListLogEntriesResponse>;
+
+                /**
+                 * Calls ListMonitoredResourceDescriptors.
+                 * @param request ListMonitoredResourceDescriptorsRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListMonitoredResourceDescriptorsResponse
+                 */
+                public listMonitoredResourceDescriptors(request: google.logging.v2.IListMonitoredResourceDescriptorsRequest, callback: google.logging.v2.LoggingServiceV2.ListMonitoredResourceDescriptorsCallback): void;
+
+                /**
+                 * Calls ListMonitoredResourceDescriptors.
+                 * @param request ListMonitoredResourceDescriptorsRequest message or plain object
+                 * @returns Promise
+                 */
+                public listMonitoredResourceDescriptors(request: google.logging.v2.IListMonitoredResourceDescriptorsRequest): Promise<google.logging.v2.ListMonitoredResourceDescriptorsResponse>;
+
+                /**
+                 * Calls ListLogs.
+                 * @param request ListLogsRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListLogsResponse
+                 */
+                public listLogs(request: google.logging.v2.IListLogsRequest, callback: google.logging.v2.LoggingServiceV2.ListLogsCallback): void;
+
+                /**
+                 * Calls ListLogs.
+                 * @param request ListLogsRequest message or plain object
+                 * @returns Promise
+                 */
+                public listLogs(request: google.logging.v2.IListLogsRequest): Promise<google.logging.v2.ListLogsResponse>;
+            }
+
+            namespace LoggingServiceV2 {
+
+                /**
+                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#deleteLog}.
+                 * @param error Error, if any
+                 * @param [response] Empty
+                 */
+                type DeleteLogCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#writeLogEntries}.
+                 * @param error Error, if any
+                 * @param [response] WriteLogEntriesResponse
+                 */
+                type WriteLogEntriesCallback = (error: (Error|null), response?: google.logging.v2.WriteLogEntriesResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogEntries}.
+                 * @param error Error, if any
+                 * @param [response] ListLogEntriesResponse
+                 */
+                type ListLogEntriesCallback = (error: (Error|null), response?: google.logging.v2.ListLogEntriesResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#listMonitoredResourceDescriptors}.
+                 * @param error Error, if any
+                 * @param [response] ListMonitoredResourceDescriptorsResponse
+                 */
+                type ListMonitoredResourceDescriptorsCallback = (error: (Error|null), response?: google.logging.v2.ListMonitoredResourceDescriptorsResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogs}.
+                 * @param error Error, if any
+                 * @param [response] ListLogsResponse
+                 */
+                type ListLogsCallback = (error: (Error|null), response?: google.logging.v2.ListLogsResponse) => void;
+            }
+
+            /** Properties of a DeleteLogRequest. */
+            interface IDeleteLogRequest {
+
+                /** DeleteLogRequest logName */
+                logName?: (string|null);
+            }
+
+            /** Represents a DeleteLogRequest. */
+            class DeleteLogRequest implements IDeleteLogRequest {
+
+                /**
+                 * Constructs a new DeleteLogRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IDeleteLogRequest);
+
+                /** DeleteLogRequest logName. */
+                public logName: string;
+
+                /**
+                 * Creates a new DeleteLogRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeleteLogRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IDeleteLogRequest): google.logging.v2.DeleteLogRequest;
+
+                /**
+                 * Encodes the specified DeleteLogRequest message. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
+                 * @param message DeleteLogRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IDeleteLogRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified DeleteLogRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
+                 * @param message DeleteLogRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IDeleteLogRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteLogRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteLogRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.DeleteLogRequest;
+
+                /**
+                 * Decodes a DeleteLogRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns DeleteLogRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.DeleteLogRequest;
+
+                /**
+                 * Verifies a DeleteLogRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a DeleteLogRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns DeleteLogRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.DeleteLogRequest;
+
+                /**
+                 * Creates a plain object from a DeleteLogRequest message. Also converts values to other types if specified.
+                 * @param message DeleteLogRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.DeleteLogRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this DeleteLogRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a WriteLogEntriesRequest. */
+            interface IWriteLogEntriesRequest {
+
+                /** WriteLogEntriesRequest logName */
+                logName?: (string|null);
+
+                /** WriteLogEntriesRequest resource */
+                resource?: (google.api.IMonitoredResource|null);
+
+                /** WriteLogEntriesRequest labels */
+                labels?: ({ [k: string]: string }|null);
+
+                /** WriteLogEntriesRequest entries */
+                entries?: (google.logging.v2.ILogEntry[]|null);
+
+                /** WriteLogEntriesRequest partialSuccess */
+                partialSuccess?: (boolean|null);
+
+                /** WriteLogEntriesRequest dryRun */
+                dryRun?: (boolean|null);
+            }
+
+            /** Represents a WriteLogEntriesRequest. */
+            class WriteLogEntriesRequest implements IWriteLogEntriesRequest {
+
+                /**
+                 * Constructs a new WriteLogEntriesRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IWriteLogEntriesRequest);
+
+                /** WriteLogEntriesRequest logName. */
+                public logName: string;
+
+                /** WriteLogEntriesRequest resource. */
+                public resource?: (google.api.IMonitoredResource|null);
+
+                /** WriteLogEntriesRequest labels. */
+                public labels: { [k: string]: string };
+
+                /** WriteLogEntriesRequest entries. */
+                public entries: google.logging.v2.ILogEntry[];
+
+                /** WriteLogEntriesRequest partialSuccess. */
+                public partialSuccess: boolean;
+
+                /** WriteLogEntriesRequest dryRun. */
+                public dryRun: boolean;
+
+                /**
+                 * Creates a new WriteLogEntriesRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WriteLogEntriesRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IWriteLogEntriesRequest): google.logging.v2.WriteLogEntriesRequest;
+
+                /**
+                 * Encodes the specified WriteLogEntriesRequest message. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
+                 * @param message WriteLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IWriteLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified WriteLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
+                 * @param message WriteLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IWriteLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a WriteLogEntriesRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns WriteLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.WriteLogEntriesRequest;
+
+                /**
+                 * Decodes a WriteLogEntriesRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns WriteLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.WriteLogEntriesRequest;
+
+                /**
+                 * Verifies a WriteLogEntriesRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a WriteLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns WriteLogEntriesRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.WriteLogEntriesRequest;
+
+                /**
+                 * Creates a plain object from a WriteLogEntriesRequest message. Also converts values to other types if specified.
+                 * @param message WriteLogEntriesRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.WriteLogEntriesRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this WriteLogEntriesRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a WriteLogEntriesResponse. */
+            interface IWriteLogEntriesResponse {
+            }
+
+            /** Represents a WriteLogEntriesResponse. */
+            class WriteLogEntriesResponse implements IWriteLogEntriesResponse {
+
+                /**
+                 * Constructs a new WriteLogEntriesResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IWriteLogEntriesResponse);
+
+                /**
+                 * Creates a new WriteLogEntriesResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WriteLogEntriesResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IWriteLogEntriesResponse): google.logging.v2.WriteLogEntriesResponse;
+
+                /**
+                 * Encodes the specified WriteLogEntriesResponse message. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
+                 * @param message WriteLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IWriteLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified WriteLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
+                 * @param message WriteLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IWriteLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a WriteLogEntriesResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns WriteLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.WriteLogEntriesResponse;
+
+                /**
+                 * Decodes a WriteLogEntriesResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns WriteLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.WriteLogEntriesResponse;
+
+                /**
+                 * Verifies a WriteLogEntriesResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a WriteLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns WriteLogEntriesResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.WriteLogEntriesResponse;
+
+                /**
+                 * Creates a plain object from a WriteLogEntriesResponse message. Also converts values to other types if specified.
+                 * @param message WriteLogEntriesResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.WriteLogEntriesResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this WriteLogEntriesResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a WriteLogEntriesPartialErrors. */
+            interface IWriteLogEntriesPartialErrors {
+
+                /** WriteLogEntriesPartialErrors logEntryErrors */
+                logEntryErrors?: ({ [k: string]: google.rpc.IStatus }|null);
+            }
+
+            /** Represents a WriteLogEntriesPartialErrors. */
+            class WriteLogEntriesPartialErrors implements IWriteLogEntriesPartialErrors {
+
+                /**
+                 * Constructs a new WriteLogEntriesPartialErrors.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IWriteLogEntriesPartialErrors);
+
+                /** WriteLogEntriesPartialErrors logEntryErrors. */
+                public logEntryErrors: { [k: string]: google.rpc.IStatus };
+
+                /**
+                 * Creates a new WriteLogEntriesPartialErrors instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WriteLogEntriesPartialErrors instance
+                 */
+                public static create(properties?: google.logging.v2.IWriteLogEntriesPartialErrors): google.logging.v2.WriteLogEntriesPartialErrors;
+
+                /**
+                 * Encodes the specified WriteLogEntriesPartialErrors message. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
+                 * @param message WriteLogEntriesPartialErrors message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IWriteLogEntriesPartialErrors, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified WriteLogEntriesPartialErrors message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
+                 * @param message WriteLogEntriesPartialErrors message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IWriteLogEntriesPartialErrors, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns WriteLogEntriesPartialErrors
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.WriteLogEntriesPartialErrors;
+
+                /**
+                 * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns WriteLogEntriesPartialErrors
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.WriteLogEntriesPartialErrors;
+
+                /**
+                 * Verifies a WriteLogEntriesPartialErrors message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a WriteLogEntriesPartialErrors message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns WriteLogEntriesPartialErrors
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.WriteLogEntriesPartialErrors;
+
+                /**
+                 * Creates a plain object from a WriteLogEntriesPartialErrors message. Also converts values to other types if specified.
+                 * @param message WriteLogEntriesPartialErrors
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.WriteLogEntriesPartialErrors, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this WriteLogEntriesPartialErrors to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListLogEntriesRequest. */
+            interface IListLogEntriesRequest {
+
+                /** ListLogEntriesRequest resourceNames */
+                resourceNames?: (string[]|null);
+
+                /** ListLogEntriesRequest filter */
+                filter?: (string|null);
+
+                /** ListLogEntriesRequest orderBy */
+                orderBy?: (string|null);
+
+                /** ListLogEntriesRequest pageSize */
+                pageSize?: (number|null);
+
+                /** ListLogEntriesRequest pageToken */
+                pageToken?: (string|null);
+            }
+
+            /** Represents a ListLogEntriesRequest. */
+            class ListLogEntriesRequest implements IListLogEntriesRequest {
+
+                /**
+                 * Constructs a new ListLogEntriesRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListLogEntriesRequest);
+
+                /** ListLogEntriesRequest resourceNames. */
+                public resourceNames: string[];
+
+                /** ListLogEntriesRequest filter. */
+                public filter: string;
+
+                /** ListLogEntriesRequest orderBy. */
+                public orderBy: string;
+
+                /** ListLogEntriesRequest pageSize. */
+                public pageSize: number;
+
+                /** ListLogEntriesRequest pageToken. */
+                public pageToken: string;
+
+                /**
+                 * Creates a new ListLogEntriesRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListLogEntriesRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IListLogEntriesRequest): google.logging.v2.ListLogEntriesRequest;
+
+                /**
+                 * Encodes the specified ListLogEntriesRequest message. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
+                 * @param message ListLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
+                 * @param message ListLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListLogEntriesRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogEntriesRequest;
+
+                /**
+                 * Decodes a ListLogEntriesRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogEntriesRequest;
+
+                /**
+                 * Verifies a ListLogEntriesRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListLogEntriesRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogEntriesRequest;
+
+                /**
+                 * Creates a plain object from a ListLogEntriesRequest message. Also converts values to other types if specified.
+                 * @param message ListLogEntriesRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListLogEntriesRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListLogEntriesRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListLogEntriesResponse. */
+            interface IListLogEntriesResponse {
+
+                /** ListLogEntriesResponse entries */
+                entries?: (google.logging.v2.ILogEntry[]|null);
+
+                /** ListLogEntriesResponse nextPageToken */
+                nextPageToken?: (string|null);
+            }
+
+            /** Represents a ListLogEntriesResponse. */
+            class ListLogEntriesResponse implements IListLogEntriesResponse {
+
+                /**
+                 * Constructs a new ListLogEntriesResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListLogEntriesResponse);
+
+                /** ListLogEntriesResponse entries. */
+                public entries: google.logging.v2.ILogEntry[];
+
+                /** ListLogEntriesResponse nextPageToken. */
+                public nextPageToken: string;
+
+                /**
+                 * Creates a new ListLogEntriesResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListLogEntriesResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IListLogEntriesResponse): google.logging.v2.ListLogEntriesResponse;
+
+                /**
+                 * Encodes the specified ListLogEntriesResponse message. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
+                 * @param message ListLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
+                 * @param message ListLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListLogEntriesResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogEntriesResponse;
+
+                /**
+                 * Decodes a ListLogEntriesResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogEntriesResponse;
+
+                /**
+                 * Verifies a ListLogEntriesResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListLogEntriesResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogEntriesResponse;
+
+                /**
+                 * Creates a plain object from a ListLogEntriesResponse message. Also converts values to other types if specified.
+                 * @param message ListLogEntriesResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListLogEntriesResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListLogEntriesResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListMonitoredResourceDescriptorsRequest. */
+            interface IListMonitoredResourceDescriptorsRequest {
+
+                /** ListMonitoredResourceDescriptorsRequest pageSize */
+                pageSize?: (number|null);
+
+                /** ListMonitoredResourceDescriptorsRequest pageToken */
+                pageToken?: (string|null);
+            }
+
+            /** Represents a ListMonitoredResourceDescriptorsRequest. */
+            class ListMonitoredResourceDescriptorsRequest implements IListMonitoredResourceDescriptorsRequest {
+
+                /**
+                 * Constructs a new ListMonitoredResourceDescriptorsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListMonitoredResourceDescriptorsRequest);
+
+                /** ListMonitoredResourceDescriptorsRequest pageSize. */
+                public pageSize: number;
+
+                /** ListMonitoredResourceDescriptorsRequest pageToken. */
+                public pageToken: string;
+
+                /**
+                 * Creates a new ListMonitoredResourceDescriptorsRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListMonitoredResourceDescriptorsRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IListMonitoredResourceDescriptorsRequest): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
+
+                /**
+                 * Encodes the specified ListMonitoredResourceDescriptorsRequest message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
+                 * @param message ListMonitoredResourceDescriptorsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListMonitoredResourceDescriptorsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListMonitoredResourceDescriptorsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
+                 * @param message ListMonitoredResourceDescriptorsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListMonitoredResourceDescriptorsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListMonitoredResourceDescriptorsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
+
+                /**
+                 * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListMonitoredResourceDescriptorsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
+
+                /**
+                 * Verifies a ListMonitoredResourceDescriptorsRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListMonitoredResourceDescriptorsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListMonitoredResourceDescriptorsRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
+
+                /**
+                 * Creates a plain object from a ListMonitoredResourceDescriptorsRequest message. Also converts values to other types if specified.
+                 * @param message ListMonitoredResourceDescriptorsRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListMonitoredResourceDescriptorsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListMonitoredResourceDescriptorsRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListMonitoredResourceDescriptorsResponse. */
+            interface IListMonitoredResourceDescriptorsResponse {
+
+                /** ListMonitoredResourceDescriptorsResponse resourceDescriptors */
+                resourceDescriptors?: (google.api.IMonitoredResourceDescriptor[]|null);
+
+                /** ListMonitoredResourceDescriptorsResponse nextPageToken */
+                nextPageToken?: (string|null);
+            }
+
+            /** Represents a ListMonitoredResourceDescriptorsResponse. */
+            class ListMonitoredResourceDescriptorsResponse implements IListMonitoredResourceDescriptorsResponse {
+
+                /**
+                 * Constructs a new ListMonitoredResourceDescriptorsResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListMonitoredResourceDescriptorsResponse);
+
+                /** ListMonitoredResourceDescriptorsResponse resourceDescriptors. */
+                public resourceDescriptors: google.api.IMonitoredResourceDescriptor[];
+
+                /** ListMonitoredResourceDescriptorsResponse nextPageToken. */
+                public nextPageToken: string;
+
+                /**
+                 * Creates a new ListMonitoredResourceDescriptorsResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListMonitoredResourceDescriptorsResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IListMonitoredResourceDescriptorsResponse): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
+
+                /**
+                 * Encodes the specified ListMonitoredResourceDescriptorsResponse message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
+                 * @param message ListMonitoredResourceDescriptorsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListMonitoredResourceDescriptorsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListMonitoredResourceDescriptorsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
+                 * @param message ListMonitoredResourceDescriptorsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListMonitoredResourceDescriptorsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListMonitoredResourceDescriptorsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
+
+                /**
+                 * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListMonitoredResourceDescriptorsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
+
+                /**
+                 * Verifies a ListMonitoredResourceDescriptorsResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListMonitoredResourceDescriptorsResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListMonitoredResourceDescriptorsResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
+
+                /**
+                 * Creates a plain object from a ListMonitoredResourceDescriptorsResponse message. Also converts values to other types if specified.
+                 * @param message ListMonitoredResourceDescriptorsResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListMonitoredResourceDescriptorsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListMonitoredResourceDescriptorsResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListLogsRequest. */
+            interface IListLogsRequest {
+
+                /** ListLogsRequest parent */
+                parent?: (string|null);
+
+                /** ListLogsRequest pageSize */
+                pageSize?: (number|null);
+
+                /** ListLogsRequest pageToken */
+                pageToken?: (string|null);
+            }
+
+            /** Represents a ListLogsRequest. */
+            class ListLogsRequest implements IListLogsRequest {
+
+                /**
+                 * Constructs a new ListLogsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListLogsRequest);
+
+                /** ListLogsRequest parent. */
+                public parent: string;
+
+                /** ListLogsRequest pageSize. */
+                public pageSize: number;
+
+                /** ListLogsRequest pageToken. */
+                public pageToken: string;
+
+                /**
+                 * Creates a new ListLogsRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListLogsRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IListLogsRequest): google.logging.v2.ListLogsRequest;
+
+                /**
+                 * Encodes the specified ListLogsRequest message. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
+                 * @param message ListLogsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListLogsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListLogsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
+                 * @param message ListLogsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListLogsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListLogsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListLogsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogsRequest;
+
+                /**
+                 * Decodes a ListLogsRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListLogsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogsRequest;
+
+                /**
+                 * Verifies a ListLogsRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListLogsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListLogsRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogsRequest;
+
+                /**
+                 * Creates a plain object from a ListLogsRequest message. Also converts values to other types if specified.
+                 * @param message ListLogsRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListLogsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListLogsRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListLogsResponse. */
+            interface IListLogsResponse {
+
+                /** ListLogsResponse logNames */
+                logNames?: (string[]|null);
+
+                /** ListLogsResponse nextPageToken */
+                nextPageToken?: (string|null);
+            }
+
+            /** Represents a ListLogsResponse. */
+            class ListLogsResponse implements IListLogsResponse {
+
+                /**
+                 * Constructs a new ListLogsResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListLogsResponse);
+
+                /** ListLogsResponse logNames. */
+                public logNames: string[];
+
+                /** ListLogsResponse nextPageToken. */
+                public nextPageToken: string;
+
+                /**
+                 * Creates a new ListLogsResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListLogsResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IListLogsResponse): google.logging.v2.ListLogsResponse;
+
+                /**
+                 * Encodes the specified ListLogsResponse message. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
+                 * @param message ListLogsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListLogsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListLogsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
+                 * @param message ListLogsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListLogsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListLogsResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListLogsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogsResponse;
+
+                /**
+                 * Decodes a ListLogsResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListLogsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogsResponse;
+
+                /**
+                 * Verifies a ListLogsResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListLogsResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListLogsResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogsResponse;
+
+                /**
+                 * Creates a plain object from a ListLogsResponse message. Also converts values to other types if specified.
+                 * @param message ListLogsResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListLogsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListLogsResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
             /** Represents a ConfigServiceV2 */
             class ConfigServiceV2 extends $protobuf.rpc.Service {
 
@@ -2716,1512 +4222,6 @@ export namespace google {
                 public toJSON(): { [k: string]: any };
             }
 
-            /** Represents a LoggingServiceV2 */
-            class LoggingServiceV2 extends $protobuf.rpc.Service {
-
-                /**
-                 * Constructs a new LoggingServiceV2 service.
-                 * @param rpcImpl RPC implementation
-                 * @param [requestDelimited=false] Whether requests are length-delimited
-                 * @param [responseDelimited=false] Whether responses are length-delimited
-                 */
-                constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
-
-                /**
-                 * Creates new LoggingServiceV2 service using the specified rpc implementation.
-                 * @param rpcImpl RPC implementation
-                 * @param [requestDelimited=false] Whether requests are length-delimited
-                 * @param [responseDelimited=false] Whether responses are length-delimited
-                 * @returns RPC service. Useful where requests and/or responses are streamed.
-                 */
-                public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): LoggingServiceV2;
-
-                /**
-                 * Calls DeleteLog.
-                 * @param request DeleteLogRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and Empty
-                 */
-                public deleteLog(request: google.logging.v2.IDeleteLogRequest, callback: google.logging.v2.LoggingServiceV2.DeleteLogCallback): void;
-
-                /**
-                 * Calls DeleteLog.
-                 * @param request DeleteLogRequest message or plain object
-                 * @returns Promise
-                 */
-                public deleteLog(request: google.logging.v2.IDeleteLogRequest): Promise<google.protobuf.Empty>;
-
-                /**
-                 * Calls WriteLogEntries.
-                 * @param request WriteLogEntriesRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and WriteLogEntriesResponse
-                 */
-                public writeLogEntries(request: google.logging.v2.IWriteLogEntriesRequest, callback: google.logging.v2.LoggingServiceV2.WriteLogEntriesCallback): void;
-
-                /**
-                 * Calls WriteLogEntries.
-                 * @param request WriteLogEntriesRequest message or plain object
-                 * @returns Promise
-                 */
-                public writeLogEntries(request: google.logging.v2.IWriteLogEntriesRequest): Promise<google.logging.v2.WriteLogEntriesResponse>;
-
-                /**
-                 * Calls ListLogEntries.
-                 * @param request ListLogEntriesRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and ListLogEntriesResponse
-                 */
-                public listLogEntries(request: google.logging.v2.IListLogEntriesRequest, callback: google.logging.v2.LoggingServiceV2.ListLogEntriesCallback): void;
-
-                /**
-                 * Calls ListLogEntries.
-                 * @param request ListLogEntriesRequest message or plain object
-                 * @returns Promise
-                 */
-                public listLogEntries(request: google.logging.v2.IListLogEntriesRequest): Promise<google.logging.v2.ListLogEntriesResponse>;
-
-                /**
-                 * Calls ListMonitoredResourceDescriptors.
-                 * @param request ListMonitoredResourceDescriptorsRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and ListMonitoredResourceDescriptorsResponse
-                 */
-                public listMonitoredResourceDescriptors(request: google.logging.v2.IListMonitoredResourceDescriptorsRequest, callback: google.logging.v2.LoggingServiceV2.ListMonitoredResourceDescriptorsCallback): void;
-
-                /**
-                 * Calls ListMonitoredResourceDescriptors.
-                 * @param request ListMonitoredResourceDescriptorsRequest message or plain object
-                 * @returns Promise
-                 */
-                public listMonitoredResourceDescriptors(request: google.logging.v2.IListMonitoredResourceDescriptorsRequest): Promise<google.logging.v2.ListMonitoredResourceDescriptorsResponse>;
-
-                /**
-                 * Calls ListLogs.
-                 * @param request ListLogsRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and ListLogsResponse
-                 */
-                public listLogs(request: google.logging.v2.IListLogsRequest, callback: google.logging.v2.LoggingServiceV2.ListLogsCallback): void;
-
-                /**
-                 * Calls ListLogs.
-                 * @param request ListLogsRequest message or plain object
-                 * @returns Promise
-                 */
-                public listLogs(request: google.logging.v2.IListLogsRequest): Promise<google.logging.v2.ListLogsResponse>;
-            }
-
-            namespace LoggingServiceV2 {
-
-                /**
-                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#deleteLog}.
-                 * @param error Error, if any
-                 * @param [response] Empty
-                 */
-                type DeleteLogCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
-
-                /**
-                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#writeLogEntries}.
-                 * @param error Error, if any
-                 * @param [response] WriteLogEntriesResponse
-                 */
-                type WriteLogEntriesCallback = (error: (Error|null), response?: google.logging.v2.WriteLogEntriesResponse) => void;
-
-                /**
-                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogEntries}.
-                 * @param error Error, if any
-                 * @param [response] ListLogEntriesResponse
-                 */
-                type ListLogEntriesCallback = (error: (Error|null), response?: google.logging.v2.ListLogEntriesResponse) => void;
-
-                /**
-                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#listMonitoredResourceDescriptors}.
-                 * @param error Error, if any
-                 * @param [response] ListMonitoredResourceDescriptorsResponse
-                 */
-                type ListMonitoredResourceDescriptorsCallback = (error: (Error|null), response?: google.logging.v2.ListMonitoredResourceDescriptorsResponse) => void;
-
-                /**
-                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#listLogs}.
-                 * @param error Error, if any
-                 * @param [response] ListLogsResponse
-                 */
-                type ListLogsCallback = (error: (Error|null), response?: google.logging.v2.ListLogsResponse) => void;
-            }
-
-            /** Properties of a DeleteLogRequest. */
-            interface IDeleteLogRequest {
-
-                /** DeleteLogRequest logName */
-                logName?: (string|null);
-            }
-
-            /** Represents a DeleteLogRequest. */
-            class DeleteLogRequest implements IDeleteLogRequest {
-
-                /**
-                 * Constructs a new DeleteLogRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IDeleteLogRequest);
-
-                /** DeleteLogRequest logName. */
-                public logName: string;
-
-                /**
-                 * Creates a new DeleteLogRequest instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns DeleteLogRequest instance
-                 */
-                public static create(properties?: google.logging.v2.IDeleteLogRequest): google.logging.v2.DeleteLogRequest;
-
-                /**
-                 * Encodes the specified DeleteLogRequest message. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
-                 * @param message DeleteLogRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IDeleteLogRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified DeleteLogRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteLogRequest.verify|verify} messages.
-                 * @param message DeleteLogRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IDeleteLogRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a DeleteLogRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns DeleteLogRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.DeleteLogRequest;
-
-                /**
-                 * Decodes a DeleteLogRequest message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns DeleteLogRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.DeleteLogRequest;
-
-                /**
-                 * Verifies a DeleteLogRequest message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a DeleteLogRequest message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns DeleteLogRequest
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.DeleteLogRequest;
-
-                /**
-                 * Creates a plain object from a DeleteLogRequest message. Also converts values to other types if specified.
-                 * @param message DeleteLogRequest
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.DeleteLogRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this DeleteLogRequest to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a WriteLogEntriesRequest. */
-            interface IWriteLogEntriesRequest {
-
-                /** WriteLogEntriesRequest logName */
-                logName?: (string|null);
-
-                /** WriteLogEntriesRequest resource */
-                resource?: (google.api.IMonitoredResource|null);
-
-                /** WriteLogEntriesRequest labels */
-                labels?: ({ [k: string]: string }|null);
-
-                /** WriteLogEntriesRequest entries */
-                entries?: (google.logging.v2.ILogEntry[]|null);
-
-                /** WriteLogEntriesRequest partialSuccess */
-                partialSuccess?: (boolean|null);
-
-                /** WriteLogEntriesRequest dryRun */
-                dryRun?: (boolean|null);
-            }
-
-            /** Represents a WriteLogEntriesRequest. */
-            class WriteLogEntriesRequest implements IWriteLogEntriesRequest {
-
-                /**
-                 * Constructs a new WriteLogEntriesRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IWriteLogEntriesRequest);
-
-                /** WriteLogEntriesRequest logName. */
-                public logName: string;
-
-                /** WriteLogEntriesRequest resource. */
-                public resource?: (google.api.IMonitoredResource|null);
-
-                /** WriteLogEntriesRequest labels. */
-                public labels: { [k: string]: string };
-
-                /** WriteLogEntriesRequest entries. */
-                public entries: google.logging.v2.ILogEntry[];
-
-                /** WriteLogEntriesRequest partialSuccess. */
-                public partialSuccess: boolean;
-
-                /** WriteLogEntriesRequest dryRun. */
-                public dryRun: boolean;
-
-                /**
-                 * Creates a new WriteLogEntriesRequest instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns WriteLogEntriesRequest instance
-                 */
-                public static create(properties?: google.logging.v2.IWriteLogEntriesRequest): google.logging.v2.WriteLogEntriesRequest;
-
-                /**
-                 * Encodes the specified WriteLogEntriesRequest message. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
-                 * @param message WriteLogEntriesRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IWriteLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified WriteLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesRequest.verify|verify} messages.
-                 * @param message WriteLogEntriesRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IWriteLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a WriteLogEntriesRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns WriteLogEntriesRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.WriteLogEntriesRequest;
-
-                /**
-                 * Decodes a WriteLogEntriesRequest message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns WriteLogEntriesRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.WriteLogEntriesRequest;
-
-                /**
-                 * Verifies a WriteLogEntriesRequest message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a WriteLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns WriteLogEntriesRequest
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.WriteLogEntriesRequest;
-
-                /**
-                 * Creates a plain object from a WriteLogEntriesRequest message. Also converts values to other types if specified.
-                 * @param message WriteLogEntriesRequest
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.WriteLogEntriesRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this WriteLogEntriesRequest to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a WriteLogEntriesResponse. */
-            interface IWriteLogEntriesResponse {
-            }
-
-            /** Represents a WriteLogEntriesResponse. */
-            class WriteLogEntriesResponse implements IWriteLogEntriesResponse {
-
-                /**
-                 * Constructs a new WriteLogEntriesResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IWriteLogEntriesResponse);
-
-                /**
-                 * Creates a new WriteLogEntriesResponse instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns WriteLogEntriesResponse instance
-                 */
-                public static create(properties?: google.logging.v2.IWriteLogEntriesResponse): google.logging.v2.WriteLogEntriesResponse;
-
-                /**
-                 * Encodes the specified WriteLogEntriesResponse message. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
-                 * @param message WriteLogEntriesResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IWriteLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified WriteLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesResponse.verify|verify} messages.
-                 * @param message WriteLogEntriesResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IWriteLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a WriteLogEntriesResponse message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns WriteLogEntriesResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.WriteLogEntriesResponse;
-
-                /**
-                 * Decodes a WriteLogEntriesResponse message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns WriteLogEntriesResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.WriteLogEntriesResponse;
-
-                /**
-                 * Verifies a WriteLogEntriesResponse message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a WriteLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns WriteLogEntriesResponse
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.WriteLogEntriesResponse;
-
-                /**
-                 * Creates a plain object from a WriteLogEntriesResponse message. Also converts values to other types if specified.
-                 * @param message WriteLogEntriesResponse
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.WriteLogEntriesResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this WriteLogEntriesResponse to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a WriteLogEntriesPartialErrors. */
-            interface IWriteLogEntriesPartialErrors {
-
-                /** WriteLogEntriesPartialErrors logEntryErrors */
-                logEntryErrors?: ({ [k: string]: google.rpc.IStatus }|null);
-            }
-
-            /** Represents a WriteLogEntriesPartialErrors. */
-            class WriteLogEntriesPartialErrors implements IWriteLogEntriesPartialErrors {
-
-                /**
-                 * Constructs a new WriteLogEntriesPartialErrors.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IWriteLogEntriesPartialErrors);
-
-                /** WriteLogEntriesPartialErrors logEntryErrors. */
-                public logEntryErrors: { [k: string]: google.rpc.IStatus };
-
-                /**
-                 * Creates a new WriteLogEntriesPartialErrors instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns WriteLogEntriesPartialErrors instance
-                 */
-                public static create(properties?: google.logging.v2.IWriteLogEntriesPartialErrors): google.logging.v2.WriteLogEntriesPartialErrors;
-
-                /**
-                 * Encodes the specified WriteLogEntriesPartialErrors message. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
-                 * @param message WriteLogEntriesPartialErrors message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IWriteLogEntriesPartialErrors, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified WriteLogEntriesPartialErrors message, length delimited. Does not implicitly {@link google.logging.v2.WriteLogEntriesPartialErrors.verify|verify} messages.
-                 * @param message WriteLogEntriesPartialErrors message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IWriteLogEntriesPartialErrors, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns WriteLogEntriesPartialErrors
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.WriteLogEntriesPartialErrors;
-
-                /**
-                 * Decodes a WriteLogEntriesPartialErrors message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns WriteLogEntriesPartialErrors
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.WriteLogEntriesPartialErrors;
-
-                /**
-                 * Verifies a WriteLogEntriesPartialErrors message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a WriteLogEntriesPartialErrors message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns WriteLogEntriesPartialErrors
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.WriteLogEntriesPartialErrors;
-
-                /**
-                 * Creates a plain object from a WriteLogEntriesPartialErrors message. Also converts values to other types if specified.
-                 * @param message WriteLogEntriesPartialErrors
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.WriteLogEntriesPartialErrors, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this WriteLogEntriesPartialErrors to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a ListLogEntriesRequest. */
-            interface IListLogEntriesRequest {
-
-                /** ListLogEntriesRequest resourceNames */
-                resourceNames?: (string[]|null);
-
-                /** ListLogEntriesRequest filter */
-                filter?: (string|null);
-
-                /** ListLogEntriesRequest orderBy */
-                orderBy?: (string|null);
-
-                /** ListLogEntriesRequest pageSize */
-                pageSize?: (number|null);
-
-                /** ListLogEntriesRequest pageToken */
-                pageToken?: (string|null);
-            }
-
-            /** Represents a ListLogEntriesRequest. */
-            class ListLogEntriesRequest implements IListLogEntriesRequest {
-
-                /**
-                 * Constructs a new ListLogEntriesRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IListLogEntriesRequest);
-
-                /** ListLogEntriesRequest resourceNames. */
-                public resourceNames: string[];
-
-                /** ListLogEntriesRequest filter. */
-                public filter: string;
-
-                /** ListLogEntriesRequest orderBy. */
-                public orderBy: string;
-
-                /** ListLogEntriesRequest pageSize. */
-                public pageSize: number;
-
-                /** ListLogEntriesRequest pageToken. */
-                public pageToken: string;
-
-                /**
-                 * Creates a new ListLogEntriesRequest instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns ListLogEntriesRequest instance
-                 */
-                public static create(properties?: google.logging.v2.IListLogEntriesRequest): google.logging.v2.ListLogEntriesRequest;
-
-                /**
-                 * Encodes the specified ListLogEntriesRequest message. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
-                 * @param message ListLogEntriesRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IListLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified ListLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesRequest.verify|verify} messages.
-                 * @param message ListLogEntriesRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IListLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a ListLogEntriesRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns ListLogEntriesRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogEntriesRequest;
-
-                /**
-                 * Decodes a ListLogEntriesRequest message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns ListLogEntriesRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogEntriesRequest;
-
-                /**
-                 * Verifies a ListLogEntriesRequest message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a ListLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns ListLogEntriesRequest
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogEntriesRequest;
-
-                /**
-                 * Creates a plain object from a ListLogEntriesRequest message. Also converts values to other types if specified.
-                 * @param message ListLogEntriesRequest
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.ListLogEntriesRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this ListLogEntriesRequest to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a ListLogEntriesResponse. */
-            interface IListLogEntriesResponse {
-
-                /** ListLogEntriesResponse entries */
-                entries?: (google.logging.v2.ILogEntry[]|null);
-
-                /** ListLogEntriesResponse nextPageToken */
-                nextPageToken?: (string|null);
-            }
-
-            /** Represents a ListLogEntriesResponse. */
-            class ListLogEntriesResponse implements IListLogEntriesResponse {
-
-                /**
-                 * Constructs a new ListLogEntriesResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IListLogEntriesResponse);
-
-                /** ListLogEntriesResponse entries. */
-                public entries: google.logging.v2.ILogEntry[];
-
-                /** ListLogEntriesResponse nextPageToken. */
-                public nextPageToken: string;
-
-                /**
-                 * Creates a new ListLogEntriesResponse instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns ListLogEntriesResponse instance
-                 */
-                public static create(properties?: google.logging.v2.IListLogEntriesResponse): google.logging.v2.ListLogEntriesResponse;
-
-                /**
-                 * Encodes the specified ListLogEntriesResponse message. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
-                 * @param message ListLogEntriesResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IListLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified ListLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogEntriesResponse.verify|verify} messages.
-                 * @param message ListLogEntriesResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IListLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a ListLogEntriesResponse message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns ListLogEntriesResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogEntriesResponse;
-
-                /**
-                 * Decodes a ListLogEntriesResponse message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns ListLogEntriesResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogEntriesResponse;
-
-                /**
-                 * Verifies a ListLogEntriesResponse message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a ListLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns ListLogEntriesResponse
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogEntriesResponse;
-
-                /**
-                 * Creates a plain object from a ListLogEntriesResponse message. Also converts values to other types if specified.
-                 * @param message ListLogEntriesResponse
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.ListLogEntriesResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this ListLogEntriesResponse to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a ListMonitoredResourceDescriptorsRequest. */
-            interface IListMonitoredResourceDescriptorsRequest {
-
-                /** ListMonitoredResourceDescriptorsRequest pageSize */
-                pageSize?: (number|null);
-
-                /** ListMonitoredResourceDescriptorsRequest pageToken */
-                pageToken?: (string|null);
-            }
-
-            /** Represents a ListMonitoredResourceDescriptorsRequest. */
-            class ListMonitoredResourceDescriptorsRequest implements IListMonitoredResourceDescriptorsRequest {
-
-                /**
-                 * Constructs a new ListMonitoredResourceDescriptorsRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IListMonitoredResourceDescriptorsRequest);
-
-                /** ListMonitoredResourceDescriptorsRequest pageSize. */
-                public pageSize: number;
-
-                /** ListMonitoredResourceDescriptorsRequest pageToken. */
-                public pageToken: string;
-
-                /**
-                 * Creates a new ListMonitoredResourceDescriptorsRequest instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns ListMonitoredResourceDescriptorsRequest instance
-                 */
-                public static create(properties?: google.logging.v2.IListMonitoredResourceDescriptorsRequest): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
-
-                /**
-                 * Encodes the specified ListMonitoredResourceDescriptorsRequest message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
-                 * @param message ListMonitoredResourceDescriptorsRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IListMonitoredResourceDescriptorsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified ListMonitoredResourceDescriptorsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsRequest.verify|verify} messages.
-                 * @param message ListMonitoredResourceDescriptorsRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IListMonitoredResourceDescriptorsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns ListMonitoredResourceDescriptorsRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
-
-                /**
-                 * Decodes a ListMonitoredResourceDescriptorsRequest message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns ListMonitoredResourceDescriptorsRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
-
-                /**
-                 * Verifies a ListMonitoredResourceDescriptorsRequest message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a ListMonitoredResourceDescriptorsRequest message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns ListMonitoredResourceDescriptorsRequest
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListMonitoredResourceDescriptorsRequest;
-
-                /**
-                 * Creates a plain object from a ListMonitoredResourceDescriptorsRequest message. Also converts values to other types if specified.
-                 * @param message ListMonitoredResourceDescriptorsRequest
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.ListMonitoredResourceDescriptorsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this ListMonitoredResourceDescriptorsRequest to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a ListMonitoredResourceDescriptorsResponse. */
-            interface IListMonitoredResourceDescriptorsResponse {
-
-                /** ListMonitoredResourceDescriptorsResponse resourceDescriptors */
-                resourceDescriptors?: (google.api.IMonitoredResourceDescriptor[]|null);
-
-                /** ListMonitoredResourceDescriptorsResponse nextPageToken */
-                nextPageToken?: (string|null);
-            }
-
-            /** Represents a ListMonitoredResourceDescriptorsResponse. */
-            class ListMonitoredResourceDescriptorsResponse implements IListMonitoredResourceDescriptorsResponse {
-
-                /**
-                 * Constructs a new ListMonitoredResourceDescriptorsResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IListMonitoredResourceDescriptorsResponse);
-
-                /** ListMonitoredResourceDescriptorsResponse resourceDescriptors. */
-                public resourceDescriptors: google.api.IMonitoredResourceDescriptor[];
-
-                /** ListMonitoredResourceDescriptorsResponse nextPageToken. */
-                public nextPageToken: string;
-
-                /**
-                 * Creates a new ListMonitoredResourceDescriptorsResponse instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns ListMonitoredResourceDescriptorsResponse instance
-                 */
-                public static create(properties?: google.logging.v2.IListMonitoredResourceDescriptorsResponse): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
-
-                /**
-                 * Encodes the specified ListMonitoredResourceDescriptorsResponse message. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
-                 * @param message ListMonitoredResourceDescriptorsResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IListMonitoredResourceDescriptorsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified ListMonitoredResourceDescriptorsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListMonitoredResourceDescriptorsResponse.verify|verify} messages.
-                 * @param message ListMonitoredResourceDescriptorsResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IListMonitoredResourceDescriptorsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns ListMonitoredResourceDescriptorsResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
-
-                /**
-                 * Decodes a ListMonitoredResourceDescriptorsResponse message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns ListMonitoredResourceDescriptorsResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
-
-                /**
-                 * Verifies a ListMonitoredResourceDescriptorsResponse message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a ListMonitoredResourceDescriptorsResponse message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns ListMonitoredResourceDescriptorsResponse
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListMonitoredResourceDescriptorsResponse;
-
-                /**
-                 * Creates a plain object from a ListMonitoredResourceDescriptorsResponse message. Also converts values to other types if specified.
-                 * @param message ListMonitoredResourceDescriptorsResponse
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.ListMonitoredResourceDescriptorsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this ListMonitoredResourceDescriptorsResponse to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a ListLogsRequest. */
-            interface IListLogsRequest {
-
-                /** ListLogsRequest parent */
-                parent?: (string|null);
-
-                /** ListLogsRequest pageSize */
-                pageSize?: (number|null);
-
-                /** ListLogsRequest pageToken */
-                pageToken?: (string|null);
-            }
-
-            /** Represents a ListLogsRequest. */
-            class ListLogsRequest implements IListLogsRequest {
-
-                /**
-                 * Constructs a new ListLogsRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IListLogsRequest);
-
-                /** ListLogsRequest parent. */
-                public parent: string;
-
-                /** ListLogsRequest pageSize. */
-                public pageSize: number;
-
-                /** ListLogsRequest pageToken. */
-                public pageToken: string;
-
-                /**
-                 * Creates a new ListLogsRequest instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns ListLogsRequest instance
-                 */
-                public static create(properties?: google.logging.v2.IListLogsRequest): google.logging.v2.ListLogsRequest;
-
-                /**
-                 * Encodes the specified ListLogsRequest message. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
-                 * @param message ListLogsRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IListLogsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified ListLogsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsRequest.verify|verify} messages.
-                 * @param message ListLogsRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IListLogsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a ListLogsRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns ListLogsRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogsRequest;
-
-                /**
-                 * Decodes a ListLogsRequest message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns ListLogsRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogsRequest;
-
-                /**
-                 * Verifies a ListLogsRequest message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a ListLogsRequest message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns ListLogsRequest
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogsRequest;
-
-                /**
-                 * Creates a plain object from a ListLogsRequest message. Also converts values to other types if specified.
-                 * @param message ListLogsRequest
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.ListLogsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this ListLogsRequest to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a ListLogsResponse. */
-            interface IListLogsResponse {
-
-                /** ListLogsResponse logNames */
-                logNames?: (string[]|null);
-
-                /** ListLogsResponse nextPageToken */
-                nextPageToken?: (string|null);
-            }
-
-            /** Represents a ListLogsResponse. */
-            class ListLogsResponse implements IListLogsResponse {
-
-                /**
-                 * Constructs a new ListLogsResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.IListLogsResponse);
-
-                /** ListLogsResponse logNames. */
-                public logNames: string[];
-
-                /** ListLogsResponse nextPageToken. */
-                public nextPageToken: string;
-
-                /**
-                 * Creates a new ListLogsResponse instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns ListLogsResponse instance
-                 */
-                public static create(properties?: google.logging.v2.IListLogsResponse): google.logging.v2.ListLogsResponse;
-
-                /**
-                 * Encodes the specified ListLogsResponse message. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
-                 * @param message ListLogsResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.IListLogsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified ListLogsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLogsResponse.verify|verify} messages.
-                 * @param message ListLogsResponse message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.IListLogsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a ListLogsResponse message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns ListLogsResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLogsResponse;
-
-                /**
-                 * Decodes a ListLogsResponse message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns ListLogsResponse
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLogsResponse;
-
-                /**
-                 * Verifies a ListLogsResponse message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a ListLogsResponse message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns ListLogsResponse
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLogsResponse;
-
-                /**
-                 * Creates a plain object from a ListLogsResponse message. Also converts values to other types if specified.
-                 * @param message ListLogsResponse
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.ListLogsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this ListLogsResponse to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a LogEntry. */
-            interface ILogEntry {
-
-                /** LogEntry logName */
-                logName?: (string|null);
-
-                /** LogEntry resource */
-                resource?: (google.api.IMonitoredResource|null);
-
-                /** LogEntry protoPayload */
-                protoPayload?: (google.protobuf.IAny|null);
-
-                /** LogEntry textPayload */
-                textPayload?: (string|null);
-
-                /** LogEntry jsonPayload */
-                jsonPayload?: (google.protobuf.IStruct|null);
-
-                /** LogEntry timestamp */
-                timestamp?: (google.protobuf.ITimestamp|null);
-
-                /** LogEntry receiveTimestamp */
-                receiveTimestamp?: (google.protobuf.ITimestamp|null);
-
-                /** LogEntry severity */
-                severity?: (google.logging.type.LogSeverity|keyof typeof google.logging.type.LogSeverity|null);
-
-                /** LogEntry insertId */
-                insertId?: (string|null);
-
-                /** LogEntry httpRequest */
-                httpRequest?: (google.logging.type.IHttpRequest|null);
-
-                /** LogEntry labels */
-                labels?: ({ [k: string]: string }|null);
-
-                /** LogEntry operation */
-                operation?: (google.logging.v2.ILogEntryOperation|null);
-
-                /** LogEntry trace */
-                trace?: (string|null);
-
-                /** LogEntry spanId */
-                spanId?: (string|null);
-
-                /** LogEntry traceSampled */
-                traceSampled?: (boolean|null);
-
-                /** LogEntry sourceLocation */
-                sourceLocation?: (google.logging.v2.ILogEntrySourceLocation|null);
-            }
-
-            /** Represents a LogEntry. */
-            class LogEntry implements ILogEntry {
-
-                /**
-                 * Constructs a new LogEntry.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.ILogEntry);
-
-                /** LogEntry logName. */
-                public logName: string;
-
-                /** LogEntry resource. */
-                public resource?: (google.api.IMonitoredResource|null);
-
-                /** LogEntry protoPayload. */
-                public protoPayload?: (google.protobuf.IAny|null);
-
-                /** LogEntry textPayload. */
-                public textPayload: string;
-
-                /** LogEntry jsonPayload. */
-                public jsonPayload?: (google.protobuf.IStruct|null);
-
-                /** LogEntry timestamp. */
-                public timestamp?: (google.protobuf.ITimestamp|null);
-
-                /** LogEntry receiveTimestamp. */
-                public receiveTimestamp?: (google.protobuf.ITimestamp|null);
-
-                /** LogEntry severity. */
-                public severity: (google.logging.type.LogSeverity|keyof typeof google.logging.type.LogSeverity);
-
-                /** LogEntry insertId. */
-                public insertId: string;
-
-                /** LogEntry httpRequest. */
-                public httpRequest?: (google.logging.type.IHttpRequest|null);
-
-                /** LogEntry labels. */
-                public labels: { [k: string]: string };
-
-                /** LogEntry operation. */
-                public operation?: (google.logging.v2.ILogEntryOperation|null);
-
-                /** LogEntry trace. */
-                public trace: string;
-
-                /** LogEntry spanId. */
-                public spanId: string;
-
-                /** LogEntry traceSampled. */
-                public traceSampled: boolean;
-
-                /** LogEntry sourceLocation. */
-                public sourceLocation?: (google.logging.v2.ILogEntrySourceLocation|null);
-
-                /** LogEntry payload. */
-                public payload?: ("protoPayload"|"textPayload"|"jsonPayload");
-
-                /**
-                 * Creates a new LogEntry instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns LogEntry instance
-                 */
-                public static create(properties?: google.logging.v2.ILogEntry): google.logging.v2.LogEntry;
-
-                /**
-                 * Encodes the specified LogEntry message. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
-                 * @param message LogEntry message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.ILogEntry, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified LogEntry message, length delimited. Does not implicitly {@link google.logging.v2.LogEntry.verify|verify} messages.
-                 * @param message LogEntry message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.ILogEntry, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a LogEntry message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns LogEntry
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogEntry;
-
-                /**
-                 * Decodes a LogEntry message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns LogEntry
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogEntry;
-
-                /**
-                 * Verifies a LogEntry message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a LogEntry message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns LogEntry
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogEntry;
-
-                /**
-                 * Creates a plain object from a LogEntry message. Also converts values to other types if specified.
-                 * @param message LogEntry
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.LogEntry, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this LogEntry to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a LogEntryOperation. */
-            interface ILogEntryOperation {
-
-                /** LogEntryOperation id */
-                id?: (string|null);
-
-                /** LogEntryOperation producer */
-                producer?: (string|null);
-
-                /** LogEntryOperation first */
-                first?: (boolean|null);
-
-                /** LogEntryOperation last */
-                last?: (boolean|null);
-            }
-
-            /** Represents a LogEntryOperation. */
-            class LogEntryOperation implements ILogEntryOperation {
-
-                /**
-                 * Constructs a new LogEntryOperation.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.ILogEntryOperation);
-
-                /** LogEntryOperation id. */
-                public id: string;
-
-                /** LogEntryOperation producer. */
-                public producer: string;
-
-                /** LogEntryOperation first. */
-                public first: boolean;
-
-                /** LogEntryOperation last. */
-                public last: boolean;
-
-                /**
-                 * Creates a new LogEntryOperation instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns LogEntryOperation instance
-                 */
-                public static create(properties?: google.logging.v2.ILogEntryOperation): google.logging.v2.LogEntryOperation;
-
-                /**
-                 * Encodes the specified LogEntryOperation message. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
-                 * @param message LogEntryOperation message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.ILogEntryOperation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified LogEntryOperation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntryOperation.verify|verify} messages.
-                 * @param message LogEntryOperation message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.ILogEntryOperation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a LogEntryOperation message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns LogEntryOperation
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogEntryOperation;
-
-                /**
-                 * Decodes a LogEntryOperation message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns LogEntryOperation
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogEntryOperation;
-
-                /**
-                 * Verifies a LogEntryOperation message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a LogEntryOperation message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns LogEntryOperation
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogEntryOperation;
-
-                /**
-                 * Creates a plain object from a LogEntryOperation message. Also converts values to other types if specified.
-                 * @param message LogEntryOperation
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.LogEntryOperation, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this LogEntryOperation to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
-            /** Properties of a LogEntrySourceLocation. */
-            interface ILogEntrySourceLocation {
-
-                /** LogEntrySourceLocation file */
-                file?: (string|null);
-
-                /** LogEntrySourceLocation line */
-                line?: (number|Long|string|null);
-
-                /** LogEntrySourceLocation function */
-                "function"?: (string|null);
-            }
-
-            /** Represents a LogEntrySourceLocation. */
-            class LogEntrySourceLocation implements ILogEntrySourceLocation {
-
-                /**
-                 * Constructs a new LogEntrySourceLocation.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: google.logging.v2.ILogEntrySourceLocation);
-
-                /** LogEntrySourceLocation file. */
-                public file: string;
-
-                /** LogEntrySourceLocation line. */
-                public line: (number|Long|string);
-
-                /** LogEntrySourceLocation function. */
-                public function: string;
-
-                /**
-                 * Creates a new LogEntrySourceLocation instance using the specified properties.
-                 * @param [properties] Properties to set
-                 * @returns LogEntrySourceLocation instance
-                 */
-                public static create(properties?: google.logging.v2.ILogEntrySourceLocation): google.logging.v2.LogEntrySourceLocation;
-
-                /**
-                 * Encodes the specified LogEntrySourceLocation message. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
-                 * @param message LogEntrySourceLocation message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: google.logging.v2.ILogEntrySourceLocation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Encodes the specified LogEntrySourceLocation message, length delimited. Does not implicitly {@link google.logging.v2.LogEntrySourceLocation.verify|verify} messages.
-                 * @param message LogEntrySourceLocation message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encodeDelimited(message: google.logging.v2.ILogEntrySourceLocation, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a LogEntrySourceLocation message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns LogEntrySourceLocation
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogEntrySourceLocation;
-
-                /**
-                 * Decodes a LogEntrySourceLocation message from the specified reader or buffer, length delimited.
-                 * @param reader Reader or buffer to decode from
-                 * @returns LogEntrySourceLocation
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogEntrySourceLocation;
-
-                /**
-                 * Verifies a LogEntrySourceLocation message.
-                 * @param message Plain object to verify
-                 * @returns `null` if valid, otherwise the reason why it is not
-                 */
-                public static verify(message: { [k: string]: any }): (string|null);
-
-                /**
-                 * Creates a LogEntrySourceLocation message from a plain object. Also converts values to their respective internal types.
-                 * @param object Plain object
-                 * @returns LogEntrySourceLocation
-                 */
-                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogEntrySourceLocation;
-
-                /**
-                 * Creates a plain object from a LogEntrySourceLocation message. Also converts values to other types if specified.
-                 * @param message LogEntrySourceLocation
-                 * @param [options] Conversion options
-                 * @returns Plain object
-                 */
-                public static toObject(message: google.logging.v2.LogEntrySourceLocation, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                /**
-                 * Converts this LogEntrySourceLocation to JSON.
-                 * @returns JSON object
-                 */
-                public toJSON(): { [k: string]: any };
-            }
-
             /** Represents a MetricsServiceV2 */
             class MetricsServiceV2 extends $protobuf.rpc.Service {
 
@@ -5280,6 +5280,440 @@ export namespace google {
             IMMUTABLE = 5
         }
 
+        /** Properties of a MonitoredResourceDescriptor. */
+        interface IMonitoredResourceDescriptor {
+
+            /** MonitoredResourceDescriptor name */
+            name?: (string|null);
+
+            /** MonitoredResourceDescriptor type */
+            type?: (string|null);
+
+            /** MonitoredResourceDescriptor displayName */
+            displayName?: (string|null);
+
+            /** MonitoredResourceDescriptor description */
+            description?: (string|null);
+
+            /** MonitoredResourceDescriptor labels */
+            labels?: (google.api.ILabelDescriptor[]|null);
+
+            /** MonitoredResourceDescriptor launchStage */
+            launchStage?: (google.api.LaunchStage|keyof typeof google.api.LaunchStage|null);
+        }
+
+        /** Represents a MonitoredResourceDescriptor. */
+        class MonitoredResourceDescriptor implements IMonitoredResourceDescriptor {
+
+            /**
+             * Constructs a new MonitoredResourceDescriptor.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.api.IMonitoredResourceDescriptor);
+
+            /** MonitoredResourceDescriptor name. */
+            public name: string;
+
+            /** MonitoredResourceDescriptor type. */
+            public type: string;
+
+            /** MonitoredResourceDescriptor displayName. */
+            public displayName: string;
+
+            /** MonitoredResourceDescriptor description. */
+            public description: string;
+
+            /** MonitoredResourceDescriptor labels. */
+            public labels: google.api.ILabelDescriptor[];
+
+            /** MonitoredResourceDescriptor launchStage. */
+            public launchStage: (google.api.LaunchStage|keyof typeof google.api.LaunchStage);
+
+            /**
+             * Creates a new MonitoredResourceDescriptor instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MonitoredResourceDescriptor instance
+             */
+            public static create(properties?: google.api.IMonitoredResourceDescriptor): google.api.MonitoredResourceDescriptor;
+
+            /**
+             * Encodes the specified MonitoredResourceDescriptor message. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
+             * @param message MonitoredResourceDescriptor message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.api.IMonitoredResourceDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MonitoredResourceDescriptor message, length delimited. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
+             * @param message MonitoredResourceDescriptor message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.api.IMonitoredResourceDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns MonitoredResourceDescriptor
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.MonitoredResourceDescriptor;
+
+            /**
+             * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns MonitoredResourceDescriptor
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.MonitoredResourceDescriptor;
+
+            /**
+             * Verifies a MonitoredResourceDescriptor message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a MonitoredResourceDescriptor message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns MonitoredResourceDescriptor
+             */
+            public static fromObject(object: { [k: string]: any }): google.api.MonitoredResourceDescriptor;
+
+            /**
+             * Creates a plain object from a MonitoredResourceDescriptor message. Also converts values to other types if specified.
+             * @param message MonitoredResourceDescriptor
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.api.MonitoredResourceDescriptor, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this MonitoredResourceDescriptor to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a MonitoredResource. */
+        interface IMonitoredResource {
+
+            /** MonitoredResource type */
+            type?: (string|null);
+
+            /** MonitoredResource labels */
+            labels?: ({ [k: string]: string }|null);
+        }
+
+        /** Represents a MonitoredResource. */
+        class MonitoredResource implements IMonitoredResource {
+
+            /**
+             * Constructs a new MonitoredResource.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.api.IMonitoredResource);
+
+            /** MonitoredResource type. */
+            public type: string;
+
+            /** MonitoredResource labels. */
+            public labels: { [k: string]: string };
+
+            /**
+             * Creates a new MonitoredResource instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MonitoredResource instance
+             */
+            public static create(properties?: google.api.IMonitoredResource): google.api.MonitoredResource;
+
+            /**
+             * Encodes the specified MonitoredResource message. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
+             * @param message MonitoredResource message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.api.IMonitoredResource, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MonitoredResource message, length delimited. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
+             * @param message MonitoredResource message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.api.IMonitoredResource, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MonitoredResource message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns MonitoredResource
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.MonitoredResource;
+
+            /**
+             * Decodes a MonitoredResource message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns MonitoredResource
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.MonitoredResource;
+
+            /**
+             * Verifies a MonitoredResource message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a MonitoredResource message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns MonitoredResource
+             */
+            public static fromObject(object: { [k: string]: any }): google.api.MonitoredResource;
+
+            /**
+             * Creates a plain object from a MonitoredResource message. Also converts values to other types if specified.
+             * @param message MonitoredResource
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.api.MonitoredResource, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this MonitoredResource to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a MonitoredResourceMetadata. */
+        interface IMonitoredResourceMetadata {
+
+            /** MonitoredResourceMetadata systemLabels */
+            systemLabels?: (google.protobuf.IStruct|null);
+
+            /** MonitoredResourceMetadata userLabels */
+            userLabels?: ({ [k: string]: string }|null);
+        }
+
+        /** Represents a MonitoredResourceMetadata. */
+        class MonitoredResourceMetadata implements IMonitoredResourceMetadata {
+
+            /**
+             * Constructs a new MonitoredResourceMetadata.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.api.IMonitoredResourceMetadata);
+
+            /** MonitoredResourceMetadata systemLabels. */
+            public systemLabels?: (google.protobuf.IStruct|null);
+
+            /** MonitoredResourceMetadata userLabels. */
+            public userLabels: { [k: string]: string };
+
+            /**
+             * Creates a new MonitoredResourceMetadata instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MonitoredResourceMetadata instance
+             */
+            public static create(properties?: google.api.IMonitoredResourceMetadata): google.api.MonitoredResourceMetadata;
+
+            /**
+             * Encodes the specified MonitoredResourceMetadata message. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
+             * @param message MonitoredResourceMetadata message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.api.IMonitoredResourceMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MonitoredResourceMetadata message, length delimited. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
+             * @param message MonitoredResourceMetadata message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.api.IMonitoredResourceMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MonitoredResourceMetadata message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns MonitoredResourceMetadata
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.MonitoredResourceMetadata;
+
+            /**
+             * Decodes a MonitoredResourceMetadata message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns MonitoredResourceMetadata
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.MonitoredResourceMetadata;
+
+            /**
+             * Verifies a MonitoredResourceMetadata message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a MonitoredResourceMetadata message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns MonitoredResourceMetadata
+             */
+            public static fromObject(object: { [k: string]: any }): google.api.MonitoredResourceMetadata;
+
+            /**
+             * Creates a plain object from a MonitoredResourceMetadata message. Also converts values to other types if specified.
+             * @param message MonitoredResourceMetadata
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.api.MonitoredResourceMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this MonitoredResourceMetadata to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a LabelDescriptor. */
+        interface ILabelDescriptor {
+
+            /** LabelDescriptor key */
+            key?: (string|null);
+
+            /** LabelDescriptor valueType */
+            valueType?: (google.api.LabelDescriptor.ValueType|keyof typeof google.api.LabelDescriptor.ValueType|null);
+
+            /** LabelDescriptor description */
+            description?: (string|null);
+        }
+
+        /** Represents a LabelDescriptor. */
+        class LabelDescriptor implements ILabelDescriptor {
+
+            /**
+             * Constructs a new LabelDescriptor.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.api.ILabelDescriptor);
+
+            /** LabelDescriptor key. */
+            public key: string;
+
+            /** LabelDescriptor valueType. */
+            public valueType: (google.api.LabelDescriptor.ValueType|keyof typeof google.api.LabelDescriptor.ValueType);
+
+            /** LabelDescriptor description. */
+            public description: string;
+
+            /**
+             * Creates a new LabelDescriptor instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns LabelDescriptor instance
+             */
+            public static create(properties?: google.api.ILabelDescriptor): google.api.LabelDescriptor;
+
+            /**
+             * Encodes the specified LabelDescriptor message. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
+             * @param message LabelDescriptor message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.api.ILabelDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified LabelDescriptor message, length delimited. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
+             * @param message LabelDescriptor message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.api.ILabelDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a LabelDescriptor message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns LabelDescriptor
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.LabelDescriptor;
+
+            /**
+             * Decodes a LabelDescriptor message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns LabelDescriptor
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.LabelDescriptor;
+
+            /**
+             * Verifies a LabelDescriptor message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a LabelDescriptor message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns LabelDescriptor
+             */
+            public static fromObject(object: { [k: string]: any }): google.api.LabelDescriptor;
+
+            /**
+             * Creates a plain object from a LabelDescriptor message. Also converts values to other types if specified.
+             * @param message LabelDescriptor
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.api.LabelDescriptor, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this LabelDescriptor to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        namespace LabelDescriptor {
+
+            /** ValueType enum. */
+            enum ValueType {
+                STRING = 0,
+                BOOL = 1,
+                INT64 = 2
+            }
+        }
+
+        /** LaunchStage enum. */
+        enum LaunchStage {
+            LAUNCH_STAGE_UNSPECIFIED = 0,
+            EARLY_ACCESS = 1,
+            ALPHA = 2,
+            BETA = 3,
+            GA = 4,
+            DEPRECATED = 5
+        }
+
         /** Properties of a ResourceDescriptor. */
         interface IResourceDescriptor {
 
@@ -5843,440 +6277,6 @@ export namespace google {
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of a MonitoredResourceDescriptor. */
-        interface IMonitoredResourceDescriptor {
-
-            /** MonitoredResourceDescriptor name */
-            name?: (string|null);
-
-            /** MonitoredResourceDescriptor type */
-            type?: (string|null);
-
-            /** MonitoredResourceDescriptor displayName */
-            displayName?: (string|null);
-
-            /** MonitoredResourceDescriptor description */
-            description?: (string|null);
-
-            /** MonitoredResourceDescriptor labels */
-            labels?: (google.api.ILabelDescriptor[]|null);
-
-            /** MonitoredResourceDescriptor launchStage */
-            launchStage?: (google.api.LaunchStage|keyof typeof google.api.LaunchStage|null);
-        }
-
-        /** Represents a MonitoredResourceDescriptor. */
-        class MonitoredResourceDescriptor implements IMonitoredResourceDescriptor {
-
-            /**
-             * Constructs a new MonitoredResourceDescriptor.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.api.IMonitoredResourceDescriptor);
-
-            /** MonitoredResourceDescriptor name. */
-            public name: string;
-
-            /** MonitoredResourceDescriptor type. */
-            public type: string;
-
-            /** MonitoredResourceDescriptor displayName. */
-            public displayName: string;
-
-            /** MonitoredResourceDescriptor description. */
-            public description: string;
-
-            /** MonitoredResourceDescriptor labels. */
-            public labels: google.api.ILabelDescriptor[];
-
-            /** MonitoredResourceDescriptor launchStage. */
-            public launchStage: (google.api.LaunchStage|keyof typeof google.api.LaunchStage);
-
-            /**
-             * Creates a new MonitoredResourceDescriptor instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns MonitoredResourceDescriptor instance
-             */
-            public static create(properties?: google.api.IMonitoredResourceDescriptor): google.api.MonitoredResourceDescriptor;
-
-            /**
-             * Encodes the specified MonitoredResourceDescriptor message. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
-             * @param message MonitoredResourceDescriptor message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.api.IMonitoredResourceDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified MonitoredResourceDescriptor message, length delimited. Does not implicitly {@link google.api.MonitoredResourceDescriptor.verify|verify} messages.
-             * @param message MonitoredResourceDescriptor message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.api.IMonitoredResourceDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns MonitoredResourceDescriptor
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.MonitoredResourceDescriptor;
-
-            /**
-             * Decodes a MonitoredResourceDescriptor message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns MonitoredResourceDescriptor
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.MonitoredResourceDescriptor;
-
-            /**
-             * Verifies a MonitoredResourceDescriptor message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a MonitoredResourceDescriptor message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns MonitoredResourceDescriptor
-             */
-            public static fromObject(object: { [k: string]: any }): google.api.MonitoredResourceDescriptor;
-
-            /**
-             * Creates a plain object from a MonitoredResourceDescriptor message. Also converts values to other types if specified.
-             * @param message MonitoredResourceDescriptor
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.api.MonitoredResourceDescriptor, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this MonitoredResourceDescriptor to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of a MonitoredResource. */
-        interface IMonitoredResource {
-
-            /** MonitoredResource type */
-            type?: (string|null);
-
-            /** MonitoredResource labels */
-            labels?: ({ [k: string]: string }|null);
-        }
-
-        /** Represents a MonitoredResource. */
-        class MonitoredResource implements IMonitoredResource {
-
-            /**
-             * Constructs a new MonitoredResource.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.api.IMonitoredResource);
-
-            /** MonitoredResource type. */
-            public type: string;
-
-            /** MonitoredResource labels. */
-            public labels: { [k: string]: string };
-
-            /**
-             * Creates a new MonitoredResource instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns MonitoredResource instance
-             */
-            public static create(properties?: google.api.IMonitoredResource): google.api.MonitoredResource;
-
-            /**
-             * Encodes the specified MonitoredResource message. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
-             * @param message MonitoredResource message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.api.IMonitoredResource, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified MonitoredResource message, length delimited. Does not implicitly {@link google.api.MonitoredResource.verify|verify} messages.
-             * @param message MonitoredResource message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.api.IMonitoredResource, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a MonitoredResource message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns MonitoredResource
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.MonitoredResource;
-
-            /**
-             * Decodes a MonitoredResource message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns MonitoredResource
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.MonitoredResource;
-
-            /**
-             * Verifies a MonitoredResource message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a MonitoredResource message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns MonitoredResource
-             */
-            public static fromObject(object: { [k: string]: any }): google.api.MonitoredResource;
-
-            /**
-             * Creates a plain object from a MonitoredResource message. Also converts values to other types if specified.
-             * @param message MonitoredResource
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.api.MonitoredResource, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this MonitoredResource to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of a MonitoredResourceMetadata. */
-        interface IMonitoredResourceMetadata {
-
-            /** MonitoredResourceMetadata systemLabels */
-            systemLabels?: (google.protobuf.IStruct|null);
-
-            /** MonitoredResourceMetadata userLabels */
-            userLabels?: ({ [k: string]: string }|null);
-        }
-
-        /** Represents a MonitoredResourceMetadata. */
-        class MonitoredResourceMetadata implements IMonitoredResourceMetadata {
-
-            /**
-             * Constructs a new MonitoredResourceMetadata.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.api.IMonitoredResourceMetadata);
-
-            /** MonitoredResourceMetadata systemLabels. */
-            public systemLabels?: (google.protobuf.IStruct|null);
-
-            /** MonitoredResourceMetadata userLabels. */
-            public userLabels: { [k: string]: string };
-
-            /**
-             * Creates a new MonitoredResourceMetadata instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns MonitoredResourceMetadata instance
-             */
-            public static create(properties?: google.api.IMonitoredResourceMetadata): google.api.MonitoredResourceMetadata;
-
-            /**
-             * Encodes the specified MonitoredResourceMetadata message. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
-             * @param message MonitoredResourceMetadata message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.api.IMonitoredResourceMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified MonitoredResourceMetadata message, length delimited. Does not implicitly {@link google.api.MonitoredResourceMetadata.verify|verify} messages.
-             * @param message MonitoredResourceMetadata message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.api.IMonitoredResourceMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a MonitoredResourceMetadata message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns MonitoredResourceMetadata
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.MonitoredResourceMetadata;
-
-            /**
-             * Decodes a MonitoredResourceMetadata message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns MonitoredResourceMetadata
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.MonitoredResourceMetadata;
-
-            /**
-             * Verifies a MonitoredResourceMetadata message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a MonitoredResourceMetadata message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns MonitoredResourceMetadata
-             */
-            public static fromObject(object: { [k: string]: any }): google.api.MonitoredResourceMetadata;
-
-            /**
-             * Creates a plain object from a MonitoredResourceMetadata message. Also converts values to other types if specified.
-             * @param message MonitoredResourceMetadata
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.api.MonitoredResourceMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this MonitoredResourceMetadata to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of a LabelDescriptor. */
-        interface ILabelDescriptor {
-
-            /** LabelDescriptor key */
-            key?: (string|null);
-
-            /** LabelDescriptor valueType */
-            valueType?: (google.api.LabelDescriptor.ValueType|keyof typeof google.api.LabelDescriptor.ValueType|null);
-
-            /** LabelDescriptor description */
-            description?: (string|null);
-        }
-
-        /** Represents a LabelDescriptor. */
-        class LabelDescriptor implements ILabelDescriptor {
-
-            /**
-             * Constructs a new LabelDescriptor.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.api.ILabelDescriptor);
-
-            /** LabelDescriptor key. */
-            public key: string;
-
-            /** LabelDescriptor valueType. */
-            public valueType: (google.api.LabelDescriptor.ValueType|keyof typeof google.api.LabelDescriptor.ValueType);
-
-            /** LabelDescriptor description. */
-            public description: string;
-
-            /**
-             * Creates a new LabelDescriptor instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns LabelDescriptor instance
-             */
-            public static create(properties?: google.api.ILabelDescriptor): google.api.LabelDescriptor;
-
-            /**
-             * Encodes the specified LabelDescriptor message. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
-             * @param message LabelDescriptor message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.api.ILabelDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified LabelDescriptor message, length delimited. Does not implicitly {@link google.api.LabelDescriptor.verify|verify} messages.
-             * @param message LabelDescriptor message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.api.ILabelDescriptor, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a LabelDescriptor message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns LabelDescriptor
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.api.LabelDescriptor;
-
-            /**
-             * Decodes a LabelDescriptor message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns LabelDescriptor
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.api.LabelDescriptor;
-
-            /**
-             * Verifies a LabelDescriptor message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a LabelDescriptor message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns LabelDescriptor
-             */
-            public static fromObject(object: { [k: string]: any }): google.api.LabelDescriptor;
-
-            /**
-             * Creates a plain object from a LabelDescriptor message. Also converts values to other types if specified.
-             * @param message LabelDescriptor
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.api.LabelDescriptor, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this LabelDescriptor to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        namespace LabelDescriptor {
-
-            /** ValueType enum. */
-            enum ValueType {
-                STRING = 0,
-                BOOL = 1,
-                INT64 = 2
-            }
-        }
-
-        /** LaunchStage enum. */
-        enum LaunchStage {
-            LAUNCH_STAGE_UNSPECIFIED = 0,
-            EARLY_ACCESS = 1,
-            ALPHA = 2,
-            BETA = 3,
-            GA = 4,
-            DEPRECATED = 5
         }
 
         /** Properties of a Distribution. */
@@ -9757,11 +9757,11 @@ export namespace google {
             /** MethodOptions uninterpretedOption */
             uninterpretedOption?: (google.protobuf.IUninterpretedOption[]|null);
 
-            /** MethodOptions .google.api.methodSignature */
-            ".google.api.methodSignature"?: (string[]|null);
-
             /** MethodOptions .google.api.http */
             ".google.api.http"?: (google.api.IHttpRule|null);
+
+            /** MethodOptions .google.api.methodSignature */
+            ".google.api.methodSignature"?: (string[]|null);
         }
 
         /** Represents a MethodOptions. */
@@ -10496,372 +10496,6 @@ export namespace google {
             }
         }
 
-        /** Properties of a Duration. */
-        interface IDuration {
-
-            /** Duration seconds */
-            seconds?: (number|Long|string|null);
-
-            /** Duration nanos */
-            nanos?: (number|null);
-        }
-
-        /** Represents a Duration. */
-        class Duration implements IDuration {
-
-            /**
-             * Constructs a new Duration.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.protobuf.IDuration);
-
-            /** Duration seconds. */
-            public seconds: (number|Long|string);
-
-            /** Duration nanos. */
-            public nanos: number;
-
-            /**
-             * Creates a new Duration instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns Duration instance
-             */
-            public static create(properties?: google.protobuf.IDuration): google.protobuf.Duration;
-
-            /**
-             * Encodes the specified Duration message. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
-             * @param message Duration message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.protobuf.IDuration, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified Duration message, length delimited. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
-             * @param message Duration message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.protobuf.IDuration, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a Duration message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns Duration
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Duration;
-
-            /**
-             * Decodes a Duration message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns Duration
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Duration;
-
-            /**
-             * Verifies a Duration message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a Duration message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns Duration
-             */
-            public static fromObject(object: { [k: string]: any }): google.protobuf.Duration;
-
-            /**
-             * Creates a plain object from a Duration message. Also converts values to other types if specified.
-             * @param message Duration
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.protobuf.Duration, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this Duration to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of an Empty. */
-        interface IEmpty {
-        }
-
-        /** Represents an Empty. */
-        class Empty implements IEmpty {
-
-            /**
-             * Constructs a new Empty.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.protobuf.IEmpty);
-
-            /**
-             * Creates a new Empty instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns Empty instance
-             */
-            public static create(properties?: google.protobuf.IEmpty): google.protobuf.Empty;
-
-            /**
-             * Encodes the specified Empty message. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
-             * @param message Empty message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.protobuf.IEmpty, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified Empty message, length delimited. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
-             * @param message Empty message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.protobuf.IEmpty, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes an Empty message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns Empty
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Empty;
-
-            /**
-             * Decodes an Empty message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns Empty
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Empty;
-
-            /**
-             * Verifies an Empty message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates an Empty message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns Empty
-             */
-            public static fromObject(object: { [k: string]: any }): google.protobuf.Empty;
-
-            /**
-             * Creates a plain object from an Empty message. Also converts values to other types if specified.
-             * @param message Empty
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.protobuf.Empty, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this Empty to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of a FieldMask. */
-        interface IFieldMask {
-
-            /** FieldMask paths */
-            paths?: (string[]|null);
-        }
-
-        /** Represents a FieldMask. */
-        class FieldMask implements IFieldMask {
-
-            /**
-             * Constructs a new FieldMask.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.protobuf.IFieldMask);
-
-            /** FieldMask paths. */
-            public paths: string[];
-
-            /**
-             * Creates a new FieldMask instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns FieldMask instance
-             */
-            public static create(properties?: google.protobuf.IFieldMask): google.protobuf.FieldMask;
-
-            /**
-             * Encodes the specified FieldMask message. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
-             * @param message FieldMask message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.protobuf.IFieldMask, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified FieldMask message, length delimited. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
-             * @param message FieldMask message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.protobuf.IFieldMask, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a FieldMask message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns FieldMask
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FieldMask;
-
-            /**
-             * Decodes a FieldMask message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns FieldMask
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FieldMask;
-
-            /**
-             * Verifies a FieldMask message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a FieldMask message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns FieldMask
-             */
-            public static fromObject(object: { [k: string]: any }): google.protobuf.FieldMask;
-
-            /**
-             * Creates a plain object from a FieldMask message. Also converts values to other types if specified.
-             * @param message FieldMask
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.protobuf.FieldMask, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this FieldMask to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
-        /** Properties of a Timestamp. */
-        interface ITimestamp {
-
-            /** Timestamp seconds */
-            seconds?: (number|Long|string|null);
-
-            /** Timestamp nanos */
-            nanos?: (number|null);
-        }
-
-        /** Represents a Timestamp. */
-        class Timestamp implements ITimestamp {
-
-            /**
-             * Constructs a new Timestamp.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: google.protobuf.ITimestamp);
-
-            /** Timestamp seconds. */
-            public seconds: (number|Long|string);
-
-            /** Timestamp nanos. */
-            public nanos: number;
-
-            /**
-             * Creates a new Timestamp instance using the specified properties.
-             * @param [properties] Properties to set
-             * @returns Timestamp instance
-             */
-            public static create(properties?: google.protobuf.ITimestamp): google.protobuf.Timestamp;
-
-            /**
-             * Encodes the specified Timestamp message. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
-             * @param message Timestamp message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encode(message: google.protobuf.ITimestamp, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Encodes the specified Timestamp message, length delimited. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
-             * @param message Timestamp message or plain object to encode
-             * @param [writer] Writer to encode to
-             * @returns Writer
-             */
-            public static encodeDelimited(message: google.protobuf.ITimestamp, writer?: $protobuf.Writer): $protobuf.Writer;
-
-            /**
-             * Decodes a Timestamp message from the specified reader or buffer.
-             * @param reader Reader or buffer to decode from
-             * @param [length] Message length if known beforehand
-             * @returns Timestamp
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Timestamp;
-
-            /**
-             * Decodes a Timestamp message from the specified reader or buffer, length delimited.
-             * @param reader Reader or buffer to decode from
-             * @returns Timestamp
-             * @throws {Error} If the payload is not a reader or valid buffer
-             * @throws {$protobuf.util.ProtocolError} If required fields are missing
-             */
-            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Timestamp;
-
-            /**
-             * Verifies a Timestamp message.
-             * @param message Plain object to verify
-             * @returns `null` if valid, otherwise the reason why it is not
-             */
-            public static verify(message: { [k: string]: any }): (string|null);
-
-            /**
-             * Creates a Timestamp message from a plain object. Also converts values to their respective internal types.
-             * @param object Plain object
-             * @returns Timestamp
-             */
-            public static fromObject(object: { [k: string]: any }): google.protobuf.Timestamp;
-
-            /**
-             * Creates a plain object from a Timestamp message. Also converts values to other types if specified.
-             * @param message Timestamp
-             * @param [options] Conversion options
-             * @returns Plain object
-             */
-            public static toObject(message: google.protobuf.Timestamp, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-            /**
-             * Converts this Timestamp to JSON.
-             * @returns JSON object
-             */
-            public toJSON(): { [k: string]: any };
-        }
-
         /** Properties of a Struct. */
         interface IStruct {
 
@@ -11170,6 +10804,102 @@ export namespace google {
             public toJSON(): { [k: string]: any };
         }
 
+        /** Properties of a Duration. */
+        interface IDuration {
+
+            /** Duration seconds */
+            seconds?: (number|Long|string|null);
+
+            /** Duration nanos */
+            nanos?: (number|null);
+        }
+
+        /** Represents a Duration. */
+        class Duration implements IDuration {
+
+            /**
+             * Constructs a new Duration.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.IDuration);
+
+            /** Duration seconds. */
+            public seconds: (number|Long|string);
+
+            /** Duration nanos. */
+            public nanos: number;
+
+            /**
+             * Creates a new Duration instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Duration instance
+             */
+            public static create(properties?: google.protobuf.IDuration): google.protobuf.Duration;
+
+            /**
+             * Encodes the specified Duration message. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
+             * @param message Duration message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.IDuration, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Duration message, length delimited. Does not implicitly {@link google.protobuf.Duration.verify|verify} messages.
+             * @param message Duration message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.protobuf.IDuration, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Duration message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Duration
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Duration;
+
+            /**
+             * Decodes a Duration message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Duration
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Duration;
+
+            /**
+             * Verifies a Duration message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Duration message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Duration
+             */
+            public static fromObject(object: { [k: string]: any }): google.protobuf.Duration;
+
+            /**
+             * Creates a plain object from a Duration message. Also converts values to other types if specified.
+             * @param message Duration
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.protobuf.Duration, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Duration to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
         /** Properties of an Any. */
         interface IAny {
 
@@ -11261,6 +10991,276 @@ export namespace google {
 
             /**
              * Converts this Any to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a Timestamp. */
+        interface ITimestamp {
+
+            /** Timestamp seconds */
+            seconds?: (number|Long|string|null);
+
+            /** Timestamp nanos */
+            nanos?: (number|null);
+        }
+
+        /** Represents a Timestamp. */
+        class Timestamp implements ITimestamp {
+
+            /**
+             * Constructs a new Timestamp.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.ITimestamp);
+
+            /** Timestamp seconds. */
+            public seconds: (number|Long|string);
+
+            /** Timestamp nanos. */
+            public nanos: number;
+
+            /**
+             * Creates a new Timestamp instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Timestamp instance
+             */
+            public static create(properties?: google.protobuf.ITimestamp): google.protobuf.Timestamp;
+
+            /**
+             * Encodes the specified Timestamp message. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
+             * @param message Timestamp message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.ITimestamp, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Timestamp message, length delimited. Does not implicitly {@link google.protobuf.Timestamp.verify|verify} messages.
+             * @param message Timestamp message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.protobuf.ITimestamp, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a Timestamp message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Timestamp
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Timestamp;
+
+            /**
+             * Decodes a Timestamp message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Timestamp
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Timestamp;
+
+            /**
+             * Verifies a Timestamp message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a Timestamp message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Timestamp
+             */
+            public static fromObject(object: { [k: string]: any }): google.protobuf.Timestamp;
+
+            /**
+             * Creates a plain object from a Timestamp message. Also converts values to other types if specified.
+             * @param message Timestamp
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.protobuf.Timestamp, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Timestamp to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of an Empty. */
+        interface IEmpty {
+        }
+
+        /** Represents an Empty. */
+        class Empty implements IEmpty {
+
+            /**
+             * Constructs a new Empty.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.IEmpty);
+
+            /**
+             * Creates a new Empty instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Empty instance
+             */
+            public static create(properties?: google.protobuf.IEmpty): google.protobuf.Empty;
+
+            /**
+             * Encodes the specified Empty message. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
+             * @param message Empty message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.IEmpty, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Empty message, length delimited. Does not implicitly {@link google.protobuf.Empty.verify|verify} messages.
+             * @param message Empty message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.protobuf.IEmpty, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an Empty message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Empty
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.Empty;
+
+            /**
+             * Decodes an Empty message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Empty
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.Empty;
+
+            /**
+             * Verifies an Empty message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates an Empty message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Empty
+             */
+            public static fromObject(object: { [k: string]: any }): google.protobuf.Empty;
+
+            /**
+             * Creates a plain object from an Empty message. Also converts values to other types if specified.
+             * @param message Empty
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.protobuf.Empty, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Empty to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a FieldMask. */
+        interface IFieldMask {
+
+            /** FieldMask paths */
+            paths?: (string[]|null);
+        }
+
+        /** Represents a FieldMask. */
+        class FieldMask implements IFieldMask {
+
+            /**
+             * Constructs a new FieldMask.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.protobuf.IFieldMask);
+
+            /** FieldMask paths. */
+            public paths: string[];
+
+            /**
+             * Creates a new FieldMask instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns FieldMask instance
+             */
+            public static create(properties?: google.protobuf.IFieldMask): google.protobuf.FieldMask;
+
+            /**
+             * Encodes the specified FieldMask message. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
+             * @param message FieldMask message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.protobuf.IFieldMask, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified FieldMask message, length delimited. Does not implicitly {@link google.protobuf.FieldMask.verify|verify} messages.
+             * @param message FieldMask message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.protobuf.IFieldMask, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a FieldMask message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns FieldMask
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.protobuf.FieldMask;
+
+            /**
+             * Decodes a FieldMask message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns FieldMask
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.protobuf.FieldMask;
+
+            /**
+             * Verifies a FieldMask message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a FieldMask message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns FieldMask
+             */
+            public static fromObject(object: { [k: string]: any }): google.protobuf.FieldMask;
+
+            /**
+             * Creates a plain object from a FieldMask message. Also converts values to other types if specified.
+             * @param message FieldMask
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.protobuf.FieldMask, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this FieldMask to JSON.
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };

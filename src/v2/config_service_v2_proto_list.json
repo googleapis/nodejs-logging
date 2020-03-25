@@ -1,3 +1,6 @@
 [
-  "../../protos/google/logging/v2/logging_config.proto"
+  "../../protos/google/logging/v2/log_entry.proto",
+  "../../protos/google/logging/v2/logging.proto",
+  "../../protos/google/logging/v2/logging_config.proto",
+  "../../protos/google/logging/v2/logging_metrics.proto"
 ]

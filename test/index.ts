@@ -36,7 +36,7 @@ import {Dataset} from '@google-cloud/bigquery';
 import {Bucket} from '@google-cloud/storage';
 
 const {v2} = require('../src');
-const PKG = require('../../package.json');
+const version = require('../../package.json').version;
 
 interface AbortableDuplex extends Duplex {
   cancel: Function;
@@ -131,7 +131,7 @@ describe('Logging', () => {
   const PROJECT_ID = 'project-id';
 
   before(() => {
-    Logging = proxyquire('../../', {
+    Logging = proxyquire('../src', {
       '@google-cloud/common': {
         util: fakeUtil,
       },
@@ -199,7 +199,7 @@ describe('Logging', () => {
           extend(
             {
               libName: 'gccl',
-              libVersion: PKG.version,
+              libVersion: version,
               scopes: EXPECTED_SCOPES,
             },
             options
@@ -216,10 +216,12 @@ describe('Logging', () => {
       const options = {
         a: 'b',
         c: 'd',
+        clientConfig: {},
+        port: 443,
+        servicePath: 'logging.googleapis.com',
       } as LoggingOptions;
 
       const logging = new Logging(options);
-
       assert.notStrictEqual(logging.options, options);
 
       assert.deepStrictEqual(
@@ -227,7 +229,7 @@ describe('Logging', () => {
         extend(
           {
             libName: 'gccl',
-            libVersion: PKG.version,
+            libVersion: version,
             scopes: EXPECTED_SCOPES,
           },
           options

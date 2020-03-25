@@ -34,7 +34,7 @@ export {middleware};
 export {HttpRequest};
 export {detectServiceContext};
 
-const PKG = require('../../package.json');
+const version = require('../../package.json').version;
 const v2 = require('./v2');
 
 import {Entry, LogEntry} from './entry';
@@ -288,7 +288,7 @@ class Logging {
     const options_ = extend(
       {
         libName: 'gccl',
-        libVersion: PKG.version,
+        libVersion: version,
         scopes,
       },
       options
