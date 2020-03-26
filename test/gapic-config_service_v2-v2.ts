@@ -18,898 +18,837 @@
 
 import * as protosTypes from '../protos/protos';
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import { describe, it } from 'mocha';
+/* eslint-disable @typescript-eslint/no-var-requires */
 const configservicev2Module = require('../src');
 
+
 const FAKE_STATUS_CODE = 1;
-class FakeError {
-  name: string;
-  message: string;
-  code: number;
-  constructor(n: number) {
-    this.name = 'fakeName';
-    this.message = 'fake message';
-    this.code = n;
-  }
+class FakeError{
+    name: string;
+    message: string;
+    code: number;
+    constructor(n: number){
+        this.name = 'fakeName';
+        this.message = 'fake message';
+        this.code = n;
+    }
 }
 const error = new FakeError(FAKE_STATUS_CODE);
 export interface Callback {
-  (err: FakeError | null, response?: {} | null): void;
+  (err: FakeError|null, response?: {} | null): void;
 }
 
-export class Operation {
-  constructor() {}
-  promise() {}
+export class Operation{
+    constructor(){};
+    promise() {};
 }
-function mockSimpleGrpcMethod(
-  expectedRequest: {},
-  response: {} | null,
-  error: FakeError | null
-) {
-  return (actualRequest: {}, options: {}, callback: Callback) => {
-    assert.deepStrictEqual(actualRequest, expectedRequest);
-    if (error) {
-      callback(error);
-    } else if (response) {
-      callback(null, response);
-    } else {
-      callback(null);
-    }
-  };
+function mockSimpleGrpcMethod(expectedRequest: {}, response: {} | null, error: FakeError | null) {
+    return (actualRequest: {}, options: {}, callback: Callback) => {
+        assert.deepStrictEqual(actualRequest, expectedRequest);
+        if (error) {
+            callback(error);
+        } else if (response) {
+            callback(null, response);
+        } else {
+            callback(null);
+        }
+    };
 }
 describe('v2.ConfigServiceV2Client', () => {
-  it('has servicePath', () => {
-    const servicePath =
-      configservicev2Module.v2.ConfigServiceV2Client.servicePath;
-    assert(servicePath);
-  });
-  it('has apiEndpoint', () => {
-    const apiEndpoint =
-      configservicev2Module.v2.ConfigServiceV2Client.apiEndpoint;
-    assert(apiEndpoint);
-  });
-  it('has port', () => {
-    const port = configservicev2Module.v2.ConfigServiceV2Client.port;
-    assert(port);
-    assert(typeof port === 'number');
-  });
-  it('should create a client with no option', () => {
-    const client = new configservicev2Module.v2.ConfigServiceV2Client();
-    assert(client);
-  });
-  it('should create a client with gRPC fallback', () => {
-    const client = new configservicev2Module.v2.ConfigServiceV2Client({
-      fallback: true,
+    it('has servicePath', () => {
+        const servicePath = configservicev2Module.v2.ConfigServiceV2Client.servicePath;
+        assert(servicePath);
     });
-    assert(client);
-  });
-  it('has initialize method and supports deferred initialization', async () => {
-    const client = new configservicev2Module.v2.ConfigServiceV2Client({
-      credentials: {client_email: 'bogus', private_key: 'bogus'},
-      projectId: 'bogus',
+    it('has apiEndpoint', () => {
+        const apiEndpoint = configservicev2Module.v2.ConfigServiceV2Client.apiEndpoint;
+        assert(apiEndpoint);
     });
-    assert.strictEqual(client.configServiceV2Stub, undefined);
-    await client.initialize();
-    assert(client.configServiceV2Stub);
-  });
-  it('has close method', () => {
-    const client = new configservicev2Module.v2.ConfigServiceV2Client({
-      credentials: {client_email: 'bogus', private_key: 'bogus'},
-      projectId: 'bogus',
+    it('has port', () => {
+        const port = configservicev2Module.v2.ConfigServiceV2Client.port;
+        assert(port);
+        assert(typeof port === 'number');
     });
-    client.close();
-  });
-  describe('getBucket', () => {
-    it('invokes getBucket without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetBucketRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getBucket = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.getBucket(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
+    it('should create a client with no option', () => {
+        const client = new configservicev2Module.v2.ConfigServiceV2Client();
+        assert(client);
     });
-
-    it('invokes getBucket with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetBucketRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getBucket = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.getBucket(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('updateBucket', () => {
-    it('invokes updateBucket without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateBucketRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateBucket = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.updateBucket(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes updateBucket with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateBucketRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateBucket = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.updateBucket(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('getSink', () => {
-    it('invokes getSink without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetSinkRequest = {};
-      request.sinkName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getSink = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.getSink(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes getSink with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetSinkRequest = {};
-      request.sinkName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getSink = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.getSink(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('createSink', () => {
-    it('invokes createSink without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.ICreateSinkRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.createSink = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.createSink(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes createSink with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.ICreateSinkRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.createSink = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.createSink(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('updateSink', () => {
-    it('invokes updateSink without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateSinkRequest = {};
-      request.sinkName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateSink = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.updateSink(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes updateSink with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateSinkRequest = {};
-      request.sinkName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateSink = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.updateSink(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('deleteSink', () => {
-    it('invokes deleteSink without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IDeleteSinkRequest = {};
-      request.sinkName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.deleteSink = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.deleteSink(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes deleteSink with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IDeleteSinkRequest = {};
-      request.sinkName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.deleteSink = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.deleteSink(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('getExclusion', () => {
-    it('invokes getExclusion without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetExclusionRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getExclusion = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.getExclusion(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes getExclusion with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetExclusionRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getExclusion = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.getExclusion(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('createExclusion', () => {
-    it('invokes createExclusion without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.ICreateExclusionRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.createExclusion = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.createExclusion(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes createExclusion with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.ICreateExclusionRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.createExclusion = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.createExclusion(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('updateExclusion', () => {
-    it('invokes updateExclusion without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateExclusionRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateExclusion = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.updateExclusion(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes updateExclusion with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateExclusionRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateExclusion = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.updateExclusion(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('deleteExclusion', () => {
-    it('invokes deleteExclusion without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IDeleteExclusionRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.deleteExclusion = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.deleteExclusion(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes deleteExclusion with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IDeleteExclusionRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.deleteExclusion = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.deleteExclusion(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('getCmekSettings', () => {
-    it('invokes getCmekSettings without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetCmekSettingsRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getCmekSettings = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.getCmekSettings(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes getCmekSettings with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IGetCmekSettingsRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.getCmekSettings = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.getCmekSettings(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('updateCmekSettings', () => {
-    it('invokes updateCmekSettings without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateCmekSettings = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.updateCmekSettings(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-
-    it('invokes updateCmekSettings with error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest = {};
-      request.name = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.updateCmekSettings = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.updateCmekSettings(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('listBuckets', () => {
-    it('invokes listBuckets without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListBucketsRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock Grpc layer
-      client._innerApiCalls.listBuckets = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      client.listBuckets(request, (err: FakeError, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-  });
-  describe('listBucketsStream', () => {
-    it('invokes listBucketsStream without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListBucketsRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {response: 'data'};
-      // Mock Grpc layer
-      client._innerApiCalls.listBuckets = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      const stream = client
-        .listBucketsStream(request, {})
-        .on('data', (response: {}) => {
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        })
-        .on('error', (err: FakeError) => {
-          done(err);
+    it('should create a client with gRPC fallback', () => {
+        const client = new configservicev2Module.v2.ConfigServiceV2Client({
+            fallback: true,
         });
-      stream.write(expectedResponse);
+        assert(client);
     });
-  });
-  describe('listSinks', () => {
-    it('invokes listSinks without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListSinksRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock Grpc layer
-      client._innerApiCalls.listSinks = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      client.listSinks(request, (err: FakeError, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-  });
-  describe('listSinksStream', () => {
-    it('invokes listSinksStream without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListSinksRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {response: 'data'};
-      // Mock Grpc layer
-      client._innerApiCalls.listSinks = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      const stream = client
-        .listSinksStream(request, {})
-        .on('data', (response: {}) => {
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        })
-        .on('error', (err: FakeError) => {
-          done(err);
+    it('has initialize method and supports deferred initialization', async () => {
+        const client = new configservicev2Module.v2.ConfigServiceV2Client({
+            credentials: { client_email: 'bogus', private_key: 'bogus' },
+            projectId: 'bogus',
         });
-      stream.write(expectedResponse);
+        assert.strictEqual(client.configServiceV2Stub, undefined);
+        await client.initialize();
+        assert(client.configServiceV2Stub);
     });
-  });
-  describe('listExclusions', () => {
-    it('invokes listExclusions without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListExclusionsRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock Grpc layer
-      client._innerApiCalls.listExclusions = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      client.listExclusions(request, (err: FakeError, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-  });
-  describe('listExclusionsStream', () => {
-    it('invokes listExclusionsStream without error', done => {
-      const client = new configservicev2Module.v2.ConfigServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListExclusionsRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {response: 'data'};
-      // Mock Grpc layer
-      client._innerApiCalls.listExclusions = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      const stream = client
-        .listExclusionsStream(request, {})
-        .on('data', (response: {}) => {
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        })
-        .on('error', (err: FakeError) => {
-          done(err);
+    it('has close method', () => {
+        const client = new configservicev2Module.v2.ConfigServiceV2Client({
+            credentials: { client_email: 'bogus', private_key: 'bogus' },
+            projectId: 'bogus',
         });
-      stream.write(expectedResponse);
+        client.close();
     });
-  });
+    describe('getBucket', () => {
+        it('invokes getBucket without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetBucketRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.getBucket = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.getBucket(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes getBucket with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetBucketRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.getBucket = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.getBucket(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('updateBucket', () => {
+        it('invokes updateBucket without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateBucketRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.updateBucket = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.updateBucket(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes updateBucket with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateBucketRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.updateBucket = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.updateBucket(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('getSink', () => {
+        it('invokes getSink without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetSinkRequest = {};
+            request.sinkName = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.getSink = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.getSink(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes getSink with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetSinkRequest = {};
+            request.sinkName = '';
+            // Mock gRPC layer
+            client._innerApiCalls.getSink = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.getSink(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('createSink', () => {
+        it('invokes createSink without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.ICreateSinkRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.createSink = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.createSink(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes createSink with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.ICreateSinkRequest = {};
+            request.parent = '';
+            // Mock gRPC layer
+            client._innerApiCalls.createSink = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.createSink(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('updateSink', () => {
+        it('invokes updateSink without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateSinkRequest = {};
+            request.sinkName = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.updateSink = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.updateSink(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes updateSink with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateSinkRequest = {};
+            request.sinkName = '';
+            // Mock gRPC layer
+            client._innerApiCalls.updateSink = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.updateSink(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('deleteSink', () => {
+        it('invokes deleteSink without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IDeleteSinkRequest = {};
+            request.sinkName = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.deleteSink = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.deleteSink(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes deleteSink with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IDeleteSinkRequest = {};
+            request.sinkName = '';
+            // Mock gRPC layer
+            client._innerApiCalls.deleteSink = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.deleteSink(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('getExclusion', () => {
+        it('invokes getExclusion without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetExclusionRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.getExclusion = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.getExclusion(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes getExclusion with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetExclusionRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.getExclusion = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.getExclusion(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('createExclusion', () => {
+        it('invokes createExclusion without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.ICreateExclusionRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.createExclusion = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.createExclusion(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes createExclusion with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.ICreateExclusionRequest = {};
+            request.parent = '';
+            // Mock gRPC layer
+            client._innerApiCalls.createExclusion = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.createExclusion(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('updateExclusion', () => {
+        it('invokes updateExclusion without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateExclusionRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.updateExclusion = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.updateExclusion(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes updateExclusion with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateExclusionRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.updateExclusion = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.updateExclusion(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('deleteExclusion', () => {
+        it('invokes deleteExclusion without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IDeleteExclusionRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.deleteExclusion = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.deleteExclusion(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes deleteExclusion with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IDeleteExclusionRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.deleteExclusion = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.deleteExclusion(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('getCmekSettings', () => {
+        it('invokes getCmekSettings without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetCmekSettingsRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.getCmekSettings = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.getCmekSettings(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes getCmekSettings with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IGetCmekSettingsRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.getCmekSettings = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.getCmekSettings(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('updateCmekSettings', () => {
+        it('invokes updateCmekSettings without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest = {};
+            request.name = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.updateCmekSettings = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.updateCmekSettings(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
+
+        it('invokes updateCmekSettings with error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest = {};
+            request.name = '';
+            // Mock gRPC layer
+            client._innerApiCalls.updateCmekSettings = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.updateCmekSettings(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
+    });
+    describe('listBuckets', () => {
+        it('invokes listBuckets without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListBucketsRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock Grpc layer
+            client._innerApiCalls.listBuckets = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            client.listBuckets(request, (err: FakeError, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            });
+        });
+    });
+    describe('listBucketsStream', () => {
+        it('invokes listBucketsStream without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListBucketsRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {response: 'data'};
+            // Mock Grpc layer
+            client._innerApiCalls.listBuckets = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            const stream = client.listBucketsStream(request, {}).on('data', (response: {}) =>{
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            }).on('error', (err: FakeError) => {
+                done(err);
+            });
+            stream.write(expectedResponse);
+        });
+    });
+    describe('listSinks', () => {
+        it('invokes listSinks without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListSinksRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock Grpc layer
+            client._innerApiCalls.listSinks = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            client.listSinks(request, (err: FakeError, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            });
+        });
+    });
+    describe('listSinksStream', () => {
+        it('invokes listSinksStream without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListSinksRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {response: 'data'};
+            // Mock Grpc layer
+            client._innerApiCalls.listSinks = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            const stream = client.listSinksStream(request, {}).on('data', (response: {}) =>{
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            }).on('error', (err: FakeError) => {
+                done(err);
+            });
+            stream.write(expectedResponse);
+        });
+    });
+    describe('listExclusions', () => {
+        it('invokes listExclusions without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListExclusionsRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock Grpc layer
+            client._innerApiCalls.listExclusions = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            client.listExclusions(request, (err: FakeError, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            });
+        });
+    });
+    describe('listExclusionsStream', () => {
+        it('invokes listExclusionsStream without error', done => {
+            const client = new configservicev2Module.v2.ConfigServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListExclusionsRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {response: 'data'};
+            // Mock Grpc layer
+            client._innerApiCalls.listExclusions = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            const stream = client.listExclusionsStream(request, {}).on('data', (response: {}) =>{
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            }).on('error', (err: FakeError) => {
+                done(err);
+            });
+            stream.write(expectedResponse);
+        });
+    });
 });

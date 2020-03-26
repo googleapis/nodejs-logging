@@ -18,375 +18,331 @@
 
 import * as protosTypes from '../protos/protos';
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import { describe, it } from 'mocha';
+/* eslint-disable @typescript-eslint/no-var-requires */
 const loggingservicev2Module = require('../src');
 
+
 const FAKE_STATUS_CODE = 1;
-class FakeError {
-  name: string;
-  message: string;
-  code: number;
-  constructor(n: number) {
-    this.name = 'fakeName';
-    this.message = 'fake message';
-    this.code = n;
-  }
+class FakeError{
+    name: string;
+    message: string;
+    code: number;
+    constructor(n: number){
+        this.name = 'fakeName';
+        this.message = 'fake message';
+        this.code = n;
+    }
 }
 const error = new FakeError(FAKE_STATUS_CODE);
 export interface Callback {
-  (err: FakeError | null, response?: {} | null): void;
+  (err: FakeError|null, response?: {} | null): void;
 }
 
-export class Operation {
-  constructor() {}
-  promise() {}
+export class Operation{
+    constructor(){};
+    promise() {};
 }
-function mockSimpleGrpcMethod(
-  expectedRequest: {},
-  response: {} | null,
-  error: FakeError | null
-) {
-  return (actualRequest: {}, options: {}, callback: Callback) => {
-    assert.deepStrictEqual(actualRequest, expectedRequest);
-    if (error) {
-      callback(error);
-    } else if (response) {
-      callback(null, response);
-    } else {
-      callback(null);
-    }
-  };
+function mockSimpleGrpcMethod(expectedRequest: {}, response: {} | null, error: FakeError | null) {
+    return (actualRequest: {}, options: {}, callback: Callback) => {
+        assert.deepStrictEqual(actualRequest, expectedRequest);
+        if (error) {
+            callback(error);
+        } else if (response) {
+            callback(null, response);
+        } else {
+            callback(null);
+        }
+    };
 }
 describe('v2.LoggingServiceV2Client', () => {
-  it('has servicePath', () => {
-    const servicePath =
-      loggingservicev2Module.v2.LoggingServiceV2Client.servicePath;
-    assert(servicePath);
-  });
-  it('has apiEndpoint', () => {
-    const apiEndpoint =
-      loggingservicev2Module.v2.LoggingServiceV2Client.apiEndpoint;
-    assert(apiEndpoint);
-  });
-  it('has port', () => {
-    const port = loggingservicev2Module.v2.LoggingServiceV2Client.port;
-    assert(port);
-    assert(typeof port === 'number');
-  });
-  it('should create a client with no option', () => {
-    const client = new loggingservicev2Module.v2.LoggingServiceV2Client();
-    assert(client);
-  });
-  it('should create a client with gRPC fallback', () => {
-    const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-      fallback: true,
+    it('has servicePath', () => {
+        const servicePath = loggingservicev2Module.v2.LoggingServiceV2Client.servicePath;
+        assert(servicePath);
     });
-    assert(client);
-  });
-  it('has initialize method and supports deferred initialization', async () => {
-    const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-      credentials: {client_email: 'bogus', private_key: 'bogus'},
-      projectId: 'bogus',
+    it('has apiEndpoint', () => {
+        const apiEndpoint = loggingservicev2Module.v2.LoggingServiceV2Client.apiEndpoint;
+        assert(apiEndpoint);
     });
-    assert.strictEqual(client.loggingServiceV2Stub, undefined);
-    await client.initialize();
-    assert(client.loggingServiceV2Stub);
-  });
-  it('has close method', () => {
-    const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-      credentials: {client_email: 'bogus', private_key: 'bogus'},
-      projectId: 'bogus',
+    it('has port', () => {
+        const port = loggingservicev2Module.v2.LoggingServiceV2Client.port;
+        assert(port);
+        assert(typeof port === 'number');
     });
-    client.close();
-  });
-  describe('deleteLog', () => {
-    it('invokes deleteLog without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IDeleteLogRequest = {};
-      request.logName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.deleteLog(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
+    it('should create a client with no option', () => {
+        const client = new loggingservicev2Module.v2.LoggingServiceV2Client();
+        assert(client);
     });
+    it('should create a client with gRPC fallback', () => {
+        const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+            fallback: true,
+        });
+        assert(client);
+    });
+    it('has initialize method and supports deferred initialization', async () => {
+        const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+            credentials: { client_email: 'bogus', private_key: 'bogus' },
+            projectId: 'bogus',
+        });
+        assert.strictEqual(client.loggingServiceV2Stub, undefined);
+        await client.initialize();
+        assert(client.loggingServiceV2Stub);
+    });
+    it('has close method', () => {
+        const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+            credentials: { client_email: 'bogus', private_key: 'bogus' },
+            projectId: 'bogus',
+        });
+        client.close();
+    });
+    describe('deleteLog', () => {
+        it('invokes deleteLog without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IDeleteLogRequest = {};
+            request.logName = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.deleteLog(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
 
-    it('invokes deleteLog with error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IDeleteLogRequest = {};
-      request.logName = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.deleteLog(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
+        it('invokes deleteLog with error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IDeleteLogRequest = {};
+            request.logName = '';
+            // Mock gRPC layer
+            client._innerApiCalls.deleteLog = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.deleteLog(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
+        });
     });
-  });
-  describe('writeLogEntries', () => {
-    it('invokes writeLogEntries without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IWriteLogEntriesRequest = {};
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
-        request,
-        expectedResponse,
-        null
-      );
-      client.writeLogEntries(request, (err: {}, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
+    describe('writeLogEntries', () => {
+        it('invokes writeLogEntries without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IWriteLogEntriesRequest = {};
+            // Mock response
+            const expectedResponse = {};
+            // Mock gRPC layer
+            client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
+                request,
+                expectedResponse,
+                null
+            );
+            client.writeLogEntries(request, (err: {}, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            })
+        });
 
-    it('invokes writeLogEntries with error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IWriteLogEntriesRequest = {};
-      // Mock response
-      const expectedResponse = {};
-      // Mock gRPC layer
-      client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
-        request,
-        null,
-        error
-      );
-      client.writeLogEntries(request, (err: FakeError, response: {}) => {
-        assert(err instanceof FakeError);
-        assert.strictEqual(err.code, FAKE_STATUS_CODE);
-        assert(typeof response === 'undefined');
-        done();
-      });
-    });
-  });
-  describe('listLogEntries', () => {
-    it('invokes listLogEntries without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListLogEntriesRequest = {};
-      // Mock response
-      const expectedResponse = {};
-      // Mock Grpc layer
-      client._innerApiCalls.listLogEntries = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      client.listLogEntries(request, (err: FakeError, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-  });
-  describe('listLogEntriesStream', () => {
-    it('invokes listLogEntriesStream without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListLogEntriesRequest = {};
-      // Mock response
-      const expectedResponse = {response: 'data'};
-      // Mock Grpc layer
-      client._innerApiCalls.listLogEntries = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      const stream = client
-        .listLogEntriesStream(request, {})
-        .on('data', (response: {}) => {
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        })
-        .on('error', (err: FakeError) => {
-          done(err);
+        it('invokes writeLogEntries with error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IWriteLogEntriesRequest = {};
+            // Mock gRPC layer
+            client._innerApiCalls.writeLogEntries = mockSimpleGrpcMethod(
+                request,
+                null,
+                error
+            );
+            client.writeLogEntries(request, (err: FakeError, response: {}) => {
+                assert(err instanceof FakeError);
+                assert.strictEqual(err.code, FAKE_STATUS_CODE);
+                assert(typeof response === 'undefined');
+                done();
+            })
         });
-      stream.write(expectedResponse);
     });
-  });
-  describe('listMonitoredResourceDescriptors', () => {
-    it('invokes listMonitoredResourceDescriptors without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest = {};
-      // Mock response
-      const expectedResponse = {};
-      // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      client.listMonitoredResourceDescriptors(
-        request,
-        (err: FakeError, response: {}) => {
-          assert.ifError(err);
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        }
-      );
-    });
-  });
-  describe('listMonitoredResourceDescriptorsStream', () => {
-    it('invokes listMonitoredResourceDescriptorsStream without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest = {};
-      // Mock response
-      const expectedResponse = {response: 'data'};
-      // Mock Grpc layer
-      client._innerApiCalls.listMonitoredResourceDescriptors = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      const stream = client
-        .listMonitoredResourceDescriptorsStream(request, {})
-        .on('data', (response: {}) => {
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        })
-        .on('error', (err: FakeError) => {
-          done(err);
+    describe('listLogEntries', () => {
+        it('invokes listLogEntries without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListLogEntriesRequest = {};
+            // Mock response
+            const expectedResponse = {};
+            // Mock Grpc layer
+            client._innerApiCalls.listLogEntries = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            client.listLogEntries(request, (err: FakeError, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            });
         });
-      stream.write(expectedResponse);
     });
-  });
-  describe('listLogs', () => {
-    it('invokes listLogs without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListLogsRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {};
-      // Mock Grpc layer
-      client._innerApiCalls.listLogs = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      client.listLogs(request, (err: FakeError, response: {}) => {
-        assert.ifError(err);
-        assert.deepStrictEqual(response, expectedResponse);
-        done();
-      });
-    });
-  });
-  describe('listLogsStream', () => {
-    it('invokes listLogsStream without error', done => {
-      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
-        credentials: {client_email: 'bogus', private_key: 'bogus'},
-        projectId: 'bogus',
-      });
-      // Initialize client before mocking
-      client.initialize();
-      // Mock request
-      const request: protosTypes.google.logging.v2.IListLogsRequest = {};
-      request.parent = '';
-      // Mock response
-      const expectedResponse = {response: 'data'};
-      // Mock Grpc layer
-      client._innerApiCalls.listLogs = (
-        actualRequest: {},
-        options: {},
-        callback: Callback
-      ) => {
-        assert.deepStrictEqual(actualRequest, request);
-        callback(null, expectedResponse);
-      };
-      const stream = client
-        .listLogsStream(request, {})
-        .on('data', (response: {}) => {
-          assert.deepStrictEqual(response, expectedResponse);
-          done();
-        })
-        .on('error', (err: FakeError) => {
-          done(err);
+    describe('listLogEntriesStream', () => {
+        it('invokes listLogEntriesStream without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListLogEntriesRequest = {};
+            // Mock response
+            const expectedResponse = {response: 'data'};
+            // Mock Grpc layer
+            client._innerApiCalls.listLogEntries = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            const stream = client.listLogEntriesStream(request, {}).on('data', (response: {}) =>{
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            }).on('error', (err: FakeError) => {
+                done(err);
+            });
+            stream.write(expectedResponse);
         });
-      stream.write(expectedResponse);
     });
-  });
+    describe('listMonitoredResourceDescriptors', () => {
+        it('invokes listMonitoredResourceDescriptors without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest = {};
+            // Mock response
+            const expectedResponse = {};
+            // Mock Grpc layer
+            client._innerApiCalls.listMonitoredResourceDescriptors = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            client.listMonitoredResourceDescriptors(request, (err: FakeError, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            });
+        });
+    });
+    describe('listMonitoredResourceDescriptorsStream', () => {
+        it('invokes listMonitoredResourceDescriptorsStream without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest = {};
+            // Mock response
+            const expectedResponse = {response: 'data'};
+            // Mock Grpc layer
+            client._innerApiCalls.listMonitoredResourceDescriptors = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            const stream = client.listMonitoredResourceDescriptorsStream(request, {}).on('data', (response: {}) =>{
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            }).on('error', (err: FakeError) => {
+                done(err);
+            });
+            stream.write(expectedResponse);
+        });
+    });
+    describe('listLogs', () => {
+        it('invokes listLogs without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListLogsRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {};
+            // Mock Grpc layer
+            client._innerApiCalls.listLogs = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            client.listLogs(request, (err: FakeError, response: {}) => {
+                assert.ifError(err);
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            });
+        });
+    });
+    describe('listLogsStream', () => {
+        it('invokes listLogsStream without error', done => {
+            const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            // Initialize client before mocking
+            client.initialize();
+            // Mock request
+            const request: protosTypes.google.logging.v2.IListLogsRequest = {};
+            request.parent = '';
+            // Mock response
+            const expectedResponse = {response: 'data'};
+            // Mock Grpc layer
+            client._innerApiCalls.listLogs = (actualRequest: {}, options: {}, callback: Callback) => {
+                assert.deepStrictEqual(actualRequest, request);
+                callback(null, expectedResponse);
+            };
+            const stream = client.listLogsStream(request, {}).on('data', (response: {}) =>{
+                assert.deepStrictEqual(response, expectedResponse);
+                done();
+            }).on('error', (err: FakeError) => {
+                done(err);
+            });
+            stream.write(expectedResponse);
+        });
+    });
 });
