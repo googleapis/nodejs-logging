@@ -55,7 +55,7 @@
     "eventid": "^1.0.0",
     "extend": "^3.0.2",
     "gcp-metadata": "^3.5.0",
-    "google-auth-library": "^5.10.1",
+    "google-auth-library": "^6.0.0",
     "google-gax": "^1.15.1",
     "is": "^3.3.0",
     "on-finished": "^2.3.0",
