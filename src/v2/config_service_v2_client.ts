@@ -18,18 +18,18 @@
 
 import * as gax from 'google-gax';
 import {
-  APICallback,
   Callback,
   CallOptions,
   Descriptors,
   ClientOptions,
   PaginationCallback,
-  PaginationResponse,
+  GaxCall,
 } from 'google-gax';
 import * as path from 'path';
 
 import {Transform} from 'stream';
-import * as protosTypes from '../../protos/protos';
+import {RequestType} from 'google-gax/build/src/apitypes';
+import * as protos from '../../protos/protos';
 import * as gapicConfig from './config_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -40,14 +40,6 @@ const version = require('../../../package.json').version;
  * @memberof v2
  */
 export class ConfigServiceV2Client {
-  private _descriptors: Descriptors = {
-    page: {},
-    stream: {},
-    longrunning: {},
-    batching: {},
-  };
-  private _innerApiCalls: {[name: string]: Function};
-  private _pathTemplates: {[name: string]: gax.PathTemplate};
   private _terminated = false;
   private _opts: ClientOptions;
   private _gaxModule: typeof gax | typeof gax.fallback;
@@ -55,6 +47,14 @@ export class ConfigServiceV2Client {
   private _protos: {};
   private _defaults: {[method: string]: gax.CallSettings};
   auth: gax.GoogleAuth;
+  descriptors: Descriptors = {
+    page: {},
+    stream: {},
+    longrunning: {},
+    batching: {},
+  };
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
   configServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -146,13 +146,16 @@ export class ConfigServiceV2Client {
       'protos.json'
     );
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback
+        ? // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require('../../protos/protos.json')
+        : nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
-    this._pathTemplates = {
+    this.pathTemplates = {
       billingAccountCmekSettingsPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/cmekSettings'
       ),
@@ -227,7 +230,7 @@ export class ConfigServiceV2Client {
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
-    this._descriptors.page = {
+    this.descriptors.page = {
       listBuckets: new this._gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -256,7 +259,7 @@ export class ConfigServiceV2Client {
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
     // merely providing the destination and request information.
-    this._innerApiCalls = {};
+    this.innerApiCalls = {};
   }
 
   /**
@@ -283,7 +286,7 @@ export class ConfigServiceV2Client {
         ? (this._protos as protobuf.Root).lookupService(
             'google.logging.v2.ConfigServiceV2'
           )
-        : // tslint:disable-next-line no-any
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.logging.v2.ConfigServiceV2,
       this._opts
     ) as Promise<{[method: string]: Function}>;
@@ -307,9 +310,8 @@ export class ConfigServiceV2Client {
       'getCmekSettings',
       'updateCmekSettings',
     ];
-
     for (const methodName of configServiceV2StubMethods) {
-      const innerCallPromise = this.configServiceV2Stub.then(
+      const callPromise = this.configServiceV2Stub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -323,20 +325,14 @@ export class ConfigServiceV2Client {
       );
 
       const apiCall = this._gaxModule.createApiCall(
-        innerCallPromise,
+        callPromise,
         this._defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.stream[methodName] ||
-          this._descriptors.longrunning[methodName]
+        this.descriptors.page[methodName] ||
+          this.descriptors.stream[methodName] ||
+          this.descriptors.longrunning[methodName]
       );
 
-      this._innerApiCalls[methodName] = (
-        argument: {},
-        callOptions?: CallOptions,
-        callback?: APICallback
-      ) => {
-        return apiCall(argument, callOptions, callback);
-      };
+      this.innerApiCalls[methodName] = apiCall;
     }
 
     return this.configServiceV2Stub;
@@ -398,22 +394,30 @@ export class ConfigServiceV2Client {
   // -- Service calls --
   // -------------------
   getBucket(
-    request: protosTypes.google.logging.v2.IGetBucketRequest,
+    request: protos.google.logging.v2.IGetBucketRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IGetBucketRequest | undefined,
       {} | undefined
     ]
   >;
   getBucket(
-    request: protosTypes.google.logging.v2.IGetBucketRequest,
+    request: protos.google.logging.v2.IGetBucketRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IGetBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getBucket(
+    request: protos.google.logging.v2.IGetBucketRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IGetBucketRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -438,23 +442,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   getBucket(
-    request: protosTypes.google.logging.v2.IGetBucketRequest,
+    request: protos.google.logging.v2.IGetBucketRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogBucket,
-          protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IGetBucketRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IGetBucketRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IGetBucketRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -475,25 +479,33 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.getBucket(request, options, callback);
+    return this.innerApiCalls.getBucket(request, options, callback);
   }
   updateBucket(
-    request: protosTypes.google.logging.v2.IUpdateBucketRequest,
+    request: protos.google.logging.v2.IUpdateBucketRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IUpdateBucketRequest | undefined,
       {} | undefined
     ]
   >;
   updateBucket(
-    request: protosTypes.google.logging.v2.IUpdateBucketRequest,
+    request: protos.google.logging.v2.IUpdateBucketRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IUpdateBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateBucket(
+    request: protos.google.logging.v2.IUpdateBucketRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IUpdateBucketRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -541,23 +553,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   updateBucket(
-    request: protosTypes.google.logging.v2.IUpdateBucketRequest,
+    request: protos.google.logging.v2.IUpdateBucketRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogBucket,
-          protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IUpdateBucketRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IUpdateBucketRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.IUpdateBucketRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -578,25 +590,33 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateBucket(request, options, callback);
+    return this.innerApiCalls.updateBucket(request, options, callback);
   }
   getSink(
-    request: protosTypes.google.logging.v2.IGetSinkRequest,
+    request: protos.google.logging.v2.IGetSinkRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IGetSinkRequest | undefined,
       {} | undefined
     ]
   >;
   getSink(
-    request: protosTypes.google.logging.v2.IGetSinkRequest,
+    request: protos.google.logging.v2.IGetSinkRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IGetSinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getSink(
+    request: protos.google.logging.v2.IGetSinkRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IGetSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -620,23 +640,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   getSink(
-    request: protosTypes.google.logging.v2.IGetSinkRequest,
+    request: protos.google.logging.v2.IGetSinkRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogSink,
-          protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IGetSinkRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IGetSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IGetSinkRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -657,25 +677,33 @@ export class ConfigServiceV2Client {
       sink_name: request.sinkName || '',
     });
     this.initialize();
-    return this._innerApiCalls.getSink(request, options, callback);
+    return this.innerApiCalls.getSink(request, options, callback);
   }
   createSink(
-    request: protosTypes.google.logging.v2.ICreateSinkRequest,
+    request: protos.google.logging.v2.ICreateSinkRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.ICreateSinkRequest | undefined,
       {} | undefined
     ]
   >;
   createSink(
-    request: protosTypes.google.logging.v2.ICreateSinkRequest,
+    request: protos.google.logging.v2.ICreateSinkRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.ICreateSinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createSink(
+    request: protos.google.logging.v2.ICreateSinkRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.ICreateSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -717,23 +745,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   createSink(
-    request: protosTypes.google.logging.v2.ICreateSinkRequest,
+    request: protos.google.logging.v2.ICreateSinkRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogSink,
-          protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.ICreateSinkRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.ICreateSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.ICreateSinkRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -754,25 +782,33 @@ export class ConfigServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.createSink(request, options, callback);
+    return this.innerApiCalls.createSink(request, options, callback);
   }
   updateSink(
-    request: protosTypes.google.logging.v2.IUpdateSinkRequest,
+    request: protos.google.logging.v2.IUpdateSinkRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IUpdateSinkRequest | undefined,
       {} | undefined
     ]
   >;
   updateSink(
-    request: protosTypes.google.logging.v2.IUpdateSinkRequest,
+    request: protos.google.logging.v2.IUpdateSinkRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IUpdateSinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateSink(
+    request: protos.google.logging.v2.IUpdateSinkRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IUpdateSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -831,23 +867,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   updateSink(
-    request: protosTypes.google.logging.v2.IUpdateSinkRequest,
+    request: protos.google.logging.v2.IUpdateSinkRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogSink,
-          protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IUpdateSinkRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IUpdateSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
+      protos.google.logging.v2.ILogSink,
+      protos.google.logging.v2.IUpdateSinkRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -868,25 +904,33 @@ export class ConfigServiceV2Client {
       sink_name: request.sinkName || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateSink(request, options, callback);
+    return this.innerApiCalls.updateSink(request, options, callback);
   }
   deleteSink(
-    request: protosTypes.google.logging.v2.IDeleteSinkRequest,
+    request: protos.google.logging.v2.IDeleteSinkRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteSinkRequest | undefined,
       {} | undefined
     ]
   >;
   deleteSink(
-    request: protosTypes.google.logging.v2.IDeleteSinkRequest,
+    request: protos.google.logging.v2.IDeleteSinkRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteSinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteSink(
+    request: protos.google.logging.v2.IDeleteSinkRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -912,23 +956,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   deleteSink(
-    request: protosTypes.google.logging.v2.IDeleteSinkRequest,
+    request: protos.google.logging.v2.IDeleteSinkRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-          {} | undefined
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteSinkRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteSinkRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteSinkRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -949,25 +993,33 @@ export class ConfigServiceV2Client {
       sink_name: request.sinkName || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteSink(request, options, callback);
+    return this.innerApiCalls.deleteSink(request, options, callback);
   }
   getExclusion(
-    request: protosTypes.google.logging.v2.IGetExclusionRequest,
+    request: protos.google.logging.v2.IGetExclusionRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IGetExclusionRequest | undefined,
       {} | undefined
     ]
   >;
   getExclusion(
-    request: protosTypes.google.logging.v2.IGetExclusionRequest,
+    request: protos.google.logging.v2.IGetExclusionRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IGetExclusionRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getExclusion(
+    request: protos.google.logging.v2.IGetExclusionRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IGetExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -991,23 +1043,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   getExclusion(
-    request: protosTypes.google.logging.v2.IGetExclusionRequest,
+    request: protos.google.logging.v2.IGetExclusionRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogExclusion,
-          protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IGetExclusionRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IGetExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IGetExclusionRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -1028,25 +1080,33 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.getExclusion(request, options, callback);
+    return this.innerApiCalls.getExclusion(request, options, callback);
   }
   createExclusion(
-    request: protosTypes.google.logging.v2.ICreateExclusionRequest,
+    request: protos.google.logging.v2.ICreateExclusionRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.ICreateExclusionRequest | undefined,
       {} | undefined
     ]
   >;
   createExclusion(
-    request: protosTypes.google.logging.v2.ICreateExclusionRequest,
+    request: protos.google.logging.v2.ICreateExclusionRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.ICreateExclusionRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createExclusion(
+    request: protos.google.logging.v2.ICreateExclusionRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.ICreateExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -1075,23 +1135,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   createExclusion(
-    request: protosTypes.google.logging.v2.ICreateExclusionRequest,
+    request: protos.google.logging.v2.ICreateExclusionRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogExclusion,
-          protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.ICreateExclusionRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.ICreateExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.ICreateExclusionRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -1112,25 +1172,33 @@ export class ConfigServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.createExclusion(request, options, callback);
+    return this.innerApiCalls.createExclusion(request, options, callback);
   }
   updateExclusion(
-    request: protosTypes.google.logging.v2.IUpdateExclusionRequest,
+    request: protos.google.logging.v2.IUpdateExclusionRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IUpdateExclusionRequest | undefined,
       {} | undefined
     ]
   >;
   updateExclusion(
-    request: protosTypes.google.logging.v2.IUpdateExclusionRequest,
+    request: protos.google.logging.v2.IUpdateExclusionRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IUpdateExclusionRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateExclusion(
+    request: protos.google.logging.v2.IUpdateExclusionRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IUpdateExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -1165,23 +1233,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   updateExclusion(
-    request: protosTypes.google.logging.v2.IUpdateExclusionRequest,
+    request: protos.google.logging.v2.IUpdateExclusionRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogExclusion,
-          protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IUpdateExclusionRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IUpdateExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
+      protos.google.logging.v2.ILogExclusion,
+      protos.google.logging.v2.IUpdateExclusionRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -1202,25 +1270,33 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateExclusion(request, options, callback);
+    return this.innerApiCalls.updateExclusion(request, options, callback);
   }
   deleteExclusion(
-    request: protosTypes.google.logging.v2.IDeleteExclusionRequest,
+    request: protos.google.logging.v2.IDeleteExclusionRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteExclusionRequest | undefined,
       {} | undefined
     ]
   >;
   deleteExclusion(
-    request: protosTypes.google.logging.v2.IDeleteExclusionRequest,
+    request: protos.google.logging.v2.IDeleteExclusionRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteExclusionRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteExclusion(
+    request: protos.google.logging.v2.IDeleteExclusionRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -1244,23 +1320,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   deleteExclusion(
-    request: protosTypes.google.logging.v2.IDeleteExclusionRequest,
+    request: protos.google.logging.v2.IDeleteExclusionRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-          {} | undefined
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteExclusionRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteExclusionRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteExclusionRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -1281,25 +1357,33 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteExclusion(request, options, callback);
+    return this.innerApiCalls.deleteExclusion(request, options, callback);
   }
   getCmekSettings(
-    request: protosTypes.google.logging.v2.IGetCmekSettingsRequest,
+    request: protos.google.logging.v2.IGetCmekSettingsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IGetCmekSettingsRequest | undefined,
       {} | undefined
     ]
   >;
   getCmekSettings(
-    request: protosTypes.google.logging.v2.IGetCmekSettingsRequest,
+    request: protos.google.logging.v2.IGetCmekSettingsRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IGetCmekSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getCmekSettings(
+    request: protos.google.logging.v2.IGetCmekSettingsRequest,
+    callback: Callback<
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IGetCmekSettingsRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -1334,23 +1418,23 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   getCmekSettings(
-    request: protosTypes.google.logging.v2.IGetCmekSettingsRequest,
+    request: protos.google.logging.v2.IGetCmekSettingsRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ICmekSettings,
-          protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IGetCmekSettingsRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IGetCmekSettingsRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IGetCmekSettingsRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -1371,25 +1455,33 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.getCmekSettings(request, options, callback);
+    return this.innerApiCalls.getCmekSettings(request, options, callback);
   }
   updateCmekSettings(
-    request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest,
+    request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
       {} | undefined
     ]
   >;
   updateCmekSettings(
-    request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest,
+    request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IUpdateCmekSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateCmekSettings(
+    request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+    callback: Callback<
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IUpdateCmekSettingsRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -1443,23 +1535,25 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   updateCmekSettings(
-    request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest,
+    request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ICmekSettings,
-          protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ICmekSettings,
+          | protos.google.logging.v2.IUpdateCmekSettingsRequest
+          | null
+          | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IUpdateCmekSettingsRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
+      protos.google.logging.v2.ICmekSettings,
+      protos.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -1480,26 +1574,34 @@ export class ConfigServiceV2Client {
       name: request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateCmekSettings(request, options, callback);
+    return this.innerApiCalls.updateCmekSettings(request, options, callback);
   }
 
   listBuckets(
-    request: protosTypes.google.logging.v2.IListBucketsRequest,
+    request: protos.google.logging.v2.IListBucketsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
+      protos.google.logging.v2.ILogBucket[],
+      protos.google.logging.v2.IListBucketsRequest | null,
+      protos.google.logging.v2.IListBucketsResponse
     ]
   >;
   listBuckets(
-    request: protosTypes.google.logging.v2.IListBucketsRequest,
+    request: protos.google.logging.v2.IListBucketsRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListBucketsRequest,
+      protos.google.logging.v2.IListBucketsResponse | null | undefined,
+      protos.google.logging.v2.ILogBucket
+    >
+  ): void;
+  listBuckets(
+    request: protos.google.logging.v2.IListBucketsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListBucketsRequest,
+      protos.google.logging.v2.IListBucketsResponse | null | undefined,
+      protos.google.logging.v2.ILogBucket
     >
   ): void;
   /**
@@ -1546,24 +1648,24 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listBuckets(
-    request: protosTypes.google.logging.v2.IListBucketsRequest,
+    request: protos.google.logging.v2.IListBucketsRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogBucket[],
-          protosTypes.google.logging.v2.IListBucketsRequest | null,
-          protosTypes.google.logging.v2.IListBucketsResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListBucketsRequest,
+          protos.google.logging.v2.IListBucketsResponse | null | undefined,
+          protos.google.logging.v2.ILogBucket
         >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListBucketsRequest,
+      protos.google.logging.v2.IListBucketsResponse | null | undefined,
+      protos.google.logging.v2.ILogBucket
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
+      protos.google.logging.v2.ILogBucket[],
+      protos.google.logging.v2.IListBucketsRequest | null,
+      protos.google.logging.v2.IListBucketsResponse
     ]
   > | void {
     request = request || {};
@@ -1583,7 +1685,7 @@ export class ConfigServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listBuckets(request, options, callback);
+    return this.innerApiCalls.listBuckets(request, options, callback);
   }
 
   /**
@@ -1627,7 +1729,7 @@ export class ConfigServiceV2Client {
    *   An object stream which emits an object representing [LogBucket]{@link google.logging.v2.LogBucket} on 'data' event.
    */
   listBucketsStream(
-    request?: protosTypes.google.logging.v2.IListBucketsRequest,
+    request?: protos.google.logging.v2.IListBucketsRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
@@ -1641,29 +1743,92 @@ export class ConfigServiceV2Client {
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listBuckets.createStream(
-      this._innerApiCalls.listBuckets as gax.GaxCall,
+    return this.descriptors.page.listBuckets.createStream(
+      this.innerApiCalls.listBuckets as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+  /**
+   * Equivalent to {@link listBuckets}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose buckets are to be listed:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+   *
+   *   Note: The locations portion of the resource must be specified, but
+   *   supplying the character `-` in place of [LOCATION_ID] will return all
+   *   buckets.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listBucketsAsync(
+    request?: protos.google.logging.v2.IListBucketsRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILogBucket> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listBuckets.asyncIterate(
+      this.innerApiCalls['listBuckets'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogBucket>;
+  }
   listSinks(
-    request: protosTypes.google.logging.v2.IListSinksRequest,
+    request: protos.google.logging.v2.IListSinksRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
+      protos.google.logging.v2.ILogSink[],
+      protos.google.logging.v2.IListSinksRequest | null,
+      protos.google.logging.v2.IListSinksResponse
     ]
   >;
   listSinks(
-    request: protosTypes.google.logging.v2.IListSinksRequest,
+    request: protos.google.logging.v2.IListSinksRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListSinksRequest,
+      protos.google.logging.v2.IListSinksResponse | null | undefined,
+      protos.google.logging.v2.ILogSink
+    >
+  ): void;
+  listSinks(
+    request: protos.google.logging.v2.IListSinksRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListSinksRequest,
+      protos.google.logging.v2.IListSinksResponse | null | undefined,
+      protos.google.logging.v2.ILogSink
     >
   ): void;
   /**
@@ -1706,24 +1871,24 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listSinks(
-    request: protosTypes.google.logging.v2.IListSinksRequest,
+    request: protos.google.logging.v2.IListSinksRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogSink[],
-          protosTypes.google.logging.v2.IListSinksRequest | null,
-          protosTypes.google.logging.v2.IListSinksResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListSinksRequest,
+          protos.google.logging.v2.IListSinksResponse | null | undefined,
+          protos.google.logging.v2.ILogSink
         >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListSinksRequest,
+      protos.google.logging.v2.IListSinksResponse | null | undefined,
+      protos.google.logging.v2.ILogSink
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
+      protos.google.logging.v2.ILogSink[],
+      protos.google.logging.v2.IListSinksRequest | null,
+      protos.google.logging.v2.IListSinksResponse
     ]
   > | void {
     request = request || {};
@@ -1743,7 +1908,7 @@ export class ConfigServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listSinks(request, options, callback);
+    return this.innerApiCalls.listSinks(request, options, callback);
   }
 
   /**
@@ -1783,7 +1948,7 @@ export class ConfigServiceV2Client {
    *   An object stream which emits an object representing [LogSink]{@link google.logging.v2.LogSink} on 'data' event.
    */
   listSinksStream(
-    request?: protosTypes.google.logging.v2.IListSinksRequest,
+    request?: protos.google.logging.v2.IListSinksRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
@@ -1797,29 +1962,88 @@ export class ConfigServiceV2Client {
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listSinks.createStream(
-      this._innerApiCalls.listSinks as gax.GaxCall,
+    return this.descriptors.page.listSinks.createStream(
+      this.innerApiCalls.listSinks as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+  /**
+   * Equivalent to {@link listSinks}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose sinks are to be listed:
+   *
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listSinksAsync(
+    request?: protos.google.logging.v2.IListSinksRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILogSink> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listSinks.asyncIterate(
+      this.innerApiCalls['listSinks'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogSink>;
+  }
   listExclusions(
-    request: protosTypes.google.logging.v2.IListExclusionsRequest,
+    request: protos.google.logging.v2.IListExclusionsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
+      protos.google.logging.v2.ILogExclusion[],
+      protos.google.logging.v2.IListExclusionsRequest | null,
+      protos.google.logging.v2.IListExclusionsResponse
     ]
   >;
   listExclusions(
-    request: protosTypes.google.logging.v2.IListExclusionsRequest,
+    request: protos.google.logging.v2.IListExclusionsRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListExclusionsRequest,
+      protos.google.logging.v2.IListExclusionsResponse | null | undefined,
+      protos.google.logging.v2.ILogExclusion
+    >
+  ): void;
+  listExclusions(
+    request: protos.google.logging.v2.IListExclusionsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListExclusionsRequest,
+      protos.google.logging.v2.IListExclusionsResponse | null | undefined,
+      protos.google.logging.v2.ILogExclusion
     >
   ): void;
   /**
@@ -1862,24 +2086,24 @@ export class ConfigServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listExclusions(
-    request: protosTypes.google.logging.v2.IListExclusionsRequest,
+    request: protos.google.logging.v2.IListExclusionsRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogExclusion[],
-          protosTypes.google.logging.v2.IListExclusionsRequest | null,
-          protosTypes.google.logging.v2.IListExclusionsResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListExclusionsRequest,
+          protos.google.logging.v2.IListExclusionsResponse | null | undefined,
+          protos.google.logging.v2.ILogExclusion
         >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListExclusionsRequest,
+      protos.google.logging.v2.IListExclusionsResponse | null | undefined,
+      protos.google.logging.v2.ILogExclusion
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
+      protos.google.logging.v2.ILogExclusion[],
+      protos.google.logging.v2.IListExclusionsRequest | null,
+      protos.google.logging.v2.IListExclusionsResponse
     ]
   > | void {
     request = request || {};
@@ -1899,7 +2123,7 @@ export class ConfigServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listExclusions(request, options, callback);
+    return this.innerApiCalls.listExclusions(request, options, callback);
   }
 
   /**
@@ -1939,7 +2163,7 @@ export class ConfigServiceV2Client {
    *   An object stream which emits an object representing [LogExclusion]{@link google.logging.v2.LogExclusion} on 'data' event.
    */
   listExclusionsStream(
-    request?: protosTypes.google.logging.v2.IListExclusionsRequest,
+    request?: protos.google.logging.v2.IListExclusionsRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
@@ -1953,11 +2177,62 @@ export class ConfigServiceV2Client {
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listExclusions.createStream(
-      this._innerApiCalls.listExclusions as gax.GaxCall,
+    return this.descriptors.page.listExclusions.createStream(
+      this.innerApiCalls.listExclusions as gax.GaxCall,
       request,
       callSettings
     );
+  }
+
+  /**
+   * Equivalent to {@link listExclusions}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose exclusions are to be listed.
+   *
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listExclusionsAsync(
+    request?: protos.google.logging.v2.IListExclusionsRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILogExclusion> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listExclusions.asyncIterate(
+      this.innerApiCalls['listExclusions'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogExclusion>;
   }
   // --------------------
   // -- Path templates --
@@ -1970,7 +2245,7 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountCmekSettingsPath(billingAccount: string) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.render({
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.render({
       billing_account: billingAccount,
     });
   }
@@ -1985,7 +2260,7 @@ export class ConfigServiceV2Client {
   matchBillingAccountFromBillingAccountCmekSettingsName(
     billingAccountCmekSettingsName: string
   ) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.match(
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.match(
       billingAccountCmekSettingsName
     ).billing_account;
   }
@@ -1998,9 +2273,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountExclusionPath(billingAccount: string, exclusion: string) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.render({
+    return this.pathTemplates.billingAccountExclusionPathTemplate.render({
       billing_account: billingAccount,
-      exclusion,
+      exclusion: exclusion,
     });
   }
 
@@ -2014,7 +2289,7 @@ export class ConfigServiceV2Client {
   matchBillingAccountFromBillingAccountExclusionName(
     billingAccountExclusionName: string
   ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(
       billingAccountExclusionName
     ).billing_account;
   }
@@ -2029,7 +2304,7 @@ export class ConfigServiceV2Client {
   matchExclusionFromBillingAccountExclusionName(
     billingAccountExclusionName: string
   ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(
       billingAccountExclusionName
     ).exclusion;
   }
@@ -2047,10 +2322,10 @@ export class ConfigServiceV2Client {
     location: string,
     bucket: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.render({
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.render({
       billing_account: billingAccount,
-      location,
-      bucket,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -2064,7 +2339,7 @@ export class ConfigServiceV2Client {
   matchBillingAccountFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).billing_account;
   }
@@ -2079,7 +2354,7 @@ export class ConfigServiceV2Client {
   matchLocationFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).location;
   }
@@ -2094,7 +2369,7 @@ export class ConfigServiceV2Client {
   matchBucketFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
   }
@@ -2107,9 +2382,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountLogPath(billingAccount: string, log: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.render({
+    return this.pathTemplates.billingAccountLogPathTemplate.render({
       billing_account: billingAccount,
-      log,
+      log: log,
     });
   }
 
@@ -2121,7 +2396,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the billing_account.
    */
   matchBillingAccountFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
+    return this.pathTemplates.billingAccountLogPathTemplate.match(
       billingAccountLogName
     ).billing_account;
   }
@@ -2134,7 +2409,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
+    return this.pathTemplates.billingAccountLogPathTemplate.match(
       billingAccountLogName
     ).log;
   }
@@ -2147,9 +2422,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountSinkPath(billingAccount: string, sink: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.render({
+    return this.pathTemplates.billingAccountSinkPathTemplate.render({
       billing_account: billingAccount,
-      sink,
+      sink: sink,
     });
   }
 
@@ -2163,7 +2438,7 @@ export class ConfigServiceV2Client {
   matchBillingAccountFromBillingAccountSinkName(
     billingAccountSinkName: string
   ) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(
       billingAccountSinkName
     ).billing_account;
   }
@@ -2176,7 +2451,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromBillingAccountSinkName(billingAccountSinkName: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(
       billingAccountSinkName
     ).sink;
   }
@@ -2188,8 +2463,8 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderCmekSettingsPath(folder: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.render({
-      folder,
+    return this.pathTemplates.folderCmekSettingsPathTemplate.render({
+      folder: folder,
     });
   }
 
@@ -2201,7 +2476,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderCmekSettingsName(folderCmekSettingsName: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.match(
+    return this.pathTemplates.folderCmekSettingsPathTemplate.match(
       folderCmekSettingsName
     ).folder;
   }
@@ -2214,9 +2489,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderExclusionPath(folder: string, exclusion: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
-      folder,
-      exclusion,
+    return this.pathTemplates.folderExclusionPathTemplate.render({
+      folder: folder,
+      exclusion: exclusion,
     });
   }
 
@@ -2228,7 +2503,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
+    return this.pathTemplates.folderExclusionPathTemplate.match(
       folderExclusionName
     ).folder;
   }
@@ -2241,7 +2516,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
+    return this.pathTemplates.folderExclusionPathTemplate.match(
       folderExclusionName
     ).exclusion;
   }
@@ -2255,10 +2530,10 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderLocationBucketPath(folder: string, location: string, bucket: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.render({
-      folder,
-      location,
-      bucket,
+    return this.pathTemplates.folderLocationBucketPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -2270,7 +2545,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).folder;
   }
@@ -2283,7 +2558,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).location;
   }
@@ -2296,7 +2571,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
   }
@@ -2309,9 +2584,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderLogPath(folder: string, log: string) {
-    return this._pathTemplates.folderLogPathTemplate.render({
-      folder,
-      log,
+    return this.pathTemplates.folderLogPathTemplate.render({
+      folder: folder,
+      log: log,
     });
   }
 
@@ -2323,8 +2598,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).folder;
   }
 
   /**
@@ -2335,7 +2609,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
   }
 
   /**
@@ -2346,9 +2620,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderSinkPath(folder: string, sink: string) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
-      folder,
-      sink,
+    return this.pathTemplates.folderSinkPathTemplate.render({
+      folder: folder,
+      sink: sink,
     });
   }
 
@@ -2360,7 +2634,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName)
       .folder;
   }
 
@@ -2372,8 +2646,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).sink;
   }
 
   /**
@@ -2384,9 +2657,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   locationPath(project: string, location: string) {
-    return this._pathTemplates.locationPathTemplate.render({
-      project,
-      location,
+    return this.pathTemplates.locationPathTemplate.render({
+      project: project,
+      location: location,
     });
   }
 
@@ -2398,7 +2671,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLocationName(locationName: string) {
-    return this._pathTemplates.locationPathTemplate.match(locationName).project;
+    return this.pathTemplates.locationPathTemplate.match(locationName).project;
   }
 
   /**
@@ -2409,8 +2682,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromLocationName(locationName: string) {
-    return this._pathTemplates.locationPathTemplate.match(locationName)
-      .location;
+    return this.pathTemplates.locationPathTemplate.match(locationName).location;
   }
 
   /**
@@ -2421,9 +2693,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   logMetricPath(project: string, metric: string) {
-    return this._pathTemplates.logMetricPathTemplate.render({
-      project,
-      metric,
+    return this.pathTemplates.logMetricPathTemplate.render({
+      project: project,
+      metric: metric,
     });
   }
 
@@ -2435,7 +2707,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName)
       .project;
   }
 
@@ -2447,8 +2719,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the metric.
    */
   matchMetricFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .metric;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).metric;
   }
 
   /**
@@ -2458,8 +2729,8 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationCmekSettingsPath(organization: string) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.render({
-      organization,
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.render({
+      organization: organization,
     });
   }
 
@@ -2473,7 +2744,7 @@ export class ConfigServiceV2Client {
   matchOrganizationFromOrganizationCmekSettingsName(
     organizationCmekSettingsName: string
   ) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.match(
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.match(
       organizationCmekSettingsName
     ).organization;
   }
@@ -2486,9 +2757,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationExclusionPath(organization: string, exclusion: string) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
-      organization,
-      exclusion,
+    return this.pathTemplates.organizationExclusionPathTemplate.render({
+      organization: organization,
+      exclusion: exclusion,
     });
   }
 
@@ -2502,7 +2773,7 @@ export class ConfigServiceV2Client {
   matchOrganizationFromOrganizationExclusionName(
     organizationExclusionName: string
   ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
+    return this.pathTemplates.organizationExclusionPathTemplate.match(
       organizationExclusionName
     ).organization;
   }
@@ -2517,7 +2788,7 @@ export class ConfigServiceV2Client {
   matchExclusionFromOrganizationExclusionName(
     organizationExclusionName: string
   ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
+    return this.pathTemplates.organizationExclusionPathTemplate.match(
       organizationExclusionName
     ).exclusion;
   }
@@ -2535,10 +2806,10 @@ export class ConfigServiceV2Client {
     location: string,
     bucket: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.render({
-      organization,
-      location,
-      bucket,
+    return this.pathTemplates.organizationLocationBucketPathTemplate.render({
+      organization: organization,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -2552,7 +2823,7 @@ export class ConfigServiceV2Client {
   matchOrganizationFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).organization;
   }
@@ -2567,7 +2838,7 @@ export class ConfigServiceV2Client {
   matchLocationFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).location;
   }
@@ -2582,7 +2853,7 @@ export class ConfigServiceV2Client {
   matchBucketFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).bucket;
   }
@@ -2595,9 +2866,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationLogPath(organization: string, log: string) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
-      organization,
-      log,
+    return this.pathTemplates.organizationLogPathTemplate.render({
+      organization: organization,
+      log: log,
     });
   }
 
@@ -2609,7 +2880,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
+    return this.pathTemplates.organizationLogPathTemplate.match(
       organizationLogName
     ).organization;
   }
@@ -2622,7 +2893,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
+    return this.pathTemplates.organizationLogPathTemplate.match(
       organizationLogName
     ).log;
   }
@@ -2635,9 +2906,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationSinkPath(organization: string, sink: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
-      organization,
-      sink,
+    return this.pathTemplates.organizationSinkPathTemplate.render({
+      organization: organization,
+      sink: sink,
     });
   }
 
@@ -2649,7 +2920,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
+    return this.pathTemplates.organizationSinkPathTemplate.match(
       organizationSinkName
     ).organization;
   }
@@ -2662,7 +2933,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
+    return this.pathTemplates.organizationSinkPathTemplate.match(
       organizationSinkName
     ).sink;
   }
@@ -2674,8 +2945,8 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectPath(project: string) {
-    return this._pathTemplates.projectPathTemplate.render({
-      project,
+    return this.pathTemplates.projectPathTemplate.render({
+      project: project,
     });
   }
 
@@ -2687,7 +2958,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectName(projectName: string) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -2697,8 +2968,8 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectCmekSettingsPath(project: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.render({
-      project,
+    return this.pathTemplates.projectCmekSettingsPathTemplate.render({
+      project: project,
     });
   }
 
@@ -2710,7 +2981,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectCmekSettingsName(projectCmekSettingsName: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.match(
+    return this.pathTemplates.projectCmekSettingsPathTemplate.match(
       projectCmekSettingsName
     ).project;
   }
@@ -2723,9 +2994,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectExclusionPath(project: string, exclusion: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.render({
-      project,
-      exclusion,
+    return this.pathTemplates.projectExclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
     });
   }
 
@@ -2737,7 +3008,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
+    return this.pathTemplates.projectExclusionPathTemplate.match(
       projectExclusionName
     ).project;
   }
@@ -2750,7 +3021,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
+    return this.pathTemplates.projectExclusionPathTemplate.match(
       projectExclusionName
     ).exclusion;
   }
@@ -2764,10 +3035,10 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectLocationBucketPath(project: string, location: string, bucket: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.render({
-      project,
-      location,
-      bucket,
+    return this.pathTemplates.projectLocationBucketPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -2779,7 +3050,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).project;
   }
@@ -2794,7 +3065,7 @@ export class ConfigServiceV2Client {
   matchLocationFromProjectLocationBucketName(
     projectLocationBucketName: string
   ) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).location;
   }
@@ -2807,7 +3078,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
   }
@@ -2820,9 +3091,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectLogPath(project: string, log: string) {
-    return this._pathTemplates.projectLogPathTemplate.render({
-      project,
-      log,
+    return this.pathTemplates.projectLogPathTemplate.render({
+      project: project,
+      log: log,
     });
   }
 
@@ -2834,7 +3105,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName)
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName)
       .project;
   }
 
@@ -2846,7 +3117,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
   }
 
   /**
@@ -2857,9 +3128,9 @@ export class ConfigServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectSinkPath(project: string, sink: string) {
-    return this._pathTemplates.projectSinkPathTemplate.render({
-      project,
-      sink,
+    return this.pathTemplates.projectSinkPathTemplate.render({
+      project: project,
+      sink: sink,
     });
   }
 
@@ -2871,7 +3142,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName)
       .project;
   }
 
@@ -2883,7 +3154,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName)
       .sink;
   }
 

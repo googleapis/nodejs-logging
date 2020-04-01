@@ -335,7 +335,7 @@ describe('metadata', () => {
         });
 
         it('should deal with instance id being a BigNumber', async () => {
-          const INSTANCE_ID_STRING = `3279739563200103600`;
+          const INSTANCE_ID_STRING = '3279739563200103600';
           const INSTANCE_ID = new BigNumber(INSTANCE_ID_STRING);
           const ZONE_ID = 'cyrodiil-anvil-2';
           const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
