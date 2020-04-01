@@ -45,7 +45,7 @@
     "posttest": "npm run check"
   },
   "dependencies": {
-    "@google-cloud/common": "^2.4.0",
+    "@google-cloud/common": "^3.0.0",
     "@google-cloud/paginator": "^3.0.0",
     "@google-cloud/projectify": "^1.0.4",
     "@google-cloud/promisify": "^2.0.0",
