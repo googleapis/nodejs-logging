@@ -17,19 +17,12 @@
 // ** All changes to this file may be overwritten. **
 
 import * as gax from 'google-gax';
-import {
-  APICallback,
-  Callback,
-  CallOptions,
-  Descriptors,
-  ClientOptions,
-  PaginationCallback,
-  PaginationResponse,
-} from 'google-gax';
+import {Callback, CallOptions, Descriptors, ClientOptions, PaginationCallback, GaxCall} from 'google-gax';
 import * as path from 'path';
 
-import {Transform} from 'stream';
-import * as protosTypes from '../../protos/protos';
+import { Transform } from 'stream';
+import { RequestType } from 'google-gax/build/src/apitypes';
+import * as protos from '../../protos/protos';
 import * as gapicConfig from './metrics_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -40,14 +33,6 @@ const version = require('../../../package.json').version;
  * @memberof v2
  */
 export class MetricsServiceV2Client {
-  private _descriptors: Descriptors = {
-    page: {},
-    stream: {},
-    longrunning: {},
-    batching: {},
-  };
-  private _innerApiCalls: {[name: string]: Function};
-  private _pathTemplates: {[name: string]: gax.PathTemplate};
   private _terminated = false;
   private _opts: ClientOptions;
   private _gaxModule: typeof gax | typeof gax.fallback;
@@ -55,6 +40,9 @@ export class MetricsServiceV2Client {
   private _protos: {};
   private _defaults: {[method: string]: gax.CallSettings};
   auth: gax.GoogleAuth;
+  descriptors: Descriptors = {page: {}, stream: {}, longrunning: {}, batching: {}};
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
   metricsServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -86,12 +74,10 @@ export class MetricsServiceV2Client {
   constructor(opts?: ClientOptions) {
     // Ensure that options include the service address and port.
     const staticMembers = this.constructor as typeof MetricsServiceV2Client;
-    const servicePath =
-      opts && opts.servicePath
-        ? opts.servicePath
-        : opts && opts.apiEndpoint
-        ? opts.apiEndpoint
-        : staticMembers.servicePath;
+    const servicePath = opts && opts.servicePath ?
+        opts.servicePath :
+        ((opts && opts.apiEndpoint) ? opts.apiEndpoint :
+                                      staticMembers.servicePath);
     const port = opts && opts.port ? opts.port : staticMembers.port;
 
     if (!opts) {
@@ -101,8 +87,8 @@ export class MetricsServiceV2Client {
     opts.port = opts.port || port;
     opts.clientConfig = opts.clientConfig || {};
 
-    const isBrowser = typeof window !== 'undefined';
-    if (isBrowser) {
+    const isBrowser = (typeof window !== 'undefined');
+    if (isBrowser){
       opts.fallback = true;
     }
     // If we are in browser, we are already using fallback because of the
@@ -119,10 +105,13 @@ export class MetricsServiceV2Client {
     this._opts = opts;
 
     // Save the auth object to the client, for use by other methods.
-    this.auth = this._gaxGrpc.auth as gax.GoogleAuth;
+    this.auth = (this._gaxGrpc.auth as gax.GoogleAuth);
 
     // Determine the client header string.
-    const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version}`];
+    const clientHeader = [
+      `gax/${this._gaxModule.version}`,
+      `gapic/${version}`,
+    ];
     if (typeof process !== 'undefined' && 'versions' in process) {
       clientHeader.push(`gl-node/${process.versions.node}`);
     } else {
@@ -138,21 +127,18 @@ export class MetricsServiceV2Client {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback ?
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
-    this._pathTemplates = {
+    this.pathTemplates = {
       billingAccountCmekSettingsPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/cmekSettings'
       ),
@@ -224,26 +210,20 @@ export class MetricsServiceV2Client {
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
-    this._descriptors.page = {
-      listLogMetrics: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'metrics'
-      ),
+    this.descriptors.page = {
+      listLogMetrics:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'metrics')
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-      'google.logging.v2.MetricsServiceV2',
-      gapicConfig as gax.ClientConfig,
-      opts.clientConfig || {},
-      {'x-goog-api-client': clientHeader.join(' ')}
-    );
+        'google.logging.v2.MetricsServiceV2', gapicConfig as gax.ClientConfig,
+        opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
     // merely providing the destination and request information.
-    this._innerApiCalls = {};
+    this.innerApiCalls = {};
   }
 
   /**
@@ -266,27 +246,18 @@ export class MetricsServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.MetricsServiceV2.
     this.metricsServiceV2Stub = this._gaxGrpc.createStub(
-      this._opts.fallback
-        ? (this._protos as protobuf.Root).lookupService(
-            'google.logging.v2.MetricsServiceV2'
-          )
-        : // tslint:disable-next-line no-any
+        this._opts.fallback ?
+          (this._protos as protobuf.Root).lookupService('google.logging.v2.MetricsServiceV2') :
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.logging.v2.MetricsServiceV2,
-      this._opts
-    ) as Promise<{[method: string]: Function}>;
+        this._opts) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const metricsServiceV2StubMethods = [
-      'listLogMetrics',
-      'getLogMetric',
-      'createLogMetric',
-      'updateLogMetric',
-      'deleteLogMetric',
-    ];
-
+    const metricsServiceV2StubMethods =
+        ['listLogMetrics', 'getLogMetric', 'createLogMetric', 'updateLogMetric', 'deleteLogMetric'];
     for (const methodName of metricsServiceV2StubMethods) {
-      const innerCallPromise = this.metricsServiceV2Stub.then(
+      const callPromise = this.metricsServiceV2Stub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -294,26 +265,19 @@ export class MetricsServiceV2Client {
           const func = stub[methodName];
           return func.apply(stub, args);
         },
-        (err: Error | null | undefined) => () => {
+        (err: Error|null|undefined) => () => {
           throw err;
-        }
-      );
+        });
 
       const apiCall = this._gaxModule.createApiCall(
-        innerCallPromise,
+        callPromise,
         this._defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.stream[methodName] ||
-          this._descriptors.longrunning[methodName]
+        this.descriptors.page[methodName] ||
+            this.descriptors.stream[methodName] ||
+            this.descriptors.longrunning[methodName]
       );
 
-      this._innerApiCalls[methodName] = (
-        argument: {},
-        callOptions?: CallOptions,
-        callback?: APICallback
-      ) => {
-        return apiCall(argument, callOptions, callback);
-      };
+      this.innerApiCalls[methodName] = apiCall;
     }
 
     return this.metricsServiceV2Stub;
@@ -351,7 +315,7 @@ export class MetricsServiceV2Client {
       'https://www.googleapis.com/auth/cloud-platform.read-only',
       'https://www.googleapis.com/auth/logging.admin',
       'https://www.googleapis.com/auth/logging.read',
-      'https://www.googleapis.com/auth/logging.write',
+      'https://www.googleapis.com/auth/logging.write'
     ];
   }
 
@@ -362,9 +326,8 @@ export class MetricsServiceV2Client {
    * @param {function(Error, string)} callback - the callback to
    *   be called with the current project Id.
    */
-  getProjectId(
-    callback?: Callback<string, undefined, undefined>
-  ): Promise<string> | void {
+  getProjectId(callback?: Callback<string, undefined, undefined>):
+      Promise<string>|void {
     if (callback) {
       this.auth.getProjectId(callback);
       return;
@@ -376,66 +339,61 @@ export class MetricsServiceV2Client {
   // -- Service calls --
   // -------------------
   getLogMetric(
-    request: protosTypes.google.logging.v2.IGetLogMetricRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IGetLogMetricRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogMetric,
+        protos.google.logging.v2.IGetLogMetricRequest|undefined, {}|undefined
+      ]>;
   getLogMetric(
-    request: protosTypes.google.logging.v2.IGetLogMetricRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Gets a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.metricName
-   *   Required. The resource name of the desired metric:
-   *
-   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IGetLogMetricRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IGetLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
   getLogMetric(
-    request: protosTypes.google.logging.v2.IGetLogMetricRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogMetric,
-          protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IGetLogMetricRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IGetLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Gets a logs-based metric.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.metricName
+ *   Required. The resource name of the desired metric:
+ *
+ *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  getLogMetric(
+      request: protos.google.logging.v2.IGetLogMetricRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IGetLogMetricRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IGetLogMetricRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogMetric,
+        protos.google.logging.v2.IGetLogMetricRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -444,77 +402,72 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName || '',
+      'metric_name': request.metricName || '',
     });
     this.initialize();
-    return this._innerApiCalls.getLogMetric(request, options, callback);
+    return this.innerApiCalls.getLogMetric(request, options, callback);
   }
   createLogMetric(
-    request: protosTypes.google.logging.v2.ICreateLogMetricRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.ICreateLogMetricRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogMetric,
+        protos.google.logging.v2.ICreateLogMetricRequest|undefined, {}|undefined
+      ]>;
   createLogMetric(
-    request: protosTypes.google.logging.v2.ICreateLogMetricRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Creates a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The resource name of the project in which to create the metric:
-   *
-   *       "projects/[PROJECT_ID]"
-   *
-   *   The new metric must be provided in the request.
-   * @param {google.logging.v2.LogMetric} request.metric
-   *   Required. The new logs-based metric, which must not have an identifier that
-   *   already exists.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.ICreateLogMetricRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.ICreateLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
   createLogMetric(
-    request: protosTypes.google.logging.v2.ICreateLogMetricRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogMetric,
-          protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.ICreateLogMetricRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.ICreateLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Creates a logs-based metric.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource name of the project in which to create the metric:
+ *
+ *       "projects/[PROJECT_ID]"
+ *
+ *   The new metric must be provided in the request.
+ * @param {google.logging.v2.LogMetric} request.metric
+ *   Required. The new logs-based metric, which must not have an identifier that
+ *   already exists.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  createLogMetric(
+      request: protos.google.logging.v2.ICreateLogMetricRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.ICreateLogMetricRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.ICreateLogMetricRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogMetric,
+        protos.google.logging.v2.ICreateLogMetricRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -523,78 +476,73 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.createLogMetric(request, options, callback);
+    return this.innerApiCalls.createLogMetric(request, options, callback);
   }
   updateLogMetric(
-    request: protosTypes.google.logging.v2.IUpdateLogMetricRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IUpdateLogMetricRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogMetric,
+        protos.google.logging.v2.IUpdateLogMetricRequest|undefined, {}|undefined
+      ]>;
   updateLogMetric(
-    request: protosTypes.google.logging.v2.IUpdateLogMetricRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Creates or updates a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.metricName
-   *   Required. The resource name of the metric to update:
-   *
-   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-   *
-   *   The updated metric must be provided in the request and it's
-   *   `name` field must be the same as `[METRIC_ID]` If the metric
-   *   does not exist in `[PROJECT_ID]`, then a new metric is created.
-   * @param {google.logging.v2.LogMetric} request.metric
-   *   Required. The updated metric.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IUpdateLogMetricRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IUpdateLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
   updateLogMetric(
-    request: protosTypes.google.logging.v2.IUpdateLogMetricRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogMetric,
-          protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IUpdateLogMetricRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IUpdateLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Creates or updates a logs-based metric.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.metricName
+ *   Required. The resource name of the metric to update:
+ *
+ *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+ *
+ *   The updated metric must be provided in the request and it's
+ *   `name` field must be the same as `[METRIC_ID]` If the metric
+ *   does not exist in `[PROJECT_ID]`, then a new metric is created.
+ * @param {google.logging.v2.LogMetric} request.metric
+ *   Required. The updated metric.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  updateLogMetric(
+      request: protos.google.logging.v2.IUpdateLogMetricRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IUpdateLogMetricRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IUpdateLogMetricRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogMetric,
+        protos.google.logging.v2.IUpdateLogMetricRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -603,72 +551,67 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName || '',
+      'metric_name': request.metricName || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateLogMetric(request, options, callback);
+    return this.innerApiCalls.updateLogMetric(request, options, callback);
   }
   deleteLogMetric(
-    request: protosTypes.google.logging.v2.IDeleteLogMetricRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IDeleteLogMetricRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteLogMetricRequest|undefined, {}|undefined
+      ]>;
   deleteLogMetric(
-    request: protosTypes.google.logging.v2.IDeleteLogMetricRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Deletes a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.metricName
-   *   Required. The resource name of the metric to delete:
-   *
-   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IDeleteLogMetricRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
   deleteLogMetric(
-    request: protosTypes.google.logging.v2.IDeleteLogMetricRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IDeleteLogMetricRequest,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogMetricRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Deletes a logs-based metric.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.metricName
+ *   Required. The resource name of the metric to delete:
+ *
+ *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  deleteLogMetric(
+      request: protos.google.logging.v2.IDeleteLogMetricRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogMetricRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogMetricRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteLogMetricRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -677,94 +620,91 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName || '',
+      'metric_name': request.metricName || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteLogMetric(request, options, callback);
+    return this.innerApiCalls.deleteLogMetric(request, options, callback);
   }
 
   listLogMetrics(
-    request: protosTypes.google.logging.v2.IListLogMetricsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListLogMetricsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogMetric[],
+        protos.google.logging.v2.IListLogMetricsRequest|null,
+        protos.google.logging.v2.IListLogMetricsResponse
+      ]>;
   listLogMetrics(
-    request: protosTypes.google.logging.v2.IListLogMetricsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
-    >
-  ): void;
-  /**
-   * Lists logs-based metrics.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The name of the project containing the metrics:
-   *
-   *       "projects/[PROJECT_ID]"
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of [LogMetric]{@link google.logging.v2.LogMetric} that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListLogMetricsRequest]{@link google.logging.v2.ListLogMetricsRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListLogMetricsResponse]{@link google.logging.v2.ListLogMetricsResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListLogMetricsRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListLogMetricsRequest,
+          protos.google.logging.v2.IListLogMetricsResponse|null|undefined,
+          protos.google.logging.v2.ILogMetric>): void;
   listLogMetrics(
-    request: protosTypes.google.logging.v2.IListLogMetricsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogMetric[],
-          protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-          protosTypes.google.logging.v2.IListLogMetricsResponse
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListLogMetricsRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListLogMetricsRequest,
+          protos.google.logging.v2.IListLogMetricsResponse|null|undefined,
+          protos.google.logging.v2.ILogMetric>): void;
+/**
+ * Lists logs-based metrics.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The name of the project containing the metrics:
+ *
+ *       "projects/[PROJECT_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [LogMetric]{@link google.logging.v2.LogMetric}.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of [LogMetric]{@link google.logging.v2.LogMetric} that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListLogMetricsRequest]{@link google.logging.v2.ListLogMetricsRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListLogMetricsResponse]{@link google.logging.v2.ListLogMetricsResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listLogMetrics(
+      request: protos.google.logging.v2.IListLogMetricsRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListLogMetricsRequest,
+          protos.google.logging.v2.IListLogMetricsResponse|null|undefined,
+          protos.google.logging.v2.ILogMetric>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListLogMetricsRequest,
+          protos.google.logging.v2.IListLogMetricsResponse|null|undefined,
+          protos.google.logging.v2.ILogMetric>):
+      Promise<[
+        protos.google.logging.v2.ILogMetric[],
+        protos.google.logging.v2.IListLogMetricsRequest|null,
+        protos.google.logging.v2.IListLogMetricsResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -773,49 +713,49 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listLogMetrics(request, options, callback);
+    return this.innerApiCalls.listLogMetrics(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listLogMetrics}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listLogMetrics} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The name of the project containing the metrics:
-   *
-   *       "projects/[PROJECT_ID]"
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [LogMetric]{@link google.logging.v2.LogMetric} on 'data' event.
-   */
+/**
+ * Equivalent to {@link listLogMetrics}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listLogMetrics} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The name of the project containing the metrics:
+ *
+ *       "projects/[PROJECT_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [LogMetric]{@link google.logging.v2.LogMetric} on 'data' event.
+ */
   listLogMetricsStream(
-    request?: protosTypes.google.logging.v2.IListLogMetricsRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListLogMetricsRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -823,15 +763,63 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listLogMetrics.createStream(
-      this._innerApiCalls.listLogMetrics as gax.GaxCall,
+    return this.descriptors.page.listLogMetrics.createStream(
+      this.innerApiCalls.listLogMetrics as gax.GaxCall,
       request,
       callSettings
     );
+  }
+
+/**
+ * Equivalent to {@link listLogMetrics}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The name of the project containing the metrics:
+ *
+ *       "projects/[PROJECT_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listLogMetricsAsync(
+      request?: protos.google.logging.v2.IListLogMetricsRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<protos.google.logging.v2.ILogMetric>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      'parent': request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listLogMetrics.asyncIterate(
+      this.innerApiCalls['listLogMetrics'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogMetric>;
   }
   // --------------------
   // -- Path templates --
@@ -843,8 +831,8 @@ export class MetricsServiceV2Client {
    * @param {string} billing_account
    * @returns {string} Resource name string.
    */
-  billingAccountCmekSettingsPath(billingAccount: string) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.render({
+  billingAccountCmekSettingsPath(billingAccount:string) {
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.render({
       billing_account: billingAccount,
     });
   }
@@ -856,12 +844,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_cmekSettings resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountCmekSettingsName(
-    billingAccountCmekSettingsName: string
-  ) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.match(
-      billingAccountCmekSettingsName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountCmekSettingsName(billingAccountCmekSettingsName: string) {
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.match(billingAccountCmekSettingsName).billing_account;
   }
 
   /**
@@ -871,10 +855,10 @@ export class MetricsServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  billingAccountExclusionPath(billingAccount: string, exclusion: string) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.render({
+  billingAccountExclusionPath(billingAccount:string,exclusion:string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.render({
       billing_account: billingAccount,
-      exclusion,
+      exclusion: exclusion,
     });
   }
 
@@ -885,12 +869,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_exclusion resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountExclusionName(
-    billingAccountExclusionName: string
-  ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
-      billingAccountExclusionName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountExclusionName(billingAccountExclusionName: string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(billingAccountExclusionName).billing_account;
   }
 
   /**
@@ -900,12 +880,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_exclusion resource.
    * @returns {string} A string representing the exclusion.
    */
-  matchExclusionFromBillingAccountExclusionName(
-    billingAccountExclusionName: string
-  ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
-      billingAccountExclusionName
-    ).exclusion;
+  matchExclusionFromBillingAccountExclusionName(billingAccountExclusionName: string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(billingAccountExclusionName).exclusion;
   }
 
   /**
@@ -916,15 +892,11 @@ export class MetricsServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  billingAccountLocationBucketPath(
-    billingAccount: string,
-    location: string,
-    bucket: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.render({
+  billingAccountLocationBucketPath(billingAccount:string,location:string,bucket:string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.render({
       billing_account: billingAccount,
-      location,
-      bucket,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -935,12 +907,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).billing_account;
   }
 
   /**
@@ -950,12 +918,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).location;
+  matchLocationFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).location;
   }
 
   /**
@@ -965,12 +929,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the bucket.
    */
-  matchBucketFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).bucket;
+  matchBucketFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).bucket;
   }
 
   /**
@@ -980,10 +940,10 @@ export class MetricsServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  billingAccountLogPath(billingAccount: string, log: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.render({
+  billingAccountLogPath(billingAccount:string,log:string) {
+    return this.pathTemplates.billingAccountLogPathTemplate.render({
       billing_account: billingAccount,
-      log,
+      log: log,
     });
   }
 
@@ -995,9 +955,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the billing_account.
    */
   matchBillingAccountFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
-      billingAccountLogName
-    ).billing_account;
+    return this.pathTemplates.billingAccountLogPathTemplate.match(billingAccountLogName).billing_account;
   }
 
   /**
@@ -1008,9 +966,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
-      billingAccountLogName
-    ).log;
+    return this.pathTemplates.billingAccountLogPathTemplate.match(billingAccountLogName).log;
   }
 
   /**
@@ -1020,10 +976,10 @@ export class MetricsServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  billingAccountSinkPath(billingAccount: string, sink: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.render({
+  billingAccountSinkPath(billingAccount:string,sink:string) {
+    return this.pathTemplates.billingAccountSinkPathTemplate.render({
       billing_account: billingAccount,
-      sink,
+      sink: sink,
     });
   }
 
@@ -1034,12 +990,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing billing_account_sink resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountSinkName(
-    billingAccountSinkName: string
-  ) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
-      billingAccountSinkName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountSinkName(billingAccountSinkName: string) {
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(billingAccountSinkName).billing_account;
   }
 
   /**
@@ -1050,9 +1002,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromBillingAccountSinkName(billingAccountSinkName: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
-      billingAccountSinkName
-    ).sink;
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(billingAccountSinkName).sink;
   }
 
   /**
@@ -1061,9 +1011,9 @@ export class MetricsServiceV2Client {
    * @param {string} folder
    * @returns {string} Resource name string.
    */
-  folderCmekSettingsPath(folder: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.render({
-      folder,
+  folderCmekSettingsPath(folder:string) {
+    return this.pathTemplates.folderCmekSettingsPathTemplate.render({
+      folder: folder,
     });
   }
 
@@ -1075,9 +1025,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderCmekSettingsName(folderCmekSettingsName: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.match(
-      folderCmekSettingsName
-    ).folder;
+    return this.pathTemplates.folderCmekSettingsPathTemplate.match(folderCmekSettingsName).folder;
   }
 
   /**
@@ -1087,10 +1035,10 @@ export class MetricsServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  folderExclusionPath(folder: string, exclusion: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
-      folder,
-      exclusion,
+  folderExclusionPath(folder:string,exclusion:string) {
+    return this.pathTemplates.folderExclusionPathTemplate.render({
+      folder: folder,
+      exclusion: exclusion,
     });
   }
 
@@ -1102,9 +1050,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).folder;
+    return this.pathTemplates.folderExclusionPathTemplate.match(folderExclusionName).folder;
   }
 
   /**
@@ -1115,9 +1061,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).exclusion;
+    return this.pathTemplates.folderExclusionPathTemplate.match(folderExclusionName).exclusion;
   }
 
   /**
@@ -1128,11 +1072,11 @@ export class MetricsServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  folderLocationBucketPath(folder: string, location: string, bucket: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.render({
-      folder,
-      location,
-      bucket,
+  folderLocationBucketPath(folder:string,location:string,bucket:string) {
+    return this.pathTemplates.folderLocationBucketPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1144,9 +1088,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).folder;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).folder;
   }
 
   /**
@@ -1157,9 +1099,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).location;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).location;
   }
 
   /**
@@ -1170,9 +1110,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).bucket;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).bucket;
   }
 
   /**
@@ -1182,10 +1120,10 @@ export class MetricsServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  folderLogPath(folder: string, log: string) {
-    return this._pathTemplates.folderLogPathTemplate.render({
-      folder,
-      log,
+  folderLogPath(folder:string,log:string) {
+    return this.pathTemplates.folderLogPathTemplate.render({
+      folder: folder,
+      log: log,
     });
   }
 
@@ -1197,8 +1135,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).folder;
   }
 
   /**
@@ -1209,7 +1146,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
   }
 
   /**
@@ -1219,10 +1156,10 @@ export class MetricsServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  folderSinkPath(folder: string, sink: string) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
-      folder,
-      sink,
+  folderSinkPath(folder:string,sink:string) {
+    return this.pathTemplates.folderSinkPathTemplate.render({
+      folder: folder,
+      sink: sink,
     });
   }
 
@@ -1234,8 +1171,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .folder;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).folder;
   }
 
   /**
@@ -1246,8 +1182,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).sink;
   }
 
   /**
@@ -1257,10 +1192,10 @@ export class MetricsServiceV2Client {
    * @param {string} metric
    * @returns {string} Resource name string.
    */
-  logMetricPath(project: string, metric: string) {
-    return this._pathTemplates.logMetricPathTemplate.render({
-      project,
-      metric,
+  logMetricPath(project:string,metric:string) {
+    return this.pathTemplates.logMetricPathTemplate.render({
+      project: project,
+      metric: metric,
     });
   }
 
@@ -1272,8 +1207,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .project;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).project;
   }
 
   /**
@@ -1284,8 +1218,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the metric.
    */
   matchMetricFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .metric;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).metric;
   }
 
   /**
@@ -1294,9 +1227,9 @@ export class MetricsServiceV2Client {
    * @param {string} organization
    * @returns {string} Resource name string.
    */
-  organizationCmekSettingsPath(organization: string) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.render({
-      organization,
+  organizationCmekSettingsPath(organization:string) {
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.render({
+      organization: organization,
     });
   }
 
@@ -1307,12 +1240,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing organization_cmekSettings resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationCmekSettingsName(
-    organizationCmekSettingsName: string
-  ) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.match(
-      organizationCmekSettingsName
-    ).organization;
+  matchOrganizationFromOrganizationCmekSettingsName(organizationCmekSettingsName: string) {
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.match(organizationCmekSettingsName).organization;
   }
 
   /**
@@ -1322,10 +1251,10 @@ export class MetricsServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  organizationExclusionPath(organization: string, exclusion: string) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
-      organization,
-      exclusion,
+  organizationExclusionPath(organization:string,exclusion:string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.render({
+      organization: organization,
+      exclusion: exclusion,
     });
   }
 
@@ -1336,12 +1265,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing organization_exclusion resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationExclusionName(
-    organizationExclusionName: string
-  ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).organization;
+  matchOrganizationFromOrganizationExclusionName(organizationExclusionName: string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.match(organizationExclusionName).organization;
   }
 
   /**
@@ -1351,12 +1276,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing organization_exclusion resource.
    * @returns {string} A string representing the exclusion.
    */
-  matchExclusionFromOrganizationExclusionName(
-    organizationExclusionName: string
-  ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).exclusion;
+  matchExclusionFromOrganizationExclusionName(organizationExclusionName: string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.match(organizationExclusionName).exclusion;
   }
 
   /**
@@ -1367,15 +1288,11 @@ export class MetricsServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  organizationLocationBucketPath(
-    organization: string,
-    location: string,
-    bucket: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.render({
-      organization,
-      location,
-      bucket,
+  organizationLocationBucketPath(organization:string,location:string,bucket:string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.render({
+      organization: organization,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1386,12 +1303,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).organization;
+  matchOrganizationFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).organization;
   }
 
   /**
@@ -1401,12 +1314,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).location;
+  matchLocationFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).location;
   }
 
   /**
@@ -1416,12 +1325,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the bucket.
    */
-  matchBucketFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).bucket;
+  matchBucketFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).bucket;
   }
 
   /**
@@ -1431,10 +1336,10 @@ export class MetricsServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  organizationLogPath(organization: string, log: string) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
-      organization,
-      log,
+  organizationLogPath(organization:string,log:string) {
+    return this.pathTemplates.organizationLogPathTemplate.render({
+      organization: organization,
+      log: log,
     });
   }
 
@@ -1446,9 +1351,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).organization;
+    return this.pathTemplates.organizationLogPathTemplate.match(organizationLogName).organization;
   }
 
   /**
@@ -1459,9 +1362,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).log;
+    return this.pathTemplates.organizationLogPathTemplate.match(organizationLogName).log;
   }
 
   /**
@@ -1471,10 +1372,10 @@ export class MetricsServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  organizationSinkPath(organization: string, sink: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
-      organization,
-      sink,
+  organizationSinkPath(organization:string,sink:string) {
+    return this.pathTemplates.organizationSinkPathTemplate.render({
+      organization: organization,
+      sink: sink,
     });
   }
 
@@ -1486,9 +1387,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).organization;
+    return this.pathTemplates.organizationSinkPathTemplate.match(organizationSinkName).organization;
   }
 
   /**
@@ -1499,9 +1398,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).sink;
+    return this.pathTemplates.organizationSinkPathTemplate.match(organizationSinkName).sink;
   }
 
   /**
@@ -1510,9 +1407,9 @@ export class MetricsServiceV2Client {
    * @param {string} project
    * @returns {string} Resource name string.
    */
-  projectPath(project: string) {
-    return this._pathTemplates.projectPathTemplate.render({
-      project,
+  projectPath(project:string) {
+    return this.pathTemplates.projectPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1524,7 +1421,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectName(projectName: string) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -1533,9 +1430,9 @@ export class MetricsServiceV2Client {
    * @param {string} project
    * @returns {string} Resource name string.
    */
-  projectCmekSettingsPath(project: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.render({
-      project,
+  projectCmekSettingsPath(project:string) {
+    return this.pathTemplates.projectCmekSettingsPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1547,9 +1444,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectCmekSettingsName(projectCmekSettingsName: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.match(
-      projectCmekSettingsName
-    ).project;
+    return this.pathTemplates.projectCmekSettingsPathTemplate.match(projectCmekSettingsName).project;
   }
 
   /**
@@ -1559,10 +1454,10 @@ export class MetricsServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  projectExclusionPath(project: string, exclusion: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.render({
-      project,
-      exclusion,
+  projectExclusionPath(project:string,exclusion:string) {
+    return this.pathTemplates.projectExclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
     });
   }
 
@@ -1574,9 +1469,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
-      projectExclusionName
-    ).project;
+    return this.pathTemplates.projectExclusionPathTemplate.match(projectExclusionName).project;
   }
 
   /**
@@ -1587,9 +1480,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
-      projectExclusionName
-    ).exclusion;
+    return this.pathTemplates.projectExclusionPathTemplate.match(projectExclusionName).exclusion;
   }
 
   /**
@@ -1600,11 +1491,11 @@ export class MetricsServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  projectLocationBucketPath(project: string, location: string, bucket: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.render({
-      project,
-      location,
-      bucket,
+  projectLocationBucketPath(project:string,location:string,bucket:string) {
+    return this.pathTemplates.projectLocationBucketPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1616,9 +1507,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).project;
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).project;
   }
 
   /**
@@ -1628,12 +1517,8 @@ export class MetricsServiceV2Client {
    *   A fully-qualified path representing project_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromProjectLocationBucketName(
-    projectLocationBucketName: string
-  ) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).location;
+  matchLocationFromProjectLocationBucketName(projectLocationBucketName: string) {
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).location;
   }
 
   /**
@@ -1644,9 +1529,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).bucket;
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).bucket;
   }
 
   /**
@@ -1656,10 +1539,10 @@ export class MetricsServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  projectLogPath(project: string, log: string) {
-    return this._pathTemplates.projectLogPathTemplate.render({
-      project,
-      log,
+  projectLogPath(project:string,log:string) {
+    return this.pathTemplates.projectLogPathTemplate.render({
+      project: project,
+      log: log,
     });
   }
 
@@ -1671,8 +1554,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName)
-      .project;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).project;
   }
 
   /**
@@ -1683,7 +1565,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
   }
 
   /**
@@ -1693,10 +1575,10 @@ export class MetricsServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  projectSinkPath(project: string, sink: string) {
-    return this._pathTemplates.projectSinkPathTemplate.render({
-      project,
-      sink,
+  projectSinkPath(project:string,sink:string) {
+    return this.pathTemplates.projectSinkPathTemplate.render({
+      project: project,
+      sink: sink,
     });
   }
 
@@ -1708,8 +1590,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
-      .project;
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName).project;
   }
 
   /**
@@ -1720,8 +1601,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
-      .sink;
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName).sink;
   }
 
   /**

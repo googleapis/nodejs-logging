@@ -46,10 +46,10 @@
   },
   "dependencies": {
     "@google-cloud/common": "^2.4.0",
-    "@google-cloud/paginator": "^3.0.0",
+    "@google-cloud/paginator": "^2.0.3",
     "@google-cloud/projectify": "^1.0.4",
-    "@google-cloud/promisify": "^2.0.0",
-    "@opencensus/propagation-stackdriver": "0.0.21",
+    "@google-cloud/promisify": "^1.0.4",
+    "@opencensus/propagation-stackdriver": "0.0.20",
     "arrify": "^2.0.1",
     "dot-prop": "^5.2.0",
     "eventid": "^1.0.0",

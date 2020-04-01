@@ -17,19 +17,12 @@
 // ** All changes to this file may be overwritten. **
 
 import * as gax from 'google-gax';
-import {
-  APICallback,
-  Callback,
-  CallOptions,
-  Descriptors,
-  ClientOptions,
-  PaginationCallback,
-  PaginationResponse,
-} from 'google-gax';
+import {Callback, CallOptions, Descriptors, ClientOptions, PaginationCallback, GaxCall} from 'google-gax';
 import * as path from 'path';
 
-import {Transform} from 'stream';
-import * as protosTypes from '../../protos/protos';
+import { Transform } from 'stream';
+import { RequestType } from 'google-gax/build/src/apitypes';
+import * as protos from '../../protos/protos';
 import * as gapicConfig from './config_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -40,14 +33,6 @@ const version = require('../../../package.json').version;
  * @memberof v2
  */
 export class ConfigServiceV2Client {
-  private _descriptors: Descriptors = {
-    page: {},
-    stream: {},
-    longrunning: {},
-    batching: {},
-  };
-  private _innerApiCalls: {[name: string]: Function};
-  private _pathTemplates: {[name: string]: gax.PathTemplate};
   private _terminated = false;
   private _opts: ClientOptions;
   private _gaxModule: typeof gax | typeof gax.fallback;
@@ -55,6 +40,9 @@ export class ConfigServiceV2Client {
   private _protos: {};
   private _defaults: {[method: string]: gax.CallSettings};
   auth: gax.GoogleAuth;
+  descriptors: Descriptors = {page: {}, stream: {}, longrunning: {}, batching: {}};
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
   configServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -86,12 +74,10 @@ export class ConfigServiceV2Client {
   constructor(opts?: ClientOptions) {
     // Ensure that options include the service address and port.
     const staticMembers = this.constructor as typeof ConfigServiceV2Client;
-    const servicePath =
-      opts && opts.servicePath
-        ? opts.servicePath
-        : opts && opts.apiEndpoint
-        ? opts.apiEndpoint
-        : staticMembers.servicePath;
+    const servicePath = opts && opts.servicePath ?
+        opts.servicePath :
+        ((opts && opts.apiEndpoint) ? opts.apiEndpoint :
+                                      staticMembers.servicePath);
     const port = opts && opts.port ? opts.port : staticMembers.port;
 
     if (!opts) {
@@ -101,8 +87,8 @@ export class ConfigServiceV2Client {
     opts.port = opts.port || port;
     opts.clientConfig = opts.clientConfig || {};
 
-    const isBrowser = typeof window !== 'undefined';
-    if (isBrowser) {
+    const isBrowser = (typeof window !== 'undefined');
+    if (isBrowser){
       opts.fallback = true;
     }
     // If we are in browser, we are already using fallback because of the
@@ -119,10 +105,13 @@ export class ConfigServiceV2Client {
     this._opts = opts;
 
     // Save the auth object to the client, for use by other methods.
-    this.auth = this._gaxGrpc.auth as gax.GoogleAuth;
+    this.auth = (this._gaxGrpc.auth as gax.GoogleAuth);
 
     // Determine the client header string.
-    const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version}`];
+    const clientHeader = [
+      `gax/${this._gaxModule.version}`,
+      `gapic/${version}`,
+    ];
     if (typeof process !== 'undefined' && 'versions' in process) {
       clientHeader.push(`gl-node/${process.versions.node}`);
     } else {
@@ -138,21 +127,18 @@ export class ConfigServiceV2Client {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback ?
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
-    this._pathTemplates = {
+    this.pathTemplates = {
       billingAccountCmekSettingsPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/cmekSettings'
       ),
@@ -227,36 +213,24 @@ export class ConfigServiceV2Client {
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
-    this._descriptors.page = {
-      listBuckets: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'buckets'
-      ),
-      listSinks: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'sinks'
-      ),
-      listExclusions: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'exclusions'
-      ),
+    this.descriptors.page = {
+      listBuckets:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'buckets'),
+      listSinks:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'sinks'),
+      listExclusions:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'exclusions')
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-      'google.logging.v2.ConfigServiceV2',
-      gapicConfig as gax.ClientConfig,
-      opts.clientConfig || {},
-      {'x-goog-api-client': clientHeader.join(' ')}
-    );
+        'google.logging.v2.ConfigServiceV2', gapicConfig as gax.ClientConfig,
+        opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
     // merely providing the destination and request information.
-    this._innerApiCalls = {};
+    this.innerApiCalls = {};
   }
 
   /**
@@ -279,37 +253,18 @@ export class ConfigServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.ConfigServiceV2.
     this.configServiceV2Stub = this._gaxGrpc.createStub(
-      this._opts.fallback
-        ? (this._protos as protobuf.Root).lookupService(
-            'google.logging.v2.ConfigServiceV2'
-          )
-        : // tslint:disable-next-line no-any
+        this._opts.fallback ?
+          (this._protos as protobuf.Root).lookupService('google.logging.v2.ConfigServiceV2') :
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.logging.v2.ConfigServiceV2,
-      this._opts
-    ) as Promise<{[method: string]: Function}>;
+        this._opts) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const configServiceV2StubMethods = [
-      'listBuckets',
-      'getBucket',
-      'updateBucket',
-      'listSinks',
-      'getSink',
-      'createSink',
-      'updateSink',
-      'deleteSink',
-      'listExclusions',
-      'getExclusion',
-      'createExclusion',
-      'updateExclusion',
-      'deleteExclusion',
-      'getCmekSettings',
-      'updateCmekSettings',
-    ];
-
+    const configServiceV2StubMethods =
+        ['listBuckets', 'getBucket', 'updateBucket', 'listSinks', 'getSink', 'createSink', 'updateSink', 'deleteSink', 'listExclusions', 'getExclusion', 'createExclusion', 'updateExclusion', 'deleteExclusion', 'getCmekSettings', 'updateCmekSettings'];
     for (const methodName of configServiceV2StubMethods) {
-      const innerCallPromise = this.configServiceV2Stub.then(
+      const callPromise = this.configServiceV2Stub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -317,26 +272,19 @@ export class ConfigServiceV2Client {
           const func = stub[methodName];
           return func.apply(stub, args);
         },
-        (err: Error | null | undefined) => () => {
+        (err: Error|null|undefined) => () => {
           throw err;
-        }
-      );
+        });
 
       const apiCall = this._gaxModule.createApiCall(
-        innerCallPromise,
+        callPromise,
         this._defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.stream[methodName] ||
-          this._descriptors.longrunning[methodName]
+        this.descriptors.page[methodName] ||
+            this.descriptors.stream[methodName] ||
+            this.descriptors.longrunning[methodName]
       );
 
-      this._innerApiCalls[methodName] = (
-        argument: {},
-        callOptions?: CallOptions,
-        callback?: APICallback
-      ) => {
-        return apiCall(argument, callOptions, callback);
-      };
+      this.innerApiCalls[methodName] = apiCall;
     }
 
     return this.configServiceV2Stub;
@@ -373,7 +321,7 @@ export class ConfigServiceV2Client {
       'https://www.googleapis.com/auth/cloud-platform',
       'https://www.googleapis.com/auth/cloud-platform.read-only',
       'https://www.googleapis.com/auth/logging.admin',
-      'https://www.googleapis.com/auth/logging.read',
+      'https://www.googleapis.com/auth/logging.read'
     ];
   }
 
@@ -384,9 +332,8 @@ export class ConfigServiceV2Client {
    * @param {function(Error, string)} callback - the callback to
    *   be called with the current project Id.
    */
-  getProjectId(
-    callback?: Callback<string, undefined, undefined>
-  ): Promise<string> | void {
+  getProjectId(callback?: Callback<string, undefined, undefined>):
+      Promise<string>|void {
     if (callback) {
       this.auth.getProjectId(callback);
       return;
@@ -398,72 +345,67 @@ export class ConfigServiceV2Client {
   // -- Service calls --
   // -------------------
   getBucket(
-    request: protosTypes.google.logging.v2.IGetBucketRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IGetBucketRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IGetBucketRequest|undefined, {}|undefined
+      ]>;
   getBucket(
-    request: protosTypes.google.logging.v2.IGetBucketRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Gets a bucket (Beta).
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The resource name of the bucket:
-   *
-   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IGetBucketRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IGetBucketRequest|null|undefined,
+          {}|null|undefined>): void;
   getBucket(
-    request: protosTypes.google.logging.v2.IGetBucketRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogBucket,
-          protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IGetBucketRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IGetBucketRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Gets a bucket (Beta).
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The resource name of the bucket:
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *
+ *   Example:
+ *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  getBucket(
+      request: protos.google.logging.v2.IGetBucketRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IGetBucketRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IGetBucketRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IGetBucketRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -472,101 +414,96 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.getBucket(request, options, callback);
+    return this.innerApiCalls.getBucket(request, options, callback);
   }
   updateBucket(
-    request: protosTypes.google.logging.v2.IUpdateBucketRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IUpdateBucketRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IUpdateBucketRequest|undefined, {}|undefined
+      ]>;
   updateBucket(
-    request: protosTypes.google.logging.v2.IUpdateBucketRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Updates a bucket. This method replaces the following fields in the
-   * existing bucket with values from the new bucket: `retention_period`
-   *
-   * If the retention period is decreased and the bucket is locked,
-   * FAILED_PRECONDITION will be returned.
-   *
-   * If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION
-   * will be returned.
-   *
-   * A buckets region may not be modified after it is created.
-   * This method is in Beta.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The full resource name of the bucket to update.
-   *
-   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`. Also
-   *   requires permission "resourcemanager.projects.updateLiens" to set the
-   *   locked property
-   * @param {google.logging.v2.LogBucket} request.bucket
-   *   Required. The updated bucket.
-   * @param {google.protobuf.FieldMask} request.updateMask
-   *   Required. Field mask that specifies the fields in `bucket` that need an update. A
-   *   bucket field will be overwritten if, and only if, it is in the update
-   *   mask. `name` and output only fields cannot be updated.
-   *
-   *   For a detailed `FieldMask` definition, see
-   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-   *
-   *   Example: `updateMask=retention_days`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IUpdateBucketRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IUpdateBucketRequest|null|undefined,
+          {}|null|undefined>): void;
   updateBucket(
-    request: protosTypes.google.logging.v2.IUpdateBucketRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogBucket,
-          protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogBucket,
-      protosTypes.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IUpdateBucketRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IUpdateBucketRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Updates a bucket. This method replaces the following fields in the
+ * existing bucket with values from the new bucket: `retention_period`
+ *
+ * If the retention period is decreased and the bucket is locked,
+ * FAILED_PRECONDITION will be returned.
+ *
+ * If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION
+ * will be returned.
+ *
+ * A buckets region may not be modified after it is created.
+ * This method is in Beta.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The full resource name of the bucket to update.
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+ *
+ *   Example:
+ *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`. Also
+ *   requires permission "resourcemanager.projects.updateLiens" to set the
+ *   locked property
+ * @param {google.logging.v2.LogBucket} request.bucket
+ *   Required. The updated bucket.
+ * @param {google.protobuf.FieldMask} request.updateMask
+ *   Required. Field mask that specifies the fields in `bucket` that need an update. A
+ *   bucket field will be overwritten if, and only if, it is in the update
+ *   mask. `name` and output only fields cannot be updated.
+ *
+ *   For a detailed `FieldMask` definition, see
+ *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+ *
+ *   Example: `updateMask=retention_days`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  updateBucket(
+      request: protos.google.logging.v2.IUpdateBucketRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IUpdateBucketRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.IUpdateBucketRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IUpdateBucketRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -575,77 +512,72 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateBucket(request, options, callback);
+    return this.innerApiCalls.updateBucket(request, options, callback);
   }
   getSink(
-    request: protosTypes.google.logging.v2.IGetSinkRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IGetSinkRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogSink,
+        protos.google.logging.v2.IGetSinkRequest|undefined, {}|undefined
+      ]>;
   getSink(
-    request: protosTypes.google.logging.v2.IGetSinkRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Gets a sink.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.sinkName
-   *   Required. The resource name of the sink:
-   *
-   *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-   *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-   *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-   *
-   *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogSink]{@link google.logging.v2.LogSink}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IGetSinkRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IGetSinkRequest|null|undefined,
+          {}|null|undefined>): void;
   getSink(
-    request: protosTypes.google.logging.v2.IGetSinkRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogSink,
-          protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IGetSinkRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IGetSinkRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Gets a sink.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.sinkName
+ *   Required. The resource name of the sink:
+ *
+ *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+ *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+ *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+ *
+ *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogSink]{@link google.logging.v2.LogSink}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  getSink(
+      request: protos.google.logging.v2.IGetSinkRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IGetSinkRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IGetSinkRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogSink,
+        protos.google.logging.v2.IGetSinkRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -654,95 +586,90 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      sink_name: request.sinkName || '',
+      'sink_name': request.sinkName || '',
     });
     this.initialize();
-    return this._innerApiCalls.getSink(request, options, callback);
+    return this.innerApiCalls.getSink(request, options, callback);
   }
   createSink(
-    request: protosTypes.google.logging.v2.ICreateSinkRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.ICreateSinkRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogSink,
+        protos.google.logging.v2.ICreateSinkRequest|undefined, {}|undefined
+      ]>;
   createSink(
-    request: protosTypes.google.logging.v2.ICreateSinkRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Creates a sink that exports specified log entries to a destination. The
-   * export of newly-ingested log entries begins immediately, unless the sink's
-   * `writer_identity` is not permitted to write to the destination. A sink can
-   * export log entries only from the resource owning the sink.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The resource in which to create the sink:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   *
-   *   Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
-   * @param {google.logging.v2.LogSink} request.sink
-   *   Required. The new sink, whose `name` parameter is a sink identifier that
-   *   is not already in use.
-   * @param {boolean} [request.uniqueWriterIdentity]
-   *   Optional. Determines the kind of IAM identity returned as `writer_identity`
-   *   in the new sink. If this value is omitted or set to false, and if the
-   *   sink's parent is a project, then the value returned as `writer_identity` is
-   *   the same group or service account used by Logging before the addition of
-   *   writer identities to this API. The sink's destination must be in the same
-   *   project as the sink itself.
-   *
-   *   If this field is set to true, or if the sink is owned by a non-project
-   *   resource such as an organization, then the value of `writer_identity` will
-   *   be a unique service account used only for exports from the new sink. For
-   *   more information, see `writer_identity` in {@link google.logging.v2.LogSink|LogSink}.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogSink]{@link google.logging.v2.LogSink}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.ICreateSinkRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.ICreateSinkRequest|null|undefined,
+          {}|null|undefined>): void;
   createSink(
-    request: protosTypes.google.logging.v2.ICreateSinkRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogSink,
-          protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.ICreateSinkRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.ICreateSinkRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Creates a sink that exports specified log entries to a destination. The
+ * export of newly-ingested log entries begins immediately, unless the sink's
+ * `writer_identity` is not permitted to write to the destination. A sink can
+ * export log entries only from the resource owning the sink.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource in which to create the sink:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ *
+ *   Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+ * @param {google.logging.v2.LogSink} request.sink
+ *   Required. The new sink, whose `name` parameter is a sink identifier that
+ *   is not already in use.
+ * @param {boolean} [request.uniqueWriterIdentity]
+ *   Optional. Determines the kind of IAM identity returned as `writer_identity`
+ *   in the new sink. If this value is omitted or set to false, and if the
+ *   sink's parent is a project, then the value returned as `writer_identity` is
+ *   the same group or service account used by Logging before the addition of
+ *   writer identities to this API. The sink's destination must be in the same
+ *   project as the sink itself.
+ *
+ *   If this field is set to true, or if the sink is owned by a non-project
+ *   resource such as an organization, then the value of `writer_identity` will
+ *   be a unique service account used only for exports from the new sink. For
+ *   more information, see `writer_identity` in {@link google.logging.v2.LogSink|LogSink}.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogSink]{@link google.logging.v2.LogSink}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  createSink(
+      request: protos.google.logging.v2.ICreateSinkRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.ICreateSinkRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.ICreateSinkRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogSink,
+        protos.google.logging.v2.ICreateSinkRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -751,112 +678,107 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.createSink(request, options, callback);
+    return this.innerApiCalls.createSink(request, options, callback);
   }
   updateSink(
-    request: protosTypes.google.logging.v2.IUpdateSinkRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IUpdateSinkRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogSink,
+        protos.google.logging.v2.IUpdateSinkRequest|undefined, {}|undefined
+      ]>;
   updateSink(
-    request: protosTypes.google.logging.v2.IUpdateSinkRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Updates a sink. This method replaces the following fields in the existing
-   * sink with values from the new sink: `destination`, and `filter`.
-   *
-   * The updated sink might also have a new `writer_identity`; see the
-   * `unique_writer_identity` field.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.sinkName
-   *   Required. The full resource name of the sink to update, including the parent
-   *   resource and the sink identifier:
-   *
-   *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-   *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-   *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-   *
-   *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
-   * @param {google.logging.v2.LogSink} request.sink
-   *   Required. The updated sink, whose name is the same identifier that appears as part
-   *   of `sink_name`.
-   * @param {boolean} [request.uniqueWriterIdentity]
-   *   Optional. See {@link google.logging.v2.ConfigServiceV2.CreateSink|sinks.create}
-   *   for a description of this field. When updating a sink, the effect of this
-   *   field on the value of `writer_identity` in the updated sink depends on both
-   *   the old and new values of this field:
-   *
-   *   +   If the old and new values of this field are both false or both true,
-   *       then there is no change to the sink's `writer_identity`.
-   *   +   If the old value is false and the new value is true, then
-   *       `writer_identity` is changed to a unique service account.
-   *   +   It is an error if the old value is true and the new value is
-   *       set to false or defaulted to false.
-   * @param {google.protobuf.FieldMask} [request.updateMask]
-   *   Optional. Field mask that specifies the fields in `sink` that need
-   *   an update. A sink field will be overwritten if, and only if, it is
-   *   in the update mask. `name` and output only fields cannot be updated.
-   *
-   *   An empty updateMask is temporarily treated as using the following mask
-   *   for backwards compatibility purposes:
-   *     destination,filter,includeChildren
-   *   At some point in the future, behavior will be removed and specifying an
-   *   empty updateMask will be an error.
-   *
-   *   For a detailed `FieldMask` definition, see
-   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-   *
-   *   Example: `updateMask=filter`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogSink]{@link google.logging.v2.LogSink}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IUpdateSinkRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IUpdateSinkRequest|null|undefined,
+          {}|null|undefined>): void;
   updateSink(
-    request: protosTypes.google.logging.v2.IUpdateSinkRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogSink,
-          protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink,
-      protosTypes.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IUpdateSinkRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IUpdateSinkRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Updates a sink. This method replaces the following fields in the existing
+ * sink with values from the new sink: `destination`, and `filter`.
+ *
+ * The updated sink might also have a new `writer_identity`; see the
+ * `unique_writer_identity` field.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.sinkName
+ *   Required. The full resource name of the sink to update, including the parent
+ *   resource and the sink identifier:
+ *
+ *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+ *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+ *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+ *
+ *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
+ * @param {google.logging.v2.LogSink} request.sink
+ *   Required. The updated sink, whose name is the same identifier that appears as part
+ *   of `sink_name`.
+ * @param {boolean} [request.uniqueWriterIdentity]
+ *   Optional. See {@link google.logging.v2.ConfigServiceV2.CreateSink|sinks.create}
+ *   for a description of this field. When updating a sink, the effect of this
+ *   field on the value of `writer_identity` in the updated sink depends on both
+ *   the old and new values of this field:
+ *
+ *   +   If the old and new values of this field are both false or both true,
+ *       then there is no change to the sink's `writer_identity`.
+ *   +   If the old value is false and the new value is true, then
+ *       `writer_identity` is changed to a unique service account.
+ *   +   It is an error if the old value is true and the new value is
+ *       set to false or defaulted to false.
+ * @param {google.protobuf.FieldMask} [request.updateMask]
+ *   Optional. Field mask that specifies the fields in `sink` that need
+ *   an update. A sink field will be overwritten if, and only if, it is
+ *   in the update mask. `name` and output only fields cannot be updated.
+ *
+ *   An empty updateMask is temporarily treated as using the following mask
+ *   for backwards compatibility purposes:
+ *     destination,filter,includeChildren
+ *   At some point in the future, behavior will be removed and specifying an
+ *   empty updateMask will be an error.
+ *
+ *   For a detailed `FieldMask` definition, see
+ *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+ *
+ *   Example: `updateMask=filter`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogSink]{@link google.logging.v2.LogSink}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  updateSink(
+      request: protos.google.logging.v2.IUpdateSinkRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IUpdateSinkRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogSink,
+          protos.google.logging.v2.IUpdateSinkRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogSink,
+        protos.google.logging.v2.IUpdateSinkRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -865,79 +787,74 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      sink_name: request.sinkName || '',
+      'sink_name': request.sinkName || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateSink(request, options, callback);
+    return this.innerApiCalls.updateSink(request, options, callback);
   }
   deleteSink(
-    request: protosTypes.google.logging.v2.IDeleteSinkRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IDeleteSinkRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteSinkRequest|undefined, {}|undefined
+      ]>;
   deleteSink(
-    request: protosTypes.google.logging.v2.IDeleteSinkRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Deletes a sink. If the sink has a unique `writer_identity`, then that
-   * service account is also deleted.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.sinkName
-   *   Required. The full resource name of the sink to delete, including the parent
-   *   resource and the sink identifier:
-   *
-   *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-   *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-   *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-   *
-   *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IDeleteSinkRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteSinkRequest|null|undefined,
+          {}|null|undefined>): void;
   deleteSink(
-    request: protosTypes.google.logging.v2.IDeleteSinkRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IDeleteSinkRequest,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteSinkRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Deletes a sink. If the sink has a unique `writer_identity`, then that
+ * service account is also deleted.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.sinkName
+ *   Required. The full resource name of the sink to delete, including the parent
+ *   resource and the sink identifier:
+ *
+ *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
+ *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
+ *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
+ *
+ *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  deleteSink(
+      request: protos.google.logging.v2.IDeleteSinkRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteSinkRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteSinkRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteSinkRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -946,77 +863,72 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      sink_name: request.sinkName || '',
+      'sink_name': request.sinkName || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteSink(request, options, callback);
+    return this.innerApiCalls.deleteSink(request, options, callback);
   }
   getExclusion(
-    request: protosTypes.google.logging.v2.IGetExclusionRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IGetExclusionRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion,
+        protos.google.logging.v2.IGetExclusionRequest|undefined, {}|undefined
+      ]>;
   getExclusion(
-    request: protosTypes.google.logging.v2.IGetExclusionRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Gets the description of an exclusion.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The resource name of an existing exclusion:
-   *
-   *       "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *       "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-   *
-   *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IGetExclusionRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IGetExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
   getExclusion(
-    request: protosTypes.google.logging.v2.IGetExclusionRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogExclusion,
-          protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IGetExclusionRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IGetExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Gets the description of an exclusion.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The resource name of an existing exclusion:
+ *
+ *       "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+ *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+ *
+ *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  getExclusion(
+      request: protos.google.logging.v2.IGetExclusionRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IGetExclusionRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IGetExclusionRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion,
+        protos.google.logging.v2.IGetExclusionRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1025,82 +937,77 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.getExclusion(request, options, callback);
+    return this.innerApiCalls.getExclusion(request, options, callback);
   }
   createExclusion(
-    request: protosTypes.google.logging.v2.ICreateExclusionRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.ICreateExclusionRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion,
+        protos.google.logging.v2.ICreateExclusionRequest|undefined, {}|undefined
+      ]>;
   createExclusion(
-    request: protosTypes.google.logging.v2.ICreateExclusionRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Creates a new exclusion in a specified parent resource.
-   * Only log entries belonging to that resource can be excluded.
-   * You can have up to 10 exclusions in a resource.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource in which to create the exclusion:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   *
-   *   Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
-   * @param {google.logging.v2.LogExclusion} request.exclusion
-   *   Required. The new exclusion, whose `name` parameter is an exclusion name
-   *   that is not already used in the parent resource.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.ICreateExclusionRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.ICreateExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
   createExclusion(
-    request: protosTypes.google.logging.v2.ICreateExclusionRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogExclusion,
-          protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.ICreateExclusionRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.ICreateExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Creates a new exclusion in a specified parent resource.
+ * Only log entries belonging to that resource can be excluded.
+ * You can have up to 10 exclusions in a resource.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource in which to create the exclusion:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ *
+ *   Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+ * @param {google.logging.v2.LogExclusion} request.exclusion
+ *   Required. The new exclusion, whose `name` parameter is an exclusion name
+ *   that is not already used in the parent resource.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  createExclusion(
+      request: protos.google.logging.v2.ICreateExclusionRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.ICreateExclusionRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.ICreateExclusionRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion,
+        protos.google.logging.v2.ICreateExclusionRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1109,88 +1016,83 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.createExclusion(request, options, callback);
+    return this.innerApiCalls.createExclusion(request, options, callback);
   }
   updateExclusion(
-    request: protosTypes.google.logging.v2.IUpdateExclusionRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IUpdateExclusionRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion,
+        protos.google.logging.v2.IUpdateExclusionRequest|undefined, {}|undefined
+      ]>;
   updateExclusion(
-    request: protosTypes.google.logging.v2.IUpdateExclusionRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Changes one or more properties of an existing exclusion.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The resource name of the exclusion to update:
-   *
-   *       "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *       "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-   *
-   *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
-   * @param {google.logging.v2.LogExclusion} request.exclusion
-   *   Required. New values for the existing exclusion. Only the fields specified in
-   *   `update_mask` are relevant.
-   * @param {google.protobuf.FieldMask} request.updateMask
-   *   Required. A non-empty list of fields to change in the existing exclusion. New values
-   *   for the fields are taken from the corresponding fields in the
-   *   {@link google.logging.v2.LogExclusion|LogExclusion} included in this request. Fields not mentioned in
-   *   `update_mask` are not changed and are ignored in the request.
-   *
-   *   For example, to change the filter and description of an exclusion,
-   *   specify an `update_mask` of `"filter,description"`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IUpdateExclusionRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IUpdateExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
   updateExclusion(
-    request: protosTypes.google.logging.v2.IUpdateExclusionRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogExclusion,
-          protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion,
-      protosTypes.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IUpdateExclusionRequest,
+      callback: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IUpdateExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Changes one or more properties of an existing exclusion.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The resource name of the exclusion to update:
+ *
+ *       "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+ *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+ *
+ *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
+ * @param {google.logging.v2.LogExclusion} request.exclusion
+ *   Required. New values for the existing exclusion. Only the fields specified in
+ *   `update_mask` are relevant.
+ * @param {google.protobuf.FieldMask} request.updateMask
+ *   Required. A non-empty list of fields to change in the existing exclusion. New values
+ *   for the fields are taken from the corresponding fields in the
+ *   {@link google.logging.v2.LogExclusion|LogExclusion} included in this request. Fields not mentioned in
+ *   `update_mask` are not changed and are ignored in the request.
+ *
+ *   For example, to change the filter and description of an exclusion,
+ *   specify an `update_mask` of `"filter,description"`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [LogExclusion]{@link google.logging.v2.LogExclusion}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  updateExclusion(
+      request: protos.google.logging.v2.IUpdateExclusionRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IUpdateExclusionRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ILogExclusion,
+          protos.google.logging.v2.IUpdateExclusionRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion,
+        protos.google.logging.v2.IUpdateExclusionRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1199,77 +1101,72 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateExclusion(request, options, callback);
+    return this.innerApiCalls.updateExclusion(request, options, callback);
   }
   deleteExclusion(
-    request: protosTypes.google.logging.v2.IDeleteExclusionRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IDeleteExclusionRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteExclusionRequest|undefined, {}|undefined
+      ]>;
   deleteExclusion(
-    request: protosTypes.google.logging.v2.IDeleteExclusionRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Deletes an exclusion.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The resource name of an existing exclusion to delete:
-   *
-   *       "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *       "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-   *
-   *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IDeleteExclusionRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
   deleteExclusion(
-    request: protosTypes.google.logging.v2.IDeleteExclusionRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IDeleteExclusionRequest,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteExclusionRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Deletes an exclusion.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The resource name of an existing exclusion to delete:
+ *
+ *       "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
+ *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+ *
+ *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  deleteExclusion(
+      request: protos.google.logging.v2.IDeleteExclusionRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteExclusionRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteExclusionRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteExclusionRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1278,88 +1175,83 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteExclusion(request, options, callback);
+    return this.innerApiCalls.deleteExclusion(request, options, callback);
   }
   getCmekSettings(
-    request: protosTypes.google.logging.v2.IGetCmekSettingsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IGetCmekSettingsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ICmekSettings,
+        protos.google.logging.v2.IGetCmekSettingsRequest|undefined, {}|undefined
+      ]>;
   getCmekSettings(
-    request: protosTypes.google.logging.v2.IGetCmekSettingsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Gets the Logs Router CMEK settings for the given resource.
-   *
-   * Note: CMEK for the Logs Router can currently only be configured for GCP
-   * organizations. Once configured, it applies to all projects and folders in
-   * the GCP organization.
-   *
-   * See [Enabling CMEK for Logs
-   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The resource for which to retrieve CMEK settings.
-   *
-   *       "projects/[PROJECT_ID]/cmekSettings"
-   *       "organizations/[ORGANIZATION_ID]/cmekSettings"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-   *       "folders/[FOLDER_ID]/cmekSettings"
-   *
-   *   Example: `"organizations/12345/cmekSettings"`.
-   *
-   *   Note: CMEK for the Logs Router can currently only be configured for GCP
-   *   organizations. Once configured, it applies to all projects and folders in
-   *   the GCP organization.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IGetCmekSettingsRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IGetCmekSettingsRequest|null|undefined,
+          {}|null|undefined>): void;
   getCmekSettings(
-    request: protosTypes.google.logging.v2.IGetCmekSettingsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ICmekSettings,
-          protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IGetCmekSettingsRequest,
+      callback: Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IGetCmekSettingsRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Gets the Logs Router CMEK settings for the given resource.
+ *
+ * Note: CMEK for the Logs Router can currently only be configured for GCP
+ * organizations. Once configured, it applies to all projects and folders in
+ * the GCP organization.
+ *
+ * See [Enabling CMEK for Logs
+ * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The resource for which to retrieve CMEK settings.
+ *
+ *       "projects/[PROJECT_ID]/cmekSettings"
+ *       "organizations/[ORGANIZATION_ID]/cmekSettings"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+ *       "folders/[FOLDER_ID]/cmekSettings"
+ *
+ *   Example: `"organizations/12345/cmekSettings"`.
+ *
+ *   Note: CMEK for the Logs Router can currently only be configured for GCP
+ *   organizations. Once configured, it applies to all projects and folders in
+ *   the GCP organization.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  getCmekSettings(
+      request: protos.google.logging.v2.IGetCmekSettingsRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IGetCmekSettingsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IGetCmekSettingsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ICmekSettings,
+        protos.google.logging.v2.IGetCmekSettingsRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1368,107 +1260,102 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.getCmekSettings(request, options, callback);
+    return this.innerApiCalls.getCmekSettings(request, options, callback);
   }
   updateCmekSettings(
-    request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ICmekSettings,
+        protos.google.logging.v2.IUpdateCmekSettingsRequest|undefined, {}|undefined
+      ]>;
   updateCmekSettings(
-    request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Updates the Logs Router CMEK settings for the given resource.
-   *
-   * Note: CMEK for the Logs Router can currently only be configured for GCP
-   * organizations. Once configured, it applies to all projects and folders in
-   * the GCP organization.
-   *
-   * {@link google.logging.v2.ConfigServiceV2.UpdateCmekSettings|UpdateCmekSettings}
-   * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
-   * account does not have the required
-   * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
-   * 3) access to the key is disabled.
-   *
-   * See [Enabling CMEK for Logs
-   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.name
-   *   Required. The resource name for the CMEK settings to update.
-   *
-   *       "projects/[PROJECT_ID]/cmekSettings"
-   *       "organizations/[ORGANIZATION_ID]/cmekSettings"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-   *       "folders/[FOLDER_ID]/cmekSettings"
-   *
-   *   Example: `"organizations/12345/cmekSettings"`.
-   *
-   *   Note: CMEK for the Logs Router can currently only be configured for GCP
-   *   organizations. Once configured, it applies to all projects and folders in
-   *   the GCP organization.
-   * @param {google.logging.v2.CmekSettings} request.cmekSettings
-   *   Required. The CMEK settings to update.
-   *
-   *   See [Enabling CMEK for Logs
-   *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
-   * @param {google.protobuf.FieldMask} [request.updateMask]
-   *   Optional. Field mask identifying which fields from `cmek_settings` should
-   *   be updated. A field will be overwritten if and only if it is in the update
-   *   mask. Output only fields cannot be updated.
-   *
-   *   See {@link google.protobuf.FieldMask|FieldMask} for more information.
-   *
-   *   Example: `"updateMask=kmsKeyName"`
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IUpdateCmekSettingsRequest|null|undefined,
+          {}|null|undefined>): void;
   updateCmekSettings(
-    request: protosTypes.google.logging.v2.IUpdateCmekSettingsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ICmekSettings,
-          protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ICmekSettings,
-      protosTypes.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+      callback: Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IUpdateCmekSettingsRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Updates the Logs Router CMEK settings for the given resource.
+ *
+ * Note: CMEK for the Logs Router can currently only be configured for GCP
+ * organizations. Once configured, it applies to all projects and folders in
+ * the GCP organization.
+ *
+ * {@link google.logging.v2.ConfigServiceV2.UpdateCmekSettings|UpdateCmekSettings}
+ * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
+ * account does not have the required
+ * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
+ * 3) access to the key is disabled.
+ *
+ * See [Enabling CMEK for Logs
+ * Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The resource name for the CMEK settings to update.
+ *
+ *       "projects/[PROJECT_ID]/cmekSettings"
+ *       "organizations/[ORGANIZATION_ID]/cmekSettings"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
+ *       "folders/[FOLDER_ID]/cmekSettings"
+ *
+ *   Example: `"organizations/12345/cmekSettings"`.
+ *
+ *   Note: CMEK for the Logs Router can currently only be configured for GCP
+ *   organizations. Once configured, it applies to all projects and folders in
+ *   the GCP organization.
+ * @param {google.logging.v2.CmekSettings} request.cmekSettings
+ *   Required. The CMEK settings to update.
+ *
+ *   See [Enabling CMEK for Logs
+ *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption) for more information.
+ * @param {google.protobuf.FieldMask} [request.updateMask]
+ *   Optional. Field mask identifying which fields from `cmek_settings` should
+ *   be updated. A field will be overwritten if and only if it is in the update
+ *   mask. Output only fields cannot be updated.
+ *
+ *   See {@link google.protobuf.FieldMask|FieldMask} for more information.
+ *
+ *   Example: `"updateMask=kmsKeyName"`
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [CmekSettings]{@link google.logging.v2.CmekSettings}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  updateCmekSettings(
+      request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IUpdateCmekSettingsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.ICmekSettings,
+          protos.google.logging.v2.IUpdateCmekSettingsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.ICmekSettings,
+        protos.google.logging.v2.IUpdateCmekSettingsRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1477,101 +1364,98 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      name: request.name || '',
+      'name': request.name || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateCmekSettings(request, options, callback);
+    return this.innerApiCalls.updateCmekSettings(request, options, callback);
   }
 
   listBuckets(
-    request: protosTypes.google.logging.v2.IListBucketsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListBucketsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogBucket[],
+        protos.google.logging.v2.IListBucketsRequest|null,
+        protos.google.logging.v2.IListBucketsResponse
+      ]>;
   listBuckets(
-    request: protosTypes.google.logging.v2.IListBucketsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
-    >
-  ): void;
-  /**
-   * Lists buckets (Beta).
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource whose buckets are to be listed:
-   *
-   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
-   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
-   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
-   *
-   *   Note: The locations portion of the resource must be specified, but
-   *   supplying the character `-` in place of [LOCATION_ID] will return all
-   *   buckets.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogBucket]{@link google.logging.v2.LogBucket}.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of [LogBucket]{@link google.logging.v2.LogBucket} that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListBucketsRequest]{@link google.logging.v2.ListBucketsRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListBucketsResponse]{@link google.logging.v2.ListBucketsResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListBucketsRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListBucketsRequest,
+          protos.google.logging.v2.IListBucketsResponse|null|undefined,
+          protos.google.logging.v2.ILogBucket>): void;
   listBuckets(
-    request: protosTypes.google.logging.v2.IListBucketsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogBucket[],
-          protosTypes.google.logging.v2.IListBucketsRequest | null,
-          protosTypes.google.logging.v2.IListBucketsResponse
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogBucket[],
-      protosTypes.google.logging.v2.IListBucketsRequest | null,
-      protosTypes.google.logging.v2.IListBucketsResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListBucketsRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListBucketsRequest,
+          protos.google.logging.v2.IListBucketsResponse|null|undefined,
+          protos.google.logging.v2.ILogBucket>): void;
+/**
+ * Lists buckets (Beta).
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose buckets are to be listed:
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+ *
+ *   Note: The locations portion of the resource must be specified, but
+ *   supplying the character `-` in place of [LOCATION_ID] will return all
+ *   buckets.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [LogBucket]{@link google.logging.v2.LogBucket}.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of [LogBucket]{@link google.logging.v2.LogBucket} that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListBucketsRequest]{@link google.logging.v2.ListBucketsRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListBucketsResponse]{@link google.logging.v2.ListBucketsResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listBuckets(
+      request: protos.google.logging.v2.IListBucketsRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListBucketsRequest,
+          protos.google.logging.v2.IListBucketsResponse|null|undefined,
+          protos.google.logging.v2.ILogBucket>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListBucketsRequest,
+          protos.google.logging.v2.IListBucketsResponse|null|undefined,
+          protos.google.logging.v2.ILogBucket>):
+      Promise<[
+        protos.google.logging.v2.ILogBucket[],
+        protos.google.logging.v2.IListBucketsRequest|null,
+        protos.google.logging.v2.IListBucketsResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1580,56 +1464,56 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listBuckets(request, options, callback);
+    return this.innerApiCalls.listBuckets(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listBuckets}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listBuckets} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource whose buckets are to be listed:
-   *
-   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
-   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
-   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
-   *
-   *   Note: The locations portion of the resource must be specified, but
-   *   supplying the character `-` in place of [LOCATION_ID] will return all
-   *   buckets.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [LogBucket]{@link google.logging.v2.LogBucket} on 'data' event.
-   */
+/**
+ * Equivalent to {@link listBuckets}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listBuckets} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose buckets are to be listed:
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+ *
+ *   Note: The locations portion of the resource must be specified, but
+ *   supplying the character `-` in place of [LOCATION_ID] will return all
+ *   buckets.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [LogBucket]{@link google.logging.v2.LogBucket} on 'data' event.
+ */
   listBucketsStream(
-    request?: protosTypes.google.logging.v2.IListBucketsRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListBucketsRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1637,101 +1521,153 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listBuckets.createStream(
-      this._innerApiCalls.listBuckets as gax.GaxCall,
+    return this.descriptors.page.listBuckets.createStream(
+      this.innerApiCalls.listBuckets as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+/**
+ * Equivalent to {@link listBuckets}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose buckets are to be listed:
+ *
+ *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+ *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]"
+ *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]"
+ *
+ *   Note: The locations portion of the resource must be specified, but
+ *   supplying the character `-` in place of [LOCATION_ID] will return all
+ *   buckets.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listBucketsAsync(
+      request?: protos.google.logging.v2.IListBucketsRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<protos.google.logging.v2.ILogBucket>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      'parent': request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listBuckets.asyncIterate(
+      this.innerApiCalls['listBuckets'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogBucket>;
+  }
   listSinks(
-    request: protosTypes.google.logging.v2.IListSinksRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListSinksRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogSink[],
+        protos.google.logging.v2.IListSinksRequest|null,
+        protos.google.logging.v2.IListSinksResponse
+      ]>;
   listSinks(
-    request: protosTypes.google.logging.v2.IListSinksRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
-    >
-  ): void;
-  /**
-   * Lists sinks.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource whose sinks are to be listed:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogSink]{@link google.logging.v2.LogSink}.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of [LogSink]{@link google.logging.v2.LogSink} that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListSinksRequest]{@link google.logging.v2.ListSinksRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListSinksResponse]{@link google.logging.v2.ListSinksResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListSinksRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListSinksRequest,
+          protos.google.logging.v2.IListSinksResponse|null|undefined,
+          protos.google.logging.v2.ILogSink>): void;
   listSinks(
-    request: protosTypes.google.logging.v2.IListSinksRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogSink[],
-          protosTypes.google.logging.v2.IListSinksRequest | null,
-          protosTypes.google.logging.v2.IListSinksResponse
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogSink[],
-      protosTypes.google.logging.v2.IListSinksRequest | null,
-      protosTypes.google.logging.v2.IListSinksResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListSinksRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListSinksRequest,
+          protos.google.logging.v2.IListSinksResponse|null|undefined,
+          protos.google.logging.v2.ILogSink>): void;
+/**
+ * Lists sinks.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose sinks are to be listed:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [LogSink]{@link google.logging.v2.LogSink}.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of [LogSink]{@link google.logging.v2.LogSink} that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListSinksRequest]{@link google.logging.v2.ListSinksRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListSinksResponse]{@link google.logging.v2.ListSinksResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listSinks(
+      request: protos.google.logging.v2.IListSinksRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListSinksRequest,
+          protos.google.logging.v2.IListSinksResponse|null|undefined,
+          protos.google.logging.v2.ILogSink>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListSinksRequest,
+          protos.google.logging.v2.IListSinksResponse|null|undefined,
+          protos.google.logging.v2.ILogSink>):
+      Promise<[
+        protos.google.logging.v2.ILogSink[],
+        protos.google.logging.v2.IListSinksRequest|null,
+        protos.google.logging.v2.IListSinksResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1740,52 +1676,52 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listSinks(request, options, callback);
+    return this.innerApiCalls.listSinks(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listSinks}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listSinks} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource whose sinks are to be listed:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [LogSink]{@link google.logging.v2.LogSink} on 'data' event.
-   */
+/**
+ * Equivalent to {@link listSinks}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listSinks} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose sinks are to be listed:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [LogSink]{@link google.logging.v2.LogSink} on 'data' event.
+ */
   listSinksStream(
-    request?: protosTypes.google.logging.v2.IListSinksRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListSinksRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1793,101 +1729,149 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listSinks.createStream(
-      this._innerApiCalls.listSinks as gax.GaxCall,
+    return this.descriptors.page.listSinks.createStream(
+      this.innerApiCalls.listSinks as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+/**
+ * Equivalent to {@link listSinks}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose sinks are to be listed:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listSinksAsync(
+      request?: protos.google.logging.v2.IListSinksRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<protos.google.logging.v2.ILogSink>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      'parent': request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listSinks.asyncIterate(
+      this.innerApiCalls['listSinks'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogSink>;
+  }
   listExclusions(
-    request: protosTypes.google.logging.v2.IListExclusionsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListExclusionsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion[],
+        protos.google.logging.v2.IListExclusionsRequest|null,
+        protos.google.logging.v2.IListExclusionsResponse
+      ]>;
   listExclusions(
-    request: protosTypes.google.logging.v2.IListExclusionsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
-    >
-  ): void;
-  /**
-   * Lists all the exclusions in a parent resource.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource whose exclusions are to be listed.
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogExclusion]{@link google.logging.v2.LogExclusion}.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of [LogExclusion]{@link google.logging.v2.LogExclusion} that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListExclusionsRequest]{@link google.logging.v2.ListExclusionsRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListExclusionsResponse]{@link google.logging.v2.ListExclusionsResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListExclusionsRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListExclusionsRequest,
+          protos.google.logging.v2.IListExclusionsResponse|null|undefined,
+          protos.google.logging.v2.ILogExclusion>): void;
   listExclusions(
-    request: protosTypes.google.logging.v2.IListExclusionsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogExclusion[],
-          protosTypes.google.logging.v2.IListExclusionsRequest | null,
-          protosTypes.google.logging.v2.IListExclusionsResponse
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogExclusion[],
-      protosTypes.google.logging.v2.IListExclusionsRequest | null,
-      protosTypes.google.logging.v2.IListExclusionsResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListExclusionsRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListExclusionsRequest,
+          protos.google.logging.v2.IListExclusionsResponse|null|undefined,
+          protos.google.logging.v2.ILogExclusion>): void;
+/**
+ * Lists all the exclusions in a parent resource.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose exclusions are to be listed.
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [LogExclusion]{@link google.logging.v2.LogExclusion}.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of [LogExclusion]{@link google.logging.v2.LogExclusion} that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListExclusionsRequest]{@link google.logging.v2.ListExclusionsRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListExclusionsResponse]{@link google.logging.v2.ListExclusionsResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listExclusions(
+      request: protos.google.logging.v2.IListExclusionsRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListExclusionsRequest,
+          protos.google.logging.v2.IListExclusionsResponse|null|undefined,
+          protos.google.logging.v2.ILogExclusion>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListExclusionsRequest,
+          protos.google.logging.v2.IListExclusionsResponse|null|undefined,
+          protos.google.logging.v2.ILogExclusion>):
+      Promise<[
+        protos.google.logging.v2.ILogExclusion[],
+        protos.google.logging.v2.IListExclusionsRequest|null,
+        protos.google.logging.v2.IListExclusionsResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1896,52 +1880,52 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listExclusions(request, options, callback);
+    return this.innerApiCalls.listExclusions(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listExclusions}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listExclusions} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The parent resource whose exclusions are to be listed.
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [LogExclusion]{@link google.logging.v2.LogExclusion} on 'data' event.
-   */
+/**
+ * Equivalent to {@link listExclusions}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listExclusions} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose exclusions are to be listed.
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [LogExclusion]{@link google.logging.v2.LogExclusion} on 'data' event.
+ */
   listExclusionsStream(
-    request?: protosTypes.google.logging.v2.IListExclusionsRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListExclusionsRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1949,15 +1933,66 @@ export class ConfigServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listExclusions.createStream(
-      this._innerApiCalls.listExclusions as gax.GaxCall,
+    return this.descriptors.page.listExclusions.createStream(
+      this.innerApiCalls.listExclusions as gax.GaxCall,
       request,
       callSettings
     );
+  }
+
+/**
+ * Equivalent to {@link listExclusions}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent resource whose exclusions are to be listed.
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method. `pageToken` must be the value of
+ *   `nextPageToken` from the previous response. The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored. The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listExclusionsAsync(
+      request?: protos.google.logging.v2.IListExclusionsRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<protos.google.logging.v2.ILogExclusion>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      'parent': request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listExclusions.asyncIterate(
+      this.innerApiCalls['listExclusions'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogExclusion>;
   }
   // --------------------
   // -- Path templates --
@@ -1969,8 +2004,8 @@ export class ConfigServiceV2Client {
    * @param {string} billing_account
    * @returns {string} Resource name string.
    */
-  billingAccountCmekSettingsPath(billingAccount: string) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.render({
+  billingAccountCmekSettingsPath(billingAccount:string) {
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.render({
       billing_account: billingAccount,
     });
   }
@@ -1982,12 +2017,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_cmekSettings resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountCmekSettingsName(
-    billingAccountCmekSettingsName: string
-  ) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.match(
-      billingAccountCmekSettingsName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountCmekSettingsName(billingAccountCmekSettingsName: string) {
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.match(billingAccountCmekSettingsName).billing_account;
   }
 
   /**
@@ -1997,8 +2028,8 @@ export class ConfigServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  billingAccountExclusionPath(billingAccount: string, exclusion: string) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.render({
+  billingAccountExclusionPath(billingAccount:string,exclusion:string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.render({
       billing_account: billingAccount,
       exclusion,
     });
@@ -2011,12 +2042,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_exclusion resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountExclusionName(
-    billingAccountExclusionName: string
-  ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
-      billingAccountExclusionName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountExclusionName(billingAccountExclusionName: string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(billingAccountExclusionName).billing_account;
   }
 
   /**
@@ -2026,12 +2053,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_exclusion resource.
    * @returns {string} A string representing the exclusion.
    */
-  matchExclusionFromBillingAccountExclusionName(
-    billingAccountExclusionName: string
-  ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
-      billingAccountExclusionName
-    ).exclusion;
+  matchExclusionFromBillingAccountExclusionName(billingAccountExclusionName: string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(billingAccountExclusionName).exclusion;
   }
 
   /**
@@ -2042,12 +2065,8 @@ export class ConfigServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  billingAccountLocationBucketPath(
-    billingAccount: string,
-    location: string,
-    bucket: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.render({
+  billingAccountLocationBucketPath(billingAccount:string,location:string,bucket:string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.render({
       billing_account: billingAccount,
       location,
       bucket,
@@ -2061,12 +2080,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).billing_account;
   }
 
   /**
@@ -2076,12 +2091,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).location;
+  matchLocationFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).location;
   }
 
   /**
@@ -2091,12 +2102,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the bucket.
    */
-  matchBucketFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).bucket;
+  matchBucketFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).bucket;
   }
 
   /**
@@ -2106,8 +2113,8 @@ export class ConfigServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  billingAccountLogPath(billingAccount: string, log: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.render({
+  billingAccountLogPath(billingAccount:string,log:string) {
+    return this.pathTemplates.billingAccountLogPathTemplate.render({
       billing_account: billingAccount,
       log,
     });
@@ -2121,9 +2128,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the billing_account.
    */
   matchBillingAccountFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
-      billingAccountLogName
-    ).billing_account;
+    return this.pathTemplates.billingAccountLogPathTemplate.match(billingAccountLogName).billing_account;
   }
 
   /**
@@ -2134,9 +2139,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
-      billingAccountLogName
-    ).log;
+    return this.pathTemplates.billingAccountLogPathTemplate.match(billingAccountLogName).log;
   }
 
   /**
@@ -2146,8 +2149,8 @@ export class ConfigServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  billingAccountSinkPath(billingAccount: string, sink: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.render({
+  billingAccountSinkPath(billingAccount:string,sink:string) {
+    return this.pathTemplates.billingAccountSinkPathTemplate.render({
       billing_account: billingAccount,
       sink,
     });
@@ -2160,12 +2163,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing billing_account_sink resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountSinkName(
-    billingAccountSinkName: string
-  ) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
-      billingAccountSinkName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountSinkName(billingAccountSinkName: string) {
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(billingAccountSinkName).billing_account;
   }
 
   /**
@@ -2176,9 +2175,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromBillingAccountSinkName(billingAccountSinkName: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
-      billingAccountSinkName
-    ).sink;
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(billingAccountSinkName).sink;
   }
 
   /**
@@ -2187,8 +2184,8 @@ export class ConfigServiceV2Client {
    * @param {string} folder
    * @returns {string} Resource name string.
    */
-  folderCmekSettingsPath(folder: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.render({
+  folderCmekSettingsPath(folder:string) {
+    return this.pathTemplates.folderCmekSettingsPathTemplate.render({
       folder,
     });
   }
@@ -2201,9 +2198,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderCmekSettingsName(folderCmekSettingsName: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.match(
-      folderCmekSettingsName
-    ).folder;
+    return this.pathTemplates.folderCmekSettingsPathTemplate.match(folderCmekSettingsName).folder;
   }
 
   /**
@@ -2213,8 +2208,8 @@ export class ConfigServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  folderExclusionPath(folder: string, exclusion: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
+  folderExclusionPath(folder:string,exclusion:string) {
+    return this.pathTemplates.folderExclusionPathTemplate.render({
       folder,
       exclusion,
     });
@@ -2228,9 +2223,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).folder;
+    return this.pathTemplates.folderExclusionPathTemplate.match(folderExclusionName).folder;
   }
 
   /**
@@ -2241,9 +2234,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).exclusion;
+    return this.pathTemplates.folderExclusionPathTemplate.match(folderExclusionName).exclusion;
   }
 
   /**
@@ -2254,8 +2245,8 @@ export class ConfigServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  folderLocationBucketPath(folder: string, location: string, bucket: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.render({
+  folderLocationBucketPath(folder:string,location:string,bucket:string) {
+    return this.pathTemplates.folderLocationBucketPathTemplate.render({
       folder,
       location,
       bucket,
@@ -2270,9 +2261,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).folder;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).folder;
   }
 
   /**
@@ -2283,9 +2272,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).location;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).location;
   }
 
   /**
@@ -2296,9 +2283,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).bucket;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).bucket;
   }
 
   /**
@@ -2308,8 +2293,8 @@ export class ConfigServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  folderLogPath(folder: string, log: string) {
-    return this._pathTemplates.folderLogPathTemplate.render({
+  folderLogPath(folder:string,log:string) {
+    return this.pathTemplates.folderLogPathTemplate.render({
       folder,
       log,
     });
@@ -2323,8 +2308,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).folder;
   }
 
   /**
@@ -2335,7 +2319,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
   }
 
   /**
@@ -2345,8 +2329,8 @@ export class ConfigServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  folderSinkPath(folder: string, sink: string) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
+  folderSinkPath(folder:string,sink:string) {
+    return this.pathTemplates.folderSinkPathTemplate.render({
       folder,
       sink,
     });
@@ -2360,8 +2344,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .folder;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).folder;
   }
 
   /**
@@ -2372,8 +2355,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).sink;
   }
 
   /**
@@ -2383,8 +2365,8 @@ export class ConfigServiceV2Client {
    * @param {string} location
    * @returns {string} Resource name string.
    */
-  locationPath(project: string, location: string) {
-    return this._pathTemplates.locationPathTemplate.render({
+  locationPath(project:string,location:string) {
+    return this.pathTemplates.locationPathTemplate.render({
       project,
       location,
     });
@@ -2398,7 +2380,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLocationName(locationName: string) {
-    return this._pathTemplates.locationPathTemplate.match(locationName).project;
+    return this.pathTemplates.locationPathTemplate.match(locationName).project;
   }
 
   /**
@@ -2409,8 +2391,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromLocationName(locationName: string) {
-    return this._pathTemplates.locationPathTemplate.match(locationName)
-      .location;
+    return this.pathTemplates.locationPathTemplate.match(locationName).location;
   }
 
   /**
@@ -2420,8 +2401,8 @@ export class ConfigServiceV2Client {
    * @param {string} metric
    * @returns {string} Resource name string.
    */
-  logMetricPath(project: string, metric: string) {
-    return this._pathTemplates.logMetricPathTemplate.render({
+  logMetricPath(project:string,metric:string) {
+    return this.pathTemplates.logMetricPathTemplate.render({
       project,
       metric,
     });
@@ -2435,8 +2416,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .project;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).project;
   }
 
   /**
@@ -2447,8 +2427,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the metric.
    */
   matchMetricFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .metric;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).metric;
   }
 
   /**
@@ -2457,8 +2436,8 @@ export class ConfigServiceV2Client {
    * @param {string} organization
    * @returns {string} Resource name string.
    */
-  organizationCmekSettingsPath(organization: string) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.render({
+  organizationCmekSettingsPath(organization:string) {
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.render({
       organization,
     });
   }
@@ -2470,12 +2449,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing organization_cmekSettings resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationCmekSettingsName(
-    organizationCmekSettingsName: string
-  ) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.match(
-      organizationCmekSettingsName
-    ).organization;
+  matchOrganizationFromOrganizationCmekSettingsName(organizationCmekSettingsName: string) {
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.match(organizationCmekSettingsName).organization;
   }
 
   /**
@@ -2485,8 +2460,8 @@ export class ConfigServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  organizationExclusionPath(organization: string, exclusion: string) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
+  organizationExclusionPath(organization:string,exclusion:string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.render({
       organization,
       exclusion,
     });
@@ -2499,12 +2474,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing organization_exclusion resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationExclusionName(
-    organizationExclusionName: string
-  ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).organization;
+  matchOrganizationFromOrganizationExclusionName(organizationExclusionName: string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.match(organizationExclusionName).organization;
   }
 
   /**
@@ -2514,12 +2485,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing organization_exclusion resource.
    * @returns {string} A string representing the exclusion.
    */
-  matchExclusionFromOrganizationExclusionName(
-    organizationExclusionName: string
-  ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).exclusion;
+  matchExclusionFromOrganizationExclusionName(organizationExclusionName: string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.match(organizationExclusionName).exclusion;
   }
 
   /**
@@ -2530,12 +2497,8 @@ export class ConfigServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  organizationLocationBucketPath(
-    organization: string,
-    location: string,
-    bucket: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.render({
+  organizationLocationBucketPath(organization:string,location:string,bucket:string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.render({
       organization,
       location,
       bucket,
@@ -2549,12 +2512,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).organization;
+  matchOrganizationFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).organization;
   }
 
   /**
@@ -2564,12 +2523,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).location;
+  matchLocationFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).location;
   }
 
   /**
@@ -2579,12 +2534,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the bucket.
    */
-  matchBucketFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).bucket;
+  matchBucketFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).bucket;
   }
 
   /**
@@ -2594,8 +2545,8 @@ export class ConfigServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  organizationLogPath(organization: string, log: string) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
+  organizationLogPath(organization:string,log:string) {
+    return this.pathTemplates.organizationLogPathTemplate.render({
       organization,
       log,
     });
@@ -2609,9 +2560,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).organization;
+    return this.pathTemplates.organizationLogPathTemplate.match(organizationLogName).organization;
   }
 
   /**
@@ -2622,9 +2571,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).log;
+    return this.pathTemplates.organizationLogPathTemplate.match(organizationLogName).log;
   }
 
   /**
@@ -2634,8 +2581,8 @@ export class ConfigServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  organizationSinkPath(organization: string, sink: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
+  organizationSinkPath(organization:string,sink:string) {
+    return this.pathTemplates.organizationSinkPathTemplate.render({
       organization,
       sink,
     });
@@ -2649,9 +2596,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).organization;
+    return this.pathTemplates.organizationSinkPathTemplate.match(organizationSinkName).organization;
   }
 
   /**
@@ -2662,9 +2607,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).sink;
+    return this.pathTemplates.organizationSinkPathTemplate.match(organizationSinkName).sink;
   }
 
   /**
@@ -2673,8 +2616,8 @@ export class ConfigServiceV2Client {
    * @param {string} project
    * @returns {string} Resource name string.
    */
-  projectPath(project: string) {
-    return this._pathTemplates.projectPathTemplate.render({
+  projectPath(project:string) {
+    return this.pathTemplates.projectPathTemplate.render({
       project,
     });
   }
@@ -2687,7 +2630,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectName(projectName: string) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -2696,8 +2639,8 @@ export class ConfigServiceV2Client {
    * @param {string} project
    * @returns {string} Resource name string.
    */
-  projectCmekSettingsPath(project: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.render({
+  projectCmekSettingsPath(project:string) {
+    return this.pathTemplates.projectCmekSettingsPathTemplate.render({
       project,
     });
   }
@@ -2710,9 +2653,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectCmekSettingsName(projectCmekSettingsName: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.match(
-      projectCmekSettingsName
-    ).project;
+    return this.pathTemplates.projectCmekSettingsPathTemplate.match(projectCmekSettingsName).project;
   }
 
   /**
@@ -2722,8 +2663,8 @@ export class ConfigServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  projectExclusionPath(project: string, exclusion: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.render({
+  projectExclusionPath(project:string,exclusion:string) {
+    return this.pathTemplates.projectExclusionPathTemplate.render({
       project,
       exclusion,
     });
@@ -2737,9 +2678,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
-      projectExclusionName
-    ).project;
+    return this.pathTemplates.projectExclusionPathTemplate.match(projectExclusionName).project;
   }
 
   /**
@@ -2750,9 +2689,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
-      projectExclusionName
-    ).exclusion;
+    return this.pathTemplates.projectExclusionPathTemplate.match(projectExclusionName).exclusion;
   }
 
   /**
@@ -2763,8 +2700,8 @@ export class ConfigServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  projectLocationBucketPath(project: string, location: string, bucket: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.render({
+  projectLocationBucketPath(project:string,location:string,bucket:string) {
+    return this.pathTemplates.projectLocationBucketPathTemplate.render({
       project,
       location,
       bucket,
@@ -2779,9 +2716,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).project;
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).project;
   }
 
   /**
@@ -2791,12 +2726,8 @@ export class ConfigServiceV2Client {
    *   A fully-qualified path representing project_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromProjectLocationBucketName(
-    projectLocationBucketName: string
-  ) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).location;
+  matchLocationFromProjectLocationBucketName(projectLocationBucketName: string) {
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).location;
   }
 
   /**
@@ -2807,9 +2738,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).bucket;
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).bucket;
   }
 
   /**
@@ -2819,8 +2748,8 @@ export class ConfigServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  projectLogPath(project: string, log: string) {
-    return this._pathTemplates.projectLogPathTemplate.render({
+  projectLogPath(project:string,log:string) {
+    return this.pathTemplates.projectLogPathTemplate.render({
       project,
       log,
     });
@@ -2834,8 +2763,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName)
-      .project;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).project;
   }
 
   /**
@@ -2846,7 +2774,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
   }
 
   /**
@@ -2856,8 +2784,8 @@ export class ConfigServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  projectSinkPath(project: string, sink: string) {
-    return this._pathTemplates.projectSinkPathTemplate.render({
+  projectSinkPath(project:string,sink:string) {
+    return this.pathTemplates.projectSinkPathTemplate.render({
       project,
       sink,
     });
@@ -2871,8 +2799,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
-      .project;
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName).project;
   }
 
   /**
@@ -2883,8 +2810,7 @@ export class ConfigServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
-      .sink;
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName).sink;
   }
 
   /**
