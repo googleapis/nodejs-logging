@@ -912,11 +912,7 @@ describe('v2.LoggingServiceV2Client', () => {
           },
         },
       };
-      const expectedResponse = [
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-      ];
+      const expectedResponse = ['', '', ''];
       client.innerApiCalls.listLogs = stubSimpleCall(expectedResponse);
       const [response] = await client.listLogs(request);
       assert.deepStrictEqual(response, expectedResponse);
@@ -945,11 +941,7 @@ describe('v2.LoggingServiceV2Client', () => {
           },
         },
       };
-      const expectedResponse = [
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-      ];
+      const expectedResponse = ['', '', ''];
       client.innerApiCalls.listLogs = stubSimpleCallWithCallback(
         expectedResponse
       );
@@ -1015,20 +1007,22 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
-      const expectedResponse = [
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-      ];
+      const expectedResponse = ['', '', ''];
+
       client.descriptors.page.listLogs.createStream = stubPageStreamingCall(
         expectedResponse
       );
       const stream = client.listLogsStream(request);
       const promise = new Promise((resolve, reject) => {
-        const responses: protosTYPE_STRING[] = [];
-        stream.on('data', (response: protosTYPE_STRING) => {
-          responses.push(response);
-        });
+        const responses: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING[] = [];
+        stream.on(
+          'data',
+          (
+            response: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING
+          ) => {
+            responses.push(response);
+          }
+        );
         stream.on('end', () => {
           resolve(responses);
         });
@@ -1068,8 +1062,8 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       const stream = client.listLogsStream(request);
       const promise = new Promise((resolve, reject) => {
-        const responses: protosTYPE_STRING[] = [];
-        stream.on('data', (response: protosTYPE_STRING) => {
+        const responses: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING[] = [];
+        stream.on('data', (response: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING) => {
           responses.push(response);
         });
         stream.on('end', () => {
@@ -1105,11 +1099,7 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
-      const expectedResponse = [
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-        generateSampleMessage(new protosTYPE_STRING()),
-      ];
+      const expectedResponse = ['','',''];
       client.descriptors.page.listLogs.asyncIterate = stubAsyncIterationCall(
         expectedResponse
       );

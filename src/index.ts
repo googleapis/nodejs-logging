@@ -186,24 +186,6 @@ export interface ServiceContext {
 }
 
 /**
- * @namespace google
- */
-/**
- * @namespace google.api
- */
-/**
- * @namespace google.logging
- */
-/**
- * @namespace google.logging.type
- */
-/**
- * @namespace google.logging.v2
- */
-/**
- * @namespace google.protobuf
- */
-/**
  * @typedef {object} ClientConfig
  * @property {string} [projectId] The project ID from the Google Developer's
  *     Console, e.g. 'grape-spaceship-123'. We will also check the environment
@@ -1364,3 +1346,4 @@ export {Logging};
 module.exports.v2 = v2;
 import * as protos from '../protos/protos';
 export {protos};
+export {v2}
