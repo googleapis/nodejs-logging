@@ -47,7 +47,7 @@ export interface LogOptions {
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
 }
 
-// tslint:disable-next-line no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Metadata = any;
 export type ApiResponse = [Metadata];
 export interface ApiResponseCallback {

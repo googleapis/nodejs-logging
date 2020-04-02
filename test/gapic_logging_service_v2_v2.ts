@@ -1063,9 +1063,14 @@ describe('v2.LoggingServiceV2Client', () => {
       const stream = client.listLogsStream(request);
       const promise = new Promise((resolve, reject) => {
         const responses: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING[] = [];
-        stream.on('data', (response: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING) => {
-          responses.push(response);
-        });
+        stream.on(
+          'data',
+          (
+            response: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING
+          ) => {
+            responses.push(response);
+          }
+        );
         stream.on('end', () => {
           resolve(responses);
         });
@@ -1099,7 +1104,7 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
-      const expectedResponse = ['','',''];
+      const expectedResponse = ['', '', ''];
       client.descriptors.page.listLogs.asyncIterate = stubAsyncIterationCall(
         expectedResponse
       );

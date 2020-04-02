@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
@@ -23,7 +23,9 @@ let fakeEventIdNewOverride: Function | null;
 
 class FakeEventId {
   new() {
-    return (fakeEventIdNewOverride || (() => {})).apply(null, arguments);
+    const func = fakeEventIdNewOverride || (() => {});
+    // eslint-disable-next-line prefer-rest-params
+    return func(null, arguments);
   }
 }
 
@@ -37,7 +39,7 @@ const structToObj = (struct: {}) => {
 };
 
 describe('Entry', () => {
-  // tslint:disable-next-line no-any variable-name
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let Entry: typeof entryTypes.Entry;
   let entry: entryTypes.Entry;
 
@@ -121,7 +123,7 @@ describe('Entry', () => {
           seconds: secondsRounded,
           nanos: Math.floor((seconds - secondsRounded) * 1e9),
         },
-        // tslint:disable-next-line: no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
     });
 
@@ -129,7 +131,7 @@ describe('Entry', () => {
       assert(entry instanceof Entry);
       assert.strictEqual(entry.metadata.resource, RESOURCE);
       assert.strictEqual(entry.data, DATA);
-      // tslint:disable-next-line: no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       assert.strictEqual((entry.metadata as any).extraProperty, true);
       assert.deepStrictEqual(entry.metadata.timestamp, date);
     });
@@ -140,7 +142,7 @@ describe('Entry', () => {
         payload: 'protoPayload',
         protoPayload: DATA,
         extraProperty: true,
-        // tslint:disable-next-line: no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
       assert.strictEqual(entry.data, DATA);
     });
@@ -155,7 +157,7 @@ describe('Entry', () => {
         payload: 'textPayload',
         textPayload: DATA as string,
         extraProperty: true,
-        // tslint:disable-next-line: no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
       assert.strictEqual(entry.data, DATA);

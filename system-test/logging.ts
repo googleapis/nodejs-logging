@@ -23,6 +23,8 @@ import {HOST_ADDRESS} from 'gcp-metadata';
 import * as nock from 'nock';
 import {Duplex} from 'stream';
 import {v4} from 'uuid';
+import {after, before} from 'mocha';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry} from '../src';
 
@@ -160,7 +162,7 @@ describe('Logging', async () => {
     async function getAndDelete(method: Function) {
       const [objects] = await method();
       return Promise.all(
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (objects as any[])
           .filter(o => {
             const name = o.name || o.id;
@@ -177,6 +179,7 @@ describe('Logging', async () => {
   describe('sinks', () => {
     it('should create a sink with a Bucket destination', async () => {
       const sink = logging.sink(generateName());
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, apiResponse] = await sink.create({
         destination: bucket,
       });
@@ -186,6 +189,7 @@ describe('Logging', async () => {
 
     it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, apiResponse] = await sink.create({destination: dataset});
 
       const destination = `bigquery.googleapis.com/datasets/${dataset.id}`;
@@ -201,6 +205,7 @@ describe('Logging', async () => {
 
     it('should create a sink with a Topic destination', async () => {
       const sink = logging.sink(generateName());
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, apiResponse] = await sink.create({destination: topic});
       const destination = 'pubsub.googleapis.com/' + topic.name;
 

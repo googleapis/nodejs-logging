@@ -67,7 +67,7 @@ export class ObjectToStructConverter {
    * //   }
    * // }
    */
-  // tslint:disable-next-line no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   convert(obj: any) {
     const convertedObject = {
       fields: {},
@@ -79,7 +79,7 @@ export class ObjectToStructConverter {
         if (is.undefined(value)) {
           continue;
         }
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (convertedObject as any).fields[prop] = this.encodeValue_(value);
       }
     }
@@ -101,7 +101,7 @@ export class ObjectToStructConverter {
    * //   stringValue: 'Hello!'
    * // }
    */
-  // tslint:disable-next-line no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   encodeValue_(value: {} | null): any {
     let convertedValue;
 
@@ -183,11 +183,12 @@ export class ObjectToStructConverter {
  * //   name: 'Stephen'
  * // }
  */
-// tslint:disable-next-line no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function structToObj(struct: any) {
-  // tslint:disable-next-line no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const convertedObject = {} as any;
   for (const prop in struct.fields) {
+    // eslint-disable-next-line no-prototype-builtins
     if (struct.fields.hasOwnProperty(prop)) {
       const value = struct.fields[prop];
       convertedObject[prop] = decodeValue(value);
@@ -203,7 +204,7 @@ export function structToObj(struct: any) {
  * @param {object} value - A Struct's Field message.
  * @return {*} - The decoded value.
  */
-// tslint:disable-next-line no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function decodeValue(value: any) {
   switch (value.kind) {
     case 'structValue': {

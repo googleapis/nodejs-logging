@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
@@ -22,9 +22,8 @@ import {Log as LOG, LogOptions, WriteOptions} from '../src/log';
 import {Data, EntryJson, LogEntry} from '../src/entry';
 
 describe('Log', () => {
-  // tslint:disable-next-line variable-name
   let Log: typeof LOG;
-  // tslint:disable-next-line no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let log: any;
 
   const PROJECT_ID = 'project-id';
@@ -618,7 +617,7 @@ describe('Log', () => {
   });
 
   describe('decorateEntries_', () => {
-    // tslint:disable-next-line no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let toJSONResponse: any;
     let logEntryStub: sinon.SinonStub;
     let toJSONStub: sinon.SinonStub;

@@ -15,15 +15,15 @@
  */
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach} from 'mocha';
 import * as http from 'http';
 import * as proxyquire from 'proxyquire';
 import {makeHeaderWrapper} from '../../src/middleware/context';
 
 const FAKE_CONTEXT = {
-  extract: (headerWrapper: {}) => {},
+  extract: () => {},
   generate: () => {},
-  inject: (headerWrapper: {}, spanContext: {}) => {},
+  inject: () => {},
 };
 
 const fakeContext = Object.assign({}, FAKE_CONTEXT);

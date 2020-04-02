@@ -15,7 +15,7 @@
  */
 
 import {Merge} from 'type-fest';
-// tslint:disable-next-line variable-name
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const EventId = require('eventid');
 import * as extend from 'extend';
 import * as is from 'is';
@@ -33,7 +33,7 @@ export type LogEntry = Merge<
     severity?: LogSeverity | null;
   }
 >;
-// tslint:disable-next-line no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
 export interface EntryJson {

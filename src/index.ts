@@ -21,8 +21,10 @@ import {callbackifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
 import * as gax from 'google-gax';
+// eslint-disable-next-line node/no-extraneous-import
 import {ClientReadableStream} from '@grpc/grpc-js';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as through from 'through2';
@@ -35,6 +37,7 @@ export {HttpRequest};
 export {detectServiceContext};
 
 const version = require('../../package.json').version;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const v2 = require('./v2');
 
 import {Entry, LogEntry} from './entry';
@@ -74,7 +77,7 @@ export interface AbortableDuplex extends Duplex {
 
 export interface CreateSinkRequest {
   // destination: Bucket|Dataset|Topic|string;
-  // tslint:disable-next-line no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   destination: any;
   filter?: string;
   includeChildren?: boolean;
@@ -662,7 +665,7 @@ class Logging {
             gaxStream.cancel();
           }
         };
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!(global as any).GCLOUD_SANDBOX_ENV) {
           requestStream.once('reading', () => {
             try {
@@ -682,7 +685,7 @@ class Logging {
             return;
           });
         }
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (userStream as any).setPipeline(requestStream, toEntryStream);
       });
     });
@@ -862,7 +865,7 @@ class Logging {
             .pipe(requestStream);
           return;
         });
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (userStream as any).setPipeline(requestStream, toLogStream);
       });
     });
@@ -986,6 +989,7 @@ class Logging {
    *   });
    */
   getSinksStream(options: GetSinksRequest) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     options = options || {};
     let requestStream: Duplex;
@@ -1021,7 +1025,7 @@ class Logging {
             gaxStream.cancel();
           }
         };
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!(global as any).GCLOUD_SANDBOX_ENV) {
           requestStream.once('reading', () => {
             try {
@@ -1041,7 +1045,7 @@ class Logging {
             return;
           });
         }
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (userStream as any).setPipeline(requestStream, toSinkStream);
       });
     });
@@ -1095,11 +1099,12 @@ class Logging {
    * @param {object} config.reqOpts Request options.
    * @param {function} [callback] Callback function.
    */
-  // tslint:disable-next-line no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   request<TResponse = any>(
     config: RequestConfig,
     callback?: RequestCallback<TResponse>
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const isStreamMode = !callback;
     let gaxStream: ClientReadableStream<LogSink | LogEntry>;
@@ -1139,7 +1144,7 @@ class Logging {
       });
     }
     function makeRequestCallback() {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((global as any).GCLOUD_SANDBOX_ENV) {
         return;
       }
@@ -1152,7 +1157,7 @@ class Logging {
       });
     }
     function makeRequestStream() {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((global as any).GCLOUD_SANDBOX_ENV) {
         return through.obj();
       }
@@ -1184,7 +1189,7 @@ class Logging {
    */
   async setAclForBucket_(config: CreateSinkRequest) {
     const bucket = config.destination as Bucket;
-    // tslint:disable-next-line no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (bucket.acl.owners as any).addGroup('cloud-logs@google.com');
     config.destination = 'storage.googleapis.com/' + bucket.name;
   }
@@ -1201,7 +1206,7 @@ class Logging {
   async setAclForDataset_(config: CreateSinkRequest) {
     const dataset = config.destination as Dataset;
     const [metadata] = await dataset.getMetadata();
-    // tslint:disable-next-line no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const access = ([] as any[]).slice.call(arrify(metadata.access));
     access.push({
       role: 'WRITER',
@@ -1239,6 +1244,7 @@ class Logging {
     config.destination = `${baseUrl}/${topicName}`;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async setProjectId(reqOpts: {}) {
     if (this.projectId === '{{projectId}}') {
       this.projectId = await this.auth.getProjectId();
@@ -1346,4 +1352,4 @@ export {Logging};
 module.exports.v2 = v2;
 import * as protos from '../protos/protos';
 export {protos};
-export {v2}
+export {v2};

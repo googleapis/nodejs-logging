@@ -15,7 +15,7 @@
  */
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach} from 'mocha';
 import * as EventEmitter from 'events';
 import * as proxyquire from 'proxyquire';
 
@@ -27,8 +27,8 @@ function makeFakeRequest() {
 
 function makeFakeResponse() {
   const ee = new EventEmitter.EventEmitter();
-  // tslint:disable-next-line:no-any
-  (ee as any).getHeader = (name: string) => {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (ee as any).getHeader = () => {};
   return ee;
 }
 
@@ -93,7 +93,7 @@ describe('middleware/express/make-middleware', () => {
         middleware(fakeRequest, fakeResponse, () => {});
 
         // Should annotate the request with the child logger.
-        // tslint:disable-next-line:no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual((fakeRequest as any).log, FAKE_CHILD_LOGGER);
       });
 

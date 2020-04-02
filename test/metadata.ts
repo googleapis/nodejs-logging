@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach, before, after, afterEach} from 'mocha';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
 import {GCPEnv} from 'google-auth-library';
@@ -62,10 +62,11 @@ const fakeFS = {
 };
 
 describe('metadata', () => {
-  // tslint:disable-next-line no-any variable-name
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let metadataCached: any;
-  // tslint:disable-next-line no-any variable-name
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let metadata: any;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let AUTH;
   const ENV_CACHED = extend({}, process.env);
 
