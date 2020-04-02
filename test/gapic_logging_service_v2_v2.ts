@@ -1008,7 +1008,6 @@ describe('v2.LoggingServiceV2Client', () => {
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
       const expectedResponse = ['', '', ''];
-
       client.descriptors.page.listLogs.createStream = stubPageStreamingCall(
         expectedResponse
       );
