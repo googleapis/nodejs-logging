@@ -21,9 +21,6 @@ import subprocess
 import os
 
 logging.basicConfig(level=logging.DEBUG)
-
-AUTOSYNTH_MULTIPLE_COMMITS = True
-
 s.metadata.set_track_obsolete_files(True)
 
 gapic = gcp.GAPICMicrogenerator()

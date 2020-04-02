@@ -17,19 +17,12 @@
 // ** All changes to this file may be overwritten. **
 
 import * as gax from 'google-gax';
-import {
-  APICallback,
-  Callback,
-  CallOptions,
-  Descriptors,
-  ClientOptions,
-  PaginationCallback,
-  PaginationResponse,
-} from 'google-gax';
+import {Callback, CallOptions, Descriptors, ClientOptions, PaginationCallback, GaxCall} from 'google-gax';
 import * as path from 'path';
 
-import {Transform} from 'stream';
-import * as protosTypes from '../../protos/protos';
+import { Transform } from 'stream';
+import { RequestType } from 'google-gax/build/src/apitypes';
+import * as protos from '../../protos/protos';
 import * as gapicConfig from './logging_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -40,14 +33,6 @@ const version = require('../../../package.json').version;
  * @memberof v2
  */
 export class LoggingServiceV2Client {
-  private _descriptors: Descriptors = {
-    page: {},
-    stream: {},
-    longrunning: {},
-    batching: {},
-  };
-  private _innerApiCalls: {[name: string]: Function};
-  private _pathTemplates: {[name: string]: gax.PathTemplate};
   private _terminated = false;
   private _opts: ClientOptions;
   private _gaxModule: typeof gax | typeof gax.fallback;
@@ -55,6 +40,9 @@ export class LoggingServiceV2Client {
   private _protos: {};
   private _defaults: {[method: string]: gax.CallSettings};
   auth: gax.GoogleAuth;
+  descriptors: Descriptors = {page: {}, stream: {}, longrunning: {}, batching: {}};
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
   loggingServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -86,12 +74,10 @@ export class LoggingServiceV2Client {
   constructor(opts?: ClientOptions) {
     // Ensure that options include the service address and port.
     const staticMembers = this.constructor as typeof LoggingServiceV2Client;
-    const servicePath =
-      opts && opts.servicePath
-        ? opts.servicePath
-        : opts && opts.apiEndpoint
-        ? opts.apiEndpoint
-        : staticMembers.servicePath;
+    const servicePath = opts && opts.servicePath ?
+        opts.servicePath :
+        ((opts && opts.apiEndpoint) ? opts.apiEndpoint :
+                                      staticMembers.servicePath);
     const port = opts && opts.port ? opts.port : staticMembers.port;
 
     if (!opts) {
@@ -101,8 +87,8 @@ export class LoggingServiceV2Client {
     opts.port = opts.port || port;
     opts.clientConfig = opts.clientConfig || {};
 
-    const isBrowser = typeof window !== 'undefined';
-    if (isBrowser) {
+    const isBrowser = (typeof window !== 'undefined');
+    if (isBrowser){
       opts.fallback = true;
     }
     // If we are in browser, we are already using fallback because of the
@@ -119,10 +105,13 @@ export class LoggingServiceV2Client {
     this._opts = opts;
 
     // Save the auth object to the client, for use by other methods.
-    this.auth = this._gaxGrpc.auth as gax.GoogleAuth;
+    this.auth = (this._gaxGrpc.auth as gax.GoogleAuth);
 
     // Determine the client header string.
-    const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version}`];
+    const clientHeader = [
+      `gax/${this._gaxModule.version}`,
+      `gapic/${version}`,
+    ];
     if (typeof process !== 'undefined' && 'versions' in process) {
       clientHeader.push(`gl-node/${process.versions.node}`);
     } else {
@@ -138,21 +127,18 @@ export class LoggingServiceV2Client {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback ?
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
-    this._pathTemplates = {
+    this.pathTemplates = {
       billingAccountCmekSettingsPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/cmekSettings'
       ),
@@ -224,43 +210,34 @@ export class LoggingServiceV2Client {
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
-    this._descriptors.page = {
-      listLogEntries: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'entries'
-      ),
-      listMonitoredResourceDescriptors: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'resourceDescriptors'
-      ),
-      listLogs: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'logNames'
-      ),
+    this.descriptors.page = {
+      listLogEntries:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'entries'),
+      listMonitoredResourceDescriptors:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'resourceDescriptors'),
+      listLogs:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'logNames')
     };
 
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
-    const protoFilesRoot = opts.fallback
-      ? this._gaxModule.protobuf.Root.fromJSON(
-          require('../../protos/protos.json')
-        )
-      : this._gaxModule.protobuf.loadSync(nodejsProtoPath);
+    const protoFilesRoot = opts.fallback ?
+      this._gaxModule.protobuf.Root.fromJSON(
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require("../../protos/protos.json")) :
+      this._gaxModule.protobuf.loadSync(nodejsProtoPath);
 
     // Some methods on this API support automatically batching
     // requests; denote this.
 
-    this._descriptors.batching = {
+    this.descriptors.batching = {
       WriteLogEntries: new this._gaxModule.BundleDescriptor(
         'entries',
-        ['log_name', 'resource', 'labels'],
+        ['log_name','resource','labels'],
         null,
         gax.createByteLengthFunction(
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           protoFilesRoot.lookupType('google.logging.v2.LogEntry') as any
         )
       ),
@@ -268,16 +245,13 @@ export class LoggingServiceV2Client {
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-      'google.logging.v2.LoggingServiceV2',
-      gapicConfig as gax.ClientConfig,
-      opts.clientConfig || {},
-      {'x-goog-api-client': clientHeader.join(' ')}
-    );
+        'google.logging.v2.LoggingServiceV2', gapicConfig as gax.ClientConfig,
+        opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
     // merely providing the destination and request information.
-    this._innerApiCalls = {};
+    this.innerApiCalls = {};
   }
 
   /**
@@ -300,27 +274,18 @@ export class LoggingServiceV2Client {
     // Put together the "service stub" for
     // google.logging.v2.LoggingServiceV2.
     this.loggingServiceV2Stub = this._gaxGrpc.createStub(
-      this._opts.fallback
-        ? (this._protos as protobuf.Root).lookupService(
-            'google.logging.v2.LoggingServiceV2'
-          )
-        : // tslint:disable-next-line no-any
+        this._opts.fallback ?
+          (this._protos as protobuf.Root).lookupService('google.logging.v2.LoggingServiceV2') :
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.logging.v2.LoggingServiceV2,
-      this._opts
-    ) as Promise<{[method: string]: Function}>;
+        this._opts) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const loggingServiceV2StubMethods = [
-      'deleteLog',
-      'writeLogEntries',
-      'listLogEntries',
-      'listMonitoredResourceDescriptors',
-      'listLogs',
-    ];
-
+    const loggingServiceV2StubMethods =
+        ['deleteLog', 'writeLogEntries', 'listLogEntries', 'listMonitoredResourceDescriptors', 'listLogs'];
     for (const methodName of loggingServiceV2StubMethods) {
-      const innerCallPromise = this.loggingServiceV2Stub.then(
+      const callPromise = this.loggingServiceV2Stub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -328,26 +293,19 @@ export class LoggingServiceV2Client {
           const func = stub[methodName];
           return func.apply(stub, args);
         },
-        (err: Error | null | undefined) => () => {
+        (err: Error|null|undefined) => () => {
           throw err;
-        }
-      );
+        });
 
       const apiCall = this._gaxModule.createApiCall(
-        innerCallPromise,
+        callPromise,
         this._defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.stream[methodName] ||
-          this._descriptors.longrunning[methodName]
+        this.descriptors.page[methodName] ||
+            this.descriptors.stream[methodName] ||
+            this.descriptors.longrunning[methodName]
       );
 
-      this._innerApiCalls[methodName] = (
-        argument: {},
-        callOptions?: CallOptions,
-        callback?: APICallback
-      ) => {
-        return apiCall(argument, callOptions, callback);
-      };
+      this.innerApiCalls[methodName] = apiCall;
     }
 
     return this.loggingServiceV2Stub;
@@ -385,7 +343,7 @@ export class LoggingServiceV2Client {
       'https://www.googleapis.com/auth/cloud-platform.read-only',
       'https://www.googleapis.com/auth/logging.admin',
       'https://www.googleapis.com/auth/logging.read',
-      'https://www.googleapis.com/auth/logging.write',
+      'https://www.googleapis.com/auth/logging.write'
     ];
   }
 
@@ -396,9 +354,8 @@ export class LoggingServiceV2Client {
    * @param {function(Error, string)} callback - the callback to
    *   be called with the current project Id.
    */
-  getProjectId(
-    callback?: Callback<string, undefined, undefined>
-  ): Promise<string> | void {
+  getProjectId(callback?: Callback<string, undefined, undefined>):
+      Promise<string>|void {
     if (callback) {
       this.auth.getProjectId(callback);
       return;
@@ -410,78 +367,73 @@ export class LoggingServiceV2Client {
   // -- Service calls --
   // -------------------
   deleteLog(
-    request: protosTypes.google.logging.v2.IDeleteLogRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IDeleteLogRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteLogRequest|undefined, {}|undefined
+      ]>;
   deleteLog(
-    request: protosTypes.google.logging.v2.IDeleteLogRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Deletes all the log entries in a log. The log reappears if it receives new
-   * entries. Log entries written shortly before the delete operation might not
-   * be deleted. Entries received after the delete operation with a timestamp
-   * before the operation will be deleted.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.logName
-   *   Required. The resource name of the log to delete:
-   *
-   *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
-   *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-   *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
-   *
-   *   `[LOG_ID]` must be URL-encoded. For example,
-   *   `"projects/my-project-id/logs/syslog"`,
-   *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
-   *   For more information about log names, see
-   *   {@link google.logging.v2.LogEntry|LogEntry}.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IDeleteLogRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogRequest|null|undefined,
+          {}|null|undefined>): void;
   deleteLog(
-    request: protosTypes.google.logging.v2.IDeleteLogRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IDeleteLogRequest,
+      callback: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Deletes all the log entries in a log. The log reappears if it receives new
+ * entries. Log entries written shortly before the delete operation might not
+ * be deleted. Entries received after the delete operation with a timestamp
+ * before the operation will be deleted.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.logName
+ *   Required. The resource name of the log to delete:
+ *
+ *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
+ *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+ *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
+ *
+ *   `[LOG_ID]` must be URL-encoded. For example,
+ *   `"projects/my-project-id/logs/syslog"`,
+ *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+ *   For more information about log names, see
+ *   {@link google.logging.v2.LogEntry|LogEntry}.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  deleteLog(
+      request: protos.google.logging.v2.IDeleteLogRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.IDeleteLogRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -490,547 +442,629 @@ export class LoggingServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      log_name: request.logName || '',
+      'log_name': request.logName || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteLog(request, options, callback);
+    return this.innerApiCalls.deleteLog(request, options, callback);
   }
   writeLogEntries(
-    request: protosTypes.google.logging.v2.IWriteLogEntriesRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
-    ]
-  >;
+      request: protos.google.logging.v2.IWriteLogEntriesRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.IWriteLogEntriesResponse,
+        protos.google.logging.v2.IWriteLogEntriesRequest|undefined, {}|undefined
+      ]>;
   writeLogEntries(
-    request: protosTypes.google.logging.v2.IWriteLogEntriesRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
-    >
-  ): void;
-  /**
-   * Writes log entries to Logging. This API method is the
-   * only way to send log entries to Logging. This method
-   * is used, directly or indirectly, by the Logging agent
-   * (fluentd) and all logging libraries configured to use Logging.
-   * A single request may contain log entries for a maximum of 1000
-   * different resources (projects, organizations, billing accounts or
-   * folders)
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} [request.logName]
-   *   Optional. A default log resource name that is assigned to all log entries
-   *   in `entries` that do not specify a value for `log_name`:
-   *
-   *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
-   *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-   *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
-   *
-   *   `[LOG_ID]` must be URL-encoded. For example:
-   *
-   *       "projects/my-project-id/logs/syslog"
-   *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
-   *
-   *   The permission `logging.logEntries.create` is needed on each project,
-   *   organization, billing account, or folder that is receiving new log
-   *   entries, whether the resource is specified in `logName` or in an
-   *   individual log entry.
-   * @param {google.api.MonitoredResource} [request.resource]
-   *   Optional. A default monitored resource object that is assigned to all log
-   *   entries in `entries` that do not specify a value for `resource`. Example:
-   *
-   *       { "type": "gce_instance",
-   *         "labels": {
-   *           "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
-   *
-   *   See {@link google.logging.v2.LogEntry|LogEntry}.
-   * @param {number[]} [request.labels]
-   *   Optional. Default labels that are added to the `labels` field of all log
-   *   entries in `entries`. If a log entry already has a label with the same key
-   *   as a label in this parameter, then the log entry's label is not changed.
-   *   See {@link google.logging.v2.LogEntry|LogEntry}.
-   * @param {number[]} request.entries
-   *   Required. The log entries to send to Logging. The order of log
-   *   entries in this list does not matter. Values supplied in this method's
-   *   `log_name`, `resource`, and `labels` fields are copied into those log
-   *   entries in this list that do not include values for their corresponding
-   *   fields. For more information, see the
-   *   {@link google.logging.v2.LogEntry|LogEntry} type.
-   *
-   *   If the `timestamp` or `insert_id` fields are missing in log entries, then
-   *   this method supplies the current time or a unique identifier, respectively.
-   *   The supplied values are chosen so that, among the log entries that did not
-   *   supply their own values, the entries earlier in the list will sort before
-   *   the entries later in the list. See the `entries.list` method.
-   *
-   *   Log entries with timestamps that are more than the
-   *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
-   *   24 hours in the future will not be available when calling `entries.list`.
-   *   However, those log entries can still be
-   *   [exported with LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
-   *
-   *   To improve throughput and to avoid exceeding the
-   *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
-   *   you should try to include several log entries in this list,
-   *   rather than calling this method for each individual log entry.
-   * @param {boolean} [request.partialSuccess]
-   *   Optional. Whether valid entries should be written even if some other
-   *   entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
-   *   entry is not written, then the response status is the error associated
-   *   with one of the failed entries and the response includes error details
-   *   keyed by the entries' zero-based index in the `entries.write` method.
-   * @param {boolean} [request.dryRun]
-   *   Optional. If true, the request should expect normal response, but the
-   *   entries won't be persisted nor exported. Useful for checking whether the
-   *   logging API endpoints are working properly before sending valuable data.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IWriteLogEntriesRequest,
+      options: gax.CallOptions,
+      callback: Callback<
+          protos.google.logging.v2.IWriteLogEntriesResponse,
+          protos.google.logging.v2.IWriteLogEntriesRequest|null|undefined,
+          {}|null|undefined>): void;
   writeLogEntries(
-    request: protosTypes.google.logging.v2.IWriteLogEntriesRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-          protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-          {} | undefined
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
-    ]
-  > | void {
+      request: protos.google.logging.v2.IWriteLogEntriesRequest,
+      callback: Callback<
+          protos.google.logging.v2.IWriteLogEntriesResponse,
+          protos.google.logging.v2.IWriteLogEntriesRequest|null|undefined,
+          {}|null|undefined>): void;
+/**
+ * Writes log entries to Logging. This API method is the
+ * only way to send log entries to Logging. This method
+ * is used, directly or indirectly, by the Logging agent
+ * (fluentd) and all logging libraries configured to use Logging.
+ * A single request may contain log entries for a maximum of 1000
+ * different resources (projects, organizations, billing accounts or
+ * folders)
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} [request.logName]
+ *   Optional. A default log resource name that is assigned to all log entries
+ *   in `entries` that do not specify a value for `log_name`:
+ *
+ *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
+ *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
+ *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
+ *
+ *   `[LOG_ID]` must be URL-encoded. For example:
+ *
+ *       "projects/my-project-id/logs/syslog"
+ *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+ *
+ *   The permission `logging.logEntries.create` is needed on each project,
+ *   organization, billing account, or folder that is receiving new log
+ *   entries, whether the resource is specified in `logName` or in an
+ *   individual log entry.
+ * @param {google.api.MonitoredResource} [request.resource]
+ *   Optional. A default monitored resource object that is assigned to all log
+ *   entries in `entries` that do not specify a value for `resource`. Example:
+ *
+ *       { "type": "gce_instance",
+ *         "labels": {
+ *           "zone": "us-central1-a", "instance_id": "00000000000000000000" }}
+ *
+ *   See {@link google.logging.v2.LogEntry|LogEntry}.
+ * @param {number[]} [request.labels]
+ *   Optional. Default labels that are added to the `labels` field of all log
+ *   entries in `entries`. If a log entry already has a label with the same key
+ *   as a label in this parameter, then the log entry's label is not changed.
+ *   See {@link google.logging.v2.LogEntry|LogEntry}.
+ * @param {number[]} request.entries
+ *   Required. The log entries to send to Logging. The order of log
+ *   entries in this list does not matter. Values supplied in this method's
+ *   `log_name`, `resource`, and `labels` fields are copied into those log
+ *   entries in this list that do not include values for their corresponding
+ *   fields. For more information, see the
+ *   {@link google.logging.v2.LogEntry|LogEntry} type.
+ *
+ *   If the `timestamp` or `insert_id` fields are missing in log entries, then
+ *   this method supplies the current time or a unique identifier, respectively.
+ *   The supplied values are chosen so that, among the log entries that did not
+ *   supply their own values, the entries earlier in the list will sort before
+ *   the entries later in the list. See the `entries.list` method.
+ *
+ *   Log entries with timestamps that are more than the
+ *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
+ *   24 hours in the future will not be available when calling `entries.list`.
+ *   However, those log entries can still be
+ *   [exported with LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
+ *
+ *   To improve throughput and to avoid exceeding the
+ *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
+ *   you should try to include several log entries in this list,
+ *   rather than calling this method for each individual log entry.
+ * @param {boolean} [request.partialSuccess]
+ *   Optional. Whether valid entries should be written even if some other
+ *   entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
+ *   entry is not written, then the response status is the error associated
+ *   with one of the failed entries and the response includes error details
+ *   keyed by the entries' zero-based index in the `entries.write` method.
+ * @param {boolean} [request.dryRun]
+ *   Optional. If true, the request should expect normal response, but the
+ *   entries won't be persisted nor exported. Useful for checking whether the
+ *   logging API endpoints are working properly before sending valuable data.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  writeLogEntries(
+      request: protos.google.logging.v2.IWriteLogEntriesRequest,
+      optionsOrCallback?: gax.CallOptions|Callback<
+          protos.google.logging.v2.IWriteLogEntriesResponse,
+          protos.google.logging.v2.IWriteLogEntriesRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.logging.v2.IWriteLogEntriesResponse,
+          protos.google.logging.v2.IWriteLogEntriesRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.logging.v2.IWriteLogEntriesResponse,
+        protos.google.logging.v2.IWriteLogEntriesRequest|undefined, {}|undefined
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
     this.initialize();
-    return this._innerApiCalls.writeLogEntries(request, options, callback);
+    return this.innerApiCalls.writeLogEntries(request, options, callback);
   }
 
   listLogEntries(
-    request: protosTypes.google.logging.v2.IListLogEntriesRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListLogEntriesRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.logging.v2.ILogEntry[],
+        protos.google.logging.v2.IListLogEntriesRequest|null,
+        protos.google.logging.v2.IListLogEntriesResponse
+      ]>;
   listLogEntries(
-    request: protosTypes.google.logging.v2.IListLogEntriesRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
-    >
-  ): void;
-  /**
-   * Lists log entries.  Use this method to retrieve log entries that originated
-   * from a project/folder/organization/billing account.  For ways to export log
-   * entries, see [Exporting Logs](https://cloud.google.com/logging/docs/export).
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string[]} request.resourceNames
-   *   Required. Names of one or more parent resources from which to
-   *   retrieve log entries:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   *
-   *
-   *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
-   *   match the filter are returned.  An empty filter matches all log entries in
-   *   the resources listed in `resource_names`. Referencing a parent resource
-   *   that is not listed in `resource_names` will cause the filter to return no
-   *   results.
-   *   The maximum length of the filter is 20000 characters.
-   * @param {string} [request.orderBy]
-   *   Optional. How the results should be sorted.  Presently, the only permitted
-   *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
-   *   option returns entries in order of increasing values of
-   *   `LogEntry.timestamp` (oldest first), and the second option returns entries
-   *   in order of decreasing timestamps (newest first).  Entries with equal
-   *   timestamps are returned in order of their `insert_id` values.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `next_page_token` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `page_token` must be the value of
-   *   `next_page_token` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogEntry]{@link google.logging.v2.LogEntry}.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of [LogEntry]{@link google.logging.v2.LogEntry} that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListLogEntriesRequest]{@link google.logging.v2.ListLogEntriesRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListLogEntriesResponse]{@link google.logging.v2.ListLogEntriesResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListLogEntriesRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListLogEntriesRequest,
+          protos.google.logging.v2.IListLogEntriesResponse|null|undefined,
+          protos.google.logging.v2.ILogEntry>): void;
   listLogEntries(
-    request: protosTypes.google.logging.v2.IListLogEntriesRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogEntry[],
-          protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-          protosTypes.google.logging.v2.IListLogEntriesResponse
-        >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
-    >
-  ): Promise<
-    [
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListLogEntriesRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListLogEntriesRequest,
+          protos.google.logging.v2.IListLogEntriesResponse|null|undefined,
+          protos.google.logging.v2.ILogEntry>): void;
+/**
+ * Lists log entries.  Use this method to retrieve log entries that originated
+ * from a project/folder/organization/billing account.  For ways to export log
+ * entries, see [Exporting Logs](https://cloud.google.com/logging/docs/export).
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string[]} request.resourceNames
+ *   Required. Names of one or more parent resources from which to
+ *   retrieve log entries:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ *
+ *
+ *   Projects listed in the `project_ids` field are added to this list.
+ * @param {string} [request.filter]
+ *   Optional. A filter that chooses which log entries to return.  See [Advanced
+ *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
+ *   match the filter are returned.  An empty filter matches all log entries in
+ *   the resources listed in `resource_names`. Referencing a parent resource
+ *   that is not listed in `resource_names` will cause the filter to return no
+ *   results.
+ *   The maximum length of the filter is 20000 characters.
+ * @param {string} [request.orderBy]
+ *   Optional. How the results should be sorted.  Presently, the only permitted
+ *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+ *   option returns entries in order of increasing values of
+ *   `LogEntry.timestamp` (oldest first), and the second option returns entries
+ *   in order of decreasing timestamps (newest first).  Entries with equal
+ *   timestamps are returned in order of their `insert_id` values.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `next_page_token` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `page_token` must be the value of
+ *   `next_page_token` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [LogEntry]{@link google.logging.v2.LogEntry}.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of [LogEntry]{@link google.logging.v2.LogEntry} that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListLogEntriesRequest]{@link google.logging.v2.ListLogEntriesRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListLogEntriesResponse]{@link google.logging.v2.ListLogEntriesResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listLogEntries(
+      request: protos.google.logging.v2.IListLogEntriesRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListLogEntriesRequest,
+          protos.google.logging.v2.IListLogEntriesResponse|null|undefined,
+          protos.google.logging.v2.ILogEntry>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListLogEntriesRequest,
+          protos.google.logging.v2.IListLogEntriesResponse|null|undefined,
+          protos.google.logging.v2.ILogEntry>):
+      Promise<[
+        protos.google.logging.v2.ILogEntry[],
+        protos.google.logging.v2.IListLogEntriesRequest|null,
+        protos.google.logging.v2.IListLogEntriesResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
     this.initialize();
-    return this._innerApiCalls.listLogEntries(request, options, callback);
+    return this.innerApiCalls.listLogEntries(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listLogEntries}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listLogEntries} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string[]} request.resourceNames
-   *   Required. Names of one or more parent resources from which to
-   *   retrieve log entries:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   *
-   *
-   *   Projects listed in the `project_ids` field are added to this list.
-   * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
-   *   match the filter are returned.  An empty filter matches all log entries in
-   *   the resources listed in `resource_names`. Referencing a parent resource
-   *   that is not listed in `resource_names` will cause the filter to return no
-   *   results.
-   *   The maximum length of the filter is 20000 characters.
-   * @param {string} [request.orderBy]
-   *   Optional. How the results should be sorted.  Presently, the only permitted
-   *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
-   *   option returns entries in order of increasing values of
-   *   `LogEntry.timestamp` (oldest first), and the second option returns entries
-   *   in order of decreasing timestamps (newest first).  Entries with equal
-   *   timestamps are returned in order of their `insert_id` values.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `next_page_token` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `page_token` must be the value of
-   *   `next_page_token` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [LogEntry]{@link google.logging.v2.LogEntry} on 'data' event.
-   */
+/**
+ * Equivalent to {@link listLogEntries}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listLogEntries} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string[]} request.resourceNames
+ *   Required. Names of one or more parent resources from which to
+ *   retrieve log entries:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ *
+ *
+ *   Projects listed in the `project_ids` field are added to this list.
+ * @param {string} [request.filter]
+ *   Optional. A filter that chooses which log entries to return.  See [Advanced
+ *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
+ *   match the filter are returned.  An empty filter matches all log entries in
+ *   the resources listed in `resource_names`. Referencing a parent resource
+ *   that is not listed in `resource_names` will cause the filter to return no
+ *   results.
+ *   The maximum length of the filter is 20000 characters.
+ * @param {string} [request.orderBy]
+ *   Optional. How the results should be sorted.  Presently, the only permitted
+ *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+ *   option returns entries in order of increasing values of
+ *   `LogEntry.timestamp` (oldest first), and the second option returns entries
+ *   in order of decreasing timestamps (newest first).  Entries with equal
+ *   timestamps are returned in order of their `insert_id` values.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `next_page_token` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `page_token` must be the value of
+ *   `next_page_token` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [LogEntry]{@link google.logging.v2.LogEntry} on 'data' event.
+ */
   listLogEntriesStream(
-    request?: protosTypes.google.logging.v2.IListLogEntriesRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListLogEntriesRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listLogEntries.createStream(
-      this._innerApiCalls.listLogEntries as gax.GaxCall,
+    return this.descriptors.page.listLogEntries.createStream(
+      this.innerApiCalls.listLogEntries as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+/**
+ * Equivalent to {@link listLogEntries}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string[]} request.resourceNames
+ *   Required. Names of one or more parent resources from which to
+ *   retrieve log entries:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ *
+ *
+ *   Projects listed in the `project_ids` field are added to this list.
+ * @param {string} [request.filter]
+ *   Optional. A filter that chooses which log entries to return.  See [Advanced
+ *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
+ *   match the filter are returned.  An empty filter matches all log entries in
+ *   the resources listed in `resource_names`. Referencing a parent resource
+ *   that is not listed in `resource_names` will cause the filter to return no
+ *   results.
+ *   The maximum length of the filter is 20000 characters.
+ * @param {string} [request.orderBy]
+ *   Optional. How the results should be sorted.  Presently, the only permitted
+ *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+ *   option returns entries in order of increasing values of
+ *   `LogEntry.timestamp` (oldest first), and the second option returns entries
+ *   in order of decreasing timestamps (newest first).  Entries with equal
+ *   timestamps are returned in order of their `insert_id` values.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `next_page_token` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `page_token` must be the value of
+ *   `next_page_token` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listLogEntriesAsync(
+      request?: protos.google.logging.v2.IListLogEntriesRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<protos.google.logging.v2.ILogEntry>{
+    request = request || {};
+    options = options || {};
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listLogEntries.asyncIterate(
+      this.innerApiCalls['listLogEntries'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogEntry>;
+  }
   listMonitoredResourceDescriptors(
-    request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        protos.google.api.IMonitoredResourceDescriptor[],
+        protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest|null,
+        protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      ]>;
   listMonitoredResourceDescriptors(
-    request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
-    >
-  ): void;
-  /**
-   * Lists the descriptors for monitored resource types used by Logging.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListMonitoredResourceDescriptorsRequest]{@link google.logging.v2.ListMonitoredResourceDescriptorsRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListMonitoredResourceDescriptorsResponse]{@link google.logging.v2.ListMonitoredResourceDescriptorsResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse|null|undefined,
+          protos.google.api.IMonitoredResourceDescriptor>): void;
   listMonitoredResourceDescriptors(
-    request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protosTypes.google.api.IMonitoredResourceDescriptor[],
-          protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-          protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
-        >,
-    callback?: Callback<
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
-    >
-  ): Promise<
-    [
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse|null|undefined,
+          protos.google.api.IMonitoredResourceDescriptor>): void;
+/**
+ * Lists the descriptors for monitored resource types used by Logging.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `pageToken` must be the value of
+ *   `nextPageToken` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListMonitoredResourceDescriptorsRequest]{@link google.logging.v2.ListMonitoredResourceDescriptorsRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListMonitoredResourceDescriptorsResponse]{@link google.logging.v2.ListMonitoredResourceDescriptorsResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listMonitoredResourceDescriptors(
+      request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse|null|undefined,
+          protos.google.api.IMonitoredResourceDescriptor>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse|null|undefined,
+          protos.google.api.IMonitoredResourceDescriptor>):
+      Promise<[
+        protos.google.api.IMonitoredResourceDescriptor[],
+        protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest|null,
+        protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
     this.initialize();
-    return this._innerApiCalls.listMonitoredResourceDescriptors(
-      request,
-      options,
-      callback
-    );
+    return this.innerApiCalls.listMonitoredResourceDescriptors(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listMonitoredResourceDescriptors}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listMonitoredResourceDescriptors} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} on 'data' event.
-   */
+/**
+ * Equivalent to {@link listMonitoredResourceDescriptors}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listMonitoredResourceDescriptors} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `pageToken` must be the value of
+ *   `nextPageToken` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} on 'data' event.
+ */
   listMonitoredResourceDescriptorsStream(
-    request?: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listMonitoredResourceDescriptors.createStream(
-      this._innerApiCalls.listMonitoredResourceDescriptors as gax.GaxCall,
+    return this.descriptors.page.listMonitoredResourceDescriptors.createStream(
+      this.innerApiCalls.listMonitoredResourceDescriptors as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+/**
+ * Equivalent to {@link listMonitoredResourceDescriptors}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `pageToken` must be the value of
+ *   `nextPageToken` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listMonitoredResourceDescriptorsAsync(
+      request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<protos.google.api.IMonitoredResourceDescriptor>{
+    request = request || {};
+    options = options || {};
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listMonitoredResourceDescriptors.asyncIterate(
+      this.innerApiCalls['listMonitoredResourceDescriptors'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.api.IMonitoredResourceDescriptor>;
+  }
   listLogs(
-    request: protosTypes.google.logging.v2.IListLogsRequest,
-    options?: gax.CallOptions
-  ): Promise<
-    [
-      string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
-    ]
-  >;
+      request: protos.google.logging.v2.IListLogsRequest,
+      options?: gax.CallOptions):
+      Promise<[
+        string[],
+        protos.google.logging.v2.IListLogsRequest|null,
+        protos.google.logging.v2.IListLogsResponse
+      ]>;
   listLogs(
-    request: protosTypes.google.logging.v2.IListLogsRequest,
-    options: gax.CallOptions,
-    callback: Callback<
-      string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
-    >
-  ): void;
-  /**
-   * Lists the logs in projects, organizations, folders, or billing accounts.
-   * Only logs that have entries are listed.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The resource name that owns the logs:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of string.
-   *   The client library support auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *
-   *   When autoPaginate: false is specified through options, the array has three elements.
-   *   The first element is Array of string that corresponds to
-   *   the one page received from the API server.
-   *   If the second element is not null it contains the request object of type [ListLogsRequest]{@link google.logging.v2.ListLogsRequest}
-   *   that can be used to obtain the next page of the results.
-   *   If it is null, the next page does not exist.
-   *   The third element contains the raw response received from the API server. Its type is
-   *   [ListLogsResponse]{@link google.logging.v2.ListLogsResponse}.
-   *
-   *   The promise has a method named "cancel" which cancels the ongoing API call.
-   */
+      request: protos.google.logging.v2.IListLogsRequest,
+      options: gax.CallOptions,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListLogsRequest,
+          protos.google.logging.v2.IListLogsResponse|null|undefined,
+          string>): void;
   listLogs(
-    request: protosTypes.google.logging.v2.IListLogsRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          string[],
-          protosTypes.google.logging.v2.IListLogsRequest | null,
-          protosTypes.google.logging.v2.IListLogsResponse
-        >,
-    callback?: Callback<
-      string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
-    >
-  ): Promise<
-    [
-      string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
-    ]
-  > | void {
+      request: protos.google.logging.v2.IListLogsRequest,
+      callback: PaginationCallback<
+          protos.google.logging.v2.IListLogsRequest,
+          protos.google.logging.v2.IListLogsResponse|null|undefined,
+          string>): void;
+/**
+ * Lists the logs in projects, organizations, folders, or billing accounts.
+ * Only logs that have entries are listed.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource name that owns the logs:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `pageToken` must be the value of
+ *   `nextPageToken` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of string.
+ *   The client library support auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *
+ *   When autoPaginate: false is specified through options, the array has three elements.
+ *   The first element is Array of string that corresponds to
+ *   the one page received from the API server.
+ *   If the second element is not null it contains the request object of type [ListLogsRequest]{@link google.logging.v2.ListLogsRequest}
+ *   that can be used to obtain the next page of the results.
+ *   If it is null, the next page does not exist.
+ *   The third element contains the raw response received from the API server. Its type is
+ *   [ListLogsResponse]{@link google.logging.v2.ListLogsResponse}.
+ *
+ *   The promise has a method named "cancel" which cancels the ongoing API call.
+ */
+  listLogs(
+      request: protos.google.logging.v2.IListLogsRequest,
+      optionsOrCallback?: gax.CallOptions|PaginationCallback<
+          protos.google.logging.v2.IListLogsRequest,
+          protos.google.logging.v2.IListLogsResponse|null|undefined,
+          string>,
+      callback?: PaginationCallback<
+          protos.google.logging.v2.IListLogsRequest,
+          protos.google.logging.v2.IListLogsResponse|null|undefined,
+          string>):
+      Promise<[
+        string[],
+        protos.google.logging.v2.IListLogsRequest|null,
+        protos.google.logging.v2.IListLogsResponse
+      ]>|void {
     request = request || {};
     let options: gax.CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as gax.CallOptions;
     }
     options = options || {};
@@ -1039,52 +1073,52 @@ export class LoggingServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listLogs(request, options, callback);
+    return this.innerApiCalls.listLogs(request, options, callback);
   }
 
-  /**
-   * Equivalent to {@link listLogs}, but returns a NodeJS Stream object.
-   *
-   * This fetches the paged responses for {@link listLogs} continuously
-   * and invokes the callback registered for 'data' event for each element in the
-   * responses.
-   *
-   * The returned object has 'end' method when no more elements are required.
-   *
-   * autoPaginate option will be ignored.
-   *
-   * @see {@link https://nodejs.org/api/stream.html}
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The resource name that owns the logs:
-   *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing string on 'data' event.
-   */
+/**
+ * Equivalent to {@link listLogs}, but returns a NodeJS Stream object.
+ *
+ * This fetches the paged responses for {@link listLogs} continuously
+ * and invokes the callback registered for 'data' event for each element in the
+ * responses.
+ *
+ * The returned object has 'end' method when no more elements are required.
+ *
+ * autoPaginate option will be ignored.
+ *
+ * @see {@link https://nodejs.org/api/stream.html}
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource name that owns the logs:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `pageToken` must be the value of
+ *   `nextPageToken` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing string on 'data' event.
+ */
   listLogsStream(
-    request?: protosTypes.google.logging.v2.IListLogsRequest,
-    options?: gax.CallOptions
-  ): Transform {
+      request?: protos.google.logging.v2.IListLogsRequest,
+      options?: gax.CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1092,15 +1126,66 @@ export class LoggingServiceV2Client {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listLogs.createStream(
-      this._innerApiCalls.listLogs as gax.GaxCall,
+    return this.descriptors.page.listLogs.createStream(
+      this.innerApiCalls.listLogs as gax.GaxCall,
       request,
       callSettings
     );
+  }
+
+/**
+ * Equivalent to {@link listLogs}, but returns an iterable object.
+ *
+ * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource name that owns the logs:
+ *
+ *       "projects/[PROJECT_ID]"
+ *       "organizations/[ORGANIZATION_ID]"
+ *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+ *       "folders/[FOLDER_ID]"
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of results to return from this request.
+ *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+ *   response indicates that more results might be available.
+ * @param {string} [request.pageToken]
+ *   Optional. If present, then retrieve the next batch of results from the
+ *   preceding call to this method.  `pageToken` must be the value of
+ *   `nextPageToken` from the previous response.  The values of other method
+ *   parameters should be identical to those in the previous call.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+ */
+  listLogsAsync(
+      request?: protos.google.logging.v2.IListLogsRequest,
+      options?: gax.CallOptions):
+    AsyncIterable<string>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      'parent': request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listLogs.asyncIterate(
+      this.innerApiCalls['listLogs'] as GaxCall,
+      request as unknown as RequestType,
+      callSettings
+    ) as AsyncIterable<string>;
   }
   // --------------------
   // -- Path templates --
@@ -1112,8 +1197,8 @@ export class LoggingServiceV2Client {
    * @param {string} billing_account
    * @returns {string} Resource name string.
    */
-  billingAccountCmekSettingsPath(billingAccount: string) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.render({
+  billingAccountCmekSettingsPath(billingAccount:string) {
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.render({
       billing_account: billingAccount,
     });
   }
@@ -1125,12 +1210,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_cmekSettings resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountCmekSettingsName(
-    billingAccountCmekSettingsName: string
-  ) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.match(
-      billingAccountCmekSettingsName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountCmekSettingsName(billingAccountCmekSettingsName: string) {
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.match(billingAccountCmekSettingsName).billing_account;
   }
 
   /**
@@ -1140,10 +1221,10 @@ export class LoggingServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  billingAccountExclusionPath(billingAccount: string, exclusion: string) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.render({
+  billingAccountExclusionPath(billingAccount:string,exclusion:string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.render({
       billing_account: billingAccount,
-      exclusion,
+      exclusion: exclusion,
     });
   }
 
@@ -1154,12 +1235,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_exclusion resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountExclusionName(
-    billingAccountExclusionName: string
-  ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
-      billingAccountExclusionName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountExclusionName(billingAccountExclusionName: string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(billingAccountExclusionName).billing_account;
   }
 
   /**
@@ -1169,12 +1246,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_exclusion resource.
    * @returns {string} A string representing the exclusion.
    */
-  matchExclusionFromBillingAccountExclusionName(
-    billingAccountExclusionName: string
-  ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
-      billingAccountExclusionName
-    ).exclusion;
+  matchExclusionFromBillingAccountExclusionName(billingAccountExclusionName: string) {
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(billingAccountExclusionName).exclusion;
   }
 
   /**
@@ -1185,15 +1258,11 @@ export class LoggingServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  billingAccountLocationBucketPath(
-    billingAccount: string,
-    location: string,
-    bucket: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.render({
+  billingAccountLocationBucketPath(billingAccount:string,location:string,bucket:string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.render({
       billing_account: billingAccount,
-      location,
-      bucket,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1204,12 +1273,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).billing_account;
   }
 
   /**
@@ -1219,12 +1284,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).location;
+  matchLocationFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).location;
   }
 
   /**
@@ -1234,12 +1295,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_location_bucket resource.
    * @returns {string} A string representing the bucket.
    */
-  matchBucketFromBillingAccountLocationBucketName(
-    billingAccountLocationBucketName: string
-  ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
-      billingAccountLocationBucketName
-    ).bucket;
+  matchBucketFromBillingAccountLocationBucketName(billingAccountLocationBucketName: string) {
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(billingAccountLocationBucketName).bucket;
   }
 
   /**
@@ -1249,10 +1306,10 @@ export class LoggingServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  billingAccountLogPath(billingAccount: string, log: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.render({
+  billingAccountLogPath(billingAccount:string,log:string) {
+    return this.pathTemplates.billingAccountLogPathTemplate.render({
       billing_account: billingAccount,
-      log,
+      log: log,
     });
   }
 
@@ -1264,9 +1321,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the billing_account.
    */
   matchBillingAccountFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
-      billingAccountLogName
-    ).billing_account;
+    return this.pathTemplates.billingAccountLogPathTemplate.match(billingAccountLogName).billing_account;
   }
 
   /**
@@ -1277,9 +1332,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
-      billingAccountLogName
-    ).log;
+    return this.pathTemplates.billingAccountLogPathTemplate.match(billingAccountLogName).log;
   }
 
   /**
@@ -1289,10 +1342,10 @@ export class LoggingServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  billingAccountSinkPath(billingAccount: string, sink: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.render({
+  billingAccountSinkPath(billingAccount:string,sink:string) {
+    return this.pathTemplates.billingAccountSinkPathTemplate.render({
       billing_account: billingAccount,
-      sink,
+      sink: sink,
     });
   }
 
@@ -1303,12 +1356,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing billing_account_sink resource.
    * @returns {string} A string representing the billing_account.
    */
-  matchBillingAccountFromBillingAccountSinkName(
-    billingAccountSinkName: string
-  ) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
-      billingAccountSinkName
-    ).billing_account;
+  matchBillingAccountFromBillingAccountSinkName(billingAccountSinkName: string) {
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(billingAccountSinkName).billing_account;
   }
 
   /**
@@ -1319,9 +1368,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromBillingAccountSinkName(billingAccountSinkName: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
-      billingAccountSinkName
-    ).sink;
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(billingAccountSinkName).sink;
   }
 
   /**
@@ -1330,9 +1377,9 @@ export class LoggingServiceV2Client {
    * @param {string} folder
    * @returns {string} Resource name string.
    */
-  folderCmekSettingsPath(folder: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.render({
-      folder,
+  folderCmekSettingsPath(folder:string) {
+    return this.pathTemplates.folderCmekSettingsPathTemplate.render({
+      folder: folder,
     });
   }
 
@@ -1344,9 +1391,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderCmekSettingsName(folderCmekSettingsName: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.match(
-      folderCmekSettingsName
-    ).folder;
+    return this.pathTemplates.folderCmekSettingsPathTemplate.match(folderCmekSettingsName).folder;
   }
 
   /**
@@ -1356,10 +1401,10 @@ export class LoggingServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  folderExclusionPath(folder: string, exclusion: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
-      folder,
-      exclusion,
+  folderExclusionPath(folder:string,exclusion:string) {
+    return this.pathTemplates.folderExclusionPathTemplate.render({
+      folder: folder,
+      exclusion: exclusion,
     });
   }
 
@@ -1371,9 +1416,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).folder;
+    return this.pathTemplates.folderExclusionPathTemplate.match(folderExclusionName).folder;
   }
 
   /**
@@ -1384,9 +1427,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
-      folderExclusionName
-    ).exclusion;
+    return this.pathTemplates.folderExclusionPathTemplate.match(folderExclusionName).exclusion;
   }
 
   /**
@@ -1397,11 +1438,11 @@ export class LoggingServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  folderLocationBucketPath(folder: string, location: string, bucket: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.render({
-      folder,
-      location,
-      bucket,
+  folderLocationBucketPath(folder:string,location:string,bucket:string) {
+    return this.pathTemplates.folderLocationBucketPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1413,9 +1454,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).folder;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).folder;
   }
 
   /**
@@ -1426,9 +1465,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).location;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).location;
   }
 
   /**
@@ -1439,9 +1476,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
-      folderLocationBucketName
-    ).bucket;
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(folderLocationBucketName).bucket;
   }
 
   /**
@@ -1451,10 +1486,10 @@ export class LoggingServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  folderLogPath(folder: string, log: string) {
-    return this._pathTemplates.folderLogPathTemplate.render({
-      folder,
-      log,
+  folderLogPath(folder:string,log:string) {
+    return this.pathTemplates.folderLogPathTemplate.render({
+      folder: folder,
+      log: log,
     });
   }
 
@@ -1466,8 +1501,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).folder;
   }
 
   /**
@@ -1478,7 +1512,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
   }
 
   /**
@@ -1488,10 +1522,10 @@ export class LoggingServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  folderSinkPath(folder: string, sink: string) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
-      folder,
-      sink,
+  folderSinkPath(folder:string,sink:string) {
+    return this.pathTemplates.folderSinkPathTemplate.render({
+      folder: folder,
+      sink: sink,
     });
   }
 
@@ -1503,8 +1537,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .folder;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).folder;
   }
 
   /**
@@ -1515,8 +1548,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).sink;
   }
 
   /**
@@ -1526,10 +1558,10 @@ export class LoggingServiceV2Client {
    * @param {string} metric
    * @returns {string} Resource name string.
    */
-  logMetricPath(project: string, metric: string) {
-    return this._pathTemplates.logMetricPathTemplate.render({
-      project,
-      metric,
+  logMetricPath(project:string,metric:string) {
+    return this.pathTemplates.logMetricPathTemplate.render({
+      project: project,
+      metric: metric,
     });
   }
 
@@ -1541,8 +1573,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .project;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).project;
   }
 
   /**
@@ -1553,8 +1584,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the metric.
    */
   matchMetricFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .metric;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).metric;
   }
 
   /**
@@ -1563,9 +1593,9 @@ export class LoggingServiceV2Client {
    * @param {string} organization
    * @returns {string} Resource name string.
    */
-  organizationCmekSettingsPath(organization: string) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.render({
-      organization,
+  organizationCmekSettingsPath(organization:string) {
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.render({
+      organization: organization,
     });
   }
 
@@ -1576,12 +1606,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing organization_cmekSettings resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationCmekSettingsName(
-    organizationCmekSettingsName: string
-  ) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.match(
-      organizationCmekSettingsName
-    ).organization;
+  matchOrganizationFromOrganizationCmekSettingsName(organizationCmekSettingsName: string) {
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.match(organizationCmekSettingsName).organization;
   }
 
   /**
@@ -1591,10 +1617,10 @@ export class LoggingServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  organizationExclusionPath(organization: string, exclusion: string) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
-      organization,
-      exclusion,
+  organizationExclusionPath(organization:string,exclusion:string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.render({
+      organization: organization,
+      exclusion: exclusion,
     });
   }
 
@@ -1605,12 +1631,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing organization_exclusion resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationExclusionName(
-    organizationExclusionName: string
-  ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).organization;
+  matchOrganizationFromOrganizationExclusionName(organizationExclusionName: string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.match(organizationExclusionName).organization;
   }
 
   /**
@@ -1620,12 +1642,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing organization_exclusion resource.
    * @returns {string} A string representing the exclusion.
    */
-  matchExclusionFromOrganizationExclusionName(
-    organizationExclusionName: string
-  ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
-      organizationExclusionName
-    ).exclusion;
+  matchExclusionFromOrganizationExclusionName(organizationExclusionName: string) {
+    return this.pathTemplates.organizationExclusionPathTemplate.match(organizationExclusionName).exclusion;
   }
 
   /**
@@ -1636,15 +1654,11 @@ export class LoggingServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  organizationLocationBucketPath(
-    organization: string,
-    location: string,
-    bucket: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.render({
-      organization,
-      location,
-      bucket,
+  organizationLocationBucketPath(organization:string,location:string,bucket:string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.render({
+      organization: organization,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1655,12 +1669,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the organization.
    */
-  matchOrganizationFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).organization;
+  matchOrganizationFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).organization;
   }
 
   /**
@@ -1670,12 +1680,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).location;
+  matchLocationFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).location;
   }
 
   /**
@@ -1685,12 +1691,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing organization_location_bucket resource.
    * @returns {string} A string representing the bucket.
    */
-  matchBucketFromOrganizationLocationBucketName(
-    organizationLocationBucketName: string
-  ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
-      organizationLocationBucketName
-    ).bucket;
+  matchBucketFromOrganizationLocationBucketName(organizationLocationBucketName: string) {
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(organizationLocationBucketName).bucket;
   }
 
   /**
@@ -1700,10 +1702,10 @@ export class LoggingServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  organizationLogPath(organization: string, log: string) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
-      organization,
-      log,
+  organizationLogPath(organization:string,log:string) {
+    return this.pathTemplates.organizationLogPathTemplate.render({
+      organization: organization,
+      log: log,
     });
   }
 
@@ -1715,9 +1717,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).organization;
+    return this.pathTemplates.organizationLogPathTemplate.match(organizationLogName).organization;
   }
 
   /**
@@ -1728,9 +1728,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
-      organizationLogName
-    ).log;
+    return this.pathTemplates.organizationLogPathTemplate.match(organizationLogName).log;
   }
 
   /**
@@ -1740,10 +1738,10 @@ export class LoggingServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  organizationSinkPath(organization: string, sink: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
-      organization,
-      sink,
+  organizationSinkPath(organization:string,sink:string) {
+    return this.pathTemplates.organizationSinkPathTemplate.render({
+      organization: organization,
+      sink: sink,
     });
   }
 
@@ -1755,9 +1753,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).organization;
+    return this.pathTemplates.organizationSinkPathTemplate.match(organizationSinkName).organization;
   }
 
   /**
@@ -1768,9 +1764,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
-      organizationSinkName
-    ).sink;
+    return this.pathTemplates.organizationSinkPathTemplate.match(organizationSinkName).sink;
   }
 
   /**
@@ -1779,9 +1773,9 @@ export class LoggingServiceV2Client {
    * @param {string} project
    * @returns {string} Resource name string.
    */
-  projectPath(project: string) {
-    return this._pathTemplates.projectPathTemplate.render({
-      project,
+  projectPath(project:string) {
+    return this.pathTemplates.projectPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1793,7 +1787,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectName(projectName: string) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -1802,9 +1796,9 @@ export class LoggingServiceV2Client {
    * @param {string} project
    * @returns {string} Resource name string.
    */
-  projectCmekSettingsPath(project: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.render({
-      project,
+  projectCmekSettingsPath(project:string) {
+    return this.pathTemplates.projectCmekSettingsPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1816,9 +1810,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectCmekSettingsName(projectCmekSettingsName: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.match(
-      projectCmekSettingsName
-    ).project;
+    return this.pathTemplates.projectCmekSettingsPathTemplate.match(projectCmekSettingsName).project;
   }
 
   /**
@@ -1828,10 +1820,10 @@ export class LoggingServiceV2Client {
    * @param {string} exclusion
    * @returns {string} Resource name string.
    */
-  projectExclusionPath(project: string, exclusion: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.render({
-      project,
-      exclusion,
+  projectExclusionPath(project:string,exclusion:string) {
+    return this.pathTemplates.projectExclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
     });
   }
 
@@ -1843,9 +1835,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
-      projectExclusionName
-    ).project;
+    return this.pathTemplates.projectExclusionPathTemplate.match(projectExclusionName).project;
   }
 
   /**
@@ -1856,9 +1846,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
-      projectExclusionName
-    ).exclusion;
+    return this.pathTemplates.projectExclusionPathTemplate.match(projectExclusionName).exclusion;
   }
 
   /**
@@ -1869,11 +1857,11 @@ export class LoggingServiceV2Client {
    * @param {string} bucket
    * @returns {string} Resource name string.
    */
-  projectLocationBucketPath(project: string, location: string, bucket: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.render({
-      project,
-      location,
-      bucket,
+  projectLocationBucketPath(project:string,location:string,bucket:string) {
+    return this.pathTemplates.projectLocationBucketPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1885,9 +1873,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).project;
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).project;
   }
 
   /**
@@ -1897,12 +1883,8 @@ export class LoggingServiceV2Client {
    *   A fully-qualified path representing project_location_bucket resource.
    * @returns {string} A string representing the location.
    */
-  matchLocationFromProjectLocationBucketName(
-    projectLocationBucketName: string
-  ) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).location;
+  matchLocationFromProjectLocationBucketName(projectLocationBucketName: string) {
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).location;
   }
 
   /**
@@ -1913,9 +1895,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
-      projectLocationBucketName
-    ).bucket;
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(projectLocationBucketName).bucket;
   }
 
   /**
@@ -1925,10 +1905,10 @@ export class LoggingServiceV2Client {
    * @param {string} log
    * @returns {string} Resource name string.
    */
-  projectLogPath(project: string, log: string) {
-    return this._pathTemplates.projectLogPathTemplate.render({
-      project,
-      log,
+  projectLogPath(project:string,log:string) {
+    return this.pathTemplates.projectLogPathTemplate.render({
+      project: project,
+      log: log,
     });
   }
 
@@ -1940,8 +1920,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName)
-      .project;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).project;
   }
 
   /**
@@ -1952,7 +1931,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
   }
 
   /**
@@ -1962,10 +1941,10 @@ export class LoggingServiceV2Client {
    * @param {string} sink
    * @returns {string} Resource name string.
    */
-  projectSinkPath(project: string, sink: string) {
-    return this._pathTemplates.projectSinkPathTemplate.render({
-      project,
-      sink,
+  projectSinkPath(project:string,sink:string) {
+    return this.pathTemplates.projectSinkPathTemplate.render({
+      project: project,
+      sink: sink,
     });
   }
 
@@ -1977,8 +1956,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
-      .project;
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName).project;
   }
 
   /**
@@ -1989,8 +1967,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
-      .sink;
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName).sink;
   }
 
   /**
