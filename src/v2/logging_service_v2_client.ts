@@ -18,18 +18,18 @@
 
 import * as gax from 'google-gax';
 import {
-  APICallback,
   Callback,
   CallOptions,
   Descriptors,
   ClientOptions,
   PaginationCallback,
-  PaginationResponse,
+  GaxCall,
 } from 'google-gax';
 import * as path from 'path';
 
 import {Transform} from 'stream';
-import * as protosTypes from '../../protos/protos';
+import {RequestType} from 'google-gax/build/src/apitypes';
+import * as protos from '../../protos/protos';
 import * as gapicConfig from './logging_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -40,14 +40,6 @@ const version = require('../../../package.json').version;
  * @memberof v2
  */
 export class LoggingServiceV2Client {
-  private _descriptors: Descriptors = {
-    page: {},
-    stream: {},
-    longrunning: {},
-    batching: {},
-  };
-  private _innerApiCalls: {[name: string]: Function};
-  private _pathTemplates: {[name: string]: gax.PathTemplate};
   private _terminated = false;
   private _opts: ClientOptions;
   private _gaxModule: typeof gax | typeof gax.fallback;
@@ -55,6 +47,14 @@ export class LoggingServiceV2Client {
   private _protos: {};
   private _defaults: {[method: string]: gax.CallSettings};
   auth: gax.GoogleAuth;
+  descriptors: Descriptors = {
+    page: {},
+    stream: {},
+    longrunning: {},
+    batching: {},
+  };
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
   loggingServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -146,13 +146,16 @@ export class LoggingServiceV2Client {
       'protos.json'
     );
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback
+        ? // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require('../../protos/protos.json')
+        : nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
-    this._pathTemplates = {
+    this.pathTemplates = {
       billingAccountCmekSettingsPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/cmekSettings'
       ),
@@ -224,7 +227,7 @@ export class LoggingServiceV2Client {
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
-    this._descriptors.page = {
+    this.descriptors.page = {
       listLogEntries: new this._gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -247,6 +250,7 @@ export class LoggingServiceV2Client {
     // rather than holding a request open.
     const protoFilesRoot = opts.fallback
       ? this._gaxModule.protobuf.Root.fromJSON(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
           require('../../protos/protos.json')
         )
       : this._gaxModule.protobuf.loadSync(nodejsProtoPath);
@@ -254,13 +258,13 @@ export class LoggingServiceV2Client {
     // Some methods on this API support automatically batching
     // requests; denote this.
 
-    this._descriptors.batching = {
+    this.descriptors.batching = {
       WriteLogEntries: new this._gaxModule.BundleDescriptor(
         'entries',
         ['log_name', 'resource', 'labels'],
         null,
         gax.createByteLengthFunction(
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           protoFilesRoot.lookupType('google.logging.v2.LogEntry') as any
         )
       ),
@@ -277,7 +281,7 @@ export class LoggingServiceV2Client {
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
     // merely providing the destination and request information.
-    this._innerApiCalls = {};
+    this.innerApiCalls = {};
   }
 
   /**
@@ -304,7 +308,7 @@ export class LoggingServiceV2Client {
         ? (this._protos as protobuf.Root).lookupService(
             'google.logging.v2.LoggingServiceV2'
           )
-        : // tslint:disable-next-line no-any
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.logging.v2.LoggingServiceV2,
       this._opts
     ) as Promise<{[method: string]: Function}>;
@@ -318,9 +322,8 @@ export class LoggingServiceV2Client {
       'listMonitoredResourceDescriptors',
       'listLogs',
     ];
-
     for (const methodName of loggingServiceV2StubMethods) {
-      const innerCallPromise = this.loggingServiceV2Stub.then(
+      const callPromise = this.loggingServiceV2Stub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -334,20 +337,14 @@ export class LoggingServiceV2Client {
       );
 
       const apiCall = this._gaxModule.createApiCall(
-        innerCallPromise,
+        callPromise,
         this._defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.stream[methodName] ||
-          this._descriptors.longrunning[methodName]
+        this.descriptors.page[methodName] ||
+          this.descriptors.stream[methodName] ||
+          this.descriptors.longrunning[methodName]
       );
 
-      this._innerApiCalls[methodName] = (
-        argument: {},
-        callOptions?: CallOptions,
-        callback?: APICallback
-      ) => {
-        return apiCall(argument, callOptions, callback);
-      };
+      this.innerApiCalls[methodName] = apiCall;
     }
 
     return this.loggingServiceV2Stub;
@@ -410,22 +407,30 @@ export class LoggingServiceV2Client {
   // -- Service calls --
   // -------------------
   deleteLog(
-    request: protosTypes.google.logging.v2.IDeleteLogRequest,
+    request: protos.google.logging.v2.IDeleteLogRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogRequest | undefined,
       {} | undefined
     ]
   >;
   deleteLog(
-    request: protosTypes.google.logging.v2.IDeleteLogRequest,
+    request: protos.google.logging.v2.IDeleteLogRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteLog(
+    request: protos.google.logging.v2.IDeleteLogRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -456,23 +461,23 @@ export class LoggingServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   deleteLog(
-    request: protosTypes.google.logging.v2.IDeleteLogRequest,
+    request: protos.google.logging.v2.IDeleteLogRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-          {} | undefined
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -493,25 +498,33 @@ export class LoggingServiceV2Client {
       log_name: request.logName || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteLog(request, options, callback);
+    return this.innerApiCalls.deleteLog(request, options, callback);
   }
   writeLogEntries(
-    request: protosTypes.google.logging.v2.IWriteLogEntriesRequest,
+    request: protos.google.logging.v2.IWriteLogEntriesRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
+      protos.google.logging.v2.IWriteLogEntriesResponse,
+      protos.google.logging.v2.IWriteLogEntriesRequest | undefined,
       {} | undefined
     ]
   >;
   writeLogEntries(
-    request: protosTypes.google.logging.v2.IWriteLogEntriesRequest,
+    request: protos.google.logging.v2.IWriteLogEntriesRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.IWriteLogEntriesResponse,
+      protos.google.logging.v2.IWriteLogEntriesRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  writeLogEntries(
+    request: protos.google.logging.v2.IWriteLogEntriesRequest,
+    callback: Callback<
+      protos.google.logging.v2.IWriteLogEntriesResponse,
+      protos.google.logging.v2.IWriteLogEntriesRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -598,23 +611,23 @@ export class LoggingServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   writeLogEntries(
-    request: protosTypes.google.logging.v2.IWriteLogEntriesRequest,
+    request: protos.google.logging.v2.IWriteLogEntriesRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-          protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.IWriteLogEntriesResponse,
+          protos.google.logging.v2.IWriteLogEntriesRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.IWriteLogEntriesResponse,
+      protos.google.logging.v2.IWriteLogEntriesRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.IWriteLogEntriesResponse,
-      protosTypes.google.logging.v2.IWriteLogEntriesRequest | undefined,
+      protos.google.logging.v2.IWriteLogEntriesResponse,
+      protos.google.logging.v2.IWriteLogEntriesRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -628,26 +641,34 @@ export class LoggingServiceV2Client {
     }
     options = options || {};
     this.initialize();
-    return this._innerApiCalls.writeLogEntries(request, options, callback);
+    return this.innerApiCalls.writeLogEntries(request, options, callback);
   }
 
   listLogEntries(
-    request: protosTypes.google.logging.v2.IListLogEntriesRequest,
+    request: protos.google.logging.v2.IListLogEntriesRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
+      protos.google.logging.v2.ILogEntry[],
+      protos.google.logging.v2.IListLogEntriesRequest | null,
+      protos.google.logging.v2.IListLogEntriesResponse
     ]
   >;
   listLogEntries(
-    request: protosTypes.google.logging.v2.IListLogEntriesRequest,
+    request: protos.google.logging.v2.IListLogEntriesRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogEntriesRequest,
+      protos.google.logging.v2.IListLogEntriesResponse | null | undefined,
+      protos.google.logging.v2.ILogEntry
+    >
+  ): void;
+  listLogEntries(
+    request: protos.google.logging.v2.IListLogEntriesRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogEntriesRequest,
+      protos.google.logging.v2.IListLogEntriesResponse | null | undefined,
+      protos.google.logging.v2.ILogEntry
     >
   ): void;
   /**
@@ -711,24 +732,24 @@ export class LoggingServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listLogEntries(
-    request: protosTypes.google.logging.v2.IListLogEntriesRequest,
+    request: protos.google.logging.v2.IListLogEntriesRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogEntry[],
-          protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-          protosTypes.google.logging.v2.IListLogEntriesResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListLogEntriesRequest,
+          protos.google.logging.v2.IListLogEntriesResponse | null | undefined,
+          protos.google.logging.v2.ILogEntry
         >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListLogEntriesRequest,
+      protos.google.logging.v2.IListLogEntriesResponse | null | undefined,
+      protos.google.logging.v2.ILogEntry
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogEntry[],
-      protosTypes.google.logging.v2.IListLogEntriesRequest | null,
-      protosTypes.google.logging.v2.IListLogEntriesResponse
+      protos.google.logging.v2.ILogEntry[],
+      protos.google.logging.v2.IListLogEntriesRequest | null,
+      protos.google.logging.v2.IListLogEntriesResponse
     ]
   > | void {
     request = request || {};
@@ -741,7 +762,7 @@ export class LoggingServiceV2Client {
     }
     options = options || {};
     this.initialize();
-    return this._innerApiCalls.listLogEntries(request, options, callback);
+    return this.innerApiCalls.listLogEntries(request, options, callback);
   }
 
   /**
@@ -800,36 +821,111 @@ export class LoggingServiceV2Client {
    *   An object stream which emits an object representing [LogEntry]{@link google.logging.v2.LogEntry} on 'data' event.
    */
   listLogEntriesStream(
-    request?: protosTypes.google.logging.v2.IListLogEntriesRequest,
+    request?: protos.google.logging.v2.IListLogEntriesRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listLogEntries.createStream(
-      this._innerApiCalls.listLogEntries as gax.GaxCall,
+    return this.descriptors.page.listLogEntries.createStream(
+      this.innerApiCalls.listLogEntries as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+  /**
+   * Equivalent to {@link listLogEntries}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string[]} request.resourceNames
+   *   Required. Names of one or more parent resources from which to
+   *   retrieve log entries:
+   *
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
+   *
+   *
+   *   Projects listed in the `project_ids` field are added to this list.
+   * @param {string} [request.filter]
+   *   Optional. A filter that chooses which log entries to return.  See [Advanced
+   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
+   *   match the filter are returned.  An empty filter matches all log entries in
+   *   the resources listed in `resource_names`. Referencing a parent resource
+   *   that is not listed in `resource_names` will cause the filter to return no
+   *   results.
+   *   The maximum length of the filter is 20000 characters.
+   * @param {string} [request.orderBy]
+   *   Optional. How the results should be sorted.  Presently, the only permitted
+   *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
+   *   option returns entries in order of increasing values of
+   *   `LogEntry.timestamp` (oldest first), and the second option returns entries
+   *   in order of decreasing timestamps (newest first).  Entries with equal
+   *   timestamps are returned in order of their `insert_id` values.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored.  The presence of `next_page_token` in the
+   *   response indicates that more results might be available.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method.  `page_token` must be the value of
+   *   `next_page_token` from the previous response.  The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listLogEntriesAsync(
+    request?: protos.google.logging.v2.IListLogEntriesRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILogEntry> {
+    request = request || {};
+    options = options || {};
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listLogEntries.asyncIterate(
+      this.innerApiCalls['listLogEntries'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogEntry>;
+  }
   listMonitoredResourceDescriptors(
-    request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      protos.google.api.IMonitoredResourceDescriptor[],
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
     ]
   >;
   listMonitoredResourceDescriptors(
-    request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      | protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      | null
+      | undefined,
+      protos.google.api.IMonitoredResourceDescriptor
+    >
+  ): void;
+  listMonitoredResourceDescriptors(
+    request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      | protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      | null
+      | undefined,
+      protos.google.api.IMonitoredResourceDescriptor
     >
   ): void;
   /**
@@ -865,24 +961,28 @@ export class LoggingServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listMonitoredResourceDescriptors(
-    request: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          protosTypes.google.api.IMonitoredResourceDescriptor[],
-          protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-          protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+          | protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+          | null
+          | undefined,
+          protos.google.api.IMonitoredResourceDescriptor
         >,
-    callback?: Callback<
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+      | protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      | null
+      | undefined,
+      protos.google.api.IMonitoredResourceDescriptor
     >
   ): Promise<
     [
-      protosTypes.google.api.IMonitoredResourceDescriptor[],
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      protos.google.api.IMonitoredResourceDescriptor[],
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
     ]
   > | void {
     request = request || {};
@@ -895,7 +995,7 @@ export class LoggingServiceV2Client {
     }
     options = options || {};
     this.initialize();
-    return this._innerApiCalls.listMonitoredResourceDescriptors(
+    return this.innerApiCalls.listMonitoredResourceDescriptors(
       request,
       options,
       callback
@@ -932,36 +1032,81 @@ export class LoggingServiceV2Client {
    *   An object stream which emits an object representing [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} on 'data' event.
    */
   listMonitoredResourceDescriptorsStream(
-    request?: protosTypes.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listMonitoredResourceDescriptors.createStream(
-      this._innerApiCalls.listMonitoredResourceDescriptors as gax.GaxCall,
+    return this.descriptors.page.listMonitoredResourceDescriptors.createStream(
+      this.innerApiCalls.listMonitoredResourceDescriptors as gax.GaxCall,
       request,
       callSettings
     );
   }
+
+  /**
+   * Equivalent to {@link listMonitoredResourceDescriptors}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method.  `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.  The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listMonitoredResourceDescriptorsAsync(
+    request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.api.IMonitoredResourceDescriptor> {
+    request = request || {};
+    options = options || {};
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listMonitoredResourceDescriptors.asyncIterate(
+      this.innerApiCalls['listMonitoredResourceDescriptors'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.api.IMonitoredResourceDescriptor>;
+  }
   listLogs(
-    request: protosTypes.google.logging.v2.IListLogsRequest,
+    request: protos.google.logging.v2.IListLogsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
       string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
+      protos.google.logging.v2.IListLogsRequest | null,
+      protos.google.logging.v2.IListLogsResponse
     ]
   >;
   listLogs(
-    request: protosTypes.google.logging.v2.IListLogsRequest,
+    request: protos.google.logging.v2.IListLogsRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogsRequest,
+      protos.google.logging.v2.IListLogsResponse | null | undefined,
+      string
+    >
+  ): void;
+  listLogs(
+    request: protos.google.logging.v2.IListLogsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogsRequest,
+      protos.google.logging.v2.IListLogsResponse | null | undefined,
+      string
     >
   ): void;
   /**
@@ -1005,24 +1150,24 @@ export class LoggingServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listLogs(
-    request: protosTypes.google.logging.v2.IListLogsRequest,
+    request: protos.google.logging.v2.IListLogsRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          string[],
-          protosTypes.google.logging.v2.IListLogsRequest | null,
-          protosTypes.google.logging.v2.IListLogsResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListLogsRequest,
+          protos.google.logging.v2.IListLogsResponse | null | undefined,
+          string
         >,
-    callback?: Callback<
-      string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListLogsRequest,
+      protos.google.logging.v2.IListLogsResponse | null | undefined,
+      string
     >
   ): Promise<
     [
       string[],
-      protosTypes.google.logging.v2.IListLogsRequest | null,
-      protosTypes.google.logging.v2.IListLogsResponse
+      protos.google.logging.v2.IListLogsRequest | null,
+      protos.google.logging.v2.IListLogsResponse
     ]
   > | void {
     request = request || {};
@@ -1042,7 +1187,7 @@ export class LoggingServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listLogs(request, options, callback);
+    return this.innerApiCalls.listLogs(request, options, callback);
   }
 
   /**
@@ -1082,7 +1227,7 @@ export class LoggingServiceV2Client {
    *   An object stream which emits an object representing string on 'data' event.
    */
   listLogsStream(
-    request?: protosTypes.google.logging.v2.IListLogsRequest,
+    request?: protos.google.logging.v2.IListLogsRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
@@ -1096,11 +1241,62 @@ export class LoggingServiceV2Client {
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listLogs.createStream(
-      this._innerApiCalls.listLogs as gax.GaxCall,
+    return this.descriptors.page.listLogs.createStream(
+      this.innerApiCalls.listLogs as gax.GaxCall,
       request,
       callSettings
     );
+  }
+
+  /**
+   * Equivalent to {@link listLogs}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The resource name that owns the logs:
+   *
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method.  `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.  The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listLogsAsync(
+    request?: protos.google.logging.v2.IListLogsRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<string> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listLogs.asyncIterate(
+      this.innerApiCalls['listLogs'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<string>;
   }
   // --------------------
   // -- Path templates --
@@ -1113,7 +1309,7 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountCmekSettingsPath(billingAccount: string) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.render({
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.render({
       billing_account: billingAccount,
     });
   }
@@ -1128,7 +1324,7 @@ export class LoggingServiceV2Client {
   matchBillingAccountFromBillingAccountCmekSettingsName(
     billingAccountCmekSettingsName: string
   ) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.match(
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.match(
       billingAccountCmekSettingsName
     ).billing_account;
   }
@@ -1141,9 +1337,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountExclusionPath(billingAccount: string, exclusion: string) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.render({
+    return this.pathTemplates.billingAccountExclusionPathTemplate.render({
       billing_account: billingAccount,
-      exclusion,
+      exclusion: exclusion,
     });
   }
 
@@ -1157,7 +1353,7 @@ export class LoggingServiceV2Client {
   matchBillingAccountFromBillingAccountExclusionName(
     billingAccountExclusionName: string
   ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(
       billingAccountExclusionName
     ).billing_account;
   }
@@ -1172,7 +1368,7 @@ export class LoggingServiceV2Client {
   matchExclusionFromBillingAccountExclusionName(
     billingAccountExclusionName: string
   ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(
       billingAccountExclusionName
     ).exclusion;
   }
@@ -1190,10 +1386,10 @@ export class LoggingServiceV2Client {
     location: string,
     bucket: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.render({
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.render({
       billing_account: billingAccount,
-      location,
-      bucket,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1207,7 +1403,7 @@ export class LoggingServiceV2Client {
   matchBillingAccountFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).billing_account;
   }
@@ -1222,7 +1418,7 @@ export class LoggingServiceV2Client {
   matchLocationFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).location;
   }
@@ -1237,7 +1433,7 @@ export class LoggingServiceV2Client {
   matchBucketFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
   }
@@ -1250,9 +1446,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountLogPath(billingAccount: string, log: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.render({
+    return this.pathTemplates.billingAccountLogPathTemplate.render({
       billing_account: billingAccount,
-      log,
+      log: log,
     });
   }
 
@@ -1264,7 +1460,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the billing_account.
    */
   matchBillingAccountFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
+    return this.pathTemplates.billingAccountLogPathTemplate.match(
       billingAccountLogName
     ).billing_account;
   }
@@ -1277,7 +1473,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
+    return this.pathTemplates.billingAccountLogPathTemplate.match(
       billingAccountLogName
     ).log;
   }
@@ -1290,9 +1486,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountSinkPath(billingAccount: string, sink: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.render({
+    return this.pathTemplates.billingAccountSinkPathTemplate.render({
       billing_account: billingAccount,
-      sink,
+      sink: sink,
     });
   }
 
@@ -1306,7 +1502,7 @@ export class LoggingServiceV2Client {
   matchBillingAccountFromBillingAccountSinkName(
     billingAccountSinkName: string
   ) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(
       billingAccountSinkName
     ).billing_account;
   }
@@ -1319,7 +1515,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromBillingAccountSinkName(billingAccountSinkName: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(
       billingAccountSinkName
     ).sink;
   }
@@ -1331,8 +1527,8 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderCmekSettingsPath(folder: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.render({
-      folder,
+    return this.pathTemplates.folderCmekSettingsPathTemplate.render({
+      folder: folder,
     });
   }
 
@@ -1344,7 +1540,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderCmekSettingsName(folderCmekSettingsName: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.match(
+    return this.pathTemplates.folderCmekSettingsPathTemplate.match(
       folderCmekSettingsName
     ).folder;
   }
@@ -1357,9 +1553,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderExclusionPath(folder: string, exclusion: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
-      folder,
-      exclusion,
+    return this.pathTemplates.folderExclusionPathTemplate.render({
+      folder: folder,
+      exclusion: exclusion,
     });
   }
 
@@ -1371,7 +1567,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
+    return this.pathTemplates.folderExclusionPathTemplate.match(
       folderExclusionName
     ).folder;
   }
@@ -1384,7 +1580,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
+    return this.pathTemplates.folderExclusionPathTemplate.match(
       folderExclusionName
     ).exclusion;
   }
@@ -1398,10 +1594,10 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderLocationBucketPath(folder: string, location: string, bucket: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.render({
-      folder,
-      location,
-      bucket,
+    return this.pathTemplates.folderLocationBucketPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1413,7 +1609,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).folder;
   }
@@ -1426,7 +1622,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).location;
   }
@@ -1439,7 +1635,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
   }
@@ -1452,9 +1648,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderLogPath(folder: string, log: string) {
-    return this._pathTemplates.folderLogPathTemplate.render({
-      folder,
-      log,
+    return this.pathTemplates.folderLogPathTemplate.render({
+      folder: folder,
+      log: log,
     });
   }
 
@@ -1466,8 +1662,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).folder;
   }
 
   /**
@@ -1478,7 +1673,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
   }
 
   /**
@@ -1489,9 +1684,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderSinkPath(folder: string, sink: string) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
-      folder,
-      sink,
+    return this.pathTemplates.folderSinkPathTemplate.render({
+      folder: folder,
+      sink: sink,
     });
   }
 
@@ -1503,7 +1698,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName)
       .folder;
   }
 
@@ -1515,8 +1710,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).sink;
   }
 
   /**
@@ -1527,9 +1721,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   logMetricPath(project: string, metric: string) {
-    return this._pathTemplates.logMetricPathTemplate.render({
-      project,
-      metric,
+    return this.pathTemplates.logMetricPathTemplate.render({
+      project: project,
+      metric: metric,
     });
   }
 
@@ -1541,7 +1735,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName)
       .project;
   }
 
@@ -1553,8 +1747,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the metric.
    */
   matchMetricFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .metric;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).metric;
   }
 
   /**
@@ -1564,8 +1757,8 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationCmekSettingsPath(organization: string) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.render({
-      organization,
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.render({
+      organization: organization,
     });
   }
 
@@ -1579,7 +1772,7 @@ export class LoggingServiceV2Client {
   matchOrganizationFromOrganizationCmekSettingsName(
     organizationCmekSettingsName: string
   ) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.match(
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.match(
       organizationCmekSettingsName
     ).organization;
   }
@@ -1592,9 +1785,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationExclusionPath(organization: string, exclusion: string) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
-      organization,
-      exclusion,
+    return this.pathTemplates.organizationExclusionPathTemplate.render({
+      organization: organization,
+      exclusion: exclusion,
     });
   }
 
@@ -1608,7 +1801,7 @@ export class LoggingServiceV2Client {
   matchOrganizationFromOrganizationExclusionName(
     organizationExclusionName: string
   ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
+    return this.pathTemplates.organizationExclusionPathTemplate.match(
       organizationExclusionName
     ).organization;
   }
@@ -1623,7 +1816,7 @@ export class LoggingServiceV2Client {
   matchExclusionFromOrganizationExclusionName(
     organizationExclusionName: string
   ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
+    return this.pathTemplates.organizationExclusionPathTemplate.match(
       organizationExclusionName
     ).exclusion;
   }
@@ -1641,10 +1834,10 @@ export class LoggingServiceV2Client {
     location: string,
     bucket: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.render({
-      organization,
-      location,
-      bucket,
+    return this.pathTemplates.organizationLocationBucketPathTemplate.render({
+      organization: organization,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1658,7 +1851,7 @@ export class LoggingServiceV2Client {
   matchOrganizationFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).organization;
   }
@@ -1673,7 +1866,7 @@ export class LoggingServiceV2Client {
   matchLocationFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).location;
   }
@@ -1688,7 +1881,7 @@ export class LoggingServiceV2Client {
   matchBucketFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).bucket;
   }
@@ -1701,9 +1894,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationLogPath(organization: string, log: string) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
-      organization,
-      log,
+    return this.pathTemplates.organizationLogPathTemplate.render({
+      organization: organization,
+      log: log,
     });
   }
 
@@ -1715,7 +1908,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
+    return this.pathTemplates.organizationLogPathTemplate.match(
       organizationLogName
     ).organization;
   }
@@ -1728,7 +1921,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
+    return this.pathTemplates.organizationLogPathTemplate.match(
       organizationLogName
     ).log;
   }
@@ -1741,9 +1934,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationSinkPath(organization: string, sink: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
-      organization,
-      sink,
+    return this.pathTemplates.organizationSinkPathTemplate.render({
+      organization: organization,
+      sink: sink,
     });
   }
 
@@ -1755,7 +1948,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
+    return this.pathTemplates.organizationSinkPathTemplate.match(
       organizationSinkName
     ).organization;
   }
@@ -1768,7 +1961,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
+    return this.pathTemplates.organizationSinkPathTemplate.match(
       organizationSinkName
     ).sink;
   }
@@ -1780,8 +1973,8 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectPath(project: string) {
-    return this._pathTemplates.projectPathTemplate.render({
-      project,
+    return this.pathTemplates.projectPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1793,7 +1986,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectName(projectName: string) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -1803,8 +1996,8 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectCmekSettingsPath(project: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.render({
-      project,
+    return this.pathTemplates.projectCmekSettingsPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1816,7 +2009,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectCmekSettingsName(projectCmekSettingsName: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.match(
+    return this.pathTemplates.projectCmekSettingsPathTemplate.match(
       projectCmekSettingsName
     ).project;
   }
@@ -1829,9 +2022,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectExclusionPath(project: string, exclusion: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.render({
-      project,
-      exclusion,
+    return this.pathTemplates.projectExclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
     });
   }
 
@@ -1843,7 +2036,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
+    return this.pathTemplates.projectExclusionPathTemplate.match(
       projectExclusionName
     ).project;
   }
@@ -1856,7 +2049,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
+    return this.pathTemplates.projectExclusionPathTemplate.match(
       projectExclusionName
     ).exclusion;
   }
@@ -1870,10 +2063,10 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectLocationBucketPath(project: string, location: string, bucket: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.render({
-      project,
-      location,
-      bucket,
+    return this.pathTemplates.projectLocationBucketPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1885,7 +2078,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).project;
   }
@@ -1900,7 +2093,7 @@ export class LoggingServiceV2Client {
   matchLocationFromProjectLocationBucketName(
     projectLocationBucketName: string
   ) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).location;
   }
@@ -1913,7 +2106,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
   }
@@ -1926,9 +2119,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectLogPath(project: string, log: string) {
-    return this._pathTemplates.projectLogPathTemplate.render({
-      project,
-      log,
+    return this.pathTemplates.projectLogPathTemplate.render({
+      project: project,
+      log: log,
     });
   }
 
@@ -1940,7 +2133,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName)
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName)
       .project;
   }
 
@@ -1952,7 +2145,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
   }
 
   /**
@@ -1963,9 +2156,9 @@ export class LoggingServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectSinkPath(project: string, sink: string) {
-    return this._pathTemplates.projectSinkPathTemplate.render({
-      project,
-      sink,
+    return this.pathTemplates.projectSinkPathTemplate.render({
+      project: project,
+      sink: sink,
     });
   }
 
@@ -1977,7 +2170,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName)
       .project;
   }
 
@@ -1989,7 +2182,7 @@ export class LoggingServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName)
       .sink;
   }
 

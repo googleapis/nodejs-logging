@@ -14,11 +14,11 @@
 
 import * as callbackify from '@google-cloud/promisify';
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
-import {Sink as SINK, SetSinkMetadata} from '../src/sink';
+import {Sink as SINK} from '../src/sink';
 import {Logging, CreateSinkRequest, LogSink} from '../src/index';
 
 let callbackified = false;
@@ -156,7 +156,7 @@ describe('Sink', () => {
 
     it('should return original arguments', async () => {
       const ARGS = [{}, {}, {}];
-      sink.logging.configService.getSink = async (reqOpts: {}, gaxOpts: {}) => {
+      sink.logging.configService.getSink = async () => {
         return [ARGS];
       };
       const [args] = await sink.getMetadata();
@@ -180,13 +180,13 @@ describe('Sink', () => {
     const METADATA = {a: 'b', c: 'd'} as LogSink;
 
     beforeEach(() => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sink.getMetadata = async () => [METADATA] as any;
       sink.logging.auth.getProjectId = async () => PROJECT_ID;
     });
 
     it('should refresh the metadata', async () => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sink.getMetadata = () => [] as any;
       sink.logging.configService.updateSink = async () => {
         return [METADATA];
@@ -209,7 +209,7 @@ describe('Sink', () => {
 
     it('should execute gax method', async () => {
       const currentMetadata = {a: 'a', e: 'e'} as LogSink;
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sink.getMetadata = async () => [currentMetadata] as any;
       sink.logging.configService.updateSink = async (
         reqOpts: {},
@@ -243,10 +243,7 @@ describe('Sink', () => {
 
     it('should update metadata', async () => {
       const metadata = {};
-      sink.logging.configService.updateSink = async (
-        reqOpts: {},
-        gaxOpts: {}
-      ) => {
+      sink.logging.configService.updateSink = async () => {
         return [metadata];
       };
       await sink.setMetadata(metadata);
@@ -255,10 +252,7 @@ describe('Sink', () => {
 
     it('should return callback with original arguments', async () => {
       const ARGS = [{}, {}, {}];
-      sink.logging.configService.updateSink = async (
-        reqOpts: {},
-        gaxOpts: {}
-      ) => {
+      sink.logging.configService.updateSink = async () => {
         return [ARGS];
       };
       const [args] = await sink.setMetadata(METADATA);

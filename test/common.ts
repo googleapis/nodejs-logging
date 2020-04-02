@@ -17,7 +17,7 @@ import {
   ObjectToStructConverterConfig,
 } from '../src/common';
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach} from 'mocha';
 const OPTIONS = {
   maxRetries: 3,
 } as ObjectToStructConverterConfig;
@@ -32,7 +32,7 @@ describe('ObjectToStructConverter', () => {
   describe('instantiation', () => {
     it('should not require an options object', () => {
       assert.doesNotThrow(() => {
-        const x = new ObjectToStructConverter();
+        new ObjectToStructConverter();
       });
     });
 
@@ -67,7 +67,7 @@ describe('ObjectToStructConverter', () => {
         return convertedValue;
       };
 
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const struct: any = objectToStructConverter.convert({
         a: inputValue,
       });
@@ -103,7 +103,7 @@ describe('ObjectToStructConverter', () => {
       const obj = {};
       let objectAdded: {};
 
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (objectToStructConverter as any).seenObjects = {
         add(obj: {}) {
           objectAdded = obj;
@@ -159,7 +159,7 @@ describe('ObjectToStructConverter', () => {
 
     it('should throw if a type is not recognized', () => {
       assert.throws(() => {
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (objectToStructConverter as any).encodeValue_();
       }, /Value of type undefined not recognized./);
     });
@@ -172,7 +172,7 @@ describe('ObjectToStructConverter', () => {
         const convertedValue = {};
         objectToStructConverter.convert = value => {
           assert.strictEqual(value, VALUE);
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return convertedValue as any;
         };
 

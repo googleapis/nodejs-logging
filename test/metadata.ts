@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach, before, after, afterEach} from 'mocha';
 import BigNumber from 'bignumber.js';
 import * as extend from 'extend';
 import {GCPEnv} from 'google-auth-library';
@@ -62,10 +62,11 @@ const fakeFS = {
 };
 
 describe('metadata', () => {
-  // tslint:disable-next-line no-any variable-name
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let metadataCached: any;
-  // tslint:disable-next-line no-any variable-name
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let metadata: any;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let AUTH;
   const ENV_CACHED = extend({}, process.env);
 
@@ -335,7 +336,7 @@ describe('metadata', () => {
         });
 
         it('should deal with instance id being a BigNumber', async () => {
-          const INSTANCE_ID_STRING = `3279739563200103600`;
+          const INSTANCE_ID_STRING = '3279739563200103600';
           const INSTANCE_ID = new BigNumber(INSTANCE_ID_STRING);
           const ZONE_ID = 'cyrodiil-anvil-2';
           const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;

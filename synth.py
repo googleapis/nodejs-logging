@@ -41,11 +41,19 @@ v2_library = gapic.typescript_library(
         proto_path=f'/google/logging/{version}',
         extra_proto_files=['google/cloud/common_resources.proto'],
 )
-s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json"])
+s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json", "system-test/fixtures/sample/src/index.js", "system-test/fixtures/sample/src/index.ts"])
 # fix incorrect docs link
 s.replace('src/v2/config_service_v2_client.ts', '/logging/docs/routing/managed-encryption', 'https://cloud.google.com/logging/docs/routing/managed-encryption')
 s.replace('src/v2/logging_service_v2_client.ts', '/logging/docs/', 'https://cloud.google.com/logging/docs/')
 s.replace('src/v2/logging_service_v2_client.ts', '/logging/quota-policy', 'https://cloud.google.com/logging/quota-policy')
+# fix improper sample message type in unit test
+# this will be fixed in micro-gen
+s.replace('test/gapic_logging_service_v2_v2.ts', 
+'generateSampleMessage\(new protosTYPE\_STRING\(\)\)',
+'\'\'')
+s.replace('test/gapic_logging_service_v2_v2.ts', 
+'protosTYPE\_STRING',
+'protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING')
 
 # Copy in templated files
 common_templates = gcp.CommonTemplates()

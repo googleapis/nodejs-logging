@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {callbackifyAll, promisifyAll} from '@google-cloud/promisify';
+import {callbackifyAll} from '@google-cloud/promisify';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {

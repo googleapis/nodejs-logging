@@ -16,7 +16,7 @@ import {util} from '@google-cloud/common';
 import {CallbackifyAllOptions} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach, before} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as through from 'through2';
@@ -35,6 +35,7 @@ import {GetEntriesRequest} from '../src/log';
 import {Dataset} from '@google-cloud/bigquery';
 import {Bucket} from '@google-cloud/storage';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {v2} = require('../src');
 const version = require('../../package.json').version;
 
@@ -63,6 +64,7 @@ const fakePaginator = {
 
 let googleAuthOverride: Function | null;
 function fakeGoogleAuth() {
+  // eslint-disable-next-line prefer-spread,prefer-rest-params
   return (googleAuthOverride || noop).apply(null, arguments);
 }
 
@@ -72,6 +74,7 @@ let replaceProjectIdTokenOverride: Function | null;
 const fakeUtil = extend({}, util, {
   isCustomType() {
     if (isCustomTypeOverride) {
+      // eslint-disable-next-line prefer-spread,prefer-rest-params
       return isCustomTypeOverride.apply(null, arguments);
     }
     return false;
@@ -89,6 +92,7 @@ const fakeCallbackify = {
 const fakeProjectify = {
   replaceProjectIdToken(reqOpts: {}) {
     if (replaceProjectIdTokenOverride) {
+      // eslint-disable-next-line prefer-spread,prefer-rest-params
       return replaceProjectIdTokenOverride.apply(null, arguments);
     }
     return reqOpts;
@@ -102,9 +106,11 @@ function fakeV2() {}
 class FakeEntry {
   calledWith_: IArguments;
   constructor() {
+    // eslint-disable-next-line prefer-rest-params
     this.calledWith_ = arguments;
   }
   static fromApiResponse_() {
+    // eslint-disable-next-line prefer-rest-params
     return arguments;
   }
 }
@@ -112,6 +118,7 @@ class FakeEntry {
 class FakeLog {
   calledWith_: IArguments;
   constructor() {
+    // eslint-disable-next-line prefer-rest-params
     this.calledWith_ = arguments;
   }
 }
@@ -119,12 +126,12 @@ class FakeLog {
 class FakeSink {
   calledWith_: IArguments;
   constructor() {
+    // eslint-disable-next-line prefer-rest-params
     this.calledWith_ = arguments;
   }
 }
 
 describe('Logging', () => {
-  // tslint:disable-next-line variable-name
   let Logging: typeof LOGGING;
   let logging: LOGGING;
 
@@ -256,7 +263,7 @@ describe('Logging', () => {
 
     it('should throw if a name is not provided', () => {
       const error = new Error('A sink name must be provided.');
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (logging as any).createSink().then(noop, (err: Error) => {
         assert.deepStrictEqual(err, error);
       });
@@ -264,7 +271,7 @@ describe('Logging', () => {
 
     it('should throw if a config object is not provided', () => {
       const error = new Error('A sink configuration object must be provided.');
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (logging as any).createSink(SINK_NAME).then(noop, (err: Error) => {
         assert.deepStrictEqual(err, error);
       });
@@ -339,7 +346,7 @@ describe('Logging', () => {
         });
 
         logging.configService.createSink = async (
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           reqOpts: any,
           gaxOpts: {}
         ) => {
@@ -360,8 +367,9 @@ describe('Logging', () => {
         };
 
         logging.configService.createSink = async (
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           reqOpts: any,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           gaxOpts: {}
         ) => {
           assert.strictEqual(
@@ -383,7 +391,7 @@ describe('Logging', () => {
         } as {}) as CreateSinkRequest;
 
         logging.configService.createSink = async (
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           reqOpts: any,
           gaxOpts: {}
         ) => {
@@ -456,7 +464,7 @@ describe('Logging', () => {
     const DATA = {};
 
     it('should return an Entry object', () => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const entry = logging.entry(RESOURCE, DATA) as any;
       assert(entry instanceof FakeEntry);
       assert.strictEqual(entry.calledWith_[0], RESOURCE);
@@ -517,7 +525,7 @@ describe('Logging', () => {
         resourceNames: ['projects/' + logging.projectId],
       };
 
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       logging.loggingService.listLogEntries = async (reqOpts: any) => {
         assert.deepStrictEqual(reqOpts.resourceNames, [
           'projects/' + logging.projectId,
@@ -533,7 +541,7 @@ describe('Logging', () => {
         orderBy: 'timestamp asc',
       };
 
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       logging.loggingService.listLogEntries = async (reqOpts: any) => {
         assert.deepStrictEqual(reqOpts.orderBy, options.orderBy);
         return [[]];
@@ -552,7 +560,7 @@ describe('Logging', () => {
       };
 
       logging.loggingService.listLogEntries = async (
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         reqOpts: any,
         gaxOpts: {}
       ) => {
@@ -761,11 +769,11 @@ describe('Logging', () => {
       logging.setProjectId = async () => {
         return done(new Error('Should not have gotten project ID'));
       };
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).GCLOUD_SANDBOX_ENV = true;
       const stream = logging.getEntriesStream(OPTIONS);
       stream.emit('reading');
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).GCLOUD_SANDBOX_ENV;
       assert(stream instanceof require('stream'));
       done();
@@ -1023,7 +1031,7 @@ describe('Logging', () => {
     });
 
     describe('success', () => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ARGS: any = [
         [
           {
@@ -1127,11 +1135,11 @@ describe('Logging', () => {
       logging.setProjectId = async () => {
         return done(new Error('Should not have gotten project ID'));
       };
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).GCLOUD_SANDBOX_ENV = true;
       const stream = logging.getSinksStream(OPTIONS);
       stream.emit('reading');
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).GCLOUD_SANDBOX_ENV;
       assert(stream instanceof require('stream'));
       done();
@@ -1170,7 +1178,7 @@ describe('Logging', () => {
     const NAME = 'log-name';
 
     it('should return a Log object', () => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const log = logging.log(NAME) as any;
       assert(log instanceof FakeLog);
       assert.strictEqual(log.calledWith_[0], logging);
@@ -1198,7 +1206,7 @@ describe('Logging', () => {
         },
       };
 
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (logging.api as any)[CONFIG.client] = {
         [CONFIG.method]: noop,
       };
@@ -1238,7 +1246,7 @@ describe('Logging', () => {
         const fakeClient = {
           [CONFIG.method]: noop,
         };
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (fakeV2 as any)[CONFIG.client] = class {
           constructor(options: {}) {
             assert.strictEqual(options, logging.options);
@@ -1251,7 +1259,7 @@ describe('Logging', () => {
       });
 
       it('should use the cached client', done => {
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (fakeV2 as any)[CONFIG.client] = () => {
           done(new Error('Should not re-instantiate a GAX client.'));
         };
@@ -1268,7 +1276,7 @@ describe('Logging', () => {
           return replacedReqOpts;
         };
 
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (logging.api as any)[CONFIG.client][CONFIG.method] = {
           bind(gaxClient: {}, reqOpts: {}) {
             assert.strictEqual(reqOpts, replacedReqOpts);
@@ -1286,10 +1294,10 @@ describe('Logging', () => {
         (logging.auth.getProjectId as Function) = () => {
           done(new Error('Should not have gotten project ID.'));
         };
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (global as any).GCLOUD_SANDBOX_ENV = true;
         const returnValue = logging.request(CONFIG, assert.ifError);
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert.strictEqual(returnValue, undefined);
@@ -1297,7 +1305,7 @@ describe('Logging', () => {
       });
 
       it('should prepare the request', done => {
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (logging.api as any)[CONFIG.client][CONFIG.method] = {
           bind(gaxClient: {}, reqOpts: {}, gaxOpts: {}) {
             assert.strictEqual(gaxClient, logging.api[CONFIG.client]);
@@ -1342,7 +1350,7 @@ describe('Logging', () => {
 
       beforeEach(() => {
         GAX_STREAM = (through() as {}) as AbortableDuplex;
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (logging.api as any)[CONFIG.client][CONFIG.method] = {
           bind() {
             return () => GAX_STREAM;
@@ -1355,11 +1363,11 @@ describe('Logging', () => {
           done(new Error('Should not have gotten project ID.'));
         };
 
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (global as any).GCLOUD_SANDBOX_ENV = true;
         const returnValue = logging.request(CONFIG);
         returnValue.emit('reading');
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         delete (global as any).GCLOUD_SANDBOX_ENV;
 
         assert(returnValue instanceof require('stream'));
@@ -1374,7 +1382,7 @@ describe('Logging', () => {
       });
 
       it('should prepare the request once reading', done => {
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (logging.api as any)[CONFIG.client][CONFIG.method] = {
           bind(gaxClient: {}, reqOpts: {}, gaxOpts: {}) {
             assert.strictEqual(gaxClient, logging.api[CONFIG.client]);
@@ -1425,7 +1433,7 @@ describe('Logging', () => {
     const NAME = 'sink-name';
 
     it('should return a Log object', () => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sink = logging.sink(NAME) as any;
       assert(sink instanceof FakeSink);
       assert.strictEqual(sink.calledWith_[0], logging);
@@ -1434,7 +1442,6 @@ describe('Logging', () => {
   });
 
   describe('setAclForBucket_', () => {
-    const SINK_NAME = 'name';
     let CONFIG: CreateSinkRequest;
 
     let bucket: Bucket;
@@ -1447,7 +1454,7 @@ describe('Logging', () => {
             addGroup: noop,
           },
         },
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any;
 
       CONFIG = {
@@ -1456,7 +1463,7 @@ describe('Logging', () => {
     });
 
     it('should add cloud-logs as an owner', async () => {
-      // tslint:disable-next-line no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (bucket.acl.owners as any).addGroup = async (entity: {}) => {
         assert.strictEqual(entity, 'cloud-logs@google.com');
       };
@@ -1468,7 +1475,7 @@ describe('Logging', () => {
       const error = new Error('Error.');
 
       beforeEach(() => {
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (bucket.acl.owners as any).addGroup = async () => {
           throw error;
         };
@@ -1483,7 +1490,7 @@ describe('Logging', () => {
 
     describe('success', () => {
       beforeEach(() => {
-        // tslint:disable-next-line no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (bucket.acl.owners as any).addGroup = async () => {};
       });
 
@@ -1497,7 +1504,6 @@ describe('Logging', () => {
   });
 
   describe('setAclForDataset_', () => {
-    const SINK_NAME = 'name';
     let CONFIG: CreateSinkRequest;
     let dataset: Dataset;
 
@@ -1517,7 +1523,6 @@ describe('Logging', () => {
     describe('metadata refresh', () => {
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = {};
 
         beforeEach(() => {
           dataset.getMetadata = async () => {
@@ -1552,10 +1557,10 @@ describe('Logging', () => {
           };
 
           const expectedAccess =
-            // tslint:disable-next-line no-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ([] as any[]).slice.call(originalAccess).concat(access);
 
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (dataset.setMetadata as Function) = async (metadata: any) => {
             assert.deepStrictEqual(apiResponse.access, originalAccess);
             assert.deepStrictEqual(metadata.access, expectedAccess);
@@ -1566,7 +1571,6 @@ describe('Logging', () => {
 
         describe('updating metadata error', () => {
           const error = new Error('Error.');
-          const apiResponse = {};
 
           beforeEach(() => {
             dataset.setMetadata = async () => {
@@ -1590,7 +1594,7 @@ describe('Logging', () => {
             const expectedDestination = [
               'bigquery.googleapis.com',
               'projects',
-              // tslint:disable-next-line no-any
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (dataset.parent as any).projectId,
               'datasets',
               dataset.id,
@@ -1606,7 +1610,7 @@ describe('Logging', () => {
 
   describe('setAclForTopic_', () => {
     let CONFIG: CreateSinkRequest;
-    // tslint:disable-next-line no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let topic: any;
 
     beforeEach(() => {
@@ -1626,7 +1630,6 @@ describe('Logging', () => {
     describe('get policy', () => {
       describe('error', () => {
         const error = new Error('Error.');
-        const apiResponse = {};
 
         beforeEach(() => {
           topic.iam.getPolicy = async () => {
@@ -1660,7 +1663,7 @@ describe('Logging', () => {
             members: ['serviceAccount:cloud-logs@system.gserviceaccount.com'],
           };
 
-          // tslint:disable-next-line no-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const expectedBindings = ([] as any[]).slice.call(originalBindings);
           expectedBindings.push(binding);
 
@@ -1674,7 +1677,6 @@ describe('Logging', () => {
 
         describe('updating policy error', () => {
           const error = new Error('Error.');
-          const apiResponse = {};
 
           beforeEach(() => {
             topic.iam.setPolicy = async () => {
@@ -1690,8 +1692,6 @@ describe('Logging', () => {
         });
 
         describe('updating policy success', () => {
-          const apiResponse = {};
-
           beforeEach(() => {
             (topic.iam.setPolicy as Function) = async () => {};
           });

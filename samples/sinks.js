@@ -173,7 +173,7 @@ async function deleteSink(sinkName) {
 }
 
 async function main() {
-  require(`yargs`)
+  require('yargs')
     .demand(1)
     .command(
       'create <sinkName> <bucketName> [filter]',
@@ -222,7 +222,7 @@ async function main() {
     )
     .wrap(120)
     .recommendCommands()
-    .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
+    .epilogue('For more information, see https://cloud.google.com/logging/docs')
     .help()
     .strict().argv;
 }

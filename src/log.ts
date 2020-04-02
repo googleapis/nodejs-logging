@@ -24,7 +24,9 @@ import {google} from '../protos/protos';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
 import {getDefaultResource} from './metadata';
+import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const snakeCaseKeys = require('snakecase-keys');
 
 export interface GetEntriesRequest {
@@ -45,7 +47,7 @@ export interface LogOptions {
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
 }
 
-// tslint:disable-next-line no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Metadata = any;
 export type ApiResponse = [Metadata];
 export interface ApiResponseCallback {
@@ -828,6 +830,7 @@ class Log implements LogSeverityFunctions {
     opts?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     if (options.resource) {
       if (options.resource.labels) {
@@ -837,7 +840,9 @@ class Log implements LogSeverityFunctions {
     } else if (this.logging.detectedResource) {
       return writeWithResource(this.logging.detectedResource);
     } else {
-      const resource = await getDefaultResource(this.logging.auth);
+      const resource = await getDefaultResource(
+        (this.logging.auth as unknown) as GoogleAuth
+      );
       this.logging.detectedResource = resource;
       return writeWithResource(resource);
     }

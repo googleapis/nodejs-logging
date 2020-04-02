@@ -20,7 +20,7 @@ const {assert} = require('chai');
 const {describe, it, before, after} = require('mocha');
 assert.rejects = require('assert').rejects;
 const cp = require('child_process');
-const uuid = require(`uuid`);
+const uuid = require('uuid');
 
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
@@ -47,7 +47,7 @@ describe('sinks', () => {
       .catch(console.warn);
   });
 
-  it(`should create a sink`, async () => {
+  it('should create a sink', async () => {
     const output = execSync(
       `${cmd} create ${sinkName} ${bucketName} "${filter}"`
     );
@@ -58,18 +58,18 @@ describe('sinks', () => {
     assert.include(metadata.filter, filter);
   });
 
-  it(`should get a sink`, () => {
+  it('should get a sink', () => {
     const output = execSync(`${cmd} get ${sinkName}`);
     assert.include(output, sinkName);
   });
 
-  it(`should list sinks`, () => {
+  it('should list sinks', () => {
     const output = execSync(`${cmd} list`);
     assert.include(output, 'Sinks:');
     assert.include(output, sinkName);
   });
 
-  it(`should update a sink`, async () => {
+  it('should update a sink', async () => {
     const newFilter = 'severity >= WARNING';
     const output = execSync(`${cmd} update ${sinkName} "${newFilter}"`);
     assert.include(output, `Sink ${sinkName} updated.`);
@@ -79,7 +79,7 @@ describe('sinks', () => {
     assert.include(metadata.filter, newFilter);
   });
 
-  it(`should delete a sink`, async () => {
+  it('should delete a sink', async () => {
     const output = execSync(`${cmd} delete ${sinkName}`);
     assert.include(output, `Sink ${sinkName} deleted.`);
     await assert.rejects(logging.sink(sinkName).getMetadata());

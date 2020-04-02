@@ -208,7 +208,7 @@ async function deleteLog(logName) {
 }
 
 async function main() {
-  require(`yargs`)
+  require('yargs')
     .demand(1)
     .command(
       'list',
@@ -280,7 +280,7 @@ async function main() {
       'List up to 2 error entries, sorted by timestamp ascending.'
     )
     .example(
-      `node $0 list -f 'logName="my-log"' -l 2`,
+      'node $0 list -f \'logName="my-log"\' -l 2',
       'List up to 2 log entries from the "my-log" log.'
     )
     .example(
@@ -294,7 +294,7 @@ async function main() {
     .example('node $0 delete my-log', 'Delete "my-log".')
     .wrap(120)
     .recommendCommands()
-    .epilogue(`For more information, see https://cloud.google.com/logging/docs`)
+    .epilogue('For more information, see https://cloud.google.com/logging/docs')
     .help()
     .strict().argv;
 }

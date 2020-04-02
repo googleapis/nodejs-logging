@@ -18,18 +18,18 @@
 
 import * as gax from 'google-gax';
 import {
-  APICallback,
   Callback,
   CallOptions,
   Descriptors,
   ClientOptions,
   PaginationCallback,
-  PaginationResponse,
+  GaxCall,
 } from 'google-gax';
 import * as path from 'path';
 
 import {Transform} from 'stream';
-import * as protosTypes from '../../protos/protos';
+import {RequestType} from 'google-gax/build/src/apitypes';
+import * as protos from '../../protos/protos';
 import * as gapicConfig from './metrics_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -40,14 +40,6 @@ const version = require('../../../package.json').version;
  * @memberof v2
  */
 export class MetricsServiceV2Client {
-  private _descriptors: Descriptors = {
-    page: {},
-    stream: {},
-    longrunning: {},
-    batching: {},
-  };
-  private _innerApiCalls: {[name: string]: Function};
-  private _pathTemplates: {[name: string]: gax.PathTemplate};
   private _terminated = false;
   private _opts: ClientOptions;
   private _gaxModule: typeof gax | typeof gax.fallback;
@@ -55,6 +47,14 @@ export class MetricsServiceV2Client {
   private _protos: {};
   private _defaults: {[method: string]: gax.CallSettings};
   auth: gax.GoogleAuth;
+  descriptors: Descriptors = {
+    page: {},
+    stream: {},
+    longrunning: {},
+    batching: {},
+  };
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
   metricsServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -146,13 +146,16 @@ export class MetricsServiceV2Client {
       'protos.json'
     );
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ? require('../../protos/protos.json') : nodejsProtoPath
+      opts.fallback
+        ? // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require('../../protos/protos.json')
+        : nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
     // identifiers to uniquely identify resources within the API.
     // Create useful helper objects for these.
-    this._pathTemplates = {
+    this.pathTemplates = {
       billingAccountCmekSettingsPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/cmekSettings'
       ),
@@ -224,7 +227,7 @@ export class MetricsServiceV2Client {
     // Some of the methods on this service return "paged" results,
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
-    this._descriptors.page = {
+    this.descriptors.page = {
       listLogMetrics: new this._gaxModule.PageDescriptor(
         'pageToken',
         'nextPageToken',
@@ -243,7 +246,7 @@ export class MetricsServiceV2Client {
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
     // merely providing the destination and request information.
-    this._innerApiCalls = {};
+    this.innerApiCalls = {};
   }
 
   /**
@@ -270,7 +273,7 @@ export class MetricsServiceV2Client {
         ? (this._protos as protobuf.Root).lookupService(
             'google.logging.v2.MetricsServiceV2'
           )
-        : // tslint:disable-next-line no-any
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.logging.v2.MetricsServiceV2,
       this._opts
     ) as Promise<{[method: string]: Function}>;
@@ -284,9 +287,8 @@ export class MetricsServiceV2Client {
       'updateLogMetric',
       'deleteLogMetric',
     ];
-
     for (const methodName of metricsServiceV2StubMethods) {
-      const innerCallPromise = this.metricsServiceV2Stub.then(
+      const callPromise = this.metricsServiceV2Stub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -300,20 +302,14 @@ export class MetricsServiceV2Client {
       );
 
       const apiCall = this._gaxModule.createApiCall(
-        innerCallPromise,
+        callPromise,
         this._defaults[methodName],
-        this._descriptors.page[methodName] ||
-          this._descriptors.stream[methodName] ||
-          this._descriptors.longrunning[methodName]
+        this.descriptors.page[methodName] ||
+          this.descriptors.stream[methodName] ||
+          this.descriptors.longrunning[methodName]
       );
 
-      this._innerApiCalls[methodName] = (
-        argument: {},
-        callOptions?: CallOptions,
-        callback?: APICallback
-      ) => {
-        return apiCall(argument, callOptions, callback);
-      };
+      this.innerApiCalls[methodName] = apiCall;
     }
 
     return this.metricsServiceV2Stub;
@@ -376,22 +372,30 @@ export class MetricsServiceV2Client {
   // -- Service calls --
   // -------------------
   getLogMetric(
-    request: protosTypes.google.logging.v2.IGetLogMetricRequest,
+    request: protos.google.logging.v2.IGetLogMetricRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IGetLogMetricRequest | undefined,
       {} | undefined
     ]
   >;
   getLogMetric(
-    request: protosTypes.google.logging.v2.IGetLogMetricRequest,
+    request: protos.google.logging.v2.IGetLogMetricRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IGetLogMetricRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getLogMetric(
+    request: protos.google.logging.v2.IGetLogMetricRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IGetLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -410,23 +414,23 @@ export class MetricsServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   getLogMetric(
-    request: protosTypes.google.logging.v2.IGetLogMetricRequest,
+    request: protos.google.logging.v2.IGetLogMetricRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogMetric,
-          protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IGetLogMetricRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IGetLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IGetLogMetricRequest | undefined,
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IGetLogMetricRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -447,25 +451,33 @@ export class MetricsServiceV2Client {
       metric_name: request.metricName || '',
     });
     this.initialize();
-    return this._innerApiCalls.getLogMetric(request, options, callback);
+    return this.innerApiCalls.getLogMetric(request, options, callback);
   }
   createLogMetric(
-    request: protosTypes.google.logging.v2.ICreateLogMetricRequest,
+    request: protos.google.logging.v2.ICreateLogMetricRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.ICreateLogMetricRequest | undefined,
       {} | undefined
     ]
   >;
   createLogMetric(
-    request: protosTypes.google.logging.v2.ICreateLogMetricRequest,
+    request: protos.google.logging.v2.ICreateLogMetricRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.ICreateLogMetricRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createLogMetric(
+    request: protos.google.logging.v2.ICreateLogMetricRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.ICreateLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -489,23 +501,23 @@ export class MetricsServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   createLogMetric(
-    request: protosTypes.google.logging.v2.ICreateLogMetricRequest,
+    request: protos.google.logging.v2.ICreateLogMetricRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogMetric,
-          protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.ICreateLogMetricRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.ICreateLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.ICreateLogMetricRequest | undefined,
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.ICreateLogMetricRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -526,25 +538,33 @@ export class MetricsServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.createLogMetric(request, options, callback);
+    return this.innerApiCalls.createLogMetric(request, options, callback);
   }
   updateLogMetric(
-    request: protosTypes.google.logging.v2.IUpdateLogMetricRequest,
+    request: protos.google.logging.v2.IUpdateLogMetricRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IUpdateLogMetricRequest | undefined,
       {} | undefined
     ]
   >;
   updateLogMetric(
-    request: protosTypes.google.logging.v2.IUpdateLogMetricRequest,
+    request: protos.google.logging.v2.IUpdateLogMetricRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IUpdateLogMetricRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateLogMetric(
+    request: protos.google.logging.v2.IUpdateLogMetricRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IUpdateLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -569,23 +589,23 @@ export class MetricsServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   updateLogMetric(
-    request: protosTypes.google.logging.v2.IUpdateLogMetricRequest,
+    request: protos.google.logging.v2.IUpdateLogMetricRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.logging.v2.ILogMetric,
-          protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-          {} | undefined
+          protos.google.logging.v2.ILogMetric,
+          protos.google.logging.v2.IUpdateLogMetricRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IUpdateLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric,
-      protosTypes.google.logging.v2.IUpdateLogMetricRequest | undefined,
+      protos.google.logging.v2.ILogMetric,
+      protos.google.logging.v2.IUpdateLogMetricRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -606,25 +626,33 @@ export class MetricsServiceV2Client {
       metric_name: request.metricName || '',
     });
     this.initialize();
-    return this._innerApiCalls.updateLogMetric(request, options, callback);
+    return this.innerApiCalls.updateLogMetric(request, options, callback);
   }
   deleteLogMetric(
-    request: protosTypes.google.logging.v2.IDeleteLogMetricRequest,
+    request: protos.google.logging.v2.IDeleteLogMetricRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogMetricRequest | undefined,
       {} | undefined
     ]
   >;
   deleteLogMetric(
-    request: protosTypes.google.logging.v2.IDeleteLogMetricRequest,
+    request: protos.google.logging.v2.IDeleteLogMetricRequest,
     options: gax.CallOptions,
     callback: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogMetricRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteLogMetric(
+    request: protos.google.logging.v2.IDeleteLogMetricRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): void;
   /**
@@ -643,23 +671,23 @@ export class MetricsServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   deleteLogMetric(
-    request: protosTypes.google.logging.v2.IDeleteLogMetricRequest,
+    request: protos.google.logging.v2.IDeleteLogMetricRequest,
     optionsOrCallback?:
       | gax.CallOptions
       | Callback<
-          protosTypes.google.protobuf.IEmpty,
-          protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-          {} | undefined
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteLogMetricRequest | null | undefined,
+          {} | null | undefined
         >,
     callback?: Callback<
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogMetricRequest | null | undefined,
+      {} | null | undefined
     >
   ): Promise<
     [
-      protosTypes.google.protobuf.IEmpty,
-      protosTypes.google.logging.v2.IDeleteLogMetricRequest | undefined,
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteLogMetricRequest | undefined,
       {} | undefined
     ]
   > | void {
@@ -680,26 +708,34 @@ export class MetricsServiceV2Client {
       metric_name: request.metricName || '',
     });
     this.initialize();
-    return this._innerApiCalls.deleteLogMetric(request, options, callback);
+    return this.innerApiCalls.deleteLogMetric(request, options, callback);
   }
 
   listLogMetrics(
-    request: protosTypes.google.logging.v2.IListLogMetricsRequest,
+    request: protos.google.logging.v2.IListLogMetricsRequest,
     options?: gax.CallOptions
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
+      protos.google.logging.v2.ILogMetric[],
+      protos.google.logging.v2.IListLogMetricsRequest | null,
+      protos.google.logging.v2.IListLogMetricsResponse
     ]
   >;
   listLogMetrics(
-    request: protosTypes.google.logging.v2.IListLogMetricsRequest,
+    request: protos.google.logging.v2.IListLogMetricsRequest,
     options: gax.CallOptions,
-    callback: Callback<
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogMetricsRequest,
+      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
+      protos.google.logging.v2.ILogMetric
+    >
+  ): void;
+  listLogMetrics(
+    request: protos.google.logging.v2.IListLogMetricsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogMetricsRequest,
+      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
+      protos.google.logging.v2.ILogMetric
     >
   ): void;
   /**
@@ -739,24 +775,24 @@ export class MetricsServiceV2Client {
    *   The promise has a method named "cancel" which cancels the ongoing API call.
    */
   listLogMetrics(
-    request: protosTypes.google.logging.v2.IListLogMetricsRequest,
+    request: protos.google.logging.v2.IListLogMetricsRequest,
     optionsOrCallback?:
       | gax.CallOptions
-      | Callback<
-          protosTypes.google.logging.v2.ILogMetric[],
-          protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-          protosTypes.google.logging.v2.IListLogMetricsResponse
+      | PaginationCallback<
+          protos.google.logging.v2.IListLogMetricsRequest,
+          protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
+          protos.google.logging.v2.ILogMetric
         >,
-    callback?: Callback<
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListLogMetricsRequest,
+      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
+      protos.google.logging.v2.ILogMetric
     >
   ): Promise<
     [
-      protosTypes.google.logging.v2.ILogMetric[],
-      protosTypes.google.logging.v2.IListLogMetricsRequest | null,
-      protosTypes.google.logging.v2.IListLogMetricsResponse
+      protos.google.logging.v2.ILogMetric[],
+      protos.google.logging.v2.IListLogMetricsRequest | null,
+      protos.google.logging.v2.IListLogMetricsResponse
     ]
   > | void {
     request = request || {};
@@ -776,7 +812,7 @@ export class MetricsServiceV2Client {
       parent: request.parent || '',
     });
     this.initialize();
-    return this._innerApiCalls.listLogMetrics(request, options, callback);
+    return this.innerApiCalls.listLogMetrics(request, options, callback);
   }
 
   /**
@@ -813,7 +849,7 @@ export class MetricsServiceV2Client {
    *   An object stream which emits an object representing [LogMetric]{@link google.logging.v2.LogMetric} on 'data' event.
    */
   listLogMetricsStream(
-    request?: protosTypes.google.logging.v2.IListLogMetricsRequest,
+    request?: protos.google.logging.v2.IListLogMetricsRequest,
     options?: gax.CallOptions
   ): Transform {
     request = request || {};
@@ -827,11 +863,59 @@ export class MetricsServiceV2Client {
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
-    return this._descriptors.page.listLogMetrics.createStream(
-      this._innerApiCalls.listLogMetrics as gax.GaxCall,
+    return this.descriptors.page.listLogMetrics.createStream(
+      this.innerApiCalls.listLogMetrics as gax.GaxCall,
       request,
       callSettings
     );
+  }
+
+  /**
+   * Equivalent to {@link listLogMetrics}, but returns an iterable object.
+   *
+   * for-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The name of the project containing the metrics:
+   *
+   *       "projects/[PROJECT_ID]"
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that conforms to @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols.
+   */
+  listLogMetricsAsync(
+    request?: protos.google.logging.v2.IListLogMetricsRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILogMetric> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listLogMetrics.asyncIterate(
+      this.innerApiCalls['listLogMetrics'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogMetric>;
   }
   // --------------------
   // -- Path templates --
@@ -844,7 +928,7 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountCmekSettingsPath(billingAccount: string) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.render({
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.render({
       billing_account: billingAccount,
     });
   }
@@ -859,7 +943,7 @@ export class MetricsServiceV2Client {
   matchBillingAccountFromBillingAccountCmekSettingsName(
     billingAccountCmekSettingsName: string
   ) {
-    return this._pathTemplates.billingAccountCmekSettingsPathTemplate.match(
+    return this.pathTemplates.billingAccountCmekSettingsPathTemplate.match(
       billingAccountCmekSettingsName
     ).billing_account;
   }
@@ -872,9 +956,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountExclusionPath(billingAccount: string, exclusion: string) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.render({
+    return this.pathTemplates.billingAccountExclusionPathTemplate.render({
       billing_account: billingAccount,
-      exclusion,
+      exclusion: exclusion,
     });
   }
 
@@ -888,7 +972,7 @@ export class MetricsServiceV2Client {
   matchBillingAccountFromBillingAccountExclusionName(
     billingAccountExclusionName: string
   ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(
       billingAccountExclusionName
     ).billing_account;
   }
@@ -903,7 +987,7 @@ export class MetricsServiceV2Client {
   matchExclusionFromBillingAccountExclusionName(
     billingAccountExclusionName: string
   ) {
-    return this._pathTemplates.billingAccountExclusionPathTemplate.match(
+    return this.pathTemplates.billingAccountExclusionPathTemplate.match(
       billingAccountExclusionName
     ).exclusion;
   }
@@ -921,10 +1005,10 @@ export class MetricsServiceV2Client {
     location: string,
     bucket: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.render({
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.render({
       billing_account: billingAccount,
-      location,
-      bucket,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -938,7 +1022,7 @@ export class MetricsServiceV2Client {
   matchBillingAccountFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).billing_account;
   }
@@ -953,7 +1037,7 @@ export class MetricsServiceV2Client {
   matchLocationFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).location;
   }
@@ -968,7 +1052,7 @@ export class MetricsServiceV2Client {
   matchBucketFromBillingAccountLocationBucketName(
     billingAccountLocationBucketName: string
   ) {
-    return this._pathTemplates.billingAccountLocationBucketPathTemplate.match(
+    return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
   }
@@ -981,9 +1065,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountLogPath(billingAccount: string, log: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.render({
+    return this.pathTemplates.billingAccountLogPathTemplate.render({
       billing_account: billingAccount,
-      log,
+      log: log,
     });
   }
 
@@ -995,7 +1079,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the billing_account.
    */
   matchBillingAccountFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
+    return this.pathTemplates.billingAccountLogPathTemplate.match(
       billingAccountLogName
     ).billing_account;
   }
@@ -1008,7 +1092,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromBillingAccountLogName(billingAccountLogName: string) {
-    return this._pathTemplates.billingAccountLogPathTemplate.match(
+    return this.pathTemplates.billingAccountLogPathTemplate.match(
       billingAccountLogName
     ).log;
   }
@@ -1021,9 +1105,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   billingAccountSinkPath(billingAccount: string, sink: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.render({
+    return this.pathTemplates.billingAccountSinkPathTemplate.render({
       billing_account: billingAccount,
-      sink,
+      sink: sink,
     });
   }
 
@@ -1037,7 +1121,7 @@ export class MetricsServiceV2Client {
   matchBillingAccountFromBillingAccountSinkName(
     billingAccountSinkName: string
   ) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(
       billingAccountSinkName
     ).billing_account;
   }
@@ -1050,7 +1134,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromBillingAccountSinkName(billingAccountSinkName: string) {
-    return this._pathTemplates.billingAccountSinkPathTemplate.match(
+    return this.pathTemplates.billingAccountSinkPathTemplate.match(
       billingAccountSinkName
     ).sink;
   }
@@ -1062,8 +1146,8 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderCmekSettingsPath(folder: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.render({
-      folder,
+    return this.pathTemplates.folderCmekSettingsPathTemplate.render({
+      folder: folder,
     });
   }
 
@@ -1075,7 +1159,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderCmekSettingsName(folderCmekSettingsName: string) {
-    return this._pathTemplates.folderCmekSettingsPathTemplate.match(
+    return this.pathTemplates.folderCmekSettingsPathTemplate.match(
       folderCmekSettingsName
     ).folder;
   }
@@ -1088,9 +1172,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderExclusionPath(folder: string, exclusion: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.render({
-      folder,
-      exclusion,
+    return this.pathTemplates.folderExclusionPathTemplate.render({
+      folder: folder,
+      exclusion: exclusion,
     });
   }
 
@@ -1102,7 +1186,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
+    return this.pathTemplates.folderExclusionPathTemplate.match(
       folderExclusionName
     ).folder;
   }
@@ -1115,7 +1199,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromFolderExclusionName(folderExclusionName: string) {
-    return this._pathTemplates.folderExclusionPathTemplate.match(
+    return this.pathTemplates.folderExclusionPathTemplate.match(
       folderExclusionName
     ).exclusion;
   }
@@ -1129,10 +1213,10 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderLocationBucketPath(folder: string, location: string, bucket: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.render({
-      folder,
-      location,
-      bucket,
+    return this.pathTemplates.folderLocationBucketPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1144,7 +1228,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).folder;
   }
@@ -1157,7 +1241,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the location.
    */
   matchLocationFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).location;
   }
@@ -1170,7 +1254,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromFolderLocationBucketName(folderLocationBucketName: string) {
-    return this._pathTemplates.folderLocationBucketPathTemplate.match(
+    return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
   }
@@ -1183,9 +1267,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderLogPath(folder: string, log: string) {
-    return this._pathTemplates.folderLogPathTemplate.render({
-      folder,
-      log,
+    return this.pathTemplates.folderLogPathTemplate.render({
+      folder: folder,
+      log: log,
     });
   }
 
@@ -1197,8 +1281,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName)
-      .folder;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).folder;
   }
 
   /**
@@ -1209,7 +1292,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromFolderLogName(folderLogName: string) {
-    return this._pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+    return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
   }
 
   /**
@@ -1220,9 +1303,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   folderSinkPath(folder: string, sink: string) {
-    return this._pathTemplates.folderSinkPathTemplate.render({
-      folder,
-      sink,
+    return this.pathTemplates.folderSinkPathTemplate.render({
+      folder: folder,
+      sink: sink,
     });
   }
 
@@ -1234,7 +1317,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the folder.
    */
   matchFolderFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName)
       .folder;
   }
 
@@ -1246,8 +1329,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromFolderSinkName(folderSinkName: string) {
-    return this._pathTemplates.folderSinkPathTemplate.match(folderSinkName)
-      .sink;
+    return this.pathTemplates.folderSinkPathTemplate.match(folderSinkName).sink;
   }
 
   /**
@@ -1258,9 +1340,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   logMetricPath(project: string, metric: string) {
-    return this._pathTemplates.logMetricPathTemplate.render({
-      project,
-      metric,
+    return this.pathTemplates.logMetricPathTemplate.render({
+      project: project,
+      metric: metric,
     });
   }
 
@@ -1272,7 +1354,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName)
       .project;
   }
 
@@ -1284,8 +1366,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the metric.
    */
   matchMetricFromLogMetricName(logMetricName: string) {
-    return this._pathTemplates.logMetricPathTemplate.match(logMetricName)
-      .metric;
+    return this.pathTemplates.logMetricPathTemplate.match(logMetricName).metric;
   }
 
   /**
@@ -1295,8 +1376,8 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationCmekSettingsPath(organization: string) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.render({
-      organization,
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.render({
+      organization: organization,
     });
   }
 
@@ -1310,7 +1391,7 @@ export class MetricsServiceV2Client {
   matchOrganizationFromOrganizationCmekSettingsName(
     organizationCmekSettingsName: string
   ) {
-    return this._pathTemplates.organizationCmekSettingsPathTemplate.match(
+    return this.pathTemplates.organizationCmekSettingsPathTemplate.match(
       organizationCmekSettingsName
     ).organization;
   }
@@ -1323,9 +1404,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationExclusionPath(organization: string, exclusion: string) {
-    return this._pathTemplates.organizationExclusionPathTemplate.render({
-      organization,
-      exclusion,
+    return this.pathTemplates.organizationExclusionPathTemplate.render({
+      organization: organization,
+      exclusion: exclusion,
     });
   }
 
@@ -1339,7 +1420,7 @@ export class MetricsServiceV2Client {
   matchOrganizationFromOrganizationExclusionName(
     organizationExclusionName: string
   ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
+    return this.pathTemplates.organizationExclusionPathTemplate.match(
       organizationExclusionName
     ).organization;
   }
@@ -1354,7 +1435,7 @@ export class MetricsServiceV2Client {
   matchExclusionFromOrganizationExclusionName(
     organizationExclusionName: string
   ) {
-    return this._pathTemplates.organizationExclusionPathTemplate.match(
+    return this.pathTemplates.organizationExclusionPathTemplate.match(
       organizationExclusionName
     ).exclusion;
   }
@@ -1372,10 +1453,10 @@ export class MetricsServiceV2Client {
     location: string,
     bucket: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.render({
-      organization,
-      location,
-      bucket,
+    return this.pathTemplates.organizationLocationBucketPathTemplate.render({
+      organization: organization,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1389,7 +1470,7 @@ export class MetricsServiceV2Client {
   matchOrganizationFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).organization;
   }
@@ -1404,7 +1485,7 @@ export class MetricsServiceV2Client {
   matchLocationFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).location;
   }
@@ -1419,7 +1500,7 @@ export class MetricsServiceV2Client {
   matchBucketFromOrganizationLocationBucketName(
     organizationLocationBucketName: string
   ) {
-    return this._pathTemplates.organizationLocationBucketPathTemplate.match(
+    return this.pathTemplates.organizationLocationBucketPathTemplate.match(
       organizationLocationBucketName
     ).bucket;
   }
@@ -1432,9 +1513,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationLogPath(organization: string, log: string) {
-    return this._pathTemplates.organizationLogPathTemplate.render({
-      organization,
-      log,
+    return this.pathTemplates.organizationLogPathTemplate.render({
+      organization: organization,
+      log: log,
     });
   }
 
@@ -1446,7 +1527,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
+    return this.pathTemplates.organizationLogPathTemplate.match(
       organizationLogName
     ).organization;
   }
@@ -1459,7 +1540,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromOrganizationLogName(organizationLogName: string) {
-    return this._pathTemplates.organizationLogPathTemplate.match(
+    return this.pathTemplates.organizationLogPathTemplate.match(
       organizationLogName
     ).log;
   }
@@ -1472,9 +1553,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   organizationSinkPath(organization: string, sink: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.render({
-      organization,
-      sink,
+    return this.pathTemplates.organizationSinkPathTemplate.render({
+      organization: organization,
+      sink: sink,
     });
   }
 
@@ -1486,7 +1567,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the organization.
    */
   matchOrganizationFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
+    return this.pathTemplates.organizationSinkPathTemplate.match(
       organizationSinkName
     ).organization;
   }
@@ -1499,7 +1580,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromOrganizationSinkName(organizationSinkName: string) {
-    return this._pathTemplates.organizationSinkPathTemplate.match(
+    return this.pathTemplates.organizationSinkPathTemplate.match(
       organizationSinkName
     ).sink;
   }
@@ -1511,8 +1592,8 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectPath(project: string) {
-    return this._pathTemplates.projectPathTemplate.render({
-      project,
+    return this.pathTemplates.projectPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1524,7 +1605,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectName(projectName: string) {
-    return this._pathTemplates.projectPathTemplate.match(projectName).project;
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -1534,8 +1615,8 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectCmekSettingsPath(project: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.render({
-      project,
+    return this.pathTemplates.projectCmekSettingsPathTemplate.render({
+      project: project,
     });
   }
 
@@ -1547,7 +1628,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectCmekSettingsName(projectCmekSettingsName: string) {
-    return this._pathTemplates.projectCmekSettingsPathTemplate.match(
+    return this.pathTemplates.projectCmekSettingsPathTemplate.match(
       projectCmekSettingsName
     ).project;
   }
@@ -1560,9 +1641,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectExclusionPath(project: string, exclusion: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.render({
-      project,
-      exclusion,
+    return this.pathTemplates.projectExclusionPathTemplate.render({
+      project: project,
+      exclusion: exclusion,
     });
   }
 
@@ -1574,7 +1655,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
+    return this.pathTemplates.projectExclusionPathTemplate.match(
       projectExclusionName
     ).project;
   }
@@ -1587,7 +1668,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the exclusion.
    */
   matchExclusionFromProjectExclusionName(projectExclusionName: string) {
-    return this._pathTemplates.projectExclusionPathTemplate.match(
+    return this.pathTemplates.projectExclusionPathTemplate.match(
       projectExclusionName
     ).exclusion;
   }
@@ -1601,10 +1682,10 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectLocationBucketPath(project: string, location: string, bucket: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.render({
-      project,
-      location,
-      bucket,
+    return this.pathTemplates.projectLocationBucketPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
     });
   }
 
@@ -1616,7 +1697,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).project;
   }
@@ -1631,7 +1712,7 @@ export class MetricsServiceV2Client {
   matchLocationFromProjectLocationBucketName(
     projectLocationBucketName: string
   ) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).location;
   }
@@ -1644,7 +1725,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the bucket.
    */
   matchBucketFromProjectLocationBucketName(projectLocationBucketName: string) {
-    return this._pathTemplates.projectLocationBucketPathTemplate.match(
+    return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
   }
@@ -1657,9 +1738,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectLogPath(project: string, log: string) {
-    return this._pathTemplates.projectLogPathTemplate.render({
-      project,
-      log,
+    return this.pathTemplates.projectLogPathTemplate.render({
+      project: project,
+      log: log,
     });
   }
 
@@ -1671,7 +1752,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName)
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName)
       .project;
   }
 
@@ -1683,7 +1764,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the log.
    */
   matchLogFromProjectLogName(projectLogName: string) {
-    return this._pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+    return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
   }
 
   /**
@@ -1694,9 +1775,9 @@ export class MetricsServiceV2Client {
    * @returns {string} Resource name string.
    */
   projectSinkPath(project: string, sink: string) {
-    return this._pathTemplates.projectSinkPathTemplate.render({
-      project,
-      sink,
+    return this.pathTemplates.projectSinkPathTemplate.render({
+      project: project,
+      sink: sink,
     });
   }
 
@@ -1708,7 +1789,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the project.
    */
   matchProjectFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName)
       .project;
   }
 
@@ -1720,7 +1801,7 @@ export class MetricsServiceV2Client {
    * @returns {string} A string representing the sink.
    */
   matchSinkFromProjectSinkName(projectSinkName: string) {
-    return this._pathTemplates.projectSinkPathTemplate.match(projectSinkName)
+    return this.pathTemplates.projectSinkPathTemplate.match(projectSinkName)
       .sink;
   }
 
