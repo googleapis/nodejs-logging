@@ -64,9 +64,8 @@ const fakePaginator = {
 
 let googleAuthOverride: Function | null;
 function fakeGoogleAuth() {
-  const func = googleAuthOverride || noop;
-  // eslint-disable-next-line prefer-rest-params
-  return func(null, arguments);
+  // eslint-disable-next-line prefer-spread,prefer-rest-params
+  return (googleAuthOverride || noop).apply(null, arguments);
 }
 
 let isCustomTypeOverride: Function | null;
@@ -75,9 +74,8 @@ let replaceProjectIdTokenOverride: Function | null;
 const fakeUtil = extend({}, util, {
   isCustomType() {
     if (isCustomTypeOverride) {
-      const func = isCustomTypeOverride;
-      // eslint-disable-next-line prefer-rest-params
-      return func(null, arguments);
+      // eslint-disable-next-line prefer-spread,prefer-rest-params
+      return isCustomTypeOverride.apply(null, arguments);
     }
     return false;
   },
@@ -94,9 +92,8 @@ const fakeCallbackify = {
 const fakeProjectify = {
   replaceProjectIdToken(reqOpts: {}) {
     if (replaceProjectIdTokenOverride) {
-      const func = replaceProjectIdTokenOverride;
-      // eslint-disable-next-line prefer-rest-params
-      return func(null, arguments);
+      // eslint-disable-next-line prefer-spread,prefer-rest-params
+      return replaceProjectIdTokenOverride.apply(null, arguments);
     }
     return reqOpts;
   },
