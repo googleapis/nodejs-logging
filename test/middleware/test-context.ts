@@ -21,9 +21,11 @@ import * as proxyquire from 'proxyquire';
 import {makeHeaderWrapper} from '../../src/middleware/context';
 
 const FAKE_CONTEXT = {
-  extract: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  extract: (headerWrapper: {}) => {},
   generate: () => {},
-  inject: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  inject: (headerWrapper: {}, spanContext: {}) => {},
 };
 
 const fakeContext = Object.assign({}, FAKE_CONTEXT);
