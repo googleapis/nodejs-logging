@@ -179,8 +179,7 @@ describe('Logging', async () => {
   describe('sinks', () => {
     it('should create a sink with a Bucket destination', async () => {
       const sink = logging.sink(generateName());
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, apiResponse] = await sink.create({
+      const [, apiResponse] = await sink.create({
         destination: bucket,
       });
       const destination = 'storage.googleapis.com/' + bucket.name;
