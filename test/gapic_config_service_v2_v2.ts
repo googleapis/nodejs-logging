@@ -296,7 +296,7 @@ describe('v2.ConfigServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.getBucket = stubSimpleCall(undefined, expectedError);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.getBucket(request);
       }, expectedError);
       assert(
@@ -410,7 +410,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.updateBucket(request);
       }, expectedError);
       assert(
@@ -521,7 +521,7 @@ describe('v2.ConfigServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.getSink = stubSimpleCall(undefined, expectedError);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.getSink(request);
       }, expectedError);
       assert(
@@ -635,7 +635,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.createSink(request);
       }, expectedError);
       assert(
@@ -749,7 +749,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.updateSink(request);
       }, expectedError);
       assert(
@@ -863,7 +863,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.deleteSink(request);
       }, expectedError);
       assert(
@@ -977,7 +977,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.getExclusion(request);
       }, expectedError);
       assert(
@@ -1091,7 +1091,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.createExclusion(request);
       }, expectedError);
       assert(
@@ -1205,7 +1205,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.updateExclusion(request);
       }, expectedError);
       assert(
@@ -1319,7 +1319,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.deleteExclusion(request);
       }, expectedError);
       assert(
@@ -1433,7 +1433,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.getCmekSettings(request);
       }, expectedError);
       assert(
@@ -1549,7 +1549,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.updateCmekSettings(request);
       }, expectedError);
       assert(
@@ -1667,7 +1667,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listBuckets(request);
       }, expectedError);
       assert(
@@ -1753,7 +1753,7 @@ describe('v2.ConfigServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -1825,7 +1825,7 @@ describe('v2.ConfigServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listBucketsAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: protos.google.logging.v2.ILogBucket[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);
@@ -1950,7 +1950,7 @@ describe('v2.ConfigServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.listSinks = stubSimpleCall(undefined, expectedError);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listSinks(request);
       }, expectedError);
       assert(
@@ -2035,7 +2035,7 @@ describe('v2.ConfigServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -2104,7 +2104,7 @@ describe('v2.ConfigServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listSinksAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: protos.google.logging.v2.ILogSink[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);
@@ -2230,7 +2230,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listExclusions(request);
       }, expectedError);
       assert(
@@ -2317,7 +2317,7 @@ describe('v2.ConfigServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -2390,7 +2390,7 @@ describe('v2.ConfigServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listExclusionsAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: protos.google.logging.v2.ILogExclusion[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);
