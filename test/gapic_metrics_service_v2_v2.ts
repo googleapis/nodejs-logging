@@ -299,7 +299,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.getLogMetric(request);
       }, expectedError);
       assert(
@@ -413,7 +413,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.createLogMetric(request);
       }, expectedError);
       assert(
@@ -527,7 +527,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.updateLogMetric(request);
       }, expectedError);
       assert(
@@ -641,7 +641,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.deleteLogMetric(request);
       }, expectedError);
       assert(
@@ -759,7 +759,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listLogMetrics(request);
       }, expectedError);
       assert(
@@ -846,7 +846,7 @@ describe('v2.MetricsServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -919,7 +919,7 @@ describe('v2.MetricsServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listLogMetricsAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: protos.google.logging.v2.ILogMetric[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);

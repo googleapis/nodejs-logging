@@ -1,6 +1,13 @@
 {
-  "updateTime": "2020-04-03T11:54:50.682865Z",
+  "updateTime": "2020-04-09T11:52:32.905609Z",
   "sources": [
+    {
+      "git": {
+        "name": ".",
+        "remote": "https://github.com/googleapis/nodejs-logging.git",
+        "sha": "12808be22cfc9e5fc8a0c8b24203d2584e812204"
+      }
+    },
     {
       "git": {
         "name": "googleapis",
