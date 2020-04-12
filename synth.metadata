@@ -1,19 +1,25 @@
 {
-  "updateTime": "2020-04-03T11:54:50.682865Z",
   "sources": [
+    {
+      "git": {
+        "name": ".",
+        "remote": "git@github.com:googleapis/nodejs-logging.git",
+        "sha": "198485ced9e3bf26440eb182f3eba1b82a10b560"
+      }
+    },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "01f3ccbaa66cf3ae4e3b9fd140b1ecfbe54a3ed0",
-        "internalRef": "304416658"
+        "sha": "1bd77e8ce6f953ac641af7966d0c52646afc16a8",
+        "internalRef": "305974465"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "99820243d348191bc9c634f2b48ddf65096285ed"
+        "sha": "6f32150677c9784f3c3a7e1949472bd29c9d72c5"
       }
     }
   ],
