@@ -19,8 +19,6 @@ import * as extend from 'extend';
 import {GCPEnv} from 'google-auth-library';
 import * as proxyquire from 'proxyquire';
 
-import assertRejects = require('assert-rejects');
-
 let instanceOverride: {} | null;
 const fakeGcpMetadata = {
   instance(path: string) {
@@ -212,7 +210,7 @@ describe('metadata', () => {
       instanceOverride = {
         errorArg: FAKE_ERROR,
       };
-      assertRejects(
+      await assert.rejects(
         metadata.getGKEDescriptor(),
         (err: Error) => err === FAKE_ERROR
       );
@@ -221,7 +219,7 @@ describe('metadata', () => {
     it('should throw error when read of namespace file fails', async () => {
       readFileShouldError = true;
 
-      assertRejects(metadata.getGKEDescriptor(), (err: Error) =>
+      await assert.rejects(metadata.getGKEDescriptor(), (err: Error) =>
         err.message.includes(FAKE_READFILE_ERROR_MESSAGE)
       );
     });

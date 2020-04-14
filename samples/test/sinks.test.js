@@ -37,14 +37,8 @@ describe('sinks', () => {
   });
 
   after(async () => {
-    await logging
-      .sink(sinkName)
-      .delete()
-      .catch(console.warn);
-    await storage
-      .bucket(bucketName)
-      .delete()
-      .catch(console.warn);
+    await logging.sink(sinkName).delete().catch(console.warn);
+    await storage.bucket(bucketName).delete().catch(console.warn);
   });
 
   it('should create a sink', async () => {
