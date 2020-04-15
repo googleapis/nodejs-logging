@@ -34,8 +34,8 @@ v2_library = gapic.typescript_library(
     version,
     generator_args={
         "grpc-service-config": f"google/logging/{version}/logging_grpc_service_config.json",
-        "package-name": f"@google-cloud/logging",
-        "main-service": f"logging",
+        "package-name": "@google-cloud/logging",
+        "main-service": "logging",
         "bundle-config": f"google/logging/{version}/logging_gapic.yaml"
         },
         proto_path=f'/google/logging/{version}',
