@@ -296,7 +296,7 @@ describe('v2.LoggingServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.deleteLog = stubSimpleCall(undefined, expectedError);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.deleteLog(request);
       }, expectedError);
       assert(
@@ -386,7 +386,7 @@ describe('v2.LoggingServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.writeLogEntries(request);
       }, expectedError);
       assert(
@@ -480,7 +480,7 @@ describe('v2.LoggingServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listLogEntries(request);
       }, expectedError);
       assert(
@@ -556,7 +556,7 @@ describe('v2.LoggingServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -611,7 +611,7 @@ describe('v2.LoggingServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listLogEntriesAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: protos.google.logging.v2.ILogEntry[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);
@@ -722,7 +722,7 @@ describe('v2.LoggingServiceV2Client', () => {
         undefined,
         expectedError
       );
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listMonitoredResourceDescriptors(request);
       }, expectedError);
       assert(
@@ -814,7 +814,7 @@ describe('v2.LoggingServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -879,7 +879,7 @@ describe('v2.LoggingServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listMonitoredResourceDescriptorsAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: protos.google.api.IMonitoredResourceDescriptor[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);
@@ -912,7 +912,7 @@ describe('v2.LoggingServiceV2Client', () => {
           },
         },
       };
-      const expectedResponse = ['', '', ''];
+      const expectedResponse = [new String(), new String(), new String()];
       client.innerApiCalls.listLogs = stubSimpleCall(expectedResponse);
       const [response] = await client.listLogs(request);
       assert.deepStrictEqual(response, expectedResponse);
@@ -941,7 +941,7 @@ describe('v2.LoggingServiceV2Client', () => {
           },
         },
       };
-      const expectedResponse = ['', '', ''];
+      const expectedResponse = [new String(), new String(), new String()];
       client.innerApiCalls.listLogs = stubSimpleCallWithCallback(
         expectedResponse
       );
@@ -986,7 +986,7 @@ describe('v2.LoggingServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.listLogs = stubSimpleCall(undefined, expectedError);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await client.listLogs(request);
       }, expectedError);
       assert(
@@ -1007,21 +1007,16 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
-      const expectedResponse = ['', '', ''];
+      const expectedResponse = [new String(), new String(), new String()];
       client.descriptors.page.listLogs.createStream = stubPageStreamingCall(
         expectedResponse
       );
       const stream = client.listLogsStream(request);
       const promise = new Promise((resolve, reject) => {
-        const responses: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING[] = [];
-        stream.on(
-          'data',
-          (
-            response: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING
-          ) => {
-            responses.push(response);
-          }
-        );
+        const responses: string[] = [];
+        stream.on('data', (response: string) => {
+          responses.push(response);
+        });
         stream.on('end', () => {
           resolve(responses);
         });
@@ -1061,15 +1056,10 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       const stream = client.listLogsStream(request);
       const promise = new Promise((resolve, reject) => {
-        const responses: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING[] = [];
-        stream.on(
-          'data',
-          (
-            response: protos.google.protobuf.FieldDescriptorProto.Type.TYPE_STRING
-          ) => {
-            responses.push(response);
-          }
-        );
+        const responses: string[] = [];
+        stream.on('data', (response: string) => {
+          responses.push(response);
+        });
         stream.on('end', () => {
           resolve(responses);
         });
@@ -1077,7 +1067,7 @@ describe('v2.LoggingServiceV2Client', () => {
           reject(err);
         });
       });
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         await promise;
       }, expectedError);
       assert(
@@ -1103,7 +1093,7 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
-      const expectedResponse = ['', '', ''];
+      const expectedResponse = [new String(), new String(), new String()];
       client.descriptors.page.listLogs.asyncIterate = stubAsyncIterationCall(
         expectedResponse
       );
@@ -1142,7 +1132,7 @@ describe('v2.LoggingServiceV2Client', () => {
         expectedError
       );
       const iterable = client.listLogsAsync(request);
-      assert.rejects(async () => {
+      await assert.rejects(async () => {
         const responses: string[] = [];
         for await (const resource of iterable) {
           responses.push(resource!);

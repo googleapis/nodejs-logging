@@ -681,9 +681,7 @@ describe('Logging', async () => {
   });
 
   function generateName() {
-    return `${TESTS_PREFIX}-${Date.now()}-${v4()
-      .split('-')
-      .pop()}`;
+    return `${TESTS_PREFIX}-${Date.now()}-${v4().split('-').pop()}`;
   }
 
   // Parse the time the resource was created using the resource id
