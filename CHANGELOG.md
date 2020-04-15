@@ -4,6 +4,31 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [8.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.3.0...v8.0.0) (2020-04-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* The library now supports Node.js v10+. The last version to support Node.js v8 is tagged legacy-8 on NPM.
+* move API to Typescript generation (#758)
+* proto annotations
+
+### Features
+
+* drop node8 support, support for async iterators ([#778](https://www.github.com/googleapis/nodejs-logging/issues/778)) ([ce29b49](https://www.github.com/googleapis/nodejs-logging/commit/ce29b498ebb357403c093053d1b9989f1a56f5af))
+* move API to Typescript generation ([#758](https://www.github.com/googleapis/nodejs-logging/issues/758)) ([049ae83](https://www.github.com/googleapis/nodejs-logging/commit/049ae8367dcd2b63c951d7c730548c5e88f72fa7))
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/paginator to v3 ([#766](https://www.github.com/googleapis/nodejs-logging/issues/766)) ([58fe7b0](https://www.github.com/googleapis/nodejs-logging/commit/58fe7b02defa33e89ef980fc3234e47e72a08436))
+* **deps:** update dependency @google-cloud/promisify to v2 ([#763](https://www.github.com/googleapis/nodejs-logging/issues/763)) ([d3fd09d](https://www.github.com/googleapis/nodejs-logging/commit/d3fd09dae00df3787122b24f25f3347e3653eb52))
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.21 ([#771](https://www.github.com/googleapis/nodejs-logging/issues/771)) ([958d186](https://www.github.com/googleapis/nodejs-logging/commit/958d1868da318fd08b543350daca7d2d33f331a8))
+* **deps:** update dependency type-fest to ^0.13.0 ([#782](https://www.github.com/googleapis/nodejs-logging/issues/782)) ([13dcb78](https://www.github.com/googleapis/nodejs-logging/commit/13dcb786dec3400afc8c7ef1753fe7c0840542e2))
+* explicit export of protobuf.roots ([#781](https://www.github.com/googleapis/nodejs-logging/issues/781)) ([12808be](https://www.github.com/googleapis/nodejs-logging/commit/12808be22cfc9e5fc8a0c8b24203d2584e812204))
+* proto annotations ([e31cc01](https://www.github.com/googleapis/nodejs-logging/commit/e31cc01d5be8a150b370cf5000eedb7cbf175d0c))
+* remove eslint, update gax, fix generated protos, run the generator ([#789](https://www.github.com/googleapis/nodejs-logging/issues/789)) ([d1df1bd](https://www.github.com/googleapis/nodejs-logging/commit/d1df1bdc1d536d3626dc1b85d357cf6ec18f80e8))
+
 ## [7.3.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.2.3...v7.3.0) (2020-03-11)
 
 
