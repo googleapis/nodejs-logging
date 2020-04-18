@@ -3,8 +3,8 @@
     {
       "git": {
         "name": ".",
-        "remote": "git@github.com:googleapis/nodejs-logging.git",
-        "sha": "d1df1bdc1d536d3626dc1b85d357cf6ec18f80e8"
+        "remote": "https://github.com/googleapis/nodejs-logging.git",
+        "sha": "ca899de645e0269e01bc1ca5fc703bbb5e9ad2ef"
       }
     },
     {
@@ -13,6 +13,13 @@
         "remote": "https://github.com/googleapis/googleapis.git",
         "sha": "3824f547aa44df459580615c73cabb30a2a78ee0",
         "internalRef": "306254195"
+      }
+    },
+    {
+      "git": {
+        "name": "synthtool",
+        "remote": "https://github.com/googleapis/synthtool.git",
+        "sha": "19465d3ec5e5acdb01521d8f3bddd311bcbee28d"
       }
     }
   ],
