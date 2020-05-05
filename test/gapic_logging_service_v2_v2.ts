@@ -296,9 +296,7 @@ describe('v2.LoggingServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.deleteLog = stubSimpleCall(undefined, expectedError);
-      await assert.rejects(async () => {
-        await client.deleteLog(request);
-      }, expectedError);
+      await assert.rejects(client.deleteLog(request), expectedError);
       assert(
         (client.innerApiCalls.deleteLog as SinonStub)
           .getCall(0)
@@ -386,9 +384,7 @@ describe('v2.LoggingServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.writeLogEntries(request);
-      }, expectedError);
+      await assert.rejects(client.writeLogEntries(request), expectedError);
       assert(
         (client.innerApiCalls.writeLogEntries as SinonStub)
           .getCall(0)
@@ -480,9 +476,7 @@ describe('v2.LoggingServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.listLogEntries(request);
-      }, expectedError);
+      await assert.rejects(client.listLogEntries(request), expectedError);
       assert(
         (client.innerApiCalls.listLogEntries as SinonStub)
           .getCall(0)
@@ -556,9 +550,7 @@ describe('v2.LoggingServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listLogEntries.createStream as SinonStub)
           .getCall(0)
@@ -722,9 +714,10 @@ describe('v2.LoggingServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.listMonitoredResourceDescriptors(request);
-      }, expectedError);
+      await assert.rejects(
+        client.listMonitoredResourceDescriptors(request),
+        expectedError
+      );
       assert(
         (client.innerApiCalls.listMonitoredResourceDescriptors as SinonStub)
           .getCall(0)
@@ -814,9 +807,7 @@ describe('v2.LoggingServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listMonitoredResourceDescriptors
           .createStream as SinonStub)
@@ -986,9 +977,7 @@ describe('v2.LoggingServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.listLogs = stubSimpleCall(undefined, expectedError);
-      await assert.rejects(async () => {
-        await client.listLogs(request);
-      }, expectedError);
+      await assert.rejects(client.listLogs(request), expectedError);
       assert(
         (client.innerApiCalls.listLogs as SinonStub)
           .getCall(0)
@@ -1067,9 +1056,7 @@ describe('v2.LoggingServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listLogs.createStream as SinonStub)
           .getCall(0)

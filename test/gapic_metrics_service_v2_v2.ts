@@ -299,9 +299,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.getLogMetric(request);
-      }, expectedError);
+      await assert.rejects(client.getLogMetric(request), expectedError);
       assert(
         (client.innerApiCalls.getLogMetric as SinonStub)
           .getCall(0)
@@ -413,9 +411,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.createLogMetric(request);
-      }, expectedError);
+      await assert.rejects(client.createLogMetric(request), expectedError);
       assert(
         (client.innerApiCalls.createLogMetric as SinonStub)
           .getCall(0)
@@ -527,9 +523,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.updateLogMetric(request);
-      }, expectedError);
+      await assert.rejects(client.updateLogMetric(request), expectedError);
       assert(
         (client.innerApiCalls.updateLogMetric as SinonStub)
           .getCall(0)
@@ -641,9 +635,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.deleteLogMetric(request);
-      }, expectedError);
+      await assert.rejects(client.deleteLogMetric(request), expectedError);
       assert(
         (client.innerApiCalls.deleteLogMetric as SinonStub)
           .getCall(0)
@@ -759,9 +751,7 @@ describe('v2.MetricsServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.listLogMetrics(request);
-      }, expectedError);
+      await assert.rejects(client.listLogMetrics(request), expectedError);
       assert(
         (client.innerApiCalls.listLogMetrics as SinonStub)
           .getCall(0)
@@ -846,9 +836,7 @@ describe('v2.MetricsServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listLogMetrics.createStream as SinonStub)
           .getCall(0)
