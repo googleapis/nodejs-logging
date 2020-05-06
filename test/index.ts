@@ -570,7 +570,8 @@ describe('Logging', () => {
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
-        assert.strictEqual(reqOpts.gaxOptions, undefined);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        assert.strictEqual((reqOpts as any).gaxOptions, undefined);
         assert.deepStrictEqual(gaxOpts, options.gaxOptions);
         return [[]];
       };

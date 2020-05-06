@@ -296,9 +296,7 @@ describe('v2.ConfigServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.getBucket = stubSimpleCall(undefined, expectedError);
-      await assert.rejects(async () => {
-        await client.getBucket(request);
-      }, expectedError);
+      await assert.rejects(client.getBucket(request), expectedError);
       assert(
         (client.innerApiCalls.getBucket as SinonStub)
           .getCall(0)
@@ -410,9 +408,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.updateBucket(request);
-      }, expectedError);
+      await assert.rejects(client.updateBucket(request), expectedError);
       assert(
         (client.innerApiCalls.updateBucket as SinonStub)
           .getCall(0)
@@ -521,9 +517,7 @@ describe('v2.ConfigServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.getSink = stubSimpleCall(undefined, expectedError);
-      await assert.rejects(async () => {
-        await client.getSink(request);
-      }, expectedError);
+      await assert.rejects(client.getSink(request), expectedError);
       assert(
         (client.innerApiCalls.getSink as SinonStub)
           .getCall(0)
@@ -635,9 +629,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.createSink(request);
-      }, expectedError);
+      await assert.rejects(client.createSink(request), expectedError);
       assert(
         (client.innerApiCalls.createSink as SinonStub)
           .getCall(0)
@@ -749,9 +741,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.updateSink(request);
-      }, expectedError);
+      await assert.rejects(client.updateSink(request), expectedError);
       assert(
         (client.innerApiCalls.updateSink as SinonStub)
           .getCall(0)
@@ -863,9 +853,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.deleteSink(request);
-      }, expectedError);
+      await assert.rejects(client.deleteSink(request), expectedError);
       assert(
         (client.innerApiCalls.deleteSink as SinonStub)
           .getCall(0)
@@ -977,9 +965,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.getExclusion(request);
-      }, expectedError);
+      await assert.rejects(client.getExclusion(request), expectedError);
       assert(
         (client.innerApiCalls.getExclusion as SinonStub)
           .getCall(0)
@@ -1091,9 +1077,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.createExclusion(request);
-      }, expectedError);
+      await assert.rejects(client.createExclusion(request), expectedError);
       assert(
         (client.innerApiCalls.createExclusion as SinonStub)
           .getCall(0)
@@ -1205,9 +1189,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.updateExclusion(request);
-      }, expectedError);
+      await assert.rejects(client.updateExclusion(request), expectedError);
       assert(
         (client.innerApiCalls.updateExclusion as SinonStub)
           .getCall(0)
@@ -1319,9 +1301,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.deleteExclusion(request);
-      }, expectedError);
+      await assert.rejects(client.deleteExclusion(request), expectedError);
       assert(
         (client.innerApiCalls.deleteExclusion as SinonStub)
           .getCall(0)
@@ -1433,9 +1413,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.getCmekSettings(request);
-      }, expectedError);
+      await assert.rejects(client.getCmekSettings(request), expectedError);
       assert(
         (client.innerApiCalls.getCmekSettings as SinonStub)
           .getCall(0)
@@ -1549,9 +1527,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.updateCmekSettings(request);
-      }, expectedError);
+      await assert.rejects(client.updateCmekSettings(request), expectedError);
       assert(
         (client.innerApiCalls.updateCmekSettings as SinonStub)
           .getCall(0)
@@ -1667,9 +1643,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.listBuckets(request);
-      }, expectedError);
+      await assert.rejects(client.listBuckets(request), expectedError);
       assert(
         (client.innerApiCalls.listBuckets as SinonStub)
           .getCall(0)
@@ -1753,9 +1727,7 @@ describe('v2.ConfigServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listBuckets.createStream as SinonStub)
           .getCall(0)
@@ -1950,9 +1922,7 @@ describe('v2.ConfigServiceV2Client', () => {
       };
       const expectedError = new Error('expected');
       client.innerApiCalls.listSinks = stubSimpleCall(undefined, expectedError);
-      await assert.rejects(async () => {
-        await client.listSinks(request);
-      }, expectedError);
+      await assert.rejects(client.listSinks(request), expectedError);
       assert(
         (client.innerApiCalls.listSinks as SinonStub)
           .getCall(0)
@@ -2035,9 +2005,7 @@ describe('v2.ConfigServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listSinks.createStream as SinonStub)
           .getCall(0)
@@ -2230,9 +2198,7 @@ describe('v2.ConfigServiceV2Client', () => {
         undefined,
         expectedError
       );
-      await assert.rejects(async () => {
-        await client.listExclusions(request);
-      }, expectedError);
+      await assert.rejects(client.listExclusions(request), expectedError);
       assert(
         (client.innerApiCalls.listExclusions as SinonStub)
           .getCall(0)
@@ -2317,9 +2283,7 @@ describe('v2.ConfigServiceV2Client', () => {
           reject(err);
         });
       });
-      await assert.rejects(async () => {
-        await promise;
-      }, expectedError);
+      await assert.rejects(promise, expectedError);
       assert(
         (client.descriptors.page.listExclusions.createStream as SinonStub)
           .getCall(0)
