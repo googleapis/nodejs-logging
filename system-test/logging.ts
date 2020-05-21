@@ -462,9 +462,9 @@ describe('Logging', async () => {
               'log entry 1',
               {delegate: 'my_username'},
               {
-                nonValue: null,
-                boolValue: true,
                 arrayValue: [1, 2, 3],
+                boolValue: true,
+                nonValue: null   
               },
               {
                 nested: {
