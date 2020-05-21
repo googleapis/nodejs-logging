@@ -464,7 +464,7 @@ describe('Logging', async () => {
               {
                 arrayValue: [1, 2, 3],
                 boolValue: true,
-                nonValue: null   
+                nonValue: null,
               },
               {
                 nested: {
