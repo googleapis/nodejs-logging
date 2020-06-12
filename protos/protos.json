@@ -13,6 +13,7 @@
                 "java_outer_classname": "LoggingMetricsProto",
                 "java_package": "com.google.logging.v2",
                 "php_namespace": "Google\\Cloud\\Logging\\V2",
+                "ruby_package": "Google::Cloud::Logging::V2",
                 "(google.api.resource_definition).type": "logging.googleapis.com/BillingAccountLocation",
                 "(google.api.resource_definition).pattern": "billingAccounts/{billing_account}/locations/{location}"
               },
