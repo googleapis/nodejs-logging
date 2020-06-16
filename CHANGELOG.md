@@ -4,6 +4,39 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [8.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.3.0...v8.0.0) (2020-06-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* The library now supports Node.js v10+. The last version to support Node.js v8 is tagged legacy-8 on NPM.
+* move API to Typescript generation (#758)
+* proto annotations
+
+### Features
+
+* add Blunderbuss config ([#806](https://www.github.com/googleapis/nodejs-logging/issues/806)) ([7f1eb67](https://www.github.com/googleapis/nodejs-logging/commit/7f1eb6731208f99b530d9553da751dad04ec92a9))
+* drop node8 support, support for async iterators ([#778](https://www.github.com/googleapis/nodejs-logging/issues/778)) ([ce29b49](https://www.github.com/googleapis/nodejs-logging/commit/ce29b498ebb357403c093053d1b9989f1a56f5af))
+* move API to Typescript generation ([#758](https://www.github.com/googleapis/nodejs-logging/issues/758)) ([049ae83](https://www.github.com/googleapis/nodejs-logging/commit/049ae8367dcd2b63c951d7c730548c5e88f72fa7))
+* move ts target to es2018 from es2016 ([#825](https://www.github.com/googleapis/nodejs-logging/issues/825)) ([8b73243](https://www.github.com/googleapis/nodejs-logging/commit/8b73243bea64f6026718af9f567e3af1bd151061))
+
+
+### Bug Fixes
+
+* explicit export of protobuf.roots ([#781](https://www.github.com/googleapis/nodejs-logging/issues/781)) ([12808be](https://www.github.com/googleapis/nodejs-logging/commit/12808be22cfc9e5fc8a0c8b24203d2584e812204))
+* handle fallback option properly ([#832](https://www.github.com/googleapis/nodejs-logging/issues/832)) ([6355b20](https://www.github.com/googleapis/nodejs-logging/commit/6355b20a19d7224acf0e2cec103aa095fc62efce))
+* linting and formatting ([#809](https://www.github.com/googleapis/nodejs-logging/issues/809)) ([739cc3a](https://www.github.com/googleapis/nodejs-logging/commit/739cc3a05d1085142ec96ec51f61401d03943876))
+* proto annotations ([e31cc01](https://www.github.com/googleapis/nodejs-logging/commit/e31cc01d5be8a150b370cf5000eedb7cbf175d0c))
+* remove eslint, update gax, fix generated protos, run the generator ([#789](https://www.github.com/googleapis/nodejs-logging/issues/789)) ([d1df1bd](https://www.github.com/googleapis/nodejs-logging/commit/d1df1bdc1d536d3626dc1b85d357cf6ec18f80e8))
+* **deps:** update dependency @google-cloud/paginator to v3 ([#766](https://www.github.com/googleapis/nodejs-logging/issues/766)) ([58fe7b0](https://www.github.com/googleapis/nodejs-logging/commit/58fe7b02defa33e89ef980fc3234e47e72a08436))
+* **deps:** update dependency @google-cloud/promisify to v2 ([#763](https://www.github.com/googleapis/nodejs-logging/issues/763)) ([d3fd09d](https://www.github.com/googleapis/nodejs-logging/commit/d3fd09dae00df3787122b24f25f3347e3653eb52))
+* **deps:** update dependency @google-cloud/storage to v5 ([#812](https://www.github.com/googleapis/nodejs-logging/issues/812)) ([b1be6c4](https://www.github.com/googleapis/nodejs-logging/commit/b1be6c45e88d05204bfbbb05e31f16a3ef909e52))
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.21 ([#771](https://www.github.com/googleapis/nodejs-logging/issues/771)) ([958d186](https://www.github.com/googleapis/nodejs-logging/commit/958d1868da318fd08b543350daca7d2d33f331a8))
+* **deps:** update dependency @opencensus/propagation-stackdriver to v0.0.22 ([#822](https://www.github.com/googleapis/nodejs-logging/issues/822)) ([6f1d18e](https://www.github.com/googleapis/nodejs-logging/commit/6f1d18ec05bbdc9666dfd350b4125761fa4a984e))
+* **deps:** update dependency type-fest to ^0.13.0 ([#782](https://www.github.com/googleapis/nodejs-logging/issues/782)) ([13dcb78](https://www.github.com/googleapis/nodejs-logging/commit/13dcb786dec3400afc8c7ef1753fe7c0840542e2))
+* **deps:** update dependency type-fest to ^0.15.0 ([#814](https://www.github.com/googleapis/nodejs-logging/issues/814)) ([2fc7eed](https://www.github.com/googleapis/nodejs-logging/commit/2fc7eed13c55320688b79513541ae9348bcd9ae0))
+* **sample-test:** we shouldn't delete node_modules after link ([aa4850b](https://www.github.com/googleapis/nodejs-logging/commit/aa4850b39411afd82977e0ecba7a7a4b821332bd))
+
 ## [7.3.0](https://www.github.com/googleapis/nodejs-logging/compare/v7.2.3...v7.3.0) (2020-03-11)
 
 
