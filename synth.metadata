@@ -3,23 +3,15 @@
     {
       "git": {
         "name": ".",
-        "remote": "https://github.com/googleapis/nodejs-logging.git",
-        "sha": "237fa098347bebda8358f9894bf10480dfebc6fd"
-      }
-    },
-    {
-      "git": {
-        "name": "googleapis",
-        "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "e0558da52e48b9f1a4bd5104e6b5e219a48f1dec",
-        "internalRef": "316038172"
+        "remote": "git@github.com:googleapis/nodejs-logging.git",
+        "sha": "1db672d746b1e02e667213b32c45d0f0e1aab781"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "dc9caca650c77b7039e2bbc3339ffb34ae78e5b7"
+        "sha": "303271797a360f8a439203413f13a160f2f5b3b4"
       }
     }
   ],
@@ -29,8 +21,8 @@
         "source": "googleapis",
         "apiName": "logging",
         "apiVersion": "v2",
-        "language": "typescript",
-        "generator": "gapic-generator-typescript"
+        "language": "nodejs",
+        "generator": "bazel"
       }
     }
   ]

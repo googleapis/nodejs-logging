@@ -26,21 +26,10 @@ AUTOSYNTH_MULTIPLE_COMMITS = True
 
 s.metadata.set_track_obsolete_files(True)
 
-gapic = gcp.GAPICMicrogenerator()
+gapic = gcp.GAPICBazel()
 version='v2'
 # tasks has two product names, and a poorly named artman yaml
-v2_library = gapic.typescript_library(
-    "logging",
-    version,
-    generator_args={
-        "grpc-service-config": f"google/logging/{version}/logging_grpc_service_config.json",
-        "package-name": "@google-cloud/logging",
-        "main-service": "logging",
-        "bundle-config": f"google/logging/{version}/logging_gapic.yaml"
-        },
-        proto_path=f'/google/logging/{version}',
-        extra_proto_files=['google/cloud/common_resources.proto'],
-)
+v2_library = gapic.node_library("logging", version, proto_path=f'google/logging/{version}')
 s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json", "system-test/fixtures/sample/src/index.js", "system-test/fixtures/sample/src/index.ts"])
 
 # Copy in templated files
