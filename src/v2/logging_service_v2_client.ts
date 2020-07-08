@@ -589,15 +589,16 @@ export class LoggingServiceV2Client {
    *   the entries later in the list. See the `entries.list` method.
    *
    *   Log entries with timestamps that are more than the
-   *   [logs retention period](https://cloud.google.com/logging/quota-policy) in the past or more than
-   *   24 hours in the future will not be available when calling `entries.list`.
-   *   However, those log entries can still be
-   *   [exported with LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
+   *   [logs retention period](https://cloud.google.com/logging/quota-policy) in
+   *   the past or more than 24 hours in the future will not be available when
+   *   calling `entries.list`. However, those log entries can still be [exported
+   *   with
+   *   LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
    *
    *   To improve throughput and to avoid exceeding the
-   *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to `entries.write`,
-   *   you should try to include several log entries in this list,
-   *   rather than calling this method for each individual log entry.
+   *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to
+   *   `entries.write`, you should try to include several log entries in this
+   *   list, rather than calling this method for each individual log entry.
    * @param {boolean} [request.partialSuccess]
    *   Optional. Whether valid entries should be written even if some other
    *   entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
@@ -678,7 +679,8 @@ export class LoggingServiceV2Client {
   /**
    * Lists log entries.  Use this method to retrieve log entries that originated
    * from a project/folder/organization/billing account.  For ways to export log
-   * entries, see [Exporting Logs](https://cloud.google.com/logging/docs/export).
+   * entries, see [Exporting
+   * Logs](https://cloud.google.com/logging/docs/export).
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -695,12 +697,12 @@ export class LoggingServiceV2Client {
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
-   *   match the filter are returned.  An empty filter matches all log entries in
-   *   the resources listed in `resource_names`. Referencing a parent resource
-   *   that is not listed in `resource_names` will cause the filter to return no
-   *   results.
-   *   The maximum length of the filter is 20000 characters.
+   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).
+   *   Only log entries that match the filter are returned.  An empty filter
+   *   matches all log entries in the resources listed in `resource_names`.
+   *   Referencing a parent resource that is not listed in `resource_names` will
+   *   cause the filter to return no results. The maximum length of the filter is
+   *   20000 characters.
    * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
@@ -710,7 +712,8 @@ export class LoggingServiceV2Client {
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `next_page_token` in the
+   *   Default is 50. If the value is negative or exceeds 1000,
+   *   the request is rejected. The presence of `next_page_token` in the
    *   response indicates that more results might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
@@ -797,12 +800,12 @@ export class LoggingServiceV2Client {
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
-   *   match the filter are returned.  An empty filter matches all log entries in
-   *   the resources listed in `resource_names`. Referencing a parent resource
-   *   that is not listed in `resource_names` will cause the filter to return no
-   *   results.
-   *   The maximum length of the filter is 20000 characters.
+   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).
+   *   Only log entries that match the filter are returned.  An empty filter
+   *   matches all log entries in the resources listed in `resource_names`.
+   *   Referencing a parent resource that is not listed in `resource_names` will
+   *   cause the filter to return no results. The maximum length of the filter is
+   *   20000 characters.
    * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
@@ -812,7 +815,8 @@ export class LoggingServiceV2Client {
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `next_page_token` in the
+   *   Default is 50. If the value is negative or exceeds 1000,
+   *   the request is rejected. The presence of `next_page_token` in the
    *   response indicates that more results might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
@@ -859,12 +863,12 @@ export class LoggingServiceV2Client {
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
    *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).  Only log entries that
-   *   match the filter are returned.  An empty filter matches all log entries in
-   *   the resources listed in `resource_names`. Referencing a parent resource
-   *   that is not listed in `resource_names` will cause the filter to return no
-   *   results.
-   *   The maximum length of the filter is 20000 characters.
+   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).
+   *   Only log entries that match the filter are returned.  An empty filter
+   *   matches all log entries in the resources listed in `resource_names`.
+   *   Referencing a parent resource that is not listed in `resource_names` will
+   *   cause the filter to return no results. The maximum length of the filter is
+   *   20000 characters.
    * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
@@ -874,7 +878,8 @@ export class LoggingServiceV2Client {
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `next_page_token` in the
+   *   Default is 50. If the value is negative or exceeds 1000,
+   *   the request is rejected. The presence of `next_page_token` in the
    *   response indicates that more results might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
