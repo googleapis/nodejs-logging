@@ -6,6 +6,11 @@
         "idempotent": [
           "DEADLINE_EXCEEDED",
           "UNAVAILABLE"
+        ],
+        "deadline_exceeded_internal_unavailable": [
+          "DEADLINE_EXCEEDED",
+          "INTERNAL",
+          "UNAVAILABLE"
         ]
       },
       "retry_params": {
@@ -22,12 +27,12 @@
       "methods": {
         "ListLogMetrics": {
           "timeout_millis": 60000,
-          "retry_codes_name": "idempotent",
+          "retry_codes_name": "deadline_exceeded_internal_unavailable",
           "retry_params_name": "default"
         },
         "GetLogMetric": {
           "timeout_millis": 60000,
-          "retry_codes_name": "idempotent",
+          "retry_codes_name": "deadline_exceeded_internal_unavailable",
           "retry_params_name": "default"
         },
         "CreateLogMetric": {
@@ -37,12 +42,12 @@
         },
         "UpdateLogMetric": {
           "timeout_millis": 60000,
-          "retry_codes_name": "idempotent",
+          "retry_codes_name": "deadline_exceeded_internal_unavailable",
           "retry_params_name": "default"
         },
         "DeleteLogMetric": {
           "timeout_millis": 60000,
-          "retry_codes_name": "idempotent",
+          "retry_codes_name": "deadline_exceeded_internal_unavailable",
           "retry_params_name": "default"
         }
       }
