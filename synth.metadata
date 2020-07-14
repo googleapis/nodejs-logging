@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/nodejs-logging.git",
-        "sha": "866592a6e5733296781b24c80a022666ba65216a"
+        "sha": "e04738f233041a689e34e86ad4627ba7f82b12a1"
       }
     },
     {
