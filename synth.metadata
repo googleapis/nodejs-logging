@@ -19,7 +19,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "3a00b7fea8c4c83eaff8eb207f530a2e3e8e1de3"
+        "sha": "a23e435abce97533dc5e7a352833f56852e12ffd"
       }
     }
   ],
@@ -57,8 +57,6 @@
     ".kokoro/continuous/node10/test.cfg",
     ".kokoro/continuous/node12/common.cfg",
     ".kokoro/continuous/node12/test.cfg",
-    ".kokoro/continuous/node8/common.cfg",
-    ".kokoro/continuous/node8/test.cfg",
     ".kokoro/docs.sh",
     ".kokoro/lint.sh",
     ".kokoro/populate-secrets.sh",
