@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import * as Long from "long";
-import * as $protobuf from "protobufjs";
+import {protobuf as $protobuf} from "google-gax";
 /** Namespace google. */
 export namespace google {
 
@@ -5707,6 +5707,8 @@ export namespace google {
         /** LaunchStage enum. */
         enum LaunchStage {
             LAUNCH_STAGE_UNSPECIFIED = 0,
+            UNIMPLEMENTED = 6,
+            PRELAUNCH = 7,
             EARLY_ACCESS = 1,
             ALPHA = 2,
             BETA = 3,
@@ -7040,6 +7042,9 @@ export namespace google {
 
             /** MetricDescriptor launchStage */
             launchStage?: (google.api.LaunchStage|keyof typeof google.api.LaunchStage|null);
+
+            /** MetricDescriptor monitoredResourceTypes */
+            monitoredResourceTypes?: (string[]|null);
         }
 
         /** Represents a MetricDescriptor. */
@@ -7080,6 +7085,9 @@ export namespace google {
 
             /** MetricDescriptor launchStage. */
             public launchStage: (google.api.LaunchStage|keyof typeof google.api.LaunchStage);
+
+            /** MetricDescriptor monitoredResourceTypes. */
+            public monitoredResourceTypes: string[];
 
             /**
              * Creates a new MetricDescriptor instance using the specified properties.

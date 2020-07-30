@@ -1432,7 +1432,8 @@
                 "java_multiple_files": true,
                 "java_outer_classname": "LogSeverityProto",
                 "java_package": "com.google.logging.type",
-                "php_namespace": "Google\\Cloud\\Logging\\Type"
+                "php_namespace": "Google\\Cloud\\Logging\\Type",
+                "ruby_package": "Google::Cloud::Logging::Type"
               },
               "nested": {
                 "HttpRequest": {
@@ -1625,6 +1626,8 @@
             "LaunchStage": {
               "values": {
                 "LAUNCH_STAGE_UNSPECIFIED": 0,
+                "UNIMPLEMENTED": 6,
+                "PRELAUNCH": 7,
                 "EARLY_ACCESS": 1,
                 "ALPHA": 2,
                 "BETA": 3,
@@ -1976,6 +1979,11 @@
                 "launchStage": {
                   "type": "LaunchStage",
                   "id": 12
+                },
+                "monitoredResourceTypes": {
+                  "rule": "repeated",
+                  "type": "string",
+                  "id": 13
                 }
               },
               "nested": {
