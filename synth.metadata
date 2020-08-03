@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/nodejs-logging.git",
-        "sha": "81b7e9b2fa6b54cff95a6b7fb79177dd7e03e118"
+        "sha": "cf880a6864d08762f68fbcd85585089ff8c59bc1"
       }
     },
     {
@@ -19,7 +19,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "89d431fb2975fc4e0ed24995a6e6dfc8ff4c24fa"
+        "sha": "5936421202fb53ed4641bcb824017dd393a3dbcc"
       }
     }
   ],

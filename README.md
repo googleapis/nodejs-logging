@@ -15,6 +15,9 @@
 monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
 
 
+A comprehensive list of changes in each version may be found in
+[the CHANGELOG](https://github.com/googleapis/nodejs-logging/blob/master/CHANGELOG.md).
+
 * [Stackdriver Logging Node.js Client API Reference][client-docs]
 * [Stackdriver Logging Documentation][product-docs]
 * [github.com/googleapis/nodejs-logging](https://github.com/googleapis/nodejs-logging)
