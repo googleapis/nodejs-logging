@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.2](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.1...v8.0.2) (2020-08-06)
+
+
+### Bug Fixes
+
+* **docs:** jsdoc strings were malformed ([#864](https://www.github.com/googleapis/nodejs-logging/issues/864)) ([75cd541](https://www.github.com/googleapis/nodejs-logging/commit/75cd54196917a30edc922adcbac1e84bf019f720))
+
 ### [8.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.0...v8.0.1) (2020-07-06)
 
 
