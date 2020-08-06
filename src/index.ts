@@ -231,14 +231,12 @@ export interface ServiceContext {
  * @example <caption>Import the client library</caption>
  * const {Logging} = require('@google-cloud/logging');
  *
- * @example <caption>Create a client that uses <a
- * href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application
- * Default Credentials (ADC)</a>:</caption> const logging = new Logging();
+ * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
+ * const logging = new Logging();
  *
- * @example <caption>Create a client with <a
- * href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit
- * credentials</a>:</caption> const logging = new Logging({ projectId:
- * 'your-project-id', keyFilename: '/path/to/keyfile.json'
+ * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicitcredentials</a>:</caption>
+ * const logging = new Logging({ projectId:
+ *  'your-project-id', keyFilename: '/path/to/keyfile.json'
  * });
  *
  * @example <caption>include:samples/quickstart.js</caption>
@@ -1315,22 +1313,17 @@ export {MonitoredResource};
  * @module {Constructor} @google-cloud/logging
  * @alias nodejs-logging
  *
- * @example <caption>Install the client library with <a
- * href="https://www.npmjs.com/">npm</a>:</caption> npm install --save
- * @google-cloud/logging
+ * @example <caption>Install the client library with <a href="https://www.npmjs.com/">npm</a>:</caption>
+ * npm install --save @google-cloud/logging
  *
  * @example <caption>Import the client library</caption>
  * const {Logging} = require('@google-cloud/logging');
  *
- * @example <caption>Create a client that uses <a
- * href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application
- * Default Credentials (ADC)</a>:</caption> const logging = new Logging();
+ * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
+ * const logging = new Logging();
  *
- * @example <caption>Create a client with <a
- * href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit
- * credentials</a>:</caption> const logging = new Logging({ projectId:
- * 'your-project-id', keyFilename: '/path/to/keyfile.json'
- * });
+ * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:</caption>
+ * const logging = new Logging({ projectId: 'your-project-id', keyFilename: '/path/to/keyfile.json'});
  *
  * @example <caption>include:samples/quickstart.js</caption>
  * region_tag:logging_quickstart
