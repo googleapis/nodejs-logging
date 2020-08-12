@@ -263,7 +263,7 @@ export class LoggingServiceV2Client {
     // requests; denote this.
 
     this.descriptors.batching = {
-      WriteLogEntries: new this._gaxModule.BundleDescriptor(
+      writeLogEntries: new this._gaxModule.BundleDescriptor(
         'entries',
         ['log_name', 'resource', 'labels'],
         null,
@@ -340,12 +340,14 @@ export class LoggingServiceV2Client {
         }
       );
 
+      const descriptor =
+        this.descriptors.page[methodName] ||
+        this.descriptors.batching?.[methodName] ||
+        undefined;
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
         this._defaults[methodName],
-        this.descriptors.page[methodName] ||
-          this.descriptors.stream[methodName] ||
-          this.descriptors.longrunning[methodName]
+        descriptor
       );
 
       this.innerApiCalls[methodName] = apiCall;
