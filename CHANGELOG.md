@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.3](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.2...v8.0.3) (2020-08-10)
+
+
+### Bug Fixes
+
+* **deps:** roll back dependency @google-cloud/logging to ^8.0.1 ([#867](https://www.github.com/googleapis/nodejs-logging/issues/867)) ([3bd950a](https://www.github.com/googleapis/nodejs-logging/commit/3bd950a3bbb3a1bb24165d1b2cb96fc35c06292d))
+
 ### [8.0.2](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.1...v8.0.2) (2020-08-06)
 
 
