@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.4](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.3...v8.0.4) (2020-08-14)
+
+
+### Bug Fixes
+
+* make request batching work again ([#872](https://www.github.com/googleapis/nodejs-logging/issues/872)) ([a9a9567](https://www.github.com/googleapis/nodejs-logging/commit/a9a9567acc94dbef66830c96ecc363f23b076667))
+
 ### [8.0.3](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.2...v8.0.3) (2020-08-10)
 
 

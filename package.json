@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/logging",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "description": "Stackdriver Logging Client Library for Node.js",
   "keywords": [
     "google apis client",
