@@ -15,25 +15,24 @@
 'use strict';
 
 const {assert} = require('chai');
-const {describe, it, after} = require('mocha');
+const {describe, it} = require('mocha');
 const uuid = require('uuid');
-const {Logging} = require('@google-cloud/logging');
 const cp = require('child_process');
 
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
-const logging = new Logging();
-const logName = `nodejs-docs-samples-test-${uuid.v4()}`;
+const TESTS_PREFIX = 'nodejs-docs-samples-test';
+const logName = generateName();
 const projectId = process.env.GCLOUD_PROJECT;
 const cmd = 'node quickstart';
 
 describe('quickstart', () => {
-  after(async () => {
-    await logging.log(logName).delete().catch(console.warn);
-  });
-
   it('should log an entry', () => {
     const stdout = execSync(`${cmd} ${projectId} ${logName}`);
     assert.include(stdout, 'Logged: Hello, world!');
   });
 });
+
+function generateName() {
+  return `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
+}
