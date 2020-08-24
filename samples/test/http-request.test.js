@@ -22,7 +22,7 @@ const cp = require('child_process');
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
 const TESTS_PREFIX = 'nodejs-docs-samples-test';
-const logName = generateName();
+const logName = `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
 const projectId = process.env.GCLOUD_PROJECT;
 const cmd = 'node http-request';
 
@@ -32,7 +32,3 @@ describe('http-request', () => {
     assert.include(stdout, 'Logged: Hello, world!');
   });
 });
-
-function generateName() {
-  return `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
-}

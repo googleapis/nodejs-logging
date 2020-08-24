@@ -23,7 +23,7 @@ const {Logging} = require('@google-cloud/logging');
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 const cmd = 'node logs';
 const TESTS_PREFIX = 'nodejs-docs-samples-test';
-const logName = generateName();
+const logName = `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
 const projectId = process.env.GCLOUD_PROJECT;
 const logging = new Logging({projectId});
 const message = 'Hello world!';
@@ -108,10 +108,6 @@ describe('logs', () => {
     assert.include(output, `Wrote to ${logName}`);
   });
 });
-
-function generateName() {
-  return `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
-}
 
 // Parse the time the resource was created using the resource id
 // Format 1: ${TESTS_PREFIX}-${date}-${uuid}

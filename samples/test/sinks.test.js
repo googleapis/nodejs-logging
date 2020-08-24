@@ -26,8 +26,7 @@ const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
 const cmd = 'node sinks.js';
 const bucketName = `nodejs-logging-sinks-test-${uuid.v4()}`;
-const TESTS_PREFIX = 'nodejs-docs-samples-test';
-const sinkName = generateName();
+const sinkName = `nodejs-logging-sinks-test-${uuid.v4()}`;
 const filter = 'severity > WARNING';
 const logging = new Logging();
 const storage = new Storage();
@@ -80,7 +79,3 @@ describe('sinks', () => {
     await assert.rejects(logging.sink(sinkName).getMetadata());
   });
 });
-
-function generateName() {
-  return `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
-}
