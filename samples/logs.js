@@ -83,8 +83,7 @@ async function writeLogEntryAdvanced(logName, options) {
   const entry = log.entry({resource: options.resource}, options.entry);
 
   async function writeLogEntry() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=write
+    // See https://googleapis.dev/nodejs/logging/latest/Log.html#write
     await log.write(entry);
     console.log(`Wrote to ${logName}`);
   }
@@ -128,8 +127,7 @@ async function listLogEntries(logName) {
 
   async function printEntryMetadata() {
     // List the most recent entries for a given log
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
+    // See https://googleapis.dev/nodejs/logging/latest/Logging.html#getEntries
     const [entries] = await log.getEntries();
     console.log('Logs:');
     entries.forEach(entry => {
@@ -167,8 +165,7 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
   };
 
   async function printEntryMetadata() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getEntries
+    // See https://googleapis.dev/nodejs/logging/latest/Logging.html#getEntries
     const [entries] = await logging.getEntries(options);
     console.log('Logs:');
     entries.forEach(entry => {
@@ -198,8 +195,7 @@ async function deleteLog(logName) {
   async function deleteLog() {
     // Deletes a logger and all its entries.
     // Note that a deletion can take several minutes to take effect.
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/log?method=delete
+    // See https://googleapis.dev/nodejs/logging/latest/Log.html#delete
     await log.delete();
     console.log(`Deleted log: ${logName}`);
   }
