@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.6](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.5...v8.0.6) (2020-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to v16 ([#889](https://www.github.com/googleapis/nodejs-logging/issues/889)) ([08ee746](https://www.github.com/googleapis/nodejs-logging/commit/08ee746ddf08f38528d350cd394e903d41d1d621))
+
 ### [8.0.5](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.4...v8.0.5) (2020-08-18)
 
 
