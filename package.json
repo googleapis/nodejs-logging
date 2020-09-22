@@ -55,7 +55,7 @@
     "dot-prop": "^5.2.0",
     "eventid": "^1.0.0",
     "extend": "^3.0.2",
-    "gcp-metadata": "^3.5.0",
+    "gcp-metadata": "^4.0.0",
     "google-auth-library": "^5.10.1",
     "google-gax": "^2.7.0",
     "is": "^3.3.0",
