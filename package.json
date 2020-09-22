@@ -48,7 +48,7 @@
   "dependencies": {
     "@google-cloud/common": "^2.4.0",
     "@google-cloud/paginator": "^3.0.0",
-    "@google-cloud/projectify": "^1.0.4",
+    "@google-cloud/projectify": "^2.0.0",
     "@google-cloud/promisify": "^2.0.0",
     "@opencensus/propagation-stackdriver": "0.0.22",
     "arrify": "^2.0.1",
