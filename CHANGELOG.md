@@ -4,6 +4,17 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.7](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.6...v8.0.7) (2020-10-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/common to v3 ([#892](https://www.github.com/googleapis/nodejs-logging/issues/892)) ([b7c0f96](https://www.github.com/googleapis/nodejs-logging/commit/b7c0f9676fd1bacfd336a42ffac53f8765d99e3e))
+* **deps:** update dependency @google-cloud/projectify to v2 ([#895](https://www.github.com/googleapis/nodejs-logging/issues/895)) ([884e905](https://www.github.com/googleapis/nodejs-logging/commit/884e905f7f8cc1670174f507a80dfc011a962a3b))
+* **deps:** update dependency gcp-metadata to v4 ([#893](https://www.github.com/googleapis/nodejs-logging/issues/893)) ([ce79a7c](https://www.github.com/googleapis/nodejs-logging/commit/ce79a7cdb345f0fa8bd87c82df400427c1a984ea))
+* **deps:** update dependency google-auth-library to v6 ([#894](https://www.github.com/googleapis/nodejs-logging/issues/894)) ([d2bbe3c](https://www.github.com/googleapis/nodejs-logging/commit/d2bbe3c69595177f90eb19702534b77fc390e8aa))
+* **deps:** update dependency type-fest to ^0.17.0 ([#901](https://www.github.com/googleapis/nodejs-logging/issues/901)) ([860b795](https://www.github.com/googleapis/nodejs-logging/commit/860b795331885da38d5f91d1af9b1b313d3a59a3))
+
 ### [8.0.6](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.5...v8.0.6) (2020-09-12)
 
 
