@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.8](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.7...v8.0.8) (2020-10-06)
+
+
+### Bug Fixes
+
+* **deps:** upgrade @google-cloud/common ([#905](https://www.github.com/googleapis/nodejs-logging/issues/905)) ([228864b](https://www.github.com/googleapis/nodejs-logging/commit/228864b7c59c80f126c3dbd2d8c8cb4a20adcdf6))
+
 ### [8.0.7](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.6...v8.0.7) (2020-10-05)
 
 
