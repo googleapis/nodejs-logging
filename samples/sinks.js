@@ -51,8 +51,7 @@ async function createSink(sinkName, bucketName, filter) {
   };
 
   async function createSink() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=create
+    // See https://googleapis.dev/nodejs/logging/latest/Sink.html#create
     await sink.create(config);
     console.log(`Created sink ${sinkName} to ${bucketName}`);
   }
@@ -76,8 +75,7 @@ async function getSinkMetadata(sinkName) {
   const sink = logging.sink(sinkName);
 
   async function printSinkMetadata() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=getMetadata
+    // See https://googleapis.dev/nodejs/logging/latest/Sink.html#getMetadata
     const [metadata] = await sink.getMetadata();
     console.log(`Name: ${metadata.name}`);
     console.log(`Destination: ${metadata.destination}`);
@@ -96,8 +94,7 @@ async function listSinks() {
   const logging = new Logging();
 
   async function printSinkMetadata() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging?method=getSinks
+    // See https://googleapis.dev/nodejs/logging/latest/Logging.html#getSinks
     const [sinks] = await logging.getSinks();
     console.log('Sinks:');
     sinks.forEach(sink => {
@@ -138,8 +135,7 @@ async function updateSink(sinkName, filter) {
   };
 
   async function updateSink() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=setMetadata
+    // See https://googleapis.dev/nodejs/logging/latest/Sink.html#setMetadata
     const [metadata] = await sink.setMetadata(metadataInfo);
     console.log(`Sink ${sinkName} updated.`, metadata);
   }
@@ -163,8 +159,7 @@ async function deleteSink(sinkName) {
   const sink = logging.sink(sinkName);
 
   async function deleteSink() {
-    // See
-    // https://googlecloudplatform.github.io/google-cloud-node/#/docs/logging/latest/logging/sink?method=delete
+    // See https://googleapis.dev/nodejs/logging/latest/Sink.html#delete
     await sink.delete();
     console.log(`Sink ${sinkName} deleted.`);
   }

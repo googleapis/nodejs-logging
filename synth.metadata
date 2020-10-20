@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/nodejs-logging.git",
-        "sha": "a9a9567acc94dbef66830c96ecc363f23b076667"
+        "sha": "dafdf8eedc213c25f23ba5cc5cfa8eea4b2e9727"
       }
     },
     {
@@ -19,7 +19,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "d3049e66447b44dc10579e461d5e08e0e3838edd"
+        "sha": "5451633881133e5573cc271a18e73b18caca8b1b"
       }
     }
   ],
@@ -42,7 +42,6 @@
     ".github/ISSUE_TEMPLATE/feature_request.md",
     ".github/ISSUE_TEMPLATE/support_request.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
-    ".github/publish.yml",
     ".github/release-please.yml",
     ".github/workflows/ci.yaml",
     ".gitignore",
@@ -51,19 +50,19 @@
     ".kokoro/common.cfg",
     ".kokoro/continuous/node10/common.cfg",
     ".kokoro/continuous/node10/docs.cfg",
-    ".kokoro/continuous/node10/lint.cfg",
-    ".kokoro/continuous/node10/samples-test.cfg",
-    ".kokoro/continuous/node10/system-test.cfg",
     ".kokoro/continuous/node10/test.cfg",
     ".kokoro/continuous/node12/common.cfg",
+    ".kokoro/continuous/node12/lint.cfg",
+    ".kokoro/continuous/node12/samples-test.cfg",
+    ".kokoro/continuous/node12/system-test.cfg",
     ".kokoro/continuous/node12/test.cfg",
     ".kokoro/docs.sh",
     ".kokoro/lint.sh",
     ".kokoro/populate-secrets.sh",
     ".kokoro/presubmit/node10/common.cfg",
-    ".kokoro/presubmit/node10/samples-test.cfg",
-    ".kokoro/presubmit/node10/system-test.cfg",
     ".kokoro/presubmit/node12/common.cfg",
+    ".kokoro/presubmit/node12/samples-test.cfg",
+    ".kokoro/presubmit/node12/system-test.cfg",
     ".kokoro/presubmit/node12/test.cfg",
     ".kokoro/publish.sh",
     ".kokoro/release/docs-devsite.cfg",
@@ -76,17 +75,18 @@
     ".kokoro/test.bat",
     ".kokoro/test.sh",
     ".kokoro/trampoline.sh",
+    ".kokoro/trampoline_v2.sh",
     ".mocharc.js",
     ".nycrc",
     ".prettierignore",
     ".prettierrc.js",
+    ".trampolinerc",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
     "LICENSE",
     "README.md",
     "api-extractor.json",
     "linkinator.config.json",
-    "package-lock.json.668747317",
     "protos/google/logging/v2/log_entry.proto",
     "protos/google/logging/v2/logging.proto",
     "protos/google/logging/v2/logging_config.proto",
@@ -96,7 +96,6 @@
     "protos/protos.json",
     "renovate.json",
     "samples/README.md",
-    "samples/package-lock.json.3850284017",
     "src/v2/config_service_v2_client.ts",
     "src/v2/config_service_v2_client_config.json",
     "src/v2/config_service_v2_proto_list.json",
