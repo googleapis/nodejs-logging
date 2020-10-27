@@ -8,8 +8,12 @@
 [![npm version](https://img.shields.io/npm/v/@google-cloud/logging.svg)](https://www.npmjs.org/package/@google-cloud/logging)
 [![codecov](https://img.shields.io/codecov/c/github/googleapis/nodejs-logging/master.svg?style=flat)](https://codecov.io/gh/googleapis/nodejs-logging)
 
-[Cloud Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
+
+
+
+[Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
 monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
+
 
 A comprehensive list of changes in each version may be found in
 [the CHANGELOG](https://github.com/googleapis/nodejs-logging/blob/master/CHANGELOG.md).
@@ -25,6 +29,7 @@ Google APIs Client Libraries, in [Client Libraries Explained][explained].
 
 **Table of contents:**
 
+
 * [Quickstart](#quickstart)
   * [Before you begin](#before-you-begin)
   * [Installing the client library](#installing-the-client-library)
@@ -38,9 +43,9 @@ Google APIs Client Libraries, in [Client Libraries Explained][explained].
 
 ### Before you begin
 
-1. [Select or create a Cloud Platform project][projects].
-1. [Enable the Cloud Logging API][enable_api].
-1. [Set up authentication with a service account][auth] so you can access the
+1.  [Select or create a Cloud Platform project][projects].
+1.  [Enable the Cloud Logging API][enable_api].
+1.  [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.
 
 ### Installing the client library
@@ -48,6 +53,7 @@ Google APIs Client Libraries, in [Client Libraries Explained][explained].
 ```bash
 npm install @google-cloud/logging
 ```
+
 
 ### Using the client library
 
@@ -85,8 +91,8 @@ async function quickstart(
   }
   writeLog();
 }
-```
 
+```
 ## Batching Writes
 
 High throughput applications should avoid awaiting calls to the logger:
@@ -106,6 +112,7 @@ log.write(logEntry2);
 The `@google-cloud/logging` library will handle batching and dispatching
 these log lines to the API.
 
+
 ## Samples
 
 Samples are in the [`samples/`](https://github.com/googleapis/nodejs-logging/tree/master/samples) directory. The samples' `README.md`
@@ -119,6 +126,8 @@ has instructions for running the samples.
 | Quickstart | [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/quickstart.js) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/quickstart.js,samples/README.md) |
 | Sinks | [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/sinks.js) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/sinks.js,samples/README.md) |
 
+
+
 The [Cloud Logging Node.js Client API Reference][client-docs] documentation
 also contains samples.
 
@@ -128,7 +137,7 @@ Our client libraries follow the [Node.js release schedule](https://nodejs.org/en
 Libraries are compatible with all current _active_ and _maintenance_ versions of
 Node.js.
 
-Client libraries targeting some end-of-life versions of Node.js are available, and
+Client libraries targetting some end-of-life versions of Node.js are available, and
 can be installed via npm [dist-tags](https://docs.npmjs.com/cli/dist-tag).
 The dist-tags follow the naming convention `legacy-(version)`.
 
@@ -138,7 +147,7 @@ _Legacy Node.js versions are supported as a best effort:_
 * Some security patches may not be able to be backported.
 * Dependencies will not be kept up-to-date, and features will not be backported.
 
-### Legacy tags available
+#### Legacy tags available
 
 * `legacy-8`: install client libraries from this dist-tag for versions
   compatible with Node.js 8.
@@ -147,11 +156,16 @@ _Legacy Node.js versions are supported as a best effort:_
 
 This library follows [Semantic Versioning](http://semver.org/).
 
+
 This library is considered to be **General Availability (GA)**. This means it
 is stable; the code surface will not change in backwards-incompatible ways
 unless absolutely necessary (e.g. because of critical security issues) or with
 an extensive deprecation period. Issues and requests against **GA** libraries
 are addressed with the highest priority.
+
+
+
+
 
 More Information: [Google Cloud Platform Launch Stages][launch_stages]
 
