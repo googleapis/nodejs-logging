@@ -1,0 +1,4 @@
+externalManifests:
+- type: json
+  file: 'synth.metadata'
+  jsonpath: '$.generatedFiles[*]'
