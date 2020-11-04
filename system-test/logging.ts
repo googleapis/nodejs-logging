@@ -34,13 +34,12 @@ nock(HOST_ADDRESS)
   .replyWithError({code: 'ENOTFOUND'})
   .persist();
 
-describe('Logging', async () => {
+describe('Logging', () => {
   const bigQuery = new BigQuery();
   const pubsub = new PubSub();
   const storage = new Storage();
   const logging = new Logging();
 
-  const PROJECT_ID = await logging.auth.getProjectId();
   const TESTS_PREFIX = 'nodejs-logging-system-test';
   const WRITE_CONSISTENCY_DELAY_MS = 5000;
 
@@ -49,19 +48,22 @@ describe('Logging', async () => {
   const dataset = bigQuery.dataset(generateName().replace(/-/g, '_'));
   const topic = pubsub.topic(generateName());
 
-  const serviceAccount = (await logging.auth.getCredentials()).client_email;
-
-  await bucket.create();
-  await bucket.iam.setPolicy({
-    bindings: [
-      {
-        role: 'roles/storage.admin',
-        members: [`serviceAccount:${serviceAccount}`],
-      },
-    ],
+  let PROJECT_ID: string;
+  before(async () => {
+    const serviceAccount = (await logging.auth.getCredentials()).client_email;
+    PROJECT_ID = await logging.auth.getProjectId();
+    await bucket.create();
+    await bucket.iam.setPolicy({
+      bindings: [
+        {
+          role: 'roles/storage.admin',
+          members: [`serviceAccount:${serviceAccount}`],
+        },
+      ],
+    });
+    await dataset.create();
+    await topic.create();
   });
-  await dataset.create();
-  await topic.create();
 
   after(async () => {
     const oneHourAgo = new Date();
@@ -598,7 +600,6 @@ describe('Logging', async () => {
 
         getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
-
           const entry = entries![0];
 
           assert.strictEqual(entry.data, text);
