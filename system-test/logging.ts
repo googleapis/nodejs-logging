@@ -74,7 +74,6 @@ describe('Logging', () => {
       deleteDatasets(),
       deleteTopics(),
       deleteSinks(),
-      deleteLogs(),
     ]);
 
     async function deleteBuckets() {
@@ -99,66 +98,6 @@ describe('Logging', () => {
 
     async function deleteSinks() {
       await getAndDelete(logging.getSinks.bind(logging));
-    }
-
-    async function deleteLogs() {
-      const maxPatienceMs = 300000; // 5 minutes.
-      let logs;
-
-      try {
-        [logs] = await logging.getLogs({
-          pageSize: 10000,
-        });
-      } catch (e) {
-        console.warn('Error retrieving logs:');
-        console.warn(`  ${e.message}`);
-        console.warn('No test logs were deleted');
-        return;
-      }
-
-      const logsToDelete = logs.filter(log => {
-        return (
-          log.name.startsWith(TESTS_PREFIX) &&
-          getDateFromGeneratedName(log.name) < oneHourAgo
-        );
-      });
-
-      if (logsToDelete.length > 0) {
-        console.log('Deleting', logsToDelete.length, 'test logs...');
-      }
-
-      let numLogsDeleted = 0;
-      for (const log of logsToDelete) {
-        try {
-          await log.delete();
-          numLogsDeleted++;
-
-          // A one second gap is preferred between delete calls to avoid rate
-          // limiting.
-          let timeoutMs = 1000;
-          if (numLogsDeleted * 1000 > maxPatienceMs) {
-            // This is taking too long. If we hit the rate limit, we'll
-            // hopefully scoop up the stragglers on a future test run.
-            timeoutMs = 10;
-          }
-          await new Promise(res => setTimeout(res, timeoutMs));
-        } catch (e) {
-          if (e.code === 8) {
-            console.warn(
-              'Rate limit reached. The next test run will attempt to delete the rest'
-            );
-            break;
-          }
-          if (e.code !== 5) {
-            // Log exists, but couldn't be deleted.
-            console.warn(`Deleting ${log.name} failed:`, e.message);
-          }
-        }
-      }
-
-      if (logsToDelete.length > 0) {
-        console.log(`${numLogsDeleted}/${logsToDelete.length} logs deleted`);
-      }
     }
 
     async function getAndDelete(method: Function) {
@@ -318,19 +257,25 @@ describe('Logging', () => {
       function pollForMessages() {
         numAttempts++;
 
-        log.getEntries({autoPaginate: false}, (err, entries) => {
-          if (err) {
-            callback(err);
-            return;
-          }
+        const time = new Date();
+        time.setHours(time.getHours() - 1);
 
-          if (entries!.length < numExpectedMessages && numAttempts < 8) {
-            setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
-            return;
-          }
+        log.getEntries(
+          {autoPaginate: false, filter: `timestamp > "${time.toISOString()}"`},
+          (err, entries) => {
+            if (err) {
+              callback(err);
+              return;
+            }
 
-          callback(null, entries);
-        });
+            if (entries!.length < numExpectedMessages && numAttempts < 8) {
+              setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+              return;
+            }
+
+            callback(null, entries);
+          }
+        );
       }
     }
 
