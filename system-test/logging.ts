@@ -257,7 +257,7 @@ describe('Logging', () => {
       function pollForMessages() {
         numAttempts++;
 
-        let time = new Date();
+        const time = new Date();
         time.setHours(time.getHours() - 1);
 
         log.getEntries(
