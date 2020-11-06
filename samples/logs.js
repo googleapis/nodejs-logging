@@ -60,37 +60,6 @@ async function writeLogEntry(logName) {
   // [END logging_write_log_entry]
 }
 
-async function writeLogEntryAdvanced(logName, options) {
-  // [START logging_write_log_entry_advanced]
-  // Imports the Google Cloud client library
-  const {Logging} = require('@google-cloud/logging');
-
-  // Creates a client
-  const logging = new Logging();
-
-  /**
-   * TODO(developer): Uncomment the following lines to run the code.
-   */
-  // const logName = 'Name of the log to write to, e.g. my-log';
-  // const options = {
-  //   resource: {...}, // TODO(developer): Fill this in
-  //   entry: 'Hello, world!'
-  // };
-
-  const log = logging.log(logName);
-
-  // Prepare the entry
-  const entry = log.entry({resource: options.resource}, options.entry);
-
-  async function writeLogEntry() {
-    // See https://googleapis.dev/nodejs/logging/latest/Log.html#write
-    await log.write(entry);
-    console.log(`Wrote to ${logName}`);
-  }
-  writeLogEntry();
-  // [END logging_write_log_entry_advanced]
-}
-
 async function listLogs() {
   // [START logging_list_logs]
   // Imports the Google Cloud client library
@@ -236,28 +205,6 @@ async function main() {
     .command('list-logs', 'Lists logs in your project.', {}, listLogs)
     .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
       listLogEntries(opts.logName)
-    )
-    .command(
-      'write <logName> <resource> <entry>',
-      'Writes a log entry to the specified log.',
-      {},
-      opts => {
-        try {
-          opts.resource = JSON.parse(opts.resource);
-        } catch (err) {
-          console.error('"resource" must be a valid JSON string!');
-          return;
-        }
-
-        try {
-          opts.entry = JSON.parse(opts.entry);
-        } catch (err) {
-          console.error('"entry" must be a valid JSON string!');
-          return;
-        }
-
-        writeLogEntryAdvanced(opts.logName, opts);
-      }
     )
     .command(
       'write-simple <logName>',
