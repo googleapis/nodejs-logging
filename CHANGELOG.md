@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.0.10](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.9...v8.0.10) (2020-11-06)
+
+
+### Bug Fixes
+
+* do not modify options object, use defaultScopes ([#935](https://www.github.com/googleapis/nodejs-logging/issues/935)) ([fd1e63a](https://www.github.com/googleapis/nodejs-logging/commit/fd1e63a56f19b5af48fbba40d136a4ce640ca2f3))
+
 ### [8.0.9](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.8...v8.0.9) (2020-11-03)
 
 
