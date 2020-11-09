@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [8.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.10...v8.1.0) (2020-11-09)
+
+
+### Features
+
+* accept entry.timestamp string input in RFC3339 format ([#937](https://www.github.com/googleapis/nodejs-logging/issues/937)) ([869bbaf](https://www.github.com/googleapis/nodejs-logging/commit/869bbafe3790d6d6f21a1f538549a1f336d6f918))
+
+
+### Bug Fixes
+
+* **deps:** roll back dependency @google-cloud/logging to ^8.0.9 ([#940](https://www.github.com/googleapis/nodejs-logging/issues/940)) ([2a3ad40](https://www.github.com/googleapis/nodejs-logging/commit/2a3ad405683421f5d2099da1b658fe111dc336d2))
+
 ### [8.0.10](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.9...v8.0.10) (2020-11-06)
 
 
