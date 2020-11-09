@@ -177,7 +177,7 @@ class Entry {
       const nanoSecs = zuluTime.match(reNano)?.[1];
       entry.timestamp = {
         seconds: ms ? Math.floor(ms / 1000) : 0,
-        nanos: nanoSecs ? parseInt(nanoSecs.padEnd(9, '0')) : 0,
+        nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
     return entry;
