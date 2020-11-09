@@ -24,7 +24,7 @@ import {objToStruct, structToObj} from './common';
 
 const eventId = new EventId();
 
-export type Timestamp = google.protobuf.ITimestamp | Date;
+export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
 export type LogEntry = Merge<
   google.logging.v2.ILogEntry,
@@ -152,6 +152,7 @@ class Entry {
    */
   toJSON(options: ToJsonOptions = {}) {
     const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
+    // Format log message
     if (is.object(this.data)) {
       entry.jsonPayload = objToStruct(this.data, {
         removeCircular: !!options.removeCircular,
@@ -160,12 +161,23 @@ class Entry {
     } else if (is.string(this.data)) {
       entry.textPayload = this.data;
     }
+    // Format log timestamp
     if (is.date(entry.timestamp)) {
       const seconds = (entry.timestamp as Date).getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
       entry.timestamp = {
         seconds: secondsRounded,
         nanos: Math.floor((seconds - secondsRounded) * 1e9),
+      };
+    } else if (is.string(entry.timestamp)) {
+      // Convert RFC3339 "Zulu" timestamp into a format that can be parsed to Date
+      const zuluTime = entry.timestamp as string;
+      const ms = Date.parse(zuluTime.split(/[.,Z]/)[0] + 'Z');
+      const reNano = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.(\d{0,9})Z$/;
+      const nanoSecs = zuluTime.match(reNano)?.[1];
+      entry.timestamp = {
+        seconds: ms ? Math.floor(ms / 1000) : 0,
+        nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
     return entry;
