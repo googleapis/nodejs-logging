@@ -212,7 +212,7 @@ describe('Entry', () => {
       assert.strictEqual(json.textPayload, entry.data);
     });
 
-    it('should convert a date', () => {
+    it('should convert a date timestamp', () => {
       const date = new Date();
       entry.metadata.timestamp = date as entryTypes.Timestamp;
       const json = entry.toJSON();
@@ -222,6 +222,40 @@ describe('Entry', () => {
         seconds: secondsRounded,
         nanos: Math.floor((seconds - secondsRounded) * 1e9),
       });
+    });
+
+    it('should convert a string timestamp', () => {
+      const tests = [
+        {
+          inputTime: '2020-01-01T00:00:00.11Z',
+          expectedSeconds: 1577836800,
+          expectedNanos: 110000000,
+        },
+        {
+          inputTime: '2020-01-01T00:00:00Z',
+          expectedSeconds: 1577836800,
+          expectedNanos: 0,
+        },
+        {
+          inputTime: '2020-01-01T00:00:00.999999999Z',
+          expectedSeconds: 1577836800,
+          expectedNanos: 999999999,
+        },
+        {
+          inputTime: 'invalid timestamp string',
+          expectedSeconds: 0,
+          expectedNanos: 0,
+        },
+      ];
+
+      for (const test of tests) {
+        entry.metadata.timestamp = test.inputTime;
+        const json = entry.toJSON();
+        assert.deepStrictEqual(json.timestamp, {
+          seconds: test.expectedSeconds,
+          nanos: test.expectedNanos,
+        });
+      }
     });
   });
 });
