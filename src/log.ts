@@ -425,10 +425,16 @@ class Log implements LogSeverityFunctions {
    */
   entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
-    if (!data) {
+    if (!data && metadataOrData?.hasOwnProperty('httpRequest')) {
+      // If user logs entry(httpRequest)
+      metadata = metadataOrData as LogEntry;
+      data = {};
+    } else if (!data) {
+      // If user logs entry(message)
       data = metadataOrData as string | {};
       metadata = {};
     } else {
+      // If user logs entry(metadata, message)
       metadata = metadataOrData as LogEntry;
     }
     return this.logging.entry(metadata, data);
