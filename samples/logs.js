@@ -143,7 +143,7 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
     });
   }
   printEntryMetadata();
-  // [START logging_list_log_entries_advanced]
+  // [END logging_list_log_entries_advanced]
 }
 
 async function deleteLog(logName) {
