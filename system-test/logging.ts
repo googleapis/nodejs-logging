@@ -534,6 +534,29 @@ describe('Logging', () => {
       });
     });
 
+    it.only('should write a httpRequest log with no message', done => {
+      const {log} = getTestLog();
+
+      const metadata = {
+        httpRequest: { status: 200 }
+      };
+
+      const logEntry = log.entry(metadata);
+
+      log.write(logEntry, err => {
+        assert.ifError(err);
+
+        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+          assert.ifError(err);
+          const entry = entries![0];
+
+          assert.strictEqual(entry.metadata.httpRequest?.status, metadata.httpRequest.status);
+          assert.deepStrictEqual(entry.data, {});
+          done();
+        });
+      });
+    });
+
     it('should set the default resource', done => {
       const {log} = getTestLog();
 
