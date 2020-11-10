@@ -23,19 +23,11 @@ const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 const cmd = 'node logs';
 const TESTS_PREFIX = 'nodejs-docs-samples-test';
 const logName = `${TESTS_PREFIX}-${Date.now()}-${uuid.v4().split('-').pop()}`;
-const message = 'Hello world!';
 
 describe('logs', () => {
   after(async () => {
     const oneHourAgo = new Date();
     oneHourAgo.setHours(oneHourAgo.getHours() - 1);
-  });
-
-  it('should write a log entry', () => {
-    const output = execSync(
-      `${cmd} write ${logName} '{"type":"global"}' '{"message":"${message}"}'`
-    );
-    assert.include(output, `Wrote to ${logName}`);
   });
 
   it('should write a simple log entry', () => {
