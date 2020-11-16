@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [8.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v8.1.0...v8.1.1) (2020-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency type-fest to ^0.19.0 ([#945](https://www.github.com/googleapis/nodejs-logging/issues/945)) ([bd5f001](https://www.github.com/googleapis/nodejs-logging/commit/bd5f00173b92a56e2524c8222f74db1216924ec3))
+
 ## [8.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.0.10...v8.1.0) (2020-11-09)
 
 
