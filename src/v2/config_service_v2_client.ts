@@ -16,6 +16,7 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
+/* global window */
 import * as gax from 'google-gax';
 import {
   Callback,
@@ -30,6 +31,11 @@ import * as path from 'path';
 import {Transform} from 'stream';
 import {RequestType} from 'google-gax/build/src/apitypes';
 import * as protos from '../../protos/protos';
+/**
+ * Client JSON configuration object, loaded from
+ * `src/v2/config_service_v2_client_config.json`.
+ * This file defines retry strategy and timeouts for all API methods in this library.
+ */
 import * as gapicConfig from './config_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -83,9 +89,9 @@ export class ConfigServiceV2Client {
    *     your project ID will be detected automatically.
    * @param {string} [options.apiEndpoint] - The domain name of the
    *     API remote host.
-   * @param {gax.ClientConfig} [options.clientConfig] - client configuration override.
-   *     TODO(@alexander-fenster): link to gax documentation.
-   * @param {boolean} fallback - Use HTTP fallback mode.
+   * @param {gax.ClientConfig} [options.clientConfig] - Client configuration override.
+   *     Follows the structure of {@link gapicConfig}.
+   * @param {boolean} [options.fallback] - Use HTTP fallback mode.
    *     In fallback mode, a special browser-compatible transport implementation is used
    *     instead of gRPC transport. In browser context (if the `window` object is defined)
    *     the fallback mode is enabled automatically; set `options.fallback` to `false`
@@ -98,7 +104,9 @@ export class ConfigServiceV2Client {
       opts?.servicePath || opts?.apiEndpoint || staticMembers.servicePath;
     const port = opts?.port || staticMembers.port;
     const clientConfig = opts?.clientConfig ?? {};
-    const fallback = opts?.fallback ?? typeof window !== 'undefined';
+    const fallback =
+      opts?.fallback ??
+      (typeof window !== 'undefined' && typeof window?.fetch === 'function');
     opts = Object.assign({servicePath, port, clientConfig, fallback}, opts);
 
     // If scopes are unset in options and we're connecting to a non-default endpoint, set scopes just in case.
@@ -167,6 +175,9 @@ export class ConfigServiceV2Client {
       billingAccountLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
       ),
+      billingAccountLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
+      ),
       billingAccountLogPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
@@ -181,6 +192,9 @@ export class ConfigServiceV2Client {
       ),
       folderLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}'
+      ),
+      folderLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/locations/{location}/buckets/{bucket}/views/{view}'
       ),
       folderLogPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
@@ -203,6 +217,9 @@ export class ConfigServiceV2Client {
       organizationLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/buckets/{bucket}'
       ),
+      organizationLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
+      ),
       organizationLogPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
@@ -221,6 +238,9 @@ export class ConfigServiceV2Client {
       projectLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}'
       ),
+      projectLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/locations/{location}/buckets/{bucket}/views/{view}'
+      ),
       projectLogPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/logs/{log}'
       ),
@@ -237,6 +257,11 @@ export class ConfigServiceV2Client {
         'pageToken',
         'nextPageToken',
         'buckets'
+      ),
+      listViews: new this._gaxModule.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'views'
       ),
       listSinks: new this._gaxModule.PageDescriptor(
         'pageToken',
@@ -298,7 +323,15 @@ export class ConfigServiceV2Client {
     const configServiceV2StubMethods = [
       'listBuckets',
       'getBucket',
+      'createBucket',
       'updateBucket',
+      'deleteBucket',
+      'undeleteBucket',
+      'listViews',
+      'getView',
+      'createView',
+      'updateView',
+      'deleteView',
       'listSinks',
       'getSink',
       'createSink',
@@ -399,7 +432,7 @@ export class ConfigServiceV2Client {
   // -------------------
   getBucket(
     request: protos.google.logging.v2.IGetBucketRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogBucket,
@@ -409,7 +442,7 @@ export class ConfigServiceV2Client {
   >;
   getBucket(
     request: protos.google.logging.v2.IGetBucketRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.IGetBucketRequest | null | undefined,
@@ -425,7 +458,7 @@ export class ConfigServiceV2Client {
     >
   ): void;
   /**
-   * Gets a bucket (Beta).
+   * Gets a bucket.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -452,7 +485,7 @@ export class ConfigServiceV2Client {
   getBucket(
     request: protos.google.logging.v2.IGetBucketRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogBucket,
           protos.google.logging.v2.IGetBucketRequest | null | undefined,
@@ -471,12 +504,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -489,9 +522,106 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.innerApiCalls.getBucket(request, options, callback);
   }
+  createBucket(
+    request: protos.google.logging.v2.ICreateBucketRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.ICreateBucketRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  createBucket(
+    request: protos.google.logging.v2.ICreateBucketRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.ICreateBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createBucket(
+    request: protos.google.logging.v2.ICreateBucketRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.ICreateBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Creates a bucket that can be used to store log entries. Once a bucket has
+   * been created, the region cannot be changed.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The resource in which to create the bucket:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+   *
+   *   Example: `"projects/my-logging-project/locations/global"`
+   * @param {string} request.bucketId
+   *   Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are
+   *   limited to 100 characters and can include only letters, digits,
+   *   underscores, hyphens, and periods.
+   * @param {google.logging.v2.LogBucket} request.bucket
+   *   Required. The new bucket. The region specified in the new bucket must be compliant
+   *   with any Location Restriction Org Policy. The name field in the bucket is
+   *   ignored.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogBucket]{@link google.logging.v2.LogBucket}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.createBucket(request);
+   */
+  createBucket(
+    request: protos.google.logging.v2.ICreateBucketRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ILogBucket,
+          protos.google.logging.v2.ICreateBucketRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.ICreateBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogBucket,
+      protos.google.logging.v2.ICreateBucketRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.createBucket(request, options, callback);
+  }
   updateBucket(
     request: protos.google.logging.v2.IUpdateBucketRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogBucket,
@@ -501,7 +631,7 @@ export class ConfigServiceV2Client {
   >;
   updateBucket(
     request: protos.google.logging.v2.IUpdateBucketRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.IUpdateBucketRequest | null | undefined,
@@ -527,7 +657,6 @@ export class ConfigServiceV2Client {
    * will be returned.
    *
    * A buckets region may not be modified after it is created.
-   * This method is in Beta.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -567,7 +696,7 @@ export class ConfigServiceV2Client {
   updateBucket(
     request: protos.google.logging.v2.IUpdateBucketRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogBucket,
           protos.google.logging.v2.IUpdateBucketRequest | null | undefined,
@@ -586,12 +715,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -604,9 +733,570 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.innerApiCalls.updateBucket(request, options, callback);
   }
+  deleteBucket(
+    request: protos.google.logging.v2.IDeleteBucketRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteBucketRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  deleteBucket(
+    request: protos.google.logging.v2.IDeleteBucketRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteBucket(
+    request: protos.google.logging.v2.IDeleteBucketRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Deletes a bucket.
+   * Moves the bucket to the DELETE_REQUESTED state. After 7 days, the
+   * bucket will be purged and all logs in the bucket will be permanently
+   * deleted.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the bucket to delete.
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *
+   *   Example:
+   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.deleteBucket(request);
+   */
+  deleteBucket(
+    request: protos.google.logging.v2.IDeleteBucketRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteBucketRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteBucketRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.deleteBucket(request, options, callback);
+  }
+  undeleteBucket(
+    request: protos.google.logging.v2.IUndeleteBucketRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IUndeleteBucketRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  undeleteBucket(
+    request: protos.google.logging.v2.IUndeleteBucketRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IUndeleteBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  undeleteBucket(
+    request: protos.google.logging.v2.IUndeleteBucketRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IUndeleteBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Undeletes a bucket. A bucket that has been deleted may be undeleted within
+   * the grace period of 7 days.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the bucket to undelete.
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *
+   *   Example:
+   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.undeleteBucket(request);
+   */
+  undeleteBucket(
+    request: protos.google.logging.v2.IUndeleteBucketRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IUndeleteBucketRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IUndeleteBucketRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IUndeleteBucketRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.undeleteBucket(request, options, callback);
+  }
+  getView(
+    request: protos.google.logging.v2.IGetViewRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IGetViewRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  getView(
+    request: protos.google.logging.v2.IGetViewRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IGetViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getView(
+    request: protos.google.logging.v2.IGetViewRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IGetViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Gets a view.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The resource name of the policy:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
+   *
+   *   Example:
+   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogView]{@link google.logging.v2.LogView}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.getView(request);
+   */
+  getView(
+    request: protos.google.logging.v2.IGetViewRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ILogView,
+          protos.google.logging.v2.IGetViewRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IGetViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IGetViewRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.getView(request, options, callback);
+  }
+  createView(
+    request: protos.google.logging.v2.ICreateViewRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.ICreateViewRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  createView(
+    request: protos.google.logging.v2.ICreateViewRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.ICreateViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createView(
+    request: protos.google.logging.v2.ICreateViewRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.ICreateViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Creates a view over logs in a bucket. A bucket may contain a maximum of
+   * 50 views.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The bucket in which to create the view
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *
+   *   Example:
+   *   `"projects/my-logging-project/locations/my-location/buckets/my-bucket"`
+   * @param {string} request.viewId
+   *   Required. The id to use for this view.
+   * @param {google.logging.v2.LogView} request.view
+   *   Required. The new view.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogView]{@link google.logging.v2.LogView}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.createView(request);
+   */
+  createView(
+    request: protos.google.logging.v2.ICreateViewRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ILogView,
+          protos.google.logging.v2.ICreateViewRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.ICreateViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.ICreateViewRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.createView(request, options, callback);
+  }
+  updateView(
+    request: protos.google.logging.v2.IUpdateViewRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IUpdateViewRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  updateView(
+    request: protos.google.logging.v2.IUpdateViewRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IUpdateViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateView(
+    request: protos.google.logging.v2.IUpdateViewRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IUpdateViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Updates a view. This method replaces the following fields in the existing
+   * view with values from the new view: `filter`.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the view to update
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
+   *
+   *   Example:
+   *     `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   * @param {google.logging.v2.LogView} request.view
+   *   Required. The updated view.
+   * @param {google.protobuf.FieldMask} [request.updateMask]
+   *   Optional. Field mask that specifies the fields in `view` that need
+   *   an update. A field will be overwritten if, and only if, it is
+   *   in the update mask. `name` and output only fields cannot be updated.
+   *
+   *   For a detailed `FieldMask` definition, see
+   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+   *
+   *   Example: `updateMask=filter`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogView]{@link google.logging.v2.LogView}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.updateView(request);
+   */
+  updateView(
+    request: protos.google.logging.v2.IUpdateViewRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ILogView,
+          protos.google.logging.v2.IUpdateViewRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IUpdateViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView,
+      protos.google.logging.v2.IUpdateViewRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.updateView(request, options, callback);
+  }
+  deleteView(
+    request: protos.google.logging.v2.IDeleteViewRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteViewRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  deleteView(
+    request: protos.google.logging.v2.IDeleteViewRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteView(
+    request: protos.google.logging.v2.IDeleteViewRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Deletes a view from a bucket.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the view to delete:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
+   *
+   *   Example:
+   *      `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.deleteView(request);
+   */
+  deleteView(
+    request: protos.google.logging.v2.IDeleteViewRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.protobuf.IEmpty,
+          protos.google.logging.v2.IDeleteViewRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteViewRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.logging.v2.IDeleteViewRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      name: request.name || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.deleteView(request, options, callback);
+  }
   getSink(
     request: protos.google.logging.v2.IGetSinkRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogSink,
@@ -616,7 +1306,7 @@ export class ConfigServiceV2Client {
   >;
   getSink(
     request: protos.google.logging.v2.IGetSinkRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.IGetSinkRequest | null | undefined,
@@ -658,7 +1348,7 @@ export class ConfigServiceV2Client {
   getSink(
     request: protos.google.logging.v2.IGetSinkRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogSink,
           protos.google.logging.v2.IGetSinkRequest | null | undefined,
@@ -677,12 +1367,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -697,7 +1387,7 @@ export class ConfigServiceV2Client {
   }
   createSink(
     request: protos.google.logging.v2.ICreateSinkRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogSink,
@@ -707,7 +1397,7 @@ export class ConfigServiceV2Client {
   >;
   createSink(
     request: protos.google.logging.v2.ICreateSinkRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.ICreateSinkRequest | null | undefined,
@@ -767,7 +1457,7 @@ export class ConfigServiceV2Client {
   createSink(
     request: protos.google.logging.v2.ICreateSinkRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogSink,
           protos.google.logging.v2.ICreateSinkRequest | null | undefined,
@@ -786,12 +1476,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -806,7 +1496,7 @@ export class ConfigServiceV2Client {
   }
   updateSink(
     request: protos.google.logging.v2.IUpdateSinkRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogSink,
@@ -816,7 +1506,7 @@ export class ConfigServiceV2Client {
   >;
   updateSink(
     request: protos.google.logging.v2.IUpdateSinkRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.IUpdateSinkRequest | null | undefined,
@@ -893,7 +1583,7 @@ export class ConfigServiceV2Client {
   updateSink(
     request: protos.google.logging.v2.IUpdateSinkRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogSink,
           protos.google.logging.v2.IUpdateSinkRequest | null | undefined,
@@ -912,12 +1602,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -932,7 +1622,7 @@ export class ConfigServiceV2Client {
   }
   deleteSink(
     request: protos.google.logging.v2.IDeleteSinkRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.protobuf.IEmpty,
@@ -942,7 +1632,7 @@ export class ConfigServiceV2Client {
   >;
   deleteSink(
     request: protos.google.logging.v2.IDeleteSinkRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteSinkRequest | null | undefined,
@@ -986,7 +1676,7 @@ export class ConfigServiceV2Client {
   deleteSink(
     request: protos.google.logging.v2.IDeleteSinkRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.protobuf.IEmpty,
           protos.google.logging.v2.IDeleteSinkRequest | null | undefined,
@@ -1005,12 +1695,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1025,7 +1715,7 @@ export class ConfigServiceV2Client {
   }
   getExclusion(
     request: protos.google.logging.v2.IGetExclusionRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogExclusion,
@@ -1035,7 +1725,7 @@ export class ConfigServiceV2Client {
   >;
   getExclusion(
     request: protos.google.logging.v2.IGetExclusionRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.IGetExclusionRequest | null | undefined,
@@ -1077,7 +1767,7 @@ export class ConfigServiceV2Client {
   getExclusion(
     request: protos.google.logging.v2.IGetExclusionRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogExclusion,
           protos.google.logging.v2.IGetExclusionRequest | null | undefined,
@@ -1096,12 +1786,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1116,7 +1806,7 @@ export class ConfigServiceV2Client {
   }
   createExclusion(
     request: protos.google.logging.v2.ICreateExclusionRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogExclusion,
@@ -1126,7 +1816,7 @@ export class ConfigServiceV2Client {
   >;
   createExclusion(
     request: protos.google.logging.v2.ICreateExclusionRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.ICreateExclusionRequest | null | undefined,
@@ -1173,7 +1863,7 @@ export class ConfigServiceV2Client {
   createExclusion(
     request: protos.google.logging.v2.ICreateExclusionRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogExclusion,
           protos.google.logging.v2.ICreateExclusionRequest | null | undefined,
@@ -1192,12 +1882,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1212,7 +1902,7 @@ export class ConfigServiceV2Client {
   }
   updateExclusion(
     request: protos.google.logging.v2.IUpdateExclusionRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogExclusion,
@@ -1222,7 +1912,7 @@ export class ConfigServiceV2Client {
   >;
   updateExclusion(
     request: protos.google.logging.v2.IUpdateExclusionRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.IUpdateExclusionRequest | null | undefined,
@@ -1275,7 +1965,7 @@ export class ConfigServiceV2Client {
   updateExclusion(
     request: protos.google.logging.v2.IUpdateExclusionRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ILogExclusion,
           protos.google.logging.v2.IUpdateExclusionRequest | null | undefined,
@@ -1294,12 +1984,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1314,7 +2004,7 @@ export class ConfigServiceV2Client {
   }
   deleteExclusion(
     request: protos.google.logging.v2.IDeleteExclusionRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.protobuf.IEmpty,
@@ -1324,7 +2014,7 @@ export class ConfigServiceV2Client {
   >;
   deleteExclusion(
     request: protos.google.logging.v2.IDeleteExclusionRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteExclusionRequest | null | undefined,
@@ -1366,7 +2056,7 @@ export class ConfigServiceV2Client {
   deleteExclusion(
     request: protos.google.logging.v2.IDeleteExclusionRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.protobuf.IEmpty,
           protos.google.logging.v2.IDeleteExclusionRequest | null | undefined,
@@ -1385,12 +2075,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1405,7 +2095,7 @@ export class ConfigServiceV2Client {
   }
   getCmekSettings(
     request: protos.google.logging.v2.IGetCmekSettingsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ICmekSettings,
@@ -1415,7 +2105,7 @@ export class ConfigServiceV2Client {
   >;
   getCmekSettings(
     request: protos.google.logging.v2.IGetCmekSettingsRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ICmekSettings,
       protos.google.logging.v2.IGetCmekSettingsRequest | null | undefined,
@@ -1469,7 +2159,7 @@ export class ConfigServiceV2Client {
   getCmekSettings(
     request: protos.google.logging.v2.IGetCmekSettingsRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ICmekSettings,
           protos.google.logging.v2.IGetCmekSettingsRequest | null | undefined,
@@ -1488,12 +2178,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1508,7 +2198,7 @@ export class ConfigServiceV2Client {
   }
   updateCmekSettings(
     request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ICmekSettings,
@@ -1518,7 +2208,7 @@ export class ConfigServiceV2Client {
   >;
   updateCmekSettings(
     request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.ICmekSettings,
       protos.google.logging.v2.IUpdateCmekSettingsRequest | null | undefined,
@@ -1592,7 +2282,7 @@ export class ConfigServiceV2Client {
   updateCmekSettings(
     request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.ICmekSettings,
           | protos.google.logging.v2.IUpdateCmekSettingsRequest
@@ -1613,12 +2303,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1634,7 +2324,7 @@ export class ConfigServiceV2Client {
 
   listBuckets(
     request: protos.google.logging.v2.IListBucketsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogBucket[],
@@ -1644,7 +2334,7 @@ export class ConfigServiceV2Client {
   >;
   listBuckets(
     request: protos.google.logging.v2.IListBucketsRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: PaginationCallback<
       protos.google.logging.v2.IListBucketsRequest,
       protos.google.logging.v2.IListBucketsResponse | null | undefined,
@@ -1660,7 +2350,7 @@ export class ConfigServiceV2Client {
     >
   ): void;
   /**
-   * Lists buckets (Beta).
+   * Lists buckets.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1700,7 +2390,7 @@ export class ConfigServiceV2Client {
   listBuckets(
     request: protos.google.logging.v2.IListBucketsRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | PaginationCallback<
           protos.google.logging.v2.IListBucketsRequest,
           protos.google.logging.v2.IListBucketsResponse | null | undefined,
@@ -1719,12 +2409,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1776,7 +2466,7 @@ export class ConfigServiceV2Client {
    */
   listBucketsStream(
     request?: protos.google.logging.v2.IListBucketsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
@@ -1840,7 +2530,7 @@ export class ConfigServiceV2Client {
    */
   listBucketsAsync(
     request?: protos.google.logging.v2.IListBucketsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): AsyncIterable<protos.google.logging.v2.ILogBucket> {
     request = request || {};
     options = options || {};
@@ -1860,9 +2550,216 @@ export class ConfigServiceV2Client {
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogBucket>;
   }
+  listViews(
+    request: protos.google.logging.v2.IListViewsRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView[],
+      protos.google.logging.v2.IListViewsRequest | null,
+      protos.google.logging.v2.IListViewsResponse
+    ]
+  >;
+  listViews(
+    request: protos.google.logging.v2.IListViewsRequest,
+    options: CallOptions,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListViewsRequest,
+      protos.google.logging.v2.IListViewsResponse | null | undefined,
+      protos.google.logging.v2.ILogView
+    >
+  ): void;
+  listViews(
+    request: protos.google.logging.v2.IListViewsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListViewsRequest,
+      protos.google.logging.v2.IListViewsResponse | null | undefined,
+      protos.google.logging.v2.ILogView
+    >
+  ): void;
+  /**
+   * Lists views on a bucket.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The bucket whose views are to be listed:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is Array of [LogView]{@link google.logging.v2.LogView}.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed and will merge results from all the pages into this array.
+   *   Note that it can affect your quota.
+   *   We recommend using `listViewsAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   */
+  listViews(
+    request: protos.google.logging.v2.IListViewsRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | PaginationCallback<
+          protos.google.logging.v2.IListViewsRequest,
+          protos.google.logging.v2.IListViewsResponse | null | undefined,
+          protos.google.logging.v2.ILogView
+        >,
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListViewsRequest,
+      protos.google.logging.v2.IListViewsResponse | null | undefined,
+      protos.google.logging.v2.ILogView
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogView[],
+      protos.google.logging.v2.IListViewsRequest | null,
+      protos.google.logging.v2.IListViewsResponse
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    this.initialize();
+    return this.innerApiCalls.listViews(request, options, callback);
+  }
+
+  /**
+   * Equivalent to `method.name.toCamelCase()`, but returns a NodeJS Stream object.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The bucket whose views are to be listed:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Stream}
+   *   An object stream which emits an object representing [LogView]{@link google.logging.v2.LogView} on 'data' event.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed. Note that it can affect your quota.
+   *   We recommend using `listViewsAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   */
+  listViewsStream(
+    request?: protos.google.logging.v2.IListViewsRequest,
+    options?: CallOptions
+  ): Transform {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listViews.createStream(
+      this.innerApiCalls.listViews as gax.GaxCall,
+      request,
+      callSettings
+    );
+  }
+
+  /**
+   * Equivalent to `listViews`, but returns an iterable object.
+   *
+   * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The bucket whose views are to be listed:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   When you iterate the returned iterable, each element will be an object representing
+   *   [LogView]{@link google.logging.v2.LogView}. The API will be called under the hood as needed, once per the page,
+   *   so you can stop the iteration when you don't need more results.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   * @example
+   * const iterable = client.listViewsAsync(request);
+   * for await (const response of iterable) {
+   *   // process response
+   * }
+   */
+  listViewsAsync(
+    request?: protos.google.logging.v2.IListViewsRequest,
+    options?: CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILogView> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = gax.routingHeader.fromParams({
+      parent: request.parent || '',
+    });
+    options = options || {};
+    const callSettings = new gax.CallSettings(options);
+    this.initialize();
+    return this.descriptors.page.listViews.asyncIterate(
+      this.innerApiCalls['listViews'] as GaxCall,
+      (request as unknown) as RequestType,
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILogView>;
+  }
   listSinks(
     request: protos.google.logging.v2.IListSinksRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogSink[],
@@ -1872,7 +2769,7 @@ export class ConfigServiceV2Client {
   >;
   listSinks(
     request: protos.google.logging.v2.IListSinksRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: PaginationCallback<
       protos.google.logging.v2.IListSinksRequest,
       protos.google.logging.v2.IListSinksResponse | null | undefined,
@@ -1924,7 +2821,7 @@ export class ConfigServiceV2Client {
   listSinks(
     request: protos.google.logging.v2.IListSinksRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | PaginationCallback<
           protos.google.logging.v2.IListSinksRequest,
           protos.google.logging.v2.IListSinksResponse | null | undefined,
@@ -1943,12 +2840,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1996,7 +2893,7 @@ export class ConfigServiceV2Client {
    */
   listSinksStream(
     request?: protos.google.logging.v2.IListSinksRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
@@ -2056,7 +2953,7 @@ export class ConfigServiceV2Client {
    */
   listSinksAsync(
     request?: protos.google.logging.v2.IListSinksRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): AsyncIterable<protos.google.logging.v2.ILogSink> {
     request = request || {};
     options = options || {};
@@ -2078,7 +2975,7 @@ export class ConfigServiceV2Client {
   }
   listExclusions(
     request: protos.google.logging.v2.IListExclusionsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogExclusion[],
@@ -2088,7 +2985,7 @@ export class ConfigServiceV2Client {
   >;
   listExclusions(
     request: protos.google.logging.v2.IListExclusionsRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: PaginationCallback<
       protos.google.logging.v2.IListExclusionsRequest,
       protos.google.logging.v2.IListExclusionsResponse | null | undefined,
@@ -2140,7 +3037,7 @@ export class ConfigServiceV2Client {
   listExclusions(
     request: protos.google.logging.v2.IListExclusionsRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | PaginationCallback<
           protos.google.logging.v2.IListExclusionsRequest,
           protos.google.logging.v2.IListExclusionsResponse | null | undefined,
@@ -2159,12 +3056,12 @@ export class ConfigServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -2212,7 +3109,7 @@ export class ConfigServiceV2Client {
    */
   listExclusionsStream(
     request?: protos.google.logging.v2.IListExclusionsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
@@ -2272,7 +3169,7 @@ export class ConfigServiceV2Client {
    */
   listExclusionsAsync(
     request?: protos.google.logging.v2.IListExclusionsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): AsyncIterable<protos.google.logging.v2.ILogExclusion> {
     request = request || {};
     options = options || {};
@@ -2430,6 +3327,91 @@ export class ConfigServiceV2Client {
     return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified billingAccountLocationBucketView resource name string.
+   *
+   * @param {string} billing_account
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  billingAccountLocationBucketViewPath(
+    billingAccount: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.render(
+      {
+        billing_account: billingAccount,
+        location: location,
+        bucket: bucket,
+        view: view,
+      }
+    );
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the location from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).view;
   }
 
   /**
@@ -2632,6 +3614,89 @@ export class ConfigServiceV2Client {
     return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified folderLocationBucketView resource name string.
+   *
+   * @param {string} folder
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  folderLocationBucketViewPath(
+    folder: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
+      view: view,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).folder;
+  }
+
+  /**
+   * Parse the location from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).view;
   }
 
   /**
@@ -2917,6 +3982,91 @@ export class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationLocationBucketView resource name string.
+   *
+   * @param {string} organization
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  organizationLocationBucketViewPath(
+    organization: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.render(
+      {
+        organization: organization,
+        location: location,
+        bucket: bucket,
+        view: view,
+      }
+    );
+  }
+
+  /**
+   * Parse the organization from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).organization;
+  }
+
+  /**
+   * Parse the location from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).view;
+  }
+
+  /**
    * Return a fully-qualified organizationLog resource name string.
    *
    * @param {string} organization
@@ -3139,6 +4289,89 @@ export class ConfigServiceV2Client {
     return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified projectLocationBucketView resource name string.
+   *
+   * @param {string} project
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  projectLocationBucketViewPath(
+    project: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
+      view: view,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).project;
+  }
+
+  /**
+   * Parse the location from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).view;
   }
 
   /**
