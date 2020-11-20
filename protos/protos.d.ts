@@ -1578,6 +1578,20 @@ export namespace google {
                 public getBucket(request: google.logging.v2.IGetBucketRequest): Promise<google.logging.v2.LogBucket>;
 
                 /**
+                 * Calls CreateBucket.
+                 * @param request CreateBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and LogBucket
+                 */
+                public createBucket(request: google.logging.v2.ICreateBucketRequest, callback: google.logging.v2.ConfigServiceV2.CreateBucketCallback): void;
+
+                /**
+                 * Calls CreateBucket.
+                 * @param request CreateBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public createBucket(request: google.logging.v2.ICreateBucketRequest): Promise<google.logging.v2.LogBucket>;
+
+                /**
                  * Calls UpdateBucket.
                  * @param request UpdateBucketRequest message or plain object
                  * @param callback Node-style callback called with the error, if any, and LogBucket
@@ -1590,6 +1604,104 @@ export namespace google {
                  * @returns Promise
                  */
                 public updateBucket(request: google.logging.v2.IUpdateBucketRequest): Promise<google.logging.v2.LogBucket>;
+
+                /**
+                 * Calls DeleteBucket.
+                 * @param request DeleteBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Empty
+                 */
+                public deleteBucket(request: google.logging.v2.IDeleteBucketRequest, callback: google.logging.v2.ConfigServiceV2.DeleteBucketCallback): void;
+
+                /**
+                 * Calls DeleteBucket.
+                 * @param request DeleteBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public deleteBucket(request: google.logging.v2.IDeleteBucketRequest): Promise<google.protobuf.Empty>;
+
+                /**
+                 * Calls UndeleteBucket.
+                 * @param request UndeleteBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Empty
+                 */
+                public undeleteBucket(request: google.logging.v2.IUndeleteBucketRequest, callback: google.logging.v2.ConfigServiceV2.UndeleteBucketCallback): void;
+
+                /**
+                 * Calls UndeleteBucket.
+                 * @param request UndeleteBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public undeleteBucket(request: google.logging.v2.IUndeleteBucketRequest): Promise<google.protobuf.Empty>;
+
+                /**
+                 * Calls ListViews.
+                 * @param request ListViewsRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListViewsResponse
+                 */
+                public listViews(request: google.logging.v2.IListViewsRequest, callback: google.logging.v2.ConfigServiceV2.ListViewsCallback): void;
+
+                /**
+                 * Calls ListViews.
+                 * @param request ListViewsRequest message or plain object
+                 * @returns Promise
+                 */
+                public listViews(request: google.logging.v2.IListViewsRequest): Promise<google.logging.v2.ListViewsResponse>;
+
+                /**
+                 * Calls GetView.
+                 * @param request GetViewRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and LogView
+                 */
+                public getView(request: google.logging.v2.IGetViewRequest, callback: google.logging.v2.ConfigServiceV2.GetViewCallback): void;
+
+                /**
+                 * Calls GetView.
+                 * @param request GetViewRequest message or plain object
+                 * @returns Promise
+                 */
+                public getView(request: google.logging.v2.IGetViewRequest): Promise<google.logging.v2.LogView>;
+
+                /**
+                 * Calls CreateView.
+                 * @param request CreateViewRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and LogView
+                 */
+                public createView(request: google.logging.v2.ICreateViewRequest, callback: google.logging.v2.ConfigServiceV2.CreateViewCallback): void;
+
+                /**
+                 * Calls CreateView.
+                 * @param request CreateViewRequest message or plain object
+                 * @returns Promise
+                 */
+                public createView(request: google.logging.v2.ICreateViewRequest): Promise<google.logging.v2.LogView>;
+
+                /**
+                 * Calls UpdateView.
+                 * @param request UpdateViewRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and LogView
+                 */
+                public updateView(request: google.logging.v2.IUpdateViewRequest, callback: google.logging.v2.ConfigServiceV2.UpdateViewCallback): void;
+
+                /**
+                 * Calls UpdateView.
+                 * @param request UpdateViewRequest message or plain object
+                 * @returns Promise
+                 */
+                public updateView(request: google.logging.v2.IUpdateViewRequest): Promise<google.logging.v2.LogView>;
+
+                /**
+                 * Calls DeleteView.
+                 * @param request DeleteViewRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Empty
+                 */
+                public deleteView(request: google.logging.v2.IDeleteViewRequest, callback: google.logging.v2.ConfigServiceV2.DeleteViewCallback): void;
+
+                /**
+                 * Calls DeleteView.
+                 * @param request DeleteViewRequest message or plain object
+                 * @returns Promise
+                 */
+                public deleteView(request: google.logging.v2.IDeleteViewRequest): Promise<google.protobuf.Empty>;
 
                 /**
                  * Calls ListSinks.
@@ -1777,11 +1889,67 @@ export namespace google {
                 type GetBucketCallback = (error: (Error|null), response?: google.logging.v2.LogBucket) => void;
 
                 /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#createBucket}.
+                 * @param error Error, if any
+                 * @param [response] LogBucket
+                 */
+                type CreateBucketCallback = (error: (Error|null), response?: google.logging.v2.LogBucket) => void;
+
+                /**
                  * Callback as used by {@link google.logging.v2.ConfigServiceV2#updateBucket}.
                  * @param error Error, if any
                  * @param [response] LogBucket
                  */
                 type UpdateBucketCallback = (error: (Error|null), response?: google.logging.v2.LogBucket) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#deleteBucket}.
+                 * @param error Error, if any
+                 * @param [response] Empty
+                 */
+                type DeleteBucketCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#undeleteBucket}.
+                 * @param error Error, if any
+                 * @param [response] Empty
+                 */
+                type UndeleteBucketCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#listViews}.
+                 * @param error Error, if any
+                 * @param [response] ListViewsResponse
+                 */
+                type ListViewsCallback = (error: (Error|null), response?: google.logging.v2.ListViewsResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#getView}.
+                 * @param error Error, if any
+                 * @param [response] LogView
+                 */
+                type GetViewCallback = (error: (Error|null), response?: google.logging.v2.LogView) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#createView}.
+                 * @param error Error, if any
+                 * @param [response] LogView
+                 */
+                type CreateViewCallback = (error: (Error|null), response?: google.logging.v2.LogView) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#updateView}.
+                 * @param error Error, if any
+                 * @param [response] LogView
+                 */
+                type UpdateViewCallback = (error: (Error|null), response?: google.logging.v2.LogView) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#deleteView}.
+                 * @param error Error, if any
+                 * @param [response] Empty
+                 */
+                type DeleteViewCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
 
                 /**
                  * Callback as used by {@link google.logging.v2.ConfigServiceV2#listSinks}.
@@ -1886,6 +2054,9 @@ export namespace google {
                 /** LogBucket retentionDays */
                 retentionDays?: (number|null);
 
+                /** LogBucket locked */
+                locked?: (boolean|null);
+
                 /** LogBucket lifecycleState */
                 lifecycleState?: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState|null);
             }
@@ -1913,6 +2084,9 @@ export namespace google {
 
                 /** LogBucket retentionDays. */
                 public retentionDays: number;
+
+                /** LogBucket locked. */
+                public locked: boolean;
 
                 /** LogBucket lifecycleState. */
                 public lifecycleState: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState);
@@ -1988,6 +2162,127 @@ export namespace google {
                 public toJSON(): { [k: string]: any };
             }
 
+            /** LifecycleState enum. */
+            enum LifecycleState {
+                LIFECYCLE_STATE_UNSPECIFIED = 0,
+                ACTIVE = 1,
+                DELETE_REQUESTED = 2
+            }
+
+            /** Properties of a LogView. */
+            interface ILogView {
+
+                /** LogView name */
+                name?: (string|null);
+
+                /** LogView description */
+                description?: (string|null);
+
+                /** LogView createTime */
+                createTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogView updateTime */
+                updateTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogView filter */
+                filter?: (string|null);
+            }
+
+            /** Represents a LogView. */
+            class LogView implements ILogView {
+
+                /**
+                 * Constructs a new LogView.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILogView);
+
+                /** LogView name. */
+                public name: string;
+
+                /** LogView description. */
+                public description: string;
+
+                /** LogView createTime. */
+                public createTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogView updateTime. */
+                public updateTime?: (google.protobuf.ITimestamp|null);
+
+                /** LogView filter. */
+                public filter: string;
+
+                /**
+                 * Creates a new LogView instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LogView instance
+                 */
+                public static create(properties?: google.logging.v2.ILogView): google.logging.v2.LogView;
+
+                /**
+                 * Encodes the specified LogView message. Does not implicitly {@link google.logging.v2.LogView.verify|verify} messages.
+                 * @param message LogView message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILogView, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LogView message, length delimited. Does not implicitly {@link google.logging.v2.LogView.verify|verify} messages.
+                 * @param message LogView message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILogView, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LogView message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LogView
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogView;
+
+                /**
+                 * Decodes a LogView message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LogView
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogView;
+
+                /**
+                 * Verifies a LogView message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LogView message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LogView
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogView;
+
+                /**
+                 * Creates a plain object from a LogView message. Also converts values to other types if specified.
+                 * @param message LogView
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LogView, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LogView to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
             /** Properties of a LogSink. */
             interface ILogSink {
 
@@ -2005,6 +2300,9 @@ export namespace google {
 
                 /** LogSink disabled */
                 disabled?: (boolean|null);
+
+                /** LogSink exclusions */
+                exclusions?: (google.logging.v2.ILogExclusion[]|null);
 
                 /** LogSink outputVersionFormat */
                 outputVersionFormat?: (google.logging.v2.LogSink.VersionFormat|keyof typeof google.logging.v2.LogSink.VersionFormat|null);
@@ -2048,6 +2346,9 @@ export namespace google {
 
                 /** LogSink disabled. */
                 public disabled: boolean;
+
+                /** LogSink exclusions. */
+                public exclusions: google.logging.v2.ILogExclusion[];
 
                 /** LogSink outputVersionFormat. */
                 public outputVersionFormat: (google.logging.v2.LogSink.VersionFormat|keyof typeof google.logging.v2.LogSink.VersionFormat);
@@ -2245,13 +2546,6 @@ export namespace google {
                  * @returns JSON object
                  */
                 public toJSON(): { [k: string]: any };
-            }
-
-            /** LifecycleState enum. */
-            enum LifecycleState {
-                LIFECYCLE_STATE_UNSPECIFIED = 0,
-                ACTIVE = 1,
-                DELETE_REQUESTED = 2
             }
 
             /** Properties of a ListBucketsRequest. */
@@ -2452,6 +2746,108 @@ export namespace google {
                 public toJSON(): { [k: string]: any };
             }
 
+            /** Properties of a CreateBucketRequest. */
+            interface ICreateBucketRequest {
+
+                /** CreateBucketRequest parent */
+                parent?: (string|null);
+
+                /** CreateBucketRequest bucketId */
+                bucketId?: (string|null);
+
+                /** CreateBucketRequest bucket */
+                bucket?: (google.logging.v2.ILogBucket|null);
+            }
+
+            /** Represents a CreateBucketRequest. */
+            class CreateBucketRequest implements ICreateBucketRequest {
+
+                /**
+                 * Constructs a new CreateBucketRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ICreateBucketRequest);
+
+                /** CreateBucketRequest parent. */
+                public parent: string;
+
+                /** CreateBucketRequest bucketId. */
+                public bucketId: string;
+
+                /** CreateBucketRequest bucket. */
+                public bucket?: (google.logging.v2.ILogBucket|null);
+
+                /**
+                 * Creates a new CreateBucketRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateBucketRequest instance
+                 */
+                public static create(properties?: google.logging.v2.ICreateBucketRequest): google.logging.v2.CreateBucketRequest;
+
+                /**
+                 * Encodes the specified CreateBucketRequest message. Does not implicitly {@link google.logging.v2.CreateBucketRequest.verify|verify} messages.
+                 * @param message CreateBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ICreateBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified CreateBucketRequest message, length delimited. Does not implicitly {@link google.logging.v2.CreateBucketRequest.verify|verify} messages.
+                 * @param message CreateBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ICreateBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CreateBucketRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CreateBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.CreateBucketRequest;
+
+                /**
+                 * Decodes a CreateBucketRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns CreateBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.CreateBucketRequest;
+
+                /**
+                 * Verifies a CreateBucketRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a CreateBucketRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns CreateBucketRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.CreateBucketRequest;
+
+                /**
+                 * Creates a plain object from a CreateBucketRequest message. Also converts values to other types if specified.
+                 * @param message CreateBucketRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.CreateBucketRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this CreateBucketRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
             /** Properties of an UpdateBucketRequest. */
             interface IUpdateBucketRequest {
 
@@ -2639,6 +3035,768 @@ export namespace google {
 
                 /**
                  * Converts this GetBucketRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a DeleteBucketRequest. */
+            interface IDeleteBucketRequest {
+
+                /** DeleteBucketRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a DeleteBucketRequest. */
+            class DeleteBucketRequest implements IDeleteBucketRequest {
+
+                /**
+                 * Constructs a new DeleteBucketRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IDeleteBucketRequest);
+
+                /** DeleteBucketRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new DeleteBucketRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeleteBucketRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IDeleteBucketRequest): google.logging.v2.DeleteBucketRequest;
+
+                /**
+                 * Encodes the specified DeleteBucketRequest message. Does not implicitly {@link google.logging.v2.DeleteBucketRequest.verify|verify} messages.
+                 * @param message DeleteBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IDeleteBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified DeleteBucketRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteBucketRequest.verify|verify} messages.
+                 * @param message DeleteBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IDeleteBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteBucketRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.DeleteBucketRequest;
+
+                /**
+                 * Decodes a DeleteBucketRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns DeleteBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.DeleteBucketRequest;
+
+                /**
+                 * Verifies a DeleteBucketRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a DeleteBucketRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns DeleteBucketRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.DeleteBucketRequest;
+
+                /**
+                 * Creates a plain object from a DeleteBucketRequest message. Also converts values to other types if specified.
+                 * @param message DeleteBucketRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.DeleteBucketRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this DeleteBucketRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of an UndeleteBucketRequest. */
+            interface IUndeleteBucketRequest {
+
+                /** UndeleteBucketRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents an UndeleteBucketRequest. */
+            class UndeleteBucketRequest implements IUndeleteBucketRequest {
+
+                /**
+                 * Constructs a new UndeleteBucketRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IUndeleteBucketRequest);
+
+                /** UndeleteBucketRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new UndeleteBucketRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UndeleteBucketRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IUndeleteBucketRequest): google.logging.v2.UndeleteBucketRequest;
+
+                /**
+                 * Encodes the specified UndeleteBucketRequest message. Does not implicitly {@link google.logging.v2.UndeleteBucketRequest.verify|verify} messages.
+                 * @param message UndeleteBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IUndeleteBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified UndeleteBucketRequest message, length delimited. Does not implicitly {@link google.logging.v2.UndeleteBucketRequest.verify|verify} messages.
+                 * @param message UndeleteBucketRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IUndeleteBucketRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an UndeleteBucketRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UndeleteBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.UndeleteBucketRequest;
+
+                /**
+                 * Decodes an UndeleteBucketRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns UndeleteBucketRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.UndeleteBucketRequest;
+
+                /**
+                 * Verifies an UndeleteBucketRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates an UndeleteBucketRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns UndeleteBucketRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.UndeleteBucketRequest;
+
+                /**
+                 * Creates a plain object from an UndeleteBucketRequest message. Also converts values to other types if specified.
+                 * @param message UndeleteBucketRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.UndeleteBucketRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this UndeleteBucketRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListViewsRequest. */
+            interface IListViewsRequest {
+
+                /** ListViewsRequest parent */
+                parent?: (string|null);
+
+                /** ListViewsRequest pageToken */
+                pageToken?: (string|null);
+
+                /** ListViewsRequest pageSize */
+                pageSize?: (number|null);
+            }
+
+            /** Represents a ListViewsRequest. */
+            class ListViewsRequest implements IListViewsRequest {
+
+                /**
+                 * Constructs a new ListViewsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListViewsRequest);
+
+                /** ListViewsRequest parent. */
+                public parent: string;
+
+                /** ListViewsRequest pageToken. */
+                public pageToken: string;
+
+                /** ListViewsRequest pageSize. */
+                public pageSize: number;
+
+                /**
+                 * Creates a new ListViewsRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListViewsRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IListViewsRequest): google.logging.v2.ListViewsRequest;
+
+                /**
+                 * Encodes the specified ListViewsRequest message. Does not implicitly {@link google.logging.v2.ListViewsRequest.verify|verify} messages.
+                 * @param message ListViewsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListViewsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListViewsRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListViewsRequest.verify|verify} messages.
+                 * @param message ListViewsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListViewsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListViewsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListViewsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListViewsRequest;
+
+                /**
+                 * Decodes a ListViewsRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListViewsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListViewsRequest;
+
+                /**
+                 * Verifies a ListViewsRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListViewsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListViewsRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListViewsRequest;
+
+                /**
+                 * Creates a plain object from a ListViewsRequest message. Also converts values to other types if specified.
+                 * @param message ListViewsRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListViewsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListViewsRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a ListViewsResponse. */
+            interface IListViewsResponse {
+
+                /** ListViewsResponse views */
+                views?: (google.logging.v2.ILogView[]|null);
+
+                /** ListViewsResponse nextPageToken */
+                nextPageToken?: (string|null);
+            }
+
+            /** Represents a ListViewsResponse. */
+            class ListViewsResponse implements IListViewsResponse {
+
+                /**
+                 * Constructs a new ListViewsResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListViewsResponse);
+
+                /** ListViewsResponse views. */
+                public views: google.logging.v2.ILogView[];
+
+                /** ListViewsResponse nextPageToken. */
+                public nextPageToken: string;
+
+                /**
+                 * Creates a new ListViewsResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListViewsResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IListViewsResponse): google.logging.v2.ListViewsResponse;
+
+                /**
+                 * Encodes the specified ListViewsResponse message. Does not implicitly {@link google.logging.v2.ListViewsResponse.verify|verify} messages.
+                 * @param message ListViewsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListViewsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListViewsResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListViewsResponse.verify|verify} messages.
+                 * @param message ListViewsResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListViewsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListViewsResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListViewsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListViewsResponse;
+
+                /**
+                 * Decodes a ListViewsResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListViewsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListViewsResponse;
+
+                /**
+                 * Verifies a ListViewsResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListViewsResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListViewsResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListViewsResponse;
+
+                /**
+                 * Creates a plain object from a ListViewsResponse message. Also converts values to other types if specified.
+                 * @param message ListViewsResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListViewsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListViewsResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a CreateViewRequest. */
+            interface ICreateViewRequest {
+
+                /** CreateViewRequest parent */
+                parent?: (string|null);
+
+                /** CreateViewRequest viewId */
+                viewId?: (string|null);
+
+                /** CreateViewRequest view */
+                view?: (google.logging.v2.ILogView|null);
+            }
+
+            /** Represents a CreateViewRequest. */
+            class CreateViewRequest implements ICreateViewRequest {
+
+                /**
+                 * Constructs a new CreateViewRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ICreateViewRequest);
+
+                /** CreateViewRequest parent. */
+                public parent: string;
+
+                /** CreateViewRequest viewId. */
+                public viewId: string;
+
+                /** CreateViewRequest view. */
+                public view?: (google.logging.v2.ILogView|null);
+
+                /**
+                 * Creates a new CreateViewRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateViewRequest instance
+                 */
+                public static create(properties?: google.logging.v2.ICreateViewRequest): google.logging.v2.CreateViewRequest;
+
+                /**
+                 * Encodes the specified CreateViewRequest message. Does not implicitly {@link google.logging.v2.CreateViewRequest.verify|verify} messages.
+                 * @param message CreateViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ICreateViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified CreateViewRequest message, length delimited. Does not implicitly {@link google.logging.v2.CreateViewRequest.verify|verify} messages.
+                 * @param message CreateViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ICreateViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CreateViewRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CreateViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.CreateViewRequest;
+
+                /**
+                 * Decodes a CreateViewRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns CreateViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.CreateViewRequest;
+
+                /**
+                 * Verifies a CreateViewRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a CreateViewRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns CreateViewRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.CreateViewRequest;
+
+                /**
+                 * Creates a plain object from a CreateViewRequest message. Also converts values to other types if specified.
+                 * @param message CreateViewRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.CreateViewRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this CreateViewRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of an UpdateViewRequest. */
+            interface IUpdateViewRequest {
+
+                /** UpdateViewRequest name */
+                name?: (string|null);
+
+                /** UpdateViewRequest view */
+                view?: (google.logging.v2.ILogView|null);
+
+                /** UpdateViewRequest updateMask */
+                updateMask?: (google.protobuf.IFieldMask|null);
+            }
+
+            /** Represents an UpdateViewRequest. */
+            class UpdateViewRequest implements IUpdateViewRequest {
+
+                /**
+                 * Constructs a new UpdateViewRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IUpdateViewRequest);
+
+                /** UpdateViewRequest name. */
+                public name: string;
+
+                /** UpdateViewRequest view. */
+                public view?: (google.logging.v2.ILogView|null);
+
+                /** UpdateViewRequest updateMask. */
+                public updateMask?: (google.protobuf.IFieldMask|null);
+
+                /**
+                 * Creates a new UpdateViewRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UpdateViewRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IUpdateViewRequest): google.logging.v2.UpdateViewRequest;
+
+                /**
+                 * Encodes the specified UpdateViewRequest message. Does not implicitly {@link google.logging.v2.UpdateViewRequest.verify|verify} messages.
+                 * @param message UpdateViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IUpdateViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified UpdateViewRequest message, length delimited. Does not implicitly {@link google.logging.v2.UpdateViewRequest.verify|verify} messages.
+                 * @param message UpdateViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IUpdateViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an UpdateViewRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UpdateViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.UpdateViewRequest;
+
+                /**
+                 * Decodes an UpdateViewRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns UpdateViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.UpdateViewRequest;
+
+                /**
+                 * Verifies an UpdateViewRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates an UpdateViewRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns UpdateViewRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.UpdateViewRequest;
+
+                /**
+                 * Creates a plain object from an UpdateViewRequest message. Also converts values to other types if specified.
+                 * @param message UpdateViewRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.UpdateViewRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this UpdateViewRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a GetViewRequest. */
+            interface IGetViewRequest {
+
+                /** GetViewRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a GetViewRequest. */
+            class GetViewRequest implements IGetViewRequest {
+
+                /**
+                 * Constructs a new GetViewRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IGetViewRequest);
+
+                /** GetViewRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new GetViewRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns GetViewRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IGetViewRequest): google.logging.v2.GetViewRequest;
+
+                /**
+                 * Encodes the specified GetViewRequest message. Does not implicitly {@link google.logging.v2.GetViewRequest.verify|verify} messages.
+                 * @param message GetViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IGetViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified GetViewRequest message, length delimited. Does not implicitly {@link google.logging.v2.GetViewRequest.verify|verify} messages.
+                 * @param message GetViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IGetViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a GetViewRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns GetViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.GetViewRequest;
+
+                /**
+                 * Decodes a GetViewRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns GetViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.GetViewRequest;
+
+                /**
+                 * Verifies a GetViewRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a GetViewRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns GetViewRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.GetViewRequest;
+
+                /**
+                 * Creates a plain object from a GetViewRequest message. Also converts values to other types if specified.
+                 * @param message GetViewRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.GetViewRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this GetViewRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a DeleteViewRequest. */
+            interface IDeleteViewRequest {
+
+                /** DeleteViewRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a DeleteViewRequest. */
+            class DeleteViewRequest implements IDeleteViewRequest {
+
+                /**
+                 * Constructs a new DeleteViewRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IDeleteViewRequest);
+
+                /** DeleteViewRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new DeleteViewRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeleteViewRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IDeleteViewRequest): google.logging.v2.DeleteViewRequest;
+
+                /**
+                 * Encodes the specified DeleteViewRequest message. Does not implicitly {@link google.logging.v2.DeleteViewRequest.verify|verify} messages.
+                 * @param message DeleteViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IDeleteViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified DeleteViewRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteViewRequest.verify|verify} messages.
+                 * @param message DeleteViewRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IDeleteViewRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteViewRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.DeleteViewRequest;
+
+                /**
+                 * Decodes a DeleteViewRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns DeleteViewRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.DeleteViewRequest;
+
+                /**
+                 * Verifies a DeleteViewRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a DeleteViewRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns DeleteViewRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.DeleteViewRequest;
+
+                /**
+                 * Creates a plain object from a DeleteViewRequest message. Also converts values to other types if specified.
+                 * @param message DeleteViewRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.DeleteViewRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this DeleteViewRequest to JSON.
                  * @returns JSON object
                  */
                 public toJSON(): { [k: string]: any };

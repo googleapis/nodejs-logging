@@ -305,6 +305,118 @@ describe('v2.ConfigServiceV2Client', () => {
     });
   });
 
+  describe('createBucket', () => {
+    it('invokes createBucket without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogBucket()
+      );
+      client.innerApiCalls.createBucket = stubSimpleCall(expectedResponse);
+      const [response] = await client.createBucket(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.createBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes createBucket without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogBucket()
+      );
+      client.innerApiCalls.createBucket = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.createBucket(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILogBucket | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.createBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes createBucket with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.createBucket = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.createBucket(request), expectedError);
+      assert(
+        (client.innerApiCalls.createBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
   describe('updateBucket', () => {
     it('invokes updateBucket without error', async () => {
       const client = new configservicev2Module.v2.ConfigServiceV2Client({
@@ -411,6 +523,675 @@ describe('v2.ConfigServiceV2Client', () => {
       await assert.rejects(client.updateBucket(request), expectedError);
       assert(
         (client.innerApiCalls.updateBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('deleteBucket', () => {
+    it('invokes deleteBucket without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteBucketRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.innerApiCalls.deleteBucket = stubSimpleCall(expectedResponse);
+      const [response] = await client.deleteBucket(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.deleteBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes deleteBucket without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteBucketRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.innerApiCalls.deleteBucket = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.deleteBucket(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.protobuf.IEmpty | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.deleteBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes deleteBucket with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteBucketRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.deleteBucket = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.deleteBucket(request), expectedError);
+      assert(
+        (client.innerApiCalls.deleteBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('undeleteBucket', () => {
+    it('invokes undeleteBucket without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UndeleteBucketRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.innerApiCalls.undeleteBucket = stubSimpleCall(expectedResponse);
+      const [response] = await client.undeleteBucket(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.undeleteBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes undeleteBucket without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UndeleteBucketRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.innerApiCalls.undeleteBucket = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.undeleteBucket(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.protobuf.IEmpty | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.undeleteBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes undeleteBucket with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UndeleteBucketRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.undeleteBucket = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.undeleteBucket(request), expectedError);
+      assert(
+        (client.innerApiCalls.undeleteBucket as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('getView', () => {
+    it('invokes getView without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogView()
+      );
+      client.innerApiCalls.getView = stubSimpleCall(expectedResponse);
+      const [response] = await client.getView(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.getView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes getView without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogView()
+      );
+      client.innerApiCalls.getView = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.getView(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILogView | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.getView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes getView with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.getView = stubSimpleCall(undefined, expectedError);
+      await assert.rejects(client.getView(request), expectedError);
+      assert(
+        (client.innerApiCalls.getView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('createView', () => {
+    it('invokes createView without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateViewRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogView()
+      );
+      client.innerApiCalls.createView = stubSimpleCall(expectedResponse);
+      const [response] = await client.createView(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.createView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes createView without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateViewRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogView()
+      );
+      client.innerApiCalls.createView = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.createView(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILogView | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.createView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes createView with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateViewRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.createView = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.createView(request), expectedError);
+      assert(
+        (client.innerApiCalls.createView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('updateView', () => {
+    it('invokes updateView without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogView()
+      );
+      client.innerApiCalls.updateView = stubSimpleCall(expectedResponse);
+      const [response] = await client.updateView(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.updateView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes updateView without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.LogView()
+      );
+      client.innerApiCalls.updateView = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.updateView(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILogView | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.updateView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes updateView with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.updateView = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.updateView(request), expectedError);
+      assert(
+        (client.innerApiCalls.updateView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('deleteView', () => {
+    it('invokes deleteView without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.innerApiCalls.deleteView = stubSimpleCall(expectedResponse);
+      const [response] = await client.deleteView(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.deleteView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes deleteView without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.innerApiCalls.deleteView = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.deleteView(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.protobuf.IEmpty | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.deleteView as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes deleteView with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteViewRequest()
+      );
+      request.name = '';
+      const expectedHeaderRequestParams = 'name=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.deleteView = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.deleteView(request), expectedError);
+      assert(
+        (client.innerApiCalls.deleteView as SinonStub)
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
       );
@@ -1818,6 +2599,279 @@ describe('v2.ConfigServiceV2Client', () => {
     });
   });
 
+  describe('listViews', () => {
+    it('invokes listViews without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+      ];
+      client.innerApiCalls.listViews = stubSimpleCall(expectedResponse);
+      const [response] = await client.listViews(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.listViews as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes listViews without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+      ];
+      client.innerApiCalls.listViews = stubSimpleCallWithCallback(
+        expectedResponse
+      );
+      const promise = new Promise((resolve, reject) => {
+        client.listViews(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILogView[] | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.listViews as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions /*, callback defined above */)
+      );
+    });
+
+    it('invokes listViews with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedOptions = {
+        otherArgs: {
+          headers: {
+            'x-goog-request-params': expectedHeaderRequestParams,
+          },
+        },
+      };
+      const expectedError = new Error('expected');
+      client.innerApiCalls.listViews = stubSimpleCall(undefined, expectedError);
+      await assert.rejects(client.listViews(request), expectedError);
+      assert(
+        (client.innerApiCalls.listViews as SinonStub)
+          .getCall(0)
+          .calledWith(request, expectedOptions, undefined)
+      );
+    });
+
+    it('invokes listViewsStream without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+      ];
+      client.descriptors.page.listViews.createStream = stubPageStreamingCall(
+        expectedResponse
+      );
+      const stream = client.listViewsStream(request);
+      const promise = new Promise((resolve, reject) => {
+        const responses: protos.google.logging.v2.LogView[] = [];
+        stream.on('data', (response: protos.google.logging.v2.LogView) => {
+          responses.push(response);
+        });
+        stream.on('end', () => {
+          resolve(responses);
+        });
+        stream.on('error', (err: Error) => {
+          reject(err);
+        });
+      });
+      const responses = await promise;
+      assert.deepStrictEqual(responses, expectedResponse);
+      assert(
+        (client.descriptors.page.listViews.createStream as SinonStub)
+          .getCall(0)
+          .calledWith(client.innerApiCalls.listViews, request)
+      );
+      assert.strictEqual(
+        (client.descriptors.page.listViews.createStream as SinonStub).getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'],
+        expectedHeaderRequestParams
+      );
+    });
+
+    it('invokes listViewsStream with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedError = new Error('expected');
+      client.descriptors.page.listViews.createStream = stubPageStreamingCall(
+        undefined,
+        expectedError
+      );
+      const stream = client.listViewsStream(request);
+      const promise = new Promise((resolve, reject) => {
+        const responses: protos.google.logging.v2.LogView[] = [];
+        stream.on('data', (response: protos.google.logging.v2.LogView) => {
+          responses.push(response);
+        });
+        stream.on('end', () => {
+          resolve(responses);
+        });
+        stream.on('error', (err: Error) => {
+          reject(err);
+        });
+      });
+      await assert.rejects(promise, expectedError);
+      assert(
+        (client.descriptors.page.listViews.createStream as SinonStub)
+          .getCall(0)
+          .calledWith(client.innerApiCalls.listViews, request)
+      );
+      assert.strictEqual(
+        (client.descriptors.page.listViews.createStream as SinonStub).getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'],
+        expectedHeaderRequestParams
+      );
+    });
+
+    it('uses async iteration with listViews without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+        generateSampleMessage(new protos.google.logging.v2.LogView()),
+      ];
+      client.descriptors.page.listViews.asyncIterate = stubAsyncIterationCall(
+        expectedResponse
+      );
+      const responses: protos.google.logging.v2.ILogView[] = [];
+      const iterable = client.listViewsAsync(request);
+      for await (const resource of iterable) {
+        responses.push(resource!);
+      }
+      assert.deepStrictEqual(responses, expectedResponse);
+      assert.deepStrictEqual(
+        (client.descriptors.page.listViews.asyncIterate as SinonStub).getCall(0)
+          .args[1],
+        request
+      );
+      assert.strictEqual(
+        (client.descriptors.page.listViews.asyncIterate as SinonStub).getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'],
+        expectedHeaderRequestParams
+      );
+    });
+
+    it('uses async iteration with listViews with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListViewsRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedError = new Error('expected');
+      client.descriptors.page.listViews.asyncIterate = stubAsyncIterationCall(
+        undefined,
+        expectedError
+      );
+      const iterable = client.listViewsAsync(request);
+      await assert.rejects(async () => {
+        const responses: protos.google.logging.v2.ILogView[] = [];
+        for await (const resource of iterable) {
+          responses.push(resource!);
+        }
+      });
+      assert.deepStrictEqual(
+        (client.descriptors.page.listViews.asyncIterate as SinonStub).getCall(0)
+          .args[1],
+        request
+      );
+      assert.strictEqual(
+        (client.descriptors.page.listViews.asyncIterate as SinonStub).getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'],
+        expectedHeaderRequestParams
+      );
+    });
+  });
+
   describe('listSinks', () => {
     it('invokes listSinks without error', async () => {
       const client = new configservicev2Module.v2.ConfigServiceV2Client({
@@ -2553,6 +3607,95 @@ describe('v2.ConfigServiceV2Client', () => {
       });
     });
 
+    describe('billingAccountLocationBucketView', () => {
+      const fakePath = '/rendered/path/billingAccountLocationBucketView';
+      const expectedParameters = {
+        billing_account: 'billingAccountValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        view: 'viewValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.billingAccountLocationBucketViewPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.billingAccountLocationBucketViewPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('billingAccountLocationBucketViewPath', () => {
+        const result = client.billingAccountLocationBucketViewPath(
+          'billingAccountValue',
+          'locationValue',
+          'bucketValue',
+          'viewValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+            .render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchBillingAccountFromBillingAccountLocationBucketViewName', () => {
+        const result = client.matchBillingAccountFromBillingAccountLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'billingAccountValue');
+        assert(
+          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromBillingAccountLocationBucketViewName', () => {
+        const result = client.matchLocationFromBillingAccountLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromBillingAccountLocationBucketViewName', () => {
+        const result = client.matchBucketFromBillingAccountLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchViewFromBillingAccountLocationBucketViewName', () => {
+        const result = client.matchViewFromBillingAccountLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'viewValue');
+        assert(
+          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('billingAccountLog', () => {
       const fakePath = '/rendered/path/billingAccountLog';
       const expectedParameters = {
@@ -2822,6 +3965,95 @@ describe('v2.ConfigServiceV2Client', () => {
         assert.strictEqual(result, 'bucketValue');
         assert(
           (client.pathTemplates.folderLocationBucketPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('folderLocationBucketView', () => {
+      const fakePath = '/rendered/path/folderLocationBucketView';
+      const expectedParameters = {
+        folder: 'folderValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        view: 'viewValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.folderLocationBucketViewPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.folderLocationBucketViewPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('folderLocationBucketViewPath', () => {
+        const result = client.folderLocationBucketViewPath(
+          'folderValue',
+          'locationValue',
+          'bucketValue',
+          'viewValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.folderLocationBucketViewPathTemplate
+            .render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchFolderFromFolderLocationBucketViewName', () => {
+        const result = client.matchFolderFromFolderLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'folderValue');
+        assert(
+          (client.pathTemplates.folderLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromFolderLocationBucketViewName', () => {
+        const result = client.matchLocationFromFolderLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (client.pathTemplates.folderLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromFolderLocationBucketViewName', () => {
+        const result = client.matchBucketFromFolderLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (client.pathTemplates.folderLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchViewFromFolderLocationBucketViewName', () => {
+        const result = client.matchViewFromFolderLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'viewValue');
+        assert(
+          (client.pathTemplates.folderLocationBucketViewPathTemplate
             .match as SinonStub)
             .getCall(-1)
             .calledWith(fakePath)
@@ -3200,6 +4432,95 @@ describe('v2.ConfigServiceV2Client', () => {
       });
     });
 
+    describe('organizationLocationBucketView', () => {
+      const fakePath = '/rendered/path/organizationLocationBucketView';
+      const expectedParameters = {
+        organization: 'organizationValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        view: 'viewValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.organizationLocationBucketViewPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.organizationLocationBucketViewPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('organizationLocationBucketViewPath', () => {
+        const result = client.organizationLocationBucketViewPath(
+          'organizationValue',
+          'locationValue',
+          'bucketValue',
+          'viewValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.organizationLocationBucketViewPathTemplate
+            .render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchOrganizationFromOrganizationLocationBucketViewName', () => {
+        const result = client.matchOrganizationFromOrganizationLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'organizationValue');
+        assert(
+          (client.pathTemplates.organizationLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromOrganizationLocationBucketViewName', () => {
+        const result = client.matchLocationFromOrganizationLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (client.pathTemplates.organizationLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromOrganizationLocationBucketViewName', () => {
+        const result = client.matchBucketFromOrganizationLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (client.pathTemplates.organizationLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchViewFromOrganizationLocationBucketViewName', () => {
+        const result = client.matchViewFromOrganizationLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'viewValue');
+        assert(
+          (client.pathTemplates.organizationLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('organizationLog', () => {
       const fakePath = '/rendered/path/organizationLog';
       const expectedParameters = {
@@ -3507,6 +4828,95 @@ describe('v2.ConfigServiceV2Client', () => {
         assert.strictEqual(result, 'bucketValue');
         assert(
           (client.pathTemplates.projectLocationBucketPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('projectLocationBucketView', () => {
+      const fakePath = '/rendered/path/projectLocationBucketView';
+      const expectedParameters = {
+        project: 'projectValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        view: 'viewValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.projectLocationBucketViewPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.projectLocationBucketViewPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('projectLocationBucketViewPath', () => {
+        const result = client.projectLocationBucketViewPath(
+          'projectValue',
+          'locationValue',
+          'bucketValue',
+          'viewValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.projectLocationBucketViewPathTemplate
+            .render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchProjectFromProjectLocationBucketViewName', () => {
+        const result = client.matchProjectFromProjectLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'projectValue');
+        assert(
+          (client.pathTemplates.projectLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromProjectLocationBucketViewName', () => {
+        const result = client.matchLocationFromProjectLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (client.pathTemplates.projectLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromProjectLocationBucketViewName', () => {
+        const result = client.matchBucketFromProjectLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (client.pathTemplates.projectLocationBucketViewPathTemplate
+            .match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchViewFromProjectLocationBucketViewName', () => {
+        const result = client.matchViewFromProjectLocationBucketViewName(
+          fakePath
+        );
+        assert.strictEqual(result, 'viewValue');
+        assert(
+          (client.pathTemplates.projectLocationBucketViewPathTemplate
             .match as SinonStub)
             .getCall(-1)
             .calledWith(fakePath)

@@ -16,6 +16,7 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
+/* global window */
 import * as gax from 'google-gax';
 import {
   Callback,
@@ -30,6 +31,11 @@ import * as path from 'path';
 import {Transform} from 'stream';
 import {RequestType} from 'google-gax/build/src/apitypes';
 import * as protos from '../../protos/protos';
+/**
+ * Client JSON configuration object, loaded from
+ * `src/v2/logging_service_v2_client_config.json`.
+ * This file defines retry strategy and timeouts for all API methods in this library.
+ */
 import * as gapicConfig from './logging_service_v2_client_config.json';
 
 const version = require('../../../package.json').version;
@@ -83,9 +89,9 @@ export class LoggingServiceV2Client {
    *     your project ID will be detected automatically.
    * @param {string} [options.apiEndpoint] - The domain name of the
    *     API remote host.
-   * @param {gax.ClientConfig} [options.clientConfig] - client configuration override.
-   *     TODO(@alexander-fenster): link to gax documentation.
-   * @param {boolean} fallback - Use HTTP fallback mode.
+   * @param {gax.ClientConfig} [options.clientConfig] - Client configuration override.
+   *     Follows the structure of {@link gapicConfig}.
+   * @param {boolean} [options.fallback] - Use HTTP fallback mode.
    *     In fallback mode, a special browser-compatible transport implementation is used
    *     instead of gRPC transport. In browser context (if the `window` object is defined)
    *     the fallback mode is enabled automatically; set `options.fallback` to `false`
@@ -98,7 +104,9 @@ export class LoggingServiceV2Client {
       opts?.servicePath || opts?.apiEndpoint || staticMembers.servicePath;
     const port = opts?.port || staticMembers.port;
     const clientConfig = opts?.clientConfig ?? {};
-    const fallback = opts?.fallback ?? typeof window !== 'undefined';
+    const fallback =
+      opts?.fallback ??
+      (typeof window !== 'undefined' && typeof window?.fetch === 'function');
     opts = Object.assign({servicePath, port, clientConfig, fallback}, opts);
 
     // If scopes are unset in options and we're connecting to a non-default endpoint, set scopes just in case.
@@ -167,6 +175,9 @@ export class LoggingServiceV2Client {
       billingAccountLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
       ),
+      billingAccountLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
+      ),
       billingAccountLogPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
@@ -181,6 +192,9 @@ export class LoggingServiceV2Client {
       ),
       folderLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}'
+      ),
+      folderLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/locations/{location}/buckets/{bucket}/views/{view}'
       ),
       folderLogPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
@@ -200,6 +214,9 @@ export class LoggingServiceV2Client {
       organizationLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/buckets/{bucket}'
       ),
+      organizationLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
+      ),
       organizationLogPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
@@ -217,6 +234,9 @@ export class LoggingServiceV2Client {
       ),
       projectLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}'
+      ),
+      projectLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/locations/{location}/buckets/{bucket}/views/{view}'
       ),
       projectLogPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/logs/{log}'
@@ -415,7 +435,7 @@ export class LoggingServiceV2Client {
   // -------------------
   deleteLog(
     request: protos.google.logging.v2.IDeleteLogRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.protobuf.IEmpty,
@@ -425,7 +445,7 @@ export class LoggingServiceV2Client {
   >;
   deleteLog(
     request: protos.google.logging.v2.IDeleteLogRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteLogRequest | null | undefined,
@@ -474,7 +494,7 @@ export class LoggingServiceV2Client {
   deleteLog(
     request: protos.google.logging.v2.IDeleteLogRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.protobuf.IEmpty,
           protos.google.logging.v2.IDeleteLogRequest | null | undefined,
@@ -493,12 +513,12 @@ export class LoggingServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -513,7 +533,7 @@ export class LoggingServiceV2Client {
   }
   writeLogEntries(
     request: protos.google.logging.v2.IWriteLogEntriesRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.IWriteLogEntriesResponse,
@@ -523,7 +543,7 @@ export class LoggingServiceV2Client {
   >;
   writeLogEntries(
     request: protos.google.logging.v2.IWriteLogEntriesRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: Callback<
       protos.google.logging.v2.IWriteLogEntriesResponse,
       protos.google.logging.v2.IWriteLogEntriesRequest | null | undefined,
@@ -629,7 +649,7 @@ export class LoggingServiceV2Client {
   writeLogEntries(
     request: protos.google.logging.v2.IWriteLogEntriesRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | Callback<
           protos.google.logging.v2.IWriteLogEntriesResponse,
           protos.google.logging.v2.IWriteLogEntriesRequest | null | undefined,
@@ -648,12 +668,12 @@ export class LoggingServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     this.initialize();
@@ -662,7 +682,7 @@ export class LoggingServiceV2Client {
 
   listLogEntries(
     request: protos.google.logging.v2.IListLogEntriesRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.logging.v2.ILogEntry[],
@@ -672,7 +692,7 @@ export class LoggingServiceV2Client {
   >;
   listLogEntries(
     request: protos.google.logging.v2.IListLogEntriesRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: PaginationCallback<
       protos.google.logging.v2.IListLogEntriesRequest,
       protos.google.logging.v2.IListLogEntriesResponse | null | undefined,
@@ -747,7 +767,7 @@ export class LoggingServiceV2Client {
   listLogEntries(
     request: protos.google.logging.v2.IListLogEntriesRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | PaginationCallback<
           protos.google.logging.v2.IListLogEntriesRequest,
           protos.google.logging.v2.IListLogEntriesResponse | null | undefined,
@@ -766,12 +786,12 @@ export class LoggingServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     this.initialize();
@@ -832,7 +852,7 @@ export class LoggingServiceV2Client {
    */
   listLogEntriesStream(
     request?: protos.google.logging.v2.IListLogEntriesRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
@@ -905,7 +925,7 @@ export class LoggingServiceV2Client {
    */
   listLogEntriesAsync(
     request?: protos.google.logging.v2.IListLogEntriesRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): AsyncIterable<protos.google.logging.v2.ILogEntry> {
     request = request || {};
     options = options || {};
@@ -920,7 +940,7 @@ export class LoggingServiceV2Client {
   }
   listMonitoredResourceDescriptors(
     request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       protos.google.api.IMonitoredResourceDescriptor[],
@@ -930,7 +950,7 @@ export class LoggingServiceV2Client {
   >;
   listMonitoredResourceDescriptors(
     request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: PaginationCallback<
       protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
       | protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
@@ -979,7 +999,7 @@ export class LoggingServiceV2Client {
   listMonitoredResourceDescriptors(
     request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | PaginationCallback<
           protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
           | protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
@@ -1002,12 +1022,12 @@ export class LoggingServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     this.initialize();
@@ -1045,7 +1065,7 @@ export class LoggingServiceV2Client {
    */
   listMonitoredResourceDescriptorsStream(
     request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
@@ -1091,7 +1111,7 @@ export class LoggingServiceV2Client {
    */
   listMonitoredResourceDescriptorsAsync(
     request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): AsyncIterable<protos.google.api.IMonitoredResourceDescriptor> {
     request = request || {};
     options = options || {};
@@ -1106,7 +1126,7 @@ export class LoggingServiceV2Client {
   }
   listLogs(
     request: protos.google.logging.v2.IListLogsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Promise<
     [
       string[],
@@ -1116,7 +1136,7 @@ export class LoggingServiceV2Client {
   >;
   listLogs(
     request: protos.google.logging.v2.IListLogsRequest,
-    options: gax.CallOptions,
+    options: CallOptions,
     callback: PaginationCallback<
       protos.google.logging.v2.IListLogsRequest,
       protos.google.logging.v2.IListLogsResponse | null | undefined,
@@ -1169,7 +1189,7 @@ export class LoggingServiceV2Client {
   listLogs(
     request: protos.google.logging.v2.IListLogsRequest,
     optionsOrCallback?:
-      | gax.CallOptions
+      | CallOptions
       | PaginationCallback<
           protos.google.logging.v2.IListLogsRequest,
           protos.google.logging.v2.IListLogsResponse | null | undefined,
@@ -1188,12 +1208,12 @@ export class LoggingServiceV2Client {
     ]
   > | void {
     request = request || {};
-    let options: gax.CallOptions;
+    let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
     } else {
-      options = optionsOrCallback as gax.CallOptions;
+      options = optionsOrCallback as CallOptions;
     }
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1241,7 +1261,7 @@ export class LoggingServiceV2Client {
    */
   listLogsStream(
     request?: protos.google.logging.v2.IListLogsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): Transform {
     request = request || {};
     options = options || {};
@@ -1301,7 +1321,7 @@ export class LoggingServiceV2Client {
    */
   listLogsAsync(
     request?: protos.google.logging.v2.IListLogsRequest,
-    options?: gax.CallOptions
+    options?: CallOptions
   ): AsyncIterable<string> {
     request = request || {};
     options = options || {};
@@ -1459,6 +1479,91 @@ export class LoggingServiceV2Client {
     return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified billingAccountLocationBucketView resource name string.
+   *
+   * @param {string} billing_account
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  billingAccountLocationBucketViewPath(
+    billingAccount: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.render(
+      {
+        billing_account: billingAccount,
+        location: location,
+        bucket: bucket,
+        view: view,
+      }
+    );
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the location from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from BillingAccountLocationBucketView resource.
+   *
+   * @param {string} billingAccountLocationBucketViewName
+   *   A fully-qualified path representing billing_account_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromBillingAccountLocationBucketViewName(
+    billingAccountLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketViewPathTemplate.match(
+      billingAccountLocationBucketViewName
+    ).view;
   }
 
   /**
@@ -1661,6 +1766,89 @@ export class LoggingServiceV2Client {
     return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified folderLocationBucketView resource name string.
+   *
+   * @param {string} folder
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  folderLocationBucketViewPath(
+    folder: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
+      view: view,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).folder;
+  }
+
+  /**
+   * Parse the location from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from FolderLocationBucketView resource.
+   *
+   * @param {string} folderLocationBucketViewName
+   *   A fully-qualified path representing folder_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromFolderLocationBucketViewName(
+    folderLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketViewPathTemplate.match(
+      folderLocationBucketViewName
+    ).view;
   }
 
   /**
@@ -1910,6 +2098,91 @@ export class LoggingServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationLocationBucketView resource name string.
+   *
+   * @param {string} organization
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  organizationLocationBucketViewPath(
+    organization: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.render(
+      {
+        organization: organization,
+        location: location,
+        bucket: bucket,
+        view: view,
+      }
+    );
+  }
+
+  /**
+   * Parse the organization from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).organization;
+  }
+
+  /**
+   * Parse the location from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from OrganizationLocationBucketView resource.
+   *
+   * @param {string} organizationLocationBucketViewName
+   *   A fully-qualified path representing organization_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromOrganizationLocationBucketViewName(
+    organizationLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketViewPathTemplate.match(
+      organizationLocationBucketViewName
+    ).view;
+  }
+
+  /**
    * Return a fully-qualified organizationLog resource name string.
    *
    * @param {string} organization
@@ -2132,6 +2405,89 @@ export class LoggingServiceV2Client {
     return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified projectLocationBucketView resource name string.
+   *
+   * @param {string} project
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} view
+   * @returns {string} Resource name string.
+   */
+  projectLocationBucketViewPath(
+    project: string,
+    location: string,
+    bucket: string,
+    view: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
+      view: view,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).project;
+  }
+
+  /**
+   * Parse the location from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).bucket;
+  }
+
+  /**
+   * Parse the view from ProjectLocationBucketView resource.
+   *
+   * @param {string} projectLocationBucketViewName
+   *   A fully-qualified path representing project_location_bucket_view resource.
+   * @returns {string} A string representing the view.
+   */
+  matchViewFromProjectLocationBucketViewName(
+    projectLocationBucketViewName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketViewPathTemplate.match(
+      projectLocationBucketViewName
+    ).view;
   }
 
   /**
