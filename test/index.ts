@@ -103,6 +103,12 @@ const originalFakeUtil = extend(true, {}, fakeUtil);
 
 function fakeV2() {}
 
+function getDefaultTimeFilter(): string {
+  const time = new Date();
+  time.setDate(time.getDate() - 1);
+  return `timestamp >= "${time.toISOString()}"`;
+}
+
 class FakeEntry {
   calledWith_: IArguments;
   constructor() {
@@ -477,12 +483,13 @@ describe('Logging', () => {
       logging.auth.getProjectId = async () => PROJECT_ID;
     });
 
-    it('should exec without options', async () => {
+    it('should exec without options (with defaults)', async () => {
       logging.loggingService.listLogEntries = async (
         reqOpts: {},
         gaxOpts: {}
       ) => {
         assert.deepStrictEqual(reqOpts, {
+          filter: `${getDefaultTimeFilter()}`,
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
@@ -495,7 +502,32 @@ describe('Logging', () => {
       await logging.getEntries();
     });
 
-    it('should accept options', async () => {
+    it('should accept options (and not overwrite timestamp)', async () => {
+      const options = {filter: 'timestamp > "2020-11-11T15:01:23.045123456Z"'};
+
+      logging.loggingService.listLogEntries = async (
+        reqOpts: {},
+        gaxOpts: {}
+      ) => {
+        assert.deepStrictEqual(
+          reqOpts,
+          extend(options, {
+            filter: 'timestamp > "2020-11-11T15:01:23.045123456Z"',
+            orderBy: 'timestamp desc',
+            resourceNames: ['projects/' + logging.projectId],
+          })
+        );
+
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+        });
+        return [[]];
+      };
+
+      await logging.getEntries(options);
+    });
+
+    it('should append default timestamp to existing filters', async () => {
       const options = {filter: 'test'};
 
       logging.loggingService.listLogEntries = async (
@@ -505,7 +537,7 @@ describe('Logging', () => {
         assert.deepStrictEqual(
           reqOpts,
           extend(options, {
-            filter: 'test',
+            filter: `test AND ${getDefaultTimeFilter()}`,
             orderBy: 'timestamp desc',
             resourceNames: ['projects/' + logging.projectId],
           })
@@ -567,6 +599,7 @@ describe('Logging', () => {
         assert.deepStrictEqual(reqOpts, {
           a: 'b',
           c: 'd',
+          filter: `${getDefaultTimeFilter()}`,
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });

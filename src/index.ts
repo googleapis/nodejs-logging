@@ -462,6 +462,7 @@ class Logging {
     return new Entry(resource, data);
   }
 
+  // TODO: nicole fix this one
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
@@ -552,12 +553,20 @@ class Logging {
     opts?: GetEntriesRequest | GetEntriesCallback
   ): Promise<GetEntriesResponse> {
     const options = opts ? (opts as GetEntriesRequest) : {};
-    const reqOpts = extend(
-      {
-        orderBy: 'timestamp desc',
-      },
-      options
-    );
+
+    // By default, sort entries by descending timestamp
+    let reqOpts = extend({orderBy: 'timestamp desc'}, options);
+
+    // By default, filter entries to last 24 hours only
+    const time = new Date();
+    time.setDate(time.getDate() - 1);
+    const timeFilter = `timestamp >= "${time.toISOString()}"`;
+    if (!options.filter) {
+      reqOpts = extend({filter: timeFilter}, reqOpts);
+    } else if (!options.filter.includes('timestamp')) {
+      reqOpts.filter += ` AND ${timeFilter}`;
+    }
+
     reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
     this.projectId = await this.auth.getProjectId();
     const resourceName = 'projects/' + this.projectId;
