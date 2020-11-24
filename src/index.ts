@@ -462,7 +462,6 @@ class Logging {
     return new Entry(resource, data);
   }
 
-  // TODO: nicole fix this one
   getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
   getEntries(callback: GetEntriesCallback): void;
   getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
