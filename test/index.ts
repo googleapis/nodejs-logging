@@ -103,12 +103,6 @@ const originalFakeUtil = extend(true, {}, fakeUtil);
 
 function fakeV2() {}
 
-function getDefaultTimeFilter(): string {
-  const time = new Date();
-  time.setDate(time.getDate() - 1);
-  return `timestamp >= "${time.toISOString()}"`;
-}
-
 class FakeEntry {
   calledWith_: IArguments;
   constructor() {
@@ -485,17 +479,19 @@ describe('Logging', () => {
 
     it('should exec without options (with defaults)', async () => {
       logging.loggingService.listLogEntries = async (
-        reqOpts: {},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        reqOpts: any,
         gaxOpts: {}
       ) => {
         assert.deepStrictEqual(reqOpts, {
-          filter: `${getDefaultTimeFilter()}`,
+          filter: reqOpts?.filter,
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
         assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
         });
+        assert.ok(reqOpts?.filter.includes('timestamp'));
         return [[]];
       };
 
@@ -531,21 +527,22 @@ describe('Logging', () => {
       const options = {filter: 'test'};
 
       logging.loggingService.listLogEntries = async (
-        reqOpts: {},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        reqOpts: any,
         gaxOpts: {}
       ) => {
         assert.deepStrictEqual(
           reqOpts,
           extend(options, {
-            filter: `test AND ${getDefaultTimeFilter()}`,
+            filter: reqOpts?.filter,
             orderBy: 'timestamp desc',
             resourceNames: ['projects/' + logging.projectId],
           })
         );
-
         assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
         });
+        assert.ok(reqOpts?.filter.includes('test AND timestamp'));
         return [[]];
       };
 
@@ -599,13 +596,14 @@ describe('Logging', () => {
         assert.deepStrictEqual(reqOpts, {
           a: 'b',
           c: 'd',
-          filter: `${getDefaultTimeFilter()}`,
+          filter: reqOpts?.filter,
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual((reqOpts as any).gaxOptions, undefined);
         assert.deepStrictEqual(gaxOpts, options.gaxOptions);
+        assert.ok(reqOpts?.filter.includes('timestamp'));
         return [[]];
       };
 
