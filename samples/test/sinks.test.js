@@ -25,8 +25,9 @@ const uuid = require('uuid');
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
 
 const cmd = 'node sinks.js';
-const bucketName = `nodejs-logging-sinks-test-${uuid.v4()}`;
-const sinkName = `nodejs-logging-sinks-test-${uuid.v4()}`;
+const TESTS_PREFIX = 'nodejs-logging-sinks-test-';
+const bucketName = `${TESTS_PREFIX}${uuid.v4()}`;
+const sinkName = `${TESTS_PREFIX}${uuid.v4()}`;
 const filter = 'severity > WARNING';
 const logging = new Logging();
 const storage = new Storage();
@@ -37,7 +38,20 @@ describe('sinks', () => {
   });
 
   after(async () => {
-    await storage.bucket(bucketName).delete().catch(console.warn);
+    // Only delete log buckets that are at least 1 hour old
+    // Fixes: https://github.com/googleapis/nodejs-logging/issues/953
+    const oneHourAgo = new Date();
+    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+
+    const [buckets] = await storage.getBuckets({prefix: TESTS_PREFIX});
+    const bucketsToDelete = buckets.filter(bucket => {
+      return new Date(bucket.metadata.timeCreated) < oneHourAgo;
+    });
+
+    for (const bucket of bucketsToDelete) {
+      await bucket.deleteFiles();
+      await bucket.delete();
+    }
   });
 
   it('should create a sink', async () => {
