@@ -52,6 +52,20 @@ function stubSimpleCallWithCallback<ResponseType>(
     : sinon.stub().callsArgWith(2, null, response);
 }
 
+function stubBidiStreamingCall<ResponseType>(
+  response?: ResponseType,
+  error?: Error
+) {
+  const transformStub = error
+    ? sinon.stub().callsArgWith(2, error)
+    : sinon.stub().callsArgWith(2, null, response);
+  const mockStream = new PassThrough({
+    objectMode: true,
+    transform: transformStub,
+  });
+  return sinon.stub().returns(mockStream);
+}
+
 function stubPageStreamingCall<ResponseType>(
   responses?: ResponseType[],
   error?: Error
@@ -389,6 +403,94 @@ describe('v2.LoggingServiceV2Client', () => {
         (client.innerApiCalls.writeLogEntries as SinonStub)
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
+      );
+    });
+  });
+
+  describe('tailLogEntries', () => {
+    it('invokes tailLogEntries without error', async () => {
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.TailLogEntriesRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.TailLogEntriesResponse()
+      );
+      client.innerApiCalls.tailLogEntries = stubBidiStreamingCall(
+        expectedResponse
+      );
+      const stream = client.tailLogEntries();
+      const promise = new Promise((resolve, reject) => {
+        stream.on(
+          'data',
+          (response: protos.google.logging.v2.TailLogEntriesResponse) => {
+            resolve(response);
+          }
+        );
+        stream.on('error', (err: Error) => {
+          reject(err);
+        });
+        stream.write(request);
+        stream.end();
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert(
+        (client.innerApiCalls.tailLogEntries as SinonStub)
+          .getCall(0)
+          .calledWithExactly(undefined)
+      );
+      assert.deepStrictEqual(
+        (((stream as unknown) as PassThrough)._transform as SinonStub).getCall(
+          0
+        ).args[0],
+        request
+      );
+    });
+
+    it('invokes tailLogEntries with error', async () => {
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.TailLogEntriesRequest()
+      );
+      const expectedError = new Error('expected');
+      client.innerApiCalls.tailLogEntries = stubBidiStreamingCall(
+        undefined,
+        expectedError
+      );
+      const stream = client.tailLogEntries();
+      const promise = new Promise((resolve, reject) => {
+        stream.on(
+          'data',
+          (response: protos.google.logging.v2.TailLogEntriesResponse) => {
+            resolve(response);
+          }
+        );
+        stream.on('error', (err: Error) => {
+          reject(err);
+        });
+        stream.write(request);
+        stream.end();
+      });
+      await assert.rejects(promise, expectedError);
+      assert(
+        (client.innerApiCalls.tailLogEntries as SinonStub)
+          .getCall(0)
+          .calledWithExactly(undefined)
+      );
+      assert.deepStrictEqual(
+        (((stream as unknown) as PassThrough)._transform as SinonStub).getCall(
+          0
+        ).args[0],
+        request
       );
     });
   });

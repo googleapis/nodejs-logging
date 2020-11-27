@@ -1429,6 +1429,39 @@
                      * @variation 2
                      */
     
+                    /**
+                     * Callback as used by {@link google.logging.v2.LoggingServiceV2#tailLogEntries}.
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @typedef TailLogEntriesCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.TailLogEntriesResponse} [response] TailLogEntriesResponse
+                     */
+    
+                    /**
+                     * Calls TailLogEntries.
+                     * @function tailLogEntries
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.ITailLogEntriesRequest} request TailLogEntriesRequest message or plain object
+                     * @param {google.logging.v2.LoggingServiceV2.TailLogEntriesCallback} callback Node-style callback called with the error, if any, and TailLogEntriesResponse
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(LoggingServiceV2.prototype.tailLogEntries = function tailLogEntries(request, callback) {
+                        return this.rpcCall(tailLogEntries, $root.google.logging.v2.TailLogEntriesRequest, $root.google.logging.v2.TailLogEntriesResponse, request, callback);
+                    }, "name", { value: "TailLogEntries" });
+    
+                    /**
+                     * Calls TailLogEntries.
+                     * @function tailLogEntries
+                     * @memberof google.logging.v2.LoggingServiceV2
+                     * @instance
+                     * @param {google.logging.v2.ITailLogEntriesRequest} request TailLogEntriesRequest message or plain object
+                     * @returns {Promise<google.logging.v2.TailLogEntriesResponse>} Promise
+                     * @variation 2
+                     */
+    
                     return LoggingServiceV2;
                 })();
     
@@ -3347,6 +3380,7 @@
                      * @property {string|null} [parent] ListLogsRequest parent
                      * @property {number|null} [pageSize] ListLogsRequest pageSize
                      * @property {string|null} [pageToken] ListLogsRequest pageToken
+                     * @property {Array.<string>|null} [resourceNames] ListLogsRequest resourceNames
                      */
     
                     /**
@@ -3358,6 +3392,7 @@
                      * @param {google.logging.v2.IListLogsRequest=} [properties] Properties to set
                      */
                     function ListLogsRequest(properties) {
+                        this.resourceNames = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                                 if (properties[keys[i]] != null)
@@ -3389,6 +3424,14 @@
                     ListLogsRequest.prototype.pageToken = "";
     
                     /**
+                     * ListLogsRequest resourceNames.
+                     * @member {Array.<string>} resourceNames
+                     * @memberof google.logging.v2.ListLogsRequest
+                     * @instance
+                     */
+                    ListLogsRequest.prototype.resourceNames = $util.emptyArray;
+    
+                    /**
                      * Creates a new ListLogsRequest instance using the specified properties.
                      * @function create
                      * @memberof google.logging.v2.ListLogsRequest
@@ -3418,6 +3461,9 @@
                             writer.uint32(/* id 2, wireType 0 =*/16).int32(message.pageSize);
                         if (message.pageToken != null && Object.hasOwnProperty.call(message, "pageToken"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.pageToken);
+                        if (message.resourceNames != null && message.resourceNames.length)
+                            for (var i = 0; i < message.resourceNames.length; ++i)
+                                writer.uint32(/* id 8, wireType 2 =*/66).string(message.resourceNames[i]);
                         return writer;
                     };
     
@@ -3460,6 +3506,11 @@
                                 break;
                             case 3:
                                 message.pageToken = reader.string();
+                                break;
+                            case 8:
+                                if (!(message.resourceNames && message.resourceNames.length))
+                                    message.resourceNames = [];
+                                message.resourceNames.push(reader.string());
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -3505,6 +3556,13 @@
                         if (message.pageToken != null && message.hasOwnProperty("pageToken"))
                             if (!$util.isString(message.pageToken))
                                 return "pageToken: string expected";
+                        if (message.resourceNames != null && message.hasOwnProperty("resourceNames")) {
+                            if (!Array.isArray(message.resourceNames))
+                                return "resourceNames: array expected";
+                            for (var i = 0; i < message.resourceNames.length; ++i)
+                                if (!$util.isString(message.resourceNames[i]))
+                                    return "resourceNames: string[] expected";
+                        }
                         return null;
                     };
     
@@ -3526,6 +3584,13 @@
                             message.pageSize = object.pageSize | 0;
                         if (object.pageToken != null)
                             message.pageToken = String(object.pageToken);
+                        if (object.resourceNames) {
+                            if (!Array.isArray(object.resourceNames))
+                                throw TypeError(".google.logging.v2.ListLogsRequest.resourceNames: array expected");
+                            message.resourceNames = [];
+                            for (var i = 0; i < object.resourceNames.length; ++i)
+                                message.resourceNames[i] = String(object.resourceNames[i]);
+                        }
                         return message;
                     };
     
@@ -3542,6 +3607,8 @@
                         if (!options)
                             options = {};
                         var object = {};
+                        if (options.arrays || options.defaults)
+                            object.resourceNames = [];
                         if (options.defaults) {
                             object.parent = "";
                             object.pageSize = 0;
@@ -3553,6 +3620,11 @@
                             object.pageSize = message.pageSize;
                         if (message.pageToken != null && message.hasOwnProperty("pageToken"))
                             object.pageToken = message.pageToken;
+                        if (message.resourceNames && message.resourceNames.length) {
+                            object.resourceNames = [];
+                            for (var j = 0; j < message.resourceNames.length; ++j)
+                                object.resourceNames[j] = message.resourceNames[j];
+                        }
                         return object;
                     };
     
@@ -3794,6 +3866,756 @@
                     };
     
                     return ListLogsResponse;
+                })();
+    
+                v2.TailLogEntriesRequest = (function() {
+    
+                    /**
+                     * Properties of a TailLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @interface ITailLogEntriesRequest
+                     * @property {Array.<string>|null} [resourceNames] TailLogEntriesRequest resourceNames
+                     * @property {string|null} [filter] TailLogEntriesRequest filter
+                     * @property {google.protobuf.IDuration|null} [bufferWindow] TailLogEntriesRequest bufferWindow
+                     */
+    
+                    /**
+                     * Constructs a new TailLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a TailLogEntriesRequest.
+                     * @implements ITailLogEntriesRequest
+                     * @constructor
+                     * @param {google.logging.v2.ITailLogEntriesRequest=} [properties] Properties to set
+                     */
+                    function TailLogEntriesRequest(properties) {
+                        this.resourceNames = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * TailLogEntriesRequest resourceNames.
+                     * @member {Array.<string>} resourceNames
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @instance
+                     */
+                    TailLogEntriesRequest.prototype.resourceNames = $util.emptyArray;
+    
+                    /**
+                     * TailLogEntriesRequest filter.
+                     * @member {string} filter
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @instance
+                     */
+                    TailLogEntriesRequest.prototype.filter = "";
+    
+                    /**
+                     * TailLogEntriesRequest bufferWindow.
+                     * @member {google.protobuf.IDuration|null|undefined} bufferWindow
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @instance
+                     */
+                    TailLogEntriesRequest.prototype.bufferWindow = null;
+    
+                    /**
+                     * Creates a new TailLogEntriesRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ITailLogEntriesRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.TailLogEntriesRequest} TailLogEntriesRequest instance
+                     */
+                    TailLogEntriesRequest.create = function create(properties) {
+                        return new TailLogEntriesRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified TailLogEntriesRequest message. Does not implicitly {@link google.logging.v2.TailLogEntriesRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ITailLogEntriesRequest} message TailLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    TailLogEntriesRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.resourceNames != null && message.resourceNames.length)
+                            for (var i = 0; i < message.resourceNames.length; ++i)
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.resourceNames[i]);
+                        if (message.filter != null && Object.hasOwnProperty.call(message, "filter"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.filter);
+                        if (message.bufferWindow != null && Object.hasOwnProperty.call(message, "bufferWindow"))
+                            $root.google.protobuf.Duration.encode(message.bufferWindow, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified TailLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.TailLogEntriesRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ITailLogEntriesRequest} message TailLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    TailLogEntriesRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a TailLogEntriesRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.TailLogEntriesRequest} TailLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    TailLogEntriesRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.TailLogEntriesRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                if (!(message.resourceNames && message.resourceNames.length))
+                                    message.resourceNames = [];
+                                message.resourceNames.push(reader.string());
+                                break;
+                            case 2:
+                                message.filter = reader.string();
+                                break;
+                            case 3:
+                                message.bufferWindow = $root.google.protobuf.Duration.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a TailLogEntriesRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.TailLogEntriesRequest} TailLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    TailLogEntriesRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a TailLogEntriesRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    TailLogEntriesRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.resourceNames != null && message.hasOwnProperty("resourceNames")) {
+                            if (!Array.isArray(message.resourceNames))
+                                return "resourceNames: array expected";
+                            for (var i = 0; i < message.resourceNames.length; ++i)
+                                if (!$util.isString(message.resourceNames[i]))
+                                    return "resourceNames: string[] expected";
+                        }
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            if (!$util.isString(message.filter))
+                                return "filter: string expected";
+                        if (message.bufferWindow != null && message.hasOwnProperty("bufferWindow")) {
+                            var error = $root.google.protobuf.Duration.verify(message.bufferWindow);
+                            if (error)
+                                return "bufferWindow." + error;
+                        }
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a TailLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.TailLogEntriesRequest} TailLogEntriesRequest
+                     */
+                    TailLogEntriesRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.TailLogEntriesRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.TailLogEntriesRequest();
+                        if (object.resourceNames) {
+                            if (!Array.isArray(object.resourceNames))
+                                throw TypeError(".google.logging.v2.TailLogEntriesRequest.resourceNames: array expected");
+                            message.resourceNames = [];
+                            for (var i = 0; i < object.resourceNames.length; ++i)
+                                message.resourceNames[i] = String(object.resourceNames[i]);
+                        }
+                        if (object.filter != null)
+                            message.filter = String(object.filter);
+                        if (object.bufferWindow != null) {
+                            if (typeof object.bufferWindow !== "object")
+                                throw TypeError(".google.logging.v2.TailLogEntriesRequest.bufferWindow: object expected");
+                            message.bufferWindow = $root.google.protobuf.Duration.fromObject(object.bufferWindow);
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a TailLogEntriesRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.TailLogEntriesRequest} message TailLogEntriesRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    TailLogEntriesRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults)
+                            object.resourceNames = [];
+                        if (options.defaults) {
+                            object.filter = "";
+                            object.bufferWindow = null;
+                        }
+                        if (message.resourceNames && message.resourceNames.length) {
+                            object.resourceNames = [];
+                            for (var j = 0; j < message.resourceNames.length; ++j)
+                                object.resourceNames[j] = message.resourceNames[j];
+                        }
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            object.filter = message.filter;
+                        if (message.bufferWindow != null && message.hasOwnProperty("bufferWindow"))
+                            object.bufferWindow = $root.google.protobuf.Duration.toObject(message.bufferWindow, options);
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this TailLogEntriesRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.TailLogEntriesRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    TailLogEntriesRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return TailLogEntriesRequest;
+                })();
+    
+                v2.TailLogEntriesResponse = (function() {
+    
+                    /**
+                     * Properties of a TailLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @interface ITailLogEntriesResponse
+                     * @property {Array.<google.logging.v2.ILogEntry>|null} [entries] TailLogEntriesResponse entries
+                     * @property {Array.<google.logging.v2.TailLogEntriesResponse.ISuppressionInfo>|null} [suppressionInfo] TailLogEntriesResponse suppressionInfo
+                     */
+    
+                    /**
+                     * Constructs a new TailLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a TailLogEntriesResponse.
+                     * @implements ITailLogEntriesResponse
+                     * @constructor
+                     * @param {google.logging.v2.ITailLogEntriesResponse=} [properties] Properties to set
+                     */
+                    function TailLogEntriesResponse(properties) {
+                        this.entries = [];
+                        this.suppressionInfo = [];
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * TailLogEntriesResponse entries.
+                     * @member {Array.<google.logging.v2.ILogEntry>} entries
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @instance
+                     */
+                    TailLogEntriesResponse.prototype.entries = $util.emptyArray;
+    
+                    /**
+                     * TailLogEntriesResponse suppressionInfo.
+                     * @member {Array.<google.logging.v2.TailLogEntriesResponse.ISuppressionInfo>} suppressionInfo
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @instance
+                     */
+                    TailLogEntriesResponse.prototype.suppressionInfo = $util.emptyArray;
+    
+                    /**
+                     * Creates a new TailLogEntriesResponse instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ITailLogEntriesResponse=} [properties] Properties to set
+                     * @returns {google.logging.v2.TailLogEntriesResponse} TailLogEntriesResponse instance
+                     */
+                    TailLogEntriesResponse.create = function create(properties) {
+                        return new TailLogEntriesResponse(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified TailLogEntriesResponse message. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ITailLogEntriesResponse} message TailLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    TailLogEntriesResponse.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.entries != null && message.entries.length)
+                            for (var i = 0; i < message.entries.length; ++i)
+                                $root.google.logging.v2.LogEntry.encode(message.entries[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        if (message.suppressionInfo != null && message.suppressionInfo.length)
+                            for (var i = 0; i < message.suppressionInfo.length; ++i)
+                                $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo.encode(message.suppressionInfo[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified TailLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ITailLogEntriesResponse} message TailLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    TailLogEntriesResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a TailLogEntriesResponse message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.TailLogEntriesResponse} TailLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    TailLogEntriesResponse.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.TailLogEntriesResponse();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                if (!(message.entries && message.entries.length))
+                                    message.entries = [];
+                                message.entries.push($root.google.logging.v2.LogEntry.decode(reader, reader.uint32()));
+                                break;
+                            case 2:
+                                if (!(message.suppressionInfo && message.suppressionInfo.length))
+                                    message.suppressionInfo = [];
+                                message.suppressionInfo.push($root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo.decode(reader, reader.uint32()));
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a TailLogEntriesResponse message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.TailLogEntriesResponse} TailLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    TailLogEntriesResponse.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a TailLogEntriesResponse message.
+                     * @function verify
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    TailLogEntriesResponse.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.entries != null && message.hasOwnProperty("entries")) {
+                            if (!Array.isArray(message.entries))
+                                return "entries: array expected";
+                            for (var i = 0; i < message.entries.length; ++i) {
+                                var error = $root.google.logging.v2.LogEntry.verify(message.entries[i]);
+                                if (error)
+                                    return "entries." + error;
+                            }
+                        }
+                        if (message.suppressionInfo != null && message.hasOwnProperty("suppressionInfo")) {
+                            if (!Array.isArray(message.suppressionInfo))
+                                return "suppressionInfo: array expected";
+                            for (var i = 0; i < message.suppressionInfo.length; ++i) {
+                                var error = $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo.verify(message.suppressionInfo[i]);
+                                if (error)
+                                    return "suppressionInfo." + error;
+                            }
+                        }
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a TailLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.TailLogEntriesResponse} TailLogEntriesResponse
+                     */
+                    TailLogEntriesResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.TailLogEntriesResponse)
+                            return object;
+                        var message = new $root.google.logging.v2.TailLogEntriesResponse();
+                        if (object.entries) {
+                            if (!Array.isArray(object.entries))
+                                throw TypeError(".google.logging.v2.TailLogEntriesResponse.entries: array expected");
+                            message.entries = [];
+                            for (var i = 0; i < object.entries.length; ++i) {
+                                if (typeof object.entries[i] !== "object")
+                                    throw TypeError(".google.logging.v2.TailLogEntriesResponse.entries: object expected");
+                                message.entries[i] = $root.google.logging.v2.LogEntry.fromObject(object.entries[i]);
+                            }
+                        }
+                        if (object.suppressionInfo) {
+                            if (!Array.isArray(object.suppressionInfo))
+                                throw TypeError(".google.logging.v2.TailLogEntriesResponse.suppressionInfo: array expected");
+                            message.suppressionInfo = [];
+                            for (var i = 0; i < object.suppressionInfo.length; ++i) {
+                                if (typeof object.suppressionInfo[i] !== "object")
+                                    throw TypeError(".google.logging.v2.TailLogEntriesResponse.suppressionInfo: object expected");
+                                message.suppressionInfo[i] = $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo.fromObject(object.suppressionInfo[i]);
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a TailLogEntriesResponse message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.TailLogEntriesResponse} message TailLogEntriesResponse
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    TailLogEntriesResponse.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.arrays || options.defaults) {
+                            object.entries = [];
+                            object.suppressionInfo = [];
+                        }
+                        if (message.entries && message.entries.length) {
+                            object.entries = [];
+                            for (var j = 0; j < message.entries.length; ++j)
+                                object.entries[j] = $root.google.logging.v2.LogEntry.toObject(message.entries[j], options);
+                        }
+                        if (message.suppressionInfo && message.suppressionInfo.length) {
+                            object.suppressionInfo = [];
+                            for (var j = 0; j < message.suppressionInfo.length; ++j)
+                                object.suppressionInfo[j] = $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo.toObject(message.suppressionInfo[j], options);
+                        }
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this TailLogEntriesResponse to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.TailLogEntriesResponse
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    TailLogEntriesResponse.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    TailLogEntriesResponse.SuppressionInfo = (function() {
+    
+                        /**
+                         * Properties of a SuppressionInfo.
+                         * @memberof google.logging.v2.TailLogEntriesResponse
+                         * @interface ISuppressionInfo
+                         * @property {google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason|null} [reason] SuppressionInfo reason
+                         * @property {number|null} [suppressedCount] SuppressionInfo suppressedCount
+                         */
+    
+                        /**
+                         * Constructs a new SuppressionInfo.
+                         * @memberof google.logging.v2.TailLogEntriesResponse
+                         * @classdesc Represents a SuppressionInfo.
+                         * @implements ISuppressionInfo
+                         * @constructor
+                         * @param {google.logging.v2.TailLogEntriesResponse.ISuppressionInfo=} [properties] Properties to set
+                         */
+                        function SuppressionInfo(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * SuppressionInfo reason.
+                         * @member {google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason} reason
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @instance
+                         */
+                        SuppressionInfo.prototype.reason = 0;
+    
+                        /**
+                         * SuppressionInfo suppressedCount.
+                         * @member {number} suppressedCount
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @instance
+                         */
+                        SuppressionInfo.prototype.suppressedCount = 0;
+    
+                        /**
+                         * Creates a new SuppressionInfo instance using the specified properties.
+                         * @function create
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {google.logging.v2.TailLogEntriesResponse.ISuppressionInfo=} [properties] Properties to set
+                         * @returns {google.logging.v2.TailLogEntriesResponse.SuppressionInfo} SuppressionInfo instance
+                         */
+                        SuppressionInfo.create = function create(properties) {
+                            return new SuppressionInfo(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified SuppressionInfo message. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.SuppressionInfo.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {google.logging.v2.TailLogEntriesResponse.ISuppressionInfo} message SuppressionInfo message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        SuppressionInfo.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
+                                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.reason);
+                            if (message.suppressedCount != null && Object.hasOwnProperty.call(message, "suppressedCount"))
+                                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.suppressedCount);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified SuppressionInfo message, length delimited. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.SuppressionInfo.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {google.logging.v2.TailLogEntriesResponse.ISuppressionInfo} message SuppressionInfo message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        SuppressionInfo.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a SuppressionInfo message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.logging.v2.TailLogEntriesResponse.SuppressionInfo} SuppressionInfo
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        SuppressionInfo.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1:
+                                    message.reason = reader.int32();
+                                    break;
+                                case 2:
+                                    message.suppressedCount = reader.int32();
+                                    break;
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a SuppressionInfo message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.logging.v2.TailLogEntriesResponse.SuppressionInfo} SuppressionInfo
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        SuppressionInfo.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a SuppressionInfo message.
+                         * @function verify
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        SuppressionInfo.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.reason != null && message.hasOwnProperty("reason"))
+                                switch (message.reason) {
+                                default:
+                                    return "reason: enum value expected";
+                                case 0:
+                                case 1:
+                                case 2:
+                                    break;
+                                }
+                            if (message.suppressedCount != null && message.hasOwnProperty("suppressedCount"))
+                                if (!$util.isInteger(message.suppressedCount))
+                                    return "suppressedCount: integer expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a SuppressionInfo message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.logging.v2.TailLogEntriesResponse.SuppressionInfo} SuppressionInfo
+                         */
+                        SuppressionInfo.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo)
+                                return object;
+                            var message = new $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo();
+                            switch (object.reason) {
+                            case "REASON_UNSPECIFIED":
+                            case 0:
+                                message.reason = 0;
+                                break;
+                            case "RATE_LIMIT":
+                            case 1:
+                                message.reason = 1;
+                                break;
+                            case "NOT_CONSUMED":
+                            case 2:
+                                message.reason = 2;
+                                break;
+                            }
+                            if (object.suppressedCount != null)
+                                message.suppressedCount = object.suppressedCount | 0;
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a SuppressionInfo message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @static
+                         * @param {google.logging.v2.TailLogEntriesResponse.SuppressionInfo} message SuppressionInfo
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        SuppressionInfo.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.reason = options.enums === String ? "REASON_UNSPECIFIED" : 0;
+                                object.suppressedCount = 0;
+                            }
+                            if (message.reason != null && message.hasOwnProperty("reason"))
+                                object.reason = options.enums === String ? $root.google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason[message.reason] : message.reason;
+                            if (message.suppressedCount != null && message.hasOwnProperty("suppressedCount"))
+                                object.suppressedCount = message.suppressedCount;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this SuppressionInfo to JSON.
+                         * @function toJSON
+                         * @memberof google.logging.v2.TailLogEntriesResponse.SuppressionInfo
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        SuppressionInfo.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Reason enum.
+                         * @name google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason
+                         * @enum {number}
+                         * @property {number} REASON_UNSPECIFIED=0 REASON_UNSPECIFIED value
+                         * @property {number} RATE_LIMIT=1 RATE_LIMIT value
+                         * @property {number} NOT_CONSUMED=2 NOT_CONSUMED value
+                         */
+                        SuppressionInfo.Reason = (function() {
+                            var valuesById = {}, values = Object.create(valuesById);
+                            values[valuesById[0] = "REASON_UNSPECIFIED"] = 0;
+                            values[valuesById[1] = "RATE_LIMIT"] = 1;
+                            values[valuesById[2] = "NOT_CONSUMED"] = 2;
+                            return values;
+                        })();
+    
+                        return SuppressionInfo;
+                    })();
+    
+                    return TailLogEntriesResponse;
                 })();
     
                 v2.ConfigServiceV2 = (function() {
