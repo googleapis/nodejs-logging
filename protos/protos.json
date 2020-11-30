@@ -322,6 +322,24 @@
                           "(google.api.method_signature)": "parent"
                         }
                       ]
+                    },
+                    "TailLogEntries": {
+                      "requestType": "TailLogEntriesRequest",
+                      "requestStream": true,
+                      "responseType": "TailLogEntriesResponse",
+                      "responseStream": true,
+                      "options": {
+                        "(google.api.http).post": "/v2/entries:tail",
+                        "(google.api.http).body": "*"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "post": "/v2/entries:tail",
+                            "body": "*"
+                          }
+                        }
+                      ]
                     }
                   }
                 },
@@ -506,6 +524,14 @@
                       "options": {
                         "(google.api.field_behavior)": "OPTIONAL"
                       }
+                    },
+                    "resourceNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 8,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
                     }
                   }
                 },
@@ -519,6 +545,69 @@
                     "nextPageToken": {
                       "type": "string",
                       "id": 2
+                    }
+                  }
+                },
+                "TailLogEntriesRequest": {
+                  "fields": {
+                    "resourceNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    },
+                    "bufferWindow": {
+                      "type": "google.protobuf.Duration",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    }
+                  }
+                },
+                "TailLogEntriesResponse": {
+                  "fields": {
+                    "entries": {
+                      "rule": "repeated",
+                      "type": "LogEntry",
+                      "id": 1
+                    },
+                    "suppressionInfo": {
+                      "rule": "repeated",
+                      "type": "SuppressionInfo",
+                      "id": 2
+                    }
+                  },
+                  "nested": {
+                    "SuppressionInfo": {
+                      "fields": {
+                        "reason": {
+                          "type": "Reason",
+                          "id": 1
+                        },
+                        "suppressedCount": {
+                          "type": "int32",
+                          "id": 2
+                        }
+                      },
+                      "nested": {
+                        "Reason": {
+                          "values": {
+                            "REASON_UNSPECIFIED": 0,
+                            "RATE_LIMIT": 1,
+                            "NOT_CONSUMED": 2
+                          }
+                        }
+                      }
                     }
                   }
                 },

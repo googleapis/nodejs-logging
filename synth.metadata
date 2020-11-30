@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/nodejs-logging.git",
-        "sha": "763b51c72e0fbfed28b44e77947140460ad7c3ee"
+        "sha": "ed9dcf8785a5abe72cbe407c38dbb900ffa80bc1"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "2f019bf70bfe06f1e2af1b04011b0a2405190e43",
-        "internalRef": "343202295"
+        "sha": "e8857c4c36948e7e0500377cd7fcecbf2459afc8",
+        "internalRef": "344435830"
       }
     },
     {
