@@ -267,6 +267,14 @@ export class LoggingServiceV2Client {
       ),
     };
 
+    // Some of the methods on this service provide streaming responses.
+    // Provide descriptors for these.
+    this.descriptors.stream = {
+      tailLogEntries: new this._gaxModule.StreamDescriptor(
+        gax.StreamType.BIDI_STREAMING
+      ),
+    };
+
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
@@ -343,6 +351,7 @@ export class LoggingServiceV2Client {
       'listLogEntries',
       'listMonitoredResourceDescriptors',
       'listLogs',
+      'tailLogEntries',
     ];
     for (const methodName of loggingServiceV2StubMethods) {
       const callPromise = this.loggingServiceV2Stub.then(
@@ -360,6 +369,7 @@ export class LoggingServiceV2Client {
 
       const descriptor =
         this.descriptors.page[methodName] ||
+        this.descriptors.stream[methodName] ||
         this.descriptors.batching?.[methodName] ||
         undefined;
       const apiCall = this._gaxModule.createApiCall(
@@ -680,6 +690,31 @@ export class LoggingServiceV2Client {
     return this.innerApiCalls.writeLogEntries(request, options, callback);
   }
 
+  /**
+   * Streaming read of log entries as they are ingested. Until the stream is
+   * terminated, it will continue reading logs.
+   *
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Stream}
+   *   An object stream which is both readable and writable. It accepts objects
+   *   representing [TailLogEntriesRequest]{@link google.logging.v2.TailLogEntriesRequest} for write() method, and
+   *   will emit objects representing [TailLogEntriesResponse]{@link google.logging.v2.TailLogEntriesResponse} on 'data' event asynchronously.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#bi-directional-streaming)
+   *   for more details and examples.
+   * @example
+   * const stream = client.tailLogEntries();
+   * stream.on('data', (response) => { ... });
+   * stream.on('end', () => { ... });
+   * stream.write(request);
+   * stream.end();
+   */
+  tailLogEntries(options?: CallOptions): gax.CancellableStream {
+    this.initialize();
+    return this.innerApiCalls.tailLogEntries(options);
+  }
+
   listLogEntries(
     request: protos.google.logging.v2.IListLogEntriesRequest,
     options?: CallOptions
@@ -724,6 +759,11 @@ export class LoggingServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
    *
+   *   May alternatively be one or more views
+   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
@@ -811,6 +851,11 @@ export class LoggingServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
    *
+   *   May alternatively be one or more views
+   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
@@ -880,6 +925,11 @@ export class LoggingServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
    *
+   *   May alternatively be one or more views
+   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
@@ -1173,6 +1223,18 @@ export class LoggingServiceV2Client {
    *   preceding call to this method.  `pageToken` must be the value of
    *   `nextPageToken` from the previous response.  The values of other method
    *   parameters should be identical to those in the previous call.
+   * @param {string[]} [request.resourceNames]
+   *   Optional. The resource name that owns the logs:
+   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *
+   *   To support legacy queries, it could also be:
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1247,6 +1309,18 @@ export class LoggingServiceV2Client {
    *   preceding call to this method.  `pageToken` must be the value of
    *   `nextPageToken` from the previous response.  The values of other method
    *   parameters should be identical to those in the previous call.
+   * @param {string[]} [request.resourceNames]
+   *   Optional. The resource name that owns the logs:
+   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *
+   *   To support legacy queries, it could also be:
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
@@ -1303,6 +1377,18 @@ export class LoggingServiceV2Client {
    *   preceding call to this method.  `pageToken` must be the value of
    *   `nextPageToken` from the previous response.  The values of other method
    *   parameters should be identical to those in the previous call.
+   * @param {string[]} [request.resourceNames]
+   *   Optional. The resource name that owns the logs:
+   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *
+   *   To support legacy queries, it could also be:
+   *       "projects/[PROJECT_ID]"
+   *       "organizations/[ORGANIZATION_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
+   *       "folders/[FOLDER_ID]"
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
