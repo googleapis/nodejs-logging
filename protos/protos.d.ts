@@ -505,6 +505,20 @@ export namespace google {
                  * @returns Promise
                  */
                 public listLogs(request: google.logging.v2.IListLogsRequest): Promise<google.logging.v2.ListLogsResponse>;
+
+                /**
+                 * Calls TailLogEntries.
+                 * @param request TailLogEntriesRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and TailLogEntriesResponse
+                 */
+                public tailLogEntries(request: google.logging.v2.ITailLogEntriesRequest, callback: google.logging.v2.LoggingServiceV2.TailLogEntriesCallback): void;
+
+                /**
+                 * Calls TailLogEntries.
+                 * @param request TailLogEntriesRequest message or plain object
+                 * @returns Promise
+                 */
+                public tailLogEntries(request: google.logging.v2.ITailLogEntriesRequest): Promise<google.logging.v2.TailLogEntriesResponse>;
             }
 
             namespace LoggingServiceV2 {
@@ -543,6 +557,13 @@ export namespace google {
                  * @param [response] ListLogsResponse
                  */
                 type ListLogsCallback = (error: (Error|null), response?: google.logging.v2.ListLogsResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.LoggingServiceV2#tailLogEntries}.
+                 * @param error Error, if any
+                 * @param [response] TailLogEntriesResponse
+                 */
+                type TailLogEntriesCallback = (error: (Error|null), response?: google.logging.v2.TailLogEntriesResponse) => void;
             }
 
             /** Properties of a DeleteLogRequest. */
@@ -1342,6 +1363,9 @@ export namespace google {
 
                 /** ListLogsRequest pageToken */
                 pageToken?: (string|null);
+
+                /** ListLogsRequest resourceNames */
+                resourceNames?: (string[]|null);
             }
 
             /** Represents a ListLogsRequest. */
@@ -1361,6 +1385,9 @@ export namespace google {
 
                 /** ListLogsRequest pageToken. */
                 public pageToken: string;
+
+                /** ListLogsRequest resourceNames. */
+                public resourceNames: string[];
 
                 /**
                  * Creates a new ListLogsRequest instance using the specified properties.
@@ -1527,6 +1554,313 @@ export namespace google {
                  * @returns JSON object
                  */
                 public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a TailLogEntriesRequest. */
+            interface ITailLogEntriesRequest {
+
+                /** TailLogEntriesRequest resourceNames */
+                resourceNames?: (string[]|null);
+
+                /** TailLogEntriesRequest filter */
+                filter?: (string|null);
+
+                /** TailLogEntriesRequest bufferWindow */
+                bufferWindow?: (google.protobuf.IDuration|null);
+            }
+
+            /** Represents a TailLogEntriesRequest. */
+            class TailLogEntriesRequest implements ITailLogEntriesRequest {
+
+                /**
+                 * Constructs a new TailLogEntriesRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ITailLogEntriesRequest);
+
+                /** TailLogEntriesRequest resourceNames. */
+                public resourceNames: string[];
+
+                /** TailLogEntriesRequest filter. */
+                public filter: string;
+
+                /** TailLogEntriesRequest bufferWindow. */
+                public bufferWindow?: (google.protobuf.IDuration|null);
+
+                /**
+                 * Creates a new TailLogEntriesRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TailLogEntriesRequest instance
+                 */
+                public static create(properties?: google.logging.v2.ITailLogEntriesRequest): google.logging.v2.TailLogEntriesRequest;
+
+                /**
+                 * Encodes the specified TailLogEntriesRequest message. Does not implicitly {@link google.logging.v2.TailLogEntriesRequest.verify|verify} messages.
+                 * @param message TailLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ITailLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified TailLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.TailLogEntriesRequest.verify|verify} messages.
+                 * @param message TailLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ITailLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TailLogEntriesRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TailLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.TailLogEntriesRequest;
+
+                /**
+                 * Decodes a TailLogEntriesRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns TailLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.TailLogEntriesRequest;
+
+                /**
+                 * Verifies a TailLogEntriesRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a TailLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns TailLogEntriesRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.TailLogEntriesRequest;
+
+                /**
+                 * Creates a plain object from a TailLogEntriesRequest message. Also converts values to other types if specified.
+                 * @param message TailLogEntriesRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.TailLogEntriesRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this TailLogEntriesRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a TailLogEntriesResponse. */
+            interface ITailLogEntriesResponse {
+
+                /** TailLogEntriesResponse entries */
+                entries?: (google.logging.v2.ILogEntry[]|null);
+
+                /** TailLogEntriesResponse suppressionInfo */
+                suppressionInfo?: (google.logging.v2.TailLogEntriesResponse.ISuppressionInfo[]|null);
+            }
+
+            /** Represents a TailLogEntriesResponse. */
+            class TailLogEntriesResponse implements ITailLogEntriesResponse {
+
+                /**
+                 * Constructs a new TailLogEntriesResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ITailLogEntriesResponse);
+
+                /** TailLogEntriesResponse entries. */
+                public entries: google.logging.v2.ILogEntry[];
+
+                /** TailLogEntriesResponse suppressionInfo. */
+                public suppressionInfo: google.logging.v2.TailLogEntriesResponse.ISuppressionInfo[];
+
+                /**
+                 * Creates a new TailLogEntriesResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TailLogEntriesResponse instance
+                 */
+                public static create(properties?: google.logging.v2.ITailLogEntriesResponse): google.logging.v2.TailLogEntriesResponse;
+
+                /**
+                 * Encodes the specified TailLogEntriesResponse message. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.verify|verify} messages.
+                 * @param message TailLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ITailLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified TailLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.verify|verify} messages.
+                 * @param message TailLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ITailLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TailLogEntriesResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TailLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.TailLogEntriesResponse;
+
+                /**
+                 * Decodes a TailLogEntriesResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns TailLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.TailLogEntriesResponse;
+
+                /**
+                 * Verifies a TailLogEntriesResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a TailLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns TailLogEntriesResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.TailLogEntriesResponse;
+
+                /**
+                 * Creates a plain object from a TailLogEntriesResponse message. Also converts values to other types if specified.
+                 * @param message TailLogEntriesResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.TailLogEntriesResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this TailLogEntriesResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            namespace TailLogEntriesResponse {
+
+                /** Properties of a SuppressionInfo. */
+                interface ISuppressionInfo {
+
+                    /** SuppressionInfo reason */
+                    reason?: (google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason|keyof typeof google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason|null);
+
+                    /** SuppressionInfo suppressedCount */
+                    suppressedCount?: (number|null);
+                }
+
+                /** Represents a SuppressionInfo. */
+                class SuppressionInfo implements ISuppressionInfo {
+
+                    /**
+                     * Constructs a new SuppressionInfo.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: google.logging.v2.TailLogEntriesResponse.ISuppressionInfo);
+
+                    /** SuppressionInfo reason. */
+                    public reason: (google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason|keyof typeof google.logging.v2.TailLogEntriesResponse.SuppressionInfo.Reason);
+
+                    /** SuppressionInfo suppressedCount. */
+                    public suppressedCount: number;
+
+                    /**
+                     * Creates a new SuppressionInfo instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns SuppressionInfo instance
+                     */
+                    public static create(properties?: google.logging.v2.TailLogEntriesResponse.ISuppressionInfo): google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
+
+                    /**
+                     * Encodes the specified SuppressionInfo message. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.SuppressionInfo.verify|verify} messages.
+                     * @param message SuppressionInfo message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: google.logging.v2.TailLogEntriesResponse.ISuppressionInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Encodes the specified SuppressionInfo message, length delimited. Does not implicitly {@link google.logging.v2.TailLogEntriesResponse.SuppressionInfo.verify|verify} messages.
+                     * @param message SuppressionInfo message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encodeDelimited(message: google.logging.v2.TailLogEntriesResponse.ISuppressionInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a SuppressionInfo message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns SuppressionInfo
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
+
+                    /**
+                     * Decodes a SuppressionInfo message from the specified reader or buffer, length delimited.
+                     * @param reader Reader or buffer to decode from
+                     * @returns SuppressionInfo
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
+
+                    /**
+                     * Verifies a SuppressionInfo message.
+                     * @param message Plain object to verify
+                     * @returns `null` if valid, otherwise the reason why it is not
+                     */
+                    public static verify(message: { [k: string]: any }): (string|null);
+
+                    /**
+                     * Creates a SuppressionInfo message from a plain object. Also converts values to their respective internal types.
+                     * @param object Plain object
+                     * @returns SuppressionInfo
+                     */
+                    public static fromObject(object: { [k: string]: any }): google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
+
+                    /**
+                     * Creates a plain object from a SuppressionInfo message. Also converts values to other types if specified.
+                     * @param message SuppressionInfo
+                     * @param [options] Conversion options
+                     * @returns Plain object
+                     */
+                    public static toObject(message: google.logging.v2.TailLogEntriesResponse.SuppressionInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                    /**
+                     * Converts this SuppressionInfo to JSON.
+                     * @returns JSON object
+                     */
+                    public toJSON(): { [k: string]: any };
+                }
+
+                namespace SuppressionInfo {
+
+                    /** Reason enum. */
+                    enum Reason {
+                        REASON_UNSPECIFIED = 0,
+                        RATE_LIMIT = 1,
+                        NOT_CONSUMED = 2
+                    }
+                }
             }
 
             /** Represents a ConfigServiceV2 */
