@@ -477,26 +477,29 @@ describe('Logging', () => {
       logging.auth.getProjectId = async () => PROJECT_ID;
     });
 
-    it('should exec without options', async () => {
+    it('should exec without options (with defaults)', async () => {
       logging.loggingService.listLogEntries = async (
-        reqOpts: {},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        reqOpts: any,
         gaxOpts: {}
       ) => {
         assert.deepStrictEqual(reqOpts, {
+          filter: reqOpts?.filter,
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
         assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
         });
+        assert.ok(reqOpts?.filter.includes('timestamp'));
         return [[]];
       };
 
       await logging.getEntries();
     });
 
-    it('should accept options', async () => {
-      const options = {filter: 'test'};
+    it('should accept options (and not overwrite timestamp)', async () => {
+      const options = {filter: 'timestamp > "2020-11-11T15:01:23.045123456Z"'};
 
       logging.loggingService.listLogEntries = async (
         reqOpts: {},
@@ -505,7 +508,7 @@ describe('Logging', () => {
         assert.deepStrictEqual(
           reqOpts,
           extend(options, {
-            filter: 'test',
+            filter: 'timestamp > "2020-11-11T15:01:23.045123456Z"',
             orderBy: 'timestamp desc',
             resourceNames: ['projects/' + logging.projectId],
           })
@@ -514,6 +517,32 @@ describe('Logging', () => {
         assert.deepStrictEqual(gaxOpts, {
           autoPaginate: undefined,
         });
+        return [[]];
+      };
+
+      await logging.getEntries(options);
+    });
+
+    it('should append default timestamp to existing filters', async () => {
+      const options = {filter: 'test'};
+
+      logging.loggingService.listLogEntries = async (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        reqOpts: any,
+        gaxOpts: {}
+      ) => {
+        assert.deepStrictEqual(
+          reqOpts,
+          extend(options, {
+            filter: reqOpts?.filter,
+            orderBy: 'timestamp desc',
+            resourceNames: ['projects/' + logging.projectId],
+          })
+        );
+        assert.deepStrictEqual(gaxOpts, {
+          autoPaginate: undefined,
+        });
+        assert.ok(reqOpts?.filter.includes('test AND timestamp'));
         return [[]];
       };
 
@@ -567,12 +596,14 @@ describe('Logging', () => {
         assert.deepStrictEqual(reqOpts, {
           a: 'b',
           c: 'd',
+          filter: reqOpts?.filter,
           orderBy: 'timestamp desc',
           resourceNames: ['projects/' + logging.projectId],
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         assert.strictEqual((reqOpts as any).gaxOptions, undefined);
         assert.deepStrictEqual(gaxOpts, options.gaxOptions);
+        assert.ok(reqOpts?.filter.includes('timestamp'));
         return [[]];
       };
 
