@@ -4,6 +4,19 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [8.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.1.1...v8.2.0) (2020-11-30)
+
+
+### Features
+
+* add the Tailing API to get a live stream of the tail end of filtered logs ([#958](https://www.github.com/googleapis/nodejs-logging/issues/958)) ([c7b2801](https://www.github.com/googleapis/nodejs-logging/commit/c7b280105d79c69ea01a3e490a712c940a851a32))
+* Makes remaining LogBucket and LogViews methods public ([c9a69da](https://www.github.com/googleapis/nodejs-logging/commit/c9a69da3cf4ec3e87f30afc22344191a3e43e26a))
+
+
+### Bug Fixes
+
+* **deps:** update dependency type-fest to ^0.20.0 ([#956](https://www.github.com/googleapis/nodejs-logging/issues/956)) ([ed9dcf8](https://www.github.com/googleapis/nodejs-logging/commit/ed9dcf8785a5abe72cbe407c38dbb900ffa80bc1))
+
 ### [8.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v8.1.0...v8.1.1) (2020-11-16)
 
 
