@@ -243,10 +243,18 @@ describe('Log', () => {
       assert(log.logging.entry.calledWithExactly(metadata, data));
     });
 
-    it('should assume one argument means data', () => {
+    it('should assume one regular argument means data', () => {
       const data = {};
       log.entry(data);
       assert(log.logging.entry.calledWith(sinon.match.any, data));
+    });
+
+    it('should assume one httpRequest argument means metadata', () => {
+      const metadata = {
+        httpRequest: {},
+      };
+      log.entry(metadata);
+      assert(log.logging.entry.calledWith(metadata, {}));
     });
   });
 

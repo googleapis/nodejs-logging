@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/logging",
-  "version": "8.1.0",
+  "version": "8.2.0",
   "description": "Stackdriver Logging Client Library for Node.js",
   "keywords": [
     "google apis client",
@@ -35,7 +35,7 @@
     "fix": "gts fix",
     "prelint": "cd samples; npm link ../; npm install",
     "lint": "gts check",
-    "prepare": "npm run compile",
+    "prepare": "npm run compile-protos && npm run compile",
     "samples-test": "cd samples/ && npm link ../ && npm test && cd ../",
     "presystem-test": "npm run compile",
     "system-test": "mocha build/system-test --timeout 600000",
@@ -64,7 +64,7 @@
     "snakecase-keys": "^3.1.2",
     "stream-events": "^1.0.5",
     "through2": "^4.0.0",
-    "type-fest": "^0.18.0"
+    "type-fest": "^0.20.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^5.0.0",

@@ -3,15 +3,23 @@
     {
       "git": {
         "name": ".",
-        "remote": "git@github.com:googleapis/nodejs-logging.git",
-        "sha": "e594c9bbd4966ede5ba0872ea715b11c1f3ca967"
+        "remote": "https://github.com/googleapis/nodejs-logging.git",
+        "sha": "ed9dcf8785a5abe72cbe407c38dbb900ffa80bc1"
+      }
+    },
+    {
+      "git": {
+        "name": "googleapis",
+        "remote": "https://github.com/googleapis/googleapis.git",
+        "sha": "e8857c4c36948e7e0500377cd7fcecbf2459afc8",
+        "internalRef": "344435830"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "1f1148d3c7a7a52f0c98077f976bd9b3c948ee2b"
+        "sha": "15013eff642a7e7e855aed5a29e6e83c39beba2a"
       }
     }
   ],
@@ -79,7 +87,6 @@
     "README.md",
     "api-extractor.json",
     "linkinator.config.json",
-    "package-lock.json.1634671361",
     "protos/google/logging/v2/log_entry.proto",
     "protos/google/logging/v2/logging.proto",
     "protos/google/logging/v2/logging_config.proto",
@@ -89,7 +96,6 @@
     "protos/protos.json",
     "renovate.json",
     "samples/README.md",
-    "samples/package-lock.json.2353518511",
     "src/v2/config_service_v2_client.ts",
     "src/v2/config_service_v2_client_config.json",
     "src/v2/config_service_v2_proto_list.json",

@@ -69,17 +69,22 @@ describe('Logging', () => {
     const oneHourAgo = new Date();
     oneHourAgo.setHours(oneHourAgo.getHours() - 1);
 
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
     await Promise.all([
+      deleteSinks(),
       deleteBuckets(),
       deleteDatasets(),
       deleteTopics(),
-      deleteSinks(),
     ]);
 
+    // Only delete log buckets that are at least 2 days old
+    // Fixes: https://github.com/googleapis/nodejs-logging/issues/953
     async function deleteBuckets() {
       const [buckets] = await storage.getBuckets({prefix: TESTS_PREFIX});
       const bucketsToDelete = buckets.filter(bucket => {
-        return new Date(bucket.metadata.timeCreated) < oneHourAgo;
+        return new Date(bucket.metadata.timeCreated) < twoDaysAgo;
       });
 
       for (const bucket of bucketsToDelete) {
@@ -529,6 +534,30 @@ describe('Logging', () => {
           const entry = entries![0];
           assert.strictEqual(entry.metadata.severity, metadata.severity);
           assert.deepStrictEqual(entry.data, data);
+          done();
+        });
+      });
+    });
+
+    it('should write a httpRequest log with no message', done => {
+      const {log} = getTestLog();
+      const metadata = {
+        httpRequest: {status: 200},
+      };
+      const logEntry = log.entry(metadata);
+
+      log.write(logEntry, err => {
+        assert.ifError(err);
+
+        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+          assert.ifError(err);
+          const entry = entries![0];
+
+          assert.strictEqual(
+            entry.metadata.httpRequest?.status,
+            metadata.httpRequest.status
+          );
+          assert.deepStrictEqual(entry.data, {});
           done();
         });
       });
