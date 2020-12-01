@@ -530,9 +530,9 @@ class Log implements LogSeverityFunctions {
     const options = extend({}, opts as GetEntriesRequest);
     const projectId = await this.logging.auth.getProjectId();
     this.formattedName_ = Log.formatName_(projectId, this.name);
-    if (options.filter) {
+    if (options.filter && !options.filter.includes('logName=')) {
       options.filter = `(${options.filter}) AND logName="${this.formattedName_}"`;
-    } else {
+    } else if (!options.filter) {
       options.filter = `logName="${this.formattedName_}"`;
     }
     return this.logging.getEntries(options);
