@@ -279,6 +279,14 @@ describe('Log', () => {
       await log.getEntries(options);
       assert(log.logging.getEntries.calledWithExactly(expectedOptions));
     });
+
+    it('should not add logName filter if already present', async () => {
+      const filter = `logName="${LOG_NAME_FORMATTED}" AND custom filter`;
+      const options = {filter};
+
+      await log.getEntries(options);
+      assert(log.logging.getEntries.calledWithExactly({filter}));
+    });
   });
 
   describe('getEntriesStream', () => {
