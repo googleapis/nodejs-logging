@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/nodejs-logging.git",
-        "sha": "ed9dcf8785a5abe72cbe407c38dbb900ffa80bc1"
+        "sha": "ff3a9116db704d8c3e0261fd31154dcc6cb9f1ff"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "e8857c4c36948e7e0500377cd7fcecbf2459afc8",
-        "internalRef": "344435830"
+        "sha": "d189e871205fea665a9648f7c4676f027495ccaf",
+        "internalRef": "345596855"
       }
     },
     {
@@ -99,6 +99,7 @@
     "src/v2/config_service_v2_client.ts",
     "src/v2/config_service_v2_client_config.json",
     "src/v2/config_service_v2_proto_list.json",
+    "src/v2/gapic_metadata.json",
     "src/v2/index.ts",
     "src/v2/logging_service_v2_client.ts",
     "src/v2/logging_service_v2_client_config.json",
