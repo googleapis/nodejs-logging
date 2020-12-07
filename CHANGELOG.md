@@ -4,6 +4,25 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.2.0...v9.0.0) (2020-12-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* getEntries filters 24 hour timestamp by default (#955)
+* users can log httprequest logs without providing a log message (#942)
+
+### Bug Fixes
+
+* only apply logName to filter when not already present ([#962](https://www.github.com/googleapis/nodejs-logging/issues/962)) ([f1fbbc4](https://www.github.com/googleapis/nodejs-logging/commit/f1fbbc4dde50c6285ab0ee44a7ebb5dd9298aaeb))
+* **deps:** roll back dependency @google-cloud/logging to ^8.1.1 ([#961](https://www.github.com/googleapis/nodejs-logging/issues/961)) ([1fa8cd3](https://www.github.com/googleapis/nodejs-logging/commit/1fa8cd3bfc0eda6f1811ab44418d6355763ef16e))
+* users can log httprequest logs without providing a log message ([#942](https://www.github.com/googleapis/nodejs-logging/issues/942)) ([d72a296](https://www.github.com/googleapis/nodejs-logging/commit/d72a29665ddd777cfc14234f1458f0a2ffc2e3b5))
+
+
+### Performance Improvements
+
+* getEntries filters 24 hour timestamp by default ([#955](https://www.github.com/googleapis/nodejs-logging/issues/955)) ([3d63d5f](https://www.github.com/googleapis/nodejs-logging/commit/3d63d5f8b79c082db37284d84c28311cb107343e))
+
 ## [8.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.1.1...v8.2.0) (2020-11-30)
 
 
