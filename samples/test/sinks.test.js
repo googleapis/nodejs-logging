@@ -38,14 +38,14 @@ describe('sinks', () => {
   });
 
   after(async () => {
-    // Only delete log buckets that are at least 1 hour old
-    // Fixes: https://github.com/googleapis/nodejs-logging/issues/953
-    const oneHourAgo = new Date();
-    oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+    // Only delete log buckets that are at least 2 days old
+    // Fixes: https://github.com/googleapis/nodejs-logging/issues/976
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
     const [buckets] = await storage.getBuckets({prefix: TESTS_PREFIX});
     const bucketsToDelete = buckets.filter(bucket => {
-      return new Date(bucket.metadata.timeCreated) < oneHourAgo;
+      return new Date(bucket.metadata.timeCreated) < twoDaysAgo;
     });
 
     for (const bucket of bucketsToDelete) {
