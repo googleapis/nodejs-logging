@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 AUTOSYNTH_MULTIPLE_COMMITS = True
 
-s.metadata.set_track_obsolete_files(True)
+s.metadata.set_track_obsolete_files(False)
 
 gapic = gcp.GAPICBazel()
 version='v2'
