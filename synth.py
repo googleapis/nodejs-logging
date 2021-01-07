@@ -24,8 +24,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 AUTOSYNTH_MULTIPLE_COMMITS = True
 
-s.metadata.set_track_obsolete_files(True)
-
 gapic = gcp.GAPICBazel()
 version='v2'
 # tasks has two product names, and a poorly named artman yaml
