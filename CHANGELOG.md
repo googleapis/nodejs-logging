@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.0.0...v9.0.1) (2021-01-07)
+
+
+### Bug Fixes
+
+* synth.py pipeline ([#979](https://www.github.com/googleapis/nodejs-logging/issues/979)) ([f987b2d](https://www.github.com/googleapis/nodejs-logging/commit/f987b2d11f569f332a0f1fcf7c7c9975c9a92d51))
+
 ## [9.0.0](https://www.github.com/googleapis/nodejs-logging/compare/v8.2.0...v9.0.0) (2020-12-04)
 
 
