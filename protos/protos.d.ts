@@ -6769,7 +6769,8 @@ export namespace google {
             REQUIRED = 2,
             OUTPUT_ONLY = 3,
             INPUT_ONLY = 4,
-            IMMUTABLE = 5
+            IMMUTABLE = 5,
+            UNORDERED_LIST = 6
         }
 
         /** Properties of a MonitoredResourceDescriptor. */
