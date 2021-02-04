@@ -50,17 +50,20 @@ async function writeLogEntry(logName) {
 
   const json_Entry = log.entry(metadata, message);
 
-  // Synchronously write the log entry
-  await log.write(text_entry);
+  async function writeLogEntry() {
+    // Synchronously write the log entry
+    await log.write(text_entry);
 
-  // Synchronously batch write the log entries
-  await log.write([text_entry, json_Entry]);
+    // Synchronously batch write the log entries
+    await log.write([text_entry, json_Entry]);
 
-  // Asynchronously let the logging library dispatch logs
-  log.write(text_entry);
+    // Asynchronously let the logging library dispatch logs
+    log.write(text_entry);
 
+    console.log(`Wrote to ${logName}`);
+  }
+  writeLogEntry();
   // [END logging_write_log_entry]
-  console.log(`Wrote to ${logName}`);
 }
 
 async function listLogs() {
