@@ -16,44 +16,50 @@
 
 async function writeLogEntry(logName) {
   // [START logging_write_log_entry]
-  // Imports the Google Cloud client library
   const {Logging} = require('@google-cloud/logging');
-
-  // Creates a client
   const logging = new Logging();
 
   /**
-   * TODO(developer): Uncomment the following line to run the code.
+   * TODO(developer): Uncomment the following line and replace with your values.
    */
-  // const logName = 'Name of the log to write to, e.g. my-log';
-
+  // const logName = 'my-log';
   const log = logging.log(logName);
 
-  // Modify this resource to match a resource in your project
-  // See
-  // https://cloud.google.com/logging/docs/api/ref_v2beta1/rest/v2beta1/MonitoredResource
-  const resource = {
-    // This example targets the "global" resource for simplicity
-    type: 'global',
+  // A text log entry
+  const text_entry = log.entry('Hello world!');
+
+  // A json log entry with additional context
+  const metadata = {
+    severity: 'WARNING',
+    labels: {
+      foo: 'bar',
+    },
+    // A default log resource is added for some GCP environments
+    // This log resource can be overwritten per spec:
+    // https://cloud.google.com/logging/docs/reference/v2/rest/v2/MonitoredResource
+    resource: {
+      type: 'global',
+    },
   };
 
-  // A text log entry
-  const entry = log.entry({resource}, 'Hello, world!');
+  const message = {
+    name: 'King Arthur',
+    quest: 'Find the Holy Grail',
+    favorite_color: 'Blue',
+  };
 
-  // A structured log entry
-  const secondEntry = log.entry(
-    {resource: resource},
-    {
-      name: 'King Arthur',
-      quest: 'Find the Holy Grail',
-      favorite_color: 'Blue',
-    }
-  );
+  const json_Entry = log.entry(metadata, message);
 
   async function writeLogEntry() {
-    // Save the two log entries. You can write entries one at a time, but it is
-    // best to write multiple entires together in a batch.
-    await log.write([entry, secondEntry]);
+    // Synchronously write the log entry
+    await log.write(text_entry);
+
+    // Synchronously batch write the log entries
+    await log.write([text_entry, json_Entry]);
+
+    // Asynchronously let the logging library dispatch logs
+    log.write(text_entry);
+
     console.log(`Wrote to ${logName}`);
   }
   writeLogEntry();
