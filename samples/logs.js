@@ -22,7 +22,7 @@ async function writeLogEntry(logName) {
   /**
    * TODO(developer): Uncomment the following line and replace with your values.
    */
-      // const logName = 'my-log';
+  // const logName = 'my-log';
   const log = logging.log(logName);
 
   // A text log entry
@@ -32,21 +32,21 @@ async function writeLogEntry(logName) {
   const metadata = {
     severity: 'WARNING',
     labels: {
-      foo: "bar"
+      foo: 'bar',
     },
     // A default log resource is added for some GCP environments
     // This log resource can be overwritten per spec:
     // https://cloud.google.com/logging/docs/reference/v2/rest/v2/MonitoredResource
     resource: {
-      type: 'global'
-    }
-  }
+      type: 'global',
+    },
+  };
 
   const message = {
     name: 'King Arthur',
     quest: 'Find the Holy Grail',
     favorite_color: 'Blue',
-  }
+  };
 
   const json_Entry = log.entry(metadata, message);
 
@@ -93,7 +93,7 @@ async function listLogEntries(logName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-      // const logName = 'Name of the log from which to list entries, e.g. my-log';
+  // const logName = 'Name of the log from which to list entries, e.g. my-log';
 
   const log = logging.log(logName);
 
@@ -126,15 +126,15 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
    * See https://cloud.google.com/logging/docs/view/advanced_filters for more
    * filter information.
    */
-      // const filter = 'severity=ERROR';
-      // const pageSize = 5;
-      // const orderBy = 'timestamp desc';
+  // const filter = 'severity=ERROR';
+  // const pageSize = 5;
+  // const orderBy = 'timestamp desc';
 
   const options = {
-        filter: filter,
-        pageSize: pageSize,
-        orderBy: orderBy,
-      };
+    filter: filter,
+    pageSize: pageSize,
+    orderBy: orderBy,
+  };
 
   async function printEntryMetadata() {
     // See https://googleapis.dev/nodejs/logging/latest/Logging.html#getEntries
@@ -160,7 +160,7 @@ async function deleteLog(logName) {
   /**
    * TODO(developer): Uncomment the following line to run the code.
    */
-      // const logName = 'Name of the log to delete, e.g. my-log';
+  // const logName = 'Name of the log to delete, e.g. my-log';
 
   const log = logging.log(logName);
 
@@ -177,72 +177,72 @@ async function deleteLog(logName) {
 
 async function main() {
   require('yargs')
-      .demand(1)
-      .command(
-          'list',
-          'Lists log entries, optionally filtering, limiting, and sorting results.',
-          {
-            filter: {
-              alias: 'f',
-              type: 'string',
-              requiresArg: true,
-              description: 'Only log entries matching the filter are written.',
-            },
-            limit: {
-              alias: 'l',
-              type: 'number',
-              requiresArg: true,
-              description: 'Maximum number of results to return.',
-            },
-            sort: {
-              alias: 's',
-              type: 'string',
-              requiresArg: true,
-              description: 'Sort results.',
-            },
-          },
-          opts => {
-            listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
-          }
-      )
-      .command('list-logs', 'Lists logs in your project.', {}, listLogs)
-      .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
-          listLogEntries(opts.logName)
-      )
-      .command(
-          'write-simple <logName>',
-          'Writes a basic log entry to the specified log.',
-          {},
-          opts => {
-            writeLogEntry(opts.logName);
-          }
-      )
-      .command('delete <logName>', 'Deletes the specified Log.', {}, opts => {
-        deleteLog(opts.logName);
-      })
-      .example('node $0 list', 'List all log entries.')
-      .example(
-          'node $0 list -f "severity=ERROR" -s "timestamp" -l 2',
-          'List up to 2 error entries, sorted by timestamp ascending.'
-      )
-      .example(
-          'node $0 list -f \'logName="my-log"\' -l 2',
-          'List up to 2 log entries from the "my-log" log.'
-      )
-      .example(
-          'node $0 write my-log \'{"type":"gae_app","labels":{"module_id":"default"}}\' \'"Hello World!"\'',
-          'Write a string log entry.'
-      )
-      .example(
-          'node $0 write my-log \'{"type":"global"}\' \'{"message":"Hello World!"}\'',
-          'Write a JSON log entry.'
-      )
-      .example('node $0 delete my-log', 'Delete "my-log".')
-      .wrap(120)
-      .recommendCommands()
-      .epilogue('For more information, see https://cloud.google.com/logging/docs')
-      .help()
-      .strict().argv;
+    .demand(1)
+    .command(
+      'list',
+      'Lists log entries, optionally filtering, limiting, and sorting results.',
+      {
+        filter: {
+          alias: 'f',
+          type: 'string',
+          requiresArg: true,
+          description: 'Only log entries matching the filter are written.',
+        },
+        limit: {
+          alias: 'l',
+          type: 'number',
+          requiresArg: true,
+          description: 'Maximum number of results to return.',
+        },
+        sort: {
+          alias: 's',
+          type: 'string',
+          requiresArg: true,
+          description: 'Sort results.',
+        },
+      },
+      opts => {
+        listLogEntriesAdvanced(opts.filter, opts.limit, opts.sort);
+      }
+    )
+    .command('list-logs', 'Lists logs in your project.', {}, listLogs)
+    .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
+      listLogEntries(opts.logName)
+    )
+    .command(
+      'write-simple <logName>',
+      'Writes a basic log entry to the specified log.',
+      {},
+      opts => {
+        writeLogEntry(opts.logName);
+      }
+    )
+    .command('delete <logName>', 'Deletes the specified Log.', {}, opts => {
+      deleteLog(opts.logName);
+    })
+    .example('node $0 list', 'List all log entries.')
+    .example(
+      'node $0 list -f "severity=ERROR" -s "timestamp" -l 2',
+      'List up to 2 error entries, sorted by timestamp ascending.'
+    )
+    .example(
+      'node $0 list -f \'logName="my-log"\' -l 2',
+      'List up to 2 log entries from the "my-log" log.'
+    )
+    .example(
+      'node $0 write my-log \'{"type":"gae_app","labels":{"module_id":"default"}}\' \'"Hello World!"\'',
+      'Write a string log entry.'
+    )
+    .example(
+      'node $0 write my-log \'{"type":"global"}\' \'{"message":"Hello World!"}\'',
+      'Write a JSON log entry.'
+    )
+    .example('node $0 delete my-log', 'Delete "my-log".')
+    .wrap(120)
+    .recommendCommands()
+    .epilogue('For more information, see https://cloud.google.com/logging/docs')
+    .help()
+    .strict().argv;
 }
 
 main().catch(console.error);
