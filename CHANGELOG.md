@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.0.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.0.1...v9.0.2) (2021-02-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency google-auth-library to v7 ([#993](https://www.github.com/googleapis/nodejs-logging/issues/993)) ([9edeaf7](https://www.github.com/googleapis/nodejs-logging/commit/9edeaf74b7cbdc55215d5a40db7d3043937c598e))
+
 ### [9.0.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.0.0...v9.0.1) (2021-01-07)
 
 
