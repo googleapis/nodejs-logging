@@ -42,6 +42,15 @@ export interface GetEntriesRequest {
   resourceNames?: string[] | string;
 }
 
+// TODO: evaluate if I should flatten gaxOption fields like maxResults
+export interface TailEntriesRequest {
+  resourceNames?: string[] | string;
+  filter?: string;
+  bufferWindow?: number;
+  log?: string;
+  gaxOptions?: CallOptions;
+}
+
 export interface LogOptions {
   removeCircular?: boolean;
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
@@ -586,6 +595,17 @@ class Log implements LogSeverityFunctions {
       options
     );
     return this.logging.getEntriesStream(options);
+  }
+
+  // TODO: add comments.
+  tailEntries(options: TailEntriesRequest) {
+    options = extend(
+        {
+          log: this.name,
+        },
+        options
+    );
+    return this.logging.tailEntries(options);
   }
 
   info(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;

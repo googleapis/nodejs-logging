@@ -22,7 +22,7 @@ import arrify = require('arrify');
 import * as extend from 'extend';
 import * as gax from 'google-gax';
 // eslint-disable-next-line node/no-extraneous-import
-import {ClientReadableStream} from '@grpc/grpc-js';
+import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
@@ -44,6 +44,7 @@ import {Entry, LogEntry} from './entry';
 import {
   Log,
   GetEntriesRequest,
+  TailEntriesRequest,
   LogOptions,
   MonitoredResource,
   Severity,
@@ -693,6 +694,81 @@ class Logging {
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (userStream as any).setPipeline(requestStream, toEntryStream);
+      });
+    });
+    return userStream;
+  }
+
+  /**
+   *
+   * @param options
+   */
+  tailEntries(options: TailEntriesRequest = {}) {
+    const userStream = streamEvents<Duplex>(pumpify.obj());
+    let gaxStream: ClientDuplexStream<any, any>;
+
+    // TODO: test this actually works
+    (userStream as AbortableDuplex).abort = () => {
+      if (gaxStream) {
+        console.log("Cancelling gaxStream");
+        gaxStream.cancel();
+      }
+    };
+
+    // TODO unit test entry is formatted correctly
+    const toEntryStream = through.obj((entry, _, next) => {
+      next(null, entry);
+    });
+
+    userStream.once('reading', () => {
+      console.log("userStream started reading");
+      this.auth.getProjectId().then(projectId => {
+        this.projectId = projectId;
+        // if (options.log) {
+        //   if (options.filter) {
+        //     options.filter = `(${
+        //         options.filter
+        //     }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
+        //   } else {
+        //     options.filter = `logName="${Log.formatName_(
+        //         this.projectId,
+        //         options.log
+        //     )}"`;
+        //   }
+        //   delete options.log;
+        // }
+        // const reqOpts = extend(
+        //     {
+        //       orderBy: 'timestamp desc',
+        //     },
+        //     options
+        // );
+        // reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
+        // reqOpts.resourceNames.push(`projects/${this.projectId}`);
+        // delete reqOpts.autoPaginate;
+        // delete reqOpts.gaxOptions;
+        // const gaxOptions = extend(
+        //     {
+        //       autoPaginate: options.autoPaginate,
+        //     },
+        //     options.gaxOptions
+        // );
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!(global as any).GCLOUD_SANDBOX_ENV) {
+          gaxStream = this.loggingService.tailLogEntries();
+          console.log("gaxStream started reading");
+          // required, otherwise tail returns nil.
+          gaxStream.write({
+              resourceNames: ["projects/log-bench"],
+              // bufferWindow: {},
+            }, (resp: any) => {
+              console.log("writing callback:");
+              console.log(resp);
+            });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (userStream as any).setPipeline(gaxStream, toEntryStream);
+        }
       });
     });
     return userStream;

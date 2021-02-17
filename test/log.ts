@@ -328,6 +328,10 @@ describe('Log', () => {
     });
   });
 
+  // TODO: tailEntries
+  // should call tailEntries with defaults
+  // should allow overriding the options
+
   describe('write', () => {
     let ENTRY: Entry;
     let ENTRIES: Entry[];

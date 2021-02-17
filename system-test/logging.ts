@@ -351,6 +351,28 @@ describe('Logging', () => {
       });
     });
 
+    it.only('should tail log entries as a stream', done => {
+      const {log, logEntries} = getTestLog();
+
+      const logInterval = setInterval(() => {
+        console.log("Writing a log entry");
+        log.write(logEntries, options, (err) => {
+          assert.ifError(err);
+        });
+      }, 10000);
+
+      const stream = logging.tailEntries()
+          .on('error', done)
+          .once('data', (entry: any) => {
+            console.log("got data:\n");
+            console.log(entry);
+            // I can end the loop here.
+            clearInterval(logInterval);
+            stream.end();
+          })
+          .on('end', done);
+    });
+
     describe('log-specific entries', () => {
       let logExpected: Log;
       let logEntriesExpected: Entry[];
@@ -386,6 +408,8 @@ describe('Logging', () => {
             done();
           });
       });
+
+      // TODO: log.tailEntries a stream
     });
 
     it('should write a single entry to a log', done => {
