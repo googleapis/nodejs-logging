@@ -351,7 +351,8 @@ describe('Logging', () => {
       });
     });
 
-    it.only('should tail log entries as a stream', done => {
+    // TODO: remove console logs
+    it('should tail log entries as a stream', done => {
       const {log, logEntries} = getTestLog();
 
       const logInterval = setInterval(() => {
@@ -407,7 +408,24 @@ describe('Logging', () => {
           });
       });
 
-      // TODO: log.tailEntries a stream
+      // TODO: remove console.logs
+      it.only('should tail log entries as a stream', done => {
+        const logInterval = setInterval(() => {
+          logExpected.write(logEntriesExpected, options, (err) => {
+            assert.ifError(err);
+          });
+        }, 10000);
+
+        const stream = logExpected.tailEntries()
+            .on('error', done)
+            .once('data', (entry: TailEntriesResponse) => {
+              console.log(entry.entries);
+              console.log(entry.suppressionInfo);
+              clearInterval(logInterval);
+              stream.end();
+            })
+            .on('end', done);
+      });
     });
 
     it('should write a single entry to a log', done => {

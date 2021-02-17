@@ -599,7 +599,12 @@ class Log implements LogSeverityFunctions {
   }
 
   // TODO: add comments.
-  tailEntries(options: TailEntriesRequest) {
+  /**
+   * log.tailEntries()
+   *
+   * @param options
+   */
+  tailEntries(options?: TailEntriesRequest) {
     options = extend(
         {
           log: this.name,
