@@ -26,7 +26,7 @@ import {v4} from 'uuid';
 import {after, before} from 'mocha';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
-import {Logging, Sink, Log, Entry} from '../src';
+import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -355,7 +355,6 @@ describe('Logging', () => {
       const {log, logEntries} = getTestLog();
 
       const logInterval = setInterval(() => {
-        console.log("Writing a log entry");
         log.write(logEntries, options, (err) => {
           assert.ifError(err);
         });
@@ -363,10 +362,9 @@ describe('Logging', () => {
 
       const stream = logging.tailEntries()
           .on('error', done)
-          .once('data', (entry: any) => {
-            console.log("got data:\n");
-            console.log(entry);
-            // I can end the loop here.
+          .once('data', (entry: TailEntriesResponse) => {
+            console.log(entry.entries);
+            console.log(entry.suppressionInfo);
             clearInterval(logInterval);
             stream.end();
           })

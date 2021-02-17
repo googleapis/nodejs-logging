@@ -107,6 +107,12 @@ export interface GetEntriesCallback {
   ): void;
 }
 
+// TODO double check if this is a necessary convention
+export interface TailEntriesResponse {
+  entries: Entry[],
+  suppressionInfo: google.logging.v2.TailLogEntriesResponse.SuppressionInfo,
+}
+
 export interface GetLogsRequest {
   autoPaginate?: boolean;
   gaxOptions?: gax.CallOptions;
@@ -722,10 +728,11 @@ class Logging {
         data.entries.forEach( (entry: google.logging.v2.LogEntry) => {
           formattedEntries.push(Entry.fromApiResponse_(entry));
         });
-        return {
+        const resp: TailEntriesResponse = {
           entries: formattedEntries,
           suppressionInfo: data.suppressionInfo,
         };
+        return resp;
       })()
       );
     });
@@ -734,7 +741,7 @@ class Logging {
       console.log("userStream started reading");
       this.auth.getProjectId().then(projectId => {
         this.projectId = projectId;
-        // If user specified a specific logname, update options.filter
+
         if (options.log) {
           if (options.filter) {
             options.filter = `(${
@@ -760,21 +767,17 @@ class Logging {
             },
             options.gaxOptions
         )
-
-        console.log("writeOptions");
-        console.log(writeOptions);
-        console.log("callOptions");
-        console.log(callOptions);
+        // console.log("writeOptions");
+        // console.log(writeOptions);
+        // console.log("callOptions");
+        // console.log(callOptions);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!(global as any).GCLOUD_SANDBOX_ENV) {
           gaxStream = this.loggingService.tailLogEntries(callOptions);
           console.log("gaxStream started reading");
-          // required, otherwise tail returns nil.
-          gaxStream.write(writeOptions, (resp: any) => {
-              // TODO remove this handling
-              console.log("writing callback:");
-              console.log(resp);
+          gaxStream.write(writeOptions, () => {
+              console.log("gaxStream initial writing config:");
             });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (userStream as any).setPipeline(gaxStream, transformStream);
