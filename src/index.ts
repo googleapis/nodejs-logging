@@ -716,58 +716,68 @@ class Logging {
     };
 
     // TODO unit test entry is formatted correctly
-    const toEntryStream = through.obj((entry, _, next) => {
-      next(null, entry);
+    const transformStream = through.obj((data, _, next) => {
+      next(null, (() => {
+        let formattedEntries: Entry[] = [];
+        data.entries.forEach( (entry: google.logging.v2.LogEntry) => {
+          formattedEntries.push(Entry.fromApiResponse_(entry));
+        });
+        return {
+          entries: formattedEntries,
+          suppressionInfo: data.suppressionInfo,
+        };
+      })()
+      );
     });
 
     userStream.once('reading', () => {
       console.log("userStream started reading");
       this.auth.getProjectId().then(projectId => {
         this.projectId = projectId;
-        // if (options.log) {
-        //   if (options.filter) {
-        //     options.filter = `(${
-        //         options.filter
-        //     }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
-        //   } else {
-        //     options.filter = `logName="${Log.formatName_(
-        //         this.projectId,
-        //         options.log
-        //     )}"`;
-        //   }
-        //   delete options.log;
-        // }
-        // const reqOpts = extend(
-        //     {
-        //       orderBy: 'timestamp desc',
-        //     },
-        //     options
-        // );
-        // reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
-        // reqOpts.resourceNames.push(`projects/${this.projectId}`);
-        // delete reqOpts.autoPaginate;
-        // delete reqOpts.gaxOptions;
-        // const gaxOptions = extend(
-        //     {
-        //       autoPaginate: options.autoPaginate,
-        //     },
-        //     options.gaxOptions
-        // );
+        // If user specified a specific logname, update options.filter
+        if (options.log) {
+          if (options.filter) {
+            options.filter = `(${
+                options.filter
+            }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
+          } else {
+            options.filter = `logName="${Log.formatName_(
+                this.projectId,
+                options.log
+            )}"`;
+          }
+        }
+        options.resourceNames = arrify(options.resourceNames);
+        options.resourceNames.push(`projects/${this.projectId}`);
+
+        const writeOptions = {
+          resourceNames: options.resourceNames,
+          ... options.filter && { filter: options.filter },
+          ... options.bufferWindow && { bufferwindow: options.bufferWindow },
+        }
+        const callOptions = extend({
+              ... options.maxResults && { maxResults: options.maxResults },
+            },
+            options.gaxOptions
+        )
+
+        console.log("writeOptions");
+        console.log(writeOptions);
+        console.log("callOptions");
+        console.log(callOptions);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (!(global as any).GCLOUD_SANDBOX_ENV) {
-          gaxStream = this.loggingService.tailLogEntries();
+          gaxStream = this.loggingService.tailLogEntries(callOptions);
           console.log("gaxStream started reading");
           // required, otherwise tail returns nil.
-          gaxStream.write({
-              resourceNames: ["projects/log-bench"],
-              // bufferWindow: {},
-            }, (resp: any) => {
+          gaxStream.write(writeOptions, (resp: any) => {
+              // TODO remove this handling
               console.log("writing callback:");
               console.log(resp);
             });
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (userStream as any).setPipeline(gaxStream, toEntryStream);
+          (userStream as any).setPipeline(gaxStream, transformStream);
         }
       });
     });

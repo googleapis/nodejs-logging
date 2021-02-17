@@ -42,13 +42,14 @@ export interface GetEntriesRequest {
   resourceNames?: string[] | string;
 }
 
-// TODO: evaluate if I should flatten gaxOption fields like maxResults
+// TODO thoroughly test this
 export interface TailEntriesRequest {
   resourceNames?: string[] | string;
   filter?: string;
   bufferWindow?: number;
   log?: string;
-  gaxOptions?: CallOptions;
+  maxResults?: number; // TODO double check this works.
+  gaxOptions?: CallOptions; // encapsulates all other call options
 }
 
 export interface LogOptions {
