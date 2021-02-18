@@ -341,9 +341,9 @@ describe('Log', () => {
       const stream = log.tailEntries();
       assert.strictEqual(stream, FAKE_STREAM);
       assert(
-          log.logging.tailEntries.calledWithExactly({
-            log: LOG_NAME_ENCODED,
-          })
+        log.logging.tailEntries.calledWithExactly({
+          log: LOG_NAME_ENCODED,
+        })
       );
     });
 
@@ -356,15 +356,15 @@ describe('Log', () => {
       const stream = log.tailEntries(options);
       assert.strictEqual(stream, FAKE_STREAM);
       assert(
-          log.logging.tailEntries.calledWithExactly(
-              extend(
-                  {},
-                  {
-                    log: LOG_NAME_ENCODED,
-                  },
-                  options
-              )
+        log.logging.tailEntries.calledWithExactly(
+          extend(
+            {},
+            {
+              log: LOG_NAME_ENCODED,
+            },
+            options
           )
+        )
       );
     });
   });

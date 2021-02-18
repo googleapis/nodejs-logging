@@ -596,11 +596,39 @@ class Log implements LogSeverityFunctions {
     return this.logging.getEntriesStream(options);
   }
 
-  // TODO: add comments.
   /**
-   * log.tailEntries()
+   * This method is a wrapper around {module:logging#tailEntries}, but with
+   * a filter specified to only return {module:logging/entry} objects from this
+   * log.
    *
-   * @param options
+   * @method Log#tailEntries
+   * @param {TailEntriesRequest} [query] Query object for tailing entries.
+   * @returns {DuplexStream} A duplex stream that emits TailEntriesResponses
+   * containing an array of {@link Entry} instances.
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   * const log = logging.log('my-log');
+   *
+   * log.tailEntries()
+   *   .on('error', console.error)
+   *   .on('data', resp => {
+   *     console.log(resp.entries);
+   *     console.log(resp.suppressionInfo);
+   *   })
+   *   .on('end', function() {
+   *     // All entries retrieved.
+   *   });
+   *
+   * //-
+   * // If you anticipate many results, you can end a stream early to prevent
+   * // unnecessary processing and API requests.
+   * //-
+   * log.tailEntries()
+   *   .on('data', function(entry) {
+   *     this.end();
+   *   });
    */
   tailEntries(options?: TailEntriesRequest) {
     options = extend(

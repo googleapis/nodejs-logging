@@ -107,7 +107,6 @@ export interface GetEntriesCallback {
   ): void;
 }
 
-// TODO double check if this is a necessary convention
 export interface TailEntriesResponse {
   entries: Entry[];
   suppressionInfo: google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
@@ -706,23 +705,49 @@ class Logging {
   }
 
   /**
+   * Streaming read of live logs as log entries are ingested. Until the stream
+   * is terminated, it will continue reading logs.
    *
-   * @param options
+   * @method Logging#tailEntries
+   * @param {TailEntriesRequest} [query] Query object for tailing entries.
+   * @returns {DuplexStream} A duplex stream that emits TailEntriesResponses
+   * containing an array of {@link Entry} instances.
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   *
+   * logging.tailEntries()
+   *   .on('error', console.error)
+   *   .on('data', resp => {
+   *     console.log(resp.entries);
+   *     console.log(resp.suppressionInfo);
+   *   })
+   *   .on('end', function() {
+   *     // All entries retrieved.
+   *   });
+   *
+   * //-
+   * // If you anticipate many results, you can end a stream early to prevent
+   * // unnecessary processing and API requests.
+   * //-
+   * logging.getEntriesStream()
+   *   .on('data', function(entry) {
+   *     this.end();
+   *   });
    */
   tailEntries(options: TailEntriesRequest = {}) {
     const userStream = streamEvents<Duplex>(pumpify.obj());
-    // TODO compelte teh ANYs
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let gaxStream: ClientDuplexStream<any, any>;
 
-    // TODO: test this actually works
     (userStream as AbortableDuplex).abort = () => {
-      if (gaxStream) {
-        console.log('Cancelling gaxStream');
+      if (gaxStream && gaxStream.cancel) {
         gaxStream.cancel();
       }
     };
 
-    // TODO unit test entry is formatted correctly
     const transformStream = through.obj((data, _, next) => {
       next(
         null,
@@ -768,9 +793,7 @@ class Logging {
       if (!(global as any).GCLOUD_SANDBOX_ENV) {
         gaxStream = this.loggingService.tailLogEntries(options.gaxOptions);
         // Write can only be called once in a single tail streaming session.
-        gaxStream.write(writeOptions, () => {
-          console.log('gaxStream is configured with RequestOptions');
-        });
+        gaxStream.write(writeOptions);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (userStream as any).setPipeline(gaxStream, transformStream);
       }
