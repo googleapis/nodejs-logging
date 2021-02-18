@@ -328,7 +328,9 @@ describe('Log', () => {
     });
   });
 
-  // TODO: tailEntries
+  // TODO: unit test tailEntries
+  describe('tailEntries', () => {});
+
   // should call tailEntries with defaults
   // should allow overriding the options
 

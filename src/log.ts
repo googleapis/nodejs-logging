@@ -42,14 +42,12 @@ export interface GetEntriesRequest {
   resourceNames?: string[] | string;
 }
 
-// TODO thoroughly test this
 export interface TailEntriesRequest {
   resourceNames?: string[] | string;
   filter?: string;
   bufferWindow?: number;
   log?: string;
-  maxResults?: number; // TODO double check this works.
-  gaxOptions?: CallOptions; // encapsulates all other call options
+  gaxOptions?: CallOptions;
 }
 
 export interface LogOptions {
@@ -606,10 +604,10 @@ class Log implements LogSeverityFunctions {
    */
   tailEntries(options?: TailEntriesRequest) {
     options = extend(
-        {
-          log: this.name,
-        },
-        options
+      {
+        log: this.name,
+      },
+      options
     );
     return this.logging.tailEntries(options);
   }

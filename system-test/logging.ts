@@ -352,24 +352,32 @@ describe('Logging', () => {
     });
 
     // TODO: remove console logs
-    it('should tail log entries as a stream', done => {
+    it.only('should tail log entries as a stream', done => {
       const {log, logEntries} = getTestLog();
 
       const logInterval = setInterval(() => {
-        log.write(logEntries, options, (err) => {
+        log.write(logEntries, options, err => {
           assert.ifError(err);
         });
       }, 10000);
 
-      const stream = logging.tailEntries()
-          .on('error', done)
-          .once('data', (entry: TailEntriesResponse) => {
-            console.log(entry.entries);
-            console.log(entry.suppressionInfo);
-            clearInterval(logInterval);
-            stream.end();
-          })
-          .on('end', done);
+      const stream = logging
+        .tailEntries({
+          filter: 'textPayload:"log entry 1"',
+        })
+        .on('error', done)
+        .once('data', (resp: TailEntriesResponse) => {
+          console.log(resp.entries);
+          console.log(resp.suppressionInfo);
+          assert.strictEqual(
+            resp.entries.length,
+            1,
+            `Expected 1 tailed entry; Got ${resp.entries.length}.`
+          );
+          clearInterval(logInterval);
+          stream.end();
+        })
+        .on('end', done);
     });
 
     describe('log-specific entries', () => {
@@ -408,23 +416,21 @@ describe('Logging', () => {
           });
       });
 
-      // TODO: remove console.logs
-      it.only('should tail log entries as a stream', done => {
+      it('should tail log entries as a stream', done => {
         const logInterval = setInterval(() => {
-          logExpected.write(logEntriesExpected, options, (err) => {
+          logExpected.write(logEntriesExpected, options, err => {
             assert.ifError(err);
           });
         }, 10000);
 
-        const stream = logExpected.tailEntries()
-            .on('error', done)
-            .once('data', (entry: TailEntriesResponse) => {
-              console.log(entry.entries);
-              console.log(entry.suppressionInfo);
-              clearInterval(logInterval);
-              stream.end();
-            })
-            .on('end', done);
+        const stream = logExpected
+          .tailEntries()
+          .on('error', done)
+          .once('data', () => {
+            clearInterval(logInterval);
+            stream.end();
+          })
+          .on('end', done);
       });
     });
 

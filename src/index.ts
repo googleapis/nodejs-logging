@@ -109,8 +109,8 @@ export interface GetEntriesCallback {
 
 // TODO double check if this is a necessary convention
 export interface TailEntriesResponse {
-  entries: Entry[],
-  suppressionInfo: google.logging.v2.TailLogEntriesResponse.SuppressionInfo,
+  entries: Entry[];
+  suppressionInfo: google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
 }
 
 export interface GetLogsRequest {
@@ -711,79 +711,71 @@ class Logging {
    */
   tailEntries(options: TailEntriesRequest = {}) {
     const userStream = streamEvents<Duplex>(pumpify.obj());
+    // TODO compelte teh ANYs
     let gaxStream: ClientDuplexStream<any, any>;
 
     // TODO: test this actually works
     (userStream as AbortableDuplex).abort = () => {
       if (gaxStream) {
-        console.log("Cancelling gaxStream");
+        console.log('Cancelling gaxStream');
         gaxStream.cancel();
       }
     };
 
     // TODO unit test entry is formatted correctly
     const transformStream = through.obj((data, _, next) => {
-      next(null, (() => {
-        let formattedEntries: Entry[] = [];
-        data.entries.forEach( (entry: google.logging.v2.LogEntry) => {
-          formattedEntries.push(Entry.fromApiResponse_(entry));
-        });
-        const resp: TailEntriesResponse = {
-          entries: formattedEntries,
-          suppressionInfo: data.suppressionInfo,
-        };
-        return resp;
-      })()
+      next(
+        null,
+        (() => {
+          const formattedEntries: Entry[] = [];
+          data.entries.forEach((entry: google.logging.v2.LogEntry) => {
+            formattedEntries.push(Entry.fromApiResponse_(entry));
+          });
+          const resp: TailEntriesResponse = {
+            entries: formattedEntries,
+            suppressionInfo: data.suppressionInfo,
+          };
+          return resp;
+        })()
       );
     });
 
-    userStream.once('reading', () => {
-      console.log("userStream started reading");
-      this.auth.getProjectId().then(projectId => {
-        this.projectId = projectId;
+    this.auth.getProjectId().then(projectId => {
+      this.projectId = projectId;
 
-        if (options.log) {
-          if (options.filter) {
-            options.filter = `(${
-                options.filter
-            }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
-          } else {
-            options.filter = `logName="${Log.formatName_(
-                this.projectId,
-                options.log
-            )}"`;
-          }
+      if (options.log) {
+        if (options.filter) {
+          options.filter = `(${options.filter}) AND logName="${Log.formatName_(
+            this.projectId,
+            options.log
+          )}"`;
+        } else {
+          options.filter = `logName="${Log.formatName_(
+            this.projectId,
+            options.log
+          )}"`;
         }
-        options.resourceNames = arrify(options.resourceNames);
-        options.resourceNames.push(`projects/${this.projectId}`);
+      }
+      options.resourceNames = arrify(options.resourceNames);
+      options.resourceNames.push(`projects/${this.projectId}`);
+      const writeOptions = {
+        resourceNames: options.resourceNames,
+        ...(options.filter && {filter: options.filter}),
+        ...(options.bufferWindow && {bufferwindow: options.bufferWindow}),
+      };
 
-        const writeOptions = {
-          resourceNames: options.resourceNames,
-          ... options.filter && { filter: options.filter },
-          ... options.bufferWindow && { bufferwindow: options.bufferWindow },
-        }
-        const callOptions = extend({
-              ... options.maxResults && { maxResults: options.maxResults },
-            },
-            options.gaxOptions
-        )
-        // console.log("writeOptions");
-        // console.log(writeOptions);
-        // console.log("callOptions");
-        // console.log(callOptions);
-
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (!(global as any).GCLOUD_SANDBOX_ENV) {
+        gaxStream = this.loggingService.tailLogEntries(options.gaxOptions);
+        // Write can only be called once in a single tail streaming session.
+        gaxStream.write(writeOptions, () => {
+          console.log('gaxStream is configured with RequestOptions');
+        });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (!(global as any).GCLOUD_SANDBOX_ENV) {
-          gaxStream = this.loggingService.tailLogEntries(callOptions);
-          console.log("gaxStream started reading");
-          gaxStream.write(writeOptions, () => {
-              console.log("gaxStream initial writing config:");
-            });
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (userStream as any).setPipeline(gaxStream, transformStream);
-        }
-      });
+        (userStream as any).setPipeline(gaxStream, transformStream);
+      }
     });
+
     return userStream;
   }
 
