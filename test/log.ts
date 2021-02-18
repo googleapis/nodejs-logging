@@ -104,7 +104,7 @@ describe('Log', () => {
       assert(
         callbackifyFake.callbackifyAll.calledWithExactly(
           Log,
-          sinon.match({exclude: ['entry', 'getEntriesStream', 'tailEntries']})
+          sinon.match({exclude: ['entry', 'getEntriesStream']})
         )
       );
     });
