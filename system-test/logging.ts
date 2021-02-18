@@ -351,8 +351,7 @@ describe('Logging', () => {
       });
     });
 
-    // TODO: remove console logs
-    it.only('should tail log entries as a stream', done => {
+    it('should tail log entries as a stream', done => {
       const {log, logEntries} = getTestLog();
 
       const logInterval = setInterval(() => {
@@ -367,8 +366,6 @@ describe('Logging', () => {
         })
         .on('error', done)
         .once('data', (resp: TailEntriesResponse) => {
-          console.log(resp.entries);
-          console.log(resp.suppressionInfo);
           assert.strictEqual(
             resp.entries.length,
             1,
