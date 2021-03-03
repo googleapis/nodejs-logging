@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.0.2...v9.1.0) (2021-03-03)
+
+
+### Features
+
+* tail entries wrapper ([#998](https://www.github.com/googleapis/nodejs-logging/issues/998)) ([bfe8b76](https://www.github.com/googleapis/nodejs-logging/commit/bfe8b765d1c690e81c96f0c71e4e431622f67104))
+
+
+### Bug Fixes
+
+* **deps:** update dependency type-fest to ^0.21.0 ([#997](https://www.github.com/googleapis/nodejs-logging/issues/997)) ([47a4c72](https://www.github.com/googleapis/nodejs-logging/commit/47a4c724f4f359f9c3d05360881724cbb14894d7))
+
 ### [9.0.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.0.1...v9.0.2) (2021-02-09)
 
 
