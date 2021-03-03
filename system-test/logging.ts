@@ -26,7 +26,7 @@ import {v4} from 'uuid';
 import {after, before} from 'mocha';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
-import {Logging, Sink, Log, Entry} from '../src';
+import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -351,6 +351,32 @@ describe('Logging', () => {
       });
     });
 
+    it('should tail log entries as a stream', done => {
+      const {log, logEntries} = getTestLog();
+
+      const logInterval = setInterval(() => {
+        log.write(logEntries, options, err => {
+          assert.ifError(err);
+        });
+      }, 10000);
+
+      const stream = logging
+        .tailEntries({
+          filter: 'textPayload:"log entry 1"',
+        })
+        .on('error', done)
+        .once('data', (resp: TailEntriesResponse) => {
+          assert.strictEqual(
+            resp.entries.length,
+            1,
+            `Expected 1 tailed entry; Got ${resp.entries.length}.`
+          );
+          clearInterval(logInterval);
+          stream.end();
+        })
+        .on('end', done);
+    });
+
     describe('log-specific entries', () => {
       let logExpected: Log;
       let logEntriesExpected: Entry[];
@@ -385,6 +411,23 @@ describe('Logging', () => {
             logstream.end();
             done();
           });
+      });
+
+      it('should tail log entries as a stream', done => {
+        const logInterval = setInterval(() => {
+          logExpected.write(logEntriesExpected, options, err => {
+            assert.ifError(err);
+          });
+        }, 10000);
+
+        const stream = logExpected
+          .tailEntries()
+          .on('error', done)
+          .once('data', () => {
+            clearInterval(logInterval);
+            stream.end();
+          })
+          .on('end', done);
       });
     });
 

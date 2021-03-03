@@ -62,6 +62,7 @@ describe('Log', () => {
     log.logging.entry.reset();
     log.logging.getEntries.reset();
     log.logging.getEntriesStream.reset();
+    log.logging.tailEntries.reset();
     log.logging.request.reset();
     log.logging.loggingService.deleteLog.reset();
     log.logging.loggingService.writeLogEntries.reset();
@@ -78,6 +79,7 @@ describe('Log', () => {
       entry: sinon.stub(),
       getEntries: sinon.stub(),
       getEntriesStream: sinon.stub(),
+      tailEntries: sinon.stub(),
       request: sinon.stub(),
       loggingService: {
         deleteLog: sinon.stub(),
@@ -316,6 +318,45 @@ describe('Log', () => {
       assert.strictEqual(stream, FAKE_STREAM);
       assert(
         log.logging.getEntriesStream.calledWithExactly(
+          extend(
+            {},
+            {
+              log: LOG_NAME_ENCODED,
+            },
+            options
+          )
+        )
+      );
+    });
+  });
+
+  describe('tailEntries', () => {
+    const FAKE_STREAM = {};
+
+    beforeEach(() => {
+      log.logging.tailEntries.returns(FAKE_STREAM);
+    });
+
+    it('should call Logging tailEntries with defaults', () => {
+      const stream = log.tailEntries();
+      assert.strictEqual(stream, FAKE_STREAM);
+      assert(
+        log.logging.tailEntries.calledWithExactly({
+          log: LOG_NAME_ENCODED,
+        })
+      );
+    });
+
+    it('should allow overriding the options', () => {
+      const options = {
+        custom: true,
+        filter: 'custom filter',
+      };
+
+      const stream = log.tailEntries(options);
+      assert.strictEqual(stream, FAKE_STREAM);
+      assert(
+        log.logging.tailEntries.calledWithExactly(
           extend(
             {},
             {
