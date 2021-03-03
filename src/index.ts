@@ -22,7 +22,7 @@ import arrify = require('arrify');
 import * as extend from 'extend';
 import * as gax from 'google-gax';
 // eslint-disable-next-line node/no-extraneous-import
-import {ClientReadableStream} from '@grpc/grpc-js';
+import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
@@ -44,6 +44,7 @@ import {Entry, LogEntry} from './entry';
 import {
   Log,
   GetEntriesRequest,
+  TailEntriesRequest,
   LogOptions,
   MonitoredResource,
   Severity,
@@ -104,6 +105,11 @@ export interface GetEntriesCallback {
     request?: google.logging.v2.IListLogEntriesRequest,
     apiResponse?: google.logging.v2.IListLogEntriesResponse
   ): void;
+}
+
+export interface TailEntriesResponse {
+  entries: Entry[];
+  suppressionInfo: google.logging.v2.TailLogEntriesResponse.SuppressionInfo;
 }
 
 export interface GetLogsRequest {
@@ -695,6 +701,104 @@ class Logging {
         (userStream as any).setPipeline(requestStream, toEntryStream);
       });
     });
+    return userStream;
+  }
+
+  /**
+   * Streaming read of live logs as log entries are ingested. Until the stream
+   * is terminated, it will continue reading logs.
+   *
+   * @method Logging#tailEntries
+   * @param {TailEntriesRequest} [query] Query object for tailing entries.
+   * @returns {DuplexStream} A duplex stream that emits TailEntriesResponses
+   * containing an array of {@link Entry} instances.
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   *
+   * logging.tailEntries()
+   *   .on('error', console.error)
+   *   .on('data', resp => {
+   *     console.log(resp.entries);
+   *     console.log(resp.suppressionInfo);
+   *   })
+   *   .on('end', function() {
+   *     // All entries retrieved.
+   *   });
+   *
+   * //-
+   * // If you anticipate many results, you can end a stream early to prevent
+   * // unnecessary processing and API requests.
+   * //-
+   * logging.getEntriesStream()
+   *   .on('data', function(entry) {
+   *     this.end();
+   *   });
+   */
+  tailEntries(options: TailEntriesRequest = {}) {
+    const userStream = streamEvents<Duplex>(pumpify.obj());
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let gaxStream: ClientDuplexStream<any, any>;
+
+    (userStream as AbortableDuplex).abort = () => {
+      if (gaxStream && gaxStream.cancel) {
+        gaxStream.cancel();
+      }
+    };
+
+    const transformStream = through.obj((data, _, next) => {
+      next(
+        null,
+        (() => {
+          const formattedEntries: Entry[] = [];
+          data.entries.forEach((entry: google.logging.v2.LogEntry) => {
+            formattedEntries.push(Entry.fromApiResponse_(entry));
+          });
+          const resp: TailEntriesResponse = {
+            entries: formattedEntries,
+            suppressionInfo: data.suppressionInfo,
+          };
+          return resp;
+        })()
+      );
+    });
+
+    this.auth.getProjectId().then(projectId => {
+      this.projectId = projectId;
+
+      if (options.log) {
+        if (options.filter) {
+          options.filter = `(${options.filter}) AND logName="${Log.formatName_(
+            this.projectId,
+            options.log
+          )}"`;
+        } else {
+          options.filter = `logName="${Log.formatName_(
+            this.projectId,
+            options.log
+          )}"`;
+        }
+      }
+      options.resourceNames = arrify(options.resourceNames);
+      options.resourceNames.push(`projects/${this.projectId}`);
+      const writeOptions = {
+        resourceNames: options.resourceNames,
+        ...(options.filter && {filter: options.filter}),
+        ...(options.bufferWindow && {bufferwindow: options.bufferWindow}),
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (!(global as any).GCLOUD_SANDBOX_ENV) {
+        gaxStream = this.loggingService.tailLogEntries(options.gaxOptions);
+        // Write can only be called once in a single tail streaming session.
+        gaxStream.write(writeOptions);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (userStream as any).setPipeline(gaxStream, transformStream);
+      }
+    });
+
     return userStream;
   }
 
