@@ -2494,8 +2494,7 @@
                 "java_multiple_files": true,
                 "java_outer_classname": "LogSeverityProto",
                 "java_package": "com.google.logging.type",
-                "php_namespace": "Google\\Cloud\\Logging\\Type",
-                "ruby_package": "Google::Cloud::Logging::Type"
+                "php_namespace": "Google\\Cloud\\Logging\\Type"
               },
               "nested": {
                 "HttpRequest": {
