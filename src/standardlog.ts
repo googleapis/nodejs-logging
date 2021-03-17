@@ -50,20 +50,13 @@ class StandardLog implements LogSeverityFunctions {
   removeCircular_: boolean;
   maxEntrySize?: number;
   logging: Logging;
+  logger?: Log;
   name: string;
-  stdout: boolean; // tracks if logs should export to stdout
 
   constructor(logging: Logging, name: string, opts?: boolean | LogOptions, stdout?: boolean) {
     const options = (opts && typeof opts !== 'boolean') ? opts : {}
     console.log(options);
 
-    if (stdout || (typeof opts === 'boolean' && opts)) {
-      console.log("print to STDOUT");
-      this.stdout = true;
-    } else {
-      console.log("Print to Cloud Logging")
-      this.stdout = false;
-    }
     this.formattedName_ = Log.formatName_(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
     this.maxEntrySize = options.maxEntrySize;
@@ -73,6 +66,16 @@ class StandardLog implements LogSeverityFunctions {
      * @type {string}
      */
     this.name = this.formattedName_.split('/').pop()!;
+
+    // If writing to Cloud Logging, instantiate
+    if (stdout || (typeof opts === 'boolean' && opts)) {
+      console.log("print to STDOUT");
+      // this.stdout = true;
+    } else {
+      console.log("Print to Cloud Logging")
+      // this.stdout = false;
+      this.logger = this.logging.log(name);
+    }
   }
 
   log(payload: string | {}, options?: WriteOptions): Promise<ApiResponse>;
@@ -112,16 +115,34 @@ class StandardLog implements LogSeverityFunctions {
       options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> | void {
 
-    if (this.stdout) {
-      return console.log("Success: printing to console.log");
-    } else {
-      //TODO is there a better way of calling this...
-      return this.logging.log('logname').write(
-          this.logging.entry({}, payload),
+    // If writing to cloud logging
+    if (this.logger) {
+      // write() is the step that adds resource & other decorations
+      return this.logger.write(
+          // TODO put back the resource stuff.
+          this.logging.entry({}, payload), // for other severity levels this is easy
           options! as WriteOptions
       );
-    }
+    } else {
+      // If writing to stdout
+      // TODO implement the correct entry format...
+      // per https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
+      // https://cloud.google.com/functions/docs/monitoring/logging#writing_structured_logs
+      // 1. log entry basic fields? I have to populate for user
+      // 2. resource detection? trace log corr? Hope this gets populated by logging agent in functions env
 
+      // let logentry = this.logging.entry({}, payload);
+
+      // I assume the trace log and other stdout metadata gets added by the agent?
+      const entry =
+          {
+            severity: 'DEFAULT',
+            message: payload, // TODO: test what if payload is an obj.
+            component: 'arbitrary-property'
+          }
+
+      return console.log(JSON.stringify(entry));
+    }
   }
 
 

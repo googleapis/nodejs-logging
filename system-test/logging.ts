@@ -736,16 +736,13 @@ describe('Logging', () => {
     //     );
     //   }
     // }
-
-
+    
     // TODO write the test here
     it.only('should write a single entry to a log', done => {
       const options: LogOptions = {removeCircular: true}
-      const console = logging.standardLog(generateName());
+      const console = logging.standardLog(generateName(), true);
       console.log("Success: hello world");
       //  todo ensuring cloud loggings till works
-
-
     });
 
   });
