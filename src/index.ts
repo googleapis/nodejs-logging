@@ -50,6 +50,9 @@ import {
   Severity,
   SeverityNames,
 } from './log';
+import {
+  StandardLog,
+} from './standardlog';
 import {Sink} from './sink';
 import {Duplex} from 'stream';
 import {google} from '../protos/protos';
@@ -250,7 +253,7 @@ export interface ServiceContext {
  * Full quickstart example:
  */
 class Logging {
-  api: {[key: string]: gax.ClientStub};
+  api: { [key: string]: gax.ClientStub };
   auth: gax.GoogleAuth;
   options: LoggingOptions;
   projectId: string;
@@ -275,12 +278,12 @@ class Logging {
       }
     }
     const options_ = extend(
-      {
-        libName: 'gccl',
-        libVersion: version,
-        scopes,
-      },
-      options
+        {
+          libName: 'gccl',
+          libVersion: version,
+          scopes,
+        },
+        options
     );
     this.api = {};
     this.auth = new gax.GoogleAuth(options_);
@@ -292,9 +295,9 @@ class Logging {
 
   createSink(name: string, config: CreateSinkRequest): Promise<[Sink, LogSink]>;
   createSink(
-    name: string,
-    config: CreateSinkRequest,
-    callback: CreateSinkCallback
+      name: string,
+      config: CreateSinkRequest,
+      callback: CreateSinkCallback
   ): void;
   /**
    * Config to set for the sink. Not all available options are listed here, see
@@ -308,12 +311,12 @@ class Logging {
    * @property {Bucket|Dataset|Topic} [destination] The destination. The proper ACL
    *     scopes will be granted to the provided destination. Can be one of:
    *     {@link
-   * https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket
+      * https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket
    * Bucket},
    *     {@link
-   * https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset
+      * https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset
    * Dataset}, or {@link
-   * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
+      * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
    * @property {string} [filter] An advanced logs filter. Only log entries
    *     matching the filter are written.
    * @property {string} [uniqueWriterIdentity] Determines the kind of IAM
@@ -330,6 +333,7 @@ class Logging {
    * @param {Sink} sink The new {@link Sink}.
    * @param {object} apiResponse The full API response.
    */
+
   // jscs:disable maximumLineLength
   /**
    * Create a sink.
@@ -378,8 +382,8 @@ class Logging {
    * Another example:
    */
   async createSink(
-    name: string,
-    config: CreateSinkRequest
+      name: string,
+      config: CreateSinkRequest
   ): Promise<[Sink, LogSink]> {
     if (typeof name !== 'string') {
       throw new Error('A sink name must be provided.');
@@ -405,8 +409,8 @@ class Logging {
     delete reqOpts.sink.uniqueWriterIdentity;
     await this.setProjectId(reqOpts);
     const [resp] = await this.configService.createSink(
-      reqOpts,
-      config.gaxOptions
+        reqOpts,
+        config.gaxOptions
     );
     const sink = this.sink(resp.name);
     sink.metadata = resp;
@@ -500,6 +504,7 @@ class Logging {
    * @property {Entry[]} 0 Array of {@link Entry} instances.
    * @property {object} 1 The full API response.
    */
+
   /**
    * @callback GetEntriesCallback
    * @param {?Error} err Request error, if any.
@@ -555,7 +560,7 @@ class Logging {
    * Another example:
    */
   async getEntries(
-    opts?: GetEntriesRequest | GetEntriesCallback
+      opts?: GetEntriesRequest | GetEntriesCallback
   ): Promise<GetEntriesResponse> {
     const options = opts ? (opts as GetEntriesRequest) : {};
 
@@ -581,10 +586,10 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-      {
-        autoPaginate: options!.autoPaginate,
-      },
-      options!.gaxOptions
+        {
+          autoPaginate: options!.autoPaginate,
+        },
+        options!.gaxOptions
     );
     const resp = await this.loggingService.listLogEntries(reqOpts, gaxOptions);
     const [entries] = resp;
@@ -643,31 +648,31 @@ class Logging {
         if (options.log) {
           if (options.filter) {
             options.filter = `(${
-              options.filter
+                options.filter
             }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
           } else {
             options.filter = `logName="${Log.formatName_(
-              this.projectId,
-              options.log
+                this.projectId,
+                options.log
             )}"`;
           }
           delete options.log;
         }
         const reqOpts = extend(
-          {
-            orderBy: 'timestamp desc',
-          },
-          options
+            {
+              orderBy: 'timestamp desc',
+            },
+            options
         );
         reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
         reqOpts.resourceNames.push(`projects/${this.projectId}`);
         delete reqOpts.autoPaginate;
         delete reqOpts.gaxOptions;
         const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions
         );
 
         let gaxStream: ClientReadableStream<LogEntry>;
@@ -682,18 +687,18 @@ class Logging {
           requestStream.once('reading', () => {
             try {
               gaxStream = this.loggingService.listLogEntriesStream(
-                reqOpts,
-                gaxOptions
+                  reqOpts,
+                  gaxOptions
               );
             } catch (error) {
               requestStream.destroy(error);
               return;
             }
             gaxStream
-              .on('error', err => {
-                requestStream.destroy(err);
-              })
-              .pipe(requestStream);
+                .on('error', err => {
+                  requestStream.destroy(err);
+                })
+                .pipe(requestStream);
             return;
           });
         }
@@ -750,18 +755,18 @@ class Logging {
 
     const transformStream = through.obj((data, _, next) => {
       next(
-        null,
-        (() => {
-          const formattedEntries: Entry[] = [];
-          data.entries.forEach((entry: google.logging.v2.LogEntry) => {
-            formattedEntries.push(Entry.fromApiResponse_(entry));
-          });
-          const resp: TailEntriesResponse = {
-            entries: formattedEntries,
-            suppressionInfo: data.suppressionInfo,
-          };
-          return resp;
-        })()
+          null,
+          (() => {
+            const formattedEntries: Entry[] = [];
+            data.entries.forEach((entry: google.logging.v2.LogEntry) => {
+              formattedEntries.push(Entry.fromApiResponse_(entry));
+            });
+            const resp: TailEntriesResponse = {
+              entries: formattedEntries,
+              suppressionInfo: data.suppressionInfo,
+            };
+            return resp;
+          })()
       );
     });
 
@@ -771,13 +776,13 @@ class Logging {
       if (options.log) {
         if (options.filter) {
           options.filter = `(${options.filter}) AND logName="${Log.formatName_(
-            this.projectId,
-            options.log
+              this.projectId,
+              options.log
           )}"`;
         } else {
           options.filter = `logName="${Log.formatName_(
-            this.projectId,
-            options.log
+              this.projectId,
+              options.log
           )}"`;
         }
       }
@@ -825,6 +830,7 @@ class Logging {
    * @property {Log[]} 0 Array of {@link Log} instances.
    * @property {object} 1 The full API response.
    */
+
   /**
    * @callback GetLogsCallback
    * @param {?Error} err Request error, if any.
@@ -875,7 +881,7 @@ class Logging {
    * Another example:
    */
   async getLogs(
-    opts?: GetLogsRequest | GetLogsCallback
+      opts?: GetLogsRequest | GetLogsCallback
   ): Promise<GetLogsResponse> {
     const options = opts ? (opts as GetSinksRequest) : {};
     this.projectId = await this.auth.getProjectId();
@@ -885,10 +891,10 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-      {
-        autoPaginate: options.autoPaginate,
-      },
-      options.gaxOptions
+        {
+          autoPaginate: options.autoPaginate,
+        },
+        options.gaxOptions
     );
     const resp = await this.loggingService.listLogs(reqOpts, gaxOptions);
     const [logs] = resp;
@@ -948,10 +954,10 @@ class Logging {
         });
         delete reqOpts.gaxOptions;
         const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions
         );
 
         let gaxStream: ClientReadableStream<Log>;
@@ -969,10 +975,10 @@ class Logging {
             return;
           }
           gaxStream
-            .on('error', err => {
-              requestStream.destroy(err);
-            })
-            .pipe(requestStream);
+              .on('error', err => {
+                requestStream.destroy(err);
+              })
+              .pipe(requestStream);
           return;
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1005,6 +1011,7 @@ class Logging {
    * @property {Sink[]} 0 Array of {@link Sink} instances.
    * @property {object} 1 The full API response.
    */
+
   /**
    * @callback GetSinksCallback
    * @param {?Error} err Request error, if any.
@@ -1040,7 +1047,7 @@ class Logging {
    * Another example:
    */
   async getSinks(
-    opts?: GetSinksRequest | GetSinksCallback
+      opts?: GetSinksRequest | GetSinksCallback
   ): Promise<GetSinksResponse> {
     const options = opts ? (opts as GetSinksRequest) : {};
     this.projectId = await this.auth.getProjectId();
@@ -1050,10 +1057,10 @@ class Logging {
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
     const gaxOptions = extend(
-      {
-        autoPaginate: options.autoPaginate,
-      },
-      options.gaxOptions
+        {
+          autoPaginate: options.autoPaginate,
+        },
+        options.gaxOptions
     );
     const resp = await this.configService.listSinks(reqOpts, gaxOptions);
     const [sinks] = resp;
@@ -1122,10 +1129,10 @@ class Logging {
         });
         delete reqOpts.gaxOptions;
         const gaxOptions = extend(
-          {
-            autoPaginate: options.autoPaginate,
-          },
-          options.gaxOptions
+            {
+              autoPaginate: options.autoPaginate,
+            },
+            options.gaxOptions
         );
 
         let gaxStream: ClientReadableStream<LogSink>;
@@ -1140,18 +1147,18 @@ class Logging {
           requestStream.once('reading', () => {
             try {
               gaxStream = this.configService.listSinksStream(
-                reqOpts,
-                gaxOptions
+                  reqOpts,
+                  gaxOptions
               );
             } catch (error) {
               requestStream.destroy(error);
               return;
             }
             gaxStream
-              .on('error', err => {
-                requestStream.destroy(err);
-              })
-              .pipe(requestStream);
+                .on('error', err => {
+                  requestStream.destroy(err);
+                })
+                .pipe(requestStream);
             return;
           });
         }
@@ -1181,6 +1188,39 @@ class Logging {
   log(name: string, options?: LogOptions) {
     return new Log(this, name, options);
   }
+
+
+  // TODO make it always return standardLog
+  standardLog(name: string, stdout?: boolean): StandardLog;
+  standardLog(name: string, options?: LogOptions, stdout?: boolean): StandardLog;
+  // standardLog(name) //log
+  // standardLog(name, options) //log
+  // standardLog(name, options, bool) //standardlog
+  // standardLog(name, bool) //standardlog
+
+  /**
+   * Get a reference to a Cloud Logging standard log.
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   * const log = logging.standardLog('my-log');
+   */
+  //TODO: implement the standardLog
+  standardLog(name: string, opts?: boolean | LogOptions, stdout?: boolean): StandardLog {
+    // Q: I  can take in the users console.log... Do I need to?
+    return new StandardLog(this, name, opts, stdout);
+  }
+
+  // TODO: extend standardLog.ts to patch console.method
+  // class StandardLog implements LogSeverityFunctions
+  // constructor // sets logname and other params
+  // methods:
+  //    log(text) =
+  //    info ...
+  //    error
+  //    warn
+
 
   /**
    * Get a reference to a Stackdriver Logging sink.

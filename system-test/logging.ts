@@ -27,6 +27,7 @@ import {after, before} from 'mocha';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
+import {LogOptions} from '../src/log';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -696,6 +697,57 @@ describe('Logging', () => {
         )
       );
     });
+  });
+
+  describe('standardlogs', () => {
+
+    // function getEntriesFromLog(
+    //     log: Log,
+    //     config: {numExpectedMessages: number},
+    //     callback: (err: Error | null, entries?: Entry[]) => void
+    // ) {
+    //   let numAttempts = 0;
+    //
+    //   const numExpectedMessages = config.numExpectedMessages;
+    //
+    //   setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+    //
+    //   function pollForMessages() {
+    //     numAttempts++;
+    //
+    //     const time = new Date();
+    //     time.setHours(time.getHours() - 1);
+    //
+    //     log.getEntries(
+    //         {autoPaginate: false, filter: `timestamp > "${time.toISOString()}"`},
+    //         (err, entries) => {
+    //           if (err) {
+    //             callback(err);
+    //             return;
+    //           }
+    //
+    //           if (entries!.length < numExpectedMessages && numAttempts < 8) {
+    //             setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
+    //             return;
+    //           }
+    //
+    //           callback(null, entries);
+    //         }
+    //     );
+    //   }
+    // }
+
+
+    // TODO write the test here
+    it.only('should write a single entry to a log', done => {
+      const options: LogOptions = {removeCircular: true}
+      const console = logging.standardLog(generateName());
+      console.log("Success: hello world");
+      //  todo ensuring cloud loggings till works
+
+
+    });
+
   });
 
   function generateName() {
