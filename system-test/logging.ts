@@ -699,50 +699,17 @@ describe('Logging', () => {
     });
   });
 
-  describe('standardlogs', () => {
+  describe('standardLogs', () => {
 
-    // function getEntriesFromLog(
-    //     log: Log,
-    //     config: {numExpectedMessages: number},
-    //     callback: (err: Error | null, entries?: Entry[]) => void
-    // ) {
-    //   let numAttempts = 0;
-    //
-    //   const numExpectedMessages = config.numExpectedMessages;
-    //
-    //   setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
-    //
-    //   function pollForMessages() {
-    //     numAttempts++;
-    //
-    //     const time = new Date();
-    //     time.setHours(time.getHours() - 1);
-    //
-    //     log.getEntries(
-    //         {autoPaginate: false, filter: `timestamp > "${time.toISOString()}"`},
-    //         (err, entries) => {
-    //           if (err) {
-    //             callback(err);
-    //             return;
-    //           }
-    //
-    //           if (entries!.length < numExpectedMessages && numAttempts < 8) {
-    //             setTimeout(pollForMessages, WRITE_CONSISTENCY_DELAY_MS);
-    //             return;
-    //           }
-    //
-    //           callback(null, entries);
-    //         }
-    //     );
-    //   }
-    // }
-    
-    // TODO write the test here
-    it.only('should write a single entry to a log', done => {
-      const options: LogOptions = {removeCircular: true}
-      const console = logging.standardLog(generateName(), true);
-      console.log("Success: hello world");
-      //  todo ensuring cloud loggings till works
+    it.only('should console.log a single entry to a log', () => {
+      const console = logging.standardLog(generateName(), 'stdout');
+      console.log("This is a Default log");
+      console.info("This is an Info log");
+      console.warn("This is a Warn log");
+      console.error("This is an Error log");
+
+    //  TODO: stub console.log and check it was called with
+    //  {"message":"Hello world","severity":"SEVERITY"}
     });
 
   });

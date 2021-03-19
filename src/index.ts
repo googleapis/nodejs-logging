@@ -1191,12 +1191,12 @@ class Logging {
 
 
   // TODO make it always return standardLog
-  standardLog(name: string, stdout?: boolean): StandardLog;
-  standardLog(name: string, options?: LogOptions, stdout?: boolean): StandardLog;
+  standardLog(name: string, stdout?: string): StandardLog;
+  standardLog(name: string, options?: LogOptions, stdout?: string): StandardLog;
   // standardLog(name) //log
   // standardLog(name, options) //log
-  // standardLog(name, options, bool) //standardlog
-  // standardLog(name, bool) //standardlog
+  // standardLog(name, options, 'stdout') //standardlog
+  // standardLog(name, 'stdout') //standardlog
 
   /**
    * Get a reference to a Cloud Logging standard log.
@@ -1204,22 +1204,12 @@ class Logging {
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.standardLog('my-log');
+   * const log = logging.standardLog('my-log', true);
    */
-  //TODO: implement the standardLog
-  standardLog(name: string, opts?: boolean | LogOptions, stdout?: boolean): StandardLog {
+  standardLog(name: string, opts?: string | LogOptions, stdout?: string): StandardLog {
     // Q: I  can take in the users console.log... Do I need to?
     return new StandardLog(this, name, opts, stdout);
   }
-
-  // TODO: extend standardLog.ts to patch console.method
-  // class StandardLog implements LogSeverityFunctions
-  // constructor // sets logname and other params
-  // methods:
-  //    log(text) =
-  //    info ...
-  //    error
-  //    warn
 
 
   /**

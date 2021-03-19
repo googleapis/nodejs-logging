@@ -22,7 +22,6 @@ type LogSeverityFunctions = {
   [P in SeverityNames]: Function;
 };
 
-
 /**
  * A log is a named collection of entries, each entry representing a timestamped
  * event. Logs can be produced by Google Cloud Platform services, by third-party
@@ -46,117 +45,136 @@ type LogSeverityFunctions = {
  * const log = logging.log('syslog');
  */
 class StandardLog implements LogSeverityFunctions {
-  formattedName_: string;
+  //  TODO: decide if StandardLog should allow users to have multi logNames
+  // formattedName_: string;
   removeCircular_: boolean;
   maxEntrySize?: number;
   logging: Logging;
   logger?: Log;
-  name: string;
 
-  constructor(logging: Logging, name: string, opts?: boolean | LogOptions, stdout?: boolean) {
-    const options = (opts && typeof opts !== 'boolean') ? opts : {}
-    console.log(options);
-
-    this.formattedName_ = Log.formatName_(logging.projectId, name);
+  constructor(logging: Logging, name: string, opts?: string | LogOptions, stdout?: string) {
+    const options = (opts && typeof opts !== 'string') ? opts : {}
     this.removeCircular_ = options.removeCircular === true;
     this.maxEntrySize = options.maxEntrySize;
     this.logging = logging;
-    /**
-     * @name Log#name
-     * @type {string}
-     */
-    this.name = this.formattedName_.split('/').pop()!;
 
-    // If writing to Cloud Logging, instantiate
-    if (stdout || (typeof opts === 'boolean' && opts)) {
-      console.log("print to STDOUT");
-      // this.stdout = true;
-    } else {
+    // If exporting to Cloud Logging, StandardLog wraps around Log
+    if (!(typeof opts === 'string' || stdout)) {
       console.log("Print to Cloud Logging")
-      // this.stdout = false;
       this.logger = this.logging.log(name);
     }
   }
 
+  log(payload: string | {}, options?: WriteOptions): void;
   log(payload: string | {}, options?: WriteOptions): Promise<ApiResponse>;
   log(payload: string | {}, options: WriteOptions, callback: ApiResponseCallback): void;
   log(payload: string | {}, callback: ApiResponseCallback): void;
   /**
-   * TODO: rewrite the comments
    * Write a log entry with a severity of "DEFAULT".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
-   * the same as documented there.
-   *
-   * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
-   * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
-   * @example
-   * const {Logging} = require('@google-cloud/logging');
-   * const logging = new Logging();
-   * const log = logging.log('my-log');
-   *
-   * const entry = log.entry('gce_instance', {
-   *   instance: 'my_instance'
-   * });
-   *
-   * log.info(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.info(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * This is a simple wrapper around {@link Log#write} or console.log depending
+   * on the user designated log export destination.
    */
   log(
       payload: string | {},
       options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> | void {
-
-    // If writing to cloud logging
     if (this.logger) {
-      // write() is the step that adds resource & other decorations
       return this.logger.write(
-          // TODO put back the resource stuff.
-          this.logging.entry({}, payload), // for other severity levels this is easy
+          this.logging.entry({}, payload),
           options! as WriteOptions
       );
     } else {
-      // If writing to stdout
-      // TODO implement the correct entry format...
-      // per https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
-      // https://cloud.google.com/functions/docs/monitoring/logging#writing_structured_logs
-      // 1. log entry basic fields? I have to populate for user
-      // 2. resource detection? trace log corr? Hope this gets populated by logging agent in functions env
-
-      // let logentry = this.logging.entry({}, payload);
-
-      // I assume the trace log and other stdout metadata gets added by the agent?
-      const entry =
-          {
-            severity: 'DEFAULT',
-            message: payload, // TODO: test what if payload is an obj.
-            component: 'arbitrary-property'
-          }
-
-      return console.log(JSON.stringify(entry));
+      const entry = this.formatJSONLogs_(payload, Severity.log);
+      console.log(JSON.stringify(entry));
     }
   }
 
-
-
-
-  info() {
+  info(payload: string | {}, options?: WriteOptions): void;
+  info(payload: string | {}, options?: WriteOptions): Promise<ApiResponse>;
+  info(payload: string | {}, options: WriteOptions, callback: ApiResponseCallback): void;
+  info(payload: string | {}, callback: ApiResponseCallback): void;
+  /**
+   * Write a log entry with a severity of "INFO".
+   *
+   * This is a simple wrapper around {@link Log#write} or console.log depending
+   * on the user designated log export destination.
+   */
+  info(
+      payload: string | {},
+      options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> | void {
+    if (this.logger) {
+      return this.logger.info(
+          this.logging.entry({}, payload),
+          options! as WriteOptions
+      );
+    } else {
+      const entry = this.formatJSONLogs_(payload, Severity.info);
+      console.log(JSON.stringify(entry));
+    }
   }
-  error() {
 
+  error(payload: string | {}, options?: WriteOptions): void;
+  error(payload: string | {}, options?: WriteOptions): Promise<ApiResponse>;
+  error(payload: string | {}, options: WriteOptions, callback: ApiResponseCallback): void;
+  error(payload: string | {}, callback: ApiResponseCallback): void;
+  /**
+   * Write a log entry with a severity of "ERROR".
+   *
+   * This is a simple wrapper around {@link Log#write} or console.log depending
+   * on the user designated log export destination.
+   */
+  error(
+      payload: string | {},
+      options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> | void {
+    if (this.logger) {
+      return this.logger.error(
+          this.logging.entry({}, payload),
+          options! as WriteOptions
+      );
+    } else {
+      const entry = this.formatJSONLogs_(payload, Severity.error);
+      console.log(JSON.stringify(entry));
+    }
   }
-  warn(){
 
+  warn(payload: string | {}, options?: WriteOptions): void;
+  warn(payload: string | {}, options?: WriteOptions): Promise<ApiResponse>;
+  warn(payload: string | {}, options: WriteOptions, callback: ApiResponseCallback): void;
+  warn(payload: string | {}, callback: ApiResponseCallback): void;
+  /**
+   * Write a log entry with a severity of "INFO".
+   *
+   * This is a simple wrapper around {@link Log#write} or console.log depending
+   * on the user designated log export destination.
+   */
+  warn(
+      payload: string | {},
+      options?: WriteOptions | ApiResponseCallback
+  ): Promise<ApiResponse> | void {
+    if (this.logger) {
+      return this.logger.warning(
+          this.logging.entry({}, payload),
+          options! as WriteOptions
+      );
+    } else {
+      const entry = this.formatJSONLogs_(payload, Severity.warn);
+      console.log(JSON.stringify(entry));
+    }
   }
 
+   formatJSONLogs_(payload: string | {}, level: Severity) {
+    const severity = ['DEFAULT', 'INFO', 'ERROR', 'WARNING']
+    const entry = {
+          // Note: the following special fields are extracted from jsonPayload and used to populate logEntry properties
+          message: payload,
+          severity: severity[level],
+          //  TODO: add other special fields once b/181162026 fix propagates
+        };
+        return entry;
+  }
 }
 
 export {StandardLog}
