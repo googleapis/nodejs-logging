@@ -33,7 +33,6 @@ if [[ -z "${PROJECT_ROOT:-}"  ]]; then
 fi
 
 # Add the test module as a submodule to the repo root
-cd "${KOKORO_ARTIFACTS_DIR}/github/nodejs-logging/"
 git submodule add https://github.com/googleapis/env-tests-logging
 cd "env-tests-logging/"
 
