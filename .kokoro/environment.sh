@@ -16,6 +16,8 @@
 
 set -eox pipefail
 
+printenv
+
 if [[ -z "${ENVIRONMENT:-}" ]]; then
   echo "ENVIRONMENT not set. Exiting"
   exit 1
