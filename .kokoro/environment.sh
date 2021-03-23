@@ -32,6 +32,10 @@ if [[ -z "${PROJECT_ROOT:-}"  ]]; then
     PROJECT_ROOT="github/nodejs-logging"
 fi
 
+# Set up local library, generates /build uploaded as a local dependency
+npm install
+npm run compile
+
 # Add the test module as a submodule to the repo root
 git submodule add https://github.com/googleapis/env-tests-logging
 cd "env-tests-logging/"
