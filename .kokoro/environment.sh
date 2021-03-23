@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eox pipefail
+set -eo pipefail
 
 printenv
 
@@ -27,6 +27,8 @@ fi
 export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/service-account.json
 export GCLOUD_PROJECT=long-door-651
 gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+
+set -x
 
 if [[ -z "${PROJECT_ROOT:-}"  ]]; then
     PROJECT_ROOT="github/nodejs-logging"
