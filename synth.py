@@ -35,4 +35,16 @@ common_templates = gcp.CommonTemplates()
 templates = common_templates.node_library(source_location='build/src')
 s.copy(templates)
 
+# adjust .trampolinerc for environment tests
+s.replace(
+    ".trampolinerc",
+    "required_envvars[^\)]*\)",
+    "required_envvars+=()"
+)
+s.replace(
+    ".trampolinerc",
+    "pass_down_envvars\+\=\(",
+    'pass_down_envvars+=(\n    "ENVIRONMENT"\n    "RUNTIME"'
+)
+
 node.postprocess_gapic_library()
