@@ -52,11 +52,11 @@ gcloud config set compute/zone us-central1-b
 gcloud auth configure-docker -q
 
 # Remove old nox
-python3.7 -m pip uninstall --yes --quiet nox-automation
+python3 -m pip uninstall --yes --quiet nox-automation
 
 # Install nox
-python3.7 -m pip install --upgrade --quiet nox
-python3.7 -m nox --version
+python3 -m pip install --upgrade --quiet nox
+python3 -m nox --version
 
 # create a unique id for this run
 UUID=$(python  -c 'import uuid; print(uuid.uuid1())' | head -c 7)
@@ -70,7 +70,7 @@ TEST_STATUS_CODE=$?
 
 # destroy resources
 echo "cleaning up..."
-${PROJECT_ROOT}/tests/environment/envctl/envctl nodejs $ENVIRONMENT destroy
+./envctl/envctl nodejs $ENVIRONMENT destroy
 
 # exit with proper status code
 exit $TEST_STATUS_CODE
