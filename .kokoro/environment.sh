@@ -51,12 +51,15 @@ gcloud config set compute/zone us-central1-b
 # authenticate docker
 gcloud auth configure-docker -q
 
-# Remove old nox
-python3 -m pip uninstall --yes --quiet nox-automation
+# This block is executed only with Trampoline V2+.
+if [[ -n "${TRAMPOLINE_VERSION:-}" ]]; then
+  # Remove old nox
+  python3 -m pip uninstall --yes --quiet nox-automation
 
-# Install nox
-python3 -m pip install --upgrade --quiet nox
-python3 -m nox --version
+  # Install nox as a user and add it to the PATH.
+	python3 -m pip install --user nox
+	export PATH="${PATH}:${HOME}/.local/bin"
+fi
 
 # create a unique id for this run
 UUID=$(python  -c 'import uuid; print(uuid.uuid1())' | head -c 7)
