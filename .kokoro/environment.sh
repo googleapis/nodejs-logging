@@ -68,7 +68,8 @@ echo $ENVCTL_ID
 
 # Run the specified environment test
 set +e
-nox --python 3.7 --session "tests(language='nodejs', platform='$ENVIRONMENT')"
+#nox --python 3.7 --session "tests(language='nodejs', platform='$ENVIRONMENT')"
+./envctl/envctl nodejs $ENVIRONMENT deploy
 TEST_STATUS_CODE=$?
 
 # destroy resources
