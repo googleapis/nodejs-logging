@@ -705,6 +705,24 @@ class Logging {
   }
 
   /**
+   * Query object for streaming entries.
+   *
+   * @typedef {object} TailEntriesRequest
+   * @property {Array.<string>|string} [resourceNames] Names of project
+   *     resources to stream logs out of.
+   * @property {string} [filter] An
+   *     [advanced logs
+   * filter](https://cloud.google.com/logging/docs/view/advanced_filters). An
+   * empty filter matches all log entries.
+   * @property {number} [bufferWindow=2] A setting to balance the tradeoff
+   *     between viewing the log entries as they are being written and viewing
+   *     them in ascending order.
+   * @property {string} [log] A name of the log specifying to only return
+   *     entries from this log.
+   * @property {object} [gaxOptions] Request configuration options, outlined
+   *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
+   */
+  /**
    * Streaming read of live logs as log entries are ingested. Until the stream
    * is terminated, it will continue reading logs.
    *
