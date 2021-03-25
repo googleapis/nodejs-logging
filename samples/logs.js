@@ -152,6 +152,37 @@ async function listLogEntriesAdvanced(filter, pageSize, orderBy) {
   // [END logging_list_log_entries_advanced]
 }
 
+async function tailLogEntries(logName) {
+  // [START logging_tail_log_entries]
+  const {Logging} = require('@google-cloud/logging');
+  const logging = new Logging();
+
+  /**
+   * TODO(developer): Replace logName with the name of your log.
+   */
+  const log = logging.log(logName);
+  console.log('running tail log entries test');
+
+  const stream = log
+    .tailEntries({
+      filter: 'timestamp > "2021-01-01T23:00:00Z"',
+    })
+    .on('error', console.error)
+    .on('data', resp => {
+      console.log(resp.entries);
+      console.log(resp.suppressionInfo);
+      // If you anticipate many results, you can end a stream early to prevent
+      // unnecessary processing and API requests.
+      stream.end();
+    })
+    .on('end', () => {
+      console.log('log entry stream has ended');
+    });
+
+  // Note: to get all project logs, invoke logging.tailEntries
+  // [END logging_tail_log_entries]
+}
+
 async function deleteLog(logName) {
   // [START logging_delete_log]
   // Imports the Google Cloud client library
@@ -211,6 +242,12 @@ async function main() {
     .command('list-logs', 'Lists logs in your project.', {}, listLogs)
     .command('list-simple <logName>', 'Lists log entries.', {}, opts =>
       listLogEntries(opts.logName)
+    )
+    .command(
+      'tail-logs <logName>',
+      'Tails log entries for a specified log.',
+      {},
+      opts => tailLogEntries(opts.logName)
     )
     .command(
       'write-simple <logName>',
