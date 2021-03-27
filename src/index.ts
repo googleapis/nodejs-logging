@@ -498,7 +498,8 @@ class Logging {
   /**
    * @typedef {array} GetEntriesResponse
    * @property {Entry[]} 0 Array of {@link Entry} instances.
-   * @property {object} 1 The full API response.
+   * @property {object} 1 The full API request.
+   * @property {object} 2 The full API response.
    */
   /**
    * @callback GetEntriesCallback
@@ -823,7 +824,8 @@ class Logging {
   /**
    * @typedef {array} GetLogsResponse
    * @property {Log[]} 0 Array of {@link Log} instances.
-   * @property {object} 1 The full API response.
+   * @property {object} 1 The full API request.
+   * @property {object} 2 The full API response.
    */
   /**
    * @callback GetLogsCallback
