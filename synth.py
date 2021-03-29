@@ -33,7 +33,10 @@ s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json", "syste
 # Copy in templated files
 common_templates = gcp.CommonTemplates()
 templates = common_templates.node_library(source_location='build/src')
-s.copy(templates)
+s.copy(templates, excludes=[
+    ".eslintignore",
+    "CONTRIBUTING.md"
+])
 
 # adjust .trampolinerc for environment tests
 s.replace(
