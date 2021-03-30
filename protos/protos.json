@@ -210,31 +210,7 @@
                         "(google.api.http).delete": "/v2/{log_name=projects/*/logs/*}",
                         "(google.api.http).additional_bindings.delete": "/v2/{log_name=billingAccounts/*/logs/*}",
                         "(google.api.method_signature)": "log_name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "delete": "/v2/{log_name=projects/*/logs/*}",
-                            "additional_bindings": [
-                              {
-                                "delete": "/v2/{log_name=*/*/logs/*}"
-                              },
-                              {
-                                "delete": "/v2/{log_name=organizations/*/logs/*}"
-                              },
-                              {
-                                "delete": "/v2/{log_name=folders/*/logs/*}"
-                              },
-                              {
-                                "delete": "/v2/{log_name=billingAccounts/*/logs/*}"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "log_name"
-                        }
-                      ]
+                      }
                     },
                     "WriteLogEntries": {
                       "requestType": "WriteLogEntriesRequest",
@@ -243,18 +219,7 @@
                         "(google.api.http).post": "/v2/entries:write",
                         "(google.api.http).body": "*",
                         "(google.api.method_signature)": "log_name,resource,labels,entries"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/entries:write",
-                            "body": "*"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "log_name,resource,labels,entries"
-                        }
-                      ]
+                      }
                     },
                     "ListLogEntries": {
                       "requestType": "ListLogEntriesRequest",
@@ -263,32 +228,14 @@
                         "(google.api.http).post": "/v2/entries:list",
                         "(google.api.http).body": "*",
                         "(google.api.method_signature)": "resource_names,filter,order_by"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/entries:list",
-                            "body": "*"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "resource_names,filter,order_by"
-                        }
-                      ]
+                      }
                     },
                     "ListMonitoredResourceDescriptors": {
                       "requestType": "ListMonitoredResourceDescriptorsRequest",
                       "responseType": "ListMonitoredResourceDescriptorsResponse",
                       "options": {
                         "(google.api.http).get": "/v2/monitoredResourceDescriptors"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/monitoredResourceDescriptors"
-                          }
-                        }
-                      ]
+                      }
                     },
                     "ListLogs": {
                       "requestType": "ListLogsRequest",
@@ -297,31 +244,7 @@
                         "(google.api.http).get": "/v2/{parent=*/*}/logs",
                         "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/logs",
                         "(google.api.method_signature)": "parent"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{parent=*/*}/logs",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{parent=projects/*}/logs"
-                              },
-                              {
-                                "get": "/v2/{parent=organizations/*}/logs"
-                              },
-                              {
-                                "get": "/v2/{parent=folders/*}/logs"
-                              },
-                              {
-                                "get": "/v2/{parent=billingAccounts/*}/logs"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent"
-                        }
-                      ]
+                      }
                     },
                     "TailLogEntries": {
                       "requestType": "TailLogEntriesRequest",
@@ -331,15 +254,7 @@
                       "options": {
                         "(google.api.http).post": "/v2/entries:tail",
                         "(google.api.http).body": "*"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/entries:tail",
-                            "body": "*"
-                          }
-                        }
-                      ]
+                      }
                     }
                   }
                 },
@@ -624,31 +539,7 @@
                         "(google.api.http).get": "/v2/{parent=*/*/locations/*}/buckets",
                         "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*/locations/*}/buckets",
                         "(google.api.method_signature)": "parent"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{parent=*/*/locations/*}/buckets",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{parent=projects/*/locations/*}/buckets"
-                              },
-                              {
-                                "get": "/v2/{parent=organizations/*/locations/*}/buckets"
-                              },
-                              {
-                                "get": "/v2/{parent=folders/*/locations/*}/buckets"
-                              },
-                              {
-                                "get": "/v2/{parent=billingAccounts/*/locations/*}/buckets"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent"
-                        }
-                      ]
+                      }
                     },
                     "GetBucket": {
                       "requestType": "GetBucketRequest",
@@ -656,28 +547,7 @@
                       "options": {
                         "(google.api.http).get": "/v2/{name=*/*/locations/*/buckets/*}",
                         "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/buckets/*}"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{name=*/*/locations/*/buckets/*}",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{name=projects/*/locations/*/buckets/*}"
-                              },
-                              {
-                                "get": "/v2/{name=organizations/*/locations/*/buckets/*}"
-                              },
-                              {
-                                "get": "/v2/{name=folders/*/locations/*/buckets/*}"
-                              },
-                              {
-                                "get": "/v2/{name=billingAccounts/*/buckets/*}"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "CreateBucket": {
                       "requestType": "CreateBucketRequest",
@@ -687,33 +557,7 @@
                         "(google.api.http).body": "bucket",
                         "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*/locations/*}/buckets",
                         "(google.api.http).additional_bindings.body": "bucket"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/{parent=*/*/locations/*}/buckets",
-                            "body": "bucket",
-                            "additional_bindings": [
-                              {
-                                "post": "/v2/{parent=projects/*/locations/*}/buckets",
-                                "body": "bucket"
-                              },
-                              {
-                                "post": "/v2/{parent=organizations/*/locations/*}/buckets",
-                                "body": "bucket"
-                              },
-                              {
-                                "post": "/v2/{parent=folders/*/locations/*}/buckets",
-                                "body": "bucket"
-                              },
-                              {
-                                "post": "/v2/{parent=billingAccounts/*/locations/*}/buckets",
-                                "body": "bucket"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "UpdateBucket": {
                       "requestType": "UpdateBucketRequest",
@@ -723,33 +567,7 @@
                         "(google.api.http).body": "bucket",
                         "(google.api.http).additional_bindings.patch": "/v2/{name=billingAccounts/*/locations/*/buckets/*}",
                         "(google.api.http).additional_bindings.body": "bucket"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "patch": "/v2/{name=*/*/locations/*/buckets/*}",
-                            "body": "bucket",
-                            "additional_bindings": [
-                              {
-                                "patch": "/v2/{name=projects/*/locations/*/buckets/*}",
-                                "body": "bucket"
-                              },
-                              {
-                                "patch": "/v2/{name=organizations/*/locations/*/buckets/*}",
-                                "body": "bucket"
-                              },
-                              {
-                                "patch": "/v2/{name=folders/*/locations/*/buckets/*}",
-                                "body": "bucket"
-                              },
-                              {
-                                "patch": "/v2/{name=billingAccounts/*/locations/*/buckets/*}",
-                                "body": "bucket"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "DeleteBucket": {
                       "requestType": "DeleteBucketRequest",
@@ -757,28 +575,7 @@
                       "options": {
                         "(google.api.http).delete": "/v2/{name=*/*/locations/*/buckets/*}",
                         "(google.api.http).additional_bindings.delete": "/v2/{name=billingAccounts/*/locations/*/buckets/*}"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "delete": "/v2/{name=*/*/locations/*/buckets/*}",
-                            "additional_bindings": [
-                              {
-                                "delete": "/v2/{name=projects/*/locations/*/buckets/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=organizations/*/locations/*/buckets/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=folders/*/locations/*/buckets/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=billingAccounts/*/locations/*/buckets/*}"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "UndeleteBucket": {
                       "requestType": "UndeleteBucketRequest",
@@ -788,33 +585,7 @@
                         "(google.api.http).body": "*",
                         "(google.api.http).additional_bindings.post": "/v2/{name=billingAccounts/*/locations/*/buckets/*}:undelete",
                         "(google.api.http).additional_bindings.body": "*"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/{name=*/*/locations/*/buckets/*}:undelete",
-                            "body": "*",
-                            "additional_bindings": [
-                              {
-                                "post": "/v2/{name=projects/*/locations/*/buckets/*}:undelete",
-                                "body": "*"
-                              },
-                              {
-                                "post": "/v2/{name=organizations/*/locations/*/buckets/*}:undelete",
-                                "body": "*"
-                              },
-                              {
-                                "post": "/v2/{name=folders/*/locations/*/buckets/*}:undelete",
-                                "body": "*"
-                              },
-                              {
-                                "post": "/v2/{name=billingAccounts/*/locations/*/buckets/*}:undelete",
-                                "body": "*"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "ListViews": {
                       "requestType": "ListViewsRequest",
@@ -823,31 +594,7 @@
                         "(google.api.http).get": "/v2/{parent=*/*/locations/*/buckets/*}/views",
                         "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/views",
                         "(google.api.method_signature)": "parent"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{parent=*/*/locations/*/buckets/*}/views",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{parent=projects/*/locations/*/buckets/*}/views"
-                              },
-                              {
-                                "get": "/v2/{parent=organizations/*/locations/*/buckets/*}/views"
-                              },
-                              {
-                                "get": "/v2/{parent=folders/*/locations/*/buckets/*}/views"
-                              },
-                              {
-                                "get": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/views"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent"
-                        }
-                      ]
+                      }
                     },
                     "GetView": {
                       "requestType": "GetViewRequest",
@@ -855,28 +602,7 @@
                       "options": {
                         "(google.api.http).get": "/v2/{name=*/*/locations/*/buckets/*/views/*}",
                         "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/buckets/*/views/*}"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{name=*/*/locations/*/buckets/*/views/*}",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{name=projects/*/locations/*/buckets/*/views/*}"
-                              },
-                              {
-                                "get": "/v2/{name=organizations/*/locations/*/buckets/*/views/*}"
-                              },
-                              {
-                                "get": "/v2/{name=folders/*/locations/*/buckets/*/views/*}"
-                              },
-                              {
-                                "get": "/v2/{name=billingAccounts/*/buckets/*/views/*}"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "CreateView": {
                       "requestType": "CreateViewRequest",
@@ -886,33 +612,7 @@
                         "(google.api.http).body": "view",
                         "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/views",
                         "(google.api.http).additional_bindings.body": "view"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/{parent=*/*/locations/*/buckets/*}/views",
-                            "body": "view",
-                            "additional_bindings": [
-                              {
-                                "post": "/v2/{parent=projects/*/locations/*/buckets/*}/views",
-                                "body": "view"
-                              },
-                              {
-                                "post": "/v2/{parent=organizations/*/locations/*/buckets/*}/views",
-                                "body": "view"
-                              },
-                              {
-                                "post": "/v2/{parent=folders/*/locations/*/buckets/*}/views",
-                                "body": "view"
-                              },
-                              {
-                                "post": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/views",
-                                "body": "view"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "UpdateView": {
                       "requestType": "UpdateViewRequest",
@@ -922,33 +622,7 @@
                         "(google.api.http).body": "view",
                         "(google.api.http).additional_bindings.patch": "/v2/{name=billingAccounts/*/locations/*/buckets/*/views/*}",
                         "(google.api.http).additional_bindings.body": "view"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "patch": "/v2/{name=*/*/locations/*/buckets/*/views/*}",
-                            "body": "view",
-                            "additional_bindings": [
-                              {
-                                "patch": "/v2/{name=projects/*/locations/*/buckets/*/views/*}",
-                                "body": "view"
-                              },
-                              {
-                                "patch": "/v2/{name=organizations/*/locations/*/buckets/*/views/*}",
-                                "body": "view"
-                              },
-                              {
-                                "patch": "/v2/{name=folders/*/locations/*/buckets/*/views/*}",
-                                "body": "view"
-                              },
-                              {
-                                "patch": "/v2/{name=billingAccounts/*/locations/*/buckets/*/views/*}",
-                                "body": "view"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "DeleteView": {
                       "requestType": "DeleteViewRequest",
@@ -956,28 +630,7 @@
                       "options": {
                         "(google.api.http).delete": "/v2/{name=*/*/locations/*/buckets/*/views/*}",
                         "(google.api.http).additional_bindings.delete": "/v2/{name=billingAccounts/*/locations/*/buckets/*/views/*}"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "delete": "/v2/{name=*/*/locations/*/buckets/*/views/*}",
-                            "additional_bindings": [
-                              {
-                                "delete": "/v2/{name=projects/*/locations/*/buckets/*/views/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=organizations/*/locations/*/buckets/*/views/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=folders/*/locations/*/buckets/*/views/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=billingAccounts/*/locations/*/buckets/*/views/*}"
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      }
                     },
                     "ListSinks": {
                       "requestType": "ListSinksRequest",
@@ -986,31 +639,7 @@
                         "(google.api.http).get": "/v2/{parent=*/*}/sinks",
                         "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/sinks",
                         "(google.api.method_signature)": "parent"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{parent=*/*}/sinks",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{parent=projects/*}/sinks"
-                              },
-                              {
-                                "get": "/v2/{parent=organizations/*}/sinks"
-                              },
-                              {
-                                "get": "/v2/{parent=folders/*}/sinks"
-                              },
-                              {
-                                "get": "/v2/{parent=billingAccounts/*}/sinks"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent"
-                        }
-                      ]
+                      }
                     },
                     "GetSink": {
                       "requestType": "GetSinkRequest",
@@ -1019,31 +648,7 @@
                         "(google.api.http).get": "/v2/{sink_name=*/*/sinks/*}",
                         "(google.api.http).additional_bindings.get": "/v2/{sink_name=billingAccounts/*/sinks/*}",
                         "(google.api.method_signature)": "sink_name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{sink_name=*/*/sinks/*}",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{sink_name=projects/*/sinks/*}"
-                              },
-                              {
-                                "get": "/v2/{sink_name=organizations/*/sinks/*}"
-                              },
-                              {
-                                "get": "/v2/{sink_name=folders/*/sinks/*}"
-                              },
-                              {
-                                "get": "/v2/{sink_name=billingAccounts/*/sinks/*}"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "sink_name"
-                        }
-                      ]
+                      }
                     },
                     "CreateSink": {
                       "requestType": "CreateSinkRequest",
@@ -1054,36 +659,7 @@
                         "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*}/sinks",
                         "(google.api.http).additional_bindings.body": "sink",
                         "(google.api.method_signature)": "parent,sink"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/{parent=*/*}/sinks",
-                            "body": "sink",
-                            "additional_bindings": [
-                              {
-                                "post": "/v2/{parent=projects/*}/sinks",
-                                "body": "sink"
-                              },
-                              {
-                                "post": "/v2/{parent=organizations/*}/sinks",
-                                "body": "sink"
-                              },
-                              {
-                                "post": "/v2/{parent=folders/*}/sinks",
-                                "body": "sink"
-                              },
-                              {
-                                "post": "/v2/{parent=billingAccounts/*}/sinks",
-                                "body": "sink"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent,sink"
-                        }
-                      ]
+                      }
                     },
                     "UpdateSink": {
                       "requestType": "UpdateSinkRequest",
@@ -1095,55 +671,7 @@
                         "(google.api.http).additional_bindings.body": "sink",
                         "(google.api.http).additional_bindings.patch": "/v2/{sink_name=billingAccounts/*/sinks/*}",
                         "(google.api.method_signature)": "sink_name,sink"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "put": "/v2/{sink_name=*/*/sinks/*}",
-                            "body": "sink",
-                            "additional_bindings": [
-                              {
-                                "put": "/v2/{sink_name=projects/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "put": "/v2/{sink_name=organizations/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "put": "/v2/{sink_name=folders/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "put": "/v2/{sink_name=billingAccounts/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "patch": "/v2/{sink_name=projects/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "patch": "/v2/{sink_name=organizations/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "patch": "/v2/{sink_name=folders/*/sinks/*}",
-                                "body": "sink"
-                              },
-                              {
-                                "patch": "/v2/{sink_name=billingAccounts/*/sinks/*}",
-                                "body": "sink"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "sink_name,sink,update_mask"
-                        },
-                        {
-                          "(google.api.method_signature)": "sink_name,sink"
-                        }
-                      ]
+                      }
                     },
                     "DeleteSink": {
                       "requestType": "DeleteSinkRequest",
@@ -1152,31 +680,7 @@
                         "(google.api.http).delete": "/v2/{sink_name=*/*/sinks/*}",
                         "(google.api.http).additional_bindings.delete": "/v2/{sink_name=billingAccounts/*/sinks/*}",
                         "(google.api.method_signature)": "sink_name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "delete": "/v2/{sink_name=*/*/sinks/*}",
-                            "additional_bindings": [
-                              {
-                                "delete": "/v2/{sink_name=projects/*/sinks/*}"
-                              },
-                              {
-                                "delete": "/v2/{sink_name=organizations/*/sinks/*}"
-                              },
-                              {
-                                "delete": "/v2/{sink_name=folders/*/sinks/*}"
-                              },
-                              {
-                                "delete": "/v2/{sink_name=billingAccounts/*/sinks/*}"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "sink_name"
-                        }
-                      ]
+                      }
                     },
                     "ListExclusions": {
                       "requestType": "ListExclusionsRequest",
@@ -1185,31 +689,7 @@
                         "(google.api.http).get": "/v2/{parent=*/*}/exclusions",
                         "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/exclusions",
                         "(google.api.method_signature)": "parent"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{parent=*/*}/exclusions",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{parent=projects/*}/exclusions"
-                              },
-                              {
-                                "get": "/v2/{parent=organizations/*}/exclusions"
-                              },
-                              {
-                                "get": "/v2/{parent=folders/*}/exclusions"
-                              },
-                              {
-                                "get": "/v2/{parent=billingAccounts/*}/exclusions"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent"
-                        }
-                      ]
+                      }
                     },
                     "GetExclusion": {
                       "requestType": "GetExclusionRequest",
@@ -1218,31 +698,7 @@
                         "(google.api.http).get": "/v2/{name=*/*/exclusions/*}",
                         "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/exclusions/*}",
                         "(google.api.method_signature)": "name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{name=*/*/exclusions/*}",
-                            "additional_bindings": [
-                              {
-                                "get": "/v2/{name=projects/*/exclusions/*}"
-                              },
-                              {
-                                "get": "/v2/{name=organizations/*/exclusions/*}"
-                              },
-                              {
-                                "get": "/v2/{name=folders/*/exclusions/*}"
-                              },
-                              {
-                                "get": "/v2/{name=billingAccounts/*/exclusions/*}"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "name"
-                        }
-                      ]
+                      }
                     },
                     "CreateExclusion": {
                       "requestType": "CreateExclusionRequest",
@@ -1253,36 +709,7 @@
                         "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*}/exclusions",
                         "(google.api.http).additional_bindings.body": "exclusion",
                         "(google.api.method_signature)": "parent,exclusion"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/{parent=*/*}/exclusions",
-                            "body": "exclusion",
-                            "additional_bindings": [
-                              {
-                                "post": "/v2/{parent=projects/*}/exclusions",
-                                "body": "exclusion"
-                              },
-                              {
-                                "post": "/v2/{parent=organizations/*}/exclusions",
-                                "body": "exclusion"
-                              },
-                              {
-                                "post": "/v2/{parent=folders/*}/exclusions",
-                                "body": "exclusion"
-                              },
-                              {
-                                "post": "/v2/{parent=billingAccounts/*}/exclusions",
-                                "body": "exclusion"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent,exclusion"
-                        }
-                      ]
+                      }
                     },
                     "UpdateExclusion": {
                       "requestType": "UpdateExclusionRequest",
@@ -1293,36 +720,7 @@
                         "(google.api.http).additional_bindings.patch": "/v2/{name=billingAccounts/*/exclusions/*}",
                         "(google.api.http).additional_bindings.body": "exclusion",
                         "(google.api.method_signature)": "name,exclusion,update_mask"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "patch": "/v2/{name=*/*/exclusions/*}",
-                            "body": "exclusion",
-                            "additional_bindings": [
-                              {
-                                "patch": "/v2/{name=projects/*/exclusions/*}",
-                                "body": "exclusion"
-                              },
-                              {
-                                "patch": "/v2/{name=organizations/*/exclusions/*}",
-                                "body": "exclusion"
-                              },
-                              {
-                                "patch": "/v2/{name=folders/*/exclusions/*}",
-                                "body": "exclusion"
-                              },
-                              {
-                                "patch": "/v2/{name=billingAccounts/*/exclusions/*}",
-                                "body": "exclusion"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "name,exclusion,update_mask"
-                        }
-                      ]
+                      }
                     },
                     "DeleteExclusion": {
                       "requestType": "DeleteExclusionRequest",
@@ -1331,31 +729,7 @@
                         "(google.api.http).delete": "/v2/{name=*/*/exclusions/*}",
                         "(google.api.http).additional_bindings.delete": "/v2/{name=billingAccounts/*/exclusions/*}",
                         "(google.api.method_signature)": "name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "delete": "/v2/{name=*/*/exclusions/*}",
-                            "additional_bindings": [
-                              {
-                                "delete": "/v2/{name=projects/*/exclusions/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=organizations/*/exclusions/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=folders/*/exclusions/*}"
-                              },
-                              {
-                                "delete": "/v2/{name=billingAccounts/*/exclusions/*}"
-                              }
-                            ]
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "name"
-                        }
-                      ]
+                      }
                     },
                     "GetCmekSettings": {
                       "requestType": "GetCmekSettingsRequest",
@@ -1363,17 +737,7 @@
                       "options": {
                         "(google.api.http).get": "/v2/{name=*/*}/cmekSettings",
                         "(google.api.http).additional_bindings.get": "/v2/{name=organizations/*}/cmekSettings"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{name=*/*}/cmekSettings",
-                            "additional_bindings": {
-                              "get": "/v2/{name=organizations/*}/cmekSettings"
-                            }
-                          }
-                        }
-                      ]
+                      }
                     },
                     "UpdateCmekSettings": {
                       "requestType": "UpdateCmekSettingsRequest",
@@ -1383,19 +747,7 @@
                         "(google.api.http).body": "cmek_settings",
                         "(google.api.http).additional_bindings.patch": "/v2/{name=organizations/*}/cmekSettings",
                         "(google.api.http).additional_bindings.body": "cmek_settings"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "patch": "/v2/{name=*/*}/cmekSettings",
-                            "body": "cmek_settings",
-                            "additional_bindings": {
-                              "patch": "/v2/{name=organizations/*}/cmekSettings",
-                              "body": "cmek_settings"
-                            }
-                          }
-                        }
-                      ]
+                      }
                     }
                   }
                 },
@@ -2207,17 +1559,7 @@
                       "options": {
                         "(google.api.http).get": "/v2/{parent=projects/*}/metrics",
                         "(google.api.method_signature)": "parent"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{parent=projects/*}/metrics"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent"
-                        }
-                      ]
+                      }
                     },
                     "GetLogMetric": {
                       "requestType": "GetLogMetricRequest",
@@ -2225,17 +1567,7 @@
                       "options": {
                         "(google.api.http).get": "/v2/{metric_name=projects/*/metrics/*}",
                         "(google.api.method_signature)": "metric_name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "get": "/v2/{metric_name=projects/*/metrics/*}"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "metric_name"
-                        }
-                      ]
+                      }
                     },
                     "CreateLogMetric": {
                       "requestType": "CreateLogMetricRequest",
@@ -2244,18 +1576,7 @@
                         "(google.api.http).post": "/v2/{parent=projects/*}/metrics",
                         "(google.api.http).body": "metric",
                         "(google.api.method_signature)": "parent,metric"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "post": "/v2/{parent=projects/*}/metrics",
-                            "body": "metric"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "parent,metric"
-                        }
-                      ]
+                      }
                     },
                     "UpdateLogMetric": {
                       "requestType": "UpdateLogMetricRequest",
@@ -2264,18 +1585,7 @@
                         "(google.api.http).put": "/v2/{metric_name=projects/*/metrics/*}",
                         "(google.api.http).body": "metric",
                         "(google.api.method_signature)": "metric_name,metric"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "put": "/v2/{metric_name=projects/*/metrics/*}",
-                            "body": "metric"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "metric_name,metric"
-                        }
-                      ]
+                      }
                     },
                     "DeleteLogMetric": {
                       "requestType": "DeleteLogMetricRequest",
@@ -2283,17 +1593,7 @@
                       "options": {
                         "(google.api.http).delete": "/v2/{metric_name=projects/*/metrics/*}",
                         "(google.api.method_signature)": "metric_name"
-                      },
-                      "parsedOptions": [
-                        {
-                          "(google.api.http)": {
-                            "delete": "/v2/{metric_name=projects/*/metrics/*}"
-                          }
-                        },
-                        {
-                          "(google.api.method_signature)": "metric_name"
-                        }
-                      ]
+                      }
                     }
                   }
                 },
@@ -2494,7 +1794,8 @@
                 "java_multiple_files": true,
                 "java_outer_classname": "LogSeverityProto",
                 "java_package": "com.google.logging.type",
-                "php_namespace": "Google\\Cloud\\Logging\\Type"
+                "php_namespace": "Google\\Cloud\\Logging\\Type",
+                "ruby_package": "Google::Cloud::Logging::Type"
               },
               "nested": {
                 "HttpRequest": {
@@ -2601,8 +1902,7 @@
                 "REQUIRED": 2,
                 "OUTPUT_ONLY": 3,
                 "INPUT_ONLY": 4,
-                "IMMUTABLE": 5,
-                "UNORDERED_LIST": 6
+                "IMMUTABLE": 5
               }
             },
             "MonitoredResourceDescriptor": {
@@ -2739,11 +2039,6 @@
                 "singular": {
                   "type": "string",
                   "id": 6
-                },
-                "style": {
-                  "rule": "repeated",
-                  "type": "Style",
-                  "id": 10
                 }
               },
               "nested": {
@@ -2752,12 +2047,6 @@
                     "HISTORY_UNSPECIFIED": 0,
                     "ORIGINALLY_SINGLE_PATTERN": 1,
                     "FUTURE_MULTI_PATTERN": 2
-                  }
-                },
-                "Style": {
-                  "values": {
-                    "STYLE_UNSPECIFIED": 0,
-                    "DECLARATIVE_FRIENDLY": 1
                   }
                 }
               }
@@ -3117,7 +2406,7 @@
         },
         "protobuf": {
           "options": {
-            "go_package": "google.golang.org/protobuf/types/descriptorpb",
+            "go_package": "github.com/golang/protobuf/protoc-gen-go/descriptor;descriptor",
             "java_package": "com.google.protobuf",
             "java_outer_classname": "DescriptorProtos",
             "csharp_namespace": "Google.Protobuf.Reflection",
