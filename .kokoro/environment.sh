@@ -38,8 +38,8 @@ fi
 npm install
 npm run compile
 
-# Add the test module as a submodule to the repo root
-git submodule add https://github.com/googleapis/env-tests-logging
+# make sure submodule is up to date
+git submodule update --init --recursive
 cd "env-tests-logging/"
 
 # Disable buffering, so that the logs stream through.
