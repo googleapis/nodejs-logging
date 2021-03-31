@@ -28,7 +28,7 @@ gapic = gcp.GAPICBazel()
 version='v2'
 # tasks has two product names, and a poorly named artman yaml
 v2_library = gapic.node_library("logging", version, proto_path=f'google/logging/{version}')
-s.copy(v2_library, excludes=["src/index.ts", "README.md", "package.json", "system-test/fixtures/sample/src/index.js", "system-test/fixtures/sample/src/index.ts"])
+s.copy(v2_library, excludes=[".eslintignore", ".prettierignore", "src/index.ts", "README.md", "package.json", "system-test/fixtures/sample/src/index.js", "system-test/fixtures/sample/src/index.ts"])
 
 # Copy in templated files
 common_templates = gcp.CommonTemplates()
