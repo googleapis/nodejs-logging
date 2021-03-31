@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.1.0...v9.1.1) (2021-03-31)
+
+
+### Bug Fixes
+
+* Insufficient return values for `GetEntriesResponse` and `GetLogsResponse` ([#1011](https://www.github.com/googleapis/nodejs-logging/issues/1011)) ([0157ae1](https://www.github.com/googleapis/nodejs-logging/commit/0157ae14899cc885d584a9fe9f7f3bbe24188eb2)), closes [#1010](https://www.github.com/googleapis/nodejs-logging/issues/1010)
+
 ## [9.1.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.0.2...v9.1.0) (2021-03-03)
 
 
