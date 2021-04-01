@@ -152,7 +152,7 @@ class Entry {
   toJSON(options: ToJsonOptions = {}) {
     const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
-    if (this.data && typeof this.data === 'object') {
+    if (this.data?.toString() === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
         removeCircular: !!options.removeCircular,
         stringify: true,
