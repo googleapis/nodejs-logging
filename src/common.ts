@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import * as is from 'is';
-
 export interface ObjectToStructConverterConfig {
   removeCircular?: boolean;
   stringify?: boolean;
@@ -76,7 +74,7 @@ export class ObjectToStructConverter {
     for (const prop in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, prop)) {
         const value = obj[prop];
-        if (is.undefined(value)) {
+        if (value === undefined) {
           continue;
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,19 +103,19 @@ export class ObjectToStructConverter {
   encodeValue_(value: {} | null): any {
     let convertedValue;
 
-    if (is.null(value)) {
+    if (value === null) {
       convertedValue = {
         nullValue: 0,
       };
-    } else if (is.number(value)) {
+    } else if (typeof value === 'number') {
       convertedValue = {
         numberValue: value,
       };
-    } else if (is.string(value)) {
+    } else if (typeof value === 'string') {
       convertedValue = {
         stringValue: value,
       };
-    } else if (is.boolean(value)) {
+    } else if (typeof value === 'boolean') {
       convertedValue = {
         boolValue: value,
       };
@@ -125,7 +123,15 @@ export class ObjectToStructConverter {
       convertedValue = {
         blobValue: value,
       };
-    } else if (is.object(value)) {
+    } else if (Array.isArray(value)) {
+      convertedValue = {
+        listValue: {
+          values: (value as Array<{}>).map(this.encodeValue_.bind(this)),
+        },
+      };
+    } else if (value?.toString() === '[object Object]') {
+      // Using `typeof value === 'object'` is discouraged here, because it
+      // return true for dates, nulls, arrays, etc.
       if (this.seenObjects.has(value!)) {
         // Circular reference.
         if (!this.removeCircular) {
@@ -144,12 +150,6 @@ export class ObjectToStructConverter {
           structValue: this.convert(value!),
         };
       }
-    } else if (is.array(value)) {
-      convertedValue = {
-        listValue: {
-          values: (value as Array<{}>).map(this.encodeValue_.bind(this)),
-        },
-      };
     } else {
       if (!this.stringify) {
         throw new Error('Value of type ' + typeof value + ' not recognized.');
