@@ -123,6 +123,12 @@ export class ObjectToStructConverter {
       convertedValue = {
         blobValue: value,
       };
+    } else if (Array.isArray(value)) {
+      convertedValue = {
+        listValue: {
+          values: (value as Array<{}>).map(this.encodeValue_.bind(this)),
+        },
+      };
     } else if (typeof value === 'object') {
       if (this.seenObjects.has(value!)) {
         // Circular reference.
@@ -142,12 +148,6 @@ export class ObjectToStructConverter {
           structValue: this.convert(value!),
         };
       }
-    } else if (Array.isArray(value)) {
-      convertedValue = {
-        listValue: {
-          values: (value as Array<{}>).map(this.encodeValue_.bind(this)),
-        },
-      };
     } else {
       if (!this.stringify) {
         throw new Error('Value of type ' + typeof value + ' not recognized.');
