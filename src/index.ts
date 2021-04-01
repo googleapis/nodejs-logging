@@ -27,7 +27,6 @@ import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
-import * as through from 'through2';
 import * as middleware from './middleware';
 import {detectServiceContext} from './metadata';
 import {StackdriverHttpRequest as HttpRequest} from './http-request';
@@ -51,7 +50,7 @@ import {
   SeverityNames,
 } from './log';
 import {Sink} from './sink';
-import {Duplex, PassThrough} from 'stream';
+import {Duplex, PassThrough, Transform} from 'stream';
 import {google} from '../protos/protos';
 
 import {Bucket} from '@google-cloud/storage'; // types only
@@ -635,8 +634,11 @@ class Logging {
         (requestStream as AbortableDuplex).abort();
       }
     };
-    const toEntryStream = through.obj((entry, _, next) => {
-      next(null, Entry.fromApiResponse_(entry));
+    const toEntryStream = new Transform({
+      objectMode: true,
+      transform: (chunk, encoding, callback) => {
+        callback(null, Entry.fromApiResponse_(chunk));
+      },
     });
     userStream.once('reading', () => {
       this.auth.getProjectId().then(projectId => {
@@ -769,21 +771,24 @@ class Logging {
       }
     };
 
-    const transformStream = through.obj((data, _, next) => {
-      next(
-        null,
-        (() => {
-          const formattedEntries: Entry[] = [];
-          data.entries.forEach((entry: google.logging.v2.LogEntry) => {
-            formattedEntries.push(Entry.fromApiResponse_(entry));
-          });
-          const resp: TailEntriesResponse = {
-            entries: formattedEntries,
-            suppressionInfo: data.suppressionInfo,
-          };
-          return resp;
-        })()
-      );
+    const transformStream = new Transform({
+      objectMode: true,
+      transform: (chunk, encoding, callback) => {
+        callback(
+          null,
+          (() => {
+            const formattedEntries: Entry[] = [];
+            chunk.entries.forEach((entry: google.logging.v2.LogEntry) => {
+              formattedEntries.push(Entry.fromApiResponse_(entry));
+            });
+            const resp: TailEntriesResponse = {
+              entries: formattedEntries,
+              suppressionInfo: chunk.suppressionInfo,
+            };
+            return resp;
+          })()
+        );
+      },
     });
 
     this.auth.getProjectId().then(projectId => {
@@ -959,8 +964,11 @@ class Logging {
         (requestStream as AbortableDuplex).abort();
       }
     };
-    const toLogStream = through.obj((logName, _, next) => {
-      next(null, this.log(logName));
+    const toLogStream = new Transform({
+      objectMode: true,
+      transform: (chunk, encoding, callback) => {
+        callback(null, this.log(chunk));
+      },
     });
     userStream.once('reading', () => {
       this.auth.getProjectId().then(projectId => {
@@ -1133,10 +1141,13 @@ class Logging {
         (requestStream as AbortableDuplex).abort();
       }
     };
-    const toSinkStream = through.obj((sink, _, next) => {
-      const sinkInstance = self.sink(sink.name);
-      sinkInstance.metadata = sink;
-      next(null, sinkInstance);
+    const toSinkStream = new Transform({
+      objectMode: true,
+      transform: (chunk, encoding, callback) => {
+        const sinkInstance = self.sink(chunk.name);
+        sinkInstance.metadata = chunk;
+        callback(null, sinkInstance);
+      },
     });
     userStream.once('reading', () => {
       this.auth.getProjectId().then(projectId => {
