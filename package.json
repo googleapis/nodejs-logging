@@ -69,7 +69,6 @@
     "@google-cloud/pubsub": "^2.0.0",
     "@google-cloud/storage": "^5.0.0",
     "@types/extend": "^3.0.1",
-    "@types/is": "0.0.21",
     "@types/mocha": "^8.0.0",
     "@types/mv": "^2.1.0",
     "@types/ncp": "^2.0.3",
