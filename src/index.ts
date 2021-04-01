@@ -51,7 +51,7 @@ import {
   SeverityNames,
 } from './log';
 import {Sink} from './sink';
-import {Duplex} from 'stream';
+import {Duplex, PassThrough} from 'stream';
 import {google} from '../protos/protos';
 
 import {Bucket} from '@google-cloud/storage'; // types only
@@ -672,7 +672,9 @@ class Logging {
         );
 
         let gaxStream: ClientReadableStream<LogEntry>;
-        requestStream = streamEvents<Duplex>(through.obj());
+        requestStream = streamEvents<Duplex>(
+          new PassThrough({objectMode: true})
+        );
         (requestStream as AbortableDuplex).abort = () => {
           if (gaxStream && gaxStream.cancel) {
             gaxStream.cancel();
@@ -975,7 +977,9 @@ class Logging {
         );
 
         let gaxStream: ClientReadableStream<Log>;
-        requestStream = streamEvents<Duplex>(through.obj());
+        requestStream = streamEvents<Duplex>(
+          new PassThrough({objectMode: true})
+        );
         (requestStream as AbortableDuplex).abort = () => {
           if (gaxStream && gaxStream.cancel) {
             gaxStream.cancel();
@@ -1149,7 +1153,9 @@ class Logging {
         );
 
         let gaxStream: ClientReadableStream<LogSink>;
-        requestStream = streamEvents<Duplex>(through.obj());
+        requestStream = streamEvents<Duplex>(
+          new PassThrough({objectMode: true})
+        );
         (requestStream as AbortableDuplex).abort = () => {
           if (gaxStream && gaxStream.cancel) {
             gaxStream.cancel();
@@ -1240,7 +1246,7 @@ class Logging {
     let gaxStream: ClientReadableStream<LogSink | LogEntry>;
     let stream: Duplex;
     if (isStreamMode) {
-      stream = streamEvents<Duplex>(through.obj());
+      stream = streamEvents<Duplex>(new PassThrough({objectMode: true}));
       (stream as AbortableDuplex).abort = () => {
         if (gaxStream && gaxStream.cancel) {
           gaxStream.cancel();
@@ -1289,7 +1295,7 @@ class Logging {
     function makeRequestStream() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((global as any).GCLOUD_SANDBOX_ENV) {
-        return through.obj();
+        return new PassThrough({objectMode: true});
       }
       prepareGaxRequest((err, requestFn) => {
         if (err) {

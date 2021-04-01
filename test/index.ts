@@ -19,7 +19,6 @@ import * as assert from 'assert';
 import {describe, it, beforeEach, before} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
-import * as through from 'through2';
 import {
   Logging as LOGGING,
   LoggingOptions,
@@ -29,7 +28,7 @@ import {
   GetSinksRequest,
   Sink,
 } from '../src/index';
-import {Duplex} from 'stream';
+import {Duplex, PassThrough} from 'stream';
 import {Policy} from '@google-cloud/pubsub';
 import {GetEntriesRequest} from '../src/log';
 import {Dataset} from '@google-cloud/bigquery';
@@ -43,6 +42,9 @@ interface AbortableDuplex extends Duplex {
   cancel: Function;
   abort: Function;
 }
+
+const through = () =>
+  (new PassThrough({objectMode: true}) as {}) as AbortableDuplex;
 
 const noop = () => {};
 let extended = false;
@@ -660,7 +662,7 @@ describe('Logging', () => {
     const RESULT = {};
 
     beforeEach(() => {
-      GAX_STREAM = (through.obj() as {}) as AbortableDuplex;
+      GAX_STREAM = through();
       GAX_STREAM.push(RESULT);
       logging.loggingService.listLogEntriesStream = () => GAX_STREAM;
       logging.auth.getProjectId = async () => PROJECT_ID;
@@ -926,7 +928,7 @@ describe('Logging', () => {
     const RESPONSE = ['log1'];
 
     beforeEach(() => {
-      GAX_STREAM = (through.obj() as {}) as AbortableDuplex;
+      GAX_STREAM = through();
       GAX_STREAM.push(RESPONSE[0]);
       logging.loggingService.listLogsStream = () => GAX_STREAM;
       (logging.auth.getProjectId as Function) = async () => {};
@@ -1108,7 +1110,7 @@ describe('Logging', () => {
     };
 
     beforeEach(() => {
-      GAX_STREAM = (through.obj() as {}) as AbortableDuplex;
+      GAX_STREAM = through();
       GAX_STREAM.push(RESULT);
       logging.configService.listSinksStream = () => GAX_STREAM;
       (logging.auth.getProjectId as Function) = async () => {};
@@ -1381,7 +1383,7 @@ describe('Logging', () => {
       let GAX_STREAM: AbortableDuplex;
 
       beforeEach(() => {
-        GAX_STREAM = (through() as {}) as AbortableDuplex;
+        GAX_STREAM = through();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (logging.api as any)[CONFIG.client][CONFIG.method] = {
           bind() {
