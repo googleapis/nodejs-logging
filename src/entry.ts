@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import {Merge} from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const EventId = require('eventid');
 import * as extend from 'extend';
@@ -26,13 +25,14 @@ const eventId = new EventId();
 
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
-export type LogEntry = Merge<
+export type LogEntry = Omit<
   google.logging.v2.ILogEntry,
-  {
-    timestamp?: Timestamp | null;
-    severity?: LogSeverity | null;
-  }
->;
+  'timestamp' | 'severity'
+> & {
+  timestamp?: Timestamp | null;
+  severity?: LogSeverity | null;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
