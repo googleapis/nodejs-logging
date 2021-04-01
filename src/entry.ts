@@ -17,7 +17,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const EventId = require('eventid');
 import * as extend from 'extend';
-import * as is from 'is';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
 
@@ -153,25 +152,25 @@ class Entry {
   toJSON(options: ToJsonOptions = {}) {
     const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
-    if (is.object(this.data)) {
+    if (this.data?.toString() === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
         removeCircular: !!options.removeCircular,
         stringify: true,
       });
-    } else if (is.string(this.data)) {
+    } else if (typeof this.data === 'string') {
       entry.textPayload = this.data;
     }
     // Format log timestamp
-    if (is.date(entry.timestamp)) {
-      const seconds = (entry.timestamp as Date).getTime() / 1000;
+    if (entry.timestamp instanceof Date) {
+      const seconds = entry.timestamp.getTime() / 1000;
       const secondsRounded = Math.floor(seconds);
       entry.timestamp = {
         seconds: secondsRounded,
         nanos: Math.floor((seconds - secondsRounded) * 1e9),
       };
-    } else if (is.string(entry.timestamp)) {
+    } else if (typeof entry.timestamp === 'string') {
       // Convert RFC3339 "Zulu" timestamp into a format that can be parsed to Date
-      const zuluTime = entry.timestamp as string;
+      const zuluTime = entry.timestamp;
       const ms = Date.parse(zuluTime.split(/[.,Z]/)[0] + 'Z');
       const reNano = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.(\d{0,9})Z$/;
       const nanoSecs = zuluTime.match(reNano)?.[1];
