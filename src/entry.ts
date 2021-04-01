@@ -26,8 +26,8 @@ const eventId = new EventId();
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
 export type LogEntry = Omit<
-  Omit<google.logging.v2.ILogEntry, 'timestamp'>,
-  'severity'
+  google.logging.v2.ILogEntry,
+  'timestamp' | 'severity'
 > & {
   timestamp?: Timestamp | null;
   severity?: LogSeverity | null;
