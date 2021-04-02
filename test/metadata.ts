@@ -152,6 +152,34 @@ describe('metadata', () => {
     });
   });
 
+  describe('getCloudRunDescriptor', () => {
+    const K_SERVICE = 'hello-world';
+    const K_REVISION = 'hello-world.1';
+    const K_CONFIGURATION = 'hello_world';
+
+    beforeEach(() => {
+      process.env.K_SERVICE = K_SERVICE;
+      process.env.K_REVISION = K_REVISION;
+      process.env.K_CONFIGURATION = K_CONFIGURATION;
+    });
+
+    it('should return the correct descriptor', async () => {
+      const ZONE_ID = 'cyrodiil-anvil-2';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = {path: 'zone', successArg: ZONE_FULL};
+      const descriptor = await metadata.getCloudRunDescriptor();
+      assert.deepStrictEqual(descriptor, {
+        type: 'cloud_run_revision',
+        labels: {
+          service_name: K_SERVICE,
+          revision_name: K_REVISION,
+          configuration_name: K_CONFIGURATION,
+          location: ZONE_ID,
+        },
+      });
+    });
+  });
+
   describe('getGAEDescriptor', () => {
     const GAE_MODULE_NAME = 'gae-module-name';
     const GAE_SERVICE = 'gae-service';
