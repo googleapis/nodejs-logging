@@ -52,6 +52,22 @@ export function getCloudFunctionDescriptor() {
 }
 
 /**
+ * Create a descriptor for Cloud Run.
+ *
+ * @returns {object}
+ */
+export function getCloudRunDescriptor() {
+  return {
+    type: 'cloud_run_revision',
+    labels: {
+      service_name: process.env.K_SERVICE,
+      revision_name: process.env.K_REVISION,
+      configuration_name: process.env.K_CONFIGURATION,
+    },
+  };
+}
+
+/**
  * Create a descriptor for Google App Engine.
  *
  * @returns {object}
@@ -146,7 +162,6 @@ export function getGlobalDescriptor() {
  */
 export async function getDefaultResource(auth: GoogleAuth) {
   const env = await auth.getEnv();
-
   switch (env) {
     case GCPEnv.KUBERNETES_ENGINE:
       return getGKEDescriptor().catch(() => getGlobalDescriptor());
@@ -155,9 +170,14 @@ export async function getDefaultResource(auth: GoogleAuth) {
     case GCPEnv.CLOUD_FUNCTIONS:
       return getCloudFunctionDescriptor();
     case GCPEnv.COMPUTE_ENGINE:
-      // Test for compute engine should be done after all the rest -
-      // everything runs on top of compute engine.
-      return getGCEDescriptor().catch(() => getGlobalDescriptor());
+      //  Google Cloud Run
+      if (process.env.K_CONFIGURATION) {
+        return getCloudRunDescriptor();
+      } else {
+        // Test for compute engine should be done after all the rest -
+        // everything runs on top of compute engine.
+        return getGCEDescriptor().catch(() => getGlobalDescriptor());
+      }
     default:
       return getGlobalDescriptor();
   }
