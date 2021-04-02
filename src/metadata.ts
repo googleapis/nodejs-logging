@@ -56,10 +56,13 @@ export function getCloudFunctionDescriptor() {
  *
  * @returns {object}
  */
-export function getCloudRunDescriptor() {
+export async function getCloudRunDescriptor() {
+  const qualifiedZone = await gcpMetadata.instance('zone');
+  const location = zoneFromQualifiedZone(qualifiedZone);
   return {
     type: 'cloud_run_revision',
     labels: {
+      location,
       service_name: process.env.K_SERVICE,
       revision_name: process.env.K_REVISION,
       configuration_name: process.env.K_CONFIGURATION,
@@ -172,7 +175,7 @@ export async function getDefaultResource(auth: GoogleAuth) {
     case GCPEnv.COMPUTE_ENGINE:
       //  Google Cloud Run
       if (process.env.K_CONFIGURATION) {
-        return getCloudRunDescriptor();
+        return getCloudRunDescriptor().catch(() => getGlobalDescriptor());
       } else {
         // Test for compute engine should be done after all the rest -
         // everything runs on top of compute engine.
