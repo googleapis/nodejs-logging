@@ -58,20 +58,17 @@
     "gcp-metadata": "^4.0.0",
     "google-auth-library": "^7.0.0",
     "google-gax": "^2.9.2",
-    "is": "^3.3.0",
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.1",
     "snakecase-keys": "^3.1.2",
     "stream-events": "^1.0.5",
-    "through2": "^4.0.0",
-    "type-fest": "^0.21.0"
+    "through2": "^4.0.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^5.0.0",
     "@google-cloud/pubsub": "^2.0.0",
     "@google-cloud/storage": "^5.0.0",
     "@types/extend": "^3.0.1",
-    "@types/is": "0.0.21",
     "@types/mocha": "^8.0.0",
     "@types/mv": "^2.1.0",
     "@types/ncp": "^2.0.3",
