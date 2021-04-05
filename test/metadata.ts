@@ -550,6 +550,23 @@ describe('metadata', () => {
       assert.deepStrictEqual(sc1, {service: FUNCTION_NAME});
     });
 
+    it('should return the correct descriptor for Cloud Run', async () => {
+      process.env.K_CONFIGURATION = 'hello-world';
+      const SERVICE_NAME = (process.env.K_SERVICE = 'hello-world');
+
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.COMPUTE_ENGINE;
+        },
+      };
+
+      const sc1 = await metadata.detectServiceContext(fakeAuth);
+      assert.deepStrictEqual(sc1, {service: SERVICE_NAME});
+
+      delete process.env['K_CONFIGURATION'];
+      delete process.env['K_SERVICE'];
+    });
+
     it('should return null on GKE', async () => {
       const fakeAuth = {
         async getEnv() {

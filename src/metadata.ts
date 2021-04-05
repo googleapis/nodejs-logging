@@ -213,6 +213,13 @@ export async function detectServiceContext(
     // name from within the pod.
     case GCPEnv.KUBERNETES_ENGINE:
     case GCPEnv.COMPUTE_ENGINE:
+      // Google Cloud Run
+      if (process.env.K_CONFIGURATION) {
+        return {
+          service: process.env.K_SERVICE,
+        };
+      }
+      return null;
     default:
       return null;
   }
