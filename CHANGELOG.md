@@ -4,6 +4,19 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.1.1...v9.2.0) (2021-04-05)
+
+
+### Features
+
+* resource autodetection for cloud run ([#1024](https://www.github.com/googleapis/nodejs-logging/issues/1024)) ([08c4404](https://www.github.com/googleapis/nodejs-logging/commit/08c4404fa401f0d90a8ee24a5b0477777e6b5e70))
+
+
+### Bug Fixes
+
+* **deps:** drop dependency on is ([#1021](https://www.github.com/googleapis/nodejs-logging/issues/1021)) ([f32da13](https://www.github.com/googleapis/nodejs-logging/commit/f32da13ac6744de68a6d8e2d615df2bb80438643))
+* **deps:** drop dependency on type-fest ([#1020](https://www.github.com/googleapis/nodejs-logging/issues/1020)) ([f1e35e4](https://www.github.com/googleapis/nodejs-logging/commit/f1e35e443e04d832677eca8663fb3ae2567919fa))
+
 ### [9.1.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.1.0...v9.1.1) (2021-03-31)
 
 
