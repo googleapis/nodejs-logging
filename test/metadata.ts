@@ -126,14 +126,14 @@ describe('metadata', () => {
         delete process.env[key];
       }
       process.env.FUNCTION_NAME = FUNCTION_NAME;
-      process.env.FUNCTION_REGION = FUNCTION_REGION;
+      process.env.K_SERVICE = K_SERVICE;
     });
 
-    it('should return the correct primary descriptor', () => {
-      process.env.K_SERVICE = K_SERVICE;
+    it('should return the correct primary descriptor', async () => {
       process.env.GOOGLE_CLOUD_REGION = GOOGLE_CLOUD_REGION;
-
-      assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
+      process.env.FUNCTION_REGION = FUNCTION_REGION;
+      const descriptor = await metadata.getCloudFunctionDescriptor();
+      assert.deepStrictEqual(descriptor, {
         type: 'cloud_function',
         labels: {
           function_name: K_SERVICE,
@@ -142,12 +142,29 @@ describe('metadata', () => {
       });
     });
 
-    it('should return the correct fallback descriptor', () => {
-      assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
+    it('should return the correct secondary descriptor', async () => {
+      process.env.FUNCTION_REGION = FUNCTION_REGION;
+      delete process.env['K_SERVICE'];
+      const descriptor = await metadata.getCloudFunctionDescriptor();
+      assert.deepStrictEqual(descriptor, {
         type: 'cloud_function',
         labels: {
           function_name: FUNCTION_NAME,
           region: FUNCTION_REGION,
+        },
+      });
+    });
+
+    it('should return the correct fallback descriptor', async () => {
+      const ZONE_ID = 'us-west2-1';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = {path: 'zone', successArg: ZONE_FULL};
+      const descriptor = await metadata.getCloudFunctionDescriptor();
+      assert.deepStrictEqual(descriptor, {
+        type: 'cloud_function',
+        labels: {
+          function_name: K_SERVICE,
+          region: 'us-west2',
         },
       });
     });
@@ -197,7 +214,7 @@ describe('metadata', () => {
           service_name: K_SERVICE,
           revision_name: K_REVISION,
           configuration_name: K_CONFIGURATION,
-          location: ZONE_ID,
+          location: 'cyrodiil-anvil',
         },
       });
     });
@@ -388,7 +405,7 @@ describe('metadata', () => {
               service_name: K_SERVICE,
               revision_name: K_REVISION,
               configuration_name: K_CONFIGURATION,
-              location: ZONE_ID,
+              location: 'cyrodiil-anvil',
             },
           });
         });
