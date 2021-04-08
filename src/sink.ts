@@ -34,6 +34,7 @@ export type SinkMetadataResponse = [LogSink];
 
 export interface SetSinkMetadata extends LogSink {
   gaxOptions?: CallOptions;
+  uniqueWriterIdentity?: boolean | string;
 }
 
 /**
@@ -289,6 +290,9 @@ class Sink {
   /**
    * Set the sink's metadata.
    *
+   * Note: If the sink was created with uniqueWriterIdentity = true, then the
+   * sink must be updated with uniqueWriterIdentity = true.
+   *
    * @see [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
    * @see [projects.sink.update API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update}
    *
@@ -325,11 +329,18 @@ class Sink {
    */
   async setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse> {
     const [currentMetadata] = await this.getMetadata();
-    const reqOpts = {
+    const uniqueWriterIdentity = metadata.uniqueWriterIdentity;
+    delete metadata.uniqueWriterIdentity;
+    let reqOpts = {
       sinkName: this.formattedName_,
       sink: extend({}, currentMetadata, metadata),
     };
     delete reqOpts.sink.gaxOptions;
+    // Add user specified uniqueWriterIdentity boolean, if any.
+    reqOpts = {
+      ...reqOpts,
+      ...(uniqueWriterIdentity && {uniqueWriterIdentity}),
+    };
     [this.metadata] = await this.logging.configService.updateSink(
       reqOpts,
       metadata.gaxOptions
