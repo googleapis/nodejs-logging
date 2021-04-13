@@ -68,6 +68,8 @@ describe('metadata', () => {
   let AUTH;
   const ENV_CACHED = extend({}, process.env);
 
+  const INITIAL_ENV: {[key: string]: string | undefined} = {};
+
   before(() => {
     metadata = proxyquire('../src/metadata', {
       'gcp-metadata': fakeGcpMetadata,
@@ -101,7 +103,6 @@ describe('metadata', () => {
       'K_SERVICE',
       'GOOGLE_CLOUD_REGION',
     ];
-    const INITIAL_ENV: {[key: string]: string | undefined} = {};
 
     before(() => {
       for (const key of TARGET_KEYS) {
@@ -125,14 +126,14 @@ describe('metadata', () => {
         delete process.env[key];
       }
       process.env.FUNCTION_NAME = FUNCTION_NAME;
-      process.env.FUNCTION_REGION = FUNCTION_REGION;
+      process.env.K_SERVICE = K_SERVICE;
     });
 
-    it('should return the correct primary descriptor', () => {
-      process.env.K_SERVICE = K_SERVICE;
+    it('should return the correct primary descriptor', async () => {
       process.env.GOOGLE_CLOUD_REGION = GOOGLE_CLOUD_REGION;
-
-      assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
+      process.env.FUNCTION_REGION = FUNCTION_REGION;
+      const descriptor = await metadata.getCloudFunctionDescriptor();
+      assert.deepStrictEqual(descriptor, {
         type: 'cloud_function',
         labels: {
           function_name: K_SERVICE,
@@ -141,12 +142,79 @@ describe('metadata', () => {
       });
     });
 
-    it('should return the correct fallback descriptor', () => {
-      assert.deepStrictEqual(metadata.getCloudFunctionDescriptor(), {
+    it('should return the correct secondary descriptor', async () => {
+      process.env.FUNCTION_REGION = FUNCTION_REGION;
+      delete process.env['K_SERVICE'];
+      const descriptor = await metadata.getCloudFunctionDescriptor();
+      assert.deepStrictEqual(descriptor, {
         type: 'cloud_function',
         labels: {
           function_name: FUNCTION_NAME,
           region: FUNCTION_REGION,
+        },
+      });
+    });
+
+    it('should return the correct fallback descriptor', async () => {
+      const ZONE_ID = 'us-west2-1';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = {path: 'zone', successArg: ZONE_FULL};
+      const descriptor = await metadata.getCloudFunctionDescriptor();
+      assert.deepStrictEqual(descriptor, {
+        type: 'cloud_function',
+        labels: {
+          function_name: K_SERVICE,
+          region: 'us-west2',
+        },
+      });
+    });
+  });
+
+  describe('getCloudRunDescriptor', () => {
+    const K_SERVICE = 'hello-world';
+    const K_REVISION = 'hello-world.1';
+    const K_CONFIGURATION = 'hello-world';
+
+    const TARGET_KEYS = ['K_SERVICE', 'K_REVISION', 'K_CONFIGURATION'];
+
+    before(() => {
+      for (const key of TARGET_KEYS) {
+        INITIAL_ENV[key] = process.env[key];
+      }
+    });
+
+    after(() => {
+      for (const key of TARGET_KEYS) {
+        const val = INITIAL_ENV[key];
+        if (val === undefined) {
+          delete process.env[key];
+        } else {
+          process.env[key] = val;
+        }
+      }
+    });
+
+    beforeEach(() => {
+      for (const key of TARGET_KEYS) {
+        delete process.env[key];
+      }
+      process.env.K_SERVICE = K_SERVICE;
+      process.env.K_REVISION = K_REVISION;
+      process.env.K_CONFIGURATION = K_CONFIGURATION;
+    });
+
+    it('should return the correct descriptor', async () => {
+      const ZONE_ID = 'cyrodiil-anvil-2';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = {path: 'zone', successArg: ZONE_FULL};
+      const descriptor = await metadata.getCloudRunDescriptor();
+      assert.deepStrictEqual(descriptor, {
+        type: 'cloud_run_revision',
+        labels: {
+          service_name: K_SERVICE,
+          revision_name: K_REVISION,
+          configuration_name: K_CONFIGURATION,
+          location: 'cyrodiil-anvil',
         },
       });
     });
@@ -297,6 +365,47 @@ describe('metadata', () => {
             labels: {
               function_name: FUNCTION_NAME,
               region: FUNCTION_REGION,
+            },
+          });
+        });
+      });
+
+      describe('cloud run', () => {
+        after(() => {
+          delete process.env['K_CONFIGURATION'];
+          delete process.env['K_REVISION'];
+          delete process.env['K_SERVICE'];
+        });
+
+        it('should return correct descriptor', async () => {
+          const K_SERVICE = 'hello-world';
+          const K_CONFIGURATION = 'hello-world';
+          const K_REVISION = 'hello-world.1';
+          const ZONE_ID = 'cyrodiil-anvil-2';
+          const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+          process.env.K_SERVICE = K_SERVICE;
+          process.env.K_REVISION = K_REVISION;
+          process.env.K_CONFIGURATION = K_CONFIGURATION;
+          instanceOverride = [
+            {
+              path: 'zone',
+              successArg: ZONE_FULL,
+            },
+          ];
+          const fakeAuth = {
+            async getEnv() {
+              return GCPEnv.COMPUTE_ENGINE;
+            },
+          };
+
+          const defaultResource = await metadata.getDefaultResource(fakeAuth);
+          assert.deepStrictEqual(defaultResource, {
+            type: 'cloud_run_revision',
+            labels: {
+              service_name: K_SERVICE,
+              revision_name: K_REVISION,
+              configuration_name: K_CONFIGURATION,
+              location: 'cyrodiil-anvil',
             },
           });
         });
@@ -456,6 +565,23 @@ describe('metadata', () => {
 
       const sc1 = await metadata.detectServiceContext(fakeAuth);
       assert.deepStrictEqual(sc1, {service: FUNCTION_NAME});
+    });
+
+    it('should return the correct descriptor for Cloud Run', async () => {
+      process.env.K_CONFIGURATION = 'hello-world';
+      const SERVICE_NAME = (process.env.K_SERVICE = 'hello-world');
+
+      const fakeAuth = {
+        async getEnv() {
+          return GCPEnv.COMPUTE_ENGINE;
+        },
+      };
+
+      const sc1 = await metadata.detectServiceContext(fakeAuth);
+      assert.deepStrictEqual(sc1, {service: SERVICE_NAME});
+
+      delete process.env['K_CONFIGURATION'];
+      delete process.env['K_SERVICE'];
     });
 
     it('should return null on GKE', async () => {

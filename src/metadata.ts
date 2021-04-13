@@ -31,22 +31,58 @@ function zoneFromQualifiedZone(qualified: string): string | undefined {
   return qualified.split('/').pop();
 }
 
+function regionFromQualifiedZone(qualified: string): string | undefined {
+  // Parses the region from the zone. Used for GCF and GCR which dynamically
+  // allocate zones.
+  const zone = zoneFromQualifiedZone(qualified);
+  const region =
+    zone === undefined ? undefined : zone.slice(0, zone.lastIndexOf('-'));
+  return region;
+}
+
 /**
  * Create a descriptor for Cloud Functions.
  *
  * @returns {object}
  */
-export function getCloudFunctionDescriptor() {
+export async function getCloudFunctionDescriptor() {
+  // If the region is already available via an environment variable, don't delay the function by pinging metaserver.
+  let region = undefined;
+  if (!(process.env.GOOGLE_CLOUD_REGION || process.env.FUNCTION_REGION)) {
+    const qualifiedZone = await gcpMetadata.instance('zone');
+    region = regionFromQualifiedZone(qualifiedZone);
+  }
   /**
    * In GCF versions after Node 8, K_SERVICE is the preferred way to
-   * get the function name and GOOGLE_CLOUD_REGION is the preferred way
-   * to get the region.
+   * get the function name. We still check for GOOGLE_CLOUD_REGION and FUNCTION_REGION for backwards Node runtime compatibility.
    */
   return {
     type: 'cloud_function',
     labels: {
       function_name: process.env.K_SERVICE || process.env.FUNCTION_NAME,
-      region: process.env.GOOGLE_CLOUD_REGION || process.env.FUNCTION_REGION,
+      region:
+        process.env.GOOGLE_CLOUD_REGION ||
+        process.env.FUNCTION_REGION ||
+        region,
+    },
+  };
+}
+
+/**
+ * Create a descriptor for Cloud Run.
+ *
+ * @returns {object}
+ */
+export async function getCloudRunDescriptor() {
+  const qualifiedZone = await gcpMetadata.instance('zone');
+  const location = regionFromQualifiedZone(qualifiedZone);
+  return {
+    type: 'cloud_run_revision',
+    labels: {
+      location,
+      service_name: process.env.K_SERVICE,
+      revision_name: process.env.K_REVISION,
+      configuration_name: process.env.K_CONFIGURATION,
     },
   };
 }
@@ -146,18 +182,22 @@ export function getGlobalDescriptor() {
  */
 export async function getDefaultResource(auth: GoogleAuth) {
   const env = await auth.getEnv();
-
   switch (env) {
     case GCPEnv.KUBERNETES_ENGINE:
       return getGKEDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.APP_ENGINE:
       return getGAEDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.CLOUD_FUNCTIONS:
-      return getCloudFunctionDescriptor();
+      return getCloudFunctionDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.COMPUTE_ENGINE:
-      // Test for compute engine should be done after all the rest -
-      // everything runs on top of compute engine.
-      return getGCEDescriptor().catch(() => getGlobalDescriptor());
+      //  Google Cloud Run
+      if (process.env.K_CONFIGURATION) {
+        return getCloudRunDescriptor().catch(() => getGlobalDescriptor());
+      } else {
+        // Test for compute engine should be done after all the rest -
+        // everything runs on top of compute engine.
+        return getGCEDescriptor().catch(() => getGlobalDescriptor());
+      }
     default:
       return getGlobalDescriptor();
   }
@@ -190,6 +230,13 @@ export async function detectServiceContext(
     // name from within the pod.
     case GCPEnv.KUBERNETES_ENGINE:
     case GCPEnv.COMPUTE_ENGINE:
+      // Google Cloud Run
+      if (process.env.K_CONFIGURATION) {
+        return {
+          service: process.env.K_SERVICE,
+        };
+      }
+      return null;
     default:
       return null;
   }
