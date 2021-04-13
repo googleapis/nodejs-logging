@@ -290,8 +290,10 @@ class Sink {
   /**
    * Set the sink's metadata.
    *
-   * Note: If the sink was created with uniqueWriterIdentity = true, then the
-   * sink must be updated with uniqueWriterIdentity = true.
+   * Note: If the sink was previously created or updated with
+   * uniqueWriterIdentity = true, then you must update the sink by setting
+   * uniqueWriterIdentity = true. Read more about using a unique writer identity
+   * here: https://cloud.google.com/logging/docs/api/tasks/exporting-logs#using_a_unique_writer_identity
    *
    * @see [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
    * @see [projects.sink.update API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update}
