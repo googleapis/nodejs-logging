@@ -395,7 +395,14 @@ describe('Log', () => {
     });
 
     it('should forward options.resource to request', async () => {
-      const CUSTOM_RESOURCE = 'custom-resource';
+      // Also check it should snakecase resource labels, as many sources & docs
+      // wrongly instruct users to use camelcase.
+      const CUSTOM_RESOURCE = {
+        labels: {
+          projectId: 'fake-project',
+          regionZone: 'us-west-1',
+        },
+      };
       const optionsWithResource = extend({}, OPTIONS, {
         resource: CUSTOM_RESOURCE,
       }) as WriteOptions;
@@ -406,7 +413,12 @@ describe('Log', () => {
           {
             logName: log.formattedName_,
             entries: ENTRIES,
-            resource: CUSTOM_RESOURCE,
+            resource: {
+              labels: {
+                project_id: 'fake-project',
+                region_zone: 'us-west-1',
+              },
+            },
           },
           undefined
         )
