@@ -196,6 +196,9 @@ describe('Logging', () => {
         };
         const [apiResponse] = await sink.setMetadata(metadata);
         assert.strictEqual(apiResponse.filter, FILTER);
+        // Sink must be deleted within this test before any logs are generated
+        // to avoid topic_permission_denied emails.
+        await sink.delete();
       });
 
       it('should set uniqueWriterIdentity from false to true', async () => {
@@ -210,6 +213,9 @@ describe('Logging', () => {
         };
         const [apiResponse] = await sink.setMetadata(metadata);
         assert.strictEqual(apiResponse.filter, FILTER);
+        // Sink must be deleted within this test before any logs are generated
+        // to avoid topic_permission_denied emails.
+        await sink.delete();
       });
     });
 
