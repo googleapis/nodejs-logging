@@ -34,6 +34,8 @@ export type SinkMetadataResponse = [LogSink];
 
 export interface SetSinkMetadata extends LogSink {
   gaxOptions?: CallOptions;
+  // A unique service account just for the sink
+  // https://cloud.google.com/logging/docs/api/tasks/exporting-logs#using_a_unique_writer_identity
   uniqueWriterIdentity?: boolean | string;
 }
 
