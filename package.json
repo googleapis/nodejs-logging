@@ -60,7 +60,6 @@
     "google-gax": "^2.9.2",
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.1",
-    "snakecase-keys": "^3.1.2",
     "stream-events": "^1.0.5"
   },
   "devDependencies": {
