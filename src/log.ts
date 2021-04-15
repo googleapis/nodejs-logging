@@ -26,9 +26,6 @@ import {Entry, EntryJson, LogEntry} from './entry';
 import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const snakeCaseKeys = require('snakecase-keys');
-
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
   filter?: string;
@@ -891,9 +888,7 @@ class Log implements LogSeverityFunctions {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     if (options.resource) {
-      if (options.resource.labels) {
-        options.resource.labels = snakeCaseKeys(options.resource.labels);
-      }
+      if (options.resource.labels) snakecaseKeys(options.resource.labels);
       return writeWithResource(options.resource);
     } else if (this.logging.detectedResource) {
       return writeWithResource(this.logging.detectedResource);
@@ -927,6 +922,17 @@ class Log implements LogSeverityFunctions {
         reqOpts,
         options.gaxOptions
       );
+    }
+    // snakecaseKeys turns label keys from camel case to snake case.
+    function snakecaseKeys(labels: {[p: string]: string} | null | undefined) {
+      for (const key in labels) {
+        Object.defineProperty(
+          labels,
+          key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
+          Object.getOwnPropertyDescriptor(labels, key) as PropertyDescriptor
+        );
+        delete labels[key];
+      }
     }
   }
 
