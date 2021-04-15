@@ -923,6 +923,7 @@ class Log implements LogSeverityFunctions {
         options.gaxOptions
       );
     }
+    // snakecaseKeys turns label keys from camel case to snake case.
     function snakecaseKeys(labels: {[p: string]: string} | null | undefined) {
       for (const key in labels) {
         Object.defineProperty(
