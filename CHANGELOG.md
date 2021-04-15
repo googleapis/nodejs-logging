@@ -4,6 +4,15 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.2.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.0...v9.2.1) (2021-04-15)
+
+
+### Bug Fixes
+
+* accept uniqueWriterIdentity in setMetadata ([#1034](https://www.github.com/googleapis/nodejs-logging/issues/1034)) ([02e8bb4](https://www.github.com/googleapis/nodejs-logging/commit/02e8bb4b5983c48bf7bd5e16ba4ab9c226d3f28e))
+* cloud functions resource.labels.region undefined ([#1028](https://www.github.com/googleapis/nodejs-logging/issues/1028)) ([3808656](https://www.github.com/googleapis/nodejs-logging/commit/38086569ad2915785e161542d7056ae3944948c8))
+* **deps:** remove dependency on through2 ([#1023](https://www.github.com/googleapis/nodejs-logging/issues/1023)) ([485347f](https://www.github.com/googleapis/nodejs-logging/commit/485347fd3712565ae90e307a314bcdfeeb581379))
+
 ## [9.2.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.1.1...v9.2.0) (2021-04-05)
 
 
