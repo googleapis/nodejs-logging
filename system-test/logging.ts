@@ -182,6 +182,43 @@ describe('Logging', () => {
       });
     });
 
+    describe('metadata with uniqueWriterIdentity', () => {
+      it('should set metadata if uniqueWriterIdentity was true', async () => {
+        const sink = logging.sink(generateName());
+        const FILTER = 'severity = ALERT';
+        await sink.create({
+          destination: topic,
+          uniqueWriterIdentity: true,
+        });
+        const metadata = {
+          filter: FILTER,
+          uniqueWriterIdentity: true,
+        };
+        const [apiResponse] = await sink.setMetadata(metadata);
+        assert.strictEqual(apiResponse.filter, FILTER);
+        // Sink must be deleted within this test before any logs are generated
+        // to avoid topic_permission_denied emails.
+        await sink.delete();
+      });
+
+      it('should set uniqueWriterIdentity from false to true', async () => {
+        const sink = logging.sink(generateName());
+        const FILTER = 'severity = ALERT';
+        await sink.create({
+          destination: topic,
+        });
+        const metadata = {
+          filter: FILTER,
+          uniqueWriterIdentity: true,
+        };
+        const [apiResponse] = await sink.setMetadata(metadata);
+        assert.strictEqual(apiResponse.filter, FILTER);
+        // Sink must be deleted within this test before any logs are generated
+        // to avoid topic_permission_denied emails.
+        await sink.delete();
+      });
+    });
+
     describe('listing sinks', () => {
       const sink = logging.sink(generateName());
 

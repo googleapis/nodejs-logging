@@ -83,7 +83,7 @@ export interface CreateSinkRequest {
   includeChildren?: boolean;
   name?: string;
   outputVersionFormat?: google.logging.v2.LogSink.VersionFormat;
-  uniqueWriterIdentity?: string;
+  uniqueWriterIdentity?: string | boolean;
   gaxOptions?: gax.CallOptions;
 }
 
@@ -315,7 +315,7 @@ class Logging {
    * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
    * @property {string} [filter] An advanced logs filter. Only log entries
    *     matching the filter are written.
-   * @property {string} [uniqueWriterIdentity] Determines the kind of IAM
+   * @property {string|boolean} [uniqueWriterIdentity] Determines the kind of IAM
    *     identity returned as `writerIdentity` in the new sink. See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create#query-parameters}.
    */
   /**
