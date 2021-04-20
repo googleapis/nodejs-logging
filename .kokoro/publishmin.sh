@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2018 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,29 +14,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eo pipefail
+set +ex
 
-export NPM_CONFIG_PREFIX=${HOME}/.npm-global
+# Only run this script if envvar PUBLISH_MIN indicates we're publishing the
+# minified distribution.
+if [ "$PUBLISH_MIN" = true ] ; then
+  # Minify all subdirectories in /build
+  for d in $(find ./build/ -maxdepth 8 -type d)
+  do
+    pushd $d
+      for f in *.js; do
+        [ -f "$f" ] || break
+        # uglify all .js files
+        uglifyjs "$f" --output "$f"
+      done
+    popd
+  done
 
-# Start the releasetool reporter
-python3 -m pip install gcp-releasetool
-python3 -m releasetool publish-reporter-script > /tmp/publisher-script; source /tmp/publisher-script
+  # Get current published min library version, e.g. 10.0.0-min.0
+  PUBLISHED_MIN=$(npm dist-tag ls) | sed 's/\ /\n/g' | sed -n '/min:/{n;p;}'
+  PUBLISHED_MIN_PREFIX=PUBLISHED_MIN | sed 's/-min.*//'
+  PUBLISHED_MIN_SUFFIX=PUBLISHED_MIN | sed 's/.*-min.//'
+  LOCAL_VERSION=$(node -pe "require('./package.json').version")
 
-cd $(dirname $0)/..
-
-NPM_TOKEN=$(cat $KOKORO_GFILE_DIR/secret_manager/npm_publish_token)
-echo "//wombat-dressing-room.appspot.com/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-npm install
-
-# Publish the regular package
-npm publish --access=public --registry=https://wombat-dressing-room.appspot.com
-
-# Publish the minified package
-export PUBLISH_MIN=true
-npm publish --access=public --registry=https://wombat-dressing-room.appspot.com
-NEW_MIN_VERSION=$(node -pe "require('./package.json').version")
-
-# Update the 'min' distro tag to latest min version
-npm dist-tag rm 'min' 2> /dev/null
-npm dist-tag add @google-cloud/logging@$NEW_MIN_VERSION min
+  if [ "$PUBLISHED_MIN_PREFIX" == "$LOCAL_VERSION" ]; then
+    # Patch the `min` distro, e.g. 10.0.0-min.1
+    nvm version $PUBLISHED_MIN_VERSION-min.$(($PUBLISHED_MIN_SUFFIX + 1))
+  else
+    # Release a new `min` distro version, e.g. 10.0.1-min.0
+    nvm version $LOCAL_VERSION-min.0
+  fi
+fi
