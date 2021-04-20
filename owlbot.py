@@ -15,29 +15,20 @@
 """This script is used to synthesize generated parts of this library."""
 
 import synthtool as s
-import synthtool.gcp as gcp
 import synthtool.languages.node as node
-import logging
-import os
 
-logging.basicConfig(level=logging.DEBUG)
-
-AUTOSYNTH_MULTIPLE_COMMITS = True
-
-gapic = gcp.GAPICBazel()
-version='v2'
-# tasks has two product names, and a poorly named artman yaml
-v2_library = gapic.node_library("logging", version, proto_path=f'google/logging/{version}')
-s.copy(v2_library, excludes=[".eslintignore", ".prettierignore", "src/index.ts", "README.md", "package.json", "system-test/fixtures/sample/src/index.js", "system-test/fixtures/sample/src/index.ts"])
-
-# Copy in templated files
-common_templates = gcp.CommonTemplates()
-templates = common_templates.node_library(source_location='build/src')
-s.copy(templates, excludes=[
-    ".eslintignore",
-    ".prettierignore",
-    "CONTRIBUTING.md"
-])
+node.owlbot_main(
+    staging_excludes=[
+        ".eslintignore", ".prettierignore", "src/index.ts", "README.md", "package.json",
+        "system-test/fixtures/sample/src/index.js",
+        "system-test/fixtures/sample/src/index.ts"],
+    templates_excludes=[
+        "src/index.ts",
+        ".eslintignore",
+        ".prettierignore",
+        "CONTRIBUTING.md"
+    ]
+)
 
 # adjust .trampolinerc for environment tests
 s.replace(
@@ -50,5 +41,3 @@ s.replace(
     "pass_down_envvars\+\=\(",
     'pass_down_envvars+=(\n    "ENVIRONMENT"\n    "RUNTIME"'
 )
-
-node.postprocess_gapic_library()
