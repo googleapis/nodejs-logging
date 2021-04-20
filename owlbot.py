@@ -19,14 +19,16 @@ import synthtool.languages.node as node
 
 node.owlbot_main(
     staging_excludes=[
-        ".eslintignore", ".prettierignore", "src/index.ts", "README.md", "package.json",
+        ".eslintignore", ".prettierignore", "src/index.ts", "README.md",
+        "package.json", "tsconfig.json",
         "system-test/fixtures/sample/src/index.js",
         "system-test/fixtures/sample/src/index.ts"],
     templates_excludes=[
         "src/index.ts",
         ".eslintignore",
         ".prettierignore",
-        "CONTRIBUTING.md"
+        "CONTRIBUTING.md",
+        "tsconfig.json",
     ]
 )
 
