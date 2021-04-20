@@ -31,31 +31,17 @@ if [ "$PUBLISH_MIN" = true ] ; then
     popd
   done
 
-  # Update package.json version to min version
-  # get published min library version... e.g. 10.0.0-min.0
-  PUBLISHED_MIN_VERSION=$(npm dist-tag ls) | sed 's/\ /\n/g' | sed -n '/min:/{n;p;}'
-  PUBLISHED_MIN_VERSION_PREFIX=PUBLISHED_MIN_VERSION | sed 's/-min.*//'
-  PUBLISHED_MIN_VERSION_SUFFIX=PUBLISHED_MIN_VERSION | sed 's/.*-min.//'
+  # Get current published min library version, e.g. 10.0.0-min.0
+  PUBLISHED_MIN=$(npm dist-tag ls) | sed 's/\ /\n/g' | sed -n '/min:/{n;p;}'
+  PUBLISHED_MIN_PREFIX=PUBLISHED_MIN | sed 's/-min.*//'
+  PUBLISHED_MIN_SUFFIX=PUBLISHED_MIN | sed 's/.*-min.//'
   LOCAL_VERSION=$(node -pe "require('./package.json').version")
 
-  if [ "$PUBLISHED_MIN_VERSION_PREFIX" == "$LOCAL_VERSION" ]; then
-    # Then only the min package is getting updated
-    nvm version PUBLISHED_MIN_VERSION_PREFIX-min......
+  if [ "$PUBLISHED_MIN_PREFIX" == "$LOCAL_VERSION" ]; then
+    # Patch the `min` distro, e.g. 10.0.0-min.1
+    nvm version $PUBLISHED_MIN_VERSION-min.$(($PUBLISHED_MIN_SUFFIX + 1))
   else
-    # `min` distro is releasing alongside a `latest` release
+    # Release a new `min` distro version, e.g. 10.0.1-min.0
     nvm version $LOCAL_VERSION-min.0
   fi
-
-
-
-  nvm version 1.1.1-min.0
-
-  # if master library version is different than current min. set
-
-  #  if master library version is same, just increment the library patch version.
-
-  # remove old tag if any
-  # tag new distro with "min"
-  npm dist-tag add @google-cloud/logging@10.0.0-min.0 min
-
 fi

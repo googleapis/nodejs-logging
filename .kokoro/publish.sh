@@ -34,5 +34,8 @@ npm publish --access=public --registry=https://wombat-dressing-room.appspot.com
 
 # Publish the minified package
 export PUBLISH_MIN=true
-
-#npm publish (dist tag = 'min')
+npm publish --access=public --registry=https://wombat-dressing-room.appspot.com
+NEW_MIN_VERSION=$(node -pe "require('./package.json').version")
+# Update the 'min' distro tag to latest min version
+npm dist-tag rm 'min' 2> /dev/null
+npm dist-tag add @google-cloud/logging@$NEW_MIN_VERSION min
