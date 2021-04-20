@@ -20,7 +20,7 @@ import synthtool.languages.node as node
 node.owlbot_main(
     staging_excludes=[
         ".eslintignore", ".prettierignore", "src/index.ts", "README.md",
-        "package.json", "tsconfig.json",
+        "package.json", "tsconfig.json", ".kokoro/publish.sh",
         "system-test/fixtures/sample/src/index.js",
         "system-test/fixtures/sample/src/index.ts"],
     templates_excludes=[
@@ -29,6 +29,7 @@ node.owlbot_main(
         ".prettierignore",
         "CONTRIBUTING.md",
         "tsconfig.json",
+        ".kokoro/publish.sh",
     ]
 )
 
