@@ -36,6 +36,7 @@
     "prelint": "cd samples; npm link ../; npm install",
     "lint": "gts check",
     "prepare": "npm run compile-protos && npm run compile",
+    "prepublishOnly": "./.kokoro/publishmin.sh",
     "samples-test": "cd samples/ && npm link ../ && npm test && cd ../",
     "presystem-test": "npm run compile",
     "system-test": "mocha build/system-test --timeout 600000",
@@ -60,7 +61,8 @@
     "google-gax": "^2.9.2",
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.1",
-    "stream-events": "^1.0.5"
+    "stream-events": "^1.0.5",
+    "uglify-js": "^3.13.4"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^5.0.0",
