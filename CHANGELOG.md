@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.2.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.1...v9.2.2) (2021-05-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to v17 ([#1058](https://www.github.com/googleapis/nodejs-logging/issues/1058)) ([8d96368](https://www.github.com/googleapis/nodejs-logging/commit/8d963684c60c98fecf48fc4075bcd9c67537dc5c))
+
 ### [9.2.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.0...v9.2.1) (2021-04-15)
 
 
