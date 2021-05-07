@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.2.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.2...v9.2.3) (2021-05-07)
+
+
+### Bug Fixes
+
+* **deps:** require google-gax v2.12.0 ([#1061](https://www.github.com/googleapis/nodejs-logging/issues/1061)) ([8866b55](https://www.github.com/googleapis/nodejs-logging/commit/8866b55ad0624d15c4aa2a616678ad3718325826))
+
 ### [9.2.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.1...v9.2.2) (2021-05-04)
 
 
