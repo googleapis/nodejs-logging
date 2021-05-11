@@ -39,12 +39,12 @@ describe('Sink', () => {
 
   const PROJECT_ID = 'project-id';
 
-  const LOGGING = ({
+  const LOGGING = {
     createSink: () => {},
     projectId: '{{projectId}}',
     auth: () => {},
     configService: () => {},
-  } as {}) as Logging;
+  } as {} as Logging;
   const SINK_NAME = 'sink-name';
 
   before(() => {

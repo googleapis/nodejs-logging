@@ -41,17 +41,13 @@ describe('middleware/context', () => {
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(
-        (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       assert.strictEqual(wrapper.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(
-        (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       wrapper.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
     });
