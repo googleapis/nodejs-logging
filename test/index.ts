@@ -44,7 +44,7 @@ interface AbortableDuplex extends Duplex {
 }
 
 const through = () =>
-  (new PassThrough({objectMode: true}) as {}) as AbortableDuplex;
+  new PassThrough({objectMode: true}) as {} as AbortableDuplex;
 
 const noop = () => {};
 let extended = false;
@@ -338,10 +338,10 @@ describe('Logging', () => {
 
     describe('API request', () => {
       it('should call GAX method', async () => {
-        const config = ({
+        const config = {
           a: 'b',
           c: 'd',
-        } as {}) as CreateSinkRequest;
+        } as {} as CreateSinkRequest;
 
         const expectedConfig = extend({}, config, {
           name: SINK_NAME,
@@ -386,11 +386,11 @@ describe('Logging', () => {
       });
 
       it('should accept GAX options', async () => {
-        const config = ({
+        const config = {
           a: 'b',
           c: 'd',
           gaxOptions: {},
-        } as {}) as CreateSinkRequest;
+        } as {} as CreateSinkRequest;
 
         logging.configService.createSink = async (
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1542,12 +1542,12 @@ describe('Logging', () => {
     let dataset: Dataset;
 
     beforeEach(() => {
-      dataset = ({
+      dataset = {
         id: 'dataset-id',
         parent: {
           projectId: PROJECT_ID,
         },
-      } as {}) as Dataset;
+      } as {} as Dataset;
 
       CONFIG = {
         destination: dataset,
