@@ -894,7 +894,7 @@ class Log implements LogSeverityFunctions {
       return writeWithResource(this.logging.detectedResource);
     } else {
       const resource = await getDefaultResource(
-        (this.logging.auth as unknown) as GoogleAuth
+        this.logging.auth as unknown as GoogleAuth
       );
       this.logging.detectedResource = resource;
       return writeWithResource(resource);
