@@ -158,12 +158,14 @@ export class MetricsServiceV2Client {
       billingAccountExclusionPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/exclusions/{exclusion}'
       ),
-      billingAccountLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
-        'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
-      ),
-      billingAccountLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
-        'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
-      ),
+      billingAccountLocationBucketPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
+        ),
+      billingAccountLocationBucketViewPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
+        ),
       billingAccountLogPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
@@ -200,9 +202,10 @@ export class MetricsServiceV2Client {
       organizationLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/buckets/{bucket}'
       ),
-      organizationLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
-        'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
-      ),
+      organizationLocationBucketViewPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
+        ),
       organizationLogPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
@@ -297,13 +300,14 @@ export class MetricsServiceV2Client {
     ];
     for (const methodName of metricsServiceV2StubMethods) {
       const callPromise = this.metricsServiceV2Stub.then(
-        stub => (...args: Array<{}>) => {
-          if (this._terminated) {
-            return Promise.reject('The client has already been closed.');
-          }
-          const func = stub[methodName];
-          return func.apply(stub, args);
-        },
+        stub =>
+          (...args: Array<{}>) => {
+            if (this._terminated) {
+              return Promise.reject('The client has already been closed.');
+            }
+            const func = stub[methodName];
+            return func.apply(stub, args);
+          },
         (err: Error | null | undefined) => () => {
           throw err;
         }
@@ -459,11 +463,10 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        metric_name: request.metricName || '',
+      });
     this.initialize();
     return this.innerApiCalls.getLogMetric(request, options, callback);
   }
@@ -550,11 +553,10 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        parent: request.parent || '',
+      });
     this.initialize();
     return this.innerApiCalls.createLogMetric(request, options, callback);
   }
@@ -642,11 +644,10 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        metric_name: request.metricName || '',
+      });
     this.initialize();
     return this.innerApiCalls.updateLogMetric(request, options, callback);
   }
@@ -728,11 +729,10 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      metric_name: request.metricName || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        metric_name: request.metricName || '',
+      });
     this.initialize();
     return this.innerApiCalls.deleteLogMetric(request, options, callback);
   }
@@ -827,11 +827,10 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        parent: request.parent || '',
+      });
     this.initialize();
     return this.innerApiCalls.listLogMetrics(request, options, callback);
   }
@@ -873,11 +872,10 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        parent: request.parent || '',
+      });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.createStream(
@@ -930,17 +928,16 @@ export class MetricsServiceV2Client {
     options = options || {};
     options.otherArgs = options.otherArgs || {};
     options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
-    });
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        parent: request.parent || '',
+      });
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.asyncIterate(
       this.innerApiCalls['listLogMetrics'] as GaxCall,
-      (request as unknown) as RequestType,
+      request as unknown as RequestType,
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogMetric>;
   }

@@ -74,7 +74,7 @@ describe('Log', () => {
   });
 
   function createLogger(maxEntrySize?: number) {
-    LOGGING = ({
+    LOGGING = {
       projectId: '{{project-id}}',
       entry: sinon.stub(),
       getEntries: sinon.stub(),
@@ -89,7 +89,7 @@ describe('Log', () => {
         getEnv: sinon.stub(),
         getProjectId: sinon.stub(),
       },
-    } as {}) as Logging;
+    } as {} as Logging;
 
     const options: LogOptions = {};
     if (maxEntrySize) {
@@ -624,10 +624,11 @@ describe('Log', () => {
       log.maxEntrySize = maxSize;
       log.truncateEntries(entries);
 
-      const message: string = entries[0].jsonPayload!.fields!.message
-        .stringValue!;
-      const stack: string = entries[0].jsonPayload!.fields!.metadata
-        .structValue!.fields!.stack.stringValue!;
+      const message: string =
+        entries[0].jsonPayload!.fields!.message.stringValue!;
+      const stack: string =
+        entries[0].jsonPayload!.fields!.metadata.structValue!.fields!.stack
+          .stringValue!;
       assert.strictEqual(stack, '');
       assert.ok(message.startsWith('hello world'));
       assert.ok(message.length < maxSize + entryMetaMaxLength);
@@ -712,7 +713,7 @@ describe('Log', () => {
 
     it('should get JSON format from Entry object', () => {
       const entry = new Entry();
-      entry.toJSON = () => (toJSONResponse as {}) as EntryJson;
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
       const decoratedEntries = log.decorateEntries_([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.notCalled);

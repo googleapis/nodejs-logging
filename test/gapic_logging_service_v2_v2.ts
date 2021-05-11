@@ -28,10 +28,9 @@ import {PassThrough} from 'stream';
 import {protobuf} from 'google-gax';
 
 function generateSampleMessage<T extends object>(instance: T) {
-  const filledObject = (instance.constructor as typeof protobuf.Message).toObject(
-    instance as protobuf.Message<T>,
-    {defaults: true}
-  );
+  const filledObject = (
+    instance.constructor as typeof protobuf.Message
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject
   ) as T;
@@ -263,9 +262,8 @@ describe('v2.LoggingServiceV2Client', () => {
       const expectedResponse = generateSampleMessage(
         new protos.google.protobuf.Empty()
       );
-      client.innerApiCalls.deleteLog = stubSimpleCallWithCallback(
-        expectedResponse
-      );
+      client.innerApiCalls.deleteLog =
+        stubSimpleCallWithCallback(expectedResponse);
       const promise = new Promise((resolve, reject) => {
         client.deleteLog(
           request,
@@ -356,9 +354,8 @@ describe('v2.LoggingServiceV2Client', () => {
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesResponse()
       );
-      client.innerApiCalls.writeLogEntries = stubSimpleCallWithCallback(
-        expectedResponse
-      );
+      client.innerApiCalls.writeLogEntries =
+        stubSimpleCallWithCallback(expectedResponse);
       const promise = new Promise((resolve, reject) => {
         client.writeLogEntries(
           request,
@@ -420,9 +417,8 @@ describe('v2.LoggingServiceV2Client', () => {
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.TailLogEntriesResponse()
       );
-      client.innerApiCalls.tailLogEntries = stubBidiStreamingCall(
-        expectedResponse
-      );
+      client.innerApiCalls.tailLogEntries =
+        stubBidiStreamingCall(expectedResponse);
       const stream = client.tailLogEntries();
       const promise = new Promise((resolve, reject) => {
         stream.on(
@@ -445,9 +441,8 @@ describe('v2.LoggingServiceV2Client', () => {
           .calledWithExactly(undefined)
       );
       assert.deepStrictEqual(
-        (((stream as unknown) as PassThrough)._transform as SinonStub).getCall(
-          0
-        ).args[0],
+        ((stream as unknown as PassThrough)._transform as SinonStub).getCall(0)
+          .args[0],
         request
       );
     });
@@ -487,9 +482,8 @@ describe('v2.LoggingServiceV2Client', () => {
           .calledWithExactly(undefined)
       );
       assert.deepStrictEqual(
-        (((stream as unknown) as PassThrough)._transform as SinonStub).getCall(
-          0
-        ).args[0],
+        ((stream as unknown as PassThrough)._transform as SinonStub).getCall(0)
+          .args[0],
         request
       );
     });
@@ -536,9 +530,8 @@ describe('v2.LoggingServiceV2Client', () => {
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
       ];
-      client.innerApiCalls.listLogEntries = stubSimpleCallWithCallback(
-        expectedResponse
-      );
+      client.innerApiCalls.listLogEntries =
+        stubSimpleCallWithCallback(expectedResponse);
       const promise = new Promise((resolve, reject) => {
         client.listLogEntries(
           request,
@@ -600,9 +593,8 @@ describe('v2.LoggingServiceV2Client', () => {
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
       ];
-      client.descriptors.page.listLogEntries.createStream = stubPageStreamingCall(
-        expectedResponse
-      );
+      client.descriptors.page.listLogEntries.createStream =
+        stubPageStreamingCall(expectedResponse);
       const stream = client.listLogEntriesStream(request);
       const promise = new Promise((resolve, reject) => {
         const responses: protos.google.logging.v2.LogEntry[] = [];
@@ -635,10 +627,8 @@ describe('v2.LoggingServiceV2Client', () => {
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
       const expectedError = new Error('expected');
-      client.descriptors.page.listLogEntries.createStream = stubPageStreamingCall(
-        undefined,
-        expectedError
-      );
+      client.descriptors.page.listLogEntries.createStream =
+        stubPageStreamingCall(undefined, expectedError);
       const stream = client.listLogEntriesStream(request);
       const promise = new Promise((resolve, reject) => {
         const responses: protos.google.logging.v2.LogEntry[] = [];
@@ -674,9 +664,8 @@ describe('v2.LoggingServiceV2Client', () => {
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
       ];
-      client.descriptors.page.listLogEntries.asyncIterate = stubAsyncIterationCall(
-        expectedResponse
-      );
+      client.descriptors.page.listLogEntries.asyncIterate =
+        stubAsyncIterationCall(expectedResponse);
       const responses: protos.google.logging.v2.ILogEntry[] = [];
       const iterable = client.listLogEntriesAsync(request);
       for await (const resource of iterable) {
@@ -684,8 +673,9 @@ describe('v2.LoggingServiceV2Client', () => {
       }
       assert.deepStrictEqual(responses, expectedResponse);
       assert.deepStrictEqual(
-        (client.descriptors.page.listLogEntries
-          .asyncIterate as SinonStub).getCall(0).args[1],
+        (
+          client.descriptors.page.listLogEntries.asyncIterate as SinonStub
+        ).getCall(0).args[1],
         request
       );
     });
@@ -700,10 +690,8 @@ describe('v2.LoggingServiceV2Client', () => {
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
       const expectedError = new Error('expected');
-      client.descriptors.page.listLogEntries.asyncIterate = stubAsyncIterationCall(
-        undefined,
-        expectedError
-      );
+      client.descriptors.page.listLogEntries.asyncIterate =
+        stubAsyncIterationCall(undefined, expectedError);
       const iterable = client.listLogEntriesAsync(request);
       await assert.rejects(async () => {
         const responses: protos.google.logging.v2.ILogEntry[] = [];
@@ -712,8 +700,9 @@ describe('v2.LoggingServiceV2Client', () => {
         }
       });
       assert.deepStrictEqual(
-        (client.descriptors.page.listLogEntries
-          .asyncIterate as SinonStub).getCall(0).args[1],
+        (
+          client.descriptors.page.listLogEntries.asyncIterate as SinonStub
+        ).getCall(0).args[1],
         request
       );
     });
@@ -741,9 +730,8 @@ describe('v2.LoggingServiceV2Client', () => {
           new protos.google.api.MonitoredResourceDescriptor()
         ),
       ];
-      client.innerApiCalls.listMonitoredResourceDescriptors = stubSimpleCall(
-        expectedResponse
-      );
+      client.innerApiCalls.listMonitoredResourceDescriptors =
+        stubSimpleCall(expectedResponse);
       const [response] = await client.listMonitoredResourceDescriptors(request);
       assert.deepStrictEqual(response, expectedResponse);
       assert(
@@ -774,9 +762,8 @@ describe('v2.LoggingServiceV2Client', () => {
           new protos.google.api.MonitoredResourceDescriptor()
         ),
       ];
-      client.innerApiCalls.listMonitoredResourceDescriptors = stubSimpleCallWithCallback(
-        expectedResponse
-      );
+      client.innerApiCalls.listMonitoredResourceDescriptors =
+        stubSimpleCallWithCallback(expectedResponse);
       const promise = new Promise((resolve, reject) => {
         client.listMonitoredResourceDescriptors(
           request,
@@ -847,9 +834,8 @@ describe('v2.LoggingServiceV2Client', () => {
           new protos.google.api.MonitoredResourceDescriptor()
         ),
       ];
-      client.descriptors.page.listMonitoredResourceDescriptors.createStream = stubPageStreamingCall(
-        expectedResponse
-      );
+      client.descriptors.page.listMonitoredResourceDescriptors.createStream =
+        stubPageStreamingCall(expectedResponse);
       const stream = client.listMonitoredResourceDescriptorsStream(request);
       const promise = new Promise((resolve, reject) => {
         const responses: protos.google.api.MonitoredResourceDescriptor[] = [];
@@ -869,8 +855,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const responses = await promise;
       assert.deepStrictEqual(responses, expectedResponse);
       assert(
-        (client.descriptors.page.listMonitoredResourceDescriptors
-          .createStream as SinonStub)
+        (
+          client.descriptors.page.listMonitoredResourceDescriptors
+            .createStream as SinonStub
+        )
           .getCall(0)
           .calledWith(
             client.innerApiCalls.listMonitoredResourceDescriptors,
@@ -889,10 +877,8 @@ describe('v2.LoggingServiceV2Client', () => {
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
       const expectedError = new Error('expected');
-      client.descriptors.page.listMonitoredResourceDescriptors.createStream = stubPageStreamingCall(
-        undefined,
-        expectedError
-      );
+      client.descriptors.page.listMonitoredResourceDescriptors.createStream =
+        stubPageStreamingCall(undefined, expectedError);
       const stream = client.listMonitoredResourceDescriptorsStream(request);
       const promise = new Promise((resolve, reject) => {
         const responses: protos.google.api.MonitoredResourceDescriptor[] = [];
@@ -911,8 +897,10 @@ describe('v2.LoggingServiceV2Client', () => {
       });
       await assert.rejects(promise, expectedError);
       assert(
-        (client.descriptors.page.listMonitoredResourceDescriptors
-          .createStream as SinonStub)
+        (
+          client.descriptors.page.listMonitoredResourceDescriptors
+            .createStream as SinonStub
+        )
           .getCall(0)
           .calledWith(
             client.innerApiCalls.listMonitoredResourceDescriptors,
@@ -941,9 +929,8 @@ describe('v2.LoggingServiceV2Client', () => {
           new protos.google.api.MonitoredResourceDescriptor()
         ),
       ];
-      client.descriptors.page.listMonitoredResourceDescriptors.asyncIterate = stubAsyncIterationCall(
-        expectedResponse
-      );
+      client.descriptors.page.listMonitoredResourceDescriptors.asyncIterate =
+        stubAsyncIterationCall(expectedResponse);
       const responses: protos.google.api.IMonitoredResourceDescriptor[] = [];
       const iterable = client.listMonitoredResourceDescriptorsAsync(request);
       for await (const resource of iterable) {
@@ -951,8 +938,10 @@ describe('v2.LoggingServiceV2Client', () => {
       }
       assert.deepStrictEqual(responses, expectedResponse);
       assert.deepStrictEqual(
-        (client.descriptors.page.listMonitoredResourceDescriptors
-          .asyncIterate as SinonStub).getCall(0).args[1],
+        (
+          client.descriptors.page.listMonitoredResourceDescriptors
+            .asyncIterate as SinonStub
+        ).getCall(0).args[1],
         request
       );
     });
@@ -967,10 +956,8 @@ describe('v2.LoggingServiceV2Client', () => {
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
       const expectedError = new Error('expected');
-      client.descriptors.page.listMonitoredResourceDescriptors.asyncIterate = stubAsyncIterationCall(
-        undefined,
-        expectedError
-      );
+      client.descriptors.page.listMonitoredResourceDescriptors.asyncIterate =
+        stubAsyncIterationCall(undefined, expectedError);
       const iterable = client.listMonitoredResourceDescriptorsAsync(request);
       await assert.rejects(async () => {
         const responses: protos.google.api.IMonitoredResourceDescriptor[] = [];
@@ -979,8 +966,10 @@ describe('v2.LoggingServiceV2Client', () => {
         }
       });
       assert.deepStrictEqual(
-        (client.descriptors.page.listMonitoredResourceDescriptors
-          .asyncIterate as SinonStub).getCall(0).args[1],
+        (
+          client.descriptors.page.listMonitoredResourceDescriptors
+            .asyncIterate as SinonStub
+        ).getCall(0).args[1],
         request
       );
     });
@@ -1035,9 +1024,8 @@ describe('v2.LoggingServiceV2Client', () => {
         },
       };
       const expectedResponse = [new String(), new String(), new String()];
-      client.innerApiCalls.listLogs = stubSimpleCallWithCallback(
-        expectedResponse
-      );
+      client.innerApiCalls.listLogs =
+        stubSimpleCallWithCallback(expectedResponse);
       const promise = new Promise((resolve, reject) => {
         client.listLogs(
           request,
@@ -1099,9 +1087,8 @@ describe('v2.LoggingServiceV2Client', () => {
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
       const expectedResponse = [new String(), new String(), new String()];
-      client.descriptors.page.listLogs.createStream = stubPageStreamingCall(
-        expectedResponse
-      );
+      client.descriptors.page.listLogs.createStream =
+        stubPageStreamingCall(expectedResponse);
       const stream = client.listLogsStream(request);
       const promise = new Promise((resolve, reject) => {
         const responses: string[] = [];
@@ -1183,9 +1170,8 @@ describe('v2.LoggingServiceV2Client', () => {
       request.parent = '';
       const expectedHeaderRequestParams = 'parent=';
       const expectedResponse = [new String(), new String(), new String()];
-      client.descriptors.page.listLogs.asyncIterate = stubAsyncIterationCall(
-        expectedResponse
-      );
+      client.descriptors.page.listLogs.asyncIterate =
+        stubAsyncIterationCall(expectedResponse);
       const responses: string[] = [];
       const iterable = client.listLogsAsync(request);
       for await (const resource of iterable) {
@@ -1264,21 +1250,26 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.billingAccountCmekSettingsPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.billingAccountCmekSettingsPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchBillingAccountFromBillingAccountCmekSettingsName', () => {
-        const result = client.matchBillingAccountFromBillingAccountCmekSettingsName(
-          fakePath
-        );
+        const result =
+          client.matchBillingAccountFromBillingAccountCmekSettingsName(
+            fakePath
+          );
         assert.strictEqual(result, 'billingAccountValue');
         assert(
-          (client.pathTemplates.billingAccountCmekSettingsPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountCmekSettingsPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1310,34 +1301,38 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.billingAccountExclusionPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.billingAccountExclusionPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchBillingAccountFromBillingAccountExclusionName', () => {
-        const result = client.matchBillingAccountFromBillingAccountExclusionName(
-          fakePath
-        );
+        const result =
+          client.matchBillingAccountFromBillingAccountExclusionName(fakePath);
         assert.strictEqual(result, 'billingAccountValue');
         assert(
-          (client.pathTemplates.billingAccountExclusionPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountExclusionPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchExclusionFromBillingAccountExclusionName', () => {
-        const result = client.matchExclusionFromBillingAccountExclusionName(
-          fakePath
-        );
+        const result =
+          client.matchExclusionFromBillingAccountExclusionName(fakePath);
         assert.strictEqual(result, 'exclusionValue');
         assert(
-          (client.pathTemplates.billingAccountExclusionPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountExclusionPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1356,12 +1351,10 @@ describe('v2.LoggingServiceV2Client', () => {
         projectId: 'bogus',
       });
       client.initialize();
-      client.pathTemplates.billingAccountLocationBucketPathTemplate.render = sinon
-        .stub()
-        .returns(fakePath);
-      client.pathTemplates.billingAccountLocationBucketPathTemplate.match = sinon
-        .stub()
-        .returns(expectedParameters);
+      client.pathTemplates.billingAccountLocationBucketPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.billingAccountLocationBucketPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
 
       it('billingAccountLocationBucketPath', () => {
         const result = client.billingAccountLocationBucketPath(
@@ -1371,47 +1364,54 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.billingAccountLocationBucketPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchBillingAccountFromBillingAccountLocationBucketName', () => {
-        const result = client.matchBillingAccountFromBillingAccountLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchBillingAccountFromBillingAccountLocationBucketName(
+            fakePath
+          );
         assert.strictEqual(result, 'billingAccountValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromBillingAccountLocationBucketName', () => {
-        const result = client.matchLocationFromBillingAccountLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromBillingAccountLocationBucketName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromBillingAccountLocationBucketName', () => {
-        const result = client.matchBucketFromBillingAccountLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromBillingAccountLocationBucketName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1431,12 +1431,10 @@ describe('v2.LoggingServiceV2Client', () => {
         projectId: 'bogus',
       });
       client.initialize();
-      client.pathTemplates.billingAccountLocationBucketViewPathTemplate.render = sinon
-        .stub()
-        .returns(fakePath);
-      client.pathTemplates.billingAccountLocationBucketViewPathTemplate.match = sinon
-        .stub()
-        .returns(expectedParameters);
+      client.pathTemplates.billingAccountLocationBucketViewPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.billingAccountLocationBucketViewPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
 
       it('billingAccountLocationBucketViewPath', () => {
         const result = client.billingAccountLocationBucketViewPath(
@@ -1447,60 +1445,70 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchBillingAccountFromBillingAccountLocationBucketViewName', () => {
-        const result = client.matchBillingAccountFromBillingAccountLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchBillingAccountFromBillingAccountLocationBucketViewName(
+            fakePath
+          );
         assert.strictEqual(result, 'billingAccountValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromBillingAccountLocationBucketViewName', () => {
-        const result = client.matchLocationFromBillingAccountLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromBillingAccountLocationBucketViewName(
+            fakePath
+          );
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromBillingAccountLocationBucketViewName', () => {
-        const result = client.matchBucketFromBillingAccountLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromBillingAccountLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchViewFromBillingAccountLocationBucketViewName', () => {
-        const result = client.matchViewFromBillingAccountLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchViewFromBillingAccountLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'viewValue');
         assert(
-          (client.pathTemplates.billingAccountLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1532,21 +1540,24 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.billingAccountLogPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.billingAccountLogPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchBillingAccountFromBillingAccountLogName', () => {
-        const result = client.matchBillingAccountFromBillingAccountLogName(
-          fakePath
-        );
+        const result =
+          client.matchBillingAccountFromBillingAccountLogName(fakePath);
         assert.strictEqual(result, 'billingAccountValue');
         assert(
-          (client.pathTemplates.billingAccountLogPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLogPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1556,8 +1567,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.matchLogFromBillingAccountLogName(fakePath);
         assert.strictEqual(result, 'logValue');
         assert(
-          (client.pathTemplates.billingAccountLogPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountLogPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1589,21 +1602,24 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.billingAccountSinkPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.billingAccountSinkPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchBillingAccountFromBillingAccountSinkName', () => {
-        const result = client.matchBillingAccountFromBillingAccountSinkName(
-          fakePath
-        );
+        const result =
+          client.matchBillingAccountFromBillingAccountSinkName(fakePath);
         assert.strictEqual(result, 'billingAccountValue');
         assert(
-          (client.pathTemplates.billingAccountSinkPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountSinkPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1613,8 +1629,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.matchSinkFromBillingAccountSinkName(fakePath);
         assert.strictEqual(result, 'sinkValue');
         assert(
-          (client.pathTemplates.billingAccountSinkPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.billingAccountSinkPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1642,8 +1660,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.folderCmekSettingsPath('folderValue');
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.folderCmekSettingsPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.folderCmekSettingsPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
@@ -1653,8 +1673,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.matchFolderFromFolderCmekSettingsName(fakePath);
         assert.strictEqual(result, 'folderValue');
         assert(
-          (client.pathTemplates.folderCmekSettingsPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderCmekSettingsPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1740,8 +1762,10 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.folderLocationBucketPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
@@ -1751,21 +1775,24 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.matchFolderFromFolderLocationBucketName(fakePath);
         assert.strictEqual(result, 'folderValue');
         assert(
-          (client.pathTemplates.folderLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromFolderLocationBucketName', () => {
-        const result = client.matchLocationFromFolderLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromFolderLocationBucketName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.folderLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1775,8 +1802,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.matchBucketFromFolderLocationBucketName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.folderLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -1812,60 +1841,66 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.folderLocationBucketViewPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketViewPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchFolderFromFolderLocationBucketViewName', () => {
-        const result = client.matchFolderFromFolderLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchFolderFromFolderLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'folderValue');
         assert(
-          (client.pathTemplates.folderLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromFolderLocationBucketViewName', () => {
-        const result = client.matchLocationFromFolderLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromFolderLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.folderLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromFolderLocationBucketViewName', () => {
-        const result = client.matchBucketFromFolderLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromFolderLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.folderLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchViewFromFolderLocationBucketViewName', () => {
-        const result = client.matchViewFromFolderLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchViewFromFolderLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'viewValue');
         assert(
-          (client.pathTemplates.folderLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.folderLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2040,21 +2075,24 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.organizationCmekSettingsPath('organizationValue');
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.organizationCmekSettingsPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.organizationCmekSettingsPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchOrganizationFromOrganizationCmekSettingsName', () => {
-        const result = client.matchOrganizationFromOrganizationCmekSettingsName(
-          fakePath
-        );
+        const result =
+          client.matchOrganizationFromOrganizationCmekSettingsName(fakePath);
         assert.strictEqual(result, 'organizationValue');
         assert(
-          (client.pathTemplates.organizationCmekSettingsPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationCmekSettingsPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2086,34 +2124,38 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.organizationExclusionPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.organizationExclusionPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchOrganizationFromOrganizationExclusionName', () => {
-        const result = client.matchOrganizationFromOrganizationExclusionName(
-          fakePath
-        );
+        const result =
+          client.matchOrganizationFromOrganizationExclusionName(fakePath);
         assert.strictEqual(result, 'organizationValue');
         assert(
-          (client.pathTemplates.organizationExclusionPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationExclusionPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchExclusionFromOrganizationExclusionName', () => {
-        const result = client.matchExclusionFromOrganizationExclusionName(
-          fakePath
-        );
+        const result =
+          client.matchExclusionFromOrganizationExclusionName(fakePath);
         assert.strictEqual(result, 'exclusionValue');
         assert(
-          (client.pathTemplates.organizationExclusionPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationExclusionPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2147,47 +2189,52 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.organizationLocationBucketPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchOrganizationFromOrganizationLocationBucketName', () => {
-        const result = client.matchOrganizationFromOrganizationLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchOrganizationFromOrganizationLocationBucketName(fakePath);
         assert.strictEqual(result, 'organizationValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromOrganizationLocationBucketName', () => {
-        const result = client.matchLocationFromOrganizationLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromOrganizationLocationBucketName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromOrganizationLocationBucketName', () => {
-        const result = client.matchBucketFromOrganizationLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromOrganizationLocationBucketName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2207,12 +2254,10 @@ describe('v2.LoggingServiceV2Client', () => {
         projectId: 'bogus',
       });
       client.initialize();
-      client.pathTemplates.organizationLocationBucketViewPathTemplate.render = sinon
-        .stub()
-        .returns(fakePath);
-      client.pathTemplates.organizationLocationBucketViewPathTemplate.match = sinon
-        .stub()
-        .returns(expectedParameters);
+      client.pathTemplates.organizationLocationBucketViewPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.organizationLocationBucketViewPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
 
       it('organizationLocationBucketViewPath', () => {
         const result = client.organizationLocationBucketViewPath(
@@ -2223,60 +2268,68 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.organizationLocationBucketViewPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketViewPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchOrganizationFromOrganizationLocationBucketViewName', () => {
-        const result = client.matchOrganizationFromOrganizationLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchOrganizationFromOrganizationLocationBucketViewName(
+            fakePath
+          );
         assert.strictEqual(result, 'organizationValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromOrganizationLocationBucketViewName', () => {
-        const result = client.matchLocationFromOrganizationLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromOrganizationLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromOrganizationLocationBucketViewName', () => {
-        const result = client.matchBucketFromOrganizationLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromOrganizationLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchViewFromOrganizationLocationBucketViewName', () => {
-        const result = client.matchViewFromOrganizationLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchViewFromOrganizationLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'viewValue');
         assert(
-          (client.pathTemplates.organizationLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.organizationLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2315,9 +2368,8 @@ describe('v2.LoggingServiceV2Client', () => {
       });
 
       it('matchOrganizationFromOrganizationLogName', () => {
-        const result = client.matchOrganizationFromOrganizationLogName(
-          fakePath
-        );
+        const result =
+          client.matchOrganizationFromOrganizationLogName(fakePath);
         assert.strictEqual(result, 'organizationValue');
         assert(
           (client.pathTemplates.organizationLogPathTemplate.match as SinonStub)
@@ -2362,17 +2414,18 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.organizationSinkPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.organizationSinkPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchOrganizationFromOrganizationSinkName', () => {
-        const result = client.matchOrganizationFromOrganizationSinkName(
-          fakePath
-        );
+        const result =
+          client.matchOrganizationFromOrganizationSinkName(fakePath);
         assert.strictEqual(result, 'organizationValue');
         assert(
           (client.pathTemplates.organizationSinkPathTemplate.match as SinonStub)
@@ -2451,8 +2504,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.projectCmekSettingsPath('projectValue');
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.projectCmekSettingsPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.projectCmekSettingsPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
@@ -2462,8 +2517,10 @@ describe('v2.LoggingServiceV2Client', () => {
         const result = client.matchProjectFromProjectCmekSettingsName(fakePath);
         assert.strictEqual(result, 'projectValue');
         assert(
-          (client.pathTemplates.projectCmekSettingsPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectCmekSettingsPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2495,8 +2552,10 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.projectExclusionPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.projectExclusionPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
@@ -2550,47 +2609,52 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.projectLocationBucketPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchProjectFromProjectLocationBucketName', () => {
-        const result = client.matchProjectFromProjectLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchProjectFromProjectLocationBucketName(fakePath);
         assert.strictEqual(result, 'projectValue');
         assert(
-          (client.pathTemplates.projectLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromProjectLocationBucketName', () => {
-        const result = client.matchLocationFromProjectLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromProjectLocationBucketName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.projectLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromProjectLocationBucketName', () => {
-        const result = client.matchBucketFromProjectLocationBucketName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromProjectLocationBucketName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.projectLocationBucketPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2626,60 +2690,66 @@ describe('v2.LoggingServiceV2Client', () => {
         );
         assert.strictEqual(result, fakePath);
         assert(
-          (client.pathTemplates.projectLocationBucketViewPathTemplate
-            .render as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketViewPathTemplate
+              .render as SinonStub
+          )
             .getCall(-1)
             .calledWith(expectedParameters)
         );
       });
 
       it('matchProjectFromProjectLocationBucketViewName', () => {
-        const result = client.matchProjectFromProjectLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchProjectFromProjectLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'projectValue');
         assert(
-          (client.pathTemplates.projectLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchLocationFromProjectLocationBucketViewName', () => {
-        const result = client.matchLocationFromProjectLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchLocationFromProjectLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'locationValue');
         assert(
-          (client.pathTemplates.projectLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchBucketFromProjectLocationBucketViewName', () => {
-        const result = client.matchBucketFromProjectLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchBucketFromProjectLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'bucketValue');
         assert(
-          (client.pathTemplates.projectLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
       });
 
       it('matchViewFromProjectLocationBucketViewName', () => {
-        const result = client.matchViewFromProjectLocationBucketViewName(
-          fakePath
-        );
+        const result =
+          client.matchViewFromProjectLocationBucketViewName(fakePath);
         assert.strictEqual(result, 'viewValue');
         assert(
-          (client.pathTemplates.projectLocationBucketViewPathTemplate
-            .match as SinonStub)
+          (
+            client.pathTemplates.projectLocationBucketViewPathTemplate
+              .match as SinonStub
+          )
             .getCall(-1)
             .calledWith(fakePath)
         );
