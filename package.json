@@ -43,7 +43,8 @@
     "test": "c8 mocha build/test",
     "precompile": "gts clean",
     "api-extractor": "api-extractor run --local",
-    "api-documenter": "api-documenter yaml --input-folder=temp"
+    "api-documenter": "api-documenter yaml --input-folder=temp",
+    "postpublish": "./.kokoro/publish-min.sh"
   },
   "dependencies": {
     "@google-cloud/common": "^3.4.1",
