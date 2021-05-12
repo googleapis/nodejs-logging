@@ -43,7 +43,8 @@
     "test": "c8 mocha build/test",
     "precompile": "gts clean",
     "api-extractor": "api-extractor run --local",
-    "api-documenter": "api-documenter yaml --input-folder=temp"
+    "api-documenter": "api-documenter yaml --input-folder=temp",
+    "postpublish": "./.kokoro/publish-min.sh"
   },
   "dependencies": {
     "@google-cloud/common": "^3.4.1",
@@ -95,7 +96,8 @@
     "webpack": "^5.0.0",
     "webpack-cli": "^4.0.0",
     "@microsoft/api-documenter": "^7.8.10",
-    "@microsoft/api-extractor": "^7.8.10"
+    "@microsoft/api-extractor": "^7.8.10",
+    "uglify-js": "^3.13.5"
   },
   "engines": {
     "node": ">=10"
