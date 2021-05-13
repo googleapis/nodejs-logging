@@ -6,13 +6,8 @@
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
-[Google Cloud Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
+[Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to store, search, analyze,
 monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
-
-If you require lightweight dependencies, an experimental, minified version of
-this library is available at [@google-cloud/logging-min](https://www.npmjs.com/package/@google-cloud/logging-min).
-Note: `logging-min` is experimental, and its feature surface is subject to
-change.
 
 ## Table of Contents
 
