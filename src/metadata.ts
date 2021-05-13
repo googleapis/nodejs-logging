@@ -146,7 +146,7 @@ export async function getGKEDescriptor() {
   //
   const resp = await gcpMetadata.instance('attributes/cluster-name');
   const qualifiedZone = await gcpMetadata.instance('zone');
-  const location = regionFromQualifiedZone(qualifiedZone);
+  const location = zoneFromQualifiedZone(qualifiedZone);
   let namespace;
   try {
     namespace = await readFile(KUBERNETES_NAMESPACE_ID_PATH, 'utf8');
@@ -230,7 +230,7 @@ export async function detectServiceContext(
         service: process.env.FUNCTION_NAME,
       };
     // On Kubernetes we use the pod-name to describe the service. Currently,
-    // we acquire the pod name from within the pod through env var `HOSTNAME`.
+    // we acquire the pod-name from within the pod through env var `HOSTNAME`.
     case GCPEnv.KUBERNETES_ENGINE:
       return {
         service: process.env.HOSTNAME,

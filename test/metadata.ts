@@ -257,18 +257,35 @@ describe('metadata', () => {
   describe('getGKEDescriptor', () => {
     const CLUSTER_NAME = 'gke-cluster-name';
 
-    it('should return the correct descriptor', async () => {
-      instanceOverride = {
-        path: 'attributes/cluster-name',
-        successArg: CLUSTER_NAME,
-      };
+    beforeEach(() => {
+      process.env.HOSTNAME = 'node-gke-123';
+    });
 
+    afterEach(() => {
+      delete process.env.HOSTNAME;
+    });
+
+    it('should return the correct descriptor', async () => {
+      const ZONE_ID = 'cyrodiil-anvil-2';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = [
+        {
+          path: 'attributes/cluster-name',
+          successArg: CLUSTER_NAME,
+        },
+        {
+          path: 'zone',
+          successArg: ZONE_FULL,
+        },
+      ];
       const descriptor = await metadata.getGKEDescriptor();
       assert.deepStrictEqual(descriptor, {
         type: 'k8s_container',
         labels: {
           cluster_name: CLUSTER_NAME,
           namespace_name: FAKE_READFILE_CONTENTS,
+          location: ZONE_ID,
+          pod_name: 'node-gke-123',
         },
       });
     });
@@ -478,25 +495,36 @@ describe('metadata', () => {
       describe('container engine', () => {
         it('should return correct descriptor', async () => {
           const CLUSTER_NAME = 'overridden-value';
-          instanceOverride = {
-            path: 'attributes/cluster-name',
-            successArg: CLUSTER_NAME,
-          };
+          const ZONE_ID = 'cyrodiil-anvil-2';
+          const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+          instanceOverride = [
+            {
+              path: 'attributes/cluster-name',
+              successArg: CLUSTER_NAME,
+            },
+            {
+              path: 'zone',
+              successArg: ZONE_FULL,
+            },
+          ];
 
           const fakeAuth = {
             async getEnv() {
               return GCPEnv.KUBERNETES_ENGINE;
             },
           };
-
+          process.env.HOSTNAME = 'node-gke-123';
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
           assert.deepStrictEqual(defaultResource, {
             type: 'k8s_container',
             labels: {
+              location: ZONE_ID,
+              pod_name: 'node-gke-123',
               cluster_name: CLUSTER_NAME,
               namespace_name: FAKE_READFILE_CONTENTS,
             },
           });
+          delete process.env.HOSTNAME;
         });
       });
 
@@ -584,14 +612,18 @@ describe('metadata', () => {
       delete process.env['K_SERVICE'];
     });
 
-    it('should return null on GKE', async () => {
+    it('should return the correct descriptor for GKE', async () => {
       const fakeAuth = {
         async getEnv() {
           return GCPEnv.KUBERNETES_ENGINE;
         },
       };
+      process.env.HOSTNAME = 'node-gke-123';
       const serviceContext = await metadata.detectServiceContext(fakeAuth);
-      assert.strictEqual(serviceContext, null);
+      assert.deepStrictEqual(serviceContext, {
+        service: 'node-gke-123',
+      });
+      delete process.env.HOSTNAME;
     });
 
     it('should return null on GCE', async () => {
