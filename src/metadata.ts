@@ -156,7 +156,6 @@ export async function getGKEDescriptor() {
     );
   }
 
-  // TODO: Add container_name once available - pending b/145137070.
   return {
     type: 'k8s_container',
     labels: {
@@ -164,6 +163,9 @@ export async function getGKEDescriptor() {
       cluster_name: resp,
       namespace_name: namespace,
       pod_name: process.env.HOSTNAME,
+      // Users must manually supply container name for now.
+      // This may be autodetected pending b/145137070.
+      container_name: process.env.CONTAINER_NAME,
     },
   };
 }

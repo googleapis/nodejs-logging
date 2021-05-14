@@ -259,10 +259,12 @@ describe('metadata', () => {
 
     beforeEach(() => {
       process.env.HOSTNAME = 'node-gke-123';
+      process.env.CONTAINER_NAME = 'my-container';
     });
 
     afterEach(() => {
       delete process.env.HOSTNAME;
+      delete process.env.CONTAINER_NAME;
     });
 
     it('should return the correct descriptor', async () => {
@@ -286,6 +288,7 @@ describe('metadata', () => {
           namespace_name: FAKE_READFILE_CONTENTS,
           location: ZONE_ID,
           pod_name: 'node-gke-123',
+          container_name: 'my-container',
         },
       });
     });
@@ -514,6 +517,7 @@ describe('metadata', () => {
             },
           };
           process.env.HOSTNAME = 'node-gke-123';
+          process.env.CONTAINER_NAME = 'my-container';
           const defaultResource = await metadata.getDefaultResource(fakeAuth);
           assert.deepStrictEqual(defaultResource, {
             type: 'k8s_container',
@@ -522,9 +526,10 @@ describe('metadata', () => {
               pod_name: 'node-gke-123',
               cluster_name: CLUSTER_NAME,
               namespace_name: FAKE_READFILE_CONTENTS,
+              container_name: 'my-container',
             },
           });
-          delete process.env.HOSTNAME;
+          delete process.env.CONTAINER_NAME;
         });
       });
 
