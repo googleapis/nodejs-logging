@@ -164,7 +164,7 @@ export async function getGKEDescriptor() {
       namespace_name: namespace,
       pod_name: process.env.HOSTNAME,
       // Users must manually supply container name for now.
-      // This may be autodetected pending b/145137070.
+      // This may be autodetected in the future, pending b/145137070.
       container_name: process.env.CONTAINER_NAME,
     },
   };
