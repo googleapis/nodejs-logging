@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.2.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.3...v9.2.4) (2021-05-18)
+
+
+### Bug Fixes
+
+* use require() to load JSON protos ([#1065](https://www.github.com/googleapis/nodejs-logging/issues/1065)) ([9718d9a](https://www.github.com/googleapis/nodejs-logging/commit/9718d9a3f7f672947de674343fc0527f39d4a0aa))
+
 ### [9.2.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.2...v9.2.3) (2021-05-07)
 
 
