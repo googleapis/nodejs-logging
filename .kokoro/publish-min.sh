@@ -42,4 +42,5 @@ if [ -f "package.json-e" ]; then
   rm package.json-e
 fi
 
-npm publish --access=public --registry=https://wombat-dressing-room.appspot.com
+# Note: ignore the postpublish script here to avoid an endless publish loop.
+npm publish --ignore-scripts --access=public --registry=https://wombat-dressing-room.appspot.com
