@@ -145,7 +145,8 @@ export async function getGKEDescriptor() {
   // with metrics may not necessarily work however.
   //
   const resp = await gcpMetadata.instance('attributes/cluster-name');
-
+  const qualifiedZone = await gcpMetadata.instance('zone');
+  const location = zoneFromQualifiedZone(qualifiedZone);
   let namespace;
   try {
     namespace = await readFile(KUBERNETES_NAMESPACE_ID_PATH, 'utf8');
@@ -158,8 +159,13 @@ export async function getGKEDescriptor() {
   return {
     type: 'k8s_container',
     labels: {
+      location,
       cluster_name: resp,
       namespace_name: namespace,
+      pod_name: process.env.HOSTNAME,
+      // Users must manually supply container name for now.
+      // This may be autodetected in the future, pending b/145137070.
+      container_name: process.env.CONTAINER_NAME,
     },
   };
 }
@@ -190,7 +196,7 @@ export async function getDefaultResource(auth: GoogleAuth) {
     case GCPEnv.CLOUD_FUNCTIONS:
       return getCloudFunctionDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.COMPUTE_ENGINE:
-      //  Google Cloud Run
+      //  Note: GCPEnv.COMPUTE_ENGINE returns `true` for Google Cloud Run
       if (process.env.K_CONFIGURATION) {
         return getCloudRunDescriptor().catch(() => getGlobalDescriptor());
       } else {
@@ -225,10 +231,12 @@ export async function detectServiceContext(
       return {
         service: process.env.FUNCTION_NAME,
       };
-    // One Kubernetes we probably need to use the pod-name to describe the
-    // service. Currently there isn't a universal way to acquire the pod
-    // name from within the pod.
+    // On Kubernetes we use the pod-name to describe the service. Currently,
+    // we acquire the pod-name from within the pod through env var `HOSTNAME`.
     case GCPEnv.KUBERNETES_ENGINE:
+      return {
+        service: process.env.HOSTNAME,
+      };
     case GCPEnv.COMPUTE_ENGINE:
       // Google Cloud Run
       if (process.env.K_CONFIGURATION) {
