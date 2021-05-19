@@ -16,7 +16,7 @@
 
 import * as http from 'http';
 
-import {StackdriverHttpRequest} from '../../http-request';
+import {CloudLoggingHttpRequest} from '../../http-request';
 
 export interface ServerRequest extends http.IncomingMessage {
   originalUrl: string;
@@ -26,7 +26,7 @@ export function makeHttpRequestData(
   req: ServerRequest,
   res: http.ServerResponse,
   latencyMilliseconds: number
-): StackdriverHttpRequest {
+): CloudLoggingHttpRequest {
   return {
     status: res.statusCode,
     requestUrl: req.originalUrl,

@@ -304,10 +304,10 @@ describe('metadata', () => {
       );
     });
 
-    it('should throw error when read of namespace file fails', async () => {
+    it('should not error if reading namespace file fails', async () => {
       readFileShouldError = true;
 
-      await assert.rejects(metadata.getGKEDescriptor(), (err: Error) =>
+      await assert.doesNotReject(metadata.getGKEDescriptor(), (err: Error) =>
         err.message.includes(FAKE_READFILE_ERROR_MESSAGE)
       );
     });
