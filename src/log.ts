@@ -509,7 +509,7 @@ class Log implements LogSeverityFunctions {
    * const log = logging.log('my-log');
    *
    * log.getEntries((err, entries) => {
-   *   // `entries` is an array of Stackdriver Logging entry objects.
+   *   // `entries` is an array of Cloud Logging entry objects.
    *   // See the `data` property to read the data from the entry.
    * });
    *
@@ -567,7 +567,7 @@ class Log implements LogSeverityFunctions {
    * log.getEntriesStream()
    *   .on('error', console.error)
    *   .on('data', entry => {
-   *     // `entry` is a Stackdriver Logging entry object.
+   *     // `entry` is a Cloud Logging entry object.
    *     // See the `data` property to read the data from the entry.
    *   })
    *   .on('end', function() {
@@ -804,7 +804,7 @@ class Log implements LogSeverityFunctions {
    *     one isn't specified.
    */
   /**
-   * Write log entries to Stackdriver Logging.
+   * Write log entries to Cloud Logging.
    *
    * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
    * dictates that the maximum cumulative size of all entries per write,

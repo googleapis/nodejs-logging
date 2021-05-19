@@ -41,7 +41,7 @@ export interface SetSinkMetadata extends LogSink {
 
 /**
  * A sink is an object that lets you to specify a set of log entries to export
- * to a particular destination. Stackdriver Logging lets you export log entries
+ * to a particular destination. Cloud Logging lets you export log entries
  * to destinations including Cloud Storage buckets (for long term log
  * storage), Google BigQuery datasets (for log analysis), Google Pub/Sub (for
  * streaming to other applications).
