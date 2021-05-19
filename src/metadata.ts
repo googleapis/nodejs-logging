@@ -147,13 +147,11 @@ export async function getGKEDescriptor() {
   const resp = await gcpMetadata.instance('attributes/cluster-name');
   const qualifiedZone = await gcpMetadata.instance('zone');
   const location = zoneFromQualifiedZone(qualifiedZone);
-  let namespace;
+  let namespace = "";
   try {
     namespace = await readFile(KUBERNETES_NAMESPACE_ID_PATH, 'utf8');
   } catch (err) {
-    throw new Error(
-      `Error reading ${KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
-    );
+    // Ignore errors (leave namespace as a nil string).
   }
 
   return {
