@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export interface StackdriverHttpRequest {
+export interface CloudLoggingHttpRequest {
   requestMethod?: string;
   requestUrl?: string;
   requestSize?: number;

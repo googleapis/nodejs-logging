@@ -29,7 +29,7 @@ const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as middleware from './middleware';
 import {detectServiceContext} from './metadata';
-import {StackdriverHttpRequest as HttpRequest} from './http-request';
+import {CloudLoggingHttpRequest as HttpRequest} from './http-request';
 
 export {middleware};
 export {HttpRequest};
@@ -220,16 +220,16 @@ export interface ServiceContext {
  *     native Promises.
  */
 /**
- * [Stackdriver Logging](https://cloud.google.com/logging/docs) allows you to
+ * [Cloud Logging](https://cloud.google.com/logging/docs) allows you to
  * store, search, analyze, monitor, and alert on log data and events from Google
  * Cloud Platform and Amazon Web Services (AWS).
  *
  * @class
  *
- * @see [What is Stackdriver Logging?](https://cloud.google.com/logging/docs)
- * @see [Introduction to the Stackdriver Logging API](https://cloud.google.com/logging/docs/api)
- * @see [Logging to Stackdriver from Bunyan](https://www.npmjs.com/package/@google-cloud/logging-bunyan)
- * @see [Logging to Stackdriver from Winston](https://www.npmjs.com/package/@google-cloud/logging-winston)
+ * @see [What is Cloud Logging?](https://cloud.google.com/logging/docs)
+ * @see [Introduction to the Cloud Logging API](https://cloud.google.com/logging/docs/api)
+ * @see [Logging to Google Cloud from Bunyan](https://www.npmjs.com/package/@google-cloud/logging-bunyan)
+ * @see [Logging to Google Cloud from Winston](https://www.npmjs.com/package/@google-cloud/logging-winston)
  *
  * @param {ClientConfig} [options] Configuration options.
  *
@@ -520,7 +520,7 @@ class Logging {
    * const logging = new Logging();
    *
    * logging.getEntries((err, entries) => {
-   *   // `entries` is an array of Stackdriver Logging entry objects.
+   *   // `entries` is an array of Cloud Logging entry objects.
    *   // See the `data` property to read the data from the entry.
    * });
    *
@@ -610,7 +610,7 @@ class Logging {
    * logging.getEntriesStream()
    *   .on('error', console.error)
    *   .on('data', entry => {
-   *     // `entry` is a Stackdriver Logging entry object.
+   *     // `entry` is a Cloud Logging entry object.
    *     // See the `data` property to read the data from the entry.
    *   })
    *   .on('end', function() {
@@ -872,7 +872,7 @@ class Logging {
    * const logging = new Logging();
    *
    * logging.getLogs((err, logs) => {
-   *   // `logs` is an array of Stackdriver Logging log objects.
+   *   // `logs` is an array of Cloud Logging log objects.
    * });
    *
    * //-
@@ -940,7 +940,7 @@ class Logging {
    * logging.getLogsStream()
    *   .on('error', console.error)
    *   .on('data', log => {
-   *     // `log` is a Stackdriver Logging log object.
+   *     // `log` is a Cloud Logging log object.
    *   })
    *   .on('end', function() {
    *     // All logs retrieved.
@@ -1200,7 +1200,7 @@ class Logging {
   }
 
   /**
-   * Get a reference to a Stackdriver Logging log.
+   * Get a reference to a Cloud Logging log.
    *
    * @see [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
    *
@@ -1220,7 +1220,7 @@ class Logging {
   }
 
   /**
-   * Get a reference to a Stackdriver Logging sink.
+   * Get a reference to a Cloud Logging sink.
    *
    * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
    *
@@ -1327,7 +1327,7 @@ class Logging {
 
   /**
    * This method is called when creating a sink with a Bucket destination. The
-   * bucket must first grant proper ACL access to the Stackdriver Logging
+   * bucket must first grant proper ACL access to the Cloud Logging
    * account.
    *
    * The parameters are the same as what {@link Logging#createSink} accepts.
@@ -1343,7 +1343,7 @@ class Logging {
 
   /**
    * This method is called when creating a sink with a Dataset destination. The
-   * dataset must first grant proper ACL access to the Stackdriver Logging
+   * dataset must first grant proper ACL access to the Cloud Logging
    * account.
    *
    * The parameters are the same as what {@link Logging#createSink} accepts.
@@ -1370,7 +1370,7 @@ class Logging {
 
   /**
    * This method is called when creating a sink with a Topic destination. The
-   * topic must first grant proper ACL access to the Stackdriver Logging
+   * topic must first grant proper ACL access to the Cloud Logging
    * account.
    *
    * The parameters are the same as what {@link Logging#createSink} accepts.

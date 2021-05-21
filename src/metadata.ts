@@ -137,7 +137,7 @@ export const KUBERNETES_NAMESPACE_ID_PATH =
  * @return {object}
  */
 export async function getGKEDescriptor() {
-  // Stackdriver Logging Monitored Resource for 'container' requires
+  // Cloud Logging Monitored Resource for 'container' requires
   // cluster_name and namespace_id fields. Note that these *need* to be
   // snake_case. The namespace_id is not easily available from inside the
   // container, but we can get the namespace_name. Logging has been using the
@@ -147,13 +147,11 @@ export async function getGKEDescriptor() {
   const resp = await gcpMetadata.instance('attributes/cluster-name');
   const qualifiedZone = await gcpMetadata.instance('zone');
   const location = zoneFromQualifiedZone(qualifiedZone);
-  let namespace;
+  let namespace = '';
   try {
     namespace = await readFile(KUBERNETES_NAMESPACE_ID_PATH, 'utf8');
   } catch (err) {
-    throw new Error(
-      `Error reading ${KUBERNETES_NAMESPACE_ID_PATH}: ${err.message}`
-    );
+    // Ignore errors (leave namespace as a nil string).
   }
 
   return {
@@ -211,7 +209,7 @@ export async function getDefaultResource(auth: GoogleAuth) {
 
 /**
  * For logged errors, users can provide a service context. This enables errors
- * to be picked up Stackdriver Error Reporting. For more information see
+ * to be picked up Cloud Error Reporting. For more information see
  * [this guide]{@link
  * https://cloud.google.com/error-reporting/docs/formatting-error-messages} and
  * the [official documentation]{@link

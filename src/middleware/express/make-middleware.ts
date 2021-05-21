@@ -19,7 +19,7 @@ import onFinished = require('on-finished');
 import {getOrInjectContext, makeHeaderWrapper} from '../context';
 
 import {makeHttpRequestData, ServerRequest} from './make-http-request';
-import {StackdriverHttpRequest} from '../../http-request';
+import {CloudLoggingHttpRequest} from '../../http-request';
 
 interface AnnotatedRequestType<LoggerType> extends ServerRequest {
   log: LoggerType;
@@ -38,13 +38,13 @@ interface AnnotatedRequestType<LoggerType> extends ServerRequest {
  * @param emitRequestLog Optional. A function that will emit a parent request
  * log. While some environments like GAE and GCF emit parent request logs
  * automatically, other environments do not. When provided this function will be
- * called with a populated `StackdriverHttpRequest` which can be emitted as
+ * called with a populated `CloudLoggingHttpRequest` which can be emitted as
  * request log.
  */
 export function makeMiddleware<LoggerType>(
   projectId: string,
   makeChildLogger: (trace: string) => LoggerType,
-  emitRequestLog?: (httpRequest: StackdriverHttpRequest, trace: string) => void
+  emitRequestLog?: (httpRequest: CloudLoggingHttpRequest, trace: string) => void
 ) {
   return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
