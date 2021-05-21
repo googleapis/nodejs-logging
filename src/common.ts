@@ -129,9 +129,7 @@ export class ObjectToStructConverter {
           values: (value as Array<{}>).map(this.encodeValue_.bind(this)),
         },
       };
-    } else if (value?.toString() === '[object Object]') {
-      // Using `typeof value === 'object'` is discouraged here, because it
-      // return true for dates, nulls, arrays, etc.
+    } else if (Object.prototype.toString.call(value) === '[object Object]') {
       if (this.seenObjects.has(value!)) {
         // Circular reference.
         if (!this.removeCircular) {
