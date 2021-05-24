@@ -4,6 +4,20 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.3.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.3...v9.3.0) (2021-05-24)
+
+
+### Features
+
+* fix resource autodetection for GKE, GAE, and GCE ([#1070](https://www.github.com/googleapis/nodejs-logging/issues/1070)) ([1820f5d](https://www.github.com/googleapis/nodejs-logging/commit/1820f5de0a7f7f9e87cc94219c3fd1cee82b2a64))
+
+
+### Bug Fixes
+
+* debrand Stackdriver & do not throw errors ([#1073](https://www.github.com/googleapis/nodejs-logging/issues/1073)) ([5cd8c17](https://www.github.com/googleapis/nodejs-logging/commit/5cd8c172a671a11a708c140f63ed0f589aa01fa5))
+* Object implementing toString not logged as Object ([#1077](https://www.github.com/googleapis/nodejs-logging/issues/1077)) ([a060957](https://www.github.com/googleapis/nodejs-logging/commit/a0609574cf5012d89863f23c4c94a79fb605c7ae))
+* use require() to load JSON protos ([#1065](https://www.github.com/googleapis/nodejs-logging/issues/1065)) ([9718d9a](https://www.github.com/googleapis/nodejs-logging/commit/9718d9a3f7f672947de674343fc0527f39d4a0aa))
+
 ### [9.2.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.2...v9.2.3) (2021-05-07)
 
 
