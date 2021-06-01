@@ -67,6 +67,8 @@ export interface WriteOptions {
   labels?: {[index: string]: string};
   partialSuccess?: boolean;
   resource?: MonitoredResource;
+  trace?: string;
+  span?: string;
 }
 
 export enum Severity {
@@ -887,26 +889,52 @@ class Log implements LogSeverityFunctions {
     const options = opts ? (opts as WriteOptions) : {};
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
-    if (options.resource) {
-      if (options.resource.labels) snakecaseKeys(options.resource.labels);
-      return writeWithResource(options.resource);
+    // Autodetect GCP resource if not user provided
+    let resource = options.resource;
+    if (resource) {
+      if (resource.labels) snakecaseKeys(resource.labels);
     } else if (this.logging.detectedResource) {
-      return writeWithResource(this.logging.detectedResource);
+      resource = this.logging.detectedResource;
     } else {
-      const resource = await getDefaultResource(
-        this.logging.auth as unknown as GoogleAuth
+      resource = await getDefaultResource(
+        (this.logging.auth as unknown) as GoogleAuth
       );
       this.logging.detectedResource = resource;
-      return writeWithResource(resource);
     }
-    async function writeWithResource(resource: {} | null) {
+    // Autodetect trace & span if not user provided
+    const trace = options.trace;
+    const span = options.span;
+    if (trace || span) {
+      console.log('user provided trace & span');
+    } else if (this.logging.detectedTrace) {
+      console.log("user didn't provide trace");
+    } else {
+      // TODO: get default trace and span.
+      // check middleware, inside of entry for httprequest stuff.
+    }
+    // At this point trace/span are not necessarily formatted
+    return writeWithExtraFields(resource, trace, span);
+
+    //TODO ensure this doesn't overwrite user span/trace on a individual logentry level.
+    async function writeWithExtraFields(
+      resource: {} | null,
+      trace: string | undefined,
+      span: string | undefined
+    ) {
+      // Decorate each log entry with additional fields like trace and span.
+      // Converting it to JSON format the API expects
       let decoratedEntries: EntryJson[];
       try {
-        decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
+        decoratedEntries = self.decorateEntries(
+          arrify(entry) as Entry[],
+          trace,
+          span
+        );
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
       self.truncateEntries(decoratedEntries!);
+      // Construct the input for calling writeLogEntries API endpoint
       const projectId = await self.logging.auth.getProjectId();
       self.formattedName_ = Log.formatName_(projectId, self.name);
       const reqOpts = extend(
@@ -917,7 +945,10 @@ class Log implements LogSeverityFunctions {
         },
         options
       );
+      // TODO(nicole): check if there's a memory leak here.
       delete reqOpts.gaxOptions;
+      console.log('writeLogEntries calling with');
+      console.log(reqOpts);
       return self.logging.loggingService.writeLogEntries(
         reqOpts,
         options.gaxOptions
@@ -936,7 +967,6 @@ class Log implements LogSeverityFunctions {
     }
   }
 
-  // TODO proper signature of `private decorateEntries` (sans underscore suffix)
   /**
    * All entries are passed through here in order to get them serialized.
    *
@@ -946,10 +976,21 @@ class Log implements LogSeverityFunctions {
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  decorateEntries_(entries: Entry[]): EntryJson[] {
+  private decorateEntries(
+    entries: Entry[],
+    trace?: string,
+    span?: string
+  ): EntryJson[] {
     return entries.map(entry => {
       if (!(entry instanceof Entry)) {
         entry = this.entry(entry);
+      }
+      if (trace) {
+        entry.metadata.trace = trace;
+        entry.metadata.traceSampled = true;
+      }
+      if (span) {
+        entry.metadata.spanId = span;
       }
       return entry.toJSON({
         removeCircular: this.removeCircular_,

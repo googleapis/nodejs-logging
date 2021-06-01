@@ -253,6 +253,8 @@ class Logging {
   auth: gax.GoogleAuth;
   options: LoggingOptions;
   projectId: string;
+  detectedTrace?: object;
+  detectedSpan?: object;
   detectedResource?: object;
   configService?: typeof v2.ConfigServiceV2Client;
   loggingService?: typeof v2.LoggingServiceV2Client;

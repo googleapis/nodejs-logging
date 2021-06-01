@@ -385,7 +385,7 @@ describe('Log', () => {
       ENTRY = {} as Entry;
       ENTRIES = [ENTRY] as Entry[];
       OPTIONS = {} as WriteOptions;
-      decorateEntriesStub = sinon.stub(log, 'decorateEntries_').returnsArg(0);
+      decorateEntriesStub = sinon.stub(log, 'decorateEntries').returnsArg(0);
       truncateEntriesStub = sinon.stub(log, 'truncateEntries').returnsArg(0);
     });
     afterEach(() => {
@@ -498,7 +498,9 @@ describe('Log', () => {
       decorateEntriesStub.returns('decorated entries');
 
       await log.write(ENTRIES, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(ENTRIES));
+      assert(
+        decorateEntriesStub.calledOnceWithExactly(ENTRIES, undefined, undefined)
+      );
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -512,7 +514,7 @@ describe('Log', () => {
       const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries));
+      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries, undefined, undefined));
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -686,7 +688,7 @@ describe('Log', () => {
     });
   });
 
-  describe('decorateEntries_', () => {
+  describe('decorateEntries', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let toJSONResponse: any;
     let logEntryStub: sinon.SinonStub;
@@ -706,15 +708,27 @@ describe('Log', () => {
 
     it('should create an Entry object if one is not provided', () => {
       const entry = {};
-      const decoratedEntries = log.decorateEntries_([entry]);
+      const decoratedEntries = log.decorateEntries([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.calledWithExactly(entry));
+    });
+
+    it('should add trace and span to Entry object', () => {
+      const entry = new Entry();
+      const decoratedEntries = log.decorateEntries([entry], 'myTrace', 'mySpan');
+      assert.strictEqual(decoratedEntries[0].trace, 'myTrace');
+      assert.strictEqual(decoratedEntries[0].traceSampled, true);
+      assert.strictEqual(decoratedEntries[0].spanId, 'mySpan');
+    });
+
+    // TODO
+    it('should add traceSampled to Entry object accordingly', () => {
     });
 
     it('should get JSON format from Entry object', () => {
       const entry = new Entry();
       entry.toJSON = () => toJSONResponse as {} as EntryJson;
-      const decoratedEntries = log.decorateEntries_([entry]);
+      const decoratedEntries = log.decorateEntries([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.notCalled);
     });
@@ -726,7 +740,7 @@ describe('Log', () => {
         .stub(entry, 'toJSON')
         .returns({} as EntryJson);
 
-      log.decorateEntries_([entry]);
+      log.decorateEntries([entry]);
       assert(localJSONStub.calledWithExactly({removeCircular: true}));
     });
 
@@ -734,7 +748,7 @@ describe('Log', () => {
       const entry = new Entry();
       sinon.stub(entry, 'toJSON').throws('Error.');
       assert.throws(() => {
-        log.decorateEntries_([entry]);
+        log.decorateEntries([entry]);
       }, 'Error.');
     });
   });
