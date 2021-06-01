@@ -902,7 +902,7 @@ class Log implements LogSeverityFunctions {
     async function writeWithResource(resource: {} | null) {
       let decoratedEntries: EntryJson[];
       try {
-        decoratedEntries = self.decorateEntries_(arrify(entry) as Entry[]);
+        decoratedEntries = self.decorateEntries(arrify(entry) as Entry[]);
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
@@ -946,7 +946,7 @@ class Log implements LogSeverityFunctions {
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  decorateEntries_(entries: Entry[]): EntryJson[] {
+  private decorateEntries(entries: Entry[]): EntryJson[] {
     return entries.map(entry => {
       if (!(entry instanceof Entry)) {
         entry = this.entry(entry);
