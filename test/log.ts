@@ -514,7 +514,13 @@ describe('Log', () => {
       const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries, undefined, undefined));
+      assert(
+        decorateEntriesStub.calledOnceWithExactly(
+          arrifiedEntries,
+          undefined,
+          undefined
+        )
+      );
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -715,15 +721,18 @@ describe('Log', () => {
 
     it('should add trace and span to Entry object', () => {
       const entry = new Entry();
-      const decoratedEntries = log.decorateEntries([entry], 'myTrace', 'mySpan');
+      const decoratedEntries = log.decorateEntries(
+        [entry],
+        'myTrace',
+        'mySpan'
+      );
       assert.strictEqual(decoratedEntries[0].trace, 'myTrace');
       assert.strictEqual(decoratedEntries[0].traceSampled, true);
       assert.strictEqual(decoratedEntries[0].spanId, 'mySpan');
     });
 
     // TODO
-    it('should add traceSampled to Entry object accordingly', () => {
-    });
+    it('should add traceSampled to Entry object accordingly', () => {});
 
     it('should get JSON format from Entry object', () => {
       const entry = new Entry();
