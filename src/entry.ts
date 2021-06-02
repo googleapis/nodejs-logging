@@ -186,27 +186,28 @@ class Entry {
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
-    // Format CloudLoggingHttpRequest, extract trace & span from http headers
-    // if available. Note: logs from middleware are already formatted.
+    // Format CloudLoggingHttpRequest
     if (this.metadata?.httpRequest) {
-      entry = this.extractTraceSpan(entry);
+      entry = this.formatHttpRequest(entry);
     }
     return entry;
   }
 
   /**
-   * If users provided X-Cloud-Trace-Context in header, extract trace & span.
-   * Read more: https://cloud.google.com/trace/docs/setup#force-trace
+   * Formats user provided HTTP requests into structured HTTPRequest format.
+   * If users provided X-Cloud-Trace-Context in header, extract trace & span
+   * Note: logs from middleware are already formatted. Read more:
+   * https://cloud.google.com/trace/docs/setup#force-trace
+   *
    * @param entry
    * @private
    */
-  private extractTraceSpan(entry: EntryJson) {
+  private formatHttpRequest(entry: EntryJson) {
     const req = this.metadata?.httpRequest as http.ClientRequest;
     const context = req.getHeader('X-Cloud-Trace-Context');
     if (context) {
       //TODO do the parsing here
       entry.trace = context.toString();
-      console.log(`entry trace is: ${entry.trace}`);
     }
     return entry;
   }
