@@ -887,6 +887,7 @@ class Log implements LogSeverityFunctions {
     const options = opts ? (opts as WriteOptions) : {};
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
+    // Autodetect monitored resource if not specified by user in WriteOptions.
     if (options.resource) {
       if (options.resource.labels) snakecaseKeys(options.resource.labels);
       return writeWithResource(options.resource);
@@ -899,6 +900,8 @@ class Log implements LogSeverityFunctions {
       this.logging.detectedResource = resource;
       return writeWithResource(resource);
     }
+    // writeWithResource formats entries and writes them to loggingService API.
+    // Service expects props: logName, resource, labels, partialSuccess, dryRun.
     async function writeWithResource(resource: {} | null) {
       let decoratedEntries: EntryJson[];
       try {
@@ -936,9 +939,11 @@ class Log implements LogSeverityFunctions {
     }
   }
 
-  // TODO proper signature of `private decorateEntries` (sans underscore suffix)
   /**
-   * All entries are passed through here in order to get them serialized.
+   * All entries are passed through here in order be formatted and serialized.
+   * User provided Entry values are formatted per LogEntry specifications.
+   * Read more about the LogEntry format:
+   * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
    *
    * @private
    *
