@@ -18,7 +18,7 @@ import * as http from 'http';
 import onFinished = require('on-finished');
 import {getOrInjectContext, makeHeaderWrapper} from '../context';
 
-import {makeHttpRequestData, ServerRequest} from './make-http-request';
+import {makeHttpRequestData, ServerRequest} from '../../make-http-request';
 import {CloudLoggingHttpRequest} from '../../http-request';
 
 interface AnnotatedRequestType<LoggerType> extends ServerRequest {

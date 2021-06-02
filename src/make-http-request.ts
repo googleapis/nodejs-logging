@@ -16,7 +16,7 @@
 
 import * as http from 'http';
 
-import {CloudLoggingHttpRequest} from '../../http-request';
+import {CloudLoggingHttpRequest} from './http-request';
 
 export interface ServerRequest extends http.IncomingMessage {
   originalUrl: string;

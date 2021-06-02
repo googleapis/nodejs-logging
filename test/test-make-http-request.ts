@@ -20,7 +20,7 @@ import {ServerResponse} from 'http';
 import {
   makeHttpRequestData,
   ServerRequest,
-} from '../../../src/middleware/express/make-http-request';
+} from '../src/make-http-request';
 
 describe('middleware/express/make-http-request', () => {
   it('should convert latency to proto Duration', () => {

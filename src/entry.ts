@@ -19,6 +19,7 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
+import * as http from 'http';
 
 const eventId = new EventId();
 
@@ -40,6 +41,7 @@ export interface EntryJson {
   insertId: number;
   jsonPayload?: google.protobuf.IStruct;
   textPayload?: string;
+  trace?: string;
 }
 
 export interface ToJsonOptions {
@@ -143,14 +145,19 @@ class Entry {
   }
 
   /**
-   * Serialize an entry to the format the API expects.
+   * Serialize an entry to the format the API expects. Read more:
+   * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
+   *
+   * Additionally, extract implied values from available JSON when available.
+   * For example, if user provides metadata.httprequest, extract trace & span
+   * from http headers.
    *
    * @param {object} [options] Configuration object.
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    let entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -178,6 +185,28 @@ class Entry {
         seconds: ms ? Math.floor(ms / 1000) : 0,
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
+    }
+    // Format CloudLoggingHttpRequest, extract trace & span from http headers
+    // if available. Note: logs from middleware are already formatted.
+    if (this.metadata?.httpRequest) {
+      entry = this.extractTraceSpan(entry);
+    }
+    return entry;
+  }
+
+  /**
+   * If users provided X-Cloud-Trace-Context in header, extract trace & span.
+   * Read more: https://cloud.google.com/trace/docs/setup#force-trace
+   * @param entry
+   * @private
+   */
+  private extractTraceSpan(entry: EntryJson) {
+    const req = this.metadata?.httpRequest as http.ClientRequest;
+    const context = req.getHeader('X-Cloud-Trace-Context');
+    if (context) {
+      //TODO do the parsing here
+      entry.trace = context.toString();
+      console.log(`entry trace is: ${entry.trace}`);
     }
     return entry;
   }
