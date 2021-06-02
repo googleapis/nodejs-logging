@@ -17,10 +17,7 @@
 import * as assert from 'assert';
 import {describe, it} from 'mocha';
 import {ServerResponse} from 'http';
-import {
-  makeHttpRequestData,
-  ServerRequest,
-} from '../src/make-http-request';
+import {makeHttpRequestData, ServerRequest} from '../src/make-http-request';
 
 describe('middleware/express/make-http-request', () => {
   it('should convert latency to proto Duration', () => {

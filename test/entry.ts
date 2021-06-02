@@ -15,7 +15,6 @@
 import * as assert from 'assert';
 import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as extend from 'extend';
-import * as http from 'http';
 import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
 import * as common from '../src/common';
@@ -259,33 +258,4 @@ describe('Entry', () => {
       }
     });
   });
-
-  // TODO: restart things here.
-  // describe('extractTraceSpan', () => {
-  //   beforeEach(() => {});
-  //
-  //   it.only('should extract a trace and span', () => {
-  //     const fakeRequest = {
-  //       headers: {
-  //         'user-agent': 'Mocha/test-case',
-  //       },
-  //       statusCode: 200,
-  //       originalUrl: '/foo/bar',
-  //       method: 'PUSH',
-  //     };
-  //
-  //     const httpRequest = http.request({
-  //       host: '127.0.0.1',
-  //       port: 8080,
-  //       method: 'GET',
-  //     });
-  //     httpRequest.setHeader(
-  //       'X-Cloud-Trace-Context',
-  //       '105445aa7843bc8bf206b120001000/1;o=1'
-  //     );
-  //     entry.metadata = {httpRequest};
-  //     const json = entry.toJSON();
-  //     console.log(json);
-  //   });
-  // });
 });
