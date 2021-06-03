@@ -20,6 +20,47 @@ import {ServerResponse} from 'http';
 import {makeHttpRequestData, ServerRequest} from '../src/make-http-request';
 
 describe('make-http-request', () => {
+  it('should prioritize originalUrl if provided', () => {
+    const req = {
+      method: 'GET',
+      url: 'http://wrongemail.com/',
+      originalUrl: 'http://google.com/',
+    } as ServerRequest;
+    const cloudReq = makeHttpRequestData(req)
+    assert.strictEqual(cloudReq.protocol, 'http:');
+    assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
+    assert.strictEqual(cloudReq.requestMethod, 'GET');
+  });
+
+  it('should infer as many request values as possible', () => {
+    const req = {
+      method: 'GET',
+      url: 'http://google.com/',
+      headers: {
+        'user-agent': 'some-agent',
+        referer: 'some-referer',
+      },
+    } as ServerRequest;
+    const cloudReq = makeHttpRequestData(req);
+    assert.strictEqual(cloudReq.protocol, 'http:');
+    assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
+    assert.strictEqual(cloudReq.requestMethod, 'GET');
+    assert.strictEqual(cloudReq.userAgent, 'some-agent');
+    assert.strictEqual(cloudReq.referer, 'some-referer');
+    assert.strictEqual(cloudReq.status, undefined);
+  });
+
+  it('should infer as many request values as possible', () => {
+    const req = {
+      method: 'GET',
+      url: 'http://google.com/',
+    } as ServerRequest;
+    const cloudReq = makeHttpRequestData(req)
+    assert.strictEqual(cloudReq.protocol, 'http:');
+    assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
+    assert.strictEqual(cloudReq.requestMethod, 'GET');
+  });
+
   it('should convert latency to proto Duration', () => {
     const fakeRequest = {headers: {}};
     const fakeResponse = {};
@@ -45,8 +86,5 @@ describe('make-http-request', () => {
       1.0000000001
     );
     assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
-  });
-  // TODO
-  it('should infer status and response size', () => {
   });
 });

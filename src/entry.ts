@@ -49,10 +49,6 @@ export interface EntryJson {
   insertId: number;
   jsonPayload?: google.protobuf.IStruct;
   textPayload?: string;
-  httpRequest?: google.protobuf.IStruct;
-  trace?: string;
-  spanId?: string;
-  traceSampled?: boolean;
 }
 
 export interface ToJsonOptions {

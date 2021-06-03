@@ -18,8 +18,7 @@ import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
 import * as common from '../src/common';
-import {makeHttpRequestData, ServerRequest} from '../src/make-http-request';
-import {ServerResponse} from 'http';
+import {ServerRequest} from '../src/make-http-request';
 
 let fakeEventIdNewOverride: Function | null;
 
@@ -261,16 +260,18 @@ describe('Entry', () => {
     });
 
     //  TODO: it should format HTTPRequest from CloudLoggingHttpRequest form
-    it.only('should format HTTPRequest from ServerRequest', () => {
-      entry.metadata.httpRequest = {
-        method: 'GET',
-        statusCode: 200,
-        headers: {},
-      } as ServerRequest;
-      const json = entry.toJSON();
-      assert.deepStrictEqual(json.httpRequest, {
-        method: 'GET',
-      });
+    it('should convert a raw incoming HTTP request', () => {
+      // entry.metadata.httpRequest = {
+      //   method: 'GET',
+      //   url: 'http://google.com/',
+      // } as ServerRequest;
+      // const json = entry.toJSON();
+      //
+      // assert.strictEqual(json.httprequest, {
+      //   protocol: 'http:';
+      //   requestUrl: 'http://google.com/',
+      //   requestMethod: 'GET',
+      // });
     });
     //  TODO: it should lift span & trace from x-cloud-context-trace
   });

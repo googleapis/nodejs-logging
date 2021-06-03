@@ -38,17 +38,34 @@ export function makeHttpRequestData(
   res?: http.ServerResponse,
   latencyMilliseconds?: number
 ): CloudLoggingHttpRequest {
-  let requestUrl, requestMethod, userAgent, status, responseSize, latency;
-  req.url ? requestUrl = req.url : null;
-  req.originalUrl ? requestUrl = req.originalUrl : requestUrl;
-  req.method ? requestMethod = req.method : null;
+  let requestUrl,
+    protocol,
+    requestMethod,
+    userAgent,
+    referer,
+    status,
+    responseSize,
+    latency;
+  if (req.url) {
+    requestUrl = req.url;
+    const url = new URL(requestUrl);
+    protocol = url.protocol;
+  }
+  // OriginalURL overwrites request.url
+  if (req.originalUrl) {
+    requestUrl = req.originalUrl;
+    const url = new URL(requestUrl);
+    protocol = url.protocol;
+  }
+  req.method ? (requestMethod = req.method) : null;
   if (req.headers && req.headers['user-agent']) {
-    userAgent = req.headers['user-agent'];
+    req.headers['user-agent'] ? (userAgent = req.headers['user-agent']) : null;
+    req.headers['referer'] ? (referer = req.headers['referer']) : null;
   }
   if (res) {
-    res.statusCode ? status = res.statusCode : null;
+    res.statusCode ? (status = res.statusCode) : null;
     res.hasHeader('Content-Length')
-      ? responseSize = Number(res.getHeader('Content-Length'))
+      ? (responseSize = Number(res.getHeader('Content-Length')))
       : null;
   }
   if (latencyMilliseconds) {
@@ -58,11 +75,14 @@ export function makeHttpRequestData(
     };
   }
 
+  // Only include the property if its value exists
   return Object.assign(
     {},
     requestUrl ? {requestUrl} : null,
+    protocol ? {protocol} : null,
     requestMethod ? {requestMethod} : null,
     userAgent ? {userAgent} : null,
+    referer ? {referer} : null,
     responseSize ? {responseSize} : null,
     status ? {status} : null,
     latency ? {latency} : null
