@@ -64,9 +64,8 @@ export function makeHttpRequestData(
   }
   if (res) {
     res.statusCode ? (status = res.statusCode) : null;
-    res.hasHeader('Content-Length')
-      ? (responseSize = Number(res.getHeader('Content-Length')))
-      : null;
+    responseSize =
+      (res.getHeader && Number(res.getHeader('Content-Length'))) || 0;
   }
   if (latencyMilliseconds) {
     latency = {

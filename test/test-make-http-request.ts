@@ -50,17 +50,6 @@ describe('make-http-request', () => {
     assert.strictEqual(cloudReq.status, undefined);
   });
 
-  it('should infer as many request values as possible', () => {
-    const req = {
-      method: 'GET',
-      url: 'http://google.com/',
-    } as ServerRequest;
-    const cloudReq = makeHttpRequestData(req)
-    assert.strictEqual(cloudReq.protocol, 'http:');
-    assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
-    assert.strictEqual(cloudReq.requestMethod, 'GET');
-  });
-
   it('should convert latency to proto Duration', () => {
     const fakeRequest = {headers: {}};
     const fakeResponse = {};
