@@ -21,18 +21,16 @@ import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
 import {CloudLoggingHttpRequest} from './http-request';
 import {makeHttpRequestData, ServerRequest} from './make-http-request';
-import * as http from 'http';
 
 const eventId = new EventId();
 
-// Additional field types supported by this client library.
+// Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
 export type HttpRequest =
   | google.logging.type.IHttpRequest
   | CloudLoggingHttpRequest
   | ServerRequest;
-
 export type LogEntry = Omit<
   google.logging.v2.ILogEntry,
   'timestamp' | 'severity' | 'httpRequest'
@@ -45,14 +43,16 @@ export type LogEntry = Omit<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
-// The final Entry format submitted to the LoggingService API.
+// Final Entry format submitted to the LoggingService API.
 export interface EntryJson {
   timestamp: Timestamp;
   insertId: number;
   jsonPayload?: google.protobuf.IStruct;
   textPayload?: string;
   httpRequest?: google.protobuf.IStruct;
-  //  TODO: explicitly declare trace/span here as well
+  trace?: string;
+  spanId?: string;
+  traceSampled?: boolean;
 }
 
 export interface ToJsonOptions {
@@ -164,7 +164,11 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
-    let entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
+    // Format httpRequest (and trace/span)
+    if (this.metadata?.httpRequest) {
+      this.formatHttpRequest();
+    }
+    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -193,9 +197,6 @@ class Entry {
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
-    if (this.metadata?.httpRequest) {
-      entry = this.formatHttpRequest(entry);
-    }
     return entry;
   }
 
@@ -206,26 +207,18 @@ class Entry {
    * Note: logs from middleware are already formatted. Read more:
    * https://cloud.google.com/trace/docs/setup#force-trace
    *
-   * @param entry
    * @private
    */
-  private formatHttpRequest(entry: EntryJson) {
-    console.log(entry);
-    console.log(typeof this.metadata?.httpRequest);
-    // Goal: return a better formatted EntryJson
-    return entry;
-    // req.headers['x-cloud-trace-context'],
-
-    // if (typeof e.httpRequest == 'CloudLoggingHttpRequest') {
-
-    // }
-    // const req = this.metadata?.httpRequest as http.ClientRequest;
-    // const context = req.getHeader('X-Cloud-Trace-Context');
-    // if (context) {
-    //   //TODO do the parsing here
-    //   entry.trace = context.toString();
-    // }
-    // return entry;
+  private formatHttpRequest() {
+    // Detect & handle if user logged a raw incoming HTTP request
+    const rawReq = this.metadata.httpRequest;
+    if (rawReq && ('statusCode' || 'headers' || 'method' || 'url' in rawReq)) {
+      this.metadata.httpRequest = makeHttpRequestData(rawReq as ServerRequest);
+      console.log('structured: ');
+      console.log(this.metadata.httpRequest);
+      // TODO extract more headers here.
+    }
+    console.log('After:');
   }
 
   /**

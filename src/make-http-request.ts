@@ -1,5 +1,5 @@
 /*!
- * Copyright 2018 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,32 +24,47 @@ export interface ServerRequest
   originalUrl: string;
 }
 
+/**
+ * makeHttpRequestData turns raw incoming HTTPRequests into structured
+ * HTTPRequest objects interpreted by Cloud Logging. See more:
+ * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#httprequest
+ *
+ * @param req
+ * @param res
+ * @param latencyMilliseconds
+ */
 export function makeHttpRequestData(
   req: ServerRequest,
   res?: http.ServerResponse,
   latencyMilliseconds?: number
 ): CloudLoggingHttpRequest {
-  // TODO: add `protocol` detection here.
+  let requestUrl, requestMethod, userAgent, status, responseSize, latency;
+  req.url ? requestUrl = req.url : null;
+  req.originalUrl ? requestUrl = req.originalUrl : requestUrl;
+  req.method ? requestMethod = req.method : null;
+  if (req.headers && req.headers['user-agent']) {
+    userAgent = req.headers['user-agent'];
+  }
+  if (res) {
+    res.statusCode ? status = res.statusCode : null;
+    res.hasHeader('Content-Length')
+      ? responseSize = Number(res.getHeader('Content-Length'))
+      : null;
+  }
+  if (latencyMilliseconds) {
+    latency = {
+      seconds: Math.floor(latencyMilliseconds / 1e3),
+      nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
+    };
+  }
+
   return Object.assign(
-    {
-      requestUrl: req.originalUrl,
-      requestMethod: req.method,
-      userAgent: req.headers['user-agent'],
-    },
-    res ? {status: res.statusCode} : null,
-    res
-      ? {
-          responseSize:
-            (res.getHeader && Number(res.getHeader('Content-Length'))) || 0,
-        }
-      : null,
-    latencyMilliseconds
-      ? {
-          latency: {
-            seconds: Math.floor(latencyMilliseconds / 1e3),
-            nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
-          },
-        }
-      : null
+    {},
+    requestUrl ? {requestUrl} : null,
+    requestMethod ? {requestMethod} : null,
+    userAgent ? {userAgent} : null,
+    responseSize ? {responseSize} : null,
+    status ? {status} : null,
+    latency ? {latency} : null
   );
 }
