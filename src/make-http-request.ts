@@ -18,25 +18,38 @@ import * as http from 'http';
 
 import {CloudLoggingHttpRequest} from './http-request';
 
-export interface ServerRequest extends http.IncomingMessage {
+export interface ServerRequest
+  extends CloudLoggingHttpRequest,
+    http.IncomingMessage {
   originalUrl: string;
 }
 
 export function makeHttpRequestData(
   req: ServerRequest,
-  res: http.ServerResponse,
-  latencyMilliseconds: number
+  res?: http.ServerResponse,
+  latencyMilliseconds?: number
 ): CloudLoggingHttpRequest {
-  return {
-    status: res.statusCode,
-    requestUrl: req.originalUrl,
-    requestMethod: req.method,
-    userAgent: req.headers['user-agent'],
-    responseSize:
-      (res.getHeader && Number(res.getHeader('Content-Length'))) || 0,
-    latency: {
-      seconds: Math.floor(latencyMilliseconds / 1e3),
-      nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
+  // TODO: add `protocol` detection here.
+  return Object.assign(
+    {
+      requestUrl: req.originalUrl,
+      requestMethod: req.method,
+      userAgent: req.headers['user-agent'],
     },
-  };
+    res ? {status: res.statusCode} : null,
+    res
+      ? {
+          responseSize:
+            (res.getHeader && Number(res.getHeader('Content-Length'))) || 0,
+        }
+      : null,
+    latencyMilliseconds
+      ? {
+          latency: {
+            seconds: Math.floor(latencyMilliseconds / 1e3),
+            nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
+          },
+        }
+      : null
+  );
 }

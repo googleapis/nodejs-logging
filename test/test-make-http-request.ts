@@ -19,7 +19,7 @@ import {describe, it} from 'mocha';
 import {ServerResponse} from 'http';
 import {makeHttpRequestData, ServerRequest} from '../src/make-http-request';
 
-describe('middleware/express/make-http-request', () => {
+describe('make-http-request', () => {
   it('should convert latency to proto Duration', () => {
     const fakeRequest = {headers: {}};
     const fakeResponse = {};
@@ -45,5 +45,8 @@ describe('middleware/express/make-http-request', () => {
       1.0000000001
     );
     assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
+  });
+  // TODO
+  it('should infer status and response size', () => {
   });
 });

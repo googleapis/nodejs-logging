@@ -27,6 +27,7 @@ import {after, before} from 'mocha';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
+import {CloudLoggingHttpRequest} from '../src/http-request';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
