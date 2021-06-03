@@ -641,6 +641,8 @@ describe('Logging', () => {
       });
     });
 
+    // TODO: maybe add an e2e test here.
+
     it('should set the default resource', done => {
       const {log} = getTestLog();
 

@@ -19,6 +19,8 @@ import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
 import * as common from '../src/common';
 import {ServerRequest} from '../src/make-http-request';
+import * as http from 'http';
+import * as nock from 'nock';
 
 let fakeEventIdNewOverride: Function | null;
 
@@ -38,6 +40,7 @@ const objToStruct = (obj: {}, opts: {}) => {
 const structToObj = (struct: {}) => {
   return (fakeStructToObj || common.structToObj)(struct);
 };
+const FAKE_URL = 'http://google.com';
 
 describe('Entry', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -260,19 +263,94 @@ describe('Entry', () => {
     });
 
     //  TODO: it should format HTTPRequest from CloudLoggingHttpRequest form
-    it('should convert a raw incoming HTTP request', () => {
-      // entry.metadata.httpRequest = {
-      //   method: 'GET',
-      //   url: 'http://google.com/',
-      // } as ServerRequest;
-      // const json = entry.toJSON();
-      //
-      // assert.strictEqual(json.httprequest, {
-      //   protocol: 'http:';
-      //   requestUrl: 'http://google.com/',
-      //   requestMethod: 'GET',
-      // });
+    it('should convert a raw incoming HTTP request', done => {
+      // Mock a fake http.incomingMessage.
+      nock(FAKE_URL)
+        .get('/')
+        .reply(200, {url: FAKE_URL}, {'user-agent': 'some-agent'});
+
+      // Mocks an incoming request object from the response of a fake request
+      http.get(FAKE_URL, req => {
+        entry.metadata.httpRequest = req as ServerRequest;
+        const json = entry.toJSON();
+        assert.strictEqual(json.httpRequest?.userAgent, 'some-agent');
+        done();
+      });
     });
-    //  TODO: it should lift span & trace from x-cloud-context-trace
+    // TODO it should not overwrite user defined trace & span
+    it.only('should extract trace & span from X-Cloud-Trace-Context', done => {
+      const contexts = [
+        {
+          input: '105445aa7843bc8bf206b120001000/000000001;o=1',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '1',
+            traceSampled: true,
+          },
+        },
+        {
+          input: '105445aa7843bc8bf206b120001000/000000001;o=0',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '1',
+            traceSampled: true,
+          },
+        },
+        {
+          // No span
+          input: '105445aa7843bc8bf206b120001000;o=1',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: null,
+            traceSampled: true,
+          },
+        },
+        {
+          // No trace
+          input: '/105445aa7843bc8bf206b120001000;o=1',
+          expected: {
+            trace: null,
+            spanId: '105445aa7843bc8bf206b120001000',
+            traceSampled: true,
+          },
+        },
+        {
+          // No traceSampled
+          input: '105445aa7843bc8bf206b120001000/0',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '0',
+            traceSampled: null,
+          },
+        },
+        {
+          // No input
+          input: '',
+          expected: {
+            trace: null,
+            spanId: null,
+            traceSampled: null,
+          },
+        },
+      ];
+
+      for (const context of contexts) {
+        nock(FAKE_URL)
+          .get('/')
+          .reply(
+            200,
+            {url: FAKE_URL},
+            {'X-Cloud-Trace-Context': context.input}
+          );
+
+        // Mocks an incoming request object from the response of a fake request
+        http.get(FAKE_URL, req => {
+          entry.metadata.httpRequest = req as ServerRequest;
+          const json = entry.toJSON();
+          assert.strictEqual(json.trace, 'some-trace');
+          done();
+        });
+      }
+    });
   });
 });

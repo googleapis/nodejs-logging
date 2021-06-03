@@ -49,6 +49,10 @@ export interface EntryJson {
   insertId: number;
   jsonPayload?: google.protobuf.IStruct;
   textPayload?: string;
+  httpRequest?: google.logging.type.IHttpRequest;
+  trace?: string;
+  spanId?: string;
+  traceSampled?: boolean;
 }
 
 export interface ToJsonOptions {
@@ -199,22 +203,38 @@ class Entry {
   /**
    * Formats user provided HTTP request into a GCP structured HTTPRequest.
    *
-   * Additionally, If users provided X-Cloud-Trace-Context in header, extract trace & span
-   * Note: logs from middleware are already formatted. Read more:
-   * https://cloud.google.com/trace/docs/setup#force-trace
+   * Additionally, If users provided X-Cloud-Trace-Context in header, extract
+   * trace & span a per the format described at https://cloud.google.com/trace/docs/setup#force-trace
+   *    "X-Cloud-Trace-Context: TRACE_ID/SPAN_ID;o=TRACE_TRUE"
+   * for example:
+   *    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b120001000/1;o=1"
+   * Note: logs from middleware are already formatted.
    *
    * @private
    */
   private formatHttpRequest() {
     // Detect & handle if user logged a raw incoming HTTP request
     const rawReq = this.metadata.httpRequest;
-    if (rawReq && ('statusCode' || 'headers' || 'method' || 'url' in rawReq)) {
-      this.metadata.httpRequest = makeHttpRequestData(rawReq as ServerRequest);
-      console.log('structured: ');
-      console.log(this.metadata.httpRequest);
-      // TODO extract more headers here.
+    if (
+      rawReq &&
+      ('statusCode' in rawReq ||
+        'headers' in rawReq ||
+        'method' in rawReq ||
+        'url' in rawReq)
+    ) {
+      this.metadata.httpRequest = makeHttpRequestData(rawReq);
+      // Infer trace & span if not user specified already.
+      const context = (rawReq as ServerRequest).headers[
+        'x-cloud-trace-context'
+      ];
+      if (!this.metadata.trace && context) {
+        console.log(context);
+        this.metadata.trace = 'some-trace';
+      }
+      // TODO
+      // if (!this.metadata.spanId && context) {}
+      // if (!this.metadata.traceSampled && context) {}
     }
-    console.log('After:');
   }
 
   /**
