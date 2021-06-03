@@ -26,7 +26,7 @@ describe('make-http-request', () => {
       url: 'http://wrongemail.com/',
       originalUrl: 'http://google.com/',
     } as ServerRequest;
-    const cloudReq = makeHttpRequestData(req)
+    const cloudReq = makeHttpRequestData(req);
     assert.strictEqual(cloudReq.protocol, 'http:');
     assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
     assert.strictEqual(cloudReq.requestMethod, 'GET');
