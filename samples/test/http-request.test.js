@@ -27,7 +27,7 @@ const projectId = process.env.GCLOUD_PROJECT;
 const cmd = 'node http-request';
 
 describe('http-request', () => {
-  it.only('should log an entry', () => {
+  it('should log an entry', () => {
     const stdout = execSync(`${cmd} ${projectId} ${logName}`);
     assert.include(stdout, 'Logged: Hello, world!');
   });
