@@ -47,6 +47,5 @@ describe('make-http-request', () => {
     assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
   });
   // TODO
-  it('should infer status and response size', () => {
-  });
+  it('should infer status and response size', () => {});
 });
