@@ -329,9 +329,9 @@ describe('Entry', () => {
         },
       ];
       for (const test of tests) {
-        const req = ({
+        const req = {
           method: 'GET',
-        } as unknown) as ServerRequest;
+        } as unknown as ServerRequest;
         // Mock raw http headers with lowercased keys.
         req.headers = {
           'x-cloud-trace-context': test.header,
@@ -348,9 +348,9 @@ describe('Entry', () => {
     });
 
     it('should not overwrite user defined trace and span', () => {
-      const req = ({
+      const req = {
         method: 'GET',
-      } as unknown) as ServerRequest;
+      } as unknown as ServerRequest;
       // Mock raw http headers with lowercased keys.
       req.headers = {
         'x-cloud-trace-context': '105445aa7843bc8bf206b120001000/000000001;o=1',
