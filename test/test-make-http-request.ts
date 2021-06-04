@@ -54,12 +54,12 @@ describe('make-http-request', () => {
   it('should infer as many response values as possible', () => {
     const RESPONSE_SIZE = 2048;
     const req = {} as ServerRequest;
-    const res = ({
+    const res = {
       statusCode: 200,
       headers: {
         'Content-Length': RESPONSE_SIZE,
       },
-    } as unknown) as http.ServerResponse;
+    } as unknown as http.ServerResponse;
     res.getHeader = function (str: string) {
       return 2048;
     };
