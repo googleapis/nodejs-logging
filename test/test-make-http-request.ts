@@ -60,7 +60,7 @@ describe('make-http-request', () => {
         'Content-Length': RESPONSE_SIZE,
       },
     } as unknown as http.ServerResponse;
-    res.getHeader = function (str: string) {
+    res.getHeader = function () {
       return 2048;
     };
     const cloudReq = makeHttpRequestData(req, res);
