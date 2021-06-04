@@ -262,7 +262,6 @@ describe('Entry', () => {
       }
     });
 
-    //  TODO: it should format HTTPRequest from CloudLoggingHttpRequest form
     it('should convert a raw incoming HTTP request', done => {
       // Mock a fake http.incomingMessage.
       nock(FAKE_URL)
@@ -277,80 +276,68 @@ describe('Entry', () => {
         done();
       });
     });
-    // TODO it should not overwrite user defined trace & span
-    it.only('should extract trace & span from X-Cloud-Trace-Context', done => {
-      const contexts = [
-        {
-          input: '105445aa7843bc8bf206b120001000/000000001;o=1',
-          expected: {
-            trace: '105445aa7843bc8bf206b120001000',
-            spanId: '1',
-            traceSampled: true,
-          },
-        },
-        {
-          input: '105445aa7843bc8bf206b120001000/000000001;o=0',
-          expected: {
-            trace: '105445aa7843bc8bf206b120001000',
-            spanId: '1',
-            traceSampled: true,
-          },
-        },
-        {
-          // No span
-          input: '105445aa7843bc8bf206b120001000;o=1',
-          expected: {
-            trace: '105445aa7843bc8bf206b120001000',
-            spanId: null,
-            traceSampled: true,
-          },
-        },
-        {
-          // No trace
-          input: '/105445aa7843bc8bf206b120001000;o=1',
-          expected: {
-            trace: null,
-            spanId: '105445aa7843bc8bf206b120001000',
-            traceSampled: true,
-          },
-        },
-        {
-          // No traceSampled
-          input: '105445aa7843bc8bf206b120001000/0',
-          expected: {
-            trace: '105445aa7843bc8bf206b120001000',
-            spanId: '0',
-            traceSampled: null,
-          },
-        },
-        {
-          // No input
-          input: '',
-          expected: {
-            trace: null,
-            spanId: null,
-            traceSampled: null,
-          },
-        },
-      ];
 
-      for (const context of contexts) {
-        nock(FAKE_URL)
-          .get('/')
-          .reply(
-            200,
-            {url: FAKE_URL},
-            {'X-Cloud-Trace-Context': context.input}
-          );
+    it('should extract trace & span from X-Cloud-Trace-Context', done => {
+      const header = {
+        'X-Cloud-Trace-Context': '105445aa7843bc8bf206b120001000/000000001;o=1',
+      };
+      const expected = {
+        trace: '105445aa7843bc8bf206b120001000',
+        spanId: '000000001',
+        traceSampled: true,
+      };
+      nock(FAKE_URL).get('/').reply(200, {url: FAKE_URL}, header);
+      http.get(FAKE_URL, req => {
+        entry.metadata.httpRequest = req as ServerRequest;
+        const json = entry.toJSON();
+        assert.strictEqual(json.trace, expected.trace);
+        assert.strictEqual(json.spanId, expected.spanId);
+        assert.strictEqual(json.traceSampled, expected.traceSampled);
+        done();
+      });
+    });
 
-        // Mocks an incoming request object from the response of a fake request
-        http.get(FAKE_URL, req => {
-          entry.metadata.httpRequest = req as ServerRequest;
-          const json = entry.toJSON();
-          assert.strictEqual(json.trace, 'some-trace');
-          done();
-        });
-      }
+    it('should extract trace only from X-Cloud-Trace-Context', done => {
+      const header = {
+        'X-Cloud-Trace-Context': '105445aa7843bc8bf206b120001000;o=0',
+      };
+      const expected = {
+        trace: '105445aa7843bc8bf206b120001000',
+        spanId: undefined,
+        traceSampled: false,
+      };
+      nock(FAKE_URL).get('/').reply(200, {url: FAKE_URL}, header);
+      http.get(FAKE_URL, req => {
+        entry.metadata.httpRequest = req as ServerRequest;
+        const json = entry.toJSON();
+        assert.strictEqual(json.trace, expected.trace);
+        assert.strictEqual(json.spanId, expected.spanId);
+        assert.strictEqual(json.traceSampled, expected.traceSampled);
+        done();
+      });
+    });
+
+    it('should not overwrite user defined trace and span', done => {
+      const header = {
+        'X-Cloud-Trace-Context': '105445aa7843bc8bf206b120001000/000000001;o=1',
+      };
+      entry.metadata.spanId = '1';
+      entry.metadata.trace = '1';
+      entry.metadata.traceSampled = false;
+      const expected = {
+        trace: '1',
+        spanId: '1',
+        traceSampled: false,
+      };
+      nock(FAKE_URL).get('/').reply(200, {url: FAKE_URL}, header);
+      http.get(FAKE_URL, req => {
+        entry.metadata.httpRequest = req as ServerRequest;
+        const json = entry.toJSON();
+        assert.strictEqual(json.trace, expected.trace);
+        assert.strictEqual(json.spanId, expected.spanId);
+        assert.strictEqual(json.traceSampled, expected.traceSampled);
+        done();
+      });
     });
   });
 });

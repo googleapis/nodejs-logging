@@ -201,7 +201,7 @@ class Entry {
   }
 
   /**
-   * Formats user provided HTTP request into a GCP structured HTTPRequest.
+   * Formats user a raw HTTP incoming request into a GCP structured HTTPRequest.
    *
    * Additionally, If users provided X-Cloud-Trace-Context in header, extract
    * trace & span a per the format described at https://cloud.google.com/trace/docs/setup#force-trace
@@ -227,13 +227,18 @@ class Entry {
       const context = (rawReq as ServerRequest).headers[
         'x-cloud-trace-context'
       ];
-      if (!this.metadata.trace && context) {
-        console.log(context);
-        this.metadata.trace = 'some-trace';
+      if (context) {
+        const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))/;
+        const match = context.toString().match(regex);
+        if (match) {
+          if (!this.metadata.trace && match.length > 1)
+            this.metadata.trace = match[1];
+          if (!this.metadata.spanId && match.length > 3)
+            this.metadata.spanId = match[3];
+          if (this.metadata.traceSampled === undefined && match.length > 5)
+            this.metadata.traceSampled = match[5] === '1';
+        }
       }
-      // TODO
-      // if (!this.metadata.spanId && context) {}
-      // if (!this.metadata.traceSampled && context) {}
     }
   }
 
