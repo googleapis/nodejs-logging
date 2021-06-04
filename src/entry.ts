@@ -166,8 +166,8 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
-    // Format httpRequest and trace/span if available.
-    if (this.metadata?.httpRequest) this.formatHttpRequest();
+    // Format raw httpRequest and trace/span if available.
+    this.formatHttpRequest();
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
@@ -201,10 +201,9 @@ class Entry {
   }
 
   /**
-   * Formats user a raw HTTP incoming request into a GCP structured HTTPRequest.
-   *
-   * Additionally, If users provided X-Cloud-Trace-Context in header, extract
-   * trace & span a per the format described at https://cloud.google.com/trace/docs/setup#force-trace
+   * Formats raw incoming request objects into a GCP structured HTTPRequest.
+   * Formats trace & span if users provided X-Cloud-Trace-Context in header.
+   * See more: https://cloud.google.com/trace/docs/setup#force-trace
    *    "X-Cloud-Trace-Context: TRACE_ID/SPAN_ID;o=TRACE_TRUE"
    * for example:
    *    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b120001000/1;o=1"
@@ -213,18 +212,18 @@ class Entry {
    * @private
    */
   private formatHttpRequest() {
-    // Detect & handle if user logged a raw incoming HTTP request
     const rawReq = this.metadata.httpRequest;
-    if (
-      rawReq &&
-      ('statusCode' in rawReq ||
+    if (rawReq) {
+      // Handle raw http requests.
+      if (
+        'statusCode' in rawReq ||
         'headers' in rawReq ||
         'method' in rawReq ||
-        'url' in rawReq)
-    ) {
-      this.metadata.httpRequest = makeHttpRequestData(rawReq);
+        'url' in rawReq
+      )
+        this.metadata.httpRequest = makeHttpRequestData(rawReq);
       // Infer trace & span if not user specified already.
-      if (rawReq.headers && rawReq.headers['x-cloud-trace-context']) {
+      if ('headers' in rawReq && rawReq.headers['x-cloud-trace-context']) {
         const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
         const match = rawReq.headers['x-cloud-trace-context']
           .toString()
