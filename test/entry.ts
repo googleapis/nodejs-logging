@@ -18,9 +18,7 @@ import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
 import * as common from '../src/common';
-import {ServerRequest} from '../src/make-http-request';
 import * as http from 'http';
-import * as nock from 'nock';
 
 let fakeEventIdNewOverride: Function | null;
 
@@ -40,7 +38,6 @@ const objToStruct = (obj: {}, opts: {}) => {
 const structToObj = (struct: {}) => {
   return (fakeStructToObj || common.structToObj)(struct);
 };
-const FAKE_URL = 'http://google.com';
 
 describe('Entry', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -265,7 +262,7 @@ describe('Entry', () => {
     it('should convert a raw incoming HTTP request', () => {
       const req = {
         method: 'GET',
-      } as ServerRequest;
+      } as http.IncomingMessage;
       req.headers = {};
       entry.metadata.httpRequest = req;
       const json = entry.toJSON();
@@ -331,7 +328,7 @@ describe('Entry', () => {
       for (const test of tests) {
         const req = {
           method: 'GET',
-        } as unknown as ServerRequest;
+        } as unknown as http.IncomingMessage;
         // Mock raw http headers with lowercased keys.
         req.headers = {
           'x-cloud-trace-context': test.header,
@@ -350,7 +347,7 @@ describe('Entry', () => {
     it('should not overwrite user defined trace and span', () => {
       const req = {
         method: 'GET',
-      } as unknown as ServerRequest;
+      } as unknown as http.IncomingMessage;
       // Mock raw http headers with lowercased keys.
       req.headers = {
         'x-cloud-trace-context': '105445aa7843bc8bf206b120001000/000000001;o=1',

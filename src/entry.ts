@@ -20,17 +20,19 @@ import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
 import {CloudLoggingHttpRequest} from './http-request';
-import {makeHttpRequestData, ServerRequest} from './make-http-request';
+import {makeHttpRequestData} from './make-http-request';
+import * as http from 'http';
 
 const eventId = new EventId();
 
 // Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
+export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
 export type HttpRequest =
   | google.logging.type.IHttpRequest
   | CloudLoggingHttpRequest
-  | ServerRequest;
+  | RawHttpRequest;
 export type LogEntry = Omit<
   google.logging.v2.ILogEntry,
   'timestamp' | 'severity' | 'httpRequest'
@@ -222,12 +224,11 @@ class Entry {
     ) {
       this.metadata.httpRequest = makeHttpRequestData(rawReq);
       // Infer trace & span if not user specified already.
-      const context = (rawReq as ServerRequest).headers[
-        'x-cloud-trace-context'
-      ];
-      if (context) {
+      if (rawReq.headers && rawReq.headers['x-cloud-trace-context']) {
         const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
-        const match = context.toString().match(regex);
+        const match = rawReq.headers['x-cloud-trace-context']
+          .toString()
+          .match(regex);
         if (match) {
           if (!this.metadata.trace && match[1]) this.metadata.trace = match[1];
           if (!this.metadata.spanId && match[3])

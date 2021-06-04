@@ -27,6 +27,8 @@ import {after, before} from 'mocha';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
+import {ServerRequest} from '../src/make-http-request';
+import * as http from 'http';
 import {CloudLoggingHttpRequest} from '../src/http-request';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
@@ -617,7 +619,7 @@ describe('Logging', () => {
       });
     });
 
-    it('should write a httpRequest log with no message', done => {
+    it('should write a structured httpRequest log with no message', done => {
       const {log} = getTestLog();
       const metadata = {
         httpRequest: {status: 200},
@@ -626,11 +628,9 @@ describe('Logging', () => {
 
       log.write(logEntry, err => {
         assert.ifError(err);
-
         getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
           const entry = entries![0];
-
           assert.strictEqual(
             entry.metadata.httpRequest?.status,
             metadata.httpRequest.status
@@ -641,7 +641,27 @@ describe('Logging', () => {
       });
     });
 
-    // TODO: maybe add an e2e test here.
+    it('should write a raw http request log with message', done => {
+      const {log} = getTestLog();
+      // Use the response of a http request as the incomingmessage request obj.
+      http.get('http://www.google.com', res => {
+        const URL = 'http://www.google.com';
+        res.url = URL;
+        const metadata = {httpRequest: res};
+        const logEntry = log.entry(metadata, 'some log message');
+        log.write(logEntry, err => {
+          assert.ifError(err);
+          getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+            assert.ifError(err);
+            const entry = entries![0];
+            assert.strictEqual(entry.data, 'some log message');
+            assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
+            assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
+            done();
+          });
+        });
+      });
+    });
 
     it('should set the default resource', done => {
       const {log} = getTestLog();

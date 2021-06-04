@@ -41,7 +41,7 @@ describe('make-http-request', () => {
         'user-agent': 'some-agent',
         referer: 'some-referer',
       },
-    } as ServerRequest;
+    } as http.IncomingMessage;
     const cloudReq = makeHttpRequestData(req);
     assert.strictEqual(cloudReq.protocol, 'http:');
     assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');

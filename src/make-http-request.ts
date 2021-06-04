@@ -18,9 +18,10 @@ import * as http from 'http';
 
 import {CloudLoggingHttpRequest} from './http-request';
 
-export interface ServerRequest
-  extends CloudLoggingHttpRequest,
-    http.IncomingMessage {
+/**
+ * Abstraction of http.IncomingMessage used by middleware implementation.
+ */
+export interface ServerRequest extends http.IncomingMessage {
   originalUrl: string;
 }
 
@@ -34,7 +35,7 @@ export interface ServerRequest
  * @param latencyMilliseconds
  */
 export function makeHttpRequestData(
-  req: ServerRequest,
+  req: ServerRequest | http.IncomingMessage,
   res?: http.ServerResponse,
   latencyMilliseconds?: number
 ): CloudLoggingHttpRequest {
@@ -52,8 +53,8 @@ export function makeHttpRequestData(
     const url = new URL(requestUrl);
     protocol = url.protocol;
   }
-  // OriginalURL overwrites request.url
-  if (req.originalUrl) {
+  // OriginalURL overwrites inferred url
+  if ('originalUrl' in req && req.originalUrl) {
     requestUrl = req.originalUrl;
     const url = new URL(requestUrl);
     protocol = url.protocol;
