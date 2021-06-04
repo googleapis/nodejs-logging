@@ -262,64 +262,98 @@ describe('Entry', () => {
       }
     });
 
-    it('should convert a raw incoming HTTP request', done => {
-      // Mock a fake http.incomingMessage.
-      nock(FAKE_URL)
-        .get('/')
-        .reply(200, {url: FAKE_URL}, {'user-agent': 'some-agent'});
-
-      // Mocks an incoming request object from the response of a fake request
-      http.get(FAKE_URL, req => {
-        entry.metadata.httpRequest = req as ServerRequest;
-        const json = entry.toJSON();
-        assert.strictEqual(json.httpRequest?.userAgent, 'some-agent');
-        done();
-      });
+    it('should convert a raw incoming HTTP request', () => {
+      const req = {
+        method: 'GET',
+      } as ServerRequest;
+      req.headers = {};
+      entry.metadata.httpRequest = req;
+      const json = entry.toJSON();
+      assert.strictEqual(json.httpRequest?.requestMethod, 'GET');
     });
 
-    it('should extract trace & span from X-Cloud-Trace-Context', done => {
-      const header = {
-        'X-Cloud-Trace-Context': '105445aa7843bc8bf206b120001000/000000001;o=1',
-      };
-      const expected = {
-        trace: '105445aa7843bc8bf206b120001000',
-        spanId: '000000001',
-        traceSampled: true,
-      };
-      nock(FAKE_URL).get('/').reply(200, {url: FAKE_URL}, header);
-      http.get(FAKE_URL, req => {
-        entry.metadata.httpRequest = req as ServerRequest;
+    it('should extract trace & span from X-Cloud-Trace-Context', () => {
+      const tests = [
+        {
+          header: '105445aa7843bc8bf206b120001000/000000001;o=1',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '000000001',
+            traceSampled: true,
+          },
+        },
+        // TraceSampled is false
+        {
+          header: '105445aa7843bc8bf206b120001000/000000001;o=0',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '000000001',
+            traceSampled: false,
+          },
+        },
+        {
+          // No span
+          header: '105445aa7843bc8bf206b120001000;o=1',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: undefined,
+            traceSampled: true,
+          },
+        },
+        {
+          // No trace
+          header: '/105445aa7843bc8bf206b120001000;o=0',
+          expected: {
+            trace: undefined,
+            spanId: '105445aa7843bc8bf206b120001000',
+            traceSampled: false,
+          },
+        },
+        {
+          // No traceSampled
+          header: '105445aa7843bc8bf206b120001000/0',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '0',
+            traceSampled: undefined,
+          },
+        },
+        {
+          // No input
+          header: '',
+          expected: {
+            trace: undefined,
+            spanId: undefined,
+            traceSampled: undefined,
+          },
+        },
+      ];
+      for (const test of tests) {
+        const req = ({
+          method: 'GET',
+        } as unknown) as ServerRequest;
+        // Mock raw http headers with lowercased keys.
+        req.headers = {
+          'x-cloud-trace-context': test.header,
+        };
+        delete entry.metadata.trace;
+        delete entry.metadata.spanId;
+        delete entry.metadata.traceSampled;
+        entry.metadata.httpRequest = req;
         const json = entry.toJSON();
-        assert.strictEqual(json.trace, expected.trace);
-        assert.strictEqual(json.spanId, expected.spanId);
-        assert.strictEqual(json.traceSampled, expected.traceSampled);
-        done();
-      });
+        assert.strictEqual(json.trace, test.expected.trace);
+        assert.strictEqual(json.spanId, test.expected.spanId);
+        assert.strictEqual(json.traceSampled, test.expected.traceSampled);
+      }
     });
 
-    it('should extract trace only from X-Cloud-Trace-Context', done => {
-      const header = {
-        'X-Cloud-Trace-Context': '105445aa7843bc8bf206b120001000;o=0',
-      };
-      const expected = {
-        trace: '105445aa7843bc8bf206b120001000',
-        spanId: undefined,
-        traceSampled: false,
-      };
-      nock(FAKE_URL).get('/').reply(200, {url: FAKE_URL}, header);
-      http.get(FAKE_URL, req => {
-        entry.metadata.httpRequest = req as ServerRequest;
-        const json = entry.toJSON();
-        assert.strictEqual(json.trace, expected.trace);
-        assert.strictEqual(json.spanId, expected.spanId);
-        assert.strictEqual(json.traceSampled, expected.traceSampled);
-        done();
-      });
-    });
-
-    it('should not overwrite user defined trace and span', done => {
-      const header = {
-        'X-Cloud-Trace-Context': '105445aa7843bc8bf206b120001000/000000001;o=1',
+    it('should not overwrite user defined trace and span', () => {
+      const req = ({
+        method: 'GET',
+      } as unknown) as ServerRequest;
+      // Mock raw http headers with lowercased keys.
+      req.headers = {
+        'x-cloud-trace-context': '105445aa7843bc8bf206b120001000/000000001;o=1',
       };
       entry.metadata.spanId = '1';
       entry.metadata.trace = '1';
@@ -329,15 +363,11 @@ describe('Entry', () => {
         spanId: '1',
         traceSampled: false,
       };
-      nock(FAKE_URL).get('/').reply(200, {url: FAKE_URL}, header);
-      http.get(FAKE_URL, req => {
-        entry.metadata.httpRequest = req as ServerRequest;
-        const json = entry.toJSON();
-        assert.strictEqual(json.trace, expected.trace);
-        assert.strictEqual(json.spanId, expected.spanId);
-        assert.strictEqual(json.traceSampled, expected.traceSampled);
-        done();
-      });
+      entry.metadata.httpRequest = req;
+      const json = entry.toJSON();
+      assert.strictEqual(json.trace, expected.trace);
+      assert.strictEqual(json.spanId, expected.spanId);
+      assert.strictEqual(json.traceSampled, expected.traceSampled);
     });
   });
 });

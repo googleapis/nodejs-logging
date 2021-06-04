@@ -164,10 +164,8 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
-    // Format httpRequest (and trace/span)
-    if (this.metadata?.httpRequest) {
-      this.formatHttpRequest();
-    }
+    // Format httpRequest and trace/span if available.
+    if (this.metadata?.httpRequest) this.formatHttpRequest();
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
@@ -228,14 +226,13 @@ class Entry {
         'x-cloud-trace-context'
       ];
       if (context) {
-        const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))/;
+        const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
         const match = context.toString().match(regex);
         if (match) {
-          if (!this.metadata.trace && match.length > 1)
-            this.metadata.trace = match[1];
-          if (!this.metadata.spanId && match.length > 3)
+          if (!this.metadata.trace && match[1]) this.metadata.trace = match[1];
+          if (!this.metadata.spanId && match[3])
             this.metadata.spanId = match[3];
-          if (this.metadata.traceSampled === undefined && match.length > 5)
+          if (this.metadata.traceSampled === undefined && match[5])
             this.metadata.traceSampled = match[5] === '1';
         }
       }

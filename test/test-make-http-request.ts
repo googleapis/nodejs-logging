@@ -64,7 +64,6 @@ describe('make-http-request', () => {
       return 2048;
     };
     const cloudReq = makeHttpRequestData(req, res);
-    console.log(cloudReq);
     assert.strictEqual(cloudReq.status, 200);
     assert.strictEqual(cloudReq.responseSize, RESPONSE_SIZE);
   });
