@@ -18,6 +18,7 @@ import * as assert from 'assert';
 import {describe, it} from 'mocha';
 import {ServerResponse} from 'http';
 import {makeHttpRequestData, ServerRequest} from '../src/make-http-request';
+import * as http from 'http';
 
 describe('make-http-request', () => {
   it('should prioritize originalUrl if provided', () => {
@@ -50,23 +51,22 @@ describe('make-http-request', () => {
     assert.strictEqual(cloudReq.status, undefined);
   });
 
-  //TODO : do this
   it('should infer as many response values as possible', () => {
-    const req = {
-      method: 'GET',
-      url: 'http://google.com/',
+    const RESPONSE_SIZE = 2048;
+    const req = {} as ServerRequest;
+    const res = ({
+      statusCode: 200,
       headers: {
-        'user-agent': 'some-agent',
-        referer: 'some-referer',
+        'Content-Length': RESPONSE_SIZE,
       },
-    } as ServerRequest;
-    const cloudReq = makeHttpRequestData(req);
-    assert.strictEqual(cloudReq.protocol, 'http:');
-    assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
-    assert.strictEqual(cloudReq.requestMethod, 'GET');
-    assert.strictEqual(cloudReq.userAgent, 'some-agent');
-    assert.strictEqual(cloudReq.referer, 'some-referer');
-    assert.strictEqual(cloudReq.status, undefined);
+    } as unknown) as http.ServerResponse;
+    res.getHeader = function (str: string) {
+      return 2048;
+    };
+    const cloudReq = makeHttpRequestData(req, res);
+    console.log(cloudReq);
+    assert.strictEqual(cloudReq.status, 200);
+    assert.strictEqual(cloudReq.responseSize, RESPONSE_SIZE);
   });
 
   it('should convert latency to proto Duration', () => {

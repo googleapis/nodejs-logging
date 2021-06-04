@@ -46,6 +46,7 @@ export function makeHttpRequestData(
     status,
     responseSize,
     latency;
+  // Format request properties
   if (req.url) {
     requestUrl = req.url;
     const url = new URL(requestUrl);
@@ -62,18 +63,19 @@ export function makeHttpRequestData(
     req.headers['user-agent'] ? (userAgent = req.headers['user-agent']) : null;
     req.headers['referer'] ? (referer = req.headers['referer']) : null;
   }
+  // Format response properties
   if (res) {
     res.statusCode ? (status = res.statusCode) : null;
     responseSize =
       (res.getHeader && Number(res.getHeader('Content-Length'))) || 0;
   }
+  // Format latency
   if (latencyMilliseconds) {
     latency = {
       seconds: Math.floor(latencyMilliseconds / 1e3),
       nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
     };
   }
-
   // Only include the property if its value exists
   return Object.assign(
     {},
