@@ -19,27 +19,42 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
+import {CloudLoggingHttpRequest} from './http-request';
+import {makeHttpRequestData} from './make-http-request';
+import * as http from 'http';
 
 const eventId = new EventId();
 
+// Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
+export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
+export type HttpRequest =
+  | google.logging.type.IHttpRequest
+  | CloudLoggingHttpRequest
+  | RawHttpRequest;
 export type LogEntry = Omit<
   google.logging.v2.ILogEntry,
-  'timestamp' | 'severity'
+  'timestamp' | 'severity' | 'httpRequest'
 > & {
   timestamp?: Timestamp | null;
   severity?: LogSeverity | null;
+  httpRequest?: HttpRequest | null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
+// Final Entry format submitted to the LoggingService API.
 export interface EntryJson {
   timestamp: Timestamp;
   insertId: number;
   jsonPayload?: google.protobuf.IStruct;
   textPayload?: string;
+  httpRequest?: google.logging.type.IHttpRequest;
+  trace?: string;
+  spanId?: string;
+  traceSampled?: boolean;
 }
 
 export interface ToJsonOptions {
@@ -143,13 +158,16 @@ class Entry {
   }
 
   /**
-   * Serialize an entry to the format the API expects.
+   * Serialize an entry to the format the API expects. Read more:
+   * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
    *
    * @param {object} [options] Configuration object.
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
+    // Format raw httpRequest and trace/span if available.
+    this.formatHttpRequest();
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
@@ -180,6 +198,45 @@ class Entry {
       };
     }
     return entry;
+  }
+
+  /**
+   * Formats raw incoming request objects into a GCP structured HTTPRequest.
+   * Formats trace & span if users provided X-Cloud-Trace-Context in header.
+   * See more: https://cloud.google.com/trace/docs/setup#force-trace
+   *    "X-Cloud-Trace-Context: TRACE_ID/SPAN_ID;o=TRACE_TRUE"
+   * for example:
+   *    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b120001000/1;o=1"
+   * Note: logs from middleware are already formatted.
+   *
+   * @private
+   */
+  private formatHttpRequest() {
+    const rawReq = this.metadata.httpRequest;
+    if (rawReq) {
+      // Handle raw http requests.
+      if (
+        'statusCode' in rawReq ||
+        'headers' in rawReq ||
+        'method' in rawReq ||
+        'url' in rawReq
+      )
+        this.metadata.httpRequest = makeHttpRequestData(rawReq);
+      // Infer trace & span if not user specified already.
+      if ('headers' in rawReq && rawReq.headers['x-cloud-trace-context']) {
+        const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
+        const match = rawReq.headers['x-cloud-trace-context']
+          .toString()
+          .match(regex);
+        if (match) {
+          if (!this.metadata.trace && match[1]) this.metadata.trace = match[1];
+          if (!this.metadata.spanId && match[3])
+            this.metadata.spanId = match[3];
+          if (this.metadata.traceSampled === undefined && match[5])
+            this.metadata.traceSampled = match[5] === '1';
+        }
+      }
+    }
   }
 
   /**

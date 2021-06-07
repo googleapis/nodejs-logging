@@ -385,7 +385,7 @@ describe('Log', () => {
       ENTRY = {} as Entry;
       ENTRIES = [ENTRY] as Entry[];
       OPTIONS = {} as WriteOptions;
-      decorateEntriesStub = sinon.stub(log, 'decorateEntries_').returnsArg(0);
+      decorateEntriesStub = sinon.stub(log, 'decorateEntries').returnsArg(0);
       truncateEntriesStub = sinon.stub(log, 'truncateEntries').returnsArg(0);
     });
     afterEach(() => {
@@ -686,7 +686,7 @@ describe('Log', () => {
     });
   });
 
-  describe('decorateEntries_', () => {
+  describe('decorateEntries', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let toJSONResponse: any;
     let logEntryStub: sinon.SinonStub;
@@ -706,7 +706,7 @@ describe('Log', () => {
 
     it('should create an Entry object if one is not provided', () => {
       const entry = {};
-      const decoratedEntries = log.decorateEntries_([entry]);
+      const decoratedEntries = log.decorateEntries([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.calledWithExactly(entry));
     });
@@ -714,7 +714,7 @@ describe('Log', () => {
     it('should get JSON format from Entry object', () => {
       const entry = new Entry();
       entry.toJSON = () => toJSONResponse as {} as EntryJson;
-      const decoratedEntries = log.decorateEntries_([entry]);
+      const decoratedEntries = log.decorateEntries([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.notCalled);
     });
@@ -726,7 +726,7 @@ describe('Log', () => {
         .stub(entry, 'toJSON')
         .returns({} as EntryJson);
 
-      log.decorateEntries_([entry]);
+      log.decorateEntries([entry]);
       assert(localJSONStub.calledWithExactly({removeCircular: true}));
     });
 
@@ -734,7 +734,7 @@ describe('Log', () => {
       const entry = new Entry();
       sinon.stub(entry, 'toJSON').throws('Error.');
       assert.throws(() => {
-        log.decorateEntries_([entry]);
+        log.decorateEntries([entry]);
       }, 'Error.');
     });
   });
