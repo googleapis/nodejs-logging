@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.3.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.3.0...v9.3.1) (2021-05-25)
+
+
+### Bug Fixes
+
+* GoogleAdsError missing using generator version after 1.3.0 ([#1081](https://www.github.com/googleapis/nodejs-logging/issues/1081)) ([bf0113d](https://www.github.com/googleapis/nodejs-logging/commit/bf0113d24a5d4e2aacb704e47207d81f98ad0d86))
+
 ## [9.3.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.2.3...v9.3.0) (2021-05-24)
 
 
