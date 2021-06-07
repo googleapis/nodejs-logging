@@ -214,7 +214,7 @@ class Entry {
   private formatHttpRequest() {
     const rawReq = this.metadata.httpRequest;
     if (rawReq) {
-      // Handle raw http requests, i.e. user is logging manually and not using middleware.
+      // Handle raw http request.
       if (
         'statusCode' in rawReq ||
         'headers' in rawReq ||

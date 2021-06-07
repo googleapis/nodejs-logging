@@ -50,7 +50,6 @@ export function makeMiddleware<LoggerType>(
     span?: string
   ) => void
 ) {
-  // TODO(nicolezhu): add tests covering additional span option
   return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
