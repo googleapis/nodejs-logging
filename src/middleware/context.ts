@@ -22,7 +22,7 @@
 
   Scenarios:
   - Context is available from Opencensus
-  - TODO: Context is available from X-Cloud-Trace-Context header
+  - TODO: Infer context from X-Cloud-Trace-Context header
  */
 
 import * as context from '@opencensus/propagation-stackdriver';

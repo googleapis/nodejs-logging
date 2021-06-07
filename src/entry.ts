@@ -214,7 +214,7 @@ class Entry {
   private formatHttpRequest() {
     const rawReq = this.metadata.httpRequest;
     if (rawReq) {
-      // Handle raw http requests.
+      // Handle raw http requests, i.e. user is logging manually and not using middleware.
       if (
         'statusCode' in rawReq ||
         'headers' in rawReq ||
@@ -222,7 +222,8 @@ class Entry {
         'url' in rawReq
       )
         this.metadata.httpRequest = makeHttpRequestData(rawReq);
-      // Infer trace & span if not user specified already.
+      // Infer trace & span if not user specified already
+      // TODO(nicolezhu): also infer from trace header if OpenCensus is configured
       if ('headers' in rawReq && rawReq.headers['x-cloud-trace-context']) {
         const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
         const match = rawReq.headers['x-cloud-trace-context']

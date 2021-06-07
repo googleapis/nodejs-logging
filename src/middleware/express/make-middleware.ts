@@ -61,14 +61,16 @@ export function makeMiddleware<LoggerType>(
     const trace = `projects/${projectId}/traces/${spanContext.traceId}`;
     const span = spanContext.spanId;
 
-    // Install a child logger on the request object.
+    // Install a child logger on the request object, with detected trace and
+    // span.
     (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
       trace,
       span
     );
 
     if (emitRequestLog) {
-      // Emit a 'Request Log' on the parent logger.
+      // Emit a 'Request Log' on the parent logger, with detected trace and
+      // span.
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = makeHttpRequestData(req, res, latencyMs);
