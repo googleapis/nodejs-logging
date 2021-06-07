@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+/*
+  When users are using middleware and this client library has access to request
+  headers, we should automatically extract as much information from the headers
+  as possible. This is in addition to when the user explicitly logs an
+  HTTPRequest logEntry object.
+
+  Scenarios:
+  - Context is available from Opencensus
+  - TODO: Context is available from X-Cloud-Trace-Context header
+ */
+
 import * as context from '@opencensus/propagation-stackdriver';
 import * as http from 'http';
 

@@ -43,9 +43,14 @@ interface AnnotatedRequestType<LoggerType> extends ServerRequest {
  */
 export function makeMiddleware<LoggerType>(
   projectId: string,
-  makeChildLogger: (trace: string) => LoggerType,
-  emitRequestLog?: (httpRequest: CloudLoggingHttpRequest, trace: string) => void
+  makeChildLogger: (trace: string, span?: string) => LoggerType,
+  emitRequestLog?: (
+    httpRequest: CloudLoggingHttpRequest,
+    trace: string,
+    span?: string
+  ) => void
 ) {
+  // TODO(nicolezhu): add tests covering additional span option
   return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
@@ -54,16 +59,20 @@ export function makeMiddleware<LoggerType>(
 
     const spanContext = getOrInjectContext(wrapper);
     const trace = `projects/${projectId}/traces/${spanContext.traceId}`;
+    const span = spanContext.spanId;
 
     // Install a child logger on the request object.
-    (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(trace);
+    (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
+      trace,
+      span
+    );
 
     if (emitRequestLog) {
       // Emit a 'Request Log' on the parent logger.
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = makeHttpRequestData(req, res, latencyMs);
-        emitRequestLog(httpRequest, trace);
+        emitRequestLog(httpRequest, trace, span);
       });
     }
 
