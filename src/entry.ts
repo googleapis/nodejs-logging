@@ -19,8 +19,12 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
-import {CloudLoggingHttpRequest} from './http-request';
-import {makeHttpRequestData} from './make-http-request';
+import {
+  CloudLoggingHttpRequest,
+  makeHttpRequestData,
+  getTraceContext,
+  CloudTraceContext,
+} from './http-request';
 import * as http from 'http';
 
 const eventId = new EventId();
@@ -166,7 +170,6 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}) {
-    // Format raw httpRequest and trace/span if available.
     this.formatHttpRequest();
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
@@ -222,19 +225,17 @@ class Entry {
         'url' in rawReq
       )
         this.metadata.httpRequest = makeHttpRequestData(rawReq);
-      // Infer trace & span if not user specified already
-      // TODO(nicolezhu): also infer from trace header if OpenCensus is configured
-      if ('headers' in rawReq && rawReq.headers['x-cloud-trace-context']) {
-        const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
-        const match = rawReq.headers['x-cloud-trace-context']
-          .toString()
-          .match(regex);
-        if (match) {
-          if (!this.metadata.trace && match[1]) this.metadata.trace = match[1];
-          if (!this.metadata.spanId && match[3])
-            this.metadata.spanId = match[3];
-          if (this.metadata.traceSampled === undefined && match[5])
-            this.metadata.traceSampled = match[5] === '1';
+
+      // Populate trace & span from HTTP headers, if not user specified already.
+      if ('headers' in rawReq) {
+        const traceContext = getTraceContext(rawReq, 'lala', false);
+        if (traceContext) {
+          if (!this.metadata.trace && traceContext.trace)
+            this.metadata.trace = traceContext.trace;
+          if (!this.metadata.spanId && traceContext.spanId)
+            this.metadata.spanId = traceContext.spanId;
+          if (this.metadata.traceSampled === undefined)
+            this.metadata.traceSampled = traceContext.traceSampled;
         }
       }
     }

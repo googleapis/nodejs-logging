@@ -15,12 +15,17 @@
  */
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import {describe, it, beforeEach} from 'mocha';
 import {ServerResponse} from 'http';
-import {makeHttpRequestData, ServerRequest} from '../src/make-http-request';
+import {
+  makeHttpRequestData,
+  ServerRequest,
+  makeHeaderWrapper,
+} from '../src/http-request';
 import * as http from 'http';
+import * as proxyquire from 'proxyquire';
 
-describe('make-http-request', () => {
+describe('http-request', () => {
   it('should prioritize originalUrl if provided', () => {
     const req = {
       method: 'GET',
@@ -93,5 +98,72 @@ describe('make-http-request', () => {
       1.0000000001
     );
     assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
+  });
+});
+
+describe('context', () => {
+  const FAKE_CONTEXT = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    extract: (headerWrapper: {}) => {},
+    generate: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    inject: (headerWrapper: {}, spanContext: {}) => {},
+  };
+
+  const fakeContext = Object.assign({}, FAKE_CONTEXT);
+
+  const {getOrInjectContext} = proxyquire('../../src/middleware/context', {
+    '@opencensus/propagation-stackdriver': fakeContext,
+  });
+
+  describe('makeHeaderWrapper', () => {
+    const HEADER_NAME = 'Content-Type';
+    const HEADER_VALUE = 'application/🎂';
+
+    it('should correctly get request headers', () => {
+      const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      assert.strictEqual(wrapper.getHeader(HEADER_NAME), HEADER_VALUE);
+    });
+
+    it('should correctly set request headers', () => {
+      const req = {headers: {} as http.IncomingHttpHeaders};
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      wrapper.setHeader(HEADER_NAME, HEADER_VALUE);
+      assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
+    });
+  });
+
+  describe('getOrInjectContext', () => {
+    beforeEach(() => {
+      fakeContext.extract = FAKE_CONTEXT.extract;
+      fakeContext.generate = FAKE_CONTEXT.generate;
+      fakeContext.inject = FAKE_CONTEXT.inject;
+    });
+
+    it('should return extracted context identically', () => {
+      const FAKE_SPAN_CONTEXT = '👾';
+      fakeContext.extract = () => FAKE_SPAN_CONTEXT;
+      fakeContext.generate = () => assert.fail('should not be called');
+      fakeContext.inject = () => assert.fail('should not be called');
+
+      const ret = getOrInjectContext({});
+      assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
+    });
+
+    it('should generate a new context if extract returns falsy', () => {
+      let injectWasCalled = false;
+      const FAKE_SPAN_CONTEXT = '👾';
+      fakeContext.extract = () => false;
+      fakeContext.generate = () => FAKE_SPAN_CONTEXT;
+      fakeContext.inject = (_, spanContext) => {
+        injectWasCalled = true;
+        assert.strictEqual(spanContext, FAKE_SPAN_CONTEXT);
+      };
+
+      const ret = getOrInjectContext({});
+      assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
+      assert.ok(injectWasCalled);
+    });
   });
 });

@@ -16,10 +16,13 @@
 
 import * as http from 'http';
 import onFinished = require('on-finished');
-import {getOrInjectContext, makeHeaderWrapper} from '../context';
-
-import {makeHttpRequestData, ServerRequest} from '../../make-http-request';
-import {CloudLoggingHttpRequest} from '../../http-request';
+import {
+  CloudLoggingHttpRequest,
+  makeHttpRequestData,
+  ServerRequest,
+  getTraceContext,
+} from '../../http-request';
+import * as w3cContext from '@opencensus/propagation-stackdriver';
 
 interface AnnotatedRequestType<LoggerType> extends ServerRequest {
   log: LoggerType;
@@ -43,37 +46,42 @@ interface AnnotatedRequestType<LoggerType> extends ServerRequest {
  */
 export function makeMiddleware<LoggerType>(
   projectId: string,
-  makeChildLogger: (trace: string, span?: string) => LoggerType,
+  makeChildLogger: (
+    trace: string,
+    span?: string,
+    traceSampled?: boolean
+  ) => LoggerType,
   emitRequestLog?: (
     httpRequest: CloudLoggingHttpRequest,
     trace: string,
-    span?: string
+    span?: string,
+    traceSampled?: boolean
   ) => void
 ) {
   return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 
-    const wrapper = makeHeaderWrapper(req);
-
-    const spanContext = getOrInjectContext(wrapper);
-    const trace = `projects/${projectId}/traces/${spanContext.traceId}`;
-    const span = spanContext.spanId;
-
+    const traceContex = getTraceContext(req, projectId, true);
     // Install a child logger on the request object, with detected trace and
     // span.
     (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
-      trace,
-      span
+      traceContex.trace,
+      traceContex.spanId,
+      traceContex.traceSampled
     );
-
+    // Emit a 'Request Log' on the parent logger, with detected trace and
+    // span.
     if (emitRequestLog) {
-      // Emit a 'Request Log' on the parent logger, with detected trace and
-      // span.
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = makeHttpRequestData(req, res, latencyMs);
-        emitRequestLog(httpRequest, trace, span);
+        emitRequestLog(
+          httpRequest,
+          traceContex.trace,
+          traceContex.spanId,
+          traceContex.traceSampled
+        );
       });
     }
 
