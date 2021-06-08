@@ -895,7 +895,7 @@ class Log implements LogSeverityFunctions {
       return writeWithResource(this.logging.detectedResource);
     } else {
       const resource = await getDefaultResource(
-        this.logging.auth as unknown as GoogleAuth
+        (this.logging.auth as unknown) as GoogleAuth
       );
       this.logging.detectedResource = resource;
       return writeWithResource(resource);
@@ -903,14 +903,17 @@ class Log implements LogSeverityFunctions {
     // writeWithResource formats entries and writes them to loggingService API.
     // Service expects props: logName, resource, labels, partialSuccess, dryRun.
     async function writeWithResource(resource: {} | null) {
+      const projectId = await self.logging.auth.getProjectId();
       let decoratedEntries: EntryJson[];
       try {
-        decoratedEntries = self.decorateEntries(arrify(entry) as Entry[]);
+        decoratedEntries = self.decorateEntries(
+          projectId,
+          arrify(entry) as Entry[]
+        );
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
       }
       self.truncateEntries(decoratedEntries!);
-      const projectId = await self.logging.auth.getProjectId();
       self.formattedName_ = Log.formatName_(projectId, self.name);
       const reqOpts = extend(
         {
@@ -951,14 +954,17 @@ class Log implements LogSeverityFunctions {
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  private decorateEntries(entries: Entry[]): EntryJson[] {
+  private decorateEntries(projectId: string, entries: Entry[]): EntryJson[] {
     return entries.map(entry => {
       if (!(entry instanceof Entry)) {
         entry = this.entry(entry);
       }
-      return entry.toJSON({
-        removeCircular: this.removeCircular_,
-      });
+      return entry.toJSON(
+        {
+          removeCircular: this.removeCircular_,
+        },
+        projectId
+      );
     });
   }
 

@@ -16,15 +16,9 @@
 
 import * as http from 'http';
 import onFinished = require('on-finished');
-import {
-  CloudLoggingHttpRequest,
-  makeHttpRequestData,
-  ServerRequest,
-  getTraceContext,
-} from '../../http-request';
-import * as w3cContext from '@opencensus/propagation-stackdriver';
+import * as request from '../../http-request';
 
-interface AnnotatedRequestType<LoggerType> extends ServerRequest {
+interface AnnotatedRequestType<LoggerType> extends request.ServerRequest {
   log: LoggerType;
 }
 
@@ -52,35 +46,36 @@ export function makeMiddleware<LoggerType>(
     traceSampled?: boolean
   ) => LoggerType,
   emitRequestLog?: (
-    httpRequest: CloudLoggingHttpRequest,
+    httpRequest: request.CloudLoggingHttpRequest,
     trace: string,
     span?: string,
     traceSampled?: boolean
   ) => void
 ) {
-  return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
+  return (req: request.ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
-
-    const traceContex = getTraceContext(req, projectId, true);
+    // Detect & establish context if we were the first actor to detect lack of
+    // context.
+    const traceContext = request.getTraceContext(req, projectId, true);
     // Install a child logger on the request object, with detected trace and
     // span.
     (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
-      traceContex.trace,
-      traceContex.spanId,
-      traceContex.traceSampled
+      traceContext.trace,
+      traceContext.spanId,
+      traceContext.traceSampled
     );
     // Emit a 'Request Log' on the parent logger, with detected trace and
     // span.
     if (emitRequestLog) {
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
-        const httpRequest = makeHttpRequestData(req, res, latencyMs);
+        const httpRequest = request.makeHttpRequestData(req, res, latencyMs);
         emitRequestLog(
           httpRequest,
-          traceContex.trace,
-          traceContex.spanId,
-          traceContex.traceSampled
+          traceContext.trace,
+          traceContext.spanId,
+          traceContext.traceSampled
         );
       });
     }

@@ -19,12 +19,7 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
-import {
-  CloudLoggingHttpRequest,
-  makeHttpRequestData,
-  getTraceContext,
-  CloudTraceContext,
-} from './http-request';
+import * as request from './http-request';
 import * as http from 'http';
 
 const eventId = new EventId();
@@ -32,10 +27,11 @@ const eventId = new EventId();
 // Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
-export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
+export type RawHttpRequest = http.IncomingMessage &
+  request.CloudLoggingHttpRequest;
 export type HttpRequest =
   | google.logging.type.IHttpRequest
-  | CloudLoggingHttpRequest
+  | request.CloudLoggingHttpRequest
   | RawHttpRequest;
 export type LogEntry = Omit<
   google.logging.v2.ILogEntry,
@@ -166,11 +162,17 @@ class Entry {
    * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
    *
    * @param {object} [options] Configuration object.
+   * @param projectId
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
-  toJSON(options: ToJsonOptions = {}) {
+  toJSON(options: ToJsonOptions = {}, projectId = '') {
+    // Extract any trace/span context from HTTP headers before mutating.
+    const traceContext = this.extractTraceFromHeaders(projectId);
+
+    // Mutates raw HTTP requests into Cloud Logging HttpRequest format
     this.formatHttpRequest();
+
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
@@ -200,6 +202,15 @@ class Entry {
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
+    // Format trace and span
+    if (traceContext) {
+      if (!this.metadata.trace && traceContext.trace)
+        entry.trace = traceContext.trace;
+      if (!this.metadata.spanId && traceContext.spanId)
+        entry.spanId = traceContext.spanId;
+      if (this.metadata.traceSampled === undefined)
+        entry.traceSampled = traceContext.traceSampled;
+    }
     return entry;
   }
 
@@ -224,21 +235,23 @@ class Entry {
         'method' in rawReq ||
         'url' in rawReq
       )
-        this.metadata.httpRequest = makeHttpRequestData(rawReq);
-
-      // Populate trace & span from HTTP headers, if not user specified already.
-      if ('headers' in rawReq) {
-        const traceContext = getTraceContext(rawReq, 'lala', false);
-        if (traceContext) {
-          if (!this.metadata.trace && traceContext.trace)
-            this.metadata.trace = traceContext.trace;
-          if (!this.metadata.spanId && traceContext.spanId)
-            this.metadata.spanId = traceContext.spanId;
-          if (this.metadata.traceSampled === undefined)
-            this.metadata.traceSampled = traceContext.traceSampled;
-        }
-      }
+        this.metadata.httpRequest = request.makeHttpRequestData(rawReq);
     }
+  }
+
+  /**
+   * extractTraceFromHeaders extracts trace and span information from raw HTTP
+   * request headers.
+   * @private
+   */
+  private extractTraceFromHeaders(
+    projectId: string
+  ): request.CloudTraceContext | null {
+    const rawReq = this.metadata.httpRequest;
+    if (rawReq && 'headers' in rawReq) {
+      return request.getTraceContext(rawReq, projectId, false);
+    }
+    return null;
   }
 
   /**
