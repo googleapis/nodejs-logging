@@ -168,17 +168,6 @@ class Entry {
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
     const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
-    // Format HTTP Request if it is in a raw incoming request format.
-    const req = this.metadata.httpRequest;
-    if (
-      req &&
-      ('statusCode' in req ||
-        'headers' in req ||
-        'method' in req ||
-        'url' in req)
-    ) {
-      entry.httpRequest = request.makeHttpRequestData(req);
-    }
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -207,7 +196,18 @@ class Entry {
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
-    // Format trace and span, extracting any trace/span context from HTTP headers.
+    // Format httpRequest
+    const req = this.metadata.httpRequest;
+    if (
+      req &&
+      ('statusCode' in req ||
+        'headers' in req ||
+        'method' in req ||
+        'url' in req)
+    ) {
+      entry.httpRequest = request.makeHttpRequestData(req);
+    }
+    // Format trace and span
     const traceContext = this.extractTraceFromHeaders(projectId);
     if (traceContext) {
       if (!this.metadata.trace && traceContext.trace)
