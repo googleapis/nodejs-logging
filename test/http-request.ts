@@ -21,6 +21,8 @@ import {
   makeHttpRequestData,
   ServerRequest,
   makeHeaderWrapper,
+  getCloudTraceContext,
+  getTraceContext,
 } from '../src/http-request';
 import * as http from 'http';
 import * as proxyquire from 'proxyquire';
@@ -60,12 +62,12 @@ describe('format raw http request to structured http-request', () => {
     it('should infer as many response values as possible', () => {
       const RESPONSE_SIZE = 2048;
       const req = {} as ServerRequest;
-      const res = {
+      const res = ({
         statusCode: 200,
         headers: {
           'Content-Length': RESPONSE_SIZE,
         },
-      } as unknown as http.ServerResponse;
+      } as unknown) as http.ServerResponse;
       res.getHeader = function () {
         return 2048;
       };
@@ -103,7 +105,7 @@ describe('format raw http request to structured http-request', () => {
   });
 });
 
-describe.only('get trace and span from http-request', () => {
+describe('get trace and span from http-request', () => {
   const FAKE_CONTEXT = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     extract: (headerWrapper: {}) => {},
@@ -118,103 +120,158 @@ describe.only('get trace and span from http-request', () => {
     '@opencensus/propagation-stackdriver': fakeContext,
   });
 
+  describe('getTraceContext', () => {
+    it('should return an empty trace string when extraction fails and inject is false', () => {
+      const req = {
+        method: 'GET',
+      } as http.IncomingMessage;
+      const context = getTraceContext(req, 'myProj');
+      assert.strictEqual(context.trace, '');
+      assert.strictEqual(context.spanId, undefined);
+      assert.strictEqual(context.traceSampled, undefined);
+    });
+
+    it('should return a formatted Google Cloud trace context first', () => {
+      const req = ({
+        headers: {['x-cloud-trace-context']: '1/2;o=1'},
+      } as unknown) as http.IncomingMessage;
+      const projectId = 'myProj';
+      const context = getTraceContext(req, projectId);
+      assert.strictEqual(context.trace, `projects/${projectId}/traces/1`);
+      assert.strictEqual(context.spanId, '2');
+      assert.strictEqual(context.traceSampled, true);
+    });
+
+    it('should return a formatted W3C trace context next', () => {
+      const req = {headers: {}} as http.IncomingMessage;
+      // This should generate a span and trace if not available.
+      const context = getTraceContext(req, 'myProj', true);
+      assert.match(context.trace, /^projects\/myProj\/traces\/*/);
+      assert.match(context.spanId!, /^\d*/);
+      assert.strictEqual(context.traceSampled, undefined);
+    });
+  });
+
   describe('makeHeaderWrapper', () => {
     const HEADER_NAME = 'Content-Type';
     const HEADER_VALUE = 'application/🎂';
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
-      assert.strictEqual(wrapper.getHeader(HEADER_NAME), HEADER_VALUE);
+      const wrapper = makeHeaderWrapper(
+          (req as unknown) as http.IncomingMessage
+      );
+      assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
-      wrapper.setHeader(HEADER_NAME, HEADER_VALUE);
+      const wrapper = makeHeaderWrapper(
+          (req as unknown) as http.IncomingMessage
+      );
+      wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
+    });
+
+    it('should return null if header property is not in http request', () => {
+      const req = {
+        method: 'GET',
+      } as http.IncomingMessage;
+      const wrapper = makeHeaderWrapper(
+          (req as unknown) as http.IncomingMessage
+      );
+      assert.strictEqual(wrapper, null);
     });
   });
 
-  describe('getTraceContext', () => {
-
-  });
-
   describe('getCloudTraceContext', () => {
-    // it('should extract trace & span from X-Cloud-Trace-Context', () => {
-    //   const tests = [
-    //     {
-    //       header: '105445aa7843bc8bf206b120001000/000000001;o=1',
-    //       expected: {
-    //         trace: 'projects/myProj/traces/105445aa7843bc8bf206b120001000',
-    //         spanId: '000000001',
-    //         traceSampled: true,
-    //       },
-    //     },
-    //     // TraceSampled is false
-    //     {
-    //       header: '105445aa7843bc8bf206b120001000/000000001;o=0',
-    //       expected: {
-    //         trace: 'projects/myProj/traces/105445aa7843bc8bf206b120001000',
-    //         spanId: '000000001',
-    //         traceSampled: false,
-    //       },
-    //     },
-    //     {
-    //       // No span
-    //       header: '105445aa7843bc8bf206b120001000;o=1',
-    //       expected: {
-    //         trace: 'projects/myProj/traces/105445aa7843bc8bf206b120001000',
-    //         spanId: undefined,
-    //         traceSampled: true,
-    //       },
-    //     },
-    //     {
-    //       // No trace
-    //       header: '/105445aa7843bc8bf206b120001000;o=0',
-    //       expected: {
-    //         trace: 'projects/myProj/traces/undefined',
-    //         spanId: '105445aa7843bc8bf206b120001000',
-    //         traceSampled: false,
-    //       },
-    //     },
-    //     {
-    //       // No traceSampled
-    //       header: '105445aa7843bc8bf206b120001000/0',
-    //       expected: {
-    //         trace: 'projects/myProj/traces/105445aa7843bc8bf206b120001000',
-    //         spanId: '0',
-    //         traceSampled: undefined,
-    //       },
-    //     },
-    //     {
-    //       // No input
-    //       header: '',
-    //       expected: {
-    //         trace: undefined,
-    //         spanId: undefined,
-    //         traceSampled: undefined,
-    //       },
-    //     },
-    //   ];
-    //   for (const test of tests) {
-    //     const req = {
-    //       method: 'GET',
-    //     } as unknown as http.IncomingMessage;
-    //     // Mock raw http headers with lowercased keys.
-    //     req.headers = {
-    //       'x-cloud-trace-context': test.header,
-    //     };
-    //     delete entry.metadata.trace;
-    //     delete entry.metadata.spanId;
-    //     delete entry.metadata.traceSampled;
-    //     entry.metadata.httpRequest = req;
-    //     const json = entry.toJSON({}, 'myProj');
-    //     assert.strictEqual(json.trace, test.expected.trace);
-    //     assert.strictEqual(json.spanId, test.expected.spanId);
-    //     assert.strictEqual(json.traceSampled, test.expected.traceSampled);
-    //   }
-    // });
+    it('should extract trace & span from X-Cloud-Trace-Context', () => {
+      const tests = [
+        {
+          header: '105445aa7843bc8bf206b120001000/000000001;o=1',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '000000001',
+            traceSampled: true,
+          },
+        },
+        // TraceSampled is false
+        {
+          header: '105445aa7843bc8bf206b120001000/000000001;o=0',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '000000001',
+            traceSampled: false,
+          },
+        },
+        {
+          // No span
+          header: '105445aa7843bc8bf206b120001000;o=1',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: undefined,
+            traceSampled: true,
+          },
+        },
+        {
+          // No trace
+          header: '/105445aa7843bc8bf206b120001000;o=0',
+          expected: {
+            trace: undefined,
+            spanId: '105445aa7843bc8bf206b120001000',
+            traceSampled: false,
+          },
+        },
+        {
+          // No traceSampled
+          header: '105445aa7843bc8bf206b120001000/0',
+          expected: {
+            trace: '105445aa7843bc8bf206b120001000',
+            spanId: '0',
+            traceSampled: false,
+          },
+        },
+        {
+          // No input
+          header: '',
+          expected: {
+            trace: undefined,
+            spanId: undefined,
+            traceSampled: false,
+          },
+        },
+      ];
+      for (const test of tests) {
+        const req = ({
+          method: 'GET',
+        } as unknown) as http.IncomingMessage;
+        req.headers = {
+          'x-cloud-trace-context': test.header,
+        };
+
+        const wrapper = makeHeaderWrapper(req);
+        const context = getCloudTraceContext(wrapper!);
+        if (context) {
+          assert.strictEqual(
+            context.trace,
+            test.expected.trace,
+            `From ${test.header}; Expected trace: ${test.expected.trace}; Got: ${context.trace}`
+          );
+          assert.strictEqual(
+            context.spanId,
+            test.expected.spanId,
+            `From ${test.header}; Expected spanId: ${test.expected.spanId}; Got: ${context.spanId}`
+          );
+          assert.strictEqual(
+            context.traceSampled,
+            test.expected.traceSampled,
+            `From ${test.header}; Expected traceSampled: ${test.expected.traceSampled}; Got: ${context.traceSampled}`
+          );
+        } else {
+          assert(false);
+        }
+      }
+    });
   });
 
   describe('getOrInjectTraceParent', () => {
@@ -224,7 +281,7 @@ describe.only('get trace and span from http-request', () => {
       fakeContext.inject = FAKE_CONTEXT.inject;
     });
 
-    it('should return extracted context identically', () => {
+    it('should return a W3C extracted trace context', () => {
       const FAKE_SPAN_CONTEXT = '👾';
       fakeContext.extract = () => FAKE_SPAN_CONTEXT;
       fakeContext.generate = () => assert.fail('should not be called');
@@ -234,22 +291,7 @@ describe.only('get trace and span from http-request', () => {
       assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
     });
 
-    it('should generate a new context if extract returns falsy', () => {
-      let injectWasCalled = false;
-      const FAKE_SPAN_CONTEXT = '👾';
-      fakeContext.extract = () => false;
-      fakeContext.generate = () => FAKE_SPAN_CONTEXT;
-      fakeContext.inject = (_, spanContext) => {
-        injectWasCalled = true;
-        assert.strictEqual(spanContext, FAKE_SPAN_CONTEXT);
-      };
-
-      const ret = getOrInjectTraceParent({}, true);
-      assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
-      assert.ok(injectWasCalled);
-    });
-
-    it('should not generate a new context if extract returns falsy and inject param is false', () => {
+    it('should not generate a new context if extract returns falsy', () => {
       let injectWasCalled = false;
       const FAKE_SPAN_CONTEXT = '👾';
       fakeContext.extract = () => false;
@@ -262,6 +304,21 @@ describe.only('get trace and span from http-request', () => {
       const ret = getOrInjectTraceParent({}, false);
       assert.strictEqual(ret, false);
       assert.ok(!injectWasCalled);
+    });
+
+    it('should generate a new context if extract returns falsy and inject is true', () => {
+      let injectWasCalled = false;
+      const FAKE_SPAN_CONTEXT = '👾';
+      fakeContext.extract = () => false;
+      fakeContext.generate = () => FAKE_SPAN_CONTEXT;
+      fakeContext.inject = (_, spanContext) => {
+        injectWasCalled = true;
+        assert.strictEqual(spanContext, FAKE_SPAN_CONTEXT);
+      };
+
+      const ret = getOrInjectTraceParent({}, true);
+      assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
+      assert.ok(injectWasCalled);
     });
   });
 });

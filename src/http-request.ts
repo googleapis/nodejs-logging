@@ -125,10 +125,15 @@ export function makeHttpRequestData(
 export type HeaderWrapper = w3cContext.HeaderGetter & w3cContext.HeaderSetter;
 
 /**
- * makeHeaderWrapper TODO
+ * makeHeaderWrapper returns a wrapper with set and get header functionality,
+ * returning null if the incoming request object doesn't contain the 'header'
+ * propery.
  * @param req
  */
-export function makeHeaderWrapper(req: http.IncomingMessage): HeaderWrapper {
+export function makeHeaderWrapper(
+  req: http.IncomingMessage
+): HeaderWrapper | null {
+  if (!req.headers) return null;
   const wrapper = {
     setHeader(name: string, value: string) {
       req.headers[name] = value;
@@ -147,9 +152,10 @@ export interface CloudTraceContext {
 }
 
 /**
- * getTraceContext returns available trace contexts by examining the HTTP
- * headers for various protocols. Optionally, it can inject trace context
- * according ot the W3C protocol.
+ * getTraceContext returns a CloudTraceContext with as many available trace and
+ * span properties as possible. It examines HTTP headers for trace context.
+ * Optionally, it can inject a W3C compliant trace context when no context is
+ * available from headers.
  */
 export function getTraceContext(
   req: http.IncomingMessage,
@@ -158,31 +164,28 @@ export function getTraceContext(
 ): CloudTraceContext {
   const context: CloudTraceContext = {trace: ''};
   const wrapper = makeHeaderWrapper(req);
-  // Detect 'X-Cloud-Trace-Context' header.
-  const cloudContext = getCloudTraceContext(wrapper);
-  console.log('Getting Cloud Trace Context');
-  if (cloudContext) {
-    context.trace = `projects/${projectId}/traces/${cloudContext.trace}`;
-    context.spanId = cloudContext.spanId;
-    context.traceSampled = cloudContext.traceSampled;
-  } else {
-    // Detect 'traceparent' header, injecting one if not available.
-    const parentContext = getOrInjectTraceParent(wrapper, inject);
-    console.log(parentContext);
-    console.log('Getting W3C Trace Parent Context');
-    if (parentContext) {
-      context.trace = `projects/${projectId}/traces/${parentContext.traceId}`;
-      context.spanId = parentContext.spanId;
+  if (wrapper) {
+    // Detect 'X-Cloud-Trace-Context' header.
+    const cloudContext = getCloudTraceContext(wrapper);
+    if (cloudContext) {
+      context.trace = `projects/${projectId}/traces/${cloudContext.trace}`;
+      context.spanId = cloudContext.spanId;
+      context.traceSampled = cloudContext.traceSampled;
+    } else {
+      // Detect 'traceparent' header, optionally injecting one if not available.
+      const parentContext = getOrInjectTraceParent(wrapper, inject);
+      if (parentContext) {
+        context.trace = `projects/${projectId}/traces/${parentContext.traceId}`;
+        context.spanId = parentContext.spanId;
+      }
     }
   }
-  console.log('getTraceContext returns:');
-  console.log('context');
   return context;
 }
 
 /**
  * getCloudTraceContext looks for the HTTP header 'X-Cloud-Trace-Context'
- * per Cloud Trace specifications
+ * per Cloud Trace specifications. `traceSampled` is false by default.
  * @param headerWrapper
  */
 export function getCloudTraceContext(
