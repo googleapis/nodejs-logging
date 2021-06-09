@@ -59,28 +59,30 @@ export function makeMiddleware<LoggerType>(
   ) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
+
     // Detect & establish context if we were the first actor to detect lack of
-    // context.
+    // context so traceContext is always available when using middleware.
     const traceContext = request.getTraceContext(req, projectId, true);
+    const spanId = traceContext.spanId ? traceContext.spanId : undefined;
+    const traceSampled = traceContext.traceSampled
+      ? traceContext.traceSampled
+      : undefined;
+
     // Install a child logger on the request object, with detected trace and
     // span.
     (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
       traceContext!.trace,
-      traceContext.spanId,
-      traceContext.traceSampled
+      spanId,
+      traceSampled
     );
+
     // Emit a 'Request Log' on the parent logger, with detected trace and
     // span.
     if (emitRequestLog) {
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = request.makeHttpRequestData(req, res, latencyMs);
-        emitRequestLog(
-          httpRequest,
-          traceContext!.trace,
-          traceContext.spanId,
-          traceContext.traceSampled
-        );
+        emitRequestLog(httpRequest, traceContext!.trace, spanId, traceSampled);
       });
     }
 
