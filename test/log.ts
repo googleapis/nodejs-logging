@@ -512,7 +512,9 @@ describe('Log', () => {
       const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries, PROJECT_ID));
+      assert(
+        decorateEntriesStub.calledOnceWithExactly(arrifiedEntries, PROJECT_ID)
+      );
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -727,7 +729,9 @@ describe('Log', () => {
         .returns({} as EntryJson);
 
       log.decorateEntries([entry], PROJECT_ID);
-      assert(localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID));
+      assert(
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+      );
     });
 
     it('should throw error from serialization', () => {

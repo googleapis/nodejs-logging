@@ -77,12 +77,12 @@ describe('format raw http request to structured http-request', () => {
     it('should infer as many response values as possible', () => {
       const RESPONSE_SIZE = 2048;
       const req = {} as ServerRequest;
-      const res = ({
+      const res = {
         statusCode: 200,
         headers: {
           'Content-Length': RESPONSE_SIZE,
         },
-      } as unknown) as http.ServerResponse;
+      } as unknown as http.ServerResponse;
       res.getHeader = function () {
         return 2048;
       };
@@ -146,9 +146,9 @@ describe('get trace and span from http-request', () => {
     });
 
     it('should return a formatted Google Cloud trace context first', () => {
-      const req = ({
+      const req = {
         headers: {['x-cloud-trace-context']: '1/2;o=1'},
-      } as unknown) as http.IncomingMessage;
+      } as unknown as http.IncomingMessage;
       const projectId = 'myProj';
       const context = getTraceContext(req, projectId);
       assert.strictEqual(context.trace, `projects/${projectId}/traces/1`);
@@ -172,17 +172,13 @@ describe('get trace and span from http-request', () => {
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(
-          (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(
-          (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
     });
@@ -191,9 +187,7 @@ describe('get trace and span from http-request', () => {
       const req = {
         method: 'GET',
       } as http.IncomingMessage;
-      const wrapper = makeHeaderWrapper(
-          (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       assert.strictEqual(wrapper, null);
     });
   });
@@ -256,9 +250,9 @@ describe('get trace and span from http-request', () => {
         },
       ];
       for (const test of tests) {
-        const req = ({
+        const req = {
           method: 'GET',
-        } as unknown) as http.IncomingMessage;
+        } as unknown as http.IncomingMessage;
         req.headers = {
           'x-cloud-trace-context': test.header,
         };

@@ -52,7 +52,11 @@ export function makeMiddleware<LoggerType>(
     traceSampled?: boolean
   ) => void
 ) {
-  return (req: request.ServerRequest, res: http.ServerResponse, next: Function) => {
+  return (
+    req: request.ServerRequest,
+    res: http.ServerResponse,
+    next: Function
+  ) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
     // Detect & establish context if we were the first actor to detect lack of

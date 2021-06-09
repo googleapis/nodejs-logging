@@ -86,10 +86,7 @@ describe('middleware/express/make-middleware', () => {
         const fakeResponse = makeFakeResponse();
 
         function makeChild(trace: {}) {
-          assert.strictEqual(
-            trace,
-            `${FAKE_TRACE_CONTEXT.trace}`
-          );
+          assert.strictEqual(trace, `${FAKE_TRACE_CONTEXT.trace}`);
           return FAKE_CHILD_LOGGER;
         }
 
@@ -108,10 +105,7 @@ describe('middleware/express/make-middleware', () => {
         const fakeResponse = makeFakeResponse();
 
         function makeChild(trace: {}, span: {}) {
-          assert.strictEqual(
-            trace,
-            `${FAKE_TRACE_CONTEXT.trace}`
-          );
+          assert.strictEqual(trace, `${FAKE_TRACE_CONTEXT.trace}`);
           assert.strictEqual(span, FAKE_TRACE_AND_SPAN_CONTEXT.spanId);
           return FAKE_CHILD_LOGGER;
         }
@@ -131,10 +125,7 @@ describe('middleware/express/make-middleware', () => {
         let emitRequestLogCalled = false;
 
         function emitRequestLog(httpRequest: {}, trace: {}) {
-          assert.strictEqual(
-            trace,
-            `${FAKE_TRACE_CONTEXT.trace}`
-          );
+          assert.strictEqual(trace, `${FAKE_TRACE_CONTEXT.trace}`);
           // TODO: check httpRequest properties.
           emitRequestLogCalled = true;
         }
