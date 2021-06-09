@@ -143,7 +143,6 @@ describe('middleware/express/make-middleware', () => {
           done();
         }, 10);
       });
-      //  TODO(nicolezhu): maybe add more tests here
     });
   });
 });
