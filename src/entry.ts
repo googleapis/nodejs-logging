@@ -167,12 +167,18 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
-    // Extract any trace/span context from HTTP headers before mutating.
-    const traceContext = this.extractTraceFromHeaders(projectId);
-
-    // Mutates raw HTTP requests into Cloud Logging HttpRequest format
-    this.formatHttpRequest();
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
+    // Format HTTP Request if it is in a raw incoming request format.
+    const req = this.metadata.httpRequest;
+    if (
+      req &&
+      ('statusCode' in req ||
+        'headers' in req ||
+        'method' in req ||
+        'url' in req)
+    ) {
+      entry.httpRequest = request.makeHttpRequestData(req);
+    }
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -201,7 +207,8 @@ class Entry {
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
-    // Format trace and span
+    // Format trace and span, extracting any trace/span context from HTTP headers.
+    const traceContext = this.extractTraceFromHeaders(projectId);
     if (traceContext) {
       if (!this.metadata.trace && traceContext.trace)
         entry.trace = traceContext.trace;
@@ -214,33 +221,8 @@ class Entry {
   }
 
   /**
-   * Formats raw incoming request objects into a GCP structured HTTPRequest.
-   * Formats trace & span if users provided X-Cloud-Trace-Context in header.
-   * See more: https://cloud.google.com/trace/docs/setup#force-trace
-   *    "X-Cloud-Trace-Context: TRACE_ID/SPAN_ID;o=TRACE_TRUE"
-   * for example:
-   *    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b120001000/1;o=1"
-   * Note: logs from middleware are already formatted.
-   *
-   * @private
-   */
-  private formatHttpRequest() {
-    const rawReq = this.metadata.httpRequest;
-    if (rawReq) {
-      // Handle raw http request.
-      if (
-        'statusCode' in rawReq ||
-        'headers' in rawReq ||
-        'method' in rawReq ||
-        'url' in rawReq
-      )
-        this.metadata.httpRequest = request.makeHttpRequestData(rawReq);
-    }
-  }
-
-  /**
    * extractTraceFromHeaders extracts trace and span information from raw HTTP
-   * request headers.
+   * request headers only.
    * @private
    */
   private extractTraceFromHeaders(
