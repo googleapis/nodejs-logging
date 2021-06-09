@@ -162,7 +162,11 @@ export function getTraceContext(
   projectId: string,
   inject?: boolean
 ): CloudTraceContext {
-  const context: CloudTraceContext = {trace: ''};
+  const context: CloudTraceContext = {
+    trace: '',
+    spanId: undefined,
+    traceSampled: undefined,
+  };
   const wrapper = makeHeaderWrapper(req);
   if (wrapper) {
     // Detect 'X-Cloud-Trace-Context' header.

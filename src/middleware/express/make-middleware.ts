@@ -63,17 +63,13 @@ export function makeMiddleware<LoggerType>(
     // Detect & establish context if we were the first actor to detect lack of
     // context so traceContext is always available when using middleware.
     const traceContext = request.getTraceContext(req, projectId, true);
-    const spanId = traceContext.spanId ? traceContext.spanId : undefined;
-    const traceSampled = traceContext.traceSampled
-      ? traceContext.traceSampled
-      : undefined;
 
     // Install a child logger on the request object, with detected trace and
     // span.
     (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
-      traceContext!.trace,
-      spanId,
-      traceSampled
+      traceContext.trace,
+      traceContext.spanId,
+      traceContext.traceSampled
     );
 
     // Emit a 'Request Log' on the parent logger, with detected trace and
@@ -82,7 +78,7 @@ export function makeMiddleware<LoggerType>(
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = request.makeHttpRequestData(req, res, latencyMs);
-        emitRequestLog(httpRequest, traceContext!.trace, spanId, traceSampled);
+        emitRequestLog(httpRequest, traceContext.trace, traceContext.spanId, traceContext.traceSampled);
       });
     }
 
