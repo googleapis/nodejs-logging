@@ -62,8 +62,8 @@ export function makeMiddleware<LoggerType>(
     // span.
     (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
       traceContext!.trace,
-      traceContext!.spanId,
-      traceContext!.traceSampled
+      traceContext.spanId,
+      traceContext.traceSampled
     );
     // Emit a 'Request Log' on the parent logger, with detected trace and
     // span.
@@ -74,8 +74,8 @@ export function makeMiddleware<LoggerType>(
         emitRequestLog(
           httpRequest,
           traceContext!.trace,
-          traceContext!.spanId,
-          traceContext!.traceSampled
+          traceContext.spanId,
+          traceContext.traceSampled
         );
       });
     }

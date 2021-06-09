@@ -907,8 +907,8 @@ class Log implements LogSeverityFunctions {
       let decoratedEntries: EntryJson[];
       try {
         decoratedEntries = self.decorateEntries(
-          projectId,
-          arrify(entry) as Entry[]
+          arrify(entry) as Entry[],
+          projectId
         );
       } catch (err) {
         // Ignore errors (the API will speak up if it has an issue).
@@ -950,11 +950,12 @@ class Log implements LogSeverityFunctions {
    *
    * @private
    *
+   * @param {string} projectId - Google project ID.
    * @param {object[]} entries - Entry objects.
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  private decorateEntries(projectId: string, entries: Entry[]): EntryJson[] {
+  private decorateEntries(entries: Entry[], projectId: string): EntryJson[] {
     return entries.map(entry => {
       if (!(entry instanceof Entry)) {
         entry = this.entry(entry);

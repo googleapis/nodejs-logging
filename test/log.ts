@@ -498,7 +498,7 @@ describe('Log', () => {
       decorateEntriesStub.returns('decorated entries');
 
       await log.write(ENTRIES, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(ENTRIES));
+      assert(decorateEntriesStub.calledOnceWithExactly(ENTRIES, PROJECT_ID));
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -512,7 +512,7 @@ describe('Log', () => {
       const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries));
+      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries, PROJECT_ID));
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -706,7 +706,7 @@ describe('Log', () => {
 
     it('should create an Entry object if one is not provided', () => {
       const entry = {};
-      const decoratedEntries = log.decorateEntries([entry]);
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.calledWithExactly(entry));
     });
@@ -714,7 +714,7 @@ describe('Log', () => {
     it('should get JSON format from Entry object', () => {
       const entry = new Entry();
       entry.toJSON = () => toJSONResponse as {} as EntryJson;
-      const decoratedEntries = log.decorateEntries([entry]);
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.notCalled);
     });
@@ -726,15 +726,15 @@ describe('Log', () => {
         .stub(entry, 'toJSON')
         .returns({} as EntryJson);
 
-      log.decorateEntries([entry]);
-      assert(localJSONStub.calledWithExactly({removeCircular: true}));
+      log.decorateEntries([entry], PROJECT_ID);
+      assert(localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID));
     });
 
     it('should throw error from serialization', () => {
       const entry = new Entry();
       sinon.stub(entry, 'toJSON').throws('Error.');
       assert.throws(() => {
-        log.decorateEntries([entry]);
+        log.decorateEntries([entry], PROJECT_ID);
       }, 'Error.');
     });
   });
