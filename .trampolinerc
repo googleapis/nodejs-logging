@@ -21,7 +21,8 @@ required_envvars+=()
 pass_down_envvars+=(
     "ENVIRONMENT"
     "RUNTIME"
-    "AUTORELEASE_PR"
+    "AUTORELEASE_PR",
+    "VERSION"
 )
 
 # Prevent unintentional override on the default image.
