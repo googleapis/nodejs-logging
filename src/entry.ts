@@ -171,12 +171,8 @@ class Entry {
     const traceContext = this.extractTraceFromHeaders(projectId);
 
     // Mutates raw HTTP requests into Cloud Logging HttpRequest format
-    console.log('raw format');
     this.formatHttpRequest();
-    console.log(this.metadata.httpRequest);
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
-    console.log('post conversion format');
-    console.log(entry.httpRequest);
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {

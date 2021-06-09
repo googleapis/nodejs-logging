@@ -120,7 +120,7 @@ export function makeHttpRequestData(
 }
 
 /**
- * HeaderWrapper: TODO
+ * HeaderWrapper: wraps getHeader and setHeader operations.
  */
 export type HeaderWrapper = w3cContext.HeaderGetter & w3cContext.HeaderSetter;
 

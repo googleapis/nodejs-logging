@@ -40,7 +40,6 @@ describe('format raw http request to structured http-request', () => {
       assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
       assert.strictEqual(cloudReq.requestMethod, 'GET');
     });
-
     it('should infer as many request values as possible', () => {
       const req = {
         method: 'GET',
@@ -58,7 +57,23 @@ describe('format raw http request to structured http-request', () => {
       assert.strictEqual(cloudReq.referer, 'some-referer');
       assert.strictEqual(cloudReq.status, undefined);
     });
-
+    it('should infer header values with caution', () => {
+      const req = {
+        method: 'GET',
+        url: 'http://google.com/',
+        headers: {
+          'user-agent': '',
+          referer: undefined,
+        },
+      } as http.IncomingMessage;
+      const cloudReq = makeHttpRequestData(req);
+      assert.strictEqual(cloudReq.protocol, 'http:');
+      assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
+      assert.strictEqual(cloudReq.requestMethod, 'GET');
+      assert.strictEqual(cloudReq.userAgent, undefined);
+      assert.strictEqual(cloudReq.referer, undefined);
+      assert.strictEqual(cloudReq.status, undefined);
+    });
     it('should infer as many response values as possible', () => {
       const RESPONSE_SIZE = 2048;
       const req = {} as ServerRequest;
@@ -75,7 +90,6 @@ describe('format raw http request to structured http-request', () => {
       assert.strictEqual(cloudReq.status, 200);
       assert.strictEqual(cloudReq.responseSize, RESPONSE_SIZE);
     });
-
     it('should convert latency to proto Duration', () => {
       const fakeRequest = {headers: {}};
       const fakeResponse = {};

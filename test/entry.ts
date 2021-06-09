@@ -259,7 +259,6 @@ describe('Entry', () => {
       }
     });
 
-    // TODO: consider moving these tests.
     it('should convert a raw incoming HTTP request', () => {
       const req = {
         method: 'GET',
@@ -270,7 +269,22 @@ describe('Entry', () => {
       assert.strictEqual(json.httpRequest?.requestMethod, 'GET');
     });
 
-    it('should not overwrite user defined trace and span', () => {
+    it('should detect trace and span if headers present', () => {
+      const req = {
+        method: 'GET',
+      } as unknown as http.IncomingMessage;
+      // To mock http message.headers, we must use lowercased keys.
+      req.headers = {
+        'x-cloud-trace-context': '0000/1111;o=1',
+      };
+      entry.metadata.httpRequest = req;
+      const json = entry.toJSON();
+      assert.strictEqual(json.trace, 'projects//traces/0000');
+      assert.strictEqual(json.spanId, '1111');
+      assert.strictEqual(json.traceSampled, true);
+    });
+
+    it('should not overwrite user defined trace and span with detected', () => {
       const req = {
         method: 'GET',
       } as unknown as http.IncomingMessage;
@@ -282,7 +296,7 @@ describe('Entry', () => {
       entry.metadata.trace = '1';
       entry.metadata.traceSampled = false;
       const expected = {
-        trace: 'projects/myProj/traces/1',
+        trace: '1',
         spanId: '1',
         traceSampled: false,
       };
@@ -292,13 +306,5 @@ describe('Entry', () => {
       assert.strictEqual(json.spanId, expected.spanId);
       assert.strictEqual(json.traceSampled, expected.traceSampled);
     });
-  });
-
-  describe('formatHttpRequest', () => {
-    // TODO
-  });
-
-  describe('extractTraceFromHeaders', () => {
-    // TODO
   });
 });
