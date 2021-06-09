@@ -78,7 +78,12 @@ export function makeMiddleware<LoggerType>(
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = request.makeHttpRequestData(req, res, latencyMs);
-        emitRequestLog(httpRequest, traceContext.trace, traceContext.spanId, traceContext.traceSampled);
+        emitRequestLog(
+          httpRequest,
+          traceContext.trace,
+          traceContext.spanId,
+          traceContext.traceSampled
+        );
       });
     }
 
