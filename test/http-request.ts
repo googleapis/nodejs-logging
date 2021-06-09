@@ -160,8 +160,8 @@ describe('get trace and span from http-request', () => {
       const req = {headers: {}} as http.IncomingMessage;
       // This should generate a span and trace if not available.
       const context = getTraceContext(req, 'myProj', true);
-      assert.match(context.trace, /^projects\/myProj\/traces\/*/);
-      assert.match(context.spanId!, /^\d*/);
+      assert(context.trace.includes('projects/myProj/traces/'));
+      assert(context.spanId!.length > 0);
       assert.strictEqual(context.traceSampled, undefined);
     });
   });

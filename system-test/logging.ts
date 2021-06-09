@@ -658,7 +658,7 @@ describe('Logging', () => {
             assert.strictEqual(entry.data, 'some log message');
             assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
             assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
-            assert.strictEqual(entry.metadata.trace, '1');
+            assert.strictEqual(entry.metadata.trace, `projects/${PROJECT_ID}/traces/1`);
             assert.strictEqual(entry.metadata.spanId, '2');
             assert.strictEqual(entry.metadata.traceSampled, true);
             done();
