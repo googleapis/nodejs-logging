@@ -142,8 +142,8 @@ export function makeHeaderWrapper(req: http.IncomingMessage): HeaderWrapper {
 
 export interface CloudTraceContext {
   trace: string;
-  spanId: string;
-  traceSampled: boolean;
+  spanId?: string;
+  traceSampled?: boolean;
 }
 
 /**
@@ -154,29 +154,30 @@ export interface CloudTraceContext {
 export function getTraceContext(
   req: http.IncomingMessage,
   projectId: string,
-  inject: boolean
+  inject?: boolean
 ): CloudTraceContext {
-  let trace: string;
-  let spanId: string;
-  let traceSampled = false;
+  const context: CloudTraceContext = {trace: ''};
   const wrapper = makeHeaderWrapper(req);
   // Detect 'X-Cloud-Trace-Context' header.
   const cloudContext = getCloudTraceContext(wrapper);
+  console.log('Getting Cloud Trace Context');
   if (cloudContext) {
-    trace = `projects/${projectId}/traces/${cloudContext.trace}`;
-    spanId = cloudContext.spanId;
-    traceSampled = cloudContext.traceSampled;
+    context.trace = `projects/${projectId}/traces/${cloudContext.trace}`;
+    context.spanId = cloudContext.spanId;
+    context.traceSampled = cloudContext.traceSampled;
   } else {
     // Detect 'traceparent' header, injecting one if not available.
     const parentContext = getOrInjectTraceParent(wrapper, inject);
-    trace = `projects/${projectId}/traces/${parentContext!.traceId}`;
-    spanId = parentContext!.spanId;
+    console.log(parentContext);
+    console.log('Getting W3C Trace Parent Context');
+    if (parentContext) {
+      context.trace = `projects/${projectId}/traces/${parentContext.traceId}`;
+      context.spanId = parentContext.spanId;
+    }
   }
-  return {
-    trace,
-    spanId,
-    traceSampled,
-  };
+  console.log('getTraceContext returns:');
+  console.log('context');
+  return context;
 }
 
 /**
@@ -217,12 +218,13 @@ export function getCloudTraceContext(
  */
 export function getOrInjectTraceParent(
   headerWrapper: HeaderWrapper,
-  inject: boolean
+  inject?: boolean
 ): w3cContext.SpanContext | null {
-  const spanContext = w3cContext.extract(headerWrapper);
+  let spanContext = w3cContext.extract(headerWrapper);
+  if (spanContext) return spanContext;
   if (inject) {
     // We were the first actor to detect lack of context. Establish context.
-    const spanContext = w3cContext.generate();
+    spanContext = w3cContext.generate();
     w3cContext.inject(headerWrapper, spanContext);
   }
   return spanContext;

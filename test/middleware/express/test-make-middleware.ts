@@ -34,7 +34,7 @@ function makeFakeResponse() {
 
 let getOrInjectContextValue: {} | undefined;
 const FAKE_CONTEXT = {
-  getOrInjectContext: () => {
+  getTraceContext: () => {
     return getOrInjectContextValue;
   },
 };
@@ -44,7 +44,7 @@ describe('middleware/express/make-middleware', () => {
     const {makeMiddleware} = proxyquire(
       '../../../src/middleware/express/make-middleware',
       {
-        '../context': FAKE_CONTEXT,
+        '../../../src/http-request': FAKE_CONTEXT,
       }
     );
 
@@ -55,9 +55,9 @@ describe('middleware/express/make-middleware', () => {
     });
 
     describe('middleware', () => {
-      const FAKE_TRACE_CONTEXT = {traceId: 'traceId-🥑'};
+      const FAKE_TRACE_CONTEXT = {trace: 'traceId-🥑'};
       const FAKE_TRACE_AND_SPAN_CONTEXT = {
-        traceId: 'traceId-🥑',
+        trace: 'traceId-🥑',
         spanId: 'spanId-🥑',
       };
 
@@ -88,7 +88,7 @@ describe('middleware/express/make-middleware', () => {
         function makeChild(trace: {}) {
           assert.strictEqual(
             trace,
-            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_TRACE_CONTEXT.traceId}`
+            `${FAKE_TRACE_CONTEXT.trace}`
           );
           return FAKE_CHILD_LOGGER;
         }
@@ -110,7 +110,7 @@ describe('middleware/express/make-middleware', () => {
         function makeChild(trace: {}, span: {}) {
           assert.strictEqual(
             trace,
-            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_TRACE_CONTEXT.traceId}`
+            `${FAKE_TRACE_CONTEXT.trace}`
           );
           assert.strictEqual(span, FAKE_TRACE_AND_SPAN_CONTEXT.spanId);
           return FAKE_CHILD_LOGGER;
@@ -133,7 +133,7 @@ describe('middleware/express/make-middleware', () => {
         function emitRequestLog(httpRequest: {}, trace: {}) {
           assert.strictEqual(
             trace,
-            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_TRACE_CONTEXT.traceId}`
+            `${FAKE_TRACE_CONTEXT.trace}`
           );
           // TODO: check httpRequest properties.
           emitRequestLogCalled = true;
@@ -152,6 +152,7 @@ describe('middleware/express/make-middleware', () => {
           done();
         }, 10);
       });
+      //  TODO(nicolezhu): maybe add more tests here
     });
   });
 });
