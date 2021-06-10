@@ -16,9 +16,14 @@
 
 import * as http from 'http';
 import onFinished = require('on-finished');
-import * as request from '../../http-request';
+import {getTraceContext} from '../../context';
+import {
+  makeHttpRequestData,
+  ServerRequest,
+  CloudLoggingHttpRequest,
+} from '../../http-request';
 
-interface AnnotatedRequestType<LoggerType> extends request.ServerRequest {
+interface AnnotatedRequestType<LoggerType> extends ServerRequest {
   log: LoggerType;
 }
 
@@ -46,14 +51,14 @@ export function makeMiddleware<LoggerType>(
     traceSampled?: boolean
   ) => LoggerType,
   emitRequestLog?: (
-    httpRequest: request.CloudLoggingHttpRequest,
+    httpRequest: CloudLoggingHttpRequest,
     trace: string,
     span?: string,
     traceSampled?: boolean
   ) => void
 ) {
   return (
-    req: request.ServerRequest,
+    req: ServerRequest,
     res: http.ServerResponse,
     next: Function
   ) => {
@@ -62,7 +67,7 @@ export function makeMiddleware<LoggerType>(
 
     // Detect & establish context if we were the first actor to detect lack of
     // context so traceContext is always available when using middleware.
-    const traceContext = request.getTraceContext(req, projectId, true);
+    const traceContext = getTraceContext(req, projectId, true);
 
     // Install a child logger on the request object, with detected trace and
     // span.
@@ -77,7 +82,7 @@ export function makeMiddleware<LoggerType>(
     if (emitRequestLog) {
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
-        const httpRequest = request.makeHttpRequestData(req, res, latencyMs);
+        const httpRequest = makeHttpRequestData(req, res, latencyMs);
         emitRequestLog(
           httpRequest,
           traceContext.trace,

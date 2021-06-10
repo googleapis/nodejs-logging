@@ -44,7 +44,7 @@ describe('middleware/express/make-middleware', () => {
     const {makeMiddleware} = proxyquire(
       '../../../src/middleware/express/make-middleware',
       {
-        '../../../src/http-request': FAKE_CONTEXT,
+        '../../../src/context': FAKE_CONTEXT,
       }
     );
 

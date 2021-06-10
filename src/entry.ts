@@ -19,7 +19,8 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
-import * as request from './http-request';
+import {makeHttpRequestData, CloudLoggingHttpRequest} from './http-request';
+import {getTraceContext, CloudTraceContext} from './context';
 import * as http from 'http';
 
 const eventId = new EventId();
@@ -27,11 +28,10 @@ const eventId = new EventId();
 // Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
-export type RawHttpRequest = http.IncomingMessage &
-  request.CloudLoggingHttpRequest;
+export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
 export type HttpRequest =
   | google.logging.type.IHttpRequest
-  | request.CloudLoggingHttpRequest
+  | CloudLoggingHttpRequest
   | RawHttpRequest;
 export type LogEntry = Omit<
   google.logging.v2.ILogEntry,
@@ -205,7 +205,7 @@ class Entry {
         'method' in req ||
         'url' in req)
     ) {
-      entry.httpRequest = request.makeHttpRequestData(req);
+      entry.httpRequest = makeHttpRequestData(req);
     }
     // Format trace and span
     const traceContext = this.extractTraceFromHeaders(projectId);
@@ -225,12 +225,10 @@ class Entry {
    * request headers only.
    * @private
    */
-  private extractTraceFromHeaders(
-    projectId: string
-  ): request.CloudTraceContext | null {
+  private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {
-      return request.getTraceContext(rawReq, projectId);
+      return getTraceContext(rawReq, projectId);
     }
     return null;
   }
