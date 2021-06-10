@@ -32,17 +32,13 @@ describe('context', () => {
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(
-        (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(
-        (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
     });
@@ -51,9 +47,7 @@ describe('context', () => {
       const req = {
         method: 'GET',
       } as http.IncomingMessage;
-      const wrapper = makeHeaderWrapper(
-        (req as unknown) as http.IncomingMessage
-      );
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
       assert.strictEqual(wrapper, null);
     });
   });
@@ -70,9 +64,9 @@ describe('context', () => {
     });
 
     it('should return a formatted W3C trace context first', () => {
-      const req = ({
+      const req = {
         headers: {['traceparent']: 'version-1-2-01'},
-      } as unknown) as http.IncomingMessage;
+      } as unknown as http.IncomingMessage;
       const context = getOrInjectContext(req, 'myProj', true);
       assert(context.trace, '1');
       assert(context.spanId, '2');
@@ -162,9 +156,9 @@ describe('context', () => {
         },
       ];
       for (const test of tests) {
-        const req = ({
+        const req = {
           method: 'GET',
-        } as unknown) as http.IncomingMessage;
+        } as unknown as http.IncomingMessage;
         req.headers = {
           'x-cloud-trace-context': test.header,
         };

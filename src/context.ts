@@ -143,7 +143,7 @@ function makeCloudTraceHeader(): string {
 
 export function getContextFromXCloudTrace(
   headerWrapper: HeaderWrapper,
-  projectId: string,
+  projectId: string
 ): CloudTraceContext | null {
   const context = parseXCloudTraceHeader(headerWrapper);
   if (!context) return null;
