@@ -30,10 +30,9 @@
 import * as http from 'http';
 import * as uuid from 'uuid';
 import * as crypto from 'crypto';
+
 /** Header that carries span context across Google infrastructure. */
 export const X_CLOUD_HEADER = 'x-cloud-trace-context';
-/** Header that carries span context across W3C compliant infrastructure. */
-export const TRACE_PARENT_HEADER = 'traceparent';
 const SPAN_ID_RANDOM_BYTES = 8;
 const spanIdBuffer = Buffer.alloc(SPAN_ID_RANDOM_BYTES);
 const randomFillSync = crypto.randomFillSync;
@@ -41,6 +40,9 @@ const randomBytes = crypto.randomBytes;
 const spanRandomBuffer = randomFillSync
   ? () => randomFillSync(spanIdBuffer)
   : () => randomBytes(SPAN_ID_RANDOM_BYTES);
+
+/** Header that carries span context across W3C compliant infrastructure. */
+export const TRACE_PARENT_HEADER = 'traceparent';
 
 /**
  * An transport and environment neutral API for getting request headers.
