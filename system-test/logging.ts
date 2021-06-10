@@ -677,7 +677,8 @@ describe('Logging', () => {
       http.get(URL, res => {
         res.url = URL;
         res.headers = {
-          'traceparent': '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+          traceparent:
+            '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
         };
         const metadata = {httpRequest: res};
         const logEntry = log.entry(metadata, 'some log message');
@@ -690,8 +691,8 @@ describe('Logging', () => {
             assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
             assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
             assert.strictEqual(
-                entry.metadata.trace,
-                `projects/${PROJECT_ID}/traces/0af7651916cd43dd8448eb211c80319c`
+              entry.metadata.trace,
+              `projects/${PROJECT_ID}/traces/0af7651916cd43dd8448eb211c80319c`
             );
             assert.strictEqual(entry.metadata.spanId, 'b7ad6b7169203331');
             assert.strictEqual(entry.metadata.traceSampled, true);
