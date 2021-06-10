@@ -87,6 +87,10 @@ export interface CloudTraceContext {
  * and span properties as possible. It examines HTTP headers for trace context.
  * Optionally, it can inject a Google compliant trace context when no context is
  * available from headers.
+ *
+ * @param req
+ * @param projectId
+ * @param inject
  */
 export function getOrInjectContext(
   req: http.IncomingMessage,
@@ -114,6 +118,7 @@ export function getOrInjectContext(
 /**
  * toCloudTraceContext converts any context format to cloudTraceContext format.
  * @param context
+ * @param projectId
  */
 function toCloudTraceContext(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -144,6 +149,13 @@ function makeCloudTraceHeader(): string {
   return `${trace}/${spanId};o=1`;
 }
 
+/**
+ * getContextFromXCloudTrace looks for the HTTP header 'x-cloud-trace-context'
+ * per Google Cloud specifications for Cloud Tracing.
+ *
+ * @param headerWrapper
+ * @param projectId
+ */
 export function getContextFromXCloudTrace(
   headerWrapper: HeaderWrapper,
   projectId: string
@@ -158,11 +170,8 @@ export function getContextFromXCloudTrace(
  * per W3C specifications for OpenTelemetry and OpenCensus
  * Read more about W3C protocol: https://www.w3.org/TR/trace-context/
  *
- * Optional: Inject a W3C compliant context with trace and span in the header,
- * if not available.
- *
  * @param headerWrapper
- * @param inject
+ * @param projectId
  */
 export function getContextFromTraceParent(
   headerWrapper: HeaderWrapper,
@@ -198,6 +207,7 @@ export function parseXCloudTraceHeader(
  * parseTraceParentHeader is a custom implementation of the `parseTraceParent`
  * function in @opentelemetry-core/trace.
  * For more information see {@link https://www.w3.org/TR/trace-context/}
+ * @param headerWrapper
  */
 export function parseTraceParentHeader(
   headerWrapper: HeaderWrapper
