@@ -164,7 +164,7 @@ export function getContextFromXCloudTrace(
  */
 export function getContextFromTraceParent(
   headerWrapper: HeaderWrapper,
-  projectId: string,
+  projectId: string
 ): CloudTraceContext | null {
   const context = parseTraceParentHeader(headerWrapper);
   if (!context) return null;
