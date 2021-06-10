@@ -20,9 +20,8 @@ import * as http from 'http';
 import {
   getOrInjectContext,
   makeHeaderWrapper,
-  getContextFromXCloudTrace,
-  getContextFromTraceParent,
   parseXCloudTraceHeader,
+  parseTraceParentHeader,
 } from '../src/context';
 
 describe('context', () => {
@@ -32,13 +31,17 @@ describe('context', () => {
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
     });
@@ -47,7 +50,9 @@ describe('context', () => {
       const req = {
         method: 'GET',
       } as http.IncomingMessage;
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       assert.strictEqual(wrapper, null);
     });
   });
@@ -64,9 +69,9 @@ describe('context', () => {
     });
 
     it('should return a formatted W3C trace context first', () => {
-      const req = {
+      const req = ({
         headers: {['traceparent']: 'version-1-2-01'},
-      } as unknown as http.IncomingMessage;
+      } as unknown) as http.IncomingMessage;
       const context = getOrInjectContext(req, 'myProj', true);
       assert(context.trace, '1');
       assert(context.spanId, '2');
@@ -74,9 +79,9 @@ describe('context', () => {
     });
 
     it('should return a formatted Google trace context next', () => {
-      const req = {
+      const req = ({
         headers: {['x-cloud-trace-context']: '1/2;o=1'},
-      } as unknown as http.IncomingMessage;
+      } as unknown) as http.IncomingMessage;
       const projectId = 'myProj';
       const context = getOrInjectContext(req, projectId, true);
       assert.strictEqual(context.trace, `projects/${projectId}/traces/1`);
@@ -96,10 +101,8 @@ describe('context', () => {
     });
   });
 
-  describe('getContextFromXCloudTrace', () => {});
-
   describe('parseXCloudTraceHeader', () => {
-    it('should extract trace & span from X-Cloud-Trace-Context', () => {
+    it('should extract trace properties from X-Cloud-Trace-Context', () => {
       const tests = [
         {
           header: '105445aa7843bc8bf206b120001000/000000001;o=1',
@@ -156,9 +159,9 @@ describe('context', () => {
         },
       ];
       for (const test of tests) {
-        const req = {
+        const req = ({
           method: 'GET',
-        } as unknown as http.IncomingMessage;
+        } as unknown) as http.IncomingMessage;
         req.headers = {
           'x-cloud-trace-context': test.header,
         };
@@ -189,6 +192,66 @@ describe('context', () => {
   });
 
   describe('parseTraceParentHeader', () => {
-    // TODO
+    it('should extract trace properties from traceparent', () => {
+      const tests = [
+        {
+          header: '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+          expected: {
+            trace: '0af7651916cd43dd8448eb211c80319c',
+            spanId: 'b7ad6b7169203331',
+            traceSampled: true,
+          },
+        },
+        // TraceSampled is false
+        {
+          header: '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-00',
+          expected: {
+            trace: '0af7651916cd43dd8448eb211c80319c',
+            spanId: 'b7ad6b7169203331',
+            traceSampled: false,
+          },
+        },
+        {
+          // No input
+          header: '',
+          expected: {
+            trace: undefined,
+            spanId: undefined,
+            traceSampled: false,
+          },
+        },
+      ];
+      for (const test of tests) {
+        const req = ({
+          method: 'GET',
+        } as unknown) as http.IncomingMessage;
+        req.headers = {
+          traceparent: test.header,
+        };
+
+        const wrapper = makeHeaderWrapper(req);
+        const context = parseTraceParentHeader(wrapper!);
+        if (context) {
+          assert.strictEqual(
+            context.trace,
+            test.expected.trace,
+            `From ${test.header}; Expected trace: ${test.expected.trace}; Got: ${context.trace}`
+          );
+          assert.strictEqual(
+            context.spanId,
+            test.expected.spanId,
+            `From ${test.header}; Expected spanId: ${test.expected.spanId}; Got: ${context.spanId}`
+          );
+          assert.strictEqual(
+            context.traceSampled,
+            test.expected.traceSampled,
+            `From ${test.header}; Expected traceSampled: ${test.expected.traceSampled}; Got: ${context.traceSampled}`
+          );
+        } else {
+          // This is the header: '' test case;
+          assert.strictEqual(test.header, '');
+        }
+      }
+    });
   });
 });
