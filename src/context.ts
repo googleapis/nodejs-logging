@@ -115,8 +115,8 @@ export function getOrInjectContext(
  * toCloudTraceContext converts any context format to cloudTraceContext format.
  * @param context
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toCloudTraceContext(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   anyContext: any,
   projectId: string
 ): CloudTraceContext {
