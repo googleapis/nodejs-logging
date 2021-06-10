@@ -16,7 +16,7 @@
 
 import * as http from 'http';
 import onFinished = require('on-finished');
-import {getTraceContext} from '../../context';
+import {getOrInjectContext} from '../../context';
 import {
   makeHttpRequestData,
   ServerRequest,
@@ -63,7 +63,7 @@ export function makeMiddleware<LoggerType>(
 
     // Detect & establish context if we were the first actor to detect lack of
     // context so traceContext is always available when using middleware.
-    const traceContext = getTraceContext(req, projectId, true);
+    const traceContext = getOrInjectContext(req, projectId, true);
 
     // Install a child logger on the request object, with detected trace and
     // span.

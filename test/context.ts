@@ -16,42 +16,33 @@
 
 import * as assert from 'assert';
 import {describe, it, beforeEach} from 'mocha';
-import * as proxyquire from 'proxyquire';
 import * as http from 'http';
 import {
-  getCloudTraceContext,
-  getTraceContext,
+  getOrInjectContext,
   makeHeaderWrapper,
+  getContextFromXCloudTrace,
+  getContextFromTraceParent,
+  parseXCloudTraceHeader,
 } from '../src/context';
 
-describe('get trace and span from http-request', () => {
-  const FAKE_CONTEXT = {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    extract: (headerWrapper: {}) => {},
-    generate: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    inject: (headerWrapper: {}, spanContext: {}) => {},
-  };
-
-  const fakeContext = Object.assign({}, FAKE_CONTEXT);
-
-  const {getOrInjectTraceParent} = proxyquire('../src/context', {
-    '@opencensus/propagation-stackdriver': fakeContext,
-  });
-
+describe('context', () => {
   describe('makeHeaderWrapper', () => {
     const HEADER_NAME = 'Content-Type';
     const HEADER_VALUE = 'application/🎂';
 
     it('should correctly get request headers', () => {
       const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
     });
 
     it('should correctly set request headers', () => {
       const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
       assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
     });
@@ -60,44 +51,60 @@ describe('get trace and span from http-request', () => {
       const req = {
         method: 'GET',
       } as http.IncomingMessage;
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      const wrapper = makeHeaderWrapper(
+        (req as unknown) as http.IncomingMessage
+      );
       assert.strictEqual(wrapper, null);
     });
   });
 
-  describe('getTraceContext', () => {
+  describe('getOrInjectContext', () => {
     it('should return a default trace context when all detection fails', () => {
       const req = {
         method: 'GET',
       } as http.IncomingMessage;
-      const context = getTraceContext(req, 'myProj');
+      const context = getOrInjectContext(req, 'myProj');
       assert.strictEqual(context.trace, '');
       assert.strictEqual(context.spanId, undefined);
       assert.strictEqual(context.traceSampled, undefined);
     });
 
-    it('should return a formatted Google Cloud trace context first', () => {
+    it('should return a formatted W3C trace context first', () => {
+      const req = ({
+        headers: {['traceparent']: 'version-1-2-01'},
+      } as unknown) as http.IncomingMessage;
+      const context = getOrInjectContext(req, 'myProj', true);
+      assert(context.trace, '1');
+      assert(context.spanId, '2');
+      assert.strictEqual(context.traceSampled, true);
+    });
+
+    it('should return a formatted Google trace context next', () => {
       const req = {
         headers: {['x-cloud-trace-context']: '1/2;o=1'},
       } as unknown as http.IncomingMessage;
       const projectId = 'myProj';
-      const context = getTraceContext(req, projectId);
+      const context = getOrInjectContext(req, projectId, true);
       assert.strictEqual(context.trace, `projects/${projectId}/traces/1`);
       assert.strictEqual(context.spanId, '2');
       assert.strictEqual(context.traceSampled, true);
     });
 
-    it('should return a formatted W3C trace context next', () => {
+    it('should intentionally inject a Google trace context', () => {
       const req = {headers: {}} as http.IncomingMessage;
+      const projectId = 'myProj';
       // This should generate a span and trace if not available.
-      const context = getTraceContext(req, 'myProj', true);
-      assert(context.trace.includes('projects/myProj/traces/'));
+      const context = getOrInjectContext(req, projectId, true);
+      console.log(context);
+      assert(context.trace.includes(`projects/${projectId}/traces/`));
       assert(context.spanId!.length > 0);
-      assert.strictEqual(context.traceSampled, undefined);
+      assert.strictEqual(context.traceSampled, true);
     });
   });
 
-  describe('getCloudTraceContext', () => {
+  describe('getContextFromXCloudTrace', () => {});
+
+  describe('parseXCloudTraceHeader', () => {
     it('should extract trace & span from X-Cloud-Trace-Context', () => {
       const tests = [
         {
@@ -155,15 +162,15 @@ describe('get trace and span from http-request', () => {
         },
       ];
       for (const test of tests) {
-        const req = {
+        const req = ({
           method: 'GET',
-        } as unknown as http.IncomingMessage;
+        } as unknown) as http.IncomingMessage;
         req.headers = {
           'x-cloud-trace-context': test.header,
         };
 
         const wrapper = makeHeaderWrapper(req);
-        const context = getCloudTraceContext(wrapper!);
+        const context = parseXCloudTraceHeader(wrapper!);
         if (context) {
           assert.strictEqual(
             context.trace,
@@ -187,51 +194,7 @@ describe('get trace and span from http-request', () => {
     });
   });
 
-  describe('getOrInjectTraceParent', () => {
-    beforeEach(() => {
-      fakeContext.extract = FAKE_CONTEXT.extract;
-      fakeContext.generate = FAKE_CONTEXT.generate;
-      fakeContext.inject = FAKE_CONTEXT.inject;
-    });
-
-    it('should return a W3C extracted trace context', () => {
-      const FAKE_SPAN_CONTEXT = '👾';
-      fakeContext.extract = () => FAKE_SPAN_CONTEXT;
-      fakeContext.generate = () => assert.fail('should not be called');
-      fakeContext.inject = () => assert.fail('should not be called');
-
-      const ret = getOrInjectTraceParent({});
-      assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
-    });
-
-    it('should not generate a new context if extract returns falsy', () => {
-      let injectWasCalled = false;
-      const FAKE_SPAN_CONTEXT = '👾';
-      fakeContext.extract = () => false;
-      fakeContext.generate = () => FAKE_SPAN_CONTEXT;
-      fakeContext.inject = (_, spanContext) => {
-        injectWasCalled = true;
-        assert.strictEqual(spanContext, FAKE_SPAN_CONTEXT);
-      };
-
-      const ret = getOrInjectTraceParent({}, false);
-      assert.strictEqual(ret, false);
-      assert.ok(!injectWasCalled);
-    });
-
-    it('should generate a new context if extract returns falsy and inject is true', () => {
-      let injectWasCalled = false;
-      const FAKE_SPAN_CONTEXT = '👾';
-      fakeContext.extract = () => false;
-      fakeContext.generate = () => FAKE_SPAN_CONTEXT;
-      fakeContext.inject = (_, spanContext) => {
-        injectWasCalled = true;
-        assert.strictEqual(spanContext, FAKE_SPAN_CONTEXT);
-      };
-
-      const ret = getOrInjectTraceParent({}, true);
-      assert.strictEqual(ret, FAKE_SPAN_CONTEXT);
-      assert.ok(injectWasCalled);
-    });
+  describe('parseTraceParentHeader', () => {
+    // TODO
   });
 });

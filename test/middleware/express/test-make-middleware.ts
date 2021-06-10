@@ -34,7 +34,7 @@ function makeFakeResponse() {
 
 let getOrInjectContextValue: {} | undefined;
 const FAKE_CONTEXT = {
-  getTraceContext: () => {
+  getOrInjectContext: () => {
     return getOrInjectContextValue;
   },
 };

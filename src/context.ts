@@ -20,12 +20,11 @@
  * from available HTTP header context.
  *
  * Specifically:
- * - If header context `traceparent` is available from OpenTelemetry (via W3
- * context propagation protocol), we extract trace and spanId.
- * - If header context `X-Cloud-Trace-Context` is available from the user or
- * Cloud Trace, we extract trace, spanId, and traceSampled fields.
- * - In the middleware scenario, we autoinject a `traceparent` context if one is
- * not available.
+ * - We extract trace context if `traceparent` is available via W3 protocol
+ * - We extract trace context if `X-Cloud-Trace-Context` is available from the
+ * user or Google Cloud Trace.
+ * - In the middleware scenario, we auto-inject a Google trace context if one
+ * is not available.
  */
 
 import * as http from 'http';
@@ -82,12 +81,12 @@ export interface CloudTraceContext {
 }
 
 /**
- * getTraceContext returns a CloudTraceContext with as many available trace and
- * span properties as possible. It examines HTTP headers for trace context.
+ * getOrInjectContext returns a CloudTraceContext with as many available trace
+ * and span properties as possible. It examines HTTP headers for trace context.
  * Optionally, it can inject a Google compliant trace context when no context is
  * available from headers.
  */
-export function getTraceContext(
+export function getOrInjectContext(
   req: http.IncomingMessage,
   projectId: string,
   inject?: boolean
@@ -101,22 +100,13 @@ export function getTraceContext(
     // Detect 'X-Cloud-Trace-Context' header.
     const cloudContext = getContextFromXCloudTrace(wrapper, projectId);
     if (cloudContext) return cloudContext;
-    if (!cloudContext && inject) {
+    // Optional: Generate and inject a context for the user;
+    if (inject) {
       wrapper.setHeader(X_CLOUD_HEADER, makeCloudTraceHeader());
       return getContextFromXCloudTrace(wrapper, projectId)!;
     }
   }
   return defaultContext;
-}
-
-/**
- * makeCloudTraceHeader generates valid X-Cloud-Trace-Context headers
- */
-function makeCloudTraceHeader(): string {
-  const trace = uuid.v4().replace(/-/g, '');
-  const spanId = spanRandomBuffer().toString('hex');
-  const traceSampled = true;
-  return `${trace}/${spanId};o=${traceSampled}`;
 }
 
 /**
@@ -140,6 +130,15 @@ function toCloudTraceContext(
     context.traceSampled = anyContext.traceSampled;
   }
   return context;
+}
+
+/**
+ * makeCloudTraceHeader generates valid X-Cloud-Trace-Context headers
+ */
+function makeCloudTraceHeader(): string {
+  const trace = uuid.v4().replace(/-/g, '');
+  const spanId = spanRandomBuffer().toString('hex');
+  return `${trace}/${spanId};o=1`;
 }
 
 export function getContextFromXCloudTrace(

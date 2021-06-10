@@ -20,7 +20,7 @@ import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
 import {makeHttpRequestData, CloudLoggingHttpRequest} from './http-request';
-import {getTraceContext, CloudTraceContext} from './context';
+import {CloudTraceContext, getOrInjectContext} from './context';
 import * as http from 'http';
 
 const eventId = new EventId();
@@ -228,7 +228,8 @@ class Entry {
   private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {
-      return getTraceContext(rawReq, projectId);
+      // TODO: later we may want to switch this to true.
+      return getOrInjectContext(rawReq, projectId, false);
     }
     return null;
   }

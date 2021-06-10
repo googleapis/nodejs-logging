@@ -20,7 +20,7 @@ import {ServerResponse} from 'http';
 import * as http from 'http';
 import {ServerRequest, makeHttpRequestData} from '../src/http-request';
 
-describe('format raw http request to structured http-request', () => {
+describe('http-request', () => {
   describe('makeHttpRequestData', () => {
     it('should prioritize originalUrl if provided', () => {
       const req = {
