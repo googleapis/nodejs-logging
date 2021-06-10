@@ -113,6 +113,7 @@ export function getOrInjectContext(
  * toCloudTraceContext converts any context format to cloudTraceContext format.
  * @param context
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toCloudTraceContext(
   anyContext: any,
   projectId: string
@@ -220,6 +221,6 @@ export function parseTraceParentHeader(
   return {
     trace: match[2],
     spanId: match[3],
-    traceSampled: parseInt(match[4], 16) == 1,
+    traceSampled: parseInt(match[4], 16) === 1,
   };
 }

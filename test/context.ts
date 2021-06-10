@@ -15,7 +15,7 @@
  */
 
 import * as assert from 'assert';
-import {describe, it, beforeEach} from 'mocha';
+import {describe, it} from 'mocha';
 import * as http from 'http';
 import {
   getOrInjectContext,
@@ -182,7 +182,7 @@ describe('context', () => {
             `From ${test.header}; Expected traceSampled: ${test.expected.traceSampled}; Got: ${context.traceSampled}`
           );
         } else {
-          assert(false);
+          assert.fail();
         }
       }
     });

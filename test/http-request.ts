@@ -15,7 +15,7 @@
  */
 
 import * as assert from 'assert';
-import {describe, it, beforeEach} from 'mocha';
+import {describe, it} from 'mocha';
 import {ServerResponse} from 'http';
 import * as http from 'http';
 import {ServerRequest, makeHttpRequestData} from '../src/http-request';
