@@ -31,12 +31,6 @@
 import * as http from 'http';
 import * as w3cContext from '@opencensus/propagation-stackdriver';
 
-export interface CloudTraceContext {
-  trace: string;
-  spanId?: string;
-  traceSampled?: boolean;
-}
-
 /**
  * HeaderWrapper: wraps getHeader and setHeader operations.
  */
@@ -64,6 +58,43 @@ export function makeHeaderWrapper(
 }
 
 /**
+ * CloudTraceContext: Cloud Logging compliant trace context.
+ */
+export interface CloudTraceContext {
+  trace: string;
+  spanId?: string;
+  traceSampled?: boolean;
+}
+
+/**
+ * toCloudTraceContext converts any context format to cloudTraceContext format.
+ * @param context
+ */
+function toCloudTraceContext(
+  anyContext: any,
+  projectId: string
+): CloudTraceContext {
+  const context: CloudTraceContext = {
+    trace: '',
+    spanId: undefined,
+    traceSampled: undefined,
+  };
+  if (anyContext?.trace) {
+    context.trace = `projects/${projectId}/traces/${anyContext.trace}`;
+  }
+  if (anyContext?.traceId) {
+    context.trace = `projects/${projectId}/traces/${anyContext.traceId}`;
+  }
+  if (anyContext?.spanId) {
+    context.spanId = anyContext.spanId;
+  }
+  if (anyContext?.traceSampled) {
+    context.traceSampled = anyContext.traceSampled;
+  }
+  return context;
+}
+
+/**
  * getTraceContext returns a CloudTraceContext with as many available trace and
  * span properties as possible. It examines HTTP headers for trace context.
  * Optionally, it can inject a W3C compliant trace context when no context is
@@ -74,29 +105,20 @@ export function getTraceContext(
   projectId: string,
   inject?: boolean
 ): CloudTraceContext {
-  const context: CloudTraceContext = {
-    trace: '',
-    spanId: undefined,
-    traceSampled: undefined,
-  };
+  let traceContext = toCloudTraceContext({}, projectId);
   const wrapper = makeHeaderWrapper(req);
   if (wrapper) {
     // Detect 'X-Cloud-Trace-Context' header.
     const cloudContext = getCloudTraceContext(wrapper);
     if (cloudContext) {
-      context.trace = `projects/${projectId}/traces/${cloudContext.trace}`;
-      context.spanId = cloudContext.spanId;
-      context.traceSampled = cloudContext.traceSampled;
+      traceContext = toCloudTraceContext(cloudContext, projectId);
     } else {
-      // Detect 'traceparent' header, optionally injecting one if not available.
+      // Detect 'traceparent' header.
       const parentContext = getOrInjectTraceParent(wrapper, inject);
-      if (parentContext) {
-        context.trace = `projects/${projectId}/traces/${parentContext.traceId}`;
-        context.spanId = parentContext.spanId;
-      }
+      traceContext = toCloudTraceContext(parentContext, projectId);
     }
   }
-  return context;
+  return traceContext;
 }
 
 /**
@@ -125,7 +147,7 @@ export function getCloudTraceContext(
 }
 
 /**
- * getCloudTraceContext looks for the HTTP header 'traceparent'
+ * getOrInjectTraceParent looks for the HTTP header 'traceparent'
  * per W3C specifications for OpenTelemetry and OpenCensus
  * Read more about W3C protocol: https://www.w3.org/TR/trace-context/
  *

@@ -39,8 +39,34 @@ describe('get trace and span from http-request', () => {
     '@opencensus/propagation-stackdriver': fakeContext,
   });
 
+  describe('makeHeaderWrapper', () => {
+    const HEADER_NAME = 'Content-Type';
+    const HEADER_VALUE = 'application/🎂';
+
+    it('should correctly get request headers', () => {
+      const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
+    });
+
+    it('should correctly set request headers', () => {
+      const req = {headers: {} as http.IncomingHttpHeaders};
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
+      assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
+    });
+
+    it('should return null if header property is not in http request', () => {
+      const req = {
+        method: 'GET',
+      } as http.IncomingMessage;
+      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
+      assert.strictEqual(wrapper, null);
+    });
+  });
+
   describe('getTraceContext', () => {
-    it('should return an empty trace string when extraction fails and inject is false', () => {
+    it('should return a default trace context when all detection fails', () => {
       const req = {
         method: 'GET',
       } as http.IncomingMessage;
@@ -68,32 +94,6 @@ describe('get trace and span from http-request', () => {
       assert(context.trace.includes('projects/myProj/traces/'));
       assert(context.spanId!.length > 0);
       assert.strictEqual(context.traceSampled, undefined);
-    });
-  });
-
-  describe('makeHeaderWrapper', () => {
-    const HEADER_NAME = 'Content-Type';
-    const HEADER_VALUE = 'application/🎂';
-
-    it('should correctly get request headers', () => {
-      const req = {headers: {[HEADER_NAME]: HEADER_VALUE}};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
-      assert.strictEqual(wrapper!.getHeader(HEADER_NAME), HEADER_VALUE);
-    });
-
-    it('should correctly set request headers', () => {
-      const req = {headers: {} as http.IncomingHttpHeaders};
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
-      wrapper!.setHeader(HEADER_NAME, HEADER_VALUE);
-      assert.strictEqual(req.headers[HEADER_NAME], HEADER_VALUE);
-    });
-
-    it('should return null if header property is not in http request', () => {
-      const req = {
-        method: 'GET',
-      } as http.IncomingMessage;
-      const wrapper = makeHeaderWrapper(req as unknown as http.IncomingMessage);
-      assert.strictEqual(wrapper, null);
     });
   });
 
