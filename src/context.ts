@@ -29,12 +29,27 @@
  */
 
 import * as http from 'http';
-import * as w3cContext from '@opencensus/propagation-stackdriver';
+import * as uuid from 'uuid';
+import * as crypto from 'crypto';
+/** Header that carries span context across Google infrastructure. */
+export const X_CLOUD_HEADER = 'x-cloud-trace-context';
+/** Header that carries span context across W3C compliant infrastructure. */
+export const TRACE_PARENT_HEADER = 'traceparent';
+const SPAN_ID_RANDOM_BYTES = 8;
+const spanIdBuffer = Buffer.alloc(SPAN_ID_RANDOM_BYTES);
+const randomFillSync = crypto.randomFillSync;
+const randomBytes = crypto.randomBytes;
+const spanRandomBuffer = randomFillSync
+  ? () => randomFillSync(spanIdBuffer)
+  : () => randomBytes(SPAN_ID_RANDOM_BYTES);
 
 /**
- * HeaderWrapper: wraps getHeader and setHeader operations.
+ * An transport and environment neutral API for getting request headers.
  */
-export type HeaderWrapper = w3cContext.HeaderGetter & w3cContext.HeaderSetter;
+export interface HeaderWrapper {
+  getHeader(name: string): string | string[] | undefined;
+  setHeader(name: string, value: string): void;
+}
 
 /**
  * makeHeaderWrapper returns a wrapper with set and get header functionality,
@@ -67,6 +82,44 @@ export interface CloudTraceContext {
 }
 
 /**
+ * getTraceContext returns a CloudTraceContext with as many available trace and
+ * span properties as possible. It examines HTTP headers for trace context.
+ * Optionally, it can inject a Google compliant trace context when no context is
+ * available from headers.
+ */
+export function getTraceContext(
+  req: http.IncomingMessage,
+  projectId: string,
+  inject?: boolean
+): CloudTraceContext {
+  const defaultContext = toCloudTraceContext({}, projectId);
+  const wrapper = makeHeaderWrapper(req);
+  if (wrapper) {
+    // Detect 'traceparent' header.
+    const traceContext = getContextFromTraceParent(wrapper, projectId);
+    if (traceContext) return traceContext;
+    // Detect 'X-Cloud-Trace-Context' header.
+    const cloudContext = getContextFromXCloudTrace(wrapper, projectId);
+    if (cloudContext) return cloudContext;
+    if (!cloudContext && inject) {
+      wrapper.setHeader(X_CLOUD_HEADER, makeCloudTraceHeader());
+      return getContextFromXCloudTrace(wrapper, projectId)!;
+    }
+  }
+  return defaultContext;
+}
+
+/**
+ * makeCloudTraceHeader generates valid X-Cloud-Trace-Context headers
+ */
+function makeCloudTraceHeader(): string {
+  const trace = uuid.v4().replace(/-/g, '');
+  const spanId = spanRandomBuffer().toString('hex');
+  const traceSampled = true;
+  return `${trace}/${spanId};o=${traceSampled}`;
+}
+
+/**
  * toCloudTraceContext converts any context format to cloudTraceContext format.
  * @param context
  */
@@ -76,14 +129,9 @@ function toCloudTraceContext(
 ): CloudTraceContext {
   const context: CloudTraceContext = {
     trace: '',
-    spanId: undefined,
-    traceSampled: undefined,
   };
   if (anyContext?.trace) {
     context.trace = `projects/${projectId}/traces/${anyContext.trace}`;
-  }
-  if (anyContext?.traceId) {
-    context.trace = `projects/${projectId}/traces/${anyContext.traceId}`;
   }
   if (anyContext?.spanId) {
     context.spanId = anyContext.spanId;
@@ -94,56 +142,14 @@ function toCloudTraceContext(
   return context;
 }
 
-/**
- * getTraceContext returns a CloudTraceContext with as many available trace and
- * span properties as possible. It examines HTTP headers for trace context.
- * Optionally, it can inject a W3C compliant trace context when no context is
- * available from headers.
- */
-export function getTraceContext(
-  req: http.IncomingMessage,
+export function getContextFromXCloudTrace(
+  headerWrapper: HeaderWrapper,
   projectId: string,
-  inject?: boolean
-): CloudTraceContext {
-  let traceContext = toCloudTraceContext({}, projectId);
-  const wrapper = makeHeaderWrapper(req);
-  if (wrapper) {
-    // Detect 'X-Cloud-Trace-Context' header.
-    const cloudContext = getCloudTraceContext(wrapper);
-    if (cloudContext) {
-      traceContext = toCloudTraceContext(cloudContext, projectId);
-    } else {
-      // Detect 'traceparent' header.
-      const parentContext = getOrInjectTraceParent(wrapper, inject);
-      traceContext = toCloudTraceContext(parentContext, projectId);
-    }
-  }
-  return traceContext;
-}
-
-/**
- * getCloudTraceContext looks for the HTTP header 'X-Cloud-Trace-Context'
- * per Cloud Trace specifications. `traceSampled` is false by default.
- * @param headerWrapper
- */
-export function getCloudTraceContext(
-  headerWrapper: HeaderWrapper
 ): CloudTraceContext | null {
-  // Infer trace & span if not user specified already
-  const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
-  const match = headerWrapper
-    .getHeader('x-cloud-trace-context')
-    ?.toString()
-    .match(regex);
-  if (match) {
-    return {
-      trace: match[1],
-      spanId: match[3],
-      traceSampled: match[5] === '1',
-    };
-  } else {
-    return null;
-  }
+  const context = parseXCloudTraceHeader(headerWrapper);
+  if (!context) return null;
+  const formatted = toCloudTraceContext(context, projectId);
+  return formatted;
 }
 
 /**
@@ -157,16 +163,64 @@ export function getCloudTraceContext(
  * @param headerWrapper
  * @param inject
  */
-export function getOrInjectTraceParent(
+export function getContextFromTraceParent(
   headerWrapper: HeaderWrapper,
+  projectId: string,
   inject?: boolean
-): w3cContext.SpanContext | null {
-  let spanContext = w3cContext.extract(headerWrapper);
-  if (spanContext) return spanContext;
-  if (inject) {
-    // We were the first actor to detect lack of context. Establish context.
-    spanContext = w3cContext.generate();
-    w3cContext.inject(headerWrapper, spanContext);
-  }
-  return spanContext;
+): CloudTraceContext | null {
+  const context = parseTraceParentHeader(headerWrapper);
+  if (!context) return null;
+  return toCloudTraceContext(context, projectId);
+}
+
+/**
+ * parseXCloudTraceHeader looks for trace context in `X-Cloud-Trace-Context`
+ * header
+ * @param headerWrapper
+ */
+export function parseXCloudTraceHeader(
+  headerWrapper: HeaderWrapper
+): CloudTraceContext | null {
+  const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
+  const match = headerWrapper
+    .getHeader(X_CLOUD_HEADER)
+    ?.toString()
+    .match(regex);
+  if (!match) return null;
+  return {
+    trace: match[1],
+    spanId: match[3],
+    traceSampled: match[5] === '1',
+  };
+}
+
+/**
+ * parseTraceParentHeader is a custom implementation of the `parseTraceParent`
+ * function in @opentelemetry-core/trace.
+ * For more information see {@link https://www.w3.org/TR/trace-context/}
+ */
+export function parseTraceParentHeader(
+  headerWrapper: HeaderWrapper
+): CloudTraceContext | null {
+  const VERSION_PART = '(?!ff)[\\da-f]{2}';
+  const TRACE_ID_PART = '(?![0]{32})[\\da-f]{32}';
+  const PARENT_ID_PART = '(?![0]{16})[\\da-f]{16}';
+  const FLAGS_PART = '[\\da-f]{2}';
+  const TRACE_PARENT_REGEX = new RegExp(
+    `^\\s?(${VERSION_PART})-(${TRACE_ID_PART})-(${PARENT_ID_PART})-(${FLAGS_PART})(-.*)?\\s?$`
+  );
+  const match = headerWrapper
+    .getHeader(TRACE_PARENT_HEADER)
+    ?.toString()
+    .match(TRACE_PARENT_REGEX);
+  if (!match) return null;
+  // According to the specification the implementation should be compatible
+  // with future versions. If there are more parts, we only reject it if it's using version 00
+  // See https://www.w3.org/TR/trace-context/#versioning-of-traceparent
+  if (match[1] === '00' && match[5]) return null;
+  return {
+    trace: match[2],
+    spanId: match[3],
+    traceSampled: parseInt(match[4], 16) == 1,
+  };
 }
