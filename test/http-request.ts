@@ -18,10 +18,7 @@ import * as assert from 'assert';
 import {describe, it, beforeEach} from 'mocha';
 import {ServerResponse} from 'http';
 import * as http from 'http';
-import {
-  ServerRequest,
-  makeHttpRequestData
-} from '../src/http-request';
+import {ServerRequest, makeHttpRequestData} from '../src/http-request';
 
 describe('format raw http request to structured http-request', () => {
   describe('makeHttpRequestData', () => {

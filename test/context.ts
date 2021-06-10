@@ -166,19 +166,19 @@ describe('get trace and span from http-request', () => {
         const context = getCloudTraceContext(wrapper!);
         if (context) {
           assert.strictEqual(
-              context.trace,
-              test.expected.trace,
-              `From ${test.header}; Expected trace: ${test.expected.trace}; Got: ${context.trace}`
+            context.trace,
+            test.expected.trace,
+            `From ${test.header}; Expected trace: ${test.expected.trace}; Got: ${context.trace}`
           );
           assert.strictEqual(
-              context.spanId,
-              test.expected.spanId,
-              `From ${test.header}; Expected spanId: ${test.expected.spanId}; Got: ${context.spanId}`
+            context.spanId,
+            test.expected.spanId,
+            `From ${test.header}; Expected spanId: ${test.expected.spanId}; Got: ${context.spanId}`
           );
           assert.strictEqual(
-              context.traceSampled,
-              test.expected.traceSampled,
-              `From ${test.header}; Expected traceSampled: ${test.expected.traceSampled}; Got: ${context.traceSampled}`
+            context.traceSampled,
+            test.expected.traceSampled,
+            `From ${test.header}; Expected traceSampled: ${test.expected.traceSampled}; Got: ${context.traceSampled}`
           );
         } else {
           assert(false);

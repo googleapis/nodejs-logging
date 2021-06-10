@@ -57,11 +57,7 @@ export function makeMiddleware<LoggerType>(
     traceSampled?: boolean
   ) => void
 ) {
-  return (
-    req: ServerRequest,
-    res: http.ServerResponse,
-    next: Function
-  ) => {
+  return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 
