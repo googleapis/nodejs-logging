@@ -32,7 +32,7 @@ import * as uuid from 'uuid';
 import * as crypto from 'crypto';
 
 /** Header that carries span context across Google infrastructure. */
-export const X_CLOUD_HEADER = 'x-cloud-trace-context';
+export const X_CLOUD_TRACE_HEADER = 'x-cloud-trace-context';
 const SPAN_ID_RANDOM_BYTES = 8;
 const spanIdBuffer = Buffer.alloc(SPAN_ID_RANDOM_BYTES);
 const randomFillSync = crypto.randomFillSync;
@@ -42,7 +42,7 @@ const spanRandomBuffer = randomFillSync
   : () => randomBytes(SPAN_ID_RANDOM_BYTES);
 
 /** Header that carries span context across W3C compliant infrastructure. */
-export const TRACE_PARENT_HEADER = 'traceparent';
+export const W3C_TRACE_PARENT_HEADER = 'traceparent';
 
 /**
  * An transport and environment neutral API for getting request headers.
@@ -106,9 +106,9 @@ export function getOrInjectContext(
     // Detect 'X-Cloud-Trace-Context' header.
     const cloudContext = getContextFromXCloudTrace(wrapper, projectId);
     if (cloudContext) return cloudContext;
-    // Optional: Generate and inject a context for the user;
+    // Optional: Generate and inject a context for the user as last resort.
     if (inject) {
-      wrapper.setHeader(X_CLOUD_HEADER, makeCloudTraceHeader());
+      wrapper.setHeader(X_CLOUD_TRACE_HEADER, makeCloudTraceHeader());
       return getContextFromXCloudTrace(wrapper, projectId)!;
     }
   }
@@ -192,7 +192,7 @@ export function parseXCloudTraceHeader(
 ): CloudTraceContext | null {
   const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
   const match = headerWrapper
-    .getHeader(X_CLOUD_HEADER)
+    .getHeader(X_CLOUD_TRACE_HEADER)
     ?.toString()
     .match(regex);
   if (!match) return null;
@@ -220,7 +220,7 @@ export function parseTraceParentHeader(
     `^\\s?(${VERSION_PART})-(${TRACE_ID_PART})-(${PARENT_ID_PART})-(${FLAGS_PART})(-.*)?\\s?$`
   );
   const match = headerWrapper
-    .getHeader(TRACE_PARENT_HEADER)
+    .getHeader(W3C_TRACE_PARENT_HEADER)
     ?.toString()
     .match(TRACE_PARENT_REGEX);
   if (!match) return null;
