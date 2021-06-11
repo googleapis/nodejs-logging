@@ -4,6 +4,19 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.4.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.3.1...v9.4.0) (2021-06-11)
+
+
+### Features
+
+* detect Google and W3C trace context (including in middleware) ([#1088](https://www.github.com/googleapis/nodejs-logging/issues/1088)) ([864f188](https://www.github.com/googleapis/nodejs-logging/commit/864f18848c87a22c335b48e60a1d4505d3c9bd94))
+* users can log raw http request objects with trace ([#1086](https://www.github.com/googleapis/nodejs-logging/issues/1086)) ([19b943e](https://www.github.com/googleapis/nodejs-logging/commit/19b943eb44b2c046ab4f2b4886a79f9c42536c2a))
+
+
+### Bug Fixes
+
+* Report warning on `.github/workflows/ci.yaml` ([#1110](https://www.github.com/googleapis/nodejs-logging/issues/1110)) ([#1089](https://www.github.com/googleapis/nodejs-logging/issues/1089)) ([0d8b8d0](https://www.github.com/googleapis/nodejs-logging/commit/0d8b8d0d3129db9f3cbd2eed7c1234b14705dd9e))
+
 ### [9.3.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.3.0...v9.3.1) (2021-05-25)
 
 
