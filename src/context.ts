@@ -134,19 +134,19 @@ function toCloudTraceContext(
   if (anyContext?.spanId) {
     context.spanId = anyContext.spanId;
   }
-  if (anyContext?.traceSampled) {
+  if ('traceSampled' in anyContext) {
     context.traceSampled = anyContext.traceSampled;
   }
   return context;
 }
 
 /**
- * makeCloudTraceHeader generates valid X-Cloud-Trace-Context headers
+ * makeCloudTraceHeader generates valid X-Cloud-Trace-Context trace and spanId.
  */
 function makeCloudTraceHeader(): string {
   const trace = uuid.v4().replace(/-/g, '');
   const spanId = spanRandomBuffer().toString('hex');
-  return `${trace}/${spanId};o=1`;
+  return `${trace}/${spanId}`;
 }
 
 /**

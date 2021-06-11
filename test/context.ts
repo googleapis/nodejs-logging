@@ -64,11 +64,11 @@ describe('context', () => {
 
     it('should return a formatted W3C trace context first', () => {
       const req = {
-        headers: {['traceparent']: 'version-1-2-01'},
+        headers: {['traceparent']: '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01'},
       } as unknown as http.IncomingMessage;
-      const context = getOrInjectContext(req, 'myProj', true);
-      assert(context.trace, '1');
-      assert(context.spanId, '2');
+      const context = getOrInjectContext(req, 'myProj');
+      assert(context.trace, '0af7651916cd43dd8448eb211c80319c');
+      assert(context.spanId, 'b7ad6b7169203331');
       assert.strictEqual(context.traceSampled, true);
     });
 
@@ -77,7 +77,7 @@ describe('context', () => {
         headers: {['x-cloud-trace-context']: '1/2;o=1'},
       } as unknown as http.IncomingMessage;
       const projectId = 'myProj';
-      const context = getOrInjectContext(req, projectId, true);
+      const context = getOrInjectContext(req, projectId);
       assert.strictEqual(context.trace, `projects/${projectId}/traces/1`);
       assert.strictEqual(context.spanId, '2');
       assert.strictEqual(context.traceSampled, true);
@@ -88,10 +88,9 @@ describe('context', () => {
       const projectId = 'myProj';
       // This should generate a span and trace if not available.
       const context = getOrInjectContext(req, projectId, true);
-      console.log(context);
       assert(context.trace.includes(`projects/${projectId}/traces/`));
       assert(context.spanId!.length > 0);
-      assert.strictEqual(context.traceSampled, true);
+      assert.strictEqual(context.traceSampled, false);
     });
   });
 
