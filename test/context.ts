@@ -64,7 +64,10 @@ describe('context', () => {
 
     it('should return a formatted W3C trace context first', () => {
       const req = {
-        headers: {['traceparent']: '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01'},
+        headers: {
+          ['traceparent']:
+            '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+        },
       } as unknown as http.IncomingMessage;
       const context = getOrInjectContext(req, 'myProj');
       assert(context.trace, '0af7651916cd43dd8448eb211c80319c');
