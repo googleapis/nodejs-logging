@@ -19,8 +19,8 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
-import {CloudLoggingHttpRequest} from './http-request';
-import {makeHttpRequestData} from './make-http-request';
+import {makeHttpRequestData, CloudLoggingHttpRequest} from './http-request';
+import {CloudTraceContext, getOrInjectContext} from './context';
 import * as http from 'http';
 
 const eventId = new EventId();
@@ -162,12 +162,11 @@ class Entry {
    * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
    *
    * @param {object} [options] Configuration object.
+   * @param projectId
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
-  toJSON(options: ToJsonOptions = {}) {
-    // Format raw httpRequest and trace/span if available.
-    this.formatHttpRequest();
+  toJSON(options: ToJsonOptions = {}, projectId = '') {
     const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
@@ -197,46 +196,42 @@ class Entry {
         nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
       };
     }
+    // Format httpRequest
+    const req = this.metadata.httpRequest;
+    if (
+      req &&
+      ('statusCode' in req ||
+        'headers' in req ||
+        'method' in req ||
+        'url' in req)
+    ) {
+      entry.httpRequest = makeHttpRequestData(req);
+    }
+    // Format trace and span
+    const traceContext = this.extractTraceFromHeaders(projectId);
+    if (traceContext) {
+      if (!this.metadata.trace && traceContext.trace)
+        entry.trace = traceContext.trace;
+      if (!this.metadata.spanId && traceContext.spanId)
+        entry.spanId = traceContext.spanId;
+      if (this.metadata.traceSampled === undefined)
+        entry.traceSampled = traceContext.traceSampled;
+    }
     return entry;
   }
 
   /**
-   * Formats raw incoming request objects into a GCP structured HTTPRequest.
-   * Formats trace & span if users provided X-Cloud-Trace-Context in header.
-   * See more: https://cloud.google.com/trace/docs/setup#force-trace
-   *    "X-Cloud-Trace-Context: TRACE_ID/SPAN_ID;o=TRACE_TRUE"
-   * for example:
-   *    "X-Cloud-Trace-Context: 105445aa7843bc8bf206b120001000/1;o=1"
-   * Note: logs from middleware are already formatted.
-   *
+   * extractTraceFromHeaders extracts trace and span information from raw HTTP
+   * request headers only.
    * @private
    */
-  private formatHttpRequest() {
+  private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
     const rawReq = this.metadata.httpRequest;
-    if (rawReq) {
-      // Handle raw http requests.
-      if (
-        'statusCode' in rawReq ||
-        'headers' in rawReq ||
-        'method' in rawReq ||
-        'url' in rawReq
-      )
-        this.metadata.httpRequest = makeHttpRequestData(rawReq);
-      // Infer trace & span if not user specified already.
-      if ('headers' in rawReq && rawReq.headers['x-cloud-trace-context']) {
-        const regex = /([a-f\d]+)?(\/?([a-f\d]+))?(;?o=(\d))?/;
-        const match = rawReq.headers['x-cloud-trace-context']
-          .toString()
-          .match(regex);
-        if (match) {
-          if (!this.metadata.trace && match[1]) this.metadata.trace = match[1];
-          if (!this.metadata.spanId && match[3])
-            this.metadata.spanId = match[3];
-          if (this.metadata.traceSampled === undefined && match[5])
-            this.metadata.traceSampled = match[5] === '1';
-        }
-      }
+    if (rawReq && 'headers' in rawReq) {
+      // TODO: later we may want to switch this to true.
+      return getOrInjectContext(rawReq, projectId, false);
     }
+    return null;
   }
 
   /**

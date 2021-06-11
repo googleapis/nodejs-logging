@@ -44,7 +44,7 @@ describe('middleware/express/make-middleware', () => {
     const {makeMiddleware} = proxyquire(
       '../../../src/middleware/express/make-middleware',
       {
-        '../context': FAKE_CONTEXT,
+        '../../../src/context': FAKE_CONTEXT,
       }
     );
 
@@ -55,14 +55,18 @@ describe('middleware/express/make-middleware', () => {
     });
 
     describe('middleware', () => {
-      const FAKE_SPAN_CONTEXT = {traceId: 'traceId-🥑'};
+      const FAKE_TRACE_CONTEXT = {trace: 'traceId-🥑'};
+      const FAKE_TRACE_AND_SPAN_CONTEXT = {
+        trace: 'traceId-🥑',
+        spanId: 'spanId-🥑',
+      };
 
       beforeEach(() => {
         getOrInjectContextValue = undefined;
       });
 
       it('should call the next middleware synchronously', () => {
-        getOrInjectContextValue = FAKE_SPAN_CONTEXT;
+        getOrInjectContextValue = FAKE_TRACE_CONTEXT;
         const fakeRequest = makeFakeRequest();
         const fakeResponse = makeFakeResponse();
         let called = false;
@@ -75,17 +79,34 @@ describe('middleware/express/make-middleware', () => {
         assert.ok(called);
       });
 
-      it('should call makeChildLogger with correct trace context', () => {
+      it('should call makeChildLogger with trace context only', () => {
         const FAKE_CHILD_LOGGER = {log: '🍌'};
-        getOrInjectContextValue = FAKE_SPAN_CONTEXT;
+        getOrInjectContextValue = FAKE_TRACE_CONTEXT;
         const fakeRequest = makeFakeRequest();
         const fakeResponse = makeFakeResponse();
 
         function makeChild(trace: {}) {
-          assert.strictEqual(
-            trace,
-            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_SPAN_CONTEXT.traceId}`
-          );
+          assert.strictEqual(trace, `${FAKE_TRACE_CONTEXT.trace}`);
+          return FAKE_CHILD_LOGGER;
+        }
+
+        const middleware = makeMiddleware(FAKE_PROJECT_ID, makeChild);
+        middleware(fakeRequest, fakeResponse, () => {});
+
+        // Should annotate the request with the child logger.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        assert.strictEqual((fakeRequest as any).log, FAKE_CHILD_LOGGER);
+      });
+
+      it('should call makeChildLogger with correct span context', () => {
+        const FAKE_CHILD_LOGGER = {log: '🍌'};
+        getOrInjectContextValue = FAKE_TRACE_AND_SPAN_CONTEXT;
+        const fakeRequest = makeFakeRequest();
+        const fakeResponse = makeFakeResponse();
+
+        function makeChild(trace: {}, span: {}) {
+          assert.strictEqual(trace, `${FAKE_TRACE_CONTEXT.trace}`);
+          assert.strictEqual(span, FAKE_TRACE_AND_SPAN_CONTEXT.spanId);
           return FAKE_CHILD_LOGGER;
         }
 
@@ -98,16 +119,13 @@ describe('middleware/express/make-middleware', () => {
       });
 
       it('should emit a request log when response is finished', done => {
-        getOrInjectContextValue = FAKE_SPAN_CONTEXT;
+        getOrInjectContextValue = FAKE_TRACE_CONTEXT;
         const fakeRequest = makeFakeRequest();
         const fakeResponse = makeFakeResponse();
         let emitRequestLogCalled = false;
 
         function emitRequestLog(httpRequest: {}, trace: {}) {
-          assert.strictEqual(
-            trace,
-            `projects/${FAKE_PROJECT_ID}/traces/${FAKE_SPAN_CONTEXT.traceId}`
-          );
+          assert.strictEqual(trace, `${FAKE_TRACE_CONTEXT.trace}`);
           // TODO: check httpRequest properties.
           emitRequestLogCalled = true;
         }

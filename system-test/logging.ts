@@ -639,7 +639,7 @@ describe('Logging', () => {
       });
     });
 
-    it('should write a raw http request log with message', done => {
+    it('should write a request log with x-cloud-trace-context header', done => {
       const {log} = getTestLog();
       const URL = 'http://www.google.com';
       // Use the response of a http request as the incomingmessage request obj.
@@ -658,8 +658,43 @@ describe('Logging', () => {
             assert.strictEqual(entry.data, 'some log message');
             assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
             assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
-            assert.strictEqual(entry.metadata.trace, '1');
+            assert.strictEqual(
+              entry.metadata.trace,
+              `projects/${PROJECT_ID}/traces/1`
+            );
             assert.strictEqual(entry.metadata.spanId, '2');
+            assert.strictEqual(entry.metadata.traceSampled, true);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should write a http request log with traceparent header', done => {
+      const {log} = getTestLog();
+      const URL = 'http://www.google.com';
+      // Use the response of a http request as the incomingmessage request obj.
+      http.get(URL, res => {
+        res.url = URL;
+        res.headers = {
+          traceparent:
+            '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+        };
+        const metadata = {httpRequest: res};
+        const logEntry = log.entry(metadata, 'some log message');
+        log.write(logEntry, err => {
+          assert.ifError(err);
+          getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+            assert.ifError(err);
+            const entry = entries![0];
+            assert.strictEqual(entry.data, 'some log message');
+            assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
+            assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
+            assert.strictEqual(
+              entry.metadata.trace,
+              `projects/${PROJECT_ID}/traces/0af7651916cd43dd8448eb211c80319c`
+            );
+            assert.strictEqual(entry.metadata.spanId, 'b7ad6b7169203331');
             assert.strictEqual(entry.metadata.traceSampled, true);
             done();
           });

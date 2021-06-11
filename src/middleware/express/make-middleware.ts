@@ -16,10 +16,12 @@
 
 import * as http from 'http';
 import onFinished = require('on-finished');
-import {getOrInjectContext, makeHeaderWrapper} from '../context';
-
-import {makeHttpRequestData, ServerRequest} from '../../make-http-request';
-import {CloudLoggingHttpRequest} from '../../http-request';
+import {getOrInjectContext} from '../../context';
+import {
+  makeHttpRequestData,
+  ServerRequest,
+  CloudLoggingHttpRequest,
+} from '../../http-request';
 
 interface AnnotatedRequestType<LoggerType> extends ServerRequest {
   log: LoggerType;
@@ -43,27 +45,46 @@ interface AnnotatedRequestType<LoggerType> extends ServerRequest {
  */
 export function makeMiddleware<LoggerType>(
   projectId: string,
-  makeChildLogger: (trace: string) => LoggerType,
-  emitRequestLog?: (httpRequest: CloudLoggingHttpRequest, trace: string) => void
+  makeChildLogger: (
+    trace: string,
+    span?: string,
+    traceSampled?: boolean
+  ) => LoggerType,
+  emitRequestLog?: (
+    httpRequest: CloudLoggingHttpRequest,
+    trace: string,
+    span?: string,
+    traceSampled?: boolean
+  ) => void
 ) {
   return (req: ServerRequest, res: http.ServerResponse, next: Function) => {
     // TODO(ofrobots): use high-resolution timer.
     const requestStartMs = Date.now();
 
-    const wrapper = makeHeaderWrapper(req);
+    // Detect & establish context if we were the first actor to detect lack of
+    // context so traceContext is always available when using middleware.
+    const traceContext = getOrInjectContext(req, projectId, true);
 
-    const spanContext = getOrInjectContext(wrapper);
-    const trace = `projects/${projectId}/traces/${spanContext.traceId}`;
+    // Install a child logger on the request object, with detected trace and
+    // span.
+    (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(
+      traceContext.trace,
+      traceContext.spanId,
+      traceContext.traceSampled
+    );
 
-    // Install a child logger on the request object.
-    (req as AnnotatedRequestType<LoggerType>).log = makeChildLogger(trace);
-
+    // Emit a 'Request Log' on the parent logger, with detected trace and
+    // span.
     if (emitRequestLog) {
-      // Emit a 'Request Log' on the parent logger.
       onFinished(res, () => {
         const latencyMs = Date.now() - requestStartMs;
         const httpRequest = makeHttpRequestData(req, res, latencyMs);
-        emitRequestLog(httpRequest, trace);
+        emitRequestLog(
+          httpRequest,
+          traceContext.trace,
+          traceContext.spanId,
+          traceContext.traceSampled
+        );
       });
     }
 
