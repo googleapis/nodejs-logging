@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.4.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.4.0...v9.4.1) (2021-06-14)
+
+
+### Bug Fixes
+
+* allow unformatted originalURL input ([#1100](https://www.github.com/googleapis/nodejs-logging/issues/1100)) ([136f90b](https://www.github.com/googleapis/nodejs-logging/commit/136f90b0926c1a04521fddd7c82d0efbf7572521))
+
 ## [9.4.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.3.1...v9.4.0) (2021-06-11)
 
 
