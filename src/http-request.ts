@@ -70,16 +70,17 @@ export function makeHttpRequestData(
     responseSize,
     latency;
   // Format request properties
-  if (req.url) {
-    requestUrl = req.url;
-    const url = new URL(requestUrl);
-    protocol = url.protocol;
-  }
+  if (req.url) requestUrl = req.url;
   // OriginalURL overwrites inferred url
-  if ('originalUrl' in req && req.originalUrl) {
-    requestUrl = req.originalUrl;
-    const url = new URL(requestUrl);
-    protocol = url.protocol;
+  if ('originalUrl' in req && req.originalUrl) requestUrl = req.originalUrl;
+  // Format protocol from valid URL
+  if (requestUrl) {
+    try {
+      const url = new URL(requestUrl);
+      protocol = url.protocol;
+    } catch (e) {
+      // Library should not panic
+    }
   }
   req.method ? (requestMethod = req.method) : null;
   if (req.headers && req.headers['user-agent']) {

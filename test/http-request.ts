@@ -33,6 +33,16 @@ describe('http-request', () => {
       assert.strictEqual(cloudReq.requestUrl, 'http://google.com/');
       assert.strictEqual(cloudReq.requestMethod, 'GET');
     });
+    it('should not panic on invalid URL', () => {
+      const req = {
+        method: 'GET',
+        originalUrl: 'invalid/url/',
+      } as ServerRequest;
+      const cloudReq = makeHttpRequestData(req);
+      assert.strictEqual(cloudReq.protocol, undefined);
+      assert.strictEqual(cloudReq.requestUrl, 'invalid/url/');
+      assert.strictEqual(cloudReq.requestMethod, 'GET');
+    });
     it('should infer as many request values as possible', () => {
       const req = {
         method: 'GET',
