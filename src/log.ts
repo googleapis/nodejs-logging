@@ -20,11 +20,12 @@ import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {google} from '../protos/protos';
-
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
 import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
+import {Writable} from 'stream';
+import {getStructuredLogs} from './structured-log';
 
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
@@ -47,9 +48,13 @@ export interface TailEntriesRequest {
   gaxOptions?: CallOptions;
 }
 
+/**
+ * logOptions
+ */
 export interface LogOptions {
   removeCircular?: boolean;
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
+  transport?: Writable;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,6 +72,14 @@ export interface WriteOptions {
   labels?: {[index: string]: string};
   partialSuccess?: boolean;
   resource?: MonitoredResource;
+}
+
+/**
+ * WriteRequest is a library level wrapper for IWriteLogEntriesRequest
+ */
+export interface WriteLogEntriesRequest extends WriteOptions {
+  logName: string;
+  entries: EntryJson[];
 }
 
 export enum Severity {
@@ -105,6 +118,11 @@ type LogSeverityFunctions = {
  * @param {object} [options] Configuration object.
  * @param {boolean} [options.removeCircular] Replace circular references in
  *     logged objects with a string value, `[Circular]`. (Default: false)
+ * @param {number} [options.maxEntrySize] A max entry size
+ * @param {boolean} [options.transport] Override the write to API stream with a
+ *     custom log stream, like stdout/stderr, rather than loggingService API.
+ *     Recommended for Cloud Functions and other Serverless GCP service
+ *     environments (Default: false)
  *
  * @example
  * const {Logging} = require('@google-cloud/logging');
@@ -117,6 +135,8 @@ class Log implements LogSeverityFunctions {
   maxEntrySize?: number;
   logging: Logging;
   name: string;
+  transport?: Writable;
+
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
     this.formattedName_ = Log.formatName_(logging.projectId, name);
@@ -915,7 +935,7 @@ class Log implements LogSeverityFunctions {
       }
       self.truncateEntries(decoratedEntries!);
       self.formattedName_ = Log.formatName_(projectId, self.name);
-      const reqOpts = extend(
+      const reqOpts: WriteLogEntriesRequest = extend(
         {
           logName: self.formattedName_,
           entries: decoratedEntries!,
@@ -924,10 +944,20 @@ class Log implements LogSeverityFunctions {
         options
       );
       delete reqOpts.gaxOptions;
-      return self.logging.loggingService.writeLogEntries(
-        reqOpts,
-        options.gaxOptions
-      );
+
+      // If the user provided a custom writable transport, write to that stream
+      // instead of to the Logging API endpoint.
+      if (self.transport) {
+        for (const json of getStructuredLogs(reqOpts)) {
+          // TODO: make sure this is thread safe / race condition free
+          self.transport.write(json);
+        }
+      } else {
+        return self.logging.loggingService.writeLogEntries(
+          reqOpts,
+          options.gaxOptions
+        );
+      }
     }
     // snakecaseKeys turns label keys from camel case to snake case.
     function snakecaseKeys(labels: {[p: string]: string} | null | undefined) {

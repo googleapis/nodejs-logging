@@ -795,6 +795,28 @@ describe('Logging', () => {
         )
       );
     });
+
+    it.only('should write to stdout', done => {
+      const {log, logEntries} = getTestLog();
+      log.transport = process.stdout;
+      log.write(
+        logEntries,
+        {
+          resource: {
+            type: 'gce_instance',
+            labels: {
+              zone: 'global',
+              instanceId: '3',
+            },
+          },
+        },
+        () => {
+          // should write to stdout, then to api again
+          delete log.transport;
+          log.write(logEntries, done);
+        }
+      );
+    });
   });
 
   function generateName() {
