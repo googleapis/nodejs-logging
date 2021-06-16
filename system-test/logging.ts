@@ -799,7 +799,7 @@ describe('Logging', () => {
     it.only('should write to stdout', done => {
       const {log, logEntries} = getTestLog();
       log.transport = process.stdout;
-      log.write(
+      log.critical(
         logEntries,
         {
           resource: {

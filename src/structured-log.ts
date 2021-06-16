@@ -28,7 +28,7 @@
 
 import {google} from '../protos/protos';
 import {Timestamp} from './entry';
-import {WriteLogEntriesRequest, MonitoredResource} from './log';
+import {MonitoredResource} from './log';
 
 export const INSERT_ID_KEY = 'logging.googleapis.com/insertId'
 export const LABELS_KEY = 'logging.googleapis.com/labels';
@@ -75,16 +75,17 @@ interface StructuredLog {
  *
  * @param req
  */
-export function getStructuredLogs(req: WriteLogEntriesRequest): string[] {
+export function getStructuredLogs(req: any): string[] {
   const logs: string[] = [];
   // Format entries into structured log
   for (const entry of req.entries) {
     // general
     const log = {} as StructuredLog;
     // TODO make sure all formatting is ok
-    if (req.logName) log.logName = req.logName;
-    if (req.resource) log.resource = req.resource;
+    log.logName = req.logName;
+    log.resource = req.resource;
     // TODO severity is missing!
+    log.severity = entry.severity;
     log.message = entry.textPayload ? entry.textPayload : entry.jsonPayload;
     log.httpRequest = entry.httpRequest;
     log.timestamp = 'todo this later';
@@ -93,6 +94,10 @@ export function getStructuredLogs(req: WriteLogEntriesRequest): string[] {
     log[SPAN_ID_KEY] = entry.spanId;
     log[TRACE_KEY] = entry.trace;
     log[TRACE_SAMPLED_KEY] = entry.traceSampled;
+    console.log('formatting:');
+    console.log(entry);
+    console.log(log);
+    // TODO get rid of undefined values
     logs.push(JSON.stringify(log) + '\n');
   }
   return logs;

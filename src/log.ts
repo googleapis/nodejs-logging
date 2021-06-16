@@ -74,14 +74,6 @@ export interface WriteOptions {
   resource?: MonitoredResource;
 }
 
-/**
- * WriteRequest is a library level wrapper for IWriteLogEntriesRequest
- */
-export interface WriteLogEntriesRequest extends WriteOptions {
-  logName: string;
-  entries: EntryJson[];
-}
-
 export enum Severity {
   emergency,
   alert,
@@ -935,7 +927,7 @@ class Log implements LogSeverityFunctions {
       }
       self.truncateEntries(decoratedEntries!);
       self.formattedName_ = Log.formatName_(projectId, self.name);
-      const reqOpts: WriteLogEntriesRequest = extend(
+      const reqOpts = extend(
         {
           logName: self.formattedName_,
           entries: decoratedEntries!,
@@ -950,6 +942,7 @@ class Log implements LogSeverityFunctions {
       if (self.transport) {
         for (const json of getStructuredLogs(reqOpts)) {
           // TODO: make sure this is thread safe / race condition free
+          // how to propagate severity...
           self.transport.write(json);
         }
       } else {
