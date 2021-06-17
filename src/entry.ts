@@ -57,6 +57,13 @@ export interface EntryJson {
   traceSampled?: boolean;
 }
 
+// Final Entry format written to a custom transport, e.g. process.stdout
+export interface StructuredJson {
+  timestamp: string;
+  insertId: string;
+  message?: object;
+}
+
 export interface ToJsonOptions {
   removeCircular?: boolean;
 }
@@ -221,6 +228,15 @@ class Entry {
   }
 
   /**
+   * Serialize an entry to a standard format for any transports, e.g. agents.
+   * Read more: https://cloud.google.com/logging/docs/structured-logging
+   */
+  toStructuredJSON(projectId = '') {
+    const s = {};
+    return s as StructuredJson;
+  }
+
+  /**
    * extractTraceFromHeaders extracts trace and span information from raw HTTP
    * request headers only.
    * @private
@@ -228,7 +244,7 @@ class Entry {
   private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {
-      // TODO: later we may want to switch this to true.
+      // TODO: we can just get header from this.metadata.logName.
       return getOrInjectContext(rawReq, projectId, false);
     }
     return null;

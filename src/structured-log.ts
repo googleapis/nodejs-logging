@@ -26,10 +26,6 @@
  * Read more: https://cloud.google.com/logging/docs/structured-logging
  */
 
-import {google} from '../protos/protos';
-import {Timestamp} from './entry';
-import {MonitoredResource} from './log';
-
 export const INSERT_ID_KEY = 'logging.googleapis.com/insertId'
 export const LABELS_KEY = 'logging.googleapis.com/labels';
 export const OPERATION_KEY = 'logging.googleapis.com/operation';
@@ -70,8 +66,8 @@ interface StructuredLog {
 }
 
 /**
- * getStructuredLogs takes any request blob, flattens adn remaps keys
- * into structured log. stringifies the result.
+ * getStructuredLogs takes a request blob and formats a structured log in
+ * stringified JSON format
  *
  * @param req
  */
@@ -82,18 +78,19 @@ export function getStructuredLogs(req: any): string[] {
     // general
     const log = {} as StructuredLog;
     // TODO make sure all formatting is ok
-    log.logName = req.logName;
-    log.resource = req.resource;
-    // TODO severity is missing!
-    log.severity = entry.severity;
-    log.message = entry.textPayload ? entry.textPayload : entry.jsonPayload;
-    log.httpRequest = entry.httpRequest;
-    log.timestamp = 'todo this later';
-    log[INSERT_ID_KEY] = entry.insertId.toString();
-    log[LABELS_KEY] = req.labels;
-    log[SPAN_ID_KEY] = entry.spanId;
-    log[TRACE_KEY] = entry.trace;
-    log[TRACE_SAMPLED_KEY] = entry.traceSampled;
+    req.logName ? log.logName = req.logName : null;
+    req.resource ? log.resource = req.resource : null;
+    req.labels ? log[LABELS_KEY] = req.labels : null;
+    entry.severity ? log.severity = entry.severity : null;
+    entry.textPayload || entry.jsonPayload
+      ? (log.message = entry.textPayload)
+      : entry.jsonPayload;
+    entry.httpRequest ? log.httpRequest = entry.httpRequest : null;
+    entry.timestamp ? log.timestamp = 'todo this later' : null;
+    entry.insertId ? log[INSERT_ID_KEY] = entry.insertId.toString() : null; // formatted
+    entry.spanId ? log[SPAN_ID_KEY] = entry.spanId : null;
+    entry.trace ? log[TRACE_KEY] = entry.trace : null;
+    'traceSampled' in entry ? log[TRACE_SAMPLED_KEY] = entry.traceSampled : null;
     console.log('formatting:');
     console.log(entry);
     console.log(log);

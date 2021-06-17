@@ -21,7 +21,7 @@ import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {google} from '../protos/protos';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
-import {Entry, EntryJson, LogEntry} from './entry';
+import {Entry, EntryJson, LogEntry, StructuredJson} from './entry';
 import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 import {Writable} from 'stream';
@@ -127,7 +127,7 @@ class Log implements LogSeverityFunctions {
   maxEntrySize?: number;
   logging: Logging;
   name: string;
-  transport?: Writable;
+  transport?: boolean | Writable;
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
@@ -140,6 +140,8 @@ class Log implements LogSeverityFunctions {
      * @type {string}
      */
     this.name = this.formattedName_.split('/').pop()!;
+    // By default, no custom transport writes to LoggingService API.
+    this.transport = false;
   }
 
   alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
@@ -897,61 +899,20 @@ class Log implements LogSeverityFunctions {
     opts?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
     // Autodetect monitored resource if not specified by user in WriteOptions.
-    if (options.resource) {
-      if (options.resource.labels) snakecaseKeys(options.resource.labels);
-      return writeWithResource(options.resource);
+    let resource = options.resource;
+    if (resource) {
+      if (resource.labels) snakecaseKeys(resource.labels);
     } else if (this.logging.detectedResource) {
-      return writeWithResource(this.logging.detectedResource);
+      resource = this.logging.detectedResource;
     } else {
-      const resource = await getDefaultResource(
-        this.logging.auth as unknown as GoogleAuth
+      resource = await getDefaultResource(
+        (this.logging.auth as unknown) as GoogleAuth
       );
       this.logging.detectedResource = resource;
-      return writeWithResource(resource);
     }
-    // writeWithResource formats entries and writes them to loggingService API.
-    // Service expects props: logName, resource, labels, partialSuccess, dryRun.
-    async function writeWithResource(resource: {} | null) {
-      const projectId = await self.logging.auth.getProjectId();
-      let decoratedEntries: EntryJson[];
-      try {
-        decoratedEntries = self.decorateEntries(
-          arrify(entry) as Entry[],
-          projectId
-        );
-      } catch (err) {
-        // Ignore errors (the API will speak up if it has an issue).
-      }
-      self.truncateEntries(decoratedEntries!);
-      self.formattedName_ = Log.formatName_(projectId, self.name);
-      const reqOpts = extend(
-        {
-          logName: self.formattedName_,
-          entries: decoratedEntries!,
-          resource,
-        },
-        options
-      );
-      delete reqOpts.gaxOptions;
+    return this.writeWithResource(entry, options, resource);
 
-      // If the user provided a custom writable transport, write to that stream
-      // instead of to the Logging API endpoint.
-      if (self.transport) {
-        for (const json of getStructuredLogs(reqOpts)) {
-          // TODO: make sure this is thread safe / race condition free
-          // how to propagate severity...
-          self.transport.write(json);
-        }
-      } else {
-        return self.logging.loggingService.writeLogEntries(
-          reqOpts,
-          options.gaxOptions
-        );
-      }
-    }
     // snakecaseKeys turns label keys from camel case to snake case.
     function snakecaseKeys(labels: {[p: string]: string} | null | undefined) {
       for (const key in labels) {
@@ -963,6 +924,85 @@ class Log implements LogSeverityFunctions {
         delete labels[key];
       }
     }
+  }
+
+  // writeWithResource formats entries and writes them to loggingService API.
+  // Service expects props: logName, resource, labels, partialSuccess, dryRun.
+  private async writeWithResource(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    resource: {}
+  ) {
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = Log.formatName_(projectId, this.name);
+    // If the user provided a custom writable transport, write to that stream
+    // instead of to the Logging API endpoint.
+    if (this.transport) {
+      this.writeToTransport(entry, options, resource, projectId);
+      return;
+    } else {
+      return this.writeToAPI(entry, options, resource);
+    }
+  }
+
+  // synchronous write to whatever transport
+  private writeToTransport(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    resource: {},
+    projectId: string
+  ) {
+    let structuredEntries: StructuredJson[];
+    try {
+      structuredEntries = (arrify(entry) as Entry[]).map(entry => {
+        if (!(entry instanceof Entry)) {
+          entry = this.entry(entry);
+        }
+        return entry.toStructuredJSON(projectId);
+      });
+      for (const entry of structuredEntries) {
+        // tack on  options.labels, resource
+        this.transport?.write(entry);
+      }
+    } catch (err) {
+      // Client libraries do not panic.
+    }
+  }
+
+  // write to API
+  private async writeToAPI(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    resource?: {}
+  ) {
+    const projectId = await this.logging.auth.getProjectId();
+    this.formattedName_ = Log.formatName_(projectId, this.name);
+    let decoratedEntries: EntryJson[];
+    try {
+      decoratedEntries = this.decorateEntries(
+        arrify(entry) as Entry[],
+        projectId
+      );
+    } catch (err) {
+      // Ignore errors (the API will speak up if it has an issue).
+    }
+
+    // if not a custom transport
+    this.truncateEntries(decoratedEntries!);
+
+    const reqOpts = extend(
+      {
+        logName: this.formattedName_,
+        entries: decoratedEntries!,
+        resource,
+      },
+      options
+    );
+    delete reqOpts.gaxOptions;
+    return this.logging.loggingService.writeLogEntries(
+      reqOpts,
+      options.gaxOptions
+    );
   }
 
   /**
