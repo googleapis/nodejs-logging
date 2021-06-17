@@ -307,4 +307,43 @@ describe('Entry', () => {
       assert.strictEqual(json.traceSampled, expected.traceSampled);
     });
   });
+
+  describe('toStructuredJSON', () => {
+    it.only('should not modify the original instance', () => {
+      const entryBefore = extend(true, {}, entry);
+      entry.toStructuredJSON();
+      const entryAfter = extend(true, {}, entry);
+      assert.deepStrictEqual(entryBefore, entryAfter);
+    });
+
+    it('should include properties not in StructuredJson', () => {
+      entry.metadata.severity = 'CRITICAL';
+    });
+    it.only('should re-map new keys and delete old keys', () => {
+      entry.metadata.insertId = '👀';
+      entry.metadata.labels = {foo: '⌛️'};
+      entry.metadata.spanId = '🍓';
+      entry.metadata.trace = '🍝';
+      entry.metadata.traceSampled = false;
+      entry.data = 'this is a log';
+      const json = entry.toStructuredJSON();
+      console.log('in test');
+      console.log(entry);
+      console.log(json);
+      const expectedJSON = {
+        [entryTypes.INSERT_ID_KEY]: '👀',
+        [entryTypes.TRACE_KEY]: '🍝',
+        [entryTypes.SPAN_ID_KEY]: '🍓',
+        [entryTypes.TRACE_SAMPLED_KEY]: false,
+        [entryTypes.LABELS_KEY]: { foo: '⌛️' },
+        message: 'this is a log',
+      }
+      assert.deepStrictEqual(json, expectedJSON)
+    });
+    it('should assign an available payload to message', () => {
+    });
+    it('should convert a string timestamp', () => {
+      // TODO copy over all the other tests above
+    });
+  });
 });

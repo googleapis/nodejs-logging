@@ -28,8 +28,10 @@ import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as middleware from './middleware';
-import {detectServiceContext} from './metadata';
+import {detectServiceContext, getDefaultResource} from './metadata';
 import {CloudLoggingHttpRequest as HttpRequest} from './http-request';
+
+import {GoogleAuth} from 'google-auth-library';
 
 export {middleware};
 export {HttpRequest};
@@ -49,6 +51,7 @@ import {
   Severity,
   SeverityNames,
 } from './log';
+import {LogSync} from './log-sync';
 import {Sink} from './sink';
 import {Duplex, PassThrough, Transform} from 'stream';
 import {google} from '../protos/protos';
@@ -1325,6 +1328,17 @@ class Logging {
     return stream!;
   }
 
+  // TODO: test this
+  /**
+   * setResource is a one time call that detects resource from the environment
+   * and sets it thereafter.
+   */
+  async setResource() {
+    this.detectedResource = await getDefaultResource(
+      (this.auth as unknown) as GoogleAuth
+    );
+  }
+
   /**
    * This method is called when creating a sink with a Bucket destination. The
    * bucket must first grant proper ACL access to the Cloud Logging
@@ -1433,6 +1447,9 @@ export {Entry};
 export {Log};
 export {Severity};
 export {SeverityNames};
+
+// TODO docs here
+export {LogSync};
 
 /**
  * {@link Sink} class.

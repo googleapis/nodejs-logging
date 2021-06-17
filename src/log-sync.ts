@@ -1,5 +1,5 @@
 /*!
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2021 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,57 +14,29 @@
  * limitations under the License.
  */
 
+/**
+ * This is a helper library for synchronously writing logs to a transport.
+ */
+
 import arrify = require('arrify');
-import {callbackifyAll} from '@google-cloud/promisify';
-import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
-import {CallOptions} from 'google-gax';
 import {google} from '../protos/protos';
-import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
-import {Entry, EntryJson, LABELS_KEY, LogEntry, StructuredJson} from './entry';
+import {Logging} from '.';
+import {Entry, LABELS_KEY, LogEntry, StructuredJson} from './entry';
 import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
-
-export interface GetEntriesRequest {
-  autoPaginate?: boolean;
-  filter?: string;
-  gaxOptions?: CallOptions;
-  log?: string;
-  maxApiCalls?: number;
-  maxResults?: number;
-  orderBy?: string;
-  pageSize?: number;
-  pageToken?: string;
-  resourceNames?: string[] | string;
-}
-
-export interface TailEntriesRequest {
-  resourceNames?: string[] | string;
-  filter?: string;
-  bufferWindow?: number;
-  log?: string;
-  gaxOptions?: CallOptions;
-}
+import {Writable} from 'stream';
 
 export interface LogOptions {
-  removeCircular?: boolean;
-  maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
+  transport?: boolean | Writable;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Metadata = any;
-export type ApiResponse = [Metadata];
-export interface ApiResponseCallback {
-  (err: Error | null, apiResponse?: Metadata): void;
-}
-export type DeleteCallback = ApiResponseCallback;
-
+// TODO abstract these types away into common.ts
 export type MonitoredResource = google.api.IMonitoredResource;
 export interface WriteOptions {
-  dryRun?: boolean;
-  gaxOptions?: CallOptions;
   labels?: {[index: string]: string};
-  partialSuccess?: boolean;
   resource?: MonitoredResource;
 }
 
@@ -105,39 +77,40 @@ type LogSeverityFunctions = {
  * @param {boolean} [options.removeCircular] Replace circular references in
  *     logged objects with a string value, `[Circular]`. (Default: false)
  * @param {number} [options.maxEntrySize] A max entry size
+ * @param {boolean|Writable} [options.transport] Override the write to API stream with a
+ *     custom log stream, like stdout/stderr, rather than loggingService API.
+ *     Recommended for Cloud Functions and other Serverless GCP service
+ *     environments (Default: false)
  *
  * @example
  * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
  * const log = logging.log('syslog');
  */
-class Log implements LogSeverityFunctions {
+class LogSync implements LogSeverityFunctions {
   formattedName_: string;
-  removeCircular_: boolean;
-  maxEntrySize?: number;
   logging: Logging;
   name: string;
+  transport?: Writable;
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
-    this.formattedName_ = Log.formatName_(logging.projectId, name);
-    this.removeCircular_ = options.removeCircular === true;
-    this.maxEntrySize = options.maxEntrySize;
+    this.formattedName_ = LogSync.formatName_(logging.projectId, name);
     this.logging = logging;
     /**
      * @name Log#name
      * @type {string}
      */
     this.name = this.formattedName_.split('/').pop()!;
+    if (options.transport) {
+      this.transport =
+        typeof options.transport === 'boolean'
+          ? process.stdout
+          : options.transport;
+    }
   }
 
-  alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  alert(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  alert(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  // TODO (nicolezhu) change all comments.
   /**
    * Write a log entry with a severity of "ALERT".
    *
@@ -166,26 +139,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  alert(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'ALERT'),
+  alert(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'ALERT'),
       options! as WriteOptions
     );
   }
 
-  critical(
-    entry: Entry | Entry[],
-    options?: WriteOptions
-  ): Promise<ApiResponse>;
-  critical(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  critical(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "CRITICAL".
    *
@@ -214,23 +174,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  critical(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'CRITICAL'),
+  critical(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'CRITICAL'),
       options! as WriteOptions
     );
   }
 
-  debug(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  debug(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  debug(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "DEBUG".
    *
@@ -259,80 +209,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  debug(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'DEBUG'),
+  debug(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'DEBUG'),
       options! as WriteOptions
     );
   }
 
-  delete(gaxOptions?: CallOptions): Promise<ApiResponse>;
-  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
-  delete(callback: DeleteCallback): void;
-  /**
-   * @typedef {array} DeleteLogResponse
-   * @property {object} 0 The full API response.
-   */
-  /**
-   * @callback DeleteLogCallback
-   * @param {?Error} err Request error, if any.
-   * @param {object} apiResponse The full API response.
-   */
-  /**
-   * Delete the log.
-   *
-   * @see [projects.logs.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete}
-   *
-   * @param {object} [gaxOptions] Request configuration options, outlined
-   *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
-   * @param {DeleteLogCallback} [callback] Callback function.
-   * @returns {Promise<DeleteLogResponse>}
-   *
-   * @example
-   * const {Logging} = require('@google-cloud/logging');
-   * const logging = new Logging();
-   * const log = logging.log('my-log');
-   *
-   * log.delete((err, apiResponse) => {
-   *   if (!err) {
-   *     // The log was deleted.
-   *   }
-   * });
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.delete().then(data => {
-   *   const apiResponse = data[0];
-   * });
-   *
-   * @example <caption>include:samples/logs.js</caption>
-   * region_tag:logging_delete_log
-   * Another example:
-   */
-  async delete(
-    gaxOptions?: CallOptions | DeleteCallback
-  ): Promise<ApiResponse> {
-    const projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(projectId, this.name);
-    const reqOpts = {
-      logName: this.formattedName_,
-    };
-    return this.logging.loggingService.deleteLog(
-      reqOpts,
-      gaxOptions! as CallOptions
-    );
-  }
-
-  emergency(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  emergency(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "EMERGENCY".
    *
@@ -361,16 +244,14 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  emergency(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'EMERGENCY'),
+  emergency(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'EMERGENCY'),
       options as WriteOptions
     );
   }
 
+  // TODO this can also be abstracted into common?
   entry(metadata?: LogEntry): Entry;
   entry(data?: string | {}): Entry;
   entry(metadata?: LogEntry, data?: string | {}): Entry;
@@ -446,13 +327,6 @@ class Log implements LogSeverityFunctions {
     return this.logging.entry(metadata, data);
   }
 
-  error(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  error(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  error(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "ERROR".
    *
@@ -481,170 +355,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  error(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'ERROR'),
+  error(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'ERROR'),
       options! as WriteOptions
     );
   }
 
-  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
-  getEntries(callback: GetEntriesCallback): void;
-  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
-  /**
-   * This method is a wrapper around {module:logging#getEntries}, but with a
-   * filter specified to only return entries from this log.
-   *
-   * @see [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
-   *
-   * @param {GetEntriesRequest} [query] Query object for listing entries.
-   * @param {GetEntriesCallback} [callback] Callback function.
-   * @returns {Promise<GetEntriesResponse>}
-   *
-   * @example
-   * const {Logging} = require('@google-cloud/logging');
-   * const logging = new Logging();
-   * const log = logging.log('my-log');
-   *
-   * log.getEntries((err, entries) => {
-   *   // `entries` is an array of Cloud Logging entry objects.
-   *   // See the `data` property to read the data from the entry.
-   * });
-   *
-   * //-
-   * // To control how many API requests are made and page through the results
-   * // manually, set `autoPaginate` to `false`.
-   * //-
-   * function callback(err, entries, nextQuery, apiResponse) {
-   *   if (nextQuery) {
-   *     // More results exist.
-   *     log.getEntries(nextQuery, callback);
-   *   }
-   * }
-   *
-   * log.getEntries({
-   *   autoPaginate: false
-   * }, callback);
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.getEntries().then(data => {
-   *   const entries = data[0];
-   * });
-   */
-  async getEntries(
-    opts?: GetEntriesRequest | GetEntriesCallback
-  ): Promise<GetEntriesResponse> {
-    const options = extend({}, opts as GetEntriesRequest);
-    const projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(projectId, this.name);
-    if (options.filter && !options.filter.includes('logName=')) {
-      options.filter = `(${options.filter}) AND logName="${this.formattedName_}"`;
-    } else if (!options.filter) {
-      options.filter = `logName="${this.formattedName_}"`;
-    }
-    return this.logging.getEntries(options);
-  }
-
-  /**
-   * This method is a wrapper around {module:logging#getEntriesStream}, but with
-   * a filter specified to only return {module:logging/entry} objects from this
-   * log.
-   *
-   * @method Log#getEntriesStream
-   * @param {GetEntriesRequest} [query] Query object for listing entries.
-   * @returns {ReadableStream} A readable stream that emits {@link Entry}
-   *     instances.
-   *
-   * @example
-   * const {Logging} = require('@google-cloud/logging');
-   * const logging = new Logging();
-   * const log = logging.log('my-log');
-   *
-   * log.getEntriesStream()
-   *   .on('error', console.error)
-   *   .on('data', entry => {
-   *     // `entry` is a Cloud Logging entry object.
-   *     // See the `data` property to read the data from the entry.
-   *   })
-   *   .on('end', function() {
-   *     // All entries retrieved.
-   *   });
-   *
-   * //-
-   * // If you anticipate many results, you can end a stream early to prevent
-   * // unnecessary processing and API requests.
-   * //-
-   * log.getEntriesStream()
-   *   .on('data', function(entry) {
-   *     this.end();
-   *   });
-   */
-  getEntriesStream(options: GetEntriesRequest) {
-    options = extend(
-      {
-        log: this.name,
-      },
-      options
-    );
-    return this.logging.getEntriesStream(options);
-  }
-
-  /**
-   * This method is a wrapper around {module:logging#tailEntries}, but with
-   * a filter specified to only return {module:logging/entry} objects from this
-   * log.
-   *
-   * @method Log#tailEntries
-   * @param {TailEntriesRequest} [query] Query object for tailing entries.
-   * @returns {DuplexStream} A duplex stream that emits TailEntriesResponses
-   * containing an array of {@link Entry} instances.
-   *
-   * @example
-   * const {Logging} = require('@google-cloud/logging');
-   * const logging = new Logging();
-   * const log = logging.log('my-log');
-   *
-   * log.tailEntries()
-   *   .on('error', console.error)
-   *   .on('data', resp => {
-   *     console.log(resp.entries);
-   *     console.log(resp.suppressionInfo);
-   *   })
-   *   .on('end', function() {
-   *     // All entries retrieved.
-   *   });
-   *
-   * //-
-   * // If you anticipate many results, you can end a stream early to prevent
-   * // unnecessary processing and API requests.
-   * //-
-   * log.tailEntries()
-   *   .on('data', function(entry) {
-   *     this.end();
-   *   });
-   */
-  tailEntries(options?: TailEntriesRequest) {
-    options = extend(
-      {
-        log: this.name,
-      },
-      options
-    );
-    return this.logging.tailEntries(options);
-  }
-
-  info(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  info(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  info(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "INFO".
    *
@@ -673,23 +390,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  info(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'INFO'),
+  info(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'INFO'),
       options! as WriteOptions
     );
   }
 
-  notice(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  notice(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  notice(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "NOTICE".
    *
@@ -718,23 +425,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  notice(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'NOTICE'),
+  notice(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'NOTICE'),
       options! as WriteOptions
     );
   }
 
-  warning(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  warning(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  warning(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "WARNING".
    *
@@ -763,32 +460,13 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    */
-  warning(
-    entry: Entry | Entry[],
-    options?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
-    return this.write(
-      Log.assignSeverityToEntries_(entry, 'WARNING'),
+  warning(entry: Entry | Entry[], options?: WriteOptions) {
+    this.write(
+      LogSync.assignSeverityToEntries_(entry, 'WARNING'),
       options as WriteOptions
     );
   }
 
-  write(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  write(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  write(entry: Entry | Entry[], callback: ApiResponseCallback): void;
-  /**
-   * @typedef {array} LogWriteResponse
-   * @property {object} 0 The full API response.
-   */
-  /**
-   * @callback LogWriteCallback
-   * @param {?Error} err Request error, if any.
-   * @param {object} apiResponse The full API response.
-   */
   /**
    * Write options.
    *
@@ -881,32 +559,34 @@ class Log implements LogSeverityFunctions {
    * region_tag:logging_write_log_entry_advanced
    * Another example:
    */
-  async write(
-    entry: Entry | Entry[],
-    opts?: WriteOptions | ApiResponseCallback
-  ): Promise<ApiResponse> {
+  write(entry: Entry | Entry[], opts?: WriteOptions) {
     const options = opts ? (opts as WriteOptions) : {};
-    let decoratedEntries: EntryJson[];
-    const resource = await this.detectResource(options);
+    // If the user provided a custom writable transport, write to that stream
+    // instead of to the Logging API endpoint.
+    // TODO overcome the issue of await write - we want sync write.
+    this.writeToTransport(entry, options);
+  }
+
+  // Write to a user specified transport
+  private writeToTransport(entry: Entry | Entry[], options: WriteOptions) {
+    let structuredEntries: StructuredJson[];
     try {
-      decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
+      structuredEntries = (arrify(entry) as Entry[]).map(entry => {
+        if (!(entry instanceof Entry)) {
+          entry = this.entry(entry);
+        }
+        return entry.toStructuredJSON(this.formattedName_);
+      });
+      const resource = this.detectResource(options);
+      for (const entry of structuredEntries) {
+        entry.logName = this.formattedName_;
+        entry.resource = resource;
+        entry[LABELS_KEY] = options.labels;
+        this.transport!.write(JSON.stringify(entry));
+      }
     } catch (err) {
-      // Ignore errors (the API will speak up if it has an issue).
+      // Ignore errors (client libraries do not panic).
     }
-    this.truncateEntries(decoratedEntries!);
-    const reqOpts = extend(
-      {
-        logName: this.formattedName_,
-        entries: decoratedEntries!,
-        resource,
-      },
-      options
-    );
-    delete reqOpts.gaxOptions;
-    return this.logging.loggingService.writeLogEntries(
-      reqOpts,
-      options.gaxOptions
-    );
   }
 
   /**
@@ -914,95 +594,15 @@ class Log implements LogSeverityFunctions {
    * @param options
    * @private
    */
-  private async detectResource(options: WriteOptions) {
+  private detectResource(options: WriteOptions) {
     let resource = options.resource;
     if (resource) {
       if (resource.labels) this.snakecaseKeys(resource.labels);
-    } else if (this.logging.detectedResource) {
+    }
+    if (this.logging.detectedResource) {
       resource = this.logging.detectedResource;
-    } else {
-      resource = await getDefaultResource(
-        (this.logging.auth as unknown) as GoogleAuth
-      );
-      this.logging.detectedResource = resource;
     }
     return resource;
-  }
-
-  /**
-   * All entries are passed through here in order be formatted and serialized.
-   * User provided Entry values are formatted per LogEntry specifications.
-   * Read more about the LogEntry format:
-   * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
-   *
-   * @private
-   *
-   * @param {string} projectId - Google project ID.
-   * @param {object[]} entries - Entry objects.
-   * @returns {object[]} Serialized entries.
-   * @throws if there is an error during serialization.
-   */
-  private decorateEntries(entries: Entry[]): EntryJson[] {
-    return entries.map(entry => {
-      if (!(entry instanceof Entry)) {
-        entry = this.entry(entry);
-      }
-      return entry.toJSON(
-        {
-          removeCircular: this.removeCircular_,
-        },
-        this.formattedName_
-      );
-    });
-  }
-
-  // TODO consider refactoring `truncateEntries` so that it does not mutate
-  /**
-   * Truncate log entries at maxEntrySize, so that error is not thrown, see:
-   * https://cloud.google.com/logging/quotas
-   *
-   * @private
-   *
-   * @param {object|string} the JSON log entry.
-   * @returns {object|string} truncated JSON log entry.
-   */
-  private truncateEntries(entries: EntryJson[]) {
-    return entries.forEach(entry => {
-      if (this.maxEntrySize === undefined) return;
-
-      const payloadSize = JSON.stringify(entry).length;
-      if (payloadSize < this.maxEntrySize) return;
-
-      let delta = payloadSize - this.maxEntrySize;
-      if (entry.textPayload) {
-        entry.textPayload = entry.textPayload.slice(
-          0,
-          Math.max(entry.textPayload.length - delta, 0)
-        );
-      } else {
-        const fieldsToTruncate = [
-          // Winston:
-          'jsonPayload.fields.metadata.structValue.fields.stack.stringValue',
-          // Bunyan:
-          'jsonPayload.fields.msg.stringValue',
-          'jsonPayload.fields.err.structValue.fields.stack.stringValue',
-          'jsonPayload.fields.err.structValue.fields.message.stringValue',
-          // All:
-          'jsonPayload.fields.message.stringValue',
-        ];
-        for (const field of fieldsToTruncate) {
-          const msg: string = dotProp.get(entry, field, '');
-          if (msg !== '') {
-            dotProp.set(
-              entry,
-              field,
-              msg.slice(0, Math.max(msg.length - delta, 0))
-            );
-            delta -= Math.min(msg.length, delta);
-          }
-        }
-      }
-    });
   }
 
   // snakecaseKeys turns label keys from camel case to snake case.
@@ -1059,16 +659,9 @@ class Log implements LogSeverityFunctions {
   }
 }
 
-/*! Developer Documentation
- *
- * All async methods (except for streams) will call a callback in the event
- * that a callback is provided .
- */
-callbackifyAll(Log, {exclude: ['entry', 'getEntriesStream']});
-
 /**
  * Reference to the {@link Log} class.
  * @name module:@google-cloud/logging.Log
  * @see Log
  */
-export {Log};
+export {LogSync};

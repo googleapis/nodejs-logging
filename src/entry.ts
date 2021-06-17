@@ -70,23 +70,14 @@ export interface EntryJson {
 // custom transport.
 export interface StructuredJson {
   // Universally supported properties
-  severity?: LogSeverity;
   message?: string | object | null;
-  // log is a legacy property, always clobbered by `message`
-  // log?: string;
   httpRequest?: object;
   timestamp?: string;
   [INSERT_ID_KEY]?: string | null;
   [LABELS_KEY]?: object;
-  // [OPERATION_KEY]?: object;
-  // [SOURCE_LOCATION_KEY]?: string;
   [SPAN_ID_KEY]?: string;
   [TRACE_KEY]?: string;
   [TRACE_SAMPLED_KEY]?: boolean | null;
-  // Additional properties supported by Serverless agents
-  // timestampSeconds?: string;
-  // timestampNanos?: string;
-  // time?: string;
   // Properties not supported by all agents (e.g. Cloud Run)
   logName?: string;
   resource?: object;
@@ -201,7 +192,7 @@ class Entry {
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
    */
-  toJSON(options: ToJsonOptions = {}, projectId = '') {
+  toJSON(options: ToJsonOptions = {}, formattedName = '') {
     const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
@@ -243,7 +234,7 @@ class Entry {
       entry.httpRequest = makeHttpRequestData(req);
     }
     // Format trace and span
-    const traceContext = this.extractTraceFromHeaders(projectId);
+    const traceContext = this.extractTraceFromHeaders(formattedName);
     if (traceContext) {
       if (!this.metadata.trace && traceContext.trace)
         entry.trace = traceContext.trace;
@@ -259,34 +250,39 @@ class Entry {
    * Serialize an entry to a standard format for any transports, e.g. agents.
    * Read more: https://cloud.google.com/logging/docs/structured-logging
    */
-  toStructuredJSON(projectId = '') {
+  toStructuredJSON(formattedName = '') {
     const entry = extend(true, {}, this.metadata) as {} as StructuredJson;
     const meta = this.metadata;
 
     if (meta.labels) {
       entry[LABELS_KEY] = Object.assign({}, meta.labels);
-      delete meta.labels;
+      delete (entry as any).labels;
     }
     if (meta.textPayload || meta.jsonPayload) {
       entry.message = meta.textPayload ? meta.textPayload : meta.jsonPayload;
-      delete meta.textPayload;
-      delete meta.jsonPayload;
+      delete (entry as any).textPayload;
+      delete (entry as any).jsonPayload;
     }
     this.data ? entry.message = this.data : null;
     if (meta.insertId) {
       entry[INSERT_ID_KEY] = meta.insertId!;
-      delete meta.insertId;
+      delete (entry as any).insertId;
     }
-    // TODO parse this
-    // meta.httpRequest ? (entry.httpRequest = meta.httpRequest) : null;
-    // // TODO parse this
-    // meta.timestamp ? (entry.timestamp = 'todo this later') : null;
-    // // TODO parse this
-    // meta.spanId ? (entry[SPAN_ID_KEY] = meta.spanId) : null;
-    // meta.trace ? (entry[TRACE_KEY] = meta.trace) : null;
-    // 'traceSampled' in meta
-    //   ? (entry[TRACE_SAMPLED_KEY] = meta.traceSampled)
-    //   : null;
+    if (meta.trace) {
+      entry[TRACE_KEY] = meta.trace;
+      delete (entry as any).trace;
+    }
+    if (meta.spanId) {
+      entry[SPAN_ID_KEY] = meta.spanId;
+      delete (entry as any).spanId;
+    }
+    if ('traceSampled' in meta) {
+      entry[TRACE_SAMPLED_KEY] = meta.traceSampled;
+      delete (entry as any).traceSampled;
+    }
+    // format httprequest if needed
+    // format trace context if needed
+    // format timestamp if needed
     console.log('Formatting:');
     console.log(this);
     console.log('Into:');
@@ -299,13 +295,28 @@ class Entry {
    * request headers only.
    * @private
    */
-  private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
+  private extractTraceFromHeaders(logname: string): CloudTraceContext | null {
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {
-      // TODO: we can just get header from this.metadata.logName.
-      return getOrInjectContext(rawReq, projectId, false);
+      return getOrInjectContext(
+        rawReq,
+        this.projectIdFromFormattedName(logname),
+        false
+      );
     }
     return null;
+  }
+
+  /**
+   * projectIdFromFormattedName gets the projectId from a formatted LogName
+   * @param logname
+   */
+  private projectIdFromFormattedName(logname: string) {
+    const projectId = logname.substring(
+      logname.lastIndexOf('projects/') + 1,
+      logname.lastIndexOf('/logs')
+    );
+    return projectId;
   }
 
   /**

@@ -148,6 +148,19 @@ describe('Log', () => {
     it('should default to no max entry size', () => {
       assert.strictEqual(log.maxEntrySize, undefined);
     });
+
+    //  TODO
+    it('should default to no custom transport', () => {
+      assert.strictEqual(log.maxEntrySize, undefined);
+    });
+
+    it('should default to stdout if user wants transport', () => {
+      assert.strictEqual(log.maxEntrySize, undefined);
+    });
+
+    it('should set to a custom user transport', () => {
+      assert.strictEqual(log.maxEntrySize, undefined);
+    });
   });
 
   describe('assignSeverityToEntries_', () => {
@@ -558,6 +571,229 @@ describe('Log', () => {
         )
       );
     });
+    // TODO
+    //  it should synchronously write to stdout
+  });
+
+  // TODO(nicolezhu): add unit tests here
+  describe('writeWithResource', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let toJSONResponse: any;
+    let logEntryStub: sinon.SinonStub;
+    let toJSONStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      toJSONResponse = {};
+      toJSONStub = sinon.stub().returns(toJSONResponse);
+      logEntryStub = sinon.stub(log, 'entry').returns({
+        toJSON: toJSONStub,
+      });
+    });
+
+    afterEach(() => {
+      logEntryStub.restore();
+    });
+
+    it('should create an Entry object if one is not provided', () => {
+      const entry = {};
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.calledWithExactly(entry));
+    });
+
+    it('should get JSON format from Entry object', () => {
+      const entry = new Entry();
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.notCalled);
+    });
+
+    it('should pass log.removeCircular to toJSON', () => {
+      log.removeCircular_ = true;
+      const entry = new Entry();
+      const localJSONStub = sinon
+          .stub(entry, 'toJSON')
+          .returns({} as EntryJson);
+
+      log.decorateEntries([entry], PROJECT_ID);
+      assert(
+          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+      );
+    });
+
+    it('should throw error from serialization', () => {
+      const entry = new Entry();
+      sinon.stub(entry, 'toJSON').throws('Error.');
+      assert.throws(() => {
+        log.decorateEntries([entry], PROJECT_ID);
+      }, 'Error.');
+    });
+  });
+
+  describe('writeToTransport', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let toJSONResponse: any;
+    let logEntryStub: sinon.SinonStub;
+    let toJSONStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      toJSONResponse = {};
+      toJSONStub = sinon.stub().returns(toJSONResponse);
+      logEntryStub = sinon.stub(log, 'entry').returns({
+        toJSON: toJSONStub,
+      });
+    });
+
+    afterEach(() => {
+      logEntryStub.restore();
+    });
+
+    it('should create an Entry object if one is not provided', () => {
+      const entry = {};
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.calledWithExactly(entry));
+    });
+
+    it('should get JSON format from Entry object', () => {
+      const entry = new Entry();
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.notCalled);
+    });
+
+    it('should pass log.removeCircular to toJSON', () => {
+      log.removeCircular_ = true;
+      const entry = new Entry();
+      const localJSONStub = sinon
+          .stub(entry, 'toJSON')
+          .returns({} as EntryJson);
+
+      log.decorateEntries([entry], PROJECT_ID);
+      assert(
+          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+      );
+    });
+
+    it('should throw error from serialization', () => {
+      const entry = new Entry();
+      sinon.stub(entry, 'toJSON').throws('Error.');
+      assert.throws(() => {
+        log.decorateEntries([entry], PROJECT_ID);
+      }, 'Error.');
+    });
+  });
+
+  describe('writeToAPI', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let toJSONResponse: any;
+    let logEntryStub: sinon.SinonStub;
+    let toJSONStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      toJSONResponse = {};
+      toJSONStub = sinon.stub().returns(toJSONResponse);
+      logEntryStub = sinon.stub(log, 'entry').returns({
+        toJSON: toJSONStub,
+      });
+    });
+
+    afterEach(() => {
+      logEntryStub.restore();
+    });
+
+    it('should create an Entry object if one is not provided', () => {
+      const entry = {};
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.calledWithExactly(entry));
+    });
+
+    it('should get JSON format from Entry object', () => {
+      const entry = new Entry();
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.notCalled);
+    });
+
+    it('should pass log.removeCircular to toJSON', () => {
+      log.removeCircular_ = true;
+      const entry = new Entry();
+      const localJSONStub = sinon
+          .stub(entry, 'toJSON')
+          .returns({} as EntryJson);
+
+      log.decorateEntries([entry], PROJECT_ID);
+      assert(
+          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+      );
+    });
+
+    it('should throw error from serialization', () => {
+      const entry = new Entry();
+      sinon.stub(entry, 'toJSON').throws('Error.');
+      assert.throws(() => {
+        log.decorateEntries([entry], PROJECT_ID);
+      }, 'Error.');
+    });
+  });
+
+  describe('decorateEntries', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let toJSONResponse: any;
+    let logEntryStub: sinon.SinonStub;
+    let toJSONStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      toJSONResponse = {};
+      toJSONStub = sinon.stub().returns(toJSONResponse);
+      logEntryStub = sinon.stub(log, 'entry').returns({
+        toJSON: toJSONStub,
+      });
+    });
+
+    afterEach(() => {
+      logEntryStub.restore();
+    });
+
+    it('should create an Entry object if one is not provided', () => {
+      const entry = {};
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.calledWithExactly(entry));
+    });
+
+    it('should get JSON format from Entry object', () => {
+      const entry = new Entry();
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
+      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.notCalled);
+    });
+
+    it('should pass log.removeCircular to toJSON', () => {
+      log.removeCircular_ = true;
+      const entry = new Entry();
+      const localJSONStub = sinon
+          .stub(entry, 'toJSON')
+          .returns({} as EntryJson);
+
+      log.decorateEntries([entry], PROJECT_ID);
+      assert(
+          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+      );
+    });
+
+    it('should throw error from serialization', () => {
+      const entry = new Entry();
+      sinon.stub(entry, 'toJSON').throws('Error.');
+      assert.throws(() => {
+        log.decorateEntries([entry], PROJECT_ID);
+      }, 'Error.');
+    });
   });
 
   describe('truncateEntries', () => {
@@ -685,61 +921,6 @@ describe('Log', () => {
           assert(writeStub.calledOnceWith(assignedEntries));
         });
       });
-    });
-  });
-
-  describe('decorateEntries', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let toJSONResponse: any;
-    let logEntryStub: sinon.SinonStub;
-    let toJSONStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      toJSONResponse = {};
-      toJSONStub = sinon.stub().returns(toJSONResponse);
-      logEntryStub = sinon.stub(log, 'entry').returns({
-        toJSON: toJSONStub,
-      });
-    });
-
-    afterEach(() => {
-      logEntryStub.restore();
-    });
-
-    it('should create an Entry object if one is not provided', () => {
-      const entry = {};
-      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
-      assert.strictEqual(decoratedEntries[0], toJSONResponse);
-      assert(log.entry.calledWithExactly(entry));
-    });
-
-    it('should get JSON format from Entry object', () => {
-      const entry = new Entry();
-      entry.toJSON = () => toJSONResponse as {} as EntryJson;
-      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
-      assert.strictEqual(decoratedEntries[0], toJSONResponse);
-      assert(log.entry.notCalled);
-    });
-
-    it('should pass log.removeCircular to toJSON', () => {
-      log.removeCircular_ = true;
-      const entry = new Entry();
-      const localJSONStub = sinon
-        .stub(entry, 'toJSON')
-        .returns({} as EntryJson);
-
-      log.decorateEntries([entry], PROJECT_ID);
-      assert(
-        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
-      );
-    });
-
-    it('should throw error from serialization', () => {
-      const entry = new Entry();
-      sinon.stub(entry, 'toJSON').throws('Error.');
-      assert.throws(() => {
-        log.decorateEntries([entry], PROJECT_ID);
-      }, 'Error.');
     });
   });
 });
