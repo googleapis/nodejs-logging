@@ -25,6 +25,14 @@ import * as http from 'http';
 
 const eventId = new EventId();
 
+export const INSERT_ID_KEY = 'logging.googleapis.com/insertId';
+export const LABELS_KEY = 'logging.googleapis.com/labels';
+export const OPERATION_KEY = 'logging.googleapis.com/operation';
+export const SOURCE_LOCATION_KEY = 'logging.googleapis.com/sourceLocation';
+export const SPAN_ID_KEY = 'logging.googleapis.com/spanId';
+export const TRACE_KEY = 'logging.googleapis.com/trace';
+export const TRACE_SAMPLED_KEY = 'logging.googleapis.com/trace_sampled';
+
 // Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
@@ -45,7 +53,8 @@ export type LogEntry = Omit<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
-// Final Entry format submitted to the LoggingService API.
+// Specific Entry properties that need to be reformatted for submission to the
+// LoggingService API.
 export interface EntryJson {
   timestamp: Timestamp;
   insertId: number;
@@ -57,11 +66,30 @@ export interface EntryJson {
   traceSampled?: boolean;
 }
 
-// Final Entry format written to a custom transport, e.g. process.stdout
+// Specific Entry properties that need to be reformatted for submission to a
+// custom transport.
 export interface StructuredJson {
-  timestamp: string;
-  insertId: string;
-  message?: object;
+  // Universally supported properties
+  severity?: LogSeverity;
+  message?: string | object | null;
+  // log is a legacy property, always clobbered by `message`
+  // log?: string;
+  httpRequest?: object;
+  timestamp?: string;
+  [INSERT_ID_KEY]?: string | null;
+  [LABELS_KEY]?: object;
+  // [OPERATION_KEY]?: object;
+  // [SOURCE_LOCATION_KEY]?: string;
+  [SPAN_ID_KEY]?: string;
+  [TRACE_KEY]?: string;
+  [TRACE_SAMPLED_KEY]?: boolean | null;
+  // Additional properties supported by Serverless agents
+  // timestampSeconds?: string;
+  // timestampNanos?: string;
+  // time?: string;
+  // Properties not supported by all agents (e.g. Cloud Run)
+  logName?: string;
+  resource?: object;
 }
 
 export interface ToJsonOptions {
@@ -69,7 +97,7 @@ export interface ToJsonOptions {
 }
 
 /**
- * Create an entry object to define new data to insert into a log.
+ * Create an entry object to define new data to insert into a meta.
  *
  * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
  * dictates that the maximum log entry size, including all
@@ -111,11 +139,11 @@ export interface ToJsonOptions {
  *   }
  * };
  *
- * const entry = syslog.entry(metadata, {
+ * const entry = sysmeta.entry(metadata, {
  *   delegate: 'my_username'
  * });
  *
- * syslog.alert(entry, (err, apiResponse) => {
+ * sysmeta.alert(entry, (err, apiResponse) => {
  *   if (!err) {
  *     // Log entry inserted successfully.
  *   }
@@ -174,7 +202,7 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -232,8 +260,38 @@ class Entry {
    * Read more: https://cloud.google.com/logging/docs/structured-logging
    */
   toStructuredJSON(projectId = '') {
-    const s = {};
-    return s as StructuredJson;
+    const entry = extend(true, {}, this.metadata) as {} as StructuredJson;
+    const meta = this.metadata;
+
+    if (meta.labels) {
+      entry[LABELS_KEY] = Object.assign({}, meta.labels);
+      delete meta.labels;
+    }
+    if (meta.textPayload || meta.jsonPayload) {
+      entry.message = meta.textPayload ? meta.textPayload : meta.jsonPayload;
+      delete meta.textPayload;
+      delete meta.jsonPayload;
+    }
+    this.data ? entry.message = this.data : null;
+    if (meta.insertId) {
+      entry[INSERT_ID_KEY] = meta.insertId!;
+      delete meta.insertId;
+    }
+    // TODO parse this
+    // meta.httpRequest ? (entry.httpRequest = meta.httpRequest) : null;
+    // // TODO parse this
+    // meta.timestamp ? (entry.timestamp = 'todo this later') : null;
+    // // TODO parse this
+    // meta.spanId ? (entry[SPAN_ID_KEY] = meta.spanId) : null;
+    // meta.trace ? (entry[TRACE_KEY] = meta.trace) : null;
+    // 'traceSampled' in meta
+    //   ? (entry[TRACE_SAMPLED_KEY] = meta.traceSampled)
+    //   : null;
+    console.log('Formatting:');
+    console.log(this);
+    console.log('Into:');
+    console.log(entry);
+    return entry;
   }
 
   /**

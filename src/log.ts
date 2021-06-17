@@ -25,7 +25,6 @@ import {Entry, EntryJson, LogEntry, StructuredJson} from './entry';
 import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 import {Writable} from 'stream';
-import {getStructuredLogs} from './structured-log';
 
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
@@ -939,13 +938,13 @@ class Log implements LogSeverityFunctions {
     // instead of to the Logging API endpoint.
     if (this.transport) {
       this.writeToTransport(entry, options, resource, projectId);
-      return;
+      // return;
     } else {
       return this.writeToAPI(entry, options, resource);
     }
   }
 
-  // synchronous write to whatever transport
+  // Write to a user specified transport
   private writeToTransport(
     entry: Entry | Entry[],
     options: WriteOptions,
@@ -961,15 +960,17 @@ class Log implements LogSeverityFunctions {
         return entry.toStructuredJSON(projectId);
       });
       for (const entry of structuredEntries) {
-        // tack on  options.labels, resource
-        this.transport?.write(entry);
+        // TODO: tack on  options.labels, resource
+        typeof this.transport === 'boolean'
+          ? process.stdout.write(JSON.stringify(entry))
+          : this.transport?.write(entry);
       }
     } catch (err) {
-      // Client libraries do not panic.
+      // Ignore errors (client libraries do not panic).
     }
   }
 
-  // write to API
+  // Write to the Logging API endpoint
   private async writeToAPI(
     entry: Entry | Entry[],
     options: WriteOptions,
