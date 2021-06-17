@@ -39,6 +39,22 @@ const structToObj = (struct: {}) => {
   return (fakeStructToObj || common.structToObj)(struct);
 };
 
+function withinExpectedTimeBoundaries(result?: Date): boolean {
+  if (result) {
+    const now = Date.now();
+    const expectedTimestampBoundaries = {
+      start: new Date(now - 1000),
+      end: new Date(now + 1000),
+    };
+    if (
+      result >= expectedTimestampBoundaries.start &&
+      result <= expectedTimestampBoundaries.end
+    )
+      return true;
+  }
+  return false;
+}
+
 describe('Entry', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let Entry: typeof entryTypes.Entry;
@@ -69,13 +85,7 @@ describe('Entry', () => {
 
   describe('instantiation', () => {
     it('should assign timestamp to metadata', () => {
-      const now = Date.now();
-      const expectedTimestampBoundaries = {
-        start: new Date(now - 1000),
-        end: new Date(now + 1000),
-      };
-      assert(entry.metadata.timestamp! >= expectedTimestampBoundaries.start);
-      assert(entry.metadata.timestamp! <= expectedTimestampBoundaries.end);
+      assert(withinExpectedTimeBoundaries(entry.metadata.timestamp! as Date));
     });
 
     it('should not assign timestamp if one is already set', () => {
@@ -309,7 +319,7 @@ describe('Entry', () => {
   });
 
   describe('toStructuredJSON', () => {
-    it.only('should not modify the original instance', () => {
+    it('should not modify the original instance', () => {
       const entryBefore = extend(true, {}, entry);
       entry.toStructuredJSON();
       const entryAfter = extend(true, {}, entry);
@@ -319,6 +329,7 @@ describe('Entry', () => {
     it('should include properties not in StructuredJson', () => {
       entry.metadata.severity = 'CRITICAL';
     });
+
     it.only('should re-map new keys and delete old keys', () => {
       entry.metadata.insertId = '👀';
       entry.metadata.labels = {foo: '⌛️'};
@@ -327,18 +338,17 @@ describe('Entry', () => {
       entry.metadata.traceSampled = false;
       entry.data = 'this is a log';
       const json = entry.toStructuredJSON();
-      console.log('in test');
-      console.log(entry);
-      console.log(json);
+      assert(withinExpectedTimeBoundaries(new Date(json.timestamp!)));
+      delete json.timestamp;
       const expectedJSON = {
         [entryTypes.INSERT_ID_KEY]: '👀',
         [entryTypes.TRACE_KEY]: '🍝',
         [entryTypes.SPAN_ID_KEY]: '🍓',
         [entryTypes.TRACE_SAMPLED_KEY]: false,
-        [entryTypes.LABELS_KEY]: { foo: '⌛️' },
+        [entryTypes.LABELS_KEY]: {foo: '⌛️'},
         message: 'this is a log',
-      }
-      assert.deepStrictEqual(json, expectedJSON)
+      };
+      assert.deepStrictEqual(json, expectedJSON);
     });
     it('should assign an available payload to message', () => {
     });

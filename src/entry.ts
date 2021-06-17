@@ -280,13 +280,11 @@ class Entry {
       entry[TRACE_SAMPLED_KEY] = meta.traceSampled;
       delete (entry as any).traceSampled;
     }
+    if (meta.timestamp instanceof Date) {
+      entry.timestamp = meta.timestamp.toISOString();
+    }
     // format httprequest if needed
     // format trace context if needed
-    // format timestamp if needed
-    console.log('Formatting:');
-    console.log(this);
-    console.log('Into:');
-    console.log(entry);
     return entry;
   }
 
