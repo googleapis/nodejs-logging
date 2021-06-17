@@ -795,27 +795,59 @@ describe('Logging', () => {
         )
       );
     });
+  });
 
-    it.only('should write to stdout', done => {
+  describe('logSyncs', () => {
+    function getTestLog(loggingInstnce = null) {
+      const log = (loggingInstnce || logging).logSync(generateName());
+
+      const logEntries = [
+        // string data
+        log.entry('log entry 1'),
+
+        // object data
+        log.entry({delegate: 'my_username'}),
+
+        // various data types
+        log.entry({
+          nonValue: null,
+          boolValue: true,
+          arrayValue: [1, 2, 3],
+        }),
+
+        // nested object data
+        log.entry({
+          nested: {
+            delegate: 'my_username',
+          },
+        }),
+      ];
+
+      return {log, logEntries};
+    }
+
+    const options = {
+      resource: {
+        type: 'gce_instance',
+        labels: {
+          zone: 'global',
+          instance_id: '3',
+        },
+      },
+    };
+
+    it.only('should write to stdout', () => {
       const {log, logEntries} = getTestLog();
-      log.transport = process.stdout;
-      log.critical(
-        logEntries,
-        {
-          resource: {
-            type: 'gce_instance',
-            labels: {
-              zone: 'global',
-              instanceId: '3',
-            },
+      // log.transport = process.stdout; default
+      log.critical(logEntries, {
+        resource: {
+          type: 'gce_instance',
+          labels: {
+            zone: 'global',
+            instanceId: '3',
           },
         },
-        () => {
-          // should write to stdout, then to api again
-          delete log.transport;
-          log.write(logEntries, done);
-        }
-      );
+      });
     });
   });
 

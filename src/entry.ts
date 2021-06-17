@@ -78,7 +78,7 @@ export interface StructuredJson {
   [SPAN_ID_KEY]?: string;
   [TRACE_KEY]?: string;
   [TRACE_SAMPLED_KEY]?: boolean | null;
-  // Properties not supported by all agents (e.g. Cloud Run)
+  // Properties not supported by all agents (e.g. Cloud Run, Functions)
   logName?: string;
   resource?: object;
 }

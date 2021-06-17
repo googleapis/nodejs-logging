@@ -27,10 +27,6 @@ import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 import {Writable} from 'stream';
 
-export interface LogOptions {
-  transport?: boolean | Writable;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Metadata = any;
 // TODO abstract these types away into common.ts
@@ -91,10 +87,9 @@ class LogSync implements LogSeverityFunctions {
   formattedName_: string;
   logging: Logging;
   name: string;
-  transport?: Writable;
+  transport: Writable;
 
-  constructor(logging: Logging, name: string, options?: LogOptions) {
-    options = options || {};
+  constructor(logging: Logging, name: string, transport?: Writable) {
     this.formattedName_ = LogSync.formatName_(logging.projectId, name);
     this.logging = logging;
     /**
@@ -102,12 +97,8 @@ class LogSync implements LogSeverityFunctions {
      * @type {string}
      */
     this.name = this.formattedName_.split('/').pop()!;
-    if (options.transport) {
-      this.transport =
-        typeof options.transport === 'boolean'
-          ? process.stdout
-          : options.transport;
-    }
+    // Default to writing to stdout
+    this.transport = transport ? transport : process.stdout;
   }
 
   // TODO (nicolezhu) change all comments.

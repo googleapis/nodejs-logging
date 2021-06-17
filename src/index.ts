@@ -53,7 +53,7 @@ import {
 } from './log';
 import {LogSync} from './log-sync';
 import {Sink} from './sink';
-import {Duplex, PassThrough, Transform} from 'stream';
+import {Duplex, PassThrough, Transform, Writable} from 'stream';
 import {google} from '../protos/protos';
 
 import {Bucket} from '@google-cloud/storage'; // types only
@@ -1220,6 +1220,27 @@ class Logging {
    */
   log(name: string, options?: LogOptions) {
     return new Log(this, name, options);
+  }
+
+  // TODO improve docs here
+  /**
+   * Get a reference to a Cloud Logging logSync.
+   *
+   * @see [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
+   *
+   * @param {string} name Name of the existing log.
+   * @param {object} [options] Configuration object.
+   * @param {boolean} [options.removeCircular] Replace circular references in
+   *     logged objects with a string value, `[Circular]`. (Default: false)
+   * @returns {Log}
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   * const log = logging.log('my-log');
+   */
+  logSync(name: string, transport?: Writable) {
+    return new LogSync(this, name, transport);
   }
 
   /**
