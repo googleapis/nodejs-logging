@@ -193,7 +193,7 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}, formattedName = '') {
-    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
+    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -263,7 +263,7 @@ class Entry {
       delete (entry as any).textPayload;
       delete (entry as any).jsonPayload;
     }
-    this.data ? entry.message = this.data : null;
+    this.data ? (entry.message = this.data) : null;
     if (meta.insertId) {
       entry[INSERT_ID_KEY] = meta.insertId!;
       delete (entry as any).insertId;

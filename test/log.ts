@@ -613,12 +613,12 @@ describe('Log', () => {
       log.removeCircular_ = true;
       const entry = new Entry();
       const localJSONStub = sinon
-          .stub(entry, 'toJSON')
-          .returns({} as EntryJson);
+        .stub(entry, 'toJSON')
+        .returns({} as EntryJson);
 
       log.decorateEntries([entry], PROJECT_ID);
       assert(
-          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
       );
     });
 
@@ -668,12 +668,12 @@ describe('Log', () => {
       log.removeCircular_ = true;
       const entry = new Entry();
       const localJSONStub = sinon
-          .stub(entry, 'toJSON')
-          .returns({} as EntryJson);
+        .stub(entry, 'toJSON')
+        .returns({} as EntryJson);
 
       log.decorateEntries([entry], PROJECT_ID);
       assert(
-          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
       );
     });
 
@@ -723,12 +723,12 @@ describe('Log', () => {
       log.removeCircular_ = true;
       const entry = new Entry();
       const localJSONStub = sinon
-          .stub(entry, 'toJSON')
-          .returns({} as EntryJson);
+        .stub(entry, 'toJSON')
+        .returns({} as EntryJson);
 
       log.decorateEntries([entry], PROJECT_ID);
       assert(
-          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
       );
     });
 
@@ -778,12 +778,12 @@ describe('Log', () => {
       log.removeCircular_ = true;
       const entry = new Entry();
       const localJSONStub = sinon
-          .stub(entry, 'toJSON')
-          .returns({} as EntryJson);
+        .stub(entry, 'toJSON')
+        .returns({} as EntryJson);
 
       log.decorateEntries([entry], PROJECT_ID);
       assert(
-          localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
       );
     });
 

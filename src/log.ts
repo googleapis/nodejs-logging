@@ -922,7 +922,7 @@ class Log implements LogSeverityFunctions {
       resource = this.logging.detectedResource;
     } else {
       resource = await getDefaultResource(
-        (this.logging.auth as unknown) as GoogleAuth
+        this.logging.auth as unknown as GoogleAuth
       );
       this.logging.detectedResource = resource;
     }

@@ -1356,7 +1356,7 @@ class Logging {
    */
   async setResource() {
     this.detectedResource = await getDefaultResource(
-      (this.auth as unknown) as GoogleAuth
+      this.auth as unknown as GoogleAuth
     );
   }
 

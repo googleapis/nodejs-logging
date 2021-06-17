@@ -350,8 +350,7 @@ describe('Entry', () => {
       };
       assert.deepStrictEqual(json, expectedJSON);
     });
-    it('should assign an available payload to message', () => {
-    });
+    it('should assign an available payload to message', () => {});
     it('should convert a string timestamp', () => {
       // TODO copy over all the other tests above
     });
