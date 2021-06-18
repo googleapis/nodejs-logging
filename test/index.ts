@@ -1233,19 +1233,6 @@ describe('Logging', () => {
     });
   });
 
-  // TODO
-  describe('setDetectedResource', () => {
-    const NAME = 'log-name';
-
-    it('should return a LogSync object', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const log = logging.log(NAME) as any;
-      assert(log instanceof FakeLog);
-      assert.strictEqual(log.calledWith_[0], logging);
-      assert.strictEqual(log.calledWith_[1], NAME);
-    });
-  });
-
   describe('request', () => {
     const CONFIG = {
       client: 'client',
@@ -1766,7 +1753,7 @@ describe('Logging', () => {
     });
   });
 
-  describe('updating project ID', () => {
+  describe('setProjectId', () => {
     it('should update project id in case of default placeholder', async () => {
       logging = new Logging({projectId: '{{projectId}}'});
       logging.auth.getProjectId = async () => {
@@ -1775,5 +1762,18 @@ describe('Logging', () => {
       await logging.setProjectId({});
       assert.strictEqual(logging.projectId, PROJECT_ID);
     });
+  });
+
+  // TODO
+  describe('setDetectedResource', () => {
+    // const NAME = 'log-name';
+    //
+    // it('should update detected resource', () => {
+    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //   const log = logging.log(NAME) as any;
+    //   assert(log instanceof FakeLog);
+    //   assert.strictEqual(log.calledWith_[0], logging);
+    //   assert.strictEqual(log.calledWith_[1], NAME);
+    // });
   });
 });

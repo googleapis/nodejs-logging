@@ -21,6 +21,8 @@ import {Entry, Logging} from '../src';
 import {Log as LOG, LogOptions, WriteOptions} from '../src/log';
 import {Data, EntryJson, LogEntry} from '../src/entry';
 
+import * as logCommon from '../src/log-common';
+
 describe('Log', () => {
   let Log: typeof LOG;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,17 +129,8 @@ describe('Log', () => {
     });
 
     it('should localize the formatted name', () => {
-      const formattedName = 'formatted-name';
-
-      const formatName_ = Log.formatName_;
-      Log.formatName_ = () => {
-        Log.formatName_ = formatName_;
-        return formattedName;
-      };
-
       const log = new Log(LOGGING, LOG_NAME);
-
-      assert.strictEqual(log.formattedName_, formattedName);
+      assert.strictEqual(log.formattedName_, logCommon.formatLogName(`{{project-id}}`, LOG_NAME));
     });
 
     it('should accept and localize options.removeCircular', () => {
@@ -156,66 +149,6 @@ describe('Log', () => {
 
     it('should default to no max entry size', () => {
       assert.strictEqual(log.maxEntrySize, undefined);
-    });
-  });
-
-  describe('assignSeverityToEntries_', () => {
-    const circular = {} as {circular: {}};
-    circular.circular = circular;
-    const ENTRIES = [
-      {data: {a: 'b'}},
-      {data: {c: 'd'}},
-      {data: {e: circular}},
-    ] as Entry[];
-    const SEVERITY = 'severity';
-
-    it('should assign severity to a single entry', () => {
-      assert.deepStrictEqual(
-        Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
-          .map(x => x.metadata)
-          .map(x => x.severity),
-        [SEVERITY]
-      );
-    });
-
-    it('should assign severity property to multiple entries', () => {
-      assert.deepStrictEqual(
-        Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
-          .map(x => x.metadata)
-          .map(x => x.severity),
-        [SEVERITY, SEVERITY, SEVERITY]
-      );
-    });
-
-    it('should not affect original array', () => {
-      const originalEntries = ENTRIES.map(x => extend({}, x));
-      Log.assignSeverityToEntries_(originalEntries, SEVERITY);
-      assert.deepStrictEqual(originalEntries, ENTRIES);
-    });
-  });
-
-  describe('formatName_', () => {
-    const PROJECT_ID = 'project-id';
-    const NAME = 'log-name';
-
-    const EXPECTED = 'projects/' + PROJECT_ID + '/logs/' + NAME;
-
-    it('should properly format the name', () => {
-      assert.strictEqual(Log.formatName_(PROJECT_ID, NAME), EXPECTED);
-    });
-
-    it('should encode a name that requires it', () => {
-      const name = 'appengine/logs';
-      const expectedName = 'projects/' + PROJECT_ID + '/logs/appengine%2Flogs';
-
-      assert.strictEqual(Log.formatName_(PROJECT_ID, name), expectedName);
-    });
-
-    it('should not encode a name that does not require it', () => {
-      const name = 'appengine%2Flogs';
-      const expectedName = 'projects/' + PROJECT_ID + '/logs/' + name;
-
-      assert.strictEqual(Log.formatName_(PROJECT_ID, name), expectedName);
     });
   });
 
@@ -577,7 +510,7 @@ describe('Log', () => {
   });
 
   // TODO(nicolezhu): add unit tests here
-  describe('detectResource', () => {});
+  describe('getOrSetResource', () => {});
 
   describe('decorateEntries', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -720,7 +653,7 @@ describe('Log', () => {
     beforeEach(() => {
       ENTRY = {} as Entry;
       LABELS = [] as WriteOptions;
-      assignSeverityStub = sinon.stub(Log, 'assignSeverityToEntries_');
+      assignSeverityStub = sinon.stub(logCommon, 'assignSeverityToEntries');
       writeStub = sinon.stub(log, 'write');
     });
 

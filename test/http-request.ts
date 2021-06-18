@@ -127,10 +127,10 @@ describe('http-request', () => {
   });
 
   describe('isRawHttp', () => {
-    it('should be true on ServerRequest', () => {
-      const req = {} as ServerRequest;
-      req.statusCode = 200;
-      assert(isRawHTTP(req));
+    it('should be true on valid objects', () => {
+      const svRequest = {} as ServerRequest;
+      svRequest.statusCode = 200;
+      assert(isRawHTTP(svRequest));
     });
 
     it('should be false on invalid objects', () => {

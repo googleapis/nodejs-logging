@@ -19,9 +19,15 @@ import {callbackifyAll} from '@google-cloud/promisify';
 import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import {google} from '../protos/protos';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
+import {
+  LogSeverityFunctions,
+  assignSeverityToEntries,
+  snakecaseKeys,
+  formatLogName,
+  WriteOptions as CommonOptions,
+} from './log-common';
 
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
@@ -57,34 +63,11 @@ export interface ApiResponseCallback {
 }
 export type DeleteCallback = ApiResponseCallback;
 
-export type MonitoredResource = google.api.IMonitoredResource;
-export interface WriteOptions {
+export interface WriteOptions extends CommonOptions {
   dryRun?: boolean;
   gaxOptions?: CallOptions;
-  labels?: {[index: string]: string};
   partialSuccess?: boolean;
-  resource?: MonitoredResource;
 }
-
-export enum Severity {
-  emergency,
-  alert,
-  critical,
-  error,
-  warning,
-  notice,
-  info,
-  debug,
-}
-
-export type SeverityNames = keyof typeof Severity;
-
-// Mapped types are only supported in type aliases and not in interfaces and
-// classes.
-type LogSeverityFunctions = {
-  // FIXME: the following can be made more precise.
-  [P in SeverityNames]: Function;
-};
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -118,7 +101,7 @@ class Log implements LogSeverityFunctions {
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
-    this.formattedName_ = Log.formatName_(logging.projectId, name);
+    this.formattedName_ = formatLogName(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
     this.maxEntrySize = options.maxEntrySize;
     this.logging = logging;
@@ -169,7 +152,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'ALERT'),
+      assignSeverityToEntries(entry, 'ALERT'),
       options! as WriteOptions
     );
   }
@@ -217,7 +200,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'CRITICAL'),
+      assignSeverityToEntries(entry, 'CRITICAL'),
       options! as WriteOptions
     );
   }
@@ -262,7 +245,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'DEBUG'),
+      assignSeverityToEntries(entry, 'DEBUG'),
       options! as WriteOptions
     );
   }
@@ -315,7 +298,7 @@ class Log implements LogSeverityFunctions {
     gaxOptions?: CallOptions | DeleteCallback
   ): Promise<ApiResponse> {
     const projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(projectId, this.name);
+    this.formattedName_ = formatLogName(projectId, this.name);
     const reqOpts = {
       logName: this.formattedName_,
     };
@@ -364,7 +347,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'EMERGENCY'),
+      assignSeverityToEntries(entry, 'EMERGENCY'),
       options as WriteOptions
     );
   }
@@ -484,7 +467,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'ERROR'),
+      assignSeverityToEntries(entry, 'ERROR'),
       options! as WriteOptions
     );
   }
@@ -539,7 +522,7 @@ class Log implements LogSeverityFunctions {
   ): Promise<GetEntriesResponse> {
     const options = extend({}, opts as GetEntriesRequest);
     const projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(projectId, this.name);
+    this.formattedName_ = formatLogName(projectId, this.name);
     if (options.filter && !options.filter.includes('logName=')) {
       options.filter = `(${options.filter}) AND logName="${this.formattedName_}"`;
     } else if (!options.filter) {
@@ -676,7 +659,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'INFO'),
+      assignSeverityToEntries(entry, 'INFO'),
       options! as WriteOptions
     );
   }
@@ -721,7 +704,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'NOTICE'),
+      assignSeverityToEntries(entry, 'NOTICE'),
       options! as WriteOptions
     );
   }
@@ -766,7 +749,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'WARNING'),
+      assignSeverityToEntries(entry, 'WARNING'),
       options as WriteOptions
     );
   }
@@ -885,10 +868,9 @@ class Log implements LogSeverityFunctions {
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
     let decoratedEntries: EntryJson[];
-    // Extract projectId from Logging, memoize it if previously missing.
+    // Extract projectId & resource from Logging, memoize them if not.
     await this.logging.setProjectId();
-    this.formattedName_ = Log.formatName_(this.logging.projectId, this.name);
-    // Extract detectedResource from Logging, memoize it if previously missing.
+    this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     const resource = await this.getOrSetResource(options);
     // Extract context from individual entries, and format them.
     try {
@@ -924,11 +906,10 @@ class Log implements LogSeverityFunctions {
    */
   private async getOrSetResource(options: WriteOptions) {
     if (options.resource) {
-      if (options.resource.labels) this.snakecaseKeys(options.resource.labels);
+      if (options.resource.labels) snakecaseKeys(options.resource.labels);
       return options.resource;
     }
-    if (!this.logging.detectedResource)
-      await this.logging.setDetectedResource();
+    await this.logging.setDetectedResource();
     return this.logging.detectedResource;
   }
 
@@ -1005,58 +986,6 @@ class Log implements LogSeverityFunctions {
         }
       }
     });
-  }
-
-  // snakecaseKeys turns label keys from camel case to snake case.
-  private snakecaseKeys(labels: {[p: string]: string} | null | undefined) {
-    for (const key in labels) {
-      Object.defineProperty(
-        labels,
-        key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
-        Object.getOwnPropertyDescriptor(labels, key) as PropertyDescriptor
-      );
-      delete labels[key];
-    }
-  }
-
-  /**
-   * Return an array of log entries with the desired severity assigned.
-   *
-   * @private
-   *
-   * @param {object|object[]} entries - Log entries.
-   * @param {string} severity - The desired severity level.
-   */
-  static assignSeverityToEntries_(
-    entries: Entry | Entry[],
-    severity: string
-  ): Entry[] {
-    return (arrify(entries) as Entry[]).map(entry => {
-      const metadata = extend(true, {}, entry.metadata, {
-        severity,
-      });
-      return extend(new Entry(), entry, {
-        metadata,
-      });
-    });
-  }
-
-  /**
-   * Format the name of a log. A log's full name is in the format of
-   * 'projects/{projectId}/logs/{logName}'.
-   *
-   * @private
-   *
-   * @returns {string}
-   */
-  static formatName_(projectId: string, name: string) {
-    const path = 'projects/' + projectId + '/logs/';
-    name = name.replace(path, '');
-    if (decodeURIComponent(name) === name) {
-      // The name has not been encoded yet.
-      name = encodeURIComponent(name);
-    }
-    return path + name;
   }
 }
 

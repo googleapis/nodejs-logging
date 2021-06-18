@@ -19,42 +19,16 @@
  */
 
 import arrify = require('arrify');
-import * as extend from 'extend';
-import {google} from '../protos/protos';
 import {Logging} from '.';
 import {Entry, LABELS_KEY, LogEntry, StructuredJson} from './entry';
-import {getDefaultResource} from './metadata';
-import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 import {Writable} from 'stream';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Metadata = any;
-// TODO abstract these types away into common.ts
-export type MonitoredResource = google.api.IMonitoredResource;
-export interface WriteOptions {
-  labels?: {[index: string]: string};
-  resource?: MonitoredResource;
-}
-
-export enum Severity {
-  emergency,
-  alert,
-  critical,
-  error,
-  warning,
-  notice,
-  info,
-  debug,
-}
-
-export type SeverityNames = keyof typeof Severity;
-
-// Mapped types are only supported in type aliases and not in interfaces and
-// classes.
-type LogSeverityFunctions = {
-  // FIXME: the following can be made more precise.
-  [P in SeverityNames]: Function;
-};
+import {
+  LogSeverityFunctions,
+  assignSeverityToEntries,
+  snakecaseKeys,
+  formatLogName,
+  WriteOptions,
+} from './log-common';
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -91,7 +65,7 @@ class LogSync implements LogSeverityFunctions {
 
   // not projectId, formattedname is expected
   constructor(logging: Logging, name: string, transport?: Writable) {
-    this.formattedName_ = LogSync.formatName_(logging.projectId, name);
+    this.formattedName_ = formatLogName(logging.projectId, name);
     this.logging = logging;
     /**
      * @name Log#name
@@ -133,7 +107,7 @@ class LogSync implements LogSeverityFunctions {
    */
   alert(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'ALERT'),
+      assignSeverityToEntries(entry, 'ALERT'),
       options! as WriteOptions
     );
   }
@@ -168,7 +142,7 @@ class LogSync implements LogSeverityFunctions {
    */
   critical(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'CRITICAL'),
+      assignSeverityToEntries(entry, 'CRITICAL'),
       options! as WriteOptions
     );
   }
@@ -203,7 +177,7 @@ class LogSync implements LogSeverityFunctions {
    */
   debug(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'DEBUG'),
+      assignSeverityToEntries(entry, 'DEBUG'),
       options! as WriteOptions
     );
   }
@@ -238,7 +212,7 @@ class LogSync implements LogSeverityFunctions {
    */
   emergency(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'EMERGENCY'),
+      assignSeverityToEntries(entry, 'EMERGENCY'),
       options as WriteOptions
     );
   }
@@ -349,7 +323,7 @@ class LogSync implements LogSeverityFunctions {
    */
   error(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'ERROR'),
+      assignSeverityToEntries(entry, 'ERROR'),
       options! as WriteOptions
     );
   }
@@ -384,7 +358,7 @@ class LogSync implements LogSeverityFunctions {
    */
   info(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'INFO'),
+      assignSeverityToEntries(entry, 'INFO'),
       options! as WriteOptions
     );
   }
@@ -419,7 +393,7 @@ class LogSync implements LogSeverityFunctions {
    */
   notice(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'NOTICE'),
+      assignSeverityToEntries(entry, 'NOTICE'),
       options! as WriteOptions
     );
   }
@@ -454,7 +428,7 @@ class LogSync implements LogSeverityFunctions {
    */
   warning(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
-      LogSync.assignSeverityToEntries_(entry, 'WARNING'),
+      assignSeverityToEntries(entry, 'WARNING'),
       options as WriteOptions
     );
   }
@@ -553,14 +527,6 @@ class LogSync implements LogSeverityFunctions {
    */
   write(entry: Entry | Entry[], opts?: WriteOptions) {
     const options = opts ? (opts as WriteOptions) : {};
-    // If the user provided a custom writable transport, write to that stream
-    // instead of to the Logging API endpoint.
-    // TODO overcome the issue of await write - we want sync write.
-    this.writeToTransport(entry, options);
-  }
-
-  // Write to a user specified transport
-  private writeToTransport(entry: Entry | Entry[], options: WriteOptions) {
     let structuredEntries: StructuredJson[];
     try {
       structuredEntries = (arrify(entry) as Entry[]).map(entry => {
@@ -572,9 +538,9 @@ class LogSync implements LogSeverityFunctions {
       const resource = this.detectResource(options);
       for (const entry of structuredEntries) {
         entry.logName = this.formattedName_;
-        entry.resource = resource;
-        entry[LABELS_KEY] = options.labels;
-        this.transport!.write(JSON.stringify(entry));
+        entry.resource = resource || entry.resource; // TODO: test this
+        entry[LABELS_KEY] = options.labels || entry[LABELS_KEY];
+        this.transport.write(JSON.stringify(entry));
       }
     } catch (err) {
       // Ignore errors (client libraries do not panic).
@@ -582,72 +548,18 @@ class LogSync implements LogSeverityFunctions {
   }
 
   /**
-   * detectResource looks for and injects a resource to Logging
+   * detectResource uses a user provided resource or it looks for a resource
+   * from the Logging instance.
+   *
    * @param options
    * @private
    */
   private detectResource(options: WriteOptions) {
-    let resource = options.resource;
-    if (resource) {
-      if (resource.labels) this.snakecaseKeys(resource.labels);
+    if (options.resource?.labels) {
+      snakecaseKeys(options.resource.labels);
+      return options.resource;
     }
-    if (this.logging.detectedResource) {
-      resource = this.logging.detectedResource;
-    }
-    return resource;
-  }
-
-  // snakecaseKeys turns label keys from camel case to snake case.
-  private snakecaseKeys(labels: {[p: string]: string} | null | undefined) {
-    for (const key in labels) {
-      Object.defineProperty(
-        labels,
-        key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
-        Object.getOwnPropertyDescriptor(labels, key) as PropertyDescriptor
-      );
-      delete labels[key];
-    }
-    return labels;
-  }
-
-  /**
-   * Return an array of log entries with the desired severity assigned.
-   *
-   * @private
-   *
-   * @param {object|object[]} entries - Log entries.
-   * @param {string} severity - The desired severity level.
-   */
-  static assignSeverityToEntries_(
-    entries: Entry | Entry[],
-    severity: string
-  ): Entry[] {
-    return (arrify(entries) as Entry[]).map(entry => {
-      const metadata = extend(true, {}, entry.metadata, {
-        severity,
-      });
-      return extend(new Entry(), entry, {
-        metadata,
-      });
-    });
-  }
-
-  /**
-   * Format the name of a log. A log's full name is in the format of
-   * 'projects/{projectId}/logs/{logName}'.
-   *
-   * @private
-   *
-   * @returns {string}
-   */
-  static formatName_(projectId: string, name: string) {
-    const path = 'projects/' + projectId + '/logs/';
-    name = name.replace(path, '');
-    if (decodeURIComponent(name) === name) {
-      // The name has not been encoded yet.
-      name = encodeURIComponent(name);
-    }
-    return path + name;
+    return this.logging.detectedResource;
   }
 }
 

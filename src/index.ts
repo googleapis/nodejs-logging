@@ -42,15 +42,8 @@ const version = require('../../package.json').version;
 const v2 = require('./v2');
 
 import {Entry, LogEntry} from './entry';
-import {
-  Log,
-  GetEntriesRequest,
-  TailEntriesRequest,
-  LogOptions,
-  MonitoredResource,
-  Severity,
-  SeverityNames,
-} from './log';
+import {MonitoredResource, Severity, SeverityNames, formatLogName} from './log-common';
+import {Log, GetEntriesRequest, TailEntriesRequest, LogOptions} from './log';
 import {LogSync} from './log-sync';
 import {Sink} from './sink';
 import {Duplex, PassThrough, Transform, Writable} from 'stream';
@@ -650,9 +643,9 @@ class Logging {
           if (options.filter) {
             options.filter = `(${
               options.filter
-            }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
+            }) AND logName="${formatLogName(this.projectId, options.log)}"`;
           } else {
-            options.filter = `logName="${Log.formatName_(
+            options.filter = `logName="${formatLogName(
               this.projectId,
               options.log
             )}"`;
@@ -799,12 +792,12 @@ class Logging {
 
       if (options.log) {
         if (options.filter) {
-          options.filter = `(${options.filter}) AND logName="${Log.formatName_(
+          options.filter = `(${options.filter}) AND logName="${formatLogName(
             this.projectId,
             options.log
           )}"`;
         } else {
-          options.filter = `logName="${Log.formatName_(
+          options.filter = `logName="${formatLogName(
             this.projectId,
             options.log
           )}"`;
@@ -1429,9 +1422,11 @@ class Logging {
    * resource context.
    */
   async setDetectedResource() {
-    this.detectedResource = await getDefaultResource(
-      this.auth as unknown as GoogleAuth
-    );
+    if (!this.detectedResource) {
+      this.detectedResource = await getDefaultResource(
+        this.auth as unknown as GoogleAuth
+      );
+    }
   }
 }
 
@@ -1466,6 +1461,8 @@ export {Entry};
  * @type {Constructor}
  */
 export {Log};
+
+// TODO give these docs links. currently not featured!
 export {Severity};
 export {SeverityNames};
 

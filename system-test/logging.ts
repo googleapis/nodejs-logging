@@ -797,6 +797,7 @@ describe('Logging', () => {
     });
   });
 
+  // TODO: create e2e tests here
   describe('logSyncs', () => {
     function getTestLog(loggingInstnce = null) {
       const log = (loggingInstnce || logging).logSync(generateName());
@@ -836,6 +837,7 @@ describe('Logging', () => {
       },
     };
 
+    // it should extract stuff from logging instance.
     it.only('should write to stdout', () => {
       const {log, logEntries} = getTestLog();
       // log.transport = process.stdout; default
