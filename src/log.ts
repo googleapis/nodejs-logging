@@ -27,7 +27,7 @@ import {
   snakecaseKeys,
   formatLogName,
   WriteOptions as CommonOptions,
-} from './log-common';
+} from './utils/log-common';
 
 export interface GetEntriesRequest {
   autoPaginate?: boolean;

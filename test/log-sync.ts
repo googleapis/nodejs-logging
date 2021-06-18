@@ -18,7 +18,7 @@ import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
 import {Entry, Logging} from '../src';
 import {Log as LOGSYNC, LogOptions, WriteOptions} from '../src/log';
-import {formatLogName} from '../src/log-common';
+import {formatLogName} from '../src/utils/log-common';
 
 describe('LogSync', () => {
   let Log: typeof LOGSYNC;

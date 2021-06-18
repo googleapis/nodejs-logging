@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {formatLogName, assignSeverityToEntries} from '../src/log-common';
+import {formatLogName, assignSeverityToEntries} from '../../src/utils/log-common';
 import {describe, it} from 'mocha';
-import {Entry} from '../src';
+import {Entry} from '../../src';
 import * as assert from 'assert';
 import * as extend from 'extend';
 

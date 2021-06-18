@@ -47,7 +47,7 @@ import {
   Severity,
   SeverityNames,
   formatLogName,
-} from './log-common';
+} from './utils/log-common';
 import {Log, GetEntriesRequest, TailEntriesRequest, LogOptions} from './log';
 import {LogSync} from './log-sync';
 import {Sink} from './sink';

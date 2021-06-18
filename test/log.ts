@@ -21,7 +21,7 @@ import {Entry, Logging} from '../src';
 import {Log as LOG, LogOptions, WriteOptions} from '../src/log';
 import {Data, EntryJson, LogEntry} from '../src/entry';
 
-import * as logCommon from '../src/log-common';
+import * as logCommon from '../src/utils/log-common';
 
 describe('Log', () => {
   let Log: typeof LOG;

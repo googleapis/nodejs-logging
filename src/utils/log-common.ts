@@ -18,10 +18,10 @@
  * Common construct and functions used by both Log and LogSync
  */
 
-import {Entry} from './entry';
+import {Entry} from '../entry';
 import * as extend from 'extend';
 import arrify = require('arrify');
-import {google} from '../protos/protos';
+import {google} from '../../protos/protos';
 
 export interface WriteOptions {
   labels?: {[index: string]: string};

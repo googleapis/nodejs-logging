@@ -28,7 +28,7 @@ import {
   snakecaseKeys,
   formatLogName,
   WriteOptions,
-} from './log-common';
+} from './utils/log-common';
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
