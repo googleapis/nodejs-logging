@@ -21,7 +21,7 @@ import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {google} from '../protos/protos';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
-import {Entry, EntryJson, LABELS_KEY, LogEntry, StructuredJson} from './entry';
+import {Entry, EntryJson, LogEntry} from './entry';
 import {getDefaultResource} from './metadata';
 import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 
@@ -887,19 +887,22 @@ class Log implements LogSeverityFunctions {
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
     let decoratedEntries: EntryJson[];
-    const resource = await this.detectResource(options);
     try {
+      // Extract context at the entry level, and format user provided entries.
       decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
     } catch (err) {
       // Ignore errors (the API will speak up if it has an issue).
     }
     this.truncateEntries(decoratedEntries!);
+    // In priority, pull resource context from user, Logging, then environment.
+    const resource = await this.detectResource(options);
     const reqOpts = extend(
       {
         logName: this.formattedName_,
         entries: decoratedEntries!,
         resource,
       },
+      // Clobber `labels` and `resource` with the user's WriteOptions.
       options
     );
     delete reqOpts.gaxOptions;
@@ -910,7 +913,11 @@ class Log implements LogSeverityFunctions {
   }
 
   /**
-   * detectResource looks for and injects a resource to Logging
+   * detectResource looks for GCP service context first at the user declaration
+   * level (snakecasing keys), then at the at Logging instance level, before
+   * finally detecting resource from the environment. The resource is then
+   * memoized at the Logging instance level for future use.
+   *
    * @param options
    * @private
    */
@@ -937,7 +944,6 @@ class Log implements LogSeverityFunctions {
    *
    * @private
    *
-   * @param {string} projectId - Google project ID.
    * @param {object[]} entries - Entry objects.
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
@@ -1015,7 +1021,6 @@ class Log implements LogSeverityFunctions {
       );
       delete labels[key];
     }
-    return labels;
   }
 
   /**

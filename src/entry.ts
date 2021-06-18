@@ -284,6 +284,7 @@ class Entry {
       entry.timestamp = meta.timestamp.toISOString();
     }
     // format httprequest if needed
+    // TODO: resume here tomorrow
     // format trace context if needed
     return entry;
   }

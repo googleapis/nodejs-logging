@@ -1243,6 +1243,18 @@ class Logging {
     return new LogSync(this, name, transport);
   }
 
+  // TODO: test this
+  /**
+   * setResource detects and sets a detectedresource object on the Logging
+   * instance. It can be invoked once to ensure LogSync entries contain
+   * resource context.
+   */
+  async setDetectedResource() {
+    this.detectedResource = await getDefaultResource(
+      this.auth as unknown as GoogleAuth
+    );
+  }
+
   /**
    * Get a reference to a Cloud Logging sink.
    *
@@ -1347,17 +1359,6 @@ class Logging {
       return;
     }
     return stream!;
-  }
-
-  // TODO: test this
-  /**
-   * setResource is a one time call that detects resource from the environment
-   * and sets it thereafter.
-   */
-  async setResource() {
-    this.detectedResource = await getDefaultResource(
-      this.auth as unknown as GoogleAuth
-    );
   }
 
   /**

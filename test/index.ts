@@ -1220,6 +1220,32 @@ describe('Logging', () => {
     });
   });
 
+  // TODO
+  describe('logSync', () => {
+    const NAME = 'log-name';
+
+    it('should return a LogSync object', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const log = logging.log(NAME) as any;
+      assert(log instanceof FakeLog);
+      assert.strictEqual(log.calledWith_[0], logging);
+      assert.strictEqual(log.calledWith_[1], NAME);
+    });
+  });
+
+  // TODO
+  describe('setDetectedResource', () => {
+    const NAME = 'log-name';
+
+    it('should return a LogSync object', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const log = logging.log(NAME) as any;
+      assert(log instanceof FakeLog);
+      assert.strictEqual(log.calledWith_[0], logging);
+      assert.strictEqual(log.calledWith_[1], NAME);
+    });
+  });
+
   describe('request', () => {
     const CONFIG = {
       client: 'client',

@@ -330,7 +330,7 @@ describe('Entry', () => {
       entry.metadata.severity = 'CRITICAL';
     });
 
-    it.only('should re-map new keys and delete old keys', () => {
+    it('should re-map new keys and delete old keys', () => {
       entry.metadata.insertId = '👀';
       entry.metadata.labels = {foo: '⌛️'};
       entry.metadata.spanId = '🍓';
@@ -350,9 +350,12 @@ describe('Entry', () => {
       };
       assert.deepStrictEqual(json, expectedJSON);
     });
+
     it('should assign an available payload to message', () => {});
+
     it('should convert a string timestamp', () => {
       // TODO copy over all the other tests above
     });
+    //  TODO complete this one
   });
 });
