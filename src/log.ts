@@ -957,7 +957,7 @@ class Log implements LogSeverityFunctions {
         {
           removeCircular: this.removeCircular_,
         },
-        this.formattedName_
+        this.logging.projectId
       );
     });
   }

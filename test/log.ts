@@ -597,30 +597,29 @@ describe('Log', () => {
 
     it('should create an Entry object if one is not provided', () => {
       const entry = {};
-      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      const decoratedEntries = log.decorateEntries([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
-      assert(log.entry.calledWithExactly(entry));
+      assert(log.entry.calledWithExactly(entry), PROJECT_ID);
     });
 
     it('should get JSON format from Entry object', () => {
       const entry = new Entry();
       entry.toJSON = () => toJSONResponse as {} as EntryJson;
-      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
+      const decoratedEntries = log.decorateEntries([entry]);
       assert.strictEqual(decoratedEntries[0], toJSONResponse);
       assert(log.entry.notCalled);
     });
 
     it('should pass log.removeCircular to toJSON', () => {
       log.removeCircular_ = true;
-      log.formattedName_ = 'log name';
+      log.logging.projectId = PROJECT_ID;
       const entry = new Entry();
       const localJSONStub = sinon
         .stub(entry, 'toJSON')
         .returns({} as EntryJson);
-
       log.decorateEntries([entry]);
       assert(
-        localJSONStub.calledWithExactly({removeCircular: true}, 'log name')
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
       );
     });
 
@@ -628,7 +627,7 @@ describe('Log', () => {
       const entry = new Entry();
       sinon.stub(entry, 'toJSON').throws('Error.');
       assert.throws(() => {
-        log.decorateEntries([entry], PROJECT_ID);
+        log.decorateEntries([entry]);
       }, 'Error.');
     });
   });
