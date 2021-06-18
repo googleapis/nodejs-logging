@@ -15,7 +15,7 @@
 import {
   ObjectToStructConverter,
   ObjectToStructConverterConfig,
-} from '../src/common';
+} from '../../src/utils/common';
 import * as assert from 'assert';
 import {describe, it, beforeEach} from 'mocha';
 const OPTIONS = {

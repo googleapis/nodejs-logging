@@ -23,7 +23,7 @@ import {
   CloudLoggingHttpRequest,
   makeHttpRequestData,
   isRawHTTP,
-} from '../src/http-request';
+} from '../../src/utils/http-request';
 
 describe('http-request', () => {
   describe('makeHttpRequestData', () => {

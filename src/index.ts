@@ -28,8 +28,8 @@ import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as middleware from './middleware';
-import {detectServiceContext, getDefaultResource} from './metadata';
-import {CloudLoggingHttpRequest as HttpRequest} from './http-request';
+import {detectServiceContext, getDefaultResource} from './utils/metadata';
+import {CloudLoggingHttpRequest as HttpRequest} from './utils/http-request';
 
 import {GoogleAuth} from 'google-auth-library';
 

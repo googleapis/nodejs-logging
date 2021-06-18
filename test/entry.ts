@@ -17,7 +17,7 @@ import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
-import * as common from '../src/common';
+import * as common from '../src/utils/common';
 import * as http from 'http';
 
 let fakeEventIdNewOverride: Function | null;
@@ -65,7 +65,7 @@ describe('Entry', () => {
 
   before(() => {
     Entry = proxyquire('../src/entry.js', {
-      './common': {
+      './utils/common': {
         objToStruct,
         structToObj,
       },

@@ -18,13 +18,13 @@
 const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
-import {objToStruct, structToObj} from './common';
+import {objToStruct, structToObj} from './utils/common';
 import {
   makeHttpRequestData,
   CloudLoggingHttpRequest,
   isRawHTTP,
-} from './http-request';
-import {CloudTraceContext, getOrInjectContext} from './context';
+} from './utils/http-request';
+import {CloudTraceContext, getOrInjectContext} from './utils/context';
 import * as http from 'http';
 
 const eventId = new EventId();
