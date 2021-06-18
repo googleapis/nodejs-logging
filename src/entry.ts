@@ -199,7 +199,7 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
-    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
+    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -265,7 +265,7 @@ class Entry {
       labels,
       ...validKeys
     } = meta;
-    const entry = (extend(true, {}, validKeys) as {}) as StructuredJson;
+    const entry = extend(true, {}, validKeys) as {} as StructuredJson;
     // Re-map keys names.
     entry[LABELS_KEY] = meta.labels
       ? Object.assign({}, meta.labels)

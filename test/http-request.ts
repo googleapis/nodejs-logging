@@ -121,6 +121,5 @@ describe('http-request', () => {
     });
   });
   // TODO
-  describe('isRawHttp', () => {
-  })
+  describe('isRawHttp', () => {});
 });

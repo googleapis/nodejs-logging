@@ -525,9 +525,7 @@ describe('Log', () => {
       const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
-      assert(
-        decorateEntriesStub.calledOnceWithExactly(arrifiedEntries)
-      );
+      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries));
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -574,8 +572,7 @@ describe('Log', () => {
   });
 
   // TODO(nicolezhu): add unit tests here
-  describe('detectResource', () => {
-  });
+  describe('detectResource', () => {});
 
   describe('decorateEntries', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

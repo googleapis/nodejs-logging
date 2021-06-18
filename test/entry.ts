@@ -345,7 +345,7 @@ describe('Entry', () => {
         [entryTypes.TRACE_KEY]: '🍝',
         [entryTypes.SPAN_ID_KEY]: '🍓',
         [entryTypes.TRACE_SAMPLED_KEY]: false,
-        [entryTypes.LABELS_KEY]: {'foo': '⌛️'},
+        [entryTypes.LABELS_KEY]: {foo: '⌛️'},
         message: 'this is a log',
       };
       assert.deepStrictEqual(json, expectedJSON);
