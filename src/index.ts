@@ -1243,18 +1243,6 @@ class Logging {
     return new LogSync(this, name, transport);
   }
 
-  // TODO: test this
-  /**
-   * setResource detects and sets a detectedresource object on the Logging
-   * instance. It can be invoked once to ensure LogSync entries contain
-   * resource context.
-   */
-  async setDetectedResource() {
-    this.detectedResource = await getDefaultResource(
-      this.auth as unknown as GoogleAuth
-    );
-  }
-
   /**
    * Get a reference to a Cloud Logging sink.
    *
@@ -1428,11 +1416,22 @@ class Logging {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async setProjectId(reqOpts: {}) {
-    if (this.projectId === '{{projectId}}') {
+  async setProjectId(reqOpts?: {}) {
+    if (this.projectId === '{{projectId}}')
       this.projectId = await this.auth.getProjectId();
-    }
-    reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
+    if (reqOpts) reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
+  }
+
+  // TODO: test this
+  /**
+   * setResource detects and sets a detectedresource object on the Logging
+   * instance. It can be invoked once to ensure LogSync entries contain
+   * resource context.
+   */
+  async setDetectedResource() {
+    this.detectedResource = await getDefaultResource(
+      this.auth as unknown as GoogleAuth
+    );
   }
 }
 

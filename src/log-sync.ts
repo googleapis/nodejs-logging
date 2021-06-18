@@ -89,6 +89,7 @@ class LogSync implements LogSeverityFunctions {
   name: string;
   transport: Writable;
 
+  // not projectId, formattedname is expected
   constructor(logging: Logging, name: string, transport?: Writable) {
     this.formattedName_ = LogSync.formatName_(logging.projectId, name);
     this.logging = logging;
@@ -98,7 +99,7 @@ class LogSync implements LogSeverityFunctions {
      */
     this.name = this.formattedName_.split('/').pop()!;
     // Default to writing to stdout
-    this.transport = transport ? transport : process.stdout;
+    this.transport = transport || process.stdout;
   }
 
   // TODO (nicolezhu) change all comments.

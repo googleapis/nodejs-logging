@@ -22,8 +22,6 @@ import {CallOptions} from 'google-gax';
 import {google} from '../protos/protos';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
-import {getDefaultResource} from './metadata';
-import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
 
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
@@ -887,22 +885,25 @@ class Log implements LogSeverityFunctions {
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
     let decoratedEntries: EntryJson[];
+    // Extract projectId from Logging, memoize it if previously missing.
+    await this.logging.setProjectId();
+    this.formattedName_ = Log.formatName_(this.logging.projectId, this.name);
+    // Extract detectedResource from Logging, memoize it if previously missing.
+    const resource = await this.getOrSetResource(options);
+    // Extract context from individual entries, and format them.
     try {
-      // Extract context at the entry level, and format user provided entries.
       decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
     } catch (err) {
       // Ignore errors (the API will speak up if it has an issue).
     }
     this.truncateEntries(decoratedEntries!);
-    // In priority, pull resource context from user, Logging, then environment.
-    const resource = await this.detectResource(options);
+    // Clobber `labels` and `resource` fields with WriteOptions from the user.
     const reqOpts = extend(
       {
         logName: this.formattedName_,
         entries: decoratedEntries!,
         resource,
       },
-      // Clobber `labels` and `resource` with the user's WriteOptions.
       options
     );
     delete reqOpts.gaxOptions;
@@ -915,25 +916,20 @@ class Log implements LogSeverityFunctions {
   /**
    * detectResource looks for GCP service context first at the user declaration
    * level (snakecasing keys), then at the at Logging instance level, before
-   * finally detecting resource from the environment. The resource is then
+   * finally detecting a resource from the environment. The resource is then
    * memoized at the Logging instance level for future use.
    *
    * @param options
    * @private
    */
-  private async detectResource(options: WriteOptions) {
-    let resource = options.resource;
-    if (resource) {
-      if (resource.labels) this.snakecaseKeys(resource.labels);
-    } else if (this.logging.detectedResource) {
-      resource = this.logging.detectedResource;
-    } else {
-      resource = await getDefaultResource(
-        this.logging.auth as unknown as GoogleAuth
-      );
-      this.logging.detectedResource = resource;
+  private async getOrSetResource(options: WriteOptions) {
+    if (options.resource) {
+      if (options.resource.labels) this.snakecaseKeys(options.resource.labels);
+      return options.resource;
     }
-    return resource;
+    if (!this.logging.detectedResource)
+      await this.logging.setDetectedResource();
+    return this.logging.detectedResource;
   }
 
   /**

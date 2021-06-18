@@ -43,22 +43,22 @@ describe('Log', () => {
     callbackifyAll: sinon.stub(),
   };
 
-  const metadataFake = {
-    getDefaultResource: sinon.stub(),
-  };
+  // const metadataFake = {
+  //   getDefaultResource: sinon.stub(),
+  // };
 
   before(() => {
     Log = proxyquire('../src/log', {
       '@google-cloud/promisify': callbackifyFake,
       './entry': {Entry},
-      './metadata': metadataFake,
+      // './metadata': metadataFake,
     }).Log;
 
     log = createLogger();
   });
 
   beforeEach(() => {
-    metadataFake.getDefaultResource.reset();
+    // metadataFake.getDefaultResource.reset();
     log.logging.entry.reset();
     log.logging.getEntries.reset();
     log.logging.getEntriesStream.reset();
@@ -68,15 +68,24 @@ describe('Log', () => {
     log.logging.loggingService.writeLogEntries.reset();
     log.logging.auth.getEnv.reset();
     log.logging.auth.getProjectId.reset();
-
-    metadataFake.getDefaultResource.returns(FAKE_RESOURCE);
     log.logging.auth.getProjectId.resolves(PROJECT_ID);
+    // metadataFake.getDefaultResource.returns(FAKE_RESOURCE);
+    // Required for Write()
+    log.logging.setProjectId = () => {
+      log.logging.projectId = PROJECT_ID;
+    };
+    log.logging.setDetectedResource = () => {
+      log.logging.detectedResource = FAKE_RESOURCE;
+    };
   });
 
+  // Create a mock Logging instance
   function createLogger(maxEntrySize?: number) {
     LOGGING = {
       projectId: '{{project-id}}',
       entry: sinon.stub(),
+      setProjectId: sinon.stub(),
+      setDetectedResource: sinon.stub(),
       getEntries: sinon.stub(),
       getEntriesStream: sinon.stub(),
       tailEntries: sinon.stub(),
@@ -146,19 +155,6 @@ describe('Log', () => {
     });
 
     it('should default to no max entry size', () => {
-      assert.strictEqual(log.maxEntrySize, undefined);
-    });
-
-    //  TODO
-    it('should default to no custom transport', () => {
-      assert.strictEqual(log.maxEntrySize, undefined);
-    });
-
-    it('should default to stdout if user wants transport', () => {
-      assert.strictEqual(log.maxEntrySize, undefined);
-    });
-
-    it('should set to a custom user transport', () => {
       assert.strictEqual(log.maxEntrySize, undefined);
     });
   });
@@ -393,7 +389,6 @@ describe('Log', () => {
     before(() => {
       origDetectedResource = log.logging.detectedResource;
     });
-
     beforeEach(() => {
       ENTRY = {} as Entry;
       ENTRIES = [ENTRY] as Entry[];
@@ -438,11 +433,21 @@ describe('Log', () => {
       );
     });
 
-    it('should cache a detected resource', async () => {
-      const fakeResource = 'test-level-fake-resource';
-      metadataFake.getDefaultResource.resetBehavior();
-      metadataFake.getDefaultResource.resolves(fakeResource);
+    it('should cache a projectId in Logging', async () => {
+      const fakeProject = 'test-level-fake-projectId';
+      log.logging.setProjectId = () => {
+        log.logging.projectId = fakeProject;
+      };
+      await log.write(ENTRIES);
+      assert(log.logging.loggingService.writeLogEntries.calledOnce);
+      assert.strictEqual(log.logging.projectId, fakeProject);
+    });
 
+    it('should cache a detected resource in Logging', async () => {
+      const fakeResource = 'test-level-fake-resource';
+      log.logging.setDetectedResource = () => {
+        log.logging.detectedResource = fakeResource;
+      };
       await log.write(ENTRIES);
       assert(log.logging.loggingService.writeLogEntries.calledOnce);
       assert.strictEqual(log.logging.detectedResource, fakeResource);
@@ -451,9 +456,9 @@ describe('Log', () => {
     it('should re-use detected resource', async () => {
       const reusableDetectedResource = 'environment-default-resource';
       log.logging.detectedResource = reusableDetectedResource;
-      metadataFake.getDefaultResource.resetBehavior();
-      metadataFake.getDefaultResource.throws('Cached resource was not used.');
-
+      log.logging.setDetectedResource = () => {
+        assert.fail;
+      };
       await log.write(ENTRIES);
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
