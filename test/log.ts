@@ -130,7 +130,10 @@ describe('Log', () => {
 
     it('should localize the formatted name', () => {
       const log = new Log(LOGGING, LOG_NAME);
-      assert.strictEqual(log.formattedName_, logCommon.formatLogName(`{{project-id}}`, LOG_NAME));
+      assert.strictEqual(
+        log.formattedName_,
+        logCommon.formatLogName('{{project-id}}', LOG_NAME)
+      );
     });
 
     it('should accept and localize options.removeCircular', () => {

@@ -42,7 +42,12 @@ const version = require('../../package.json').version;
 const v2 = require('./v2');
 
 import {Entry, LogEntry} from './entry';
-import {MonitoredResource, Severity, SeverityNames, formatLogName} from './log-common';
+import {
+  MonitoredResource,
+  Severity,
+  SeverityNames,
+  formatLogName,
+} from './log-common';
 import {Log, GetEntriesRequest, TailEntriesRequest, LogOptions} from './log';
 import {LogSync} from './log-sync';
 import {Sink} from './sink';
@@ -641,9 +646,10 @@ class Logging {
         this.projectId = projectId;
         if (options.log) {
           if (options.filter) {
-            options.filter = `(${
-              options.filter
-            }) AND logName="${formatLogName(this.projectId, options.log)}"`;
+            options.filter = `(${options.filter}) AND logName="${formatLogName(
+              this.projectId,
+              options.log
+            )}"`;
           } else {
             options.filter = `logName="${formatLogName(
               this.projectId,
