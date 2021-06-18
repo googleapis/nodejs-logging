@@ -113,3 +113,13 @@ export function makeHttpRequestData(
     latency ? {latency} : null
   );
 }
+
+export function isRawHTTP(req?: any | null): boolean {
+  if (
+    req &&
+    ('statusCode' in req || 'headers' in req || 'method' in req || 'url' in req)
+  ) {
+    return true;
+  }
+  return false;
+}

@@ -120,4 +120,7 @@ describe('http-request', () => {
       assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
     });
   });
+  // TODO
+  describe('isRawHttp', () => {
+  })
 });

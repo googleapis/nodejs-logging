@@ -19,7 +19,11 @@ const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
 import {objToStruct, structToObj} from './common';
-import {makeHttpRequestData, CloudLoggingHttpRequest} from './http-request';
+import {
+  makeHttpRequestData,
+  CloudLoggingHttpRequest,
+  isRawHTTP,
+} from './http-request';
 import {CloudTraceContext, getOrInjectContext} from './context';
 import * as http from 'http';
 
@@ -53,7 +57,7 @@ export type LogEntry = Omit<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
-// Specific Entry properties that need to be reformatted for submission to the
+// The expected format of a subset of Entry properties before submission to the
 // LoggingService API.
 export interface EntryJson {
   timestamp: Timestamp;
@@ -66,18 +70,20 @@ export interface EntryJson {
   traceSampled?: boolean;
 }
 
-// Specific Entry properties that need to be reformatted for submission to a
+// The expected format of a subset of Entry properties before submission to a
 // custom transport, most likely to process.stdout.
 export interface StructuredJson {
   // Universally supported properties
-  message?: string | object | null;
+  message?: string | object;
   httpRequest?: object;
   timestamp?: string;
-  [INSERT_ID_KEY]?: string | null;
+  [INSERT_ID_KEY]?: string;
+  [OPERATION_KEY]?: object;
+  [SOURCE_LOCATION_KEY]?: object;
   [LABELS_KEY]?: object;
   [SPAN_ID_KEY]?: string;
   [TRACE_KEY]?: string;
-  [TRACE_SAMPLED_KEY]?: boolean | null;
+  [TRACE_SAMPLED_KEY]?: boolean;
   // Properties not supported by all agents (e.g. Cloud Run, Functions)
   logName?: string;
   resource?: object;
@@ -193,7 +199,7 @@ class Entry {
    *     object with a string value, `[Circular]`.
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    const entry = (extend(true, {}, this.metadata) as {}) as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -224,18 +230,18 @@ class Entry {
     }
     // Format httpRequest
     const req = this.metadata.httpRequest;
-    if (this.isRawHTTP(req)) {
+    if (isRawHTTP(req)) {
       entry.httpRequest = makeHttpRequestData(req! as RawHttpRequest);
-    }
-    // Format trace and span
-    const traceContext = this.extractTraceFromHeaders(projectId);
-    if (traceContext) {
-      if (!this.metadata.trace && traceContext.trace)
-        entry.trace = traceContext.trace;
-      if (!this.metadata.spanId && traceContext.spanId)
-        entry.spanId = traceContext.spanId;
-      if (this.metadata.traceSampled === undefined)
-        entry.traceSampled = traceContext.traceSampled;
+      // Format trace and span
+      const traceContext = this.extractTraceFromHeaders(projectId);
+      if (traceContext) {
+        if (!this.metadata.trace && traceContext.trace)
+          entry.trace = traceContext.trace;
+        if (!this.metadata.spanId && traceContext.spanId)
+          entry.spanId = traceContext.spanId;
+        if (this.metadata.traceSampled === undefined)
+          entry.traceSampled = traceContext.traceSampled;
+      }
     }
     return entry;
   }
@@ -245,69 +251,56 @@ class Entry {
    * Read more: https://cloud.google.com/logging/docs/structured-logging
    */
   toStructuredJSON(projectId = '') {
-    const entry = extend(true, {}, this.metadata) as {} as StructuredJson;
     const meta = this.metadata;
-    // Format log payload.
-    if (meta.textPayload || meta.jsonPayload) {
-      entry.message = meta.textPayload ? meta.textPayload : meta.jsonPayload;
-      delete (entry as any).textPayload;
-      delete (entry as any).jsonPayload;
-    }
-    this.data ? (entry.message = this.data) : null;
+    // Mask out the keys that need to be renamed.
+    const {
+      textPayload,
+      jsonPayload,
+      insertId,
+      trace,
+      spanId,
+      traceSampled,
+      operation,
+      sourceLocation,
+      labels,
+      ...validKeys
+    } = meta;
+    const entry = (extend(true, {}, validKeys) as {}) as StructuredJson;
     // Re-map keys names.
-    if (meta.labels) {
-      entry[LABELS_KEY] = Object.assign({}, meta.labels);
-      delete (entry as any).labels;
-    }
-    if (meta.insertId) {
-      entry[INSERT_ID_KEY] = meta.insertId!;
-      delete (entry as any).insertId;
-    }
-    if (meta.trace) {
-      entry[TRACE_KEY] = meta.trace;
-      delete (entry as any).trace;
-    }
-    if (meta.spanId) {
-      entry[SPAN_ID_KEY] = meta.spanId;
-      delete (entry as any).spanId;
-    }
-    if ('traceSampled' in meta) {
-      entry[TRACE_SAMPLED_KEY] = meta.traceSampled;
-      delete (entry as any).traceSampled;
-    }
+    entry[LABELS_KEY] = meta.labels
+      ? Object.assign({}, meta.labels)
+      : undefined;
+    entry[INSERT_ID_KEY] = meta.insertId || undefined;
+    entry[TRACE_KEY] = meta.trace || undefined;
+    entry[SPAN_ID_KEY] = meta.spanId || undefined;
+    entry[TRACE_SAMPLED_KEY] =
+      'traceSampled' in meta && meta.traceSampled !== null
+        ? meta.traceSampled
+        : undefined;
+    // Format log payload.
+    entry.message =
+      meta.textPayload || meta.jsonPayload || meta.protoPayload || undefined;
+    entry.message = this.data || entry.message;
     // Format timestamp
     if (meta.timestamp instanceof Date) {
       entry.timestamp = meta.timestamp.toISOString();
     }
     // Format httprequest
     const req = meta.httpRequest;
-    if (this.isRawHTTP(req)) {
+    if (isRawHTTP(req)) {
       entry.httpRequest = makeHttpRequestData(req! as RawHttpRequest);
-    }
-    // Inject detected trace context if applicable.
-    const traceContext = this.extractTraceFromHeaders(projectId);
-    if (traceContext) {
-      if (!entry[TRACE_KEY] && traceContext.trace)
-        entry[TRACE_KEY] = traceContext.trace;
-      if (!entry[SPAN_ID_KEY] && traceContext.spanId)
-        entry[SPAN_ID_KEY] = traceContext.spanId;
-      if (entry[TRACE_SAMPLED_KEY] === undefined)
-        entry[TRACE_SAMPLED_KEY] = traceContext.traceSampled;
+      // Inject detected trace context if applicable.
+      const traceContext = this.extractTraceFromHeaders(projectId);
+      if (traceContext) {
+        if (!entry[TRACE_KEY] && traceContext.trace)
+          entry[TRACE_KEY] = traceContext.trace;
+        if (!entry[SPAN_ID_KEY] && traceContext.spanId)
+          entry[SPAN_ID_KEY] = traceContext.spanId;
+        if (entry[TRACE_SAMPLED_KEY] === undefined)
+          entry[TRACE_SAMPLED_KEY] = traceContext.traceSampled;
+      }
     }
     return entry;
-  }
-
-  private isRawHTTP(req?: HttpRequest | null): boolean {
-    if (
-      req &&
-      ('statusCode' in req ||
-        'headers' in req ||
-        'method' in req ||
-        'url' in req)
-    ) {
-      return true;
-    }
-    return false;
   }
 
   /**
