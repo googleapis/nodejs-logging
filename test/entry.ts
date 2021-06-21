@@ -175,10 +175,6 @@ describe('Entry', () => {
     });
   });
 
-  describe('extractTraceFromHeaders', () => {
-    // TODO
-  });
-
   describe('toJSON', () => {
     beforeEach(() => {
       fakeObjToStruct = () => {};

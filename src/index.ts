@@ -1421,7 +1421,6 @@ class Logging {
     if (reqOpts) reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
   }
 
-  // TODO: test this
   /**
    * setResource detects and sets a detectedresource object on the Logging
    * instance. It can be invoked once to ensure LogSync entries contain

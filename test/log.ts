@@ -45,10 +45,6 @@ describe('Log', () => {
     callbackifyAll: sinon.stub(),
   };
 
-  // const metadataFake = {
-  //   getDefaultResource: sinon.stub(),
-  // };
-
   before(() => {
     Log = proxyquire('../src/log', {
       '@google-cloud/promisify': callbackifyFake,
@@ -509,9 +505,6 @@ describe('Log', () => {
       );
     });
   });
-
-  // TODO(nicolezhu): add unit tests here
-  describe('getOrSetResource', () => {});
 
   describe('decorateEntries', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

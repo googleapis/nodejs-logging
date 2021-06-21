@@ -33,6 +33,9 @@ import {Policy} from '@google-cloud/pubsub';
 import {GetEntriesRequest} from '../src/log';
 import {Dataset} from '@google-cloud/bigquery';
 import {Bucket} from '@google-cloud/storage';
+import * as metadata from '../src/utils/metadata';
+
+import * as sinon from 'sinon';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const {v2} = require('../src');
@@ -151,6 +154,7 @@ describe('Logging', () => {
         GoogleAuth: fakeGoogleAuth,
       },
       './log': {Log: FakeLog},
+      './log-sync': {LogSync: FakeLog},
       './entry': {Entry: FakeEntry},
       './sink': {Sink: FakeSink},
       './v2': fakeV2,
@@ -1220,13 +1224,12 @@ describe('Logging', () => {
     });
   });
 
-  // TODO
   describe('logSync', () => {
     const NAME = 'log-name';
 
     it('should return a LogSync object', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const log = logging.log(NAME) as any;
+      const log = logging.logSync(NAME) as any;
       assert(log instanceof FakeLog);
       assert.strictEqual(log.calledWith_[0], logging);
       assert.strictEqual(log.calledWith_[1], NAME);
@@ -1764,16 +1767,12 @@ describe('Logging', () => {
     });
   });
 
-  // TODO
   describe('setDetectedResource', () => {
-    // const NAME = 'log-name';
-    //
-    // it('should update detected resource', () => {
-    //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //   const log = logging.log(NAME) as any;
-    //   assert(log instanceof FakeLog);
-    //   assert.strictEqual(log.calledWith_[0], logging);
-    //   assert.strictEqual(log.calledWith_[1], NAME);
-    // });
+    it('should update detected resource if none', async () => {
+      logging = new Logging();
+      sinon.stub(metadata, 'getDefaultResource').resolves({type: 'bar'});
+      await logging.setDetectedResource();
+      assert.strictEqual((logging.detectedResource as any).type, 'bar');
+    });
   });
 });
