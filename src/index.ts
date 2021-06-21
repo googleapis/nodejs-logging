@@ -1225,18 +1225,20 @@ class Logging {
   /**
    * Get a reference to a Cloud Logging logSync.
    *
-   * @see [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
-   *
    * @param {string} name Name of the existing log.
-   * @param {object} [options] Configuration object.
-   * @param {boolean} [options.removeCircular] Replace circular references in
-   *     logged objects with a string value, `[Circular]`. (Default: false)
-   * @returns {Log}
+   * @param {object} transport An optional write stream.
+   * @returns {LogSync}
    *
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   *
+   * // Optional: enrich logs with additional context
+   * await logging.setProjectId();
+   * await logging.setDetectedResource();
+   *
+   * // Default transport writes to process.stdout
+   * const log = logging.logSync('my-log');
    */
   logSync(name: string, transport?: Writable) {
     return new LogSync(this, name, transport);
@@ -1414,6 +1416,11 @@ class Logging {
     config.destination = `${baseUrl}/${topicName}`;
   }
 
+  /**
+   * setProjectId detects and sets a projectId string on the Logging instance.
+   * It can be invoked once to ensure ensuing LogSync entries have a projectID.
+   * @param reqOpts
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async setProjectId(reqOpts?: {}) {
     if (this.projectId === '{{projectId}}')
@@ -1423,7 +1430,7 @@ class Logging {
 
   /**
    * setResource detects and sets a detectedresource object on the Logging
-   * instance. It can be invoked once to ensure LogSync entries contain
+   * instance. It can be invoked once to ensure ensuing LogSync entries contain
    * resource context.
    */
   async setDetectedResource() {
@@ -1467,11 +1474,19 @@ export {Entry};
  */
 export {Log};
 
-// TODO give these docs links. currently not featured!
+/**
+ * {@link Severity} enum.
+ */
 export {Severity};
 export {SeverityNames};
 
-// TODO docs here
+/**
+ * {@link LogSync} class.
+ *
+ * @name Logging.LogSync
+ * @see LogSync
+ * @type {Constructor}
+ */
 export {LogSync};
 
 /**

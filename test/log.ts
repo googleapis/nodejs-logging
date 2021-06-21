@@ -49,14 +49,12 @@ describe('Log', () => {
     Log = proxyquire('../src/log', {
       '@google-cloud/promisify': callbackifyFake,
       './entry': {Entry},
-      // './metadata': metadataFake,
     }).Log;
 
     log = createLogger();
   });
 
   beforeEach(() => {
-    // metadataFake.getDefaultResource.reset();
     log.logging.entry.reset();
     log.logging.getEntries.reset();
     log.logging.getEntriesStream.reset();
@@ -67,8 +65,7 @@ describe('Log', () => {
     log.logging.auth.getEnv.reset();
     log.logging.auth.getProjectId.reset();
     log.logging.auth.getProjectId.resolves(PROJECT_ID);
-    // metadataFake.getDefaultResource.returns(FAKE_RESOURCE);
-    // Required for Write()
+    // Required setup for Write():
     log.logging.setProjectId = () => {
       log.logging.projectId = PROJECT_ID;
     };

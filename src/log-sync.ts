@@ -15,7 +15,7 @@
  */
 
 /**
- * This is a helper library for synchronously writing logs to a transport.
+ * This is a helper library for synchronously writing logs to any transport.
  */
 
 import arrify = require('arrify');
@@ -31,31 +31,28 @@ import {
 } from './utils/log-common';
 
 /**
- * A log is a named collection of entries, each entry representing a timestamped
- * event. Logs can be produced by Google Cloud Platform services, by third-party
- * services, or by your applications. For example, the log `apache-access` is
- * produced by the Apache Web Server, but the log
- * `compute.googleapis.com/activity_log` is produced by Google Compute Engine.
+ * A logSync is a named collection of entries in structured log format. In Cloud
+ * Logging, structured logs refer to log entries that use the jsonPayload field
+ * to add structure to their payloads. In most GCP environments, like GKE and
+ * Cloud Functions, structured logs written to process.stdout are automatically
+ * picked up and formatted by logging agents.
  *
- * @see [Introduction to Logs]{@link https://cloud.google.com/logging/docs/basic-concepts#logs}
+ * Recommended for Serverless environment logging, especially where async log
+ * calls made by the `Log` class can be dropped by the CPU.
+ *
+ * @see [Structured Logging]{@link https://cloud.google.com/logging/docs/structured-logging}
  *
  * @class
  *
  * @param {Logging} logging {@link Logging} instance.
- * @param {string} name Name of the log.
- * @param {object} [options] Configuration object.
- * @param {boolean} [options.removeCircular] Replace circular references in
- *     logged objects with a string value, `[Circular]`. (Default: false)
- * @param {number} [options.maxEntrySize] A max entry size
- * @param {boolean|Writable} [options.transport] Override the write to API stream with a
- *     custom log stream, like stdout/stderr, rather than loggingService API.
- *     Recommended for Cloud Functions and other Serverless GCP service
- *     environments (Default: false)
+ * @param {string} name Name of the logSync.
+ * @param {Writable} [transport] transport A custom writable transport stream.
+ *     Default: process.stdout.
  *
  * @example
  * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
- * const log = logging.log('syslog');
+ * const log = logging.logSync('mylog');
  */
 class LogSync implements LogSeverityFunctions {
   formattedName_: string;
@@ -76,34 +73,24 @@ class LogSync implements LogSeverityFunctions {
     this.transport = transport || process.stdout;
   }
 
-  // TODO (nicolezhu) change all comments.
   /**
    * Write a log entry with a severity of "ALERT".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.alert(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.alert(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.alert(entry);
    */
   alert(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -115,30 +102,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "CRITICAL".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.critical(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.critical(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.critical(entry);
    */
   critical(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -150,30 +128,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "DEBUG".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.debug(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.debug(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.debug(entry);
    */
   debug(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -185,30 +154,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "EMERGENCY".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.emergency(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.emergency(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.emergency(entry);
    */
   emergency(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -217,20 +177,14 @@ class LogSync implements LogSeverityFunctions {
     );
   }
 
+  // TODO(future): dedupe entry code across LogSync & Log classes.
   entry(metadata?: LogEntry): Entry;
   entry(data?: string | {}): Entry;
   entry(metadata?: LogEntry, data?: string | {}): Entry;
   /**
    * Create an entry object for this log.
    *
-   * Using this method will not itself make any API requests. You will use
-   * the object returned in other API calls, such as
-   * {@link Log#write}.
-   *
-   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
-   * dictates that the maximum log entry size, including all
-   * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
-   * cannot exceed _approximately_ 256 KB.
+   * Using this method will not itself do any logging.
    *
    * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
    *
@@ -244,7 +198,7 @@ class LogSync implements LogSeverityFunctions {
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const metadata = {
    *   resource: {
@@ -259,21 +213,6 @@ class LogSync implements LogSeverityFunctions {
    * const entry = log.entry(metadata, {
    *   delegate: 'my_username'
    * });
-   *
-   * entry.toJSON();
-   * // {
-   * //   logName: 'projects/grape-spaceship-123/logs/syslog',
-   * //   resource: {
-   * //     type: 'gce_instance',
-   * //     labels: {
-   * //       zone: 'global',
-   * //       instance_id: '3'
-   * //     }
-   * //   },
-   * //   jsonPayload: {
-   * //     delegate: 'my_username'
-   * //   }
-   * // }
    */
   entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
@@ -295,30 +234,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "ERROR".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.error(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.error(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.error(entry);
    */
   error(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -330,30 +260,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "INFO".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.info(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.info(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.info(entry);
    */
   info(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -365,30 +286,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "NOTICE".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.notice(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.notice(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.notice(entry);
    */
   notice(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -400,30 +312,21 @@ class LogSync implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "WARNING".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link LogSync#write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    * @example
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
-   * const log = logging.log('my-log');
+   * const log = logging.logSync('my-log');
    *
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.warning(entry, (err, apiResponse) => {});
-   *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.warning(entry).then(data => {
-   *   const apiResponse = data[0];
-   * });
+   * log.warning(entry);
    */
   warning(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -433,45 +336,17 @@ class LogSync implements LogSeverityFunctions {
   }
 
   /**
-   * Write options.
-   *
-   * @typedef {object} WriteOptions
-   * @property {boolean} [dryRun] If true, the request should expect normal
-   *     response, but the entries won't be persisted nor exported.
-   * @property {object} gaxOptions Request configuration options, outlined here:
-   *     https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
-   * @property {object[]} labels Labels to set on the log.
-   * @property {boolean} [partialSuccess] Whether valid entries should be
-   *     written even if some other entries fail due to INVALID_ARGUMENT
-   *     or PERMISSION_DENIED errors.
-   * @property {object} resource A default monitored resource for entries where
-   *     one isn't specified.
-   */
-  /**
-   * Write log entries to Cloud Logging.
-   *
-   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
-   * dictates that the maximum cumulative size of all entries per write,
-   * including all [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
-   * cannot exceed _approximately_ 10 MB.
-   *
-   * @see [entries.write API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write}
+   * Write log entries to a custom transport (default: process.stdout).
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
-   * @param {LogWriteCallback} [callback] Callback function.
-   * @returns {Promise<LogWriteResponse>}
    *
    * @example
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
    *
-   * log.write(entry, (err, apiResponse) => {
-   *   if (!err) {
-   *     // The log entry was written.
-   *   }
-   * });
+   * log.write(entry);
    *
    * //-
    * // You may also pass multiple log entries to write.
@@ -480,14 +355,7 @@ class LogSync implements LogSeverityFunctions {
    *   user: 'my_username'
    * });
    *
-   * log.write([
-   *   entry,
-   *   secondEntry
-   * ], (err, apiResponse) => {
-   *   if (!err) {
-   *     // The log entries were written.
-   *   }
-   * });
+   * log.write([entry, secondEntry]);
    *
    * //-
    * // To save some steps, you can also pass in plain values as your entries.
@@ -507,22 +375,10 @@ class LogSync implements LogSeverityFunctions {
    *   resource: 'compute.googleapis.com'
    * };
    *
-   * log.write(entries, options, (err, apiResponse) => {});
+   * log.write(entries, options);
    *
-   * //-
-   * // If the callback is omitted, we'll return a Promise.
-   * //-
-   * log.write(entries).then(data => {
-   *   const apiResponse = data[0];
+   * log.write(entries);
    * });
-   *
-   * @example <caption>include:samples/logs.js</caption>
-   * region_tag:logging_write_log_entry
-   * Another example:
-   *
-   * @example <caption>include:samples/logs.js</caption>
-   * region_tag:logging_write_log_entry_advanced
-   * Another example:
    */
   write(entry: Entry | Entry[], opts?: WriteOptions) {
     const options = opts ? (opts as WriteOptions) : {};
@@ -552,8 +408,8 @@ class LogSync implements LogSeverityFunctions {
 }
 
 /**
- * Reference to the {@link Log} class.
- * @name module:@google-cloud/logging.Log
- * @see Log
+ * Reference to the {@link LogSync} class.
+ * @name module:@google-cloud/logging.LogSync
+ * @see LogSync
  */
 export {LogSync};

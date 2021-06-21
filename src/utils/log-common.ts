@@ -49,7 +49,10 @@ export type LogSeverityFunctions = {
   [P in SeverityNames]: Function;
 };
 
-// snakecaseKeys turns label keys from camel case to snake case.
+/**
+ * snakecaseKeys turns label keys from camel case to snake case.
+ * @param labels
+ */
 export function snakecaseKeys(
   labels: {[p: string]: string} | null | undefined
 ) {
@@ -90,9 +93,8 @@ export function assignSeverityToEntries(
  * Format the name of a log. A log's full name is in the format of
  * 'projects/{projectId}/logs/{logName}'.
  *
- * @private
- *
- * @returns {string}
+ * @param projectId
+ * @param name
  */
 export function formatLogName(projectId: string, name: string) {
   const path = 'projects/' + projectId + '/logs/';

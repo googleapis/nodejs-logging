@@ -253,6 +253,7 @@ class Entry {
   toStructuredJSON(projectId = '') {
     const meta = this.metadata;
     // Mask out the keys that need to be renamed.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {
       textPayload,
       jsonPayload,
@@ -289,7 +290,7 @@ class Entry {
     const req = meta.httpRequest;
     if (isRawHTTP(req)) {
       entry.httpRequest = makeHttpRequestData(req! as RawHttpRequest);
-      // Inject detected trace context if applicable.
+      // Detected trace context from headers if applicable.
       const traceContext = this.extractTraceFromHeaders(projectId);
       if (traceContext) {
         if (!entry[TRACE_KEY] && traceContext.trace)

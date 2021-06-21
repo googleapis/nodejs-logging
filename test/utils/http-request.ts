@@ -129,7 +129,7 @@ describe('http-request', () => {
   describe('isRawHttp', () => {
     it('should be true on valid objects', () => {
       const svRequest = {} as ServerRequest;
-      svRequest.statusCode = 200;
+      svRequest.method = 'GET';
       assert(isRawHTTP(svRequest));
     });
 
