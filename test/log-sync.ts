@@ -102,7 +102,9 @@ describe('LogSync', () => {
     });
 
     afterEach(() => {
-      fs.unlink(TEST_FILE, (e) => {console.log(e)});
+      fs.unlink(TEST_FILE, e => {
+        console.log(e);
+      });
     });
 
     function createLogger() {
@@ -118,7 +120,10 @@ describe('LogSync', () => {
       log.write(ENTRIES);
       buffer.end(() => {
         const result = JSON.parse(fs.readFileSync(TEST_FILE, 'utf8'));
-        assert.strictEqual(result.logName, `projects/{{project-id}}/logs/escaping%2Frequired%2Ffor%2Fthis%2Flog-name`);
+        assert.strictEqual(
+          result.logName,
+          'projects/{{project-id}}/logs/escaping%2Frequired%2Ffor%2Fthis%2Flog-name'
+        );
         done();
       });
     });
