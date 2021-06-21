@@ -355,11 +355,40 @@ describe('Entry', () => {
       assert.deepStrictEqual(json, expectedJSON);
     });
 
-    it('should assign an available payload to message', () => {});
+    it('should assign payloads to message in priority', () => {
+      entry = new Entry(METADATA);
+      entry.metadata.textPayload = 'test log';
+      let json = entry.toStructuredJSON();
+      assert.strictEqual(json.message, 'test log');
+      entry.data = 'new test log';
+      json = entry.toStructuredJSON();
+      assert.strictEqual(json.message, 'new test log');
+    });
 
     it('should convert a string timestamp', () => {
-      // TODO copy over all the other tests above
+      entry.metadata.timestamp = new Date();
+      const json = entry.toStructuredJSON();
+      assert(withinExpectedTimeBoundaries(new Date(json.timestamp!)));
     });
-    //  TODO complete this one
+
+    it('should convert a raw http to httprequest', () => {
+      entry.metadata.httpRequest = {
+        method: 'POST',
+      } as http.IncomingMessage;
+      const json = entry.toStructuredJSON();
+      assert.strictEqual((json.httpRequest as any).requestMethod, 'POST');
+    });
+
+    it('should extract trace and span from headers', () => {
+      entry.metadata.httpRequest = {
+        headers: {
+          ['x-cloud-trace-context']: '1/1',
+        },
+      } as any as http.IncomingMessage;
+      const json = entry.toStructuredJSON();
+      assert.strictEqual(json[entryTypes.TRACE_KEY], 'projects//traces/1');
+      assert.strictEqual(json[entryTypes.SPAN_ID_KEY], '1');
+      assert.strictEqual(json[entryTypes.TRACE_SAMPLED_KEY], false);
+    });
   });
 });
