@@ -29,6 +29,12 @@ import {
   WriteOptions as CommonOptions,
 } from './utils/log-common';
 
+export interface WriteOptions extends CommonOptions {
+  dryRun?: boolean;
+  gaxOptions?: CallOptions;
+  partialSuccess?: boolean;
+}
+
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
   filter?: string;
@@ -62,12 +68,6 @@ export interface ApiResponseCallback {
   (err: Error | null, apiResponse?: Metadata): void;
 }
 export type DeleteCallback = ApiResponseCallback;
-
-export interface WriteOptions extends CommonOptions {
-  dryRun?: boolean;
-  gaxOptions?: CallOptions;
-  partialSuccess?: boolean;
-}
 
 /**
  * A log is a named collection of entries, each entry representing a timestamped
@@ -868,11 +868,11 @@ class Log implements LogSeverityFunctions {
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
     let decoratedEntries: EntryJson[];
-    // Extract projectId & resource from Logging, memoize them if not.
+    // Extract projectId & resource from Logging - inject & memoize if not.
     await this.logging.setProjectId();
     this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     const resource = await this.getOrSetResource(options);
-    // Extract context from individual entries, and format them.
+    // Extract & format additional context from individual entries.
     try {
       decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
     } catch (err) {

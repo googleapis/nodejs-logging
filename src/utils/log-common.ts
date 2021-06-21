@@ -30,9 +30,6 @@ export interface WriteOptions {
 
 export type MonitoredResource = google.api.IMonitoredResource;
 
-/**
- * TODO: name this
- */
 export enum Severity {
   emergency,
   alert,

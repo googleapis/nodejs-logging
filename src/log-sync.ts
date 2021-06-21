@@ -217,7 +217,6 @@ class LogSync implements LogSeverityFunctions {
     );
   }
 
-  // TODO this can also be abstracted into common?
   entry(metadata?: LogEntry): Entry;
   entry(data?: string | {}): Entry;
   entry(metadata?: LogEntry, data?: string | {}): Entry;
@@ -527,7 +526,9 @@ class LogSync implements LogSeverityFunctions {
    */
   write(entry: Entry | Entry[], opts?: WriteOptions) {
     const options = opts ? (opts as WriteOptions) : {};
+    // We expect projectId and resource to be set before this fn is called...
     let structuredEntries: StructuredJson[];
+    this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     try {
       structuredEntries = (arrify(entry) as Entry[]).map(entry => {
         if (!(entry instanceof Entry)) {
@@ -535,31 +536,18 @@ class LogSync implements LogSeverityFunctions {
         }
         return entry.toStructuredJSON(this.formattedName_);
       });
-      const resource = this.detectResource(options);
       for (const entry of structuredEntries) {
         entry.logName = this.formattedName_;
-        entry.resource = resource || entry.resource; // TODO: test this
+        entry.resource =
+          snakecaseKeys(options.resource?.labels) ||
+          entry.resource ||
+          this.logging.detectedResource;
         entry[LABELS_KEY] = options.labels || entry[LABELS_KEY];
-        this.transport.write(JSON.stringify(entry));
+        this.transport.write(JSON.stringify(entry) + '\n');
       }
     } catch (err) {
       // Ignore errors (client libraries do not panic).
     }
-  }
-
-  /**
-   * detectResource uses a user provided resource or it looks for a resource
-   * from the Logging instance.
-   *
-   * @param options
-   * @private
-   */
-  private detectResource(options: WriteOptions) {
-    if (options.resource?.labels) {
-      snakecaseKeys(options.resource.labels);
-      return options.resource;
-    }
-    return this.logging.detectedResource;
   }
 }
 

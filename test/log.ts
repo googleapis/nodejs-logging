@@ -339,8 +339,6 @@ describe('Log', () => {
     });
 
     it('should forward options.resource to request', async () => {
-      // Also check it should snakecase resource labels, as many sources & docs
-      // wrongly instruct users to use camelcase.
       const CUSTOM_RESOURCE = {
         labels: {
           projectId: 'fake-project',

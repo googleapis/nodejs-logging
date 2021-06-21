@@ -17,6 +17,7 @@
 import {
   formatLogName,
   assignSeverityToEntries,
+  snakecaseKeys,
 } from '../../src/utils/log-common';
 import {describe, it} from 'mocha';
 import {Entry} from '../../src';
@@ -81,6 +82,22 @@ describe('Log Common', () => {
       const expectedName = 'projects/' + PROJECT_ID + '/logs/' + name;
 
       assert.strictEqual(formatLogName(PROJECT_ID, name), expectedName);
+    });
+  });
+
+  describe('snakecaseKeys', () => {
+    it('should snakecase keys that are in camelcase', () => {
+      // Check it should snakecase resource labels, as many sources & docs
+      // wrongly instruct users to use camelcase.
+      const labels = {
+        projectId: 'id',
+        fooBarBaz: 'foobar',
+      };
+      const result = snakecaseKeys(labels);
+      assert.deepStrictEqual(result, {
+        project_id: 'id',
+        foo_bar_baz: 'foobar',
+      });
     });
   });
 });
