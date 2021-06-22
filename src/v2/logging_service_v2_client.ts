@@ -427,7 +427,7 @@ export class LoggingServiceV2Client {
   // -- Service calls --
   // -------------------
   deleteLog(
-    request: protos.google.logging.v2.IDeleteLogRequest,
+    request?: protos.google.logging.v2.IDeleteLogRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -485,7 +485,7 @@ export class LoggingServiceV2Client {
    * const [response] = await client.deleteLog(request);
    */
   deleteLog(
-    request: protos.google.logging.v2.IDeleteLogRequest,
+    request?: protos.google.logging.v2.IDeleteLogRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -524,7 +524,7 @@ export class LoggingServiceV2Client {
     return this.innerApiCalls.deleteLog(request, options, callback);
   }
   writeLogEntries(
-    request: protos.google.logging.v2.IWriteLogEntriesRequest,
+    request?: protos.google.logging.v2.IWriteLogEntriesRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -639,7 +639,7 @@ export class LoggingServiceV2Client {
    * const [response] = await client.writeLogEntries(request);
    */
   writeLogEntries(
-    request: protos.google.logging.v2.IWriteLogEntriesRequest,
+    request?: protos.google.logging.v2.IWriteLogEntriesRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -698,7 +698,7 @@ export class LoggingServiceV2Client {
   }
 
   listLogEntries(
-    request: protos.google.logging.v2.IListLogEntriesRequest,
+    request?: protos.google.logging.v2.IListLogEntriesRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -787,7 +787,7 @@ export class LoggingServiceV2Client {
    *   for more details and examples.
    */
   listLogEntries(
-    request: protos.google.logging.v2.IListLogEntriesRequest,
+    request?: protos.google.logging.v2.IListLogEntriesRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
@@ -971,7 +971,7 @@ export class LoggingServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogEntry>;
   }
   listMonitoredResourceDescriptors(
-    request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1029,7 +1029,7 @@ export class LoggingServiceV2Client {
    *   for more details and examples.
    */
   listMonitoredResourceDescriptors(
-    request: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
+    request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
@@ -1157,7 +1157,7 @@ export class LoggingServiceV2Client {
     ) as AsyncIterable<protos.google.api.IMonitoredResourceDescriptor>;
   }
   listLogs(
-    request: protos.google.logging.v2.IListLogsRequest,
+    request?: protos.google.logging.v2.IListLogsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1231,7 +1231,7 @@ export class LoggingServiceV2Client {
    *   for more details and examples.
    */
   listLogs(
-    request: protos.google.logging.v2.IListLogsRequest,
+    request?: protos.google.logging.v2.IListLogsRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
