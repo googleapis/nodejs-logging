@@ -18,7 +18,7 @@
 const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
-import {objToStruct, structToObj} from './utils/common';
+import {objToStruct, structToObj, zuluToDateObj} from './utils/common';
 import {
   makeHttpRequestData,
   CloudLoggingHttpRequest,
@@ -218,15 +218,7 @@ class Entry {
         nanos: Math.floor((seconds - secondsRounded) * 1e9),
       };
     } else if (typeof entry.timestamp === 'string') {
-      // Convert RFC3339 "Zulu" timestamp into a format that can be parsed to Date
-      const zuluTime = entry.timestamp;
-      const ms = Date.parse(zuluTime.split(/[.,Z]/)[0] + 'Z');
-      const reNano = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.(\d{0,9})Z$/;
-      const nanoSecs = zuluTime.match(reNano)?.[1];
-      entry.timestamp = {
-        seconds: ms ? Math.floor(ms / 1000) : 0,
-        nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
-      };
+      entry.timestamp = zuluToDateObj(entry.timestamp);
     }
     // Format httpRequest
     const req = this.metadata.httpRequest;

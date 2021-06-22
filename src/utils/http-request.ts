@@ -114,9 +114,16 @@ export function makeHttpRequestData(
   );
 }
 
+/**
+ * isRawHTTP detects whether a request object extends the http.IncomingMessage
+ * class. It should return true on HTTP compliant requests and all requests
+ * created by an http.Server.
+ *
+ * @param req
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isRawHTTP(req?: any | null): boolean {
-  if (req && ('headers' in req || 'method' in req || 'url' in req)) {
+  if (req && ('originalUrl' in req ||'headers' in req || 'method' in req || 'url' in req)) {
     return true;
   }
   return false;

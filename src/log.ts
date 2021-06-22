@@ -896,10 +896,10 @@ class Log implements LogSeverityFunctions {
   }
 
   /**
-   * detectResource looks for GCP service context first at the user declaration
-   * level (snakecasing keys), then at the at Logging instance level, before
-   * finally detecting a resource from the environment. The resource is then
-   * memoized at the Logging instance level for future use.
+   * getOrSetResource looks for GCP service context first at the user
+   * declaration level (snakecasing keys), then in the Logging instance,
+   * before finally detecting a resource from the environment.
+   * The resource is then memoized at the Logging instance level for future use.
    *
    * @param options
    * @private

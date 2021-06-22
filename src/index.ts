@@ -1221,7 +1221,6 @@ class Logging {
     return new Log(this, name, options);
   }
 
-  // TODO improve docs here
   /**
    * Get a reference to a Cloud Logging logSync.
    *

@@ -222,3 +222,18 @@ export function decodeValue(value: any) {
     }
   }
 }
+
+/**
+ * zuluToDateObj RFC3339 "Zulu" timestamp into a format that can be parsed to
+ * a JS Date Object.
+ * @param zuluTime
+ */
+export function zuluToDateObj(zuluTime: string) {
+  const ms = Date.parse(zuluTime.split(/[.,Z]/)[0] + 'Z');
+  const reNano = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.(\d{0,9})Z$/;
+  const nanoSecs = zuluTime.match(reNano)?.[1];
+  return {
+    seconds: ms ? Math.floor(ms / 1000) : 0,
+    nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
+  };
+}
