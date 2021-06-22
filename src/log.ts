@@ -987,6 +987,35 @@ class Log implements LogSeverityFunctions {
       }
     });
   }
+
+  // TODO: in a future breaking release, delete this extranenous function.
+  /**
+   * Return an array of log entries with the desired severity assigned.
+   *
+   * @private
+   *
+   * @param {object|object[]} entries - Log entries.
+   * @param {string} severity - The desired severity level.
+   */
+  static assignSeverityToEntries_(
+    entries: Entry | Entry[],
+    severity: string
+  ): Entry[] {
+    return assignSeverityToEntries(entries, severity);
+  }
+
+  // TODO: in a future breaking release, delete this extranenous function.
+  /**
+   * Format the name of a log. A log's full name is in the format of
+   * 'projects/{projectId}/logs/{logName}'.
+   *
+   * @private
+   *
+   * @returns {string}
+   */
+  static formatName_(projectId: string, name: string) {
+    return formatLogName(projectId, name);
+  }
 }
 
 /*! Developer Documentation

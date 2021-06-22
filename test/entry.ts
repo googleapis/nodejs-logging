@@ -39,6 +39,7 @@ const structToObj = (struct: {}) => {
   return (fakeStructToObj || common.structToObj)(struct);
 };
 
+// Allows for a 1000ms margin of error when comparing timestamps
 function withinExpectedTimeBoundaries(result?: Date): boolean {
   if (result) {
     const now = Date.now();

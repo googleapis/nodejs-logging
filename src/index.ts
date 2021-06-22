@@ -23,7 +23,6 @@ import * as extend from 'extend';
 import * as gax from 'google-gax';
 // eslint-disable-next-line node/no-extraneous-import
 import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
@@ -47,6 +46,7 @@ import {
   Severity,
   SeverityNames,
   formatLogName,
+  assignSeverityToEntries,
 } from './utils/log-common';
 import {Log, GetEntriesRequest, TailEntriesRequest, LogOptions} from './log';
 import {LogSync} from './log-sync';
@@ -1479,6 +1479,18 @@ export {Log};
 export {Severity};
 export {SeverityNames};
 
+export {assignSeverityToEntries};
+export {formatLogName};
+
+/**
+ * {@link MonitoredResource} class.
+ *
+ * @name Logging.MonitoredResource
+ * @see MonitoredResource
+ * @type {Interface}
+ */
+export {MonitoredResource};
+
 /**
  * {@link LogSync} class.
  *
@@ -1496,15 +1508,6 @@ export {LogSync};
  * @type {Constructor}
  */
 export {Sink};
-
-/**
- * {@link MonitoredResource} class.
- *
- * @name Logging.MonitoredResource
- * @see MonitoredResource
- * @type {Interface}
- */
-export {MonitoredResource};
 
 /**
  * The default export of the `@google-cloud/logging` package is the
