@@ -123,7 +123,13 @@ export function makeHttpRequestData(
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isRawHTTP(req?: any | null): boolean {
-  if (req && ('originalUrl' in req ||'headers' in req || 'method' in req || 'url' in req)) {
+  if (
+    req &&
+    ('originalUrl' in req ||
+      'headers' in req ||
+      'method' in req ||
+      'url' in req)
+  ) {
     return true;
   }
   return false;
