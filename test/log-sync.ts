@@ -226,7 +226,7 @@ describe('LogSync', () => {
         });
 
         it('should pass correct arguments to write', async () => {
-          const assignedEntries = [] as Entry[];
+          const assignedEntries: Entry[] = [];
           assignSeverityStub.returns(assignedEntries);
           severityMethod(ENTRY, LABELS);
           assert(writeStub.calledOnceWith(assignedEntries));

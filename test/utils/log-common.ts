@@ -83,6 +83,13 @@ describe('Log Common', () => {
 
       assert.strictEqual(formatLogName(PROJECT_ID, name), expectedName);
     });
+
+    it('should format a name with empty PROJECT_ID', () => {
+      const name = 'appengine%2Flogs';
+      const expectedName = 'projects//logs/' + name;
+
+      assert.strictEqual(formatLogName('', name), expectedName);
+    });
   });
 
   describe('snakecaseKeys', () => {

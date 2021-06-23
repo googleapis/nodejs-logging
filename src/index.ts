@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 Google LLC
+ * Copyright 2015 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -307,13 +307,9 @@ class Logging {
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
    * @property {Bucket|Dataset|Topic} [destination] The destination. The proper ACL
    *     scopes will be granted to the provided destination. Can be one of:
-   *     {@link
-   * https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket
-   * Bucket},
-   *     {@link
-   * https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset
-   * Dataset}, or {@link
-   * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
+   *     {@link https://googleapis.dev/nodejs/storage/latest/ Bucket},
+   *     {@link https://googleapis.dev/nodejs/bigquery/latest/ Dataset}, or
+   *     {@link https://googleapis.dev/nodejs/pubsub/latest/ Topic}
    * @property {string} [filter] An advanced logs filter. Only log entries
    *     matching the filter are written.
    * @property {string|boolean} [uniqueWriterIdentity] Determines the kind of IAM

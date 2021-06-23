@@ -22,7 +22,7 @@ import {
   ServerRequest,
   CloudLoggingHttpRequest,
   makeHttpRequestData,
-  isRawHTTP,
+  isRawHttpRequest,
 } from '../../src/utils/http-request';
 
 describe('http-request', () => {
@@ -130,13 +130,13 @@ describe('http-request', () => {
     it('should be true on valid objects', () => {
       const svRequest = {} as ServerRequest;
       svRequest.method = 'GET';
-      assert(isRawHTTP(svRequest));
+      assert(isRawHttpRequest(svRequest));
     });
 
     it('should be false on invalid objects', () => {
-      assert(!isRawHTTP({} as CloudLoggingHttpRequest));
-      assert(!isRawHTTP({}));
-      assert(!isRawHTTP(null));
+      assert(!isRawHttpRequest({requestMethod: 'POST'} as CloudLoggingHttpRequest));
+      assert(!isRawHttpRequest({}));
+      assert(!isRawHttpRequest(null));
     });
   });
 });

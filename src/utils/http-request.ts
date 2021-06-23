@@ -23,6 +23,8 @@
  */
 
 import * as http from 'http';
+export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
+
 export interface CloudLoggingHttpRequest {
   requestMethod?: string;
   requestUrl?: string;
@@ -115,14 +117,14 @@ export function makeHttpRequestData(
 }
 
 /**
- * isRawHTTP detects whether a request object extends the http.IncomingMessage
- * class. It should return true on HTTP compliant requests and all requests
- * created by an http.Server.
+ * isRawHttpRequest detects whether a request object extends the
+ * http.IncomingMessage class. It should return true on HTTP compliant requests
+ * and all requests created by an http.Server.
  *
  * @param req
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isRawHTTP(req?: any | null): boolean {
+export function isRawHttpRequest(req?: any): req is RawHttpRequest {
   if (
     req &&
     ('originalUrl' in req ||

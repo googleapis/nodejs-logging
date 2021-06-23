@@ -390,7 +390,7 @@ class LogSync implements LogSeverityFunctions {
         if (!(entry instanceof Entry)) {
           entry = this.entry(entry);
         }
-        return entry.toStructuredJSON(this.formattedName_);
+        return entry.toStructuredJSON(this.logging.projectId);
       });
       for (const entry of structuredEntries) {
         entry.logName = this.formattedName_;

@@ -1,5 +1,5 @@
 /*!
- * Copyright 2021 Google LLC
+ * Copyright 2015 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import {objToStruct, structToObj, zuluToDateObj} from './utils/common';
 import {
   makeHttpRequestData,
   CloudLoggingHttpRequest,
-  isRawHTTP,
+  RawHttpRequest,
+  isRawHttpRequest,
 } from './utils/http-request';
 import {CloudTraceContext, getOrInjectContext} from './utils/context';
-import * as http from 'http';
 
 const eventId = new EventId();
 
@@ -40,7 +40,6 @@ export const TRACE_SAMPLED_KEY = 'logging.googleapis.com/trace_sampled';
 // Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
-export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
 export type HttpRequest =
   | google.logging.type.IHttpRequest
   | CloudLoggingHttpRequest
@@ -136,11 +135,11 @@ export interface ToJsonOptions {
  *   }
  * };
  *
- * const entry = sysmeta.entry(metadata, {
+ * const entry = syslog.entry(metadata, {
  *   delegate: 'my_username'
  * });
  *
- * sysmeta.alert(entry, (err, apiResponse) => {
+ * syslog.alert(entry, (err, apiResponse) => {
  *   if (!err) {
  *     // Log entry inserted successfully.
  *   }
@@ -194,12 +193,12 @@ class Entry {
    * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
    *
    * @param {object} [options] Configuration object.
-   * @param projectId
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
+   * @param {string} [projectId] GCP Project ID.
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    const entry: EntryJson = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -222,8 +221,8 @@ class Entry {
     }
     // Format httpRequest
     const req = this.metadata.httpRequest;
-    if (isRawHTTP(req)) {
-      entry.httpRequest = makeHttpRequestData(req! as RawHttpRequest);
+    if (isRawHttpRequest(req)) {
+      entry.httpRequest = makeHttpRequestData(req);
       // Format trace and span
       const traceContext = this.extractTraceFromHeaders(projectId);
       if (traceContext) {
@@ -259,7 +258,7 @@ class Entry {
       ...validKeys
     } = meta;
     // eslint-enable @typescript-eslint/no-unused-vars
-    const entry = extend(true, {}, validKeys) as {} as StructuredJson;
+    const entry: StructuredJson = extend(true, {}, validKeys) as {};
     // Re-map keys names.
     entry[LABELS_KEY] = meta.labels
       ? Object.assign({}, meta.labels)
@@ -281,8 +280,8 @@ class Entry {
     }
     // Format httprequest
     const req = meta.httpRequest;
-    if (isRawHTTP(req)) {
-      entry.httpRequest = makeHttpRequestData(req! as RawHttpRequest);
+    if (isRawHttpRequest(req)) {
+      entry.httpRequest = makeHttpRequestData(req);
       // Detected trace context from headers if applicable.
       const traceContext = this.extractTraceFromHeaders(projectId);
       if (traceContext) {
