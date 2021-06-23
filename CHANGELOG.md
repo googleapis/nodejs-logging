@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.5.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.4.1...v9.5.0) (2021-06-23)
+
+
+### Features
+
+* users can write structured logEntries to STDOUT ([#1102](https://www.github.com/googleapis/nodejs-logging/issues/1102)) ([f4e892e](https://www.github.com/googleapis/nodejs-logging/commit/f4e892ed1342f3aacb8056212d75792959ab43b5))
+
 ### [9.4.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.4.0...v9.4.1) (2021-06-14)
 
 
