@@ -19,7 +19,7 @@ import * as gcpMetadata from 'gcp-metadata';
 import {GCPEnv, GoogleAuth} from 'google-auth-library';
 import {promisify} from 'util';
 
-import {ServiceContext} from './index';
+import {ServiceContext} from '../index';
 
 const readFile = promisify(fs.readFile);
 

@@ -21,6 +21,8 @@ import {Entry, Logging} from '../src';
 import {Log as LOG, LogOptions, WriteOptions} from '../src/log';
 import {Data, EntryJson, LogEntry} from '../src/entry';
 
+import * as logCommon from '../src/utils/log-common';
+
 describe('Log', () => {
   let Log: typeof LOG;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,22 +45,16 @@ describe('Log', () => {
     callbackifyAll: sinon.stub(),
   };
 
-  const metadataFake = {
-    getDefaultResource: sinon.stub(),
-  };
-
   before(() => {
     Log = proxyquire('../src/log', {
       '@google-cloud/promisify': callbackifyFake,
       './entry': {Entry},
-      './metadata': metadataFake,
     }).Log;
 
     log = createLogger();
   });
 
   beforeEach(() => {
-    metadataFake.getDefaultResource.reset();
     log.logging.entry.reset();
     log.logging.getEntries.reset();
     log.logging.getEntriesStream.reset();
@@ -68,15 +64,23 @@ describe('Log', () => {
     log.logging.loggingService.writeLogEntries.reset();
     log.logging.auth.getEnv.reset();
     log.logging.auth.getProjectId.reset();
-
-    metadataFake.getDefaultResource.returns(FAKE_RESOURCE);
     log.logging.auth.getProjectId.resolves(PROJECT_ID);
+    // Required setup for Write():
+    log.logging.setProjectId = () => {
+      log.logging.projectId = PROJECT_ID;
+    };
+    log.logging.setDetectedResource = () => {
+      log.logging.detectedResource = FAKE_RESOURCE;
+    };
   });
 
+  // Create a mock Logging instance
   function createLogger(maxEntrySize?: number) {
     LOGGING = {
       projectId: '{{project-id}}',
       entry: sinon.stub(),
+      setProjectId: sinon.stub(),
+      setDetectedResource: sinon.stub(),
       getEntries: sinon.stub(),
       getEntriesStream: sinon.stub(),
       tailEntries: sinon.stub(),
@@ -118,17 +122,11 @@ describe('Log', () => {
     });
 
     it('should localize the formatted name', () => {
-      const formattedName = 'formatted-name';
-
-      const formatName_ = Log.formatName_;
-      Log.formatName_ = () => {
-        Log.formatName_ = formatName_;
-        return formattedName;
-      };
-
       const log = new Log(LOGGING, LOG_NAME);
-
-      assert.strictEqual(log.formattedName_, formattedName);
+      assert.strictEqual(
+        log.formattedName_,
+        logCommon.formatLogName('{{project-id}}', LOG_NAME)
+      );
     });
 
     it('should accept and localize options.removeCircular', () => {
@@ -147,66 +145,6 @@ describe('Log', () => {
 
     it('should default to no max entry size', () => {
       assert.strictEqual(log.maxEntrySize, undefined);
-    });
-  });
-
-  describe('assignSeverityToEntries_', () => {
-    const circular = {} as {circular: {}};
-    circular.circular = circular;
-    const ENTRIES = [
-      {data: {a: 'b'}},
-      {data: {c: 'd'}},
-      {data: {e: circular}},
-    ] as Entry[];
-    const SEVERITY = 'severity';
-
-    it('should assign severity to a single entry', () => {
-      assert.deepStrictEqual(
-        Log.assignSeverityToEntries_(ENTRIES[0], SEVERITY)
-          .map(x => x.metadata)
-          .map(x => x.severity),
-        [SEVERITY]
-      );
-    });
-
-    it('should assign severity property to multiple entries', () => {
-      assert.deepStrictEqual(
-        Log.assignSeverityToEntries_(ENTRIES, SEVERITY)
-          .map(x => x.metadata)
-          .map(x => x.severity),
-        [SEVERITY, SEVERITY, SEVERITY]
-      );
-    });
-
-    it('should not affect original array', () => {
-      const originalEntries = ENTRIES.map(x => extend({}, x));
-      Log.assignSeverityToEntries_(originalEntries, SEVERITY);
-      assert.deepStrictEqual(originalEntries, ENTRIES);
-    });
-  });
-
-  describe('formatName_', () => {
-    const PROJECT_ID = 'project-id';
-    const NAME = 'log-name';
-
-    const EXPECTED = 'projects/' + PROJECT_ID + '/logs/' + NAME;
-
-    it('should properly format the name', () => {
-      assert.strictEqual(Log.formatName_(PROJECT_ID, NAME), EXPECTED);
-    });
-
-    it('should encode a name that requires it', () => {
-      const name = 'appengine/logs';
-      const expectedName = 'projects/' + PROJECT_ID + '/logs/appengine%2Flogs';
-
-      assert.strictEqual(Log.formatName_(PROJECT_ID, name), expectedName);
-    });
-
-    it('should not encode a name that does not require it', () => {
-      const name = 'appengine%2Flogs';
-      const expectedName = 'projects/' + PROJECT_ID + '/logs/' + name;
-
-      assert.strictEqual(Log.formatName_(PROJECT_ID, name), expectedName);
     });
   });
 
@@ -380,7 +318,6 @@ describe('Log', () => {
     before(() => {
       origDetectedResource = log.logging.detectedResource;
     });
-
     beforeEach(() => {
       ENTRY = {} as Entry;
       ENTRIES = [ENTRY] as Entry[];
@@ -395,8 +332,6 @@ describe('Log', () => {
     });
 
     it('should forward options.resource to request', async () => {
-      // Also check it should snakecase resource labels, as many sources & docs
-      // wrongly instruct users to use camelcase.
       const CUSTOM_RESOURCE = {
         labels: {
           projectId: 'fake-project',
@@ -425,11 +360,21 @@ describe('Log', () => {
       );
     });
 
-    it('should cache a detected resource', async () => {
-      const fakeResource = 'test-level-fake-resource';
-      metadataFake.getDefaultResource.resetBehavior();
-      metadataFake.getDefaultResource.resolves(fakeResource);
+    it('should cache a projectId in Logging', async () => {
+      const fakeProject = 'test-level-fake-projectId';
+      log.logging.setProjectId = () => {
+        log.logging.projectId = fakeProject;
+      };
+      await log.write(ENTRIES);
+      assert(log.logging.loggingService.writeLogEntries.calledOnce);
+      assert.strictEqual(log.logging.projectId, fakeProject);
+    });
 
+    it('should cache a detected resource in Logging', async () => {
+      const fakeResource = 'test-level-fake-resource';
+      log.logging.setDetectedResource = () => {
+        log.logging.detectedResource = fakeResource;
+      };
       await log.write(ENTRIES);
       assert(log.logging.loggingService.writeLogEntries.calledOnce);
       assert.strictEqual(log.logging.detectedResource, fakeResource);
@@ -438,9 +383,9 @@ describe('Log', () => {
     it('should re-use detected resource', async () => {
       const reusableDetectedResource = 'environment-default-resource';
       log.logging.detectedResource = reusableDetectedResource;
-      metadataFake.getDefaultResource.resetBehavior();
-      metadataFake.getDefaultResource.throws('Cached resource was not used.');
-
+      log.logging.setDetectedResource = () => {
+        assert.fail;
+      };
       await log.write(ENTRIES);
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
@@ -498,7 +443,7 @@ describe('Log', () => {
       decorateEntriesStub.returns('decorated entries');
 
       await log.write(ENTRIES, OPTIONS);
-      assert(decorateEntriesStub.calledOnceWithExactly(ENTRIES, PROJECT_ID));
+      assert(decorateEntriesStub.calledOnceWithExactly(ENTRIES));
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -512,9 +457,7 @@ describe('Log', () => {
       const arrifiedEntries: Entry[] = [ENTRY];
 
       await log.write(ENTRY, OPTIONS);
-      assert(
-        decorateEntriesStub.calledOnceWithExactly(arrifiedEntries, PROJECT_ID)
-      );
+      assert(decorateEntriesStub.calledOnceWithExactly(arrifiedEntries));
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
           sinon.match({
@@ -557,6 +500,61 @@ describe('Log', () => {
           })
         )
       );
+    });
+  });
+
+  describe('decorateEntries', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let toJSONResponse: any;
+    let logEntryStub: sinon.SinonStub;
+    let toJSONStub: sinon.SinonStub;
+
+    beforeEach(() => {
+      toJSONResponse = {};
+      toJSONStub = sinon.stub().returns(toJSONResponse);
+      logEntryStub = sinon.stub(log, 'entry').returns({
+        toJSON: toJSONStub,
+      });
+    });
+
+    afterEach(() => {
+      logEntryStub.restore();
+    });
+
+    it('should create an Entry object if one is not provided', () => {
+      const entry = {};
+      const decoratedEntries = log.decorateEntries([entry]);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.calledWithExactly(entry), PROJECT_ID);
+    });
+
+    it('should get JSON format from Entry object', () => {
+      const entry = new Entry();
+      entry.toJSON = () => toJSONResponse as {} as EntryJson;
+      const decoratedEntries = log.decorateEntries([entry]);
+      assert.strictEqual(decoratedEntries[0], toJSONResponse);
+      assert(log.entry.notCalled);
+    });
+
+    it('should pass log.removeCircular to toJSON', () => {
+      log.removeCircular_ = true;
+      log.logging.projectId = PROJECT_ID;
+      const entry = new Entry();
+      const localJSONStub = sinon
+        .stub(entry, 'toJSON')
+        .returns({} as EntryJson);
+      log.decorateEntries([entry]);
+      assert(
+        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
+      );
+    });
+
+    it('should throw error from serialization', () => {
+      const entry = new Entry();
+      sinon.stub(entry, 'toJSON').throws('Error.');
+      assert.throws(() => {
+        log.decorateEntries([entry]);
+      }, 'Error.');
     });
   });
 
@@ -646,7 +644,7 @@ describe('Log', () => {
     beforeEach(() => {
       ENTRY = {} as Entry;
       LABELS = [] as WriteOptions;
-      assignSeverityStub = sinon.stub(Log, 'assignSeverityToEntries_');
+      assignSeverityStub = sinon.stub(logCommon, 'assignSeverityToEntries');
       writeStub = sinon.stub(log, 'write');
     });
 
@@ -685,61 +683,6 @@ describe('Log', () => {
           assert(writeStub.calledOnceWith(assignedEntries));
         });
       });
-    });
-  });
-
-  describe('decorateEntries', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let toJSONResponse: any;
-    let logEntryStub: sinon.SinonStub;
-    let toJSONStub: sinon.SinonStub;
-
-    beforeEach(() => {
-      toJSONResponse = {};
-      toJSONStub = sinon.stub().returns(toJSONResponse);
-      logEntryStub = sinon.stub(log, 'entry').returns({
-        toJSON: toJSONStub,
-      });
-    });
-
-    afterEach(() => {
-      logEntryStub.restore();
-    });
-
-    it('should create an Entry object if one is not provided', () => {
-      const entry = {};
-      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
-      assert.strictEqual(decoratedEntries[0], toJSONResponse);
-      assert(log.entry.calledWithExactly(entry));
-    });
-
-    it('should get JSON format from Entry object', () => {
-      const entry = new Entry();
-      entry.toJSON = () => toJSONResponse as {} as EntryJson;
-      const decoratedEntries = log.decorateEntries([entry], PROJECT_ID);
-      assert.strictEqual(decoratedEntries[0], toJSONResponse);
-      assert(log.entry.notCalled);
-    });
-
-    it('should pass log.removeCircular to toJSON', () => {
-      log.removeCircular_ = true;
-      const entry = new Entry();
-      const localJSONStub = sinon
-        .stub(entry, 'toJSON')
-        .returns({} as EntryJson);
-
-      log.decorateEntries([entry], PROJECT_ID);
-      assert(
-        localJSONStub.calledWithExactly({removeCircular: true}, PROJECT_ID)
-      );
-    });
-
-    it('should throw error from serialization', () => {
-      const entry = new Entry();
-      sinon.stub(entry, 'toJSON').throws('Error.');
-      assert.throws(() => {
-        log.decorateEntries([entry], PROJECT_ID);
-      }, 'Error.');
     });
   });
 });

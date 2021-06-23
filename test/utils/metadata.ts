@@ -71,7 +71,7 @@ describe('metadata', () => {
   const INITIAL_ENV: {[key: string]: string | undefined} = {};
 
   before(() => {
-    metadata = proxyquire('../src/metadata', {
+    metadata = proxyquire('../../src/utils/metadata', {
       'gcp-metadata': fakeGcpMetadata,
       fs: fakeFS,
     });

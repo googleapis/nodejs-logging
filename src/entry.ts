@@ -18,17 +18,28 @@
 const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
-import {objToStruct, structToObj} from './common';
-import {makeHttpRequestData, CloudLoggingHttpRequest} from './http-request';
-import {CloudTraceContext, getOrInjectContext} from './context';
-import * as http from 'http';
+import {objToStruct, structToObj, zuluToDateObj} from './utils/common';
+import {
+  makeHttpRequestData,
+  CloudLoggingHttpRequest,
+  RawHttpRequest,
+  isRawHttpRequest,
+} from './utils/http-request';
+import {CloudTraceContext, getOrInjectContext} from './utils/context';
 
 const eventId = new EventId();
+
+export const INSERT_ID_KEY = 'logging.googleapis.com/insertId';
+export const LABELS_KEY = 'logging.googleapis.com/labels';
+export const OPERATION_KEY = 'logging.googleapis.com/operation';
+export const SOURCE_LOCATION_KEY = 'logging.googleapis.com/sourceLocation';
+export const SPAN_ID_KEY = 'logging.googleapis.com/spanId';
+export const TRACE_KEY = 'logging.googleapis.com/trace';
+export const TRACE_SAMPLED_KEY = 'logging.googleapis.com/trace_sampled';
 
 // Accepted field types from user supported by this client library.
 export type Timestamp = google.protobuf.ITimestamp | Date | string;
 export type LogSeverity = google.logging.type.LogSeverity | string;
-export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
 export type HttpRequest =
   | google.logging.type.IHttpRequest
   | CloudLoggingHttpRequest
@@ -45,7 +56,8 @@ export type LogEntry = Omit<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Data = any;
 
-// Final Entry format submitted to the LoggingService API.
+// The expected format of a subset of Entry properties before submission to the
+// LoggingService API.
 export interface EntryJson {
   timestamp: Timestamp;
   insertId: number;
@@ -57,12 +69,31 @@ export interface EntryJson {
   traceSampled?: boolean;
 }
 
+// The expected format of a subset of Entry properties before submission to a
+// custom transport, most likely to process.stdout.
+export interface StructuredJson {
+  // Universally supported properties
+  message?: string | object;
+  httpRequest?: object;
+  timestamp?: string;
+  [INSERT_ID_KEY]?: string;
+  [OPERATION_KEY]?: object;
+  [SOURCE_LOCATION_KEY]?: object;
+  [LABELS_KEY]?: object;
+  [SPAN_ID_KEY]?: string;
+  [TRACE_KEY]?: string;
+  [TRACE_SAMPLED_KEY]?: boolean;
+  // Properties not supported by all agents (e.g. Cloud Run, Functions)
+  logName?: string;
+  resource?: object;
+}
+
 export interface ToJsonOptions {
   removeCircular?: boolean;
 }
 
 /**
- * Create an entry object to define new data to insert into a log.
+ * Create an entry object to define new data to insert into a meta.
  *
  * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
  * dictates that the maximum log entry size, including all
@@ -162,12 +193,12 @@ class Entry {
    * https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
    *
    * @param {object} [options] Configuration object.
-   * @param projectId
    * @param {boolean} [options.removeCircular] Replace circular references in an
    *     object with a string value, `[Circular]`.
+   * @param {string} [projectId] GCP Project ID.
    */
   toJSON(options: ToJsonOptions = {}, projectId = '') {
-    const entry = extend(true, {}, this.metadata) as {} as EntryJson;
+    const entry: EntryJson = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
     if (Object.prototype.toString.call(this.data) === '[object Object]') {
       entry.jsonPayload = objToStruct(this.data, {
@@ -186,36 +217,81 @@ class Entry {
         nanos: Math.floor((seconds - secondsRounded) * 1e9),
       };
     } else if (typeof entry.timestamp === 'string') {
-      // Convert RFC3339 "Zulu" timestamp into a format that can be parsed to Date
-      const zuluTime = entry.timestamp;
-      const ms = Date.parse(zuluTime.split(/[.,Z]/)[0] + 'Z');
-      const reNano = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.(\d{0,9})Z$/;
-      const nanoSecs = zuluTime.match(reNano)?.[1];
-      entry.timestamp = {
-        seconds: ms ? Math.floor(ms / 1000) : 0,
-        nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
-      };
+      entry.timestamp = zuluToDateObj(entry.timestamp);
     }
     // Format httpRequest
     const req = this.metadata.httpRequest;
-    if (
-      req &&
-      ('statusCode' in req ||
-        'headers' in req ||
-        'method' in req ||
-        'url' in req)
-    ) {
+    if (isRawHttpRequest(req)) {
       entry.httpRequest = makeHttpRequestData(req);
+      // Format trace and span
+      const traceContext = this.extractTraceFromHeaders(projectId);
+      if (traceContext) {
+        if (!this.metadata.trace && traceContext.trace)
+          entry.trace = traceContext.trace;
+        if (!this.metadata.spanId && traceContext.spanId)
+          entry.spanId = traceContext.spanId;
+        if (this.metadata.traceSampled === undefined)
+          entry.traceSampled = traceContext.traceSampled;
+      }
     }
-    // Format trace and span
-    const traceContext = this.extractTraceFromHeaders(projectId);
-    if (traceContext) {
-      if (!this.metadata.trace && traceContext.trace)
-        entry.trace = traceContext.trace;
-      if (!this.metadata.spanId && traceContext.spanId)
-        entry.spanId = traceContext.spanId;
-      if (this.metadata.traceSampled === undefined)
-        entry.traceSampled = traceContext.traceSampled;
+    return entry;
+  }
+
+  /**
+   * Serialize an entry to a standard format for any transports, e.g. agents.
+   * Read more: https://cloud.google.com/logging/docs/structured-logging
+   */
+  toStructuredJSON(projectId = '') {
+    const meta = this.metadata;
+    // Mask out the keys that need to be renamed.
+    // eslint-disable @typescript-eslint/no-unused-vars
+    const {
+      textPayload,
+      jsonPayload,
+      insertId,
+      trace,
+      spanId,
+      traceSampled,
+      operation,
+      sourceLocation,
+      labels,
+      ...validKeys
+    } = meta;
+    // eslint-enable @typescript-eslint/no-unused-vars
+    const entry: StructuredJson = extend(true, {}, validKeys) as {};
+    // Re-map keys names.
+    entry[LABELS_KEY] = meta.labels
+      ? Object.assign({}, meta.labels)
+      : undefined;
+    entry[INSERT_ID_KEY] = meta.insertId || undefined;
+    entry[TRACE_KEY] = meta.trace || undefined;
+    entry[SPAN_ID_KEY] = meta.spanId || undefined;
+    entry[TRACE_SAMPLED_KEY] =
+      'traceSampled' in meta && meta.traceSampled !== null
+        ? meta.traceSampled
+        : undefined;
+    // Format log payload.
+    entry.message =
+      meta.textPayload || meta.jsonPayload || meta.protoPayload || undefined;
+    entry.message = this.data || entry.message;
+    // Format timestamp
+    if (meta.timestamp instanceof Date) {
+      entry.timestamp = meta.timestamp.toISOString();
+    }
+    // Format httprequest
+    const req = meta.httpRequest;
+    if (isRawHttpRequest(req)) {
+      entry.httpRequest = makeHttpRequestData(req);
+      // Detected trace context from headers if applicable.
+      const traceContext = this.extractTraceFromHeaders(projectId);
+      if (traceContext) {
+        if (!entry[TRACE_KEY] && traceContext.trace)
+          entry[TRACE_KEY] = traceContext.trace;
+        if (!entry[SPAN_ID_KEY] && traceContext.spanId)
+          entry[SPAN_ID_KEY] = traceContext.spanId;
+        if (entry[TRACE_SAMPLED_KEY] === undefined)
+          entry[TRACE_SAMPLED_KEY] = traceContext.traceSampled;
+      }
     }
     return entry;
   }
@@ -228,7 +304,6 @@ class Entry {
   private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {
-      // TODO: later we may want to switch this to true.
       return getOrInjectContext(rawReq, projectId, false);
     }
     return null;

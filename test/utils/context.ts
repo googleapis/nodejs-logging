@@ -22,7 +22,7 @@ import {
   makeHeaderWrapper,
   parseXCloudTraceHeader,
   parseTraceParentHeader,
-} from '../src/context';
+} from '../../src/utils/context';
 
 describe('context', () => {
   describe('makeHeaderWrapper', () => {

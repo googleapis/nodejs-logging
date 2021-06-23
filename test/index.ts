@@ -33,6 +33,9 @@ import {Policy} from '@google-cloud/pubsub';
 import {GetEntriesRequest} from '../src/log';
 import {Dataset} from '@google-cloud/bigquery';
 import {Bucket} from '@google-cloud/storage';
+import * as metadata from '../src/utils/metadata';
+
+import * as sinon from 'sinon';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const {v2} = require('../src');
@@ -151,6 +154,7 @@ describe('Logging', () => {
         GoogleAuth: fakeGoogleAuth,
       },
       './log': {Log: FakeLog},
+      './log-sync': {LogSync: FakeLog},
       './entry': {Entry: FakeEntry},
       './sink': {Sink: FakeSink},
       './v2': fakeV2,
@@ -1220,6 +1224,18 @@ describe('Logging', () => {
     });
   });
 
+  describe('logSync', () => {
+    const NAME = 'log-name';
+
+    it('should return a LogSync object', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const log = logging.logSync(NAME) as any;
+      assert(log instanceof FakeLog);
+      assert.strictEqual(log.calledWith_[0], logging);
+      assert.strictEqual(log.calledWith_[1], NAME);
+    });
+  });
+
   describe('request', () => {
     const CONFIG = {
       client: 'client',
@@ -1740,7 +1756,7 @@ describe('Logging', () => {
     });
   });
 
-  describe('updating project ID', () => {
+  describe('setProjectId', () => {
     it('should update project id in case of default placeholder', async () => {
       logging = new Logging({projectId: '{{projectId}}'});
       logging.auth.getProjectId = async () => {
@@ -1748,6 +1764,16 @@ describe('Logging', () => {
       };
       await logging.setProjectId({});
       assert.strictEqual(logging.projectId, PROJECT_ID);
+    });
+  });
+
+  describe('setDetectedResource', () => {
+    it('should update detected resource if none', async () => {
+      logging = new Logging();
+      sinon.stub(metadata, 'getDefaultResource').resolves({type: 'bar'});
+      await logging.setDetectedResource();
+      assert.strictEqual((logging.detectedResource as any).type, 'bar');
+      sinon.restore();
     });
   });
 });

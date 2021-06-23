@@ -16,12 +16,12 @@
 
 import * as http from 'http';
 import onFinished = require('on-finished');
-import {getOrInjectContext} from '../../context';
+import {getOrInjectContext} from '../../utils/context';
 import {
   makeHttpRequestData,
   ServerRequest,
   CloudLoggingHttpRequest,
-} from '../../http-request';
+} from '../../utils/http-request';
 
 interface AnnotatedRequestType<LoggerType> extends ServerRequest {
   log: LoggerType;
