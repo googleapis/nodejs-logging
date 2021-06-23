@@ -134,7 +134,9 @@ describe('http-request', () => {
     });
 
     it('should be false on invalid objects', () => {
-      assert(!isRawHttpRequest({requestMethod: 'POST'} as CloudLoggingHttpRequest));
+      assert(
+        !isRawHttpRequest({requestMethod: 'POST'} as CloudLoggingHttpRequest)
+      );
       assert(!isRawHttpRequest({}));
       assert(!isRawHttpRequest(null));
     });
