@@ -23,13 +23,14 @@ import * as extend from 'extend';
 import * as gax from 'google-gax';
 // eslint-disable-next-line node/no-extraneous-import
 import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
 import * as streamEvents from 'stream-events';
 import * as middleware from './middleware';
-import {detectServiceContext} from './metadata';
-import {CloudLoggingHttpRequest as HttpRequest} from './http-request';
+import {detectServiceContext, getDefaultResource} from './utils/metadata';
+import {CloudLoggingHttpRequest as HttpRequest} from './utils/http-request';
+
+import {GoogleAuth} from 'google-auth-library';
 
 export {middleware};
 export {HttpRequest};
@@ -41,16 +42,16 @@ const v2 = require('./v2');
 
 import {Entry, LogEntry} from './entry';
 import {
-  Log,
-  GetEntriesRequest,
-  TailEntriesRequest,
-  LogOptions,
   MonitoredResource,
   Severity,
   SeverityNames,
-} from './log';
+  formatLogName,
+  assignSeverityToEntries,
+} from './utils/log-common';
+import {Log, GetEntriesRequest, TailEntriesRequest, LogOptions} from './log';
+import {LogSync} from './log-sync';
 import {Sink} from './sink';
-import {Duplex, PassThrough, Transform} from 'stream';
+import {Duplex, PassThrough, Transform, Writable} from 'stream';
 import {google} from '../protos/protos';
 
 import {Bucket} from '@google-cloud/storage'; // types only
@@ -306,13 +307,9 @@ class Logging {
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
    * @property {Bucket|Dataset|Topic} [destination] The destination. The proper ACL
    *     scopes will be granted to the provided destination. Can be one of:
-   *     {@link
-   * https://cloud.google.com/nodejs/docs/reference/storage/latest/Bucket
-   * Bucket},
-   *     {@link
-   * https://cloud.google.com/nodejs/docs/reference/bigquery/latest/Dataset
-   * Dataset}, or {@link
-   * https://cloud.google.com/nodejs/docs/reference/pubsub/latest/Topic Topic}
+   *     {@link https://googleapis.dev/nodejs/storage/latest/ Bucket},
+   *     {@link https://googleapis.dev/nodejs/bigquery/latest/ Dataset}, or
+   *     {@link https://googleapis.dev/nodejs/pubsub/latest/ Topic}
    * @property {string} [filter] An advanced logs filter. Only log entries
    *     matching the filter are written.
    * @property {string|boolean} [uniqueWriterIdentity] Determines the kind of IAM
@@ -645,11 +642,12 @@ class Logging {
         this.projectId = projectId;
         if (options.log) {
           if (options.filter) {
-            options.filter = `(${
-              options.filter
-            }) AND logName="${Log.formatName_(this.projectId, options.log)}"`;
+            options.filter = `(${options.filter}) AND logName="${formatLogName(
+              this.projectId,
+              options.log
+            )}"`;
           } else {
-            options.filter = `logName="${Log.formatName_(
+            options.filter = `logName="${formatLogName(
               this.projectId,
               options.log
             )}"`;
@@ -796,12 +794,12 @@ class Logging {
 
       if (options.log) {
         if (options.filter) {
-          options.filter = `(${options.filter}) AND logName="${Log.formatName_(
+          options.filter = `(${options.filter}) AND logName="${formatLogName(
             this.projectId,
             options.log
           )}"`;
         } else {
-          options.filter = `logName="${Log.formatName_(
+          options.filter = `logName="${formatLogName(
             this.projectId,
             options.log
           )}"`;
@@ -1220,6 +1218,28 @@ class Logging {
   }
 
   /**
+   * Get a reference to a Cloud Logging logSync.
+   *
+   * @param {string} name Name of the existing log.
+   * @param {object} transport An optional write stream.
+   * @returns {LogSync}
+   *
+   * @example
+   * const {Logging} = require('@google-cloud/logging');
+   * const logging = new Logging();
+   *
+   * // Optional: enrich logs with additional context
+   * await logging.setProjectId();
+   * await logging.setDetectedResource();
+   *
+   * // Default transport writes to process.stdout
+   * const log = logging.logSync('my-log');
+   */
+  logSync(name: string, transport?: Writable) {
+    return new LogSync(this, name, transport);
+  }
+
+  /**
    * Get a reference to a Cloud Logging sink.
    *
    * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
@@ -1391,12 +1411,29 @@ class Logging {
     config.destination = `${baseUrl}/${topicName}`;
   }
 
+  /**
+   * setProjectId detects and sets a projectId string on the Logging instance.
+   * It can be invoked once to ensure ensuing LogSync entries have a projectID.
+   * @param reqOpts
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async setProjectId(reqOpts: {}) {
-    if (this.projectId === '{{projectId}}') {
+  async setProjectId(reqOpts?: {}) {
+    if (this.projectId === '{{projectId}}')
       this.projectId = await this.auth.getProjectId();
+    if (reqOpts) reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
+  }
+
+  /**
+   * setResource detects and sets a detectedresource object on the Logging
+   * instance. It can be invoked once to ensure ensuing LogSync entries contain
+   * resource context.
+   */
+  async setDetectedResource() {
+    if (!this.detectedResource) {
+      this.detectedResource = await getDefaultResource(
+        this.auth as unknown as GoogleAuth
+      );
     }
-    reqOpts = replaceProjectIdToken(reqOpts, this.projectId);
   }
 }
 
@@ -1431,17 +1468,15 @@ export {Entry};
  * @type {Constructor}
  */
 export {Log};
+
+/**
+ * {@link Severity} enum.
+ */
 export {Severity};
 export {SeverityNames};
 
-/**
- * {@link Sink} class.
- *
- * @name Logging.Sink
- * @see Sink
- * @type {Constructor}
- */
-export {Sink};
+export {assignSeverityToEntries};
+export {formatLogName};
 
 /**
  * {@link MonitoredResource} class.
@@ -1451,6 +1486,24 @@ export {Sink};
  * @type {Interface}
  */
 export {MonitoredResource};
+
+/**
+ * {@link LogSync} class.
+ *
+ * @name Logging.LogSync
+ * @see LogSync
+ * @type {Constructor}
+ */
+export {LogSync};
+
+/**
+ * {@link Sink} class.
+ *
+ * @name Logging.Sink
+ * @see Sink
+ * @type {Constructor}
+ */
+export {Sink};
 
 /**
  * The default export of the `@google-cloud/logging` package is the

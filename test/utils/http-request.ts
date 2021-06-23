@@ -16,9 +16,14 @@
 
 import * as assert from 'assert';
 import {describe, it} from 'mocha';
-import {ServerResponse} from 'http';
 import * as http from 'http';
-import {ServerRequest, makeHttpRequestData} from '../src/http-request';
+type ServerResponse = http.ServerResponse;
+import {
+  ServerRequest,
+  CloudLoggingHttpRequest,
+  makeHttpRequestData,
+  isRawHttpRequest,
+} from '../../src/utils/http-request';
 
 describe('http-request', () => {
   describe('makeHttpRequestData', () => {
@@ -118,6 +123,22 @@ describe('http-request', () => {
         1.0000000001
       );
       assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
+    });
+  });
+
+  describe('isRawHttp', () => {
+    it('should be true on valid objects', () => {
+      const svRequest = {} as ServerRequest;
+      svRequest.method = 'GET';
+      assert(isRawHttpRequest(svRequest));
+    });
+
+    it('should be false on invalid objects', () => {
+      assert(
+        !isRawHttpRequest({requestMethod: 'POST'} as CloudLoggingHttpRequest)
+      );
+      assert(!isRawHttpRequest({}));
+      assert(!isRawHttpRequest(null));
     });
   });
 });

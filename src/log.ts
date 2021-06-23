@@ -19,12 +19,21 @@ import {callbackifyAll} from '@google-cloud/promisify';
 import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
-import {google} from '../protos/protos';
-
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
-import {getDefaultResource} from './metadata';
-import {GoogleAuth} from 'google-auth-library/build/src/auth/googleauth';
+import {
+  LogSeverityFunctions,
+  assignSeverityToEntries,
+  snakecaseKeys,
+  formatLogName,
+  WriteOptions as CommonOptions,
+} from './utils/log-common';
+
+export interface WriteOptions extends CommonOptions {
+  dryRun?: boolean;
+  gaxOptions?: CallOptions;
+  partialSuccess?: boolean;
+}
 
 export interface GetEntriesRequest {
   autoPaginate?: boolean;
@@ -60,35 +69,6 @@ export interface ApiResponseCallback {
 }
 export type DeleteCallback = ApiResponseCallback;
 
-export type MonitoredResource = google.api.IMonitoredResource;
-export interface WriteOptions {
-  dryRun?: boolean;
-  gaxOptions?: CallOptions;
-  labels?: {[index: string]: string};
-  partialSuccess?: boolean;
-  resource?: MonitoredResource;
-}
-
-export enum Severity {
-  emergency,
-  alert,
-  critical,
-  error,
-  warning,
-  notice,
-  info,
-  debug,
-}
-
-export type SeverityNames = keyof typeof Severity;
-
-// Mapped types are only supported in type aliases and not in interfaces and
-// classes.
-type LogSeverityFunctions = {
-  // FIXME: the following can be made more precise.
-  [P in SeverityNames]: Function;
-};
-
 /**
  * A log is a named collection of entries, each entry representing a timestamped
  * event. Logs can be produced by Google Cloud Platform services, by third-party
@@ -105,6 +85,7 @@ type LogSeverityFunctions = {
  * @param {object} [options] Configuration object.
  * @param {boolean} [options.removeCircular] Replace circular references in
  *     logged objects with a string value, `[Circular]`. (Default: false)
+ * @param {number} [options.maxEntrySize] A max entry size
  *
  * @example
  * const {Logging} = require('@google-cloud/logging');
@@ -117,9 +98,10 @@ class Log implements LogSeverityFunctions {
   maxEntrySize?: number;
   logging: Logging;
   name: string;
+
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
-    this.formattedName_ = Log.formatName_(logging.projectId, name);
+    this.formattedName_ = formatLogName(logging.projectId, name);
     this.removeCircular_ = options.removeCircular === true;
     this.maxEntrySize = options.maxEntrySize;
     this.logging = logging;
@@ -170,7 +152,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'ALERT'),
+      assignSeverityToEntries(entry, 'ALERT'),
       options! as WriteOptions
     );
   }
@@ -218,7 +200,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'CRITICAL'),
+      assignSeverityToEntries(entry, 'CRITICAL'),
       options! as WriteOptions
     );
   }
@@ -263,7 +245,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'DEBUG'),
+      assignSeverityToEntries(entry, 'DEBUG'),
       options! as WriteOptions
     );
   }
@@ -316,7 +298,7 @@ class Log implements LogSeverityFunctions {
     gaxOptions?: CallOptions | DeleteCallback
   ): Promise<ApiResponse> {
     const projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(projectId, this.name);
+    this.formattedName_ = formatLogName(projectId, this.name);
     const reqOpts = {
       logName: this.formattedName_,
     };
@@ -365,7 +347,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'EMERGENCY'),
+      assignSeverityToEntries(entry, 'EMERGENCY'),
       options as WriteOptions
     );
   }
@@ -485,7 +467,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'ERROR'),
+      assignSeverityToEntries(entry, 'ERROR'),
       options! as WriteOptions
     );
   }
@@ -540,7 +522,7 @@ class Log implements LogSeverityFunctions {
   ): Promise<GetEntriesResponse> {
     const options = extend({}, opts as GetEntriesRequest);
     const projectId = await this.logging.auth.getProjectId();
-    this.formattedName_ = Log.formatName_(projectId, this.name);
+    this.formattedName_ = formatLogName(projectId, this.name);
     if (options.filter && !options.filter.includes('logName=')) {
       options.filter = `(${options.filter}) AND logName="${this.formattedName_}"`;
     } else if (!options.filter) {
@@ -677,7 +659,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'INFO'),
+      assignSeverityToEntries(entry, 'INFO'),
       options! as WriteOptions
     );
   }
@@ -722,7 +704,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'NOTICE'),
+      assignSeverityToEntries(entry, 'NOTICE'),
       options! as WriteOptions
     );
   }
@@ -767,7 +749,7 @@ class Log implements LogSeverityFunctions {
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
-      Log.assignSeverityToEntries_(entry, 'WARNING'),
+      assignSeverityToEntries(entry, 'WARNING'),
       options as WriteOptions
     );
   }
@@ -885,61 +867,50 @@ class Log implements LogSeverityFunctions {
     opts?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
-    // Autodetect monitored resource if not specified by user in WriteOptions.
+    let decoratedEntries: EntryJson[];
+    // Extract projectId & resource from Logging - inject & memoize if not.
+    await this.logging.setProjectId();
+    this.formattedName_ = formatLogName(this.logging.projectId, this.name);
+    const resource = await this.getOrSetResource(options);
+    // Extract & format additional context from individual entries.
+    try {
+      decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
+    } catch (err) {
+      // Ignore errors (the API will speak up if it has an issue).
+    }
+    this.truncateEntries(decoratedEntries!);
+    // Clobber `labels` and `resource` fields with WriteOptions from the user.
+    const reqOpts = extend(
+      {
+        logName: this.formattedName_,
+        entries: decoratedEntries!,
+        resource,
+      },
+      options
+    );
+    delete reqOpts.gaxOptions;
+    return this.logging.loggingService.writeLogEntries(
+      reqOpts,
+      options.gaxOptions
+    );
+  }
+
+  /**
+   * getOrSetResource looks for GCP service context first at the user
+   * declaration level (snakecasing keys), then in the Logging instance,
+   * before finally detecting a resource from the environment.
+   * The resource is then memoized at the Logging instance level for future use.
+   *
+   * @param options
+   * @private
+   */
+  private async getOrSetResource(options: WriteOptions) {
     if (options.resource) {
       if (options.resource.labels) snakecaseKeys(options.resource.labels);
-      return writeWithResource(options.resource);
-    } else if (this.logging.detectedResource) {
-      return writeWithResource(this.logging.detectedResource);
-    } else {
-      const resource = await getDefaultResource(
-        this.logging.auth as unknown as GoogleAuth
-      );
-      this.logging.detectedResource = resource;
-      return writeWithResource(resource);
+      return options.resource;
     }
-    // writeWithResource formats entries and writes them to loggingService API.
-    // Service expects props: logName, resource, labels, partialSuccess, dryRun.
-    async function writeWithResource(resource: {} | null) {
-      const projectId = await self.logging.auth.getProjectId();
-      let decoratedEntries: EntryJson[];
-      try {
-        decoratedEntries = self.decorateEntries(
-          arrify(entry) as Entry[],
-          projectId
-        );
-      } catch (err) {
-        // Ignore errors (the API will speak up if it has an issue).
-      }
-      self.truncateEntries(decoratedEntries!);
-      self.formattedName_ = Log.formatName_(projectId, self.name);
-      const reqOpts = extend(
-        {
-          logName: self.formattedName_,
-          entries: decoratedEntries!,
-          resource,
-        },
-        options
-      );
-      delete reqOpts.gaxOptions;
-      return self.logging.loggingService.writeLogEntries(
-        reqOpts,
-        options.gaxOptions
-      );
-    }
-    // snakecaseKeys turns label keys from camel case to snake case.
-    function snakecaseKeys(labels: {[p: string]: string} | null | undefined) {
-      for (const key in labels) {
-        Object.defineProperty(
-          labels,
-          key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
-          Object.getOwnPropertyDescriptor(labels, key) as PropertyDescriptor
-        );
-        delete labels[key];
-      }
-    }
+    await this.logging.setDetectedResource();
+    return this.logging.detectedResource;
   }
 
   /**
@@ -950,12 +921,11 @@ class Log implements LogSeverityFunctions {
    *
    * @private
    *
-   * @param {string} projectId - Google project ID.
    * @param {object[]} entries - Entry objects.
    * @returns {object[]} Serialized entries.
    * @throws if there is an error during serialization.
    */
-  private decorateEntries(entries: Entry[], projectId: string): EntryJson[] {
+  private decorateEntries(entries: Entry[]): EntryJson[] {
     return entries.map(entry => {
       if (!(entry instanceof Entry)) {
         entry = this.entry(entry);
@@ -964,7 +934,7 @@ class Log implements LogSeverityFunctions {
         {
           removeCircular: this.removeCircular_,
         },
-        projectId
+        this.logging.projectId
       );
     });
   }
@@ -1018,6 +988,7 @@ class Log implements LogSeverityFunctions {
     });
   }
 
+  // TODO: in a future breaking release, delete this extranenous function.
   /**
    * Return an array of log entries with the desired severity assigned.
    *
@@ -1030,16 +1001,10 @@ class Log implements LogSeverityFunctions {
     entries: Entry | Entry[],
     severity: string
   ): Entry[] {
-    return (arrify(entries) as Entry[]).map(entry => {
-      const metadata = extend(true, {}, entry.metadata, {
-        severity,
-      });
-      return extend(new Entry(), entry, {
-        metadata,
-      });
-    });
+    return assignSeverityToEntries(entries, severity);
   }
 
+  // TODO: in a future breaking release, delete this extranenous function.
   /**
    * Format the name of a log. A log's full name is in the format of
    * 'projects/{projectId}/logs/{logName}'.
@@ -1049,13 +1014,7 @@ class Log implements LogSeverityFunctions {
    * @returns {string}
    */
   static formatName_(projectId: string, name: string) {
-    const path = 'projects/' + projectId + '/logs/';
-    name = name.replace(path, '');
-    if (decodeURIComponent(name) === name) {
-      // The name has not been encoded yet.
-      name = encodeURIComponent(name);
-    }
-    return path + name;
+    return formatLogName(projectId, name);
   }
 }
 

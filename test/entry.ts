@@ -17,7 +17,7 @@ import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as extend from 'extend';
 import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
-import * as common from '../src/common';
+import * as common from '../src/utils/common';
 import * as http from 'http';
 
 let fakeEventIdNewOverride: Function | null;
@@ -39,6 +39,23 @@ const structToObj = (struct: {}) => {
   return (fakeStructToObj || common.structToObj)(struct);
 };
 
+// Allows for a 1000ms margin of error when comparing timestamps
+function withinExpectedTimeBoundaries(result?: Date): boolean {
+  if (result) {
+    const now = Date.now();
+    const expectedTimestampBoundaries = {
+      start: new Date(now - 1000),
+      end: new Date(now + 1000),
+    };
+    if (
+      result >= expectedTimestampBoundaries.start &&
+      result <= expectedTimestampBoundaries.end
+    )
+      return true;
+  }
+  return false;
+}
+
 describe('Entry', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let Entry: typeof entryTypes.Entry;
@@ -49,7 +66,7 @@ describe('Entry', () => {
 
   before(() => {
     Entry = proxyquire('../src/entry.js', {
-      './common': {
+      './utils/common': {
         objToStruct,
         structToObj,
       },
@@ -69,13 +86,7 @@ describe('Entry', () => {
 
   describe('instantiation', () => {
     it('should assign timestamp to metadata', () => {
-      const now = Date.now();
-      const expectedTimestampBoundaries = {
-        start: new Date(now - 1000),
-        end: new Date(now + 1000),
-      };
-      assert(entry.metadata.timestamp! >= expectedTimestampBoundaries.start);
-      assert(entry.metadata.timestamp! <= expectedTimestampBoundaries.end);
+      assert(withinExpectedTimeBoundaries(entry.metadata.timestamp! as Date));
     });
 
     it('should not assign timestamp if one is already set', () => {
@@ -226,37 +237,17 @@ describe('Entry', () => {
     });
 
     it('should convert a string timestamp', () => {
-      const tests = [
-        {
-          inputTime: '2020-01-01T00:00:00.11Z',
-          expectedSeconds: 1577836800,
-          expectedNanos: 110000000,
-        },
-        {
-          inputTime: '2020-01-01T00:00:00Z',
-          expectedSeconds: 1577836800,
-          expectedNanos: 0,
-        },
-        {
-          inputTime: '2020-01-01T00:00:00.999999999Z',
-          expectedSeconds: 1577836800,
-          expectedNanos: 999999999,
-        },
-        {
-          inputTime: 'invalid timestamp string',
-          expectedSeconds: 0,
-          expectedNanos: 0,
-        },
-      ];
-
-      for (const test of tests) {
-        entry.metadata.timestamp = test.inputTime;
-        const json = entry.toJSON();
-        assert.deepStrictEqual(json.timestamp, {
-          seconds: test.expectedSeconds,
-          nanos: test.expectedNanos,
-        });
-      }
+      const test = {
+        inputTime: '2020-01-01T00:00:00.999999999Z',
+        expectedSeconds: 1577836800,
+        expectedNanos: 999999999,
+      };
+      entry.metadata.timestamp = test.inputTime;
+      const json = entry.toJSON();
+      assert.deepStrictEqual(json.timestamp, {
+        seconds: test.expectedSeconds,
+        nanos: test.expectedNanos,
+      });
     });
 
     it('should convert a raw incoming HTTP request', () => {
@@ -305,6 +296,76 @@ describe('Entry', () => {
       assert.strictEqual(json.trace, expected.trace);
       assert.strictEqual(json.spanId, expected.spanId);
       assert.strictEqual(json.traceSampled, expected.traceSampled);
+    });
+  });
+
+  describe('toStructuredJSON', () => {
+    it('should not modify the original instance', () => {
+      const entryBefore = extend(true, {}, entry);
+      entry.toStructuredJSON();
+      const entryAfter = extend(true, {}, entry);
+      assert.deepStrictEqual(entryBefore, entryAfter);
+    });
+
+    it('should include properties not in StructuredJson', () => {
+      entry.metadata.severity = 'CRITICAL';
+    });
+
+    it('should re-map new keys and delete old keys', () => {
+      entry.metadata.insertId = '👀';
+      entry.metadata.labels = {foo: '⌛️'};
+      entry.metadata.spanId = '🍓';
+      entry.metadata.trace = '🍝';
+      entry.metadata.traceSampled = false;
+      entry.data = 'this is a log';
+      const json = entry.toStructuredJSON();
+      assert(withinExpectedTimeBoundaries(new Date(json.timestamp!)));
+      delete json.timestamp;
+      const expectedJSON = {
+        [entryTypes.INSERT_ID_KEY]: '👀',
+        [entryTypes.TRACE_KEY]: '🍝',
+        [entryTypes.SPAN_ID_KEY]: '🍓',
+        [entryTypes.TRACE_SAMPLED_KEY]: false,
+        [entryTypes.LABELS_KEY]: {foo: '⌛️'},
+        message: 'this is a log',
+      };
+      assert.deepStrictEqual(json, expectedJSON);
+    });
+
+    it('should assign payloads to message in priority', () => {
+      entry = new Entry(METADATA);
+      entry.metadata.textPayload = 'test log';
+      let json = entry.toStructuredJSON();
+      assert.strictEqual(json.message, 'test log');
+      entry.data = 'new test log';
+      json = entry.toStructuredJSON();
+      assert.strictEqual(json.message, 'new test log');
+    });
+
+    it('should convert a string timestamp', () => {
+      entry.metadata.timestamp = new Date();
+      const json = entry.toStructuredJSON();
+      assert(withinExpectedTimeBoundaries(new Date(json.timestamp!)));
+    });
+
+    it('should convert a raw http to httprequest', () => {
+      entry.metadata.httpRequest = {
+        method: 'POST',
+      } as http.IncomingMessage;
+      const json = entry.toStructuredJSON();
+      assert.strictEqual((json.httpRequest as any).requestMethod, 'POST');
+    });
+
+    it('should extract trace and span from headers', () => {
+      entry.metadata.httpRequest = {
+        headers: {
+          ['x-cloud-trace-context']: '1/1',
+        },
+      } as any as http.IncomingMessage;
+      const json = entry.toStructuredJSON();
+      assert.strictEqual(json[entryTypes.TRACE_KEY], 'projects//traces/1');
+      assert.strictEqual(json[entryTypes.SPAN_ID_KEY], '1');
+      assert.strictEqual(json[entryTypes.TRACE_SAMPLED_KEY], false);
     });
   });
 });

@@ -15,7 +15,8 @@
 import {
   ObjectToStructConverter,
   ObjectToStructConverterConfig,
-} from '../src/common';
+  zuluToDateObj,
+} from '../../src/utils/common';
 import * as assert from 'assert';
 import {describe, it, beforeEach} from 'mocha';
 const OPTIONS = {
@@ -232,5 +233,41 @@ describe('ObjectToStructConverter', () => {
         });
       });
     });
+  });
+});
+
+describe('zuluToDateObj', () => {
+  it('should convert a string timestamp', () => {
+    const tests = [
+      {
+        inputTime: '2020-01-01T00:00:00.11Z',
+        expectedSeconds: 1577836800,
+        expectedNanos: 110000000,
+      },
+      {
+        inputTime: '2020-01-01T00:00:00Z',
+        expectedSeconds: 1577836800,
+        expectedNanos: 0,
+      },
+      {
+        inputTime: '2020-01-01T00:00:00.999999999Z',
+        expectedSeconds: 1577836800,
+        expectedNanos: 999999999,
+      },
+      {
+        inputTime: 'invalid timestamp string',
+        expectedSeconds: 0,
+        expectedNanos: 0,
+      },
+    ];
+
+    for (const test of tests) {
+      const dateString = test.inputTime;
+      const dateObj = zuluToDateObj(dateString);
+      assert.deepStrictEqual(dateObj, {
+        seconds: test.expectedSeconds,
+        nanos: test.expectedNanos,
+      });
+    }
   });
 });
