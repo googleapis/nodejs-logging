@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.5.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.0...v9.5.1) (2021-06-23)
+
+
+### Bug Fixes
+
+* make request optional in all cases ([#1103](https://www.github.com/googleapis/nodejs-logging/issues/1103)) ([4f5e5e3](https://www.github.com/googleapis/nodejs-logging/commit/4f5e5e3a1e0d79f5bc172687a95cd0839c1a124e))
+
 ## [9.5.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.4.1...v9.5.0) (2021-06-23)
 
 
