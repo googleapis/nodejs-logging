@@ -387,7 +387,7 @@ export class MetricsServiceV2Client {
   // -- Service calls --
   // -------------------
   getLogMetric(
-    request: protos.google.logging.v2.IGetLogMetricRequest,
+    request?: protos.google.logging.v2.IGetLogMetricRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -433,7 +433,7 @@ export class MetricsServiceV2Client {
    * const [response] = await client.getLogMetric(request);
    */
   getLogMetric(
-    request: protos.google.logging.v2.IGetLogMetricRequest,
+    request?: protos.google.logging.v2.IGetLogMetricRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -472,7 +472,7 @@ export class MetricsServiceV2Client {
     return this.innerApiCalls.getLogMetric(request, options, callback);
   }
   createLogMetric(
-    request: protos.google.logging.v2.ICreateLogMetricRequest,
+    request?: protos.google.logging.v2.ICreateLogMetricRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -523,7 +523,7 @@ export class MetricsServiceV2Client {
    * const [response] = await client.createLogMetric(request);
    */
   createLogMetric(
-    request: protos.google.logging.v2.ICreateLogMetricRequest,
+    request?: protos.google.logging.v2.ICreateLogMetricRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -562,7 +562,7 @@ export class MetricsServiceV2Client {
     return this.innerApiCalls.createLogMetric(request, options, callback);
   }
   updateLogMetric(
-    request: protos.google.logging.v2.IUpdateLogMetricRequest,
+    request?: protos.google.logging.v2.IUpdateLogMetricRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -614,7 +614,7 @@ export class MetricsServiceV2Client {
    * const [response] = await client.updateLogMetric(request);
    */
   updateLogMetric(
-    request: protos.google.logging.v2.IUpdateLogMetricRequest,
+    request?: protos.google.logging.v2.IUpdateLogMetricRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -653,7 +653,7 @@ export class MetricsServiceV2Client {
     return this.innerApiCalls.updateLogMetric(request, options, callback);
   }
   deleteLogMetric(
-    request: protos.google.logging.v2.IDeleteLogMetricRequest,
+    request?: protos.google.logging.v2.IDeleteLogMetricRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -699,7 +699,7 @@ export class MetricsServiceV2Client {
    * const [response] = await client.deleteLogMetric(request);
    */
   deleteLogMetric(
-    request: protos.google.logging.v2.IDeleteLogMetricRequest,
+    request?: protos.google.logging.v2.IDeleteLogMetricRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -739,7 +739,7 @@ export class MetricsServiceV2Client {
   }
 
   listLogMetrics(
-    request: protos.google.logging.v2.IListLogMetricsRequest,
+    request?: protos.google.logging.v2.IListLogMetricsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -797,7 +797,7 @@ export class MetricsServiceV2Client {
    *   for more details and examples.
    */
   listLogMetrics(
-    request: protos.google.logging.v2.IListLogMetricsRequest,
+    request?: protos.google.logging.v2.IListLogMetricsRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<

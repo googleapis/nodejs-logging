@@ -422,7 +422,7 @@ export class ConfigServiceV2Client {
   // -- Service calls --
   // -------------------
   getBucket(
-    request: protos.google.logging.v2.IGetBucketRequest,
+    request?: protos.google.logging.v2.IGetBucketRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -474,7 +474,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.getBucket(request);
    */
   getBucket(
-    request: protos.google.logging.v2.IGetBucketRequest,
+    request?: protos.google.logging.v2.IGetBucketRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -513,7 +513,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getBucket(request, options, callback);
   }
   createBucket(
-    request: protos.google.logging.v2.ICreateBucketRequest,
+    request?: protos.google.logging.v2.ICreateBucketRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -570,7 +570,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.createBucket(request);
    */
   createBucket(
-    request: protos.google.logging.v2.ICreateBucketRequest,
+    request?: protos.google.logging.v2.ICreateBucketRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -609,7 +609,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createBucket(request, options, callback);
   }
   updateBucket(
-    request: protos.google.logging.v2.IUpdateBucketRequest,
+    request?: protos.google.logging.v2.IUpdateBucketRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -683,7 +683,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.updateBucket(request);
    */
   updateBucket(
-    request: protos.google.logging.v2.IUpdateBucketRequest,
+    request?: protos.google.logging.v2.IUpdateBucketRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -722,7 +722,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateBucket(request, options, callback);
   }
   deleteBucket(
-    request: protos.google.logging.v2.IDeleteBucketRequest,
+    request?: protos.google.logging.v2.IDeleteBucketRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -777,7 +777,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.deleteBucket(request);
    */
   deleteBucket(
-    request: protos.google.logging.v2.IDeleteBucketRequest,
+    request?: protos.google.logging.v2.IDeleteBucketRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -816,7 +816,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteBucket(request, options, callback);
   }
   undeleteBucket(
-    request: protos.google.logging.v2.IUndeleteBucketRequest,
+    request?: protos.google.logging.v2.IUndeleteBucketRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -869,7 +869,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.undeleteBucket(request);
    */
   undeleteBucket(
-    request: protos.google.logging.v2.IUndeleteBucketRequest,
+    request?: protos.google.logging.v2.IUndeleteBucketRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -908,7 +908,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.undeleteBucket(request, options, callback);
   }
   getView(
-    request: protos.google.logging.v2.IGetViewRequest,
+    request?: protos.google.logging.v2.IGetViewRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -957,7 +957,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.getView(request);
    */
   getView(
-    request: protos.google.logging.v2.IGetViewRequest,
+    request?: protos.google.logging.v2.IGetViewRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -996,7 +996,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getView(request, options, callback);
   }
   createView(
-    request: protos.google.logging.v2.ICreateViewRequest,
+    request?: protos.google.logging.v2.ICreateViewRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1050,7 +1050,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.createView(request);
    */
   createView(
-    request: protos.google.logging.v2.ICreateViewRequest,
+    request?: protos.google.logging.v2.ICreateViewRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1089,7 +1089,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createView(request, options, callback);
   }
   updateView(
-    request: protos.google.logging.v2.IUpdateViewRequest,
+    request?: protos.google.logging.v2.IUpdateViewRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1150,7 +1150,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.updateView(request);
    */
   updateView(
-    request: protos.google.logging.v2.IUpdateViewRequest,
+    request?: protos.google.logging.v2.IUpdateViewRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1189,7 +1189,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateView(request, options, callback);
   }
   deleteView(
-    request: protos.google.logging.v2.IDeleteViewRequest,
+    request?: protos.google.logging.v2.IDeleteViewRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1238,7 +1238,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.deleteView(request);
    */
   deleteView(
-    request: protos.google.logging.v2.IDeleteViewRequest,
+    request?: protos.google.logging.v2.IDeleteViewRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1277,7 +1277,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteView(request, options, callback);
   }
   getSink(
-    request: protos.google.logging.v2.IGetSinkRequest,
+    request?: protos.google.logging.v2.IGetSinkRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1328,7 +1328,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.getSink(request);
    */
   getSink(
-    request: protos.google.logging.v2.IGetSinkRequest,
+    request?: protos.google.logging.v2.IGetSinkRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1367,7 +1367,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getSink(request, options, callback);
   }
   createSink(
-    request: protos.google.logging.v2.ICreateSinkRequest,
+    request?: protos.google.logging.v2.ICreateSinkRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1436,7 +1436,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.createSink(request);
    */
   createSink(
-    request: protos.google.logging.v2.ICreateSinkRequest,
+    request?: protos.google.logging.v2.ICreateSinkRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1475,7 +1475,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createSink(request, options, callback);
   }
   updateSink(
-    request: protos.google.logging.v2.IUpdateSinkRequest,
+    request?: protos.google.logging.v2.IUpdateSinkRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1561,7 +1561,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.updateSink(request);
    */
   updateSink(
-    request: protos.google.logging.v2.IUpdateSinkRequest,
+    request?: protos.google.logging.v2.IUpdateSinkRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1600,7 +1600,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateSink(request, options, callback);
   }
   deleteSink(
-    request: protos.google.logging.v2.IDeleteSinkRequest,
+    request?: protos.google.logging.v2.IDeleteSinkRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1653,7 +1653,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.deleteSink(request);
    */
   deleteSink(
-    request: protos.google.logging.v2.IDeleteSinkRequest,
+    request?: protos.google.logging.v2.IDeleteSinkRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1692,7 +1692,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteSink(request, options, callback);
   }
   getExclusion(
-    request: protos.google.logging.v2.IGetExclusionRequest,
+    request?: protos.google.logging.v2.IGetExclusionRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1743,7 +1743,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.getExclusion(request);
    */
   getExclusion(
-    request: protos.google.logging.v2.IGetExclusionRequest,
+    request?: protos.google.logging.v2.IGetExclusionRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1782,7 +1782,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getExclusion(request, options, callback);
   }
   createExclusion(
-    request: protos.google.logging.v2.ICreateExclusionRequest,
+    request?: protos.google.logging.v2.ICreateExclusionRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1838,7 +1838,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.createExclusion(request);
    */
   createExclusion(
-    request: protos.google.logging.v2.ICreateExclusionRequest,
+    request?: protos.google.logging.v2.ICreateExclusionRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1877,7 +1877,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createExclusion(request, options, callback);
   }
   updateExclusion(
-    request: protos.google.logging.v2.IUpdateExclusionRequest,
+    request?: protos.google.logging.v2.IUpdateExclusionRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -1939,7 +1939,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.updateExclusion(request);
    */
   updateExclusion(
-    request: protos.google.logging.v2.IUpdateExclusionRequest,
+    request?: protos.google.logging.v2.IUpdateExclusionRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -1978,7 +1978,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateExclusion(request, options, callback);
   }
   deleteExclusion(
-    request: protos.google.logging.v2.IDeleteExclusionRequest,
+    request?: protos.google.logging.v2.IDeleteExclusionRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2029,7 +2029,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.deleteExclusion(request);
    */
   deleteExclusion(
-    request: protos.google.logging.v2.IDeleteExclusionRequest,
+    request?: protos.google.logging.v2.IDeleteExclusionRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -2068,7 +2068,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteExclusion(request, options, callback);
   }
   getCmekSettings(
-    request: protos.google.logging.v2.IGetCmekSettingsRequest,
+    request?: protos.google.logging.v2.IGetCmekSettingsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2131,7 +2131,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.getCmekSettings(request);
    */
   getCmekSettings(
-    request: protos.google.logging.v2.IGetCmekSettingsRequest,
+    request?: protos.google.logging.v2.IGetCmekSettingsRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -2170,7 +2170,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getCmekSettings(request, options, callback);
   }
   updateCmekSettings(
-    request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+    request?: protos.google.logging.v2.IUpdateCmekSettingsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2253,7 +2253,7 @@ export class ConfigServiceV2Client {
    * const [response] = await client.updateCmekSettings(request);
    */
   updateCmekSettings(
-    request: protos.google.logging.v2.IUpdateCmekSettingsRequest,
+    request?: protos.google.logging.v2.IUpdateCmekSettingsRequest,
     optionsOrCallback?:
       | CallOptions
       | Callback<
@@ -2295,7 +2295,7 @@ export class ConfigServiceV2Client {
   }
 
   listBuckets(
-    request: protos.google.logging.v2.IListBucketsRequest,
+    request?: protos.google.logging.v2.IListBucketsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2360,7 +2360,7 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    */
   listBuckets(
-    request: protos.google.logging.v2.IListBucketsRequest,
+    request?: protos.google.logging.v2.IListBucketsRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
@@ -2520,7 +2520,7 @@ export class ConfigServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogBucket>;
   }
   listViews(
-    request: protos.google.logging.v2.IListViewsRequest,
+    request?: protos.google.logging.v2.IListViewsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2578,7 +2578,7 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    */
   listViews(
-    request: protos.google.logging.v2.IListViewsRequest,
+    request?: protos.google.logging.v2.IListViewsRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
@@ -2724,7 +2724,7 @@ export class ConfigServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogView>;
   }
   listSinks(
-    request: protos.google.logging.v2.IListSinksRequest,
+    request?: protos.google.logging.v2.IListSinksRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2785,7 +2785,7 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    */
   listSinks(
-    request: protos.google.logging.v2.IListSinksRequest,
+    request?: protos.google.logging.v2.IListSinksRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
@@ -2937,7 +2937,7 @@ export class ConfigServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogSink>;
   }
   listExclusions(
-    request: protos.google.logging.v2.IListExclusionsRequest,
+    request?: protos.google.logging.v2.IListExclusionsRequest,
     options?: CallOptions
   ): Promise<
     [
@@ -2998,7 +2998,7 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    */
   listExclusions(
-    request: protos.google.logging.v2.IListExclusionsRequest,
+    request?: protos.google.logging.v2.IListExclusionsRequest,
     optionsOrCallback?:
       | CallOptions
       | PaginationCallback<
