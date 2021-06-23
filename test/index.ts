@@ -1773,6 +1773,7 @@ describe('Logging', () => {
       sinon.stub(metadata, 'getDefaultResource').resolves({type: 'bar'});
       await logging.setDetectedResource();
       assert.strictEqual((logging.detectedResource as any).type, 'bar');
+      sinon.restore();
     });
   });
 });
