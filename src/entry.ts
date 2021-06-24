@@ -244,7 +244,7 @@ class Entry {
   toStructuredJSON(projectId = '') {
     const meta = this.metadata;
     // Mask out the keys that need to be renamed.
-    // eslint-disable @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const {
       textPayload,
       jsonPayload,
@@ -257,7 +257,7 @@ class Entry {
       labels,
       ...validKeys
     } = meta;
-    // eslint-enable @typescript-eslint/no-unused-vars
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     const entry: StructuredJson = extend(true, {}, validKeys) as {};
     // Re-map keys names.
     entry[LABELS_KEY] = meta.labels
