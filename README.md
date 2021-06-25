@@ -119,14 +119,20 @@ these log lines to the API.
 
 ## Writing to Stdout
 
-Serverless applications like Cloud Functions, Cloud Run, and App Engine
-should use the `LogSync` class to synchronously log to `stdout` or another
-custom transport. Logs written to `stdout` are picked up by a [Logging agent](https://cloud.google.com/logging/docs/agent/logging)
-injected with additional context, and streamed to the Logging API.
+The `LogSync` class helps users easily write context-rich structured logs to
+`stdout` or any custom transport. It extracts additional log properties like
+trace context from HTTP headers and can be used as an on/off toggle between
+writing to the API or to `stdout` during local development.
 
-This library's `LogSync` gives users idiomatic syntax sugar, an on/off toggle
-between writing to the API vs to `stdout`, and extracts additional log
-properties like trace context from HTTP headers.
+Logs written to `stdout` are then picked up, out-of-process, by a Logging
+agent in the respective GCP environment. Logging agents can add more
+properties to each entry before streaming it to the Logging API.
+
+Read more about [Logging agents](https://cloud.google.com/logging/docs/agent/logging).
+
+Serverless applications like Cloud Functions, Cloud Run, and App Engine
+are highly recommended to use the `LogSync` class as async logs may be dropped
+due to lack of CPU.
 
 Read more about [structured logging](https://cloud.google.com/logging/docs/structured-logging).
 
@@ -141,6 +147,10 @@ const log = logging.logSync(logname);
 const meta = { // optional field overrides here };
 const entry = log.entry(meta, 'Your log message');
 log.write(entry);
+
+// Syntax sugar for logging at a specific severity
+log.alert(entry);
+log.warning(entry);
 ```
 
 
