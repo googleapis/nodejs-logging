@@ -117,6 +117,42 @@ log.write(logEntry2);
 The `@google-cloud/logging` library will handle batching and dispatching
 these log lines to the API.
 
+## Writing to Stdout
+
+The `LogSync` class helps users easily write context-rich structured logs to
+`stdout` or any custom transport. It extracts additional log properties like
+trace context from HTTP headers and can be used as an on/off toggle between
+writing to the API or to `stdout` during local development.
+
+Logs written to `stdout` are then picked up, out-of-process, by a Logging
+agent in the respective GCP environment. Logging agents can add more
+properties to each entry before streaming it to the Logging API.
+
+Read more about [Logging agents](https://cloud.google.com/logging/docs/agent/logging).
+
+Serverless applications like Cloud Functions, Cloud Run, and App Engine
+are highly recommended to use the `LogSync` class as async logs may be dropped
+due to lack of CPU.
+
+Read more about [structured logging](https://cloud.google.com/logging/docs/structured-logging).
+
+```js
+// Optional: Create and configure a client
+const logging = new Logging();
+await logging.setProjectId()
+await logging.setDetectedResource()
+
+// Create a LogSync transport, defaulting to `process.stdout`
+const log = logging.logSync(logname);
+const meta = { // optional field overrides here };
+const entry = log.entry(meta, 'Your log message');
+log.write(entry);
+
+// Syntax sugar for logging at a specific severity
+log.alert(entry);
+log.warning(entry);
+```
+
 
 ## Samples
 

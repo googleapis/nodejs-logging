@@ -353,6 +353,7 @@ describe('Entry', () => {
         method: 'POST',
       } as http.IncomingMessage;
       const json = entry.toStructuredJSON();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       assert.strictEqual((json.httpRequest as any).requestMethod, 'POST');
     });
 
