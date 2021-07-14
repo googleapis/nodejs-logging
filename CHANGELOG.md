@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.5.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.3...v9.5.4) (2021-07-14)
+
+
+### Bug Fixes
+
+* missing "uuid" dependency ([#1119](https://www.github.com/googleapis/nodejs-logging/issues/1119)) ([168389c](https://www.github.com/googleapis/nodejs-logging/commit/168389ce885e6e00c7f8d87fbda2564077ff5356))
+
 ### [9.5.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.2...v9.5.3) (2021-07-12)
 
 
