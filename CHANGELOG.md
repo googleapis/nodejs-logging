@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.4...v9.5.5) (2021-07-16)
+
+
+### Bug Fixes
+
+* Updating WORKSPACE files to use the newest version of the Typescript generator. ([#1121](https://www.github.com/googleapis/nodejs-logging/issues/1121)) ([8ac1348](https://www.github.com/googleapis/nodejs-logging/commit/8ac1348b18fc07ad79e5d06ea945eb92d9f24bc9))
+
 ### [9.5.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.3...v9.5.4) (2021-07-14)
 
 
