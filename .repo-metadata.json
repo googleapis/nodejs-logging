@@ -1,5 +1,5 @@
 {
-  "client_documentation": "https://googleapis.dev/nodejs/logging/latest",
+  "client_documentation": "https://cloud.google.com/nodejs/docs/reference/logging/latest",
   "product_documentation": "https://cloud.google.com/logging/docs",
   "name": "logging",
   "codeowner_team": "@googleapis/api-logging",

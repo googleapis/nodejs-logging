@@ -4,6 +4,27 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.5.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.3...v9.5.4) (2021-07-14)
+
+
+### Bug Fixes
+
+* missing "uuid" dependency ([#1119](https://www.github.com/googleapis/nodejs-logging/issues/1119)) ([168389c](https://www.github.com/googleapis/nodejs-logging/commit/168389ce885e6e00c7f8d87fbda2564077ff5356))
+
+### [9.5.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.2...v9.5.3) (2021-07-12)
+
+
+### Bug Fixes
+
+* **deps:** google-gax v2.17.1 ([#1117](https://www.github.com/googleapis/nodejs-logging/issues/1117)) ([cbf3af9](https://www.github.com/googleapis/nodejs-logging/commit/cbf3af964225dfdf1bb23406ffbfd71202c7b6ca))
+
+### [9.5.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.1...v9.5.2) (2021-06-30)
+
+
+### Bug Fixes
+
+* **deps:** require google-gax v2.17.0 ([#1111](https://www.github.com/googleapis/nodejs-logging/issues/1111)) ([d64d671](https://www.github.com/googleapis/nodejs-logging/commit/d64d67190dddf0318ca47eb8528e4b9052e3a9c0))
+
 ### [9.5.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.0...v9.5.1) (2021-06-23)
 
 
