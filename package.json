@@ -55,7 +55,7 @@
     "extend": "^3.0.2",
     "gcp-metadata": "^4.0.0",
     "google-auth-library": "^7.0.0",
-    "google-gax": "^2.17.1",
+    "google-gax": "^2.24.1",
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.1",
     "stream-events": "^1.0.5",
