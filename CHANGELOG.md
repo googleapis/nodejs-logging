@@ -4,6 +4,14 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.4...v9.5.5) (2021-08-16)
+
+
+### Bug Fixes
+
+* **deps:** require google-gax v2.24.1 ([#1139](https://www.github.com/googleapis/nodejs-logging/issues/1139)) ([4c9fc48](https://www.github.com/googleapis/nodejs-logging/commit/4c9fc486cab8aac21b50cebb0e25990f7cffeccf))
+* Updating WORKSPACE files to use the newest version of the Typescript generator. ([#1121](https://www.github.com/googleapis/nodejs-logging/issues/1121)) ([8ac1348](https://www.github.com/googleapis/nodejs-logging/commit/8ac1348b18fc07ad79e5d06ea945eb92d9f24bc9))
+
 ### [9.5.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.3...v9.5.4) (2021-07-14)
 
 
