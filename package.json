@@ -51,7 +51,7 @@
     "@google-cloud/promisify": "^2.0.0",
     "arrify": "^2.0.1",
     "dot-prop": "^6.0.0",
-    "eventid": "^1.0.0",
+    "eventid": "^2.0.0",
     "extend": "^3.0.2",
     "gcp-metadata": "^4.0.0",
     "google-auth-library": "^7.0.0",
