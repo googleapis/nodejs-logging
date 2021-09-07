@@ -4,6 +4,20 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.5.7](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.6...v9.5.7) (2021-09-02)
+
+
+### Bug Fixes
+
+* Fix detecting Cloud Run logic ([#1145](https://www.github.com/googleapis/nodejs-logging/issues/1145)) ([99c276c](https://www.github.com/googleapis/nodejs-logging/commit/99c276cf0c394200836f3289ff21a4880523a7b5)), closes [#1127](https://www.github.com/googleapis/nodejs-logging/issues/1127)
+
+### [9.5.6](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.5...v9.5.6) (2021-09-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency eventid to v2 ([#1144](https://www.github.com/googleapis/nodejs-logging/issues/1144)) ([2c4b4c1](https://www.github.com/googleapis/nodejs-logging/commit/2c4b4c1bca7859cd15fd611653d8b35983fe5915))
+
 ### [9.5.5](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.4...v9.5.5) (2021-08-16)
 
 
