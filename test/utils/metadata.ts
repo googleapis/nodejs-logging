@@ -414,7 +414,7 @@ describe('metadata', () => {
           ];
           const fakeAuth = {
             async getEnv() {
-              return GCPEnv.COMPUTE_ENGINE;
+              return GCPEnv.CLOUD_RUN;
             },
           };
 
@@ -606,7 +606,7 @@ describe('metadata', () => {
 
       const fakeAuth = {
         async getEnv() {
-          return GCPEnv.COMPUTE_ENGINE;
+          return GCPEnv.CLOUD_RUN;
         },
       };
 

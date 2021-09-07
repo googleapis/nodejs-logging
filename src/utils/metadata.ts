@@ -193,15 +193,10 @@ export async function getDefaultResource(auth: GoogleAuth) {
       return getGAEDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.CLOUD_FUNCTIONS:
       return getCloudFunctionDescriptor().catch(() => getGlobalDescriptor());
+    case GCPEnv.CLOUD_RUN:
+      return getCloudRunDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.COMPUTE_ENGINE:
-      //  Note: GCPEnv.COMPUTE_ENGINE returns `true` for Google Cloud Run
-      if (process.env.K_CONFIGURATION) {
-        return getCloudRunDescriptor().catch(() => getGlobalDescriptor());
-      } else {
-        // Test for compute engine should be done after all the rest -
-        // everything runs on top of compute engine.
-        return getGCEDescriptor().catch(() => getGlobalDescriptor());
-      }
+      return getGCEDescriptor().catch(() => getGlobalDescriptor());
     default:
       return getGlobalDescriptor();
   }
@@ -235,13 +230,11 @@ export async function detectServiceContext(
       return {
         service: process.env.HOSTNAME,
       };
+    case GCPEnv.CLOUD_RUN:
+      return {
+        service: process.env.K_SERVICE,
+      };
     case GCPEnv.COMPUTE_ENGINE:
-      // Google Cloud Run
-      if (process.env.K_CONFIGURATION) {
-        return {
-          service: process.env.K_SERVICE,
-        };
-      }
       return null;
     default:
       return null;
