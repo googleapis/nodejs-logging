@@ -4,6 +4,18 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+## [9.6.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.7...v9.6.0) (2021-09-08)
+
+
+### Features
+
+* turns on self-signed JWT feature flag ([#1140](https://www.github.com/googleapis/nodejs-logging/issues/1140)) ([dc15213](https://www.github.com/googleapis/nodejs-logging/commit/dc15213d0fa2c56c74bb1c22f38f105c7358dd38))
+
+
+### Bug Fixes
+
+* **build:** update branch to main ([#1152](https://www.github.com/googleapis/nodejs-logging/issues/1152)) ([9a2e91e](https://www.github.com/googleapis/nodejs-logging/commit/9a2e91ea5f78160c02949a8f2729219f8da7afcd))
+
 ### [9.5.7](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.6...v9.5.7) (2021-09-02)
 
 
