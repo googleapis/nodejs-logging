@@ -41,7 +41,7 @@ Before running the samples, make sure you've followed the steps outlined in
 
 ### Fluent
 
-View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/fluent.js).
+View the [source code](https://github.com/googleapis/nodejs-logging/blob/main/samples/fluent.js).
 
 [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/fluent.js,samples/README.md)
 
@@ -60,7 +60,7 @@ __Usage:__
 
 Log a message with httpRequest metadata.
 
-View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/http-request.js).
+View the [source code](https://github.com/googleapis/nodejs-logging/blob/main/samples/http-request.js).
 
 [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/http-request.js,samples/README.md)
 
@@ -77,7 +77,7 @@ __Usage:__
 
 ### Logs
 
-View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/logs.js).
+View the [source code](https://github.com/googleapis/nodejs-logging/blob/main/samples/logs.js).
 
 [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/logs.js,samples/README.md)
 
@@ -94,7 +94,7 @@ __Usage:__
 
 ### Quickstart
 
-View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/quickstart.js).
+View the [source code](https://github.com/googleapis/nodejs-logging/blob/main/samples/quickstart.js).
 
 [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/quickstart.js,samples/README.md)
 
@@ -111,7 +111,7 @@ __Usage:__
 
 ### Sinks
 
-View the [source code](https://github.com/googleapis/nodejs-logging/blob/master/samples/sinks.js).
+View the [source code](https://github.com/googleapis/nodejs-logging/blob/main/samples/sinks.js).
 
 [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/nodejs-logging&page=editor&open_in_editor=samples/sinks.js,samples/README.md)
 
