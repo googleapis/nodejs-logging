@@ -446,6 +446,10 @@ export class MetricsServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.getLogMetric(request);
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.get_log_metric.js</caption>
+   * region_tag:logging_get_log_metric_sample
+   *
    */
   getLogMetric(
     request?: protos.google.logging.v2.IGetLogMetricRequest,
@@ -536,6 +540,10 @@ export class MetricsServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.createLogMetric(request);
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.create_log_metric.js</caption>
+   * region_tag:logging_create_log_metric_sample
+   *
    */
   createLogMetric(
     request?: protos.google.logging.v2.ICreateLogMetricRequest,
@@ -627,6 +635,10 @@ export class MetricsServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.updateLogMetric(request);
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.update_log_metric.js</caption>
+   * region_tag:logging_update_log_metric_sample
+   *
    */
   updateLogMetric(
     request?: protos.google.logging.v2.IUpdateLogMetricRequest,
@@ -712,6 +724,10 @@ export class MetricsServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.deleteLogMetric(request);
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.delete_log_metric.js</caption>
+   * region_tag:logging_delete_log_metric_sample
+   *
    */
   deleteLogMetric(
     request?: protos.google.logging.v2.IDeleteLogMetricRequest,
@@ -810,6 +826,10 @@ export class MetricsServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.list_log_metrics.js</caption>
+   * region_tag:logging_list_log_metrics_sample
+   *
    */
   listLogMetrics(
     request?: protos.google.logging.v2.IListLogMetricsRequest,
@@ -879,6 +899,10 @@ export class MetricsServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.list_log_metrics.js</caption>
+   * region_tag:logging_list_log_metrics_sample
+   *
    */
   listLogMetricsStream(
     request?: protos.google.logging.v2.IListLogMetricsRequest,
@@ -892,7 +916,8 @@ export class MetricsServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogMetrics'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.createStream(
       this.innerApiCalls.listLogMetrics as gax.GaxCall,
@@ -935,6 +960,10 @@ export class MetricsServiceV2Client {
    * for await (const response of iterable) {
    *   // process response
    * }
+   *
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.list_log_metrics.js</caption>
+   * region_tag:logging_list_log_metrics_sample
+   *
    */
   listLogMetricsAsync(
     request?: protos.google.logging.v2.IListLogMetricsRequest,
@@ -949,7 +978,8 @@ export class MetricsServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogMetrics'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.asyncIterate(
       this.innerApiCalls['listLogMetrics'] as GaxCall,

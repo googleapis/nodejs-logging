@@ -487,6 +487,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.getBucket(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_bucket.js</caption>
+   * region_tag:logging_get_bucket_sample
+   *
    */
   getBucket(
     request?: protos.google.logging.v2.IGetBucketRequest,
@@ -583,6 +587,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.createBucket(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_bucket.js</caption>
+   * region_tag:logging_create_bucket_sample
+   *
    */
   createBucket(
     request?: protos.google.logging.v2.ICreateBucketRequest,
@@ -696,6 +704,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.updateBucket(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_bucket.js</caption>
+   * region_tag:logging_update_bucket_sample
+   *
    */
   updateBucket(
     request?: protos.google.logging.v2.IUpdateBucketRequest,
@@ -790,6 +802,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.deleteBucket(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.delete_bucket.js</caption>
+   * region_tag:logging_delete_bucket_sample
+   *
    */
   deleteBucket(
     request?: protos.google.logging.v2.IDeleteBucketRequest,
@@ -882,6 +898,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.undeleteBucket(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.undelete_bucket.js</caption>
+   * region_tag:logging_undelete_bucket_sample
+   *
    */
   undeleteBucket(
     request?: protos.google.logging.v2.IUndeleteBucketRequest,
@@ -970,6 +990,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.getView(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_view.js</caption>
+   * region_tag:logging_get_view_sample
+   *
    */
   getView(
     request?: protos.google.logging.v2.IGetViewRequest,
@@ -1063,6 +1087,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.createView(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_view.js</caption>
+   * region_tag:logging_create_view_sample
+   *
    */
   createView(
     request?: protos.google.logging.v2.ICreateViewRequest,
@@ -1163,6 +1191,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.updateView(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_view.js</caption>
+   * region_tag:logging_update_view_sample
+   *
    */
   updateView(
     request?: protos.google.logging.v2.IUpdateViewRequest,
@@ -1251,6 +1283,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.deleteView(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.delete_view.js</caption>
+   * region_tag:logging_delete_view_sample
+   *
    */
   deleteView(
     request?: protos.google.logging.v2.IDeleteViewRequest,
@@ -1341,6 +1377,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.getSink(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_sink.js</caption>
+   * region_tag:logging_get_sink_sample
+   *
    */
   getSink(
     request?: protos.google.logging.v2.IGetSinkRequest,
@@ -1449,6 +1489,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.createSink(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_sink.js</caption>
+   * region_tag:logging_create_sink_sample
+   *
    */
   createSink(
     request?: protos.google.logging.v2.ICreateSinkRequest,
@@ -1574,6 +1618,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.updateSink(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_sink.js</caption>
+   * region_tag:logging_update_sink_sample
+   *
    */
   updateSink(
     request?: protos.google.logging.v2.IUpdateSinkRequest,
@@ -1666,6 +1714,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.deleteSink(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.delete_sink.js</caption>
+   * region_tag:logging_delete_sink_sample
+   *
    */
   deleteSink(
     request?: protos.google.logging.v2.IDeleteSinkRequest,
@@ -1756,6 +1808,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.getExclusion(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_exclusion.js</caption>
+   * region_tag:logging_get_exclusion_sample
+   *
    */
   getExclusion(
     request?: protos.google.logging.v2.IGetExclusionRequest,
@@ -1851,6 +1907,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.createExclusion(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_exclusion.js</caption>
+   * region_tag:logging_create_exclusion_sample
+   *
    */
   createExclusion(
     request?: protos.google.logging.v2.ICreateExclusionRequest,
@@ -1952,6 +2012,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.updateExclusion(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_exclusion.js</caption>
+   * region_tag:logging_update_exclusion_sample
+   *
    */
   updateExclusion(
     request?: protos.google.logging.v2.IUpdateExclusionRequest,
@@ -2042,6 +2106,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.deleteExclusion(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.delete_exclusion.js</caption>
+   * region_tag:logging_delete_exclusion_sample
+   *
    */
   deleteExclusion(
     request?: protos.google.logging.v2.IDeleteExclusionRequest,
@@ -2144,6 +2212,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.getCmekSettings(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_cmek_settings.js</caption>
+   * region_tag:logging_get_cmek_settings_sample
+   *
    */
   getCmekSettings(
     request?: protos.google.logging.v2.IGetCmekSettingsRequest,
@@ -2266,6 +2338,10 @@ export class ConfigServiceV2Client {
    *   for more details and examples.
    * @example
    * const [response] = await client.updateCmekSettings(request);
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_cmek_settings.js</caption>
+   * region_tag:logging_update_cmek_settings_sample
+   *
    */
   updateCmekSettings(
     request?: protos.google.logging.v2.IUpdateCmekSettingsRequest,
@@ -2373,6 +2449,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_buckets.js</caption>
+   * region_tag:logging_list_buckets_sample
+   *
    */
   listBuckets(
     request?: protos.google.logging.v2.IListBucketsRequest,
@@ -2449,6 +2529,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_buckets.js</caption>
+   * region_tag:logging_list_buckets_sample
+   *
    */
   listBucketsStream(
     request?: protos.google.logging.v2.IListBucketsRequest,
@@ -2462,7 +2546,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listBuckets'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listBuckets.createStream(
       this.innerApiCalls.listBuckets as gax.GaxCall,
@@ -2512,6 +2597,10 @@ export class ConfigServiceV2Client {
    * for await (const response of iterable) {
    *   // process response
    * }
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_buckets.js</caption>
+   * region_tag:logging_list_buckets_sample
+   *
    */
   listBucketsAsync(
     request?: protos.google.logging.v2.IListBucketsRequest,
@@ -2526,7 +2615,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listBuckets'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listBuckets.asyncIterate(
       this.innerApiCalls['listBuckets'] as GaxCall,
@@ -2591,6 +2681,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_views.js</caption>
+   * region_tag:logging_list_views_sample
+   *
    */
   listViews(
     request?: protos.google.logging.v2.IListViewsRequest,
@@ -2660,6 +2754,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_views.js</caption>
+   * region_tag:logging_list_views_sample
+   *
    */
   listViewsStream(
     request?: protos.google.logging.v2.IListViewsRequest,
@@ -2673,7 +2771,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listViews'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listViews.createStream(
       this.innerApiCalls.listViews as gax.GaxCall,
@@ -2716,6 +2815,10 @@ export class ConfigServiceV2Client {
    * for await (const response of iterable) {
    *   // process response
    * }
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_views.js</caption>
+   * region_tag:logging_list_views_sample
+   *
    */
   listViewsAsync(
     request?: protos.google.logging.v2.IListViewsRequest,
@@ -2730,7 +2833,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listViews'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listViews.asyncIterate(
       this.innerApiCalls['listViews'] as GaxCall,
@@ -2798,6 +2902,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_sinks.js</caption>
+   * region_tag:logging_list_sinks_sample
+   *
    */
   listSinks(
     request?: protos.google.logging.v2.IListSinksRequest,
@@ -2870,6 +2978,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_sinks.js</caption>
+   * region_tag:logging_list_sinks_sample
+   *
    */
   listSinksStream(
     request?: protos.google.logging.v2.IListSinksRequest,
@@ -2883,7 +2995,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listSinks'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listSinks.createStream(
       this.innerApiCalls.listSinks as gax.GaxCall,
@@ -2929,6 +3042,10 @@ export class ConfigServiceV2Client {
    * for await (const response of iterable) {
    *   // process response
    * }
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_sinks.js</caption>
+   * region_tag:logging_list_sinks_sample
+   *
    */
   listSinksAsync(
     request?: protos.google.logging.v2.IListSinksRequest,
@@ -2943,7 +3060,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listSinks'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listSinks.asyncIterate(
       this.innerApiCalls['listSinks'] as GaxCall,
@@ -3011,6 +3129,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_exclusions.js</caption>
+   * region_tag:logging_list_exclusions_sample
+   *
    */
   listExclusions(
     request?: protos.google.logging.v2.IListExclusionsRequest,
@@ -3083,6 +3205,10 @@ export class ConfigServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_exclusions.js</caption>
+   * region_tag:logging_list_exclusions_sample
+   *
    */
   listExclusionsStream(
     request?: protos.google.logging.v2.IListExclusionsRequest,
@@ -3096,7 +3222,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listExclusions'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listExclusions.createStream(
       this.innerApiCalls.listExclusions as gax.GaxCall,
@@ -3142,6 +3269,10 @@ export class ConfigServiceV2Client {
    * for await (const response of iterable) {
    *   // process response
    * }
+   *
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_exclusions.js</caption>
+   * region_tag:logging_list_exclusions_sample
+   *
    */
   listExclusionsAsync(
     request?: protos.google.logging.v2.IListExclusionsRequest,
@@ -3156,7 +3287,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listExclusions'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listExclusions.asyncIterate(
       this.innerApiCalls['listExclusions'] as GaxCall,
