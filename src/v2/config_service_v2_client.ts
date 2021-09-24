@@ -2462,7 +2462,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listBuckets'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listBuckets.createStream(
       this.innerApiCalls.listBuckets as gax.GaxCall,
@@ -2526,7 +2527,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listBuckets'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listBuckets.asyncIterate(
       this.innerApiCalls['listBuckets'] as GaxCall,
@@ -2673,7 +2675,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listViews'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listViews.createStream(
       this.innerApiCalls.listViews as gax.GaxCall,
@@ -2730,7 +2733,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listViews'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listViews.asyncIterate(
       this.innerApiCalls['listViews'] as GaxCall,
@@ -2883,7 +2887,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listSinks'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listSinks.createStream(
       this.innerApiCalls.listSinks as gax.GaxCall,
@@ -2943,7 +2948,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listSinks'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listSinks.asyncIterate(
       this.innerApiCalls['listSinks'] as GaxCall,
@@ -3096,7 +3102,8 @@ export class ConfigServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listExclusions'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listExclusions.createStream(
       this.innerApiCalls.listExclusions as gax.GaxCall,
@@ -3156,7 +3163,8 @@ export class ConfigServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listExclusions'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listExclusions.asyncIterate(
       this.innerApiCalls['listExclusions'] as GaxCall,

@@ -898,7 +898,8 @@ export class LoggingServiceV2Client {
   ): Transform {
     request = request || {};
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogEntries'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogEntries.createStream(
       this.innerApiCalls.listLogEntries as gax.GaxCall,
@@ -977,7 +978,8 @@ export class LoggingServiceV2Client {
     request = request || {};
     options = options || {};
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogEntries'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogEntries.asyncIterate(
       this.innerApiCalls['listLogEntries'] as GaxCall,
@@ -1116,7 +1118,9 @@ export class LoggingServiceV2Client {
   ): Transform {
     request = request || {};
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings =
+      this._defaults['listMonitoredResourceDescriptors'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listMonitoredResourceDescriptors.createStream(
       this.innerApiCalls.listMonitoredResourceDescriptors as gax.GaxCall,
@@ -1163,7 +1167,9 @@ export class LoggingServiceV2Client {
     request = request || {};
     options = options || {};
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings =
+      this._defaults['listMonitoredResourceDescriptors'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listMonitoredResourceDescriptors.asyncIterate(
       this.innerApiCalls['listMonitoredResourceDescriptors'] as GaxCall,
@@ -1341,7 +1347,8 @@ export class LoggingServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogs'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogs.createStream(
       this.innerApiCalls.listLogs as gax.GaxCall,
@@ -1413,7 +1420,8 @@ export class LoggingServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogs'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogs.asyncIterate(
       this.innerApiCalls['listLogs'] as GaxCall,

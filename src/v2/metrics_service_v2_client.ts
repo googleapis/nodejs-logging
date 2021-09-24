@@ -892,7 +892,8 @@ export class MetricsServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogMetrics'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.createStream(
       this.innerApiCalls.listLogMetrics as gax.GaxCall,
@@ -949,7 +950,8 @@ export class MetricsServiceV2Client {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogMetrics'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.asyncIterate(
       this.innerApiCalls['listLogMetrics'] as GaxCall,
