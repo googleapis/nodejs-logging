@@ -118,7 +118,14 @@ describe('Logging', () => {
             }
             return getDateFromGeneratedName(name) < oneHourAgo;
           })
-          .map(o => o.delete())
+          .map(o => {
+            const name = o.name || o.id;
+            try {
+              o.delete();
+            } catch (err) {
+              console.warn(`failed to delete "${name}": ${err}`);
+            }
+          })
       );
     }
   });
