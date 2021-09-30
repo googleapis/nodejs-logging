@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.6.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.0...v9.6.1) (2021-09-30)
+
+
+### Bug Fixes
+
+* log a warning instead of failing test ([#1161](https://www.github.com/googleapis/nodejs-logging/issues/1161)) ([689ffb8](https://www.github.com/googleapis/nodejs-logging/commit/689ffb8a7ab76104ddd4739cba484db0f3471222))
+
 ## [9.6.0](https://www.github.com/googleapis/nodejs-logging/compare/v9.5.7...v9.6.0) (2021-09-08)
 
 
