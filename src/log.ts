@@ -867,23 +867,18 @@ class Log implements LogSeverityFunctions {
     opts?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     const options = opts ? (opts as WriteOptions) : {};
-    let decoratedEntries: EntryJson[];
     // Extract projectId & resource from Logging - inject & memoize if not.
     await this.logging.setProjectId();
     this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     const resource = await this.getOrSetResource(options);
     // Extract & format additional context from individual entries.
-    try {
-      decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
-    } catch (err) {
-      // Ignore errors (the API will speak up if it has an issue).
-    }
-    this.truncateEntries(decoratedEntries!);
+    const decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
+    this.truncateEntries(decoratedEntries);
     // Clobber `labels` and `resource` fields with WriteOptions from the user.
     const reqOpts = extend(
       {
         logName: this.formattedName_,
-        entries: decoratedEntries!,
+        entries: decoratedEntries,
         resource,
       },
       options
