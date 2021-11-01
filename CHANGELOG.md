@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.6.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.1...v9.6.2) (2021-11-01)
+
+
+### Bug Fixes
+
+* Cannot read property 'forEach' of undefined ([#1173](https://www.github.com/googleapis/nodejs-logging/issues/1173)) ([abf1ab0](https://www.github.com/googleapis/nodejs-logging/commit/abf1ab03483db8bf0c018524c348260a06193a4c))
+
 ### [9.6.1](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.0...v9.6.1) (2021-09-30)
 
 
