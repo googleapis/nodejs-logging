@@ -88,9 +88,11 @@ export type DeleteCallback = ApiResponseCallback;
  * @param {number} [options.maxEntrySize] A max entry size
  *
  * @example
+ * ```
  * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
  * const log = logging.log('syslog');
+ * ```
  */
 class Log implements LogSeverityFunctions {
   formattedName_: string;
@@ -130,6 +132,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -146,6 +149,7 @@ class Log implements LogSeverityFunctions {
    * log.alert(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   alert(
     entry: Entry | Entry[],
@@ -178,6 +182,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -194,6 +199,7 @@ class Log implements LogSeverityFunctions {
    * log.critical(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   critical(
     entry: Entry | Entry[],
@@ -223,6 +229,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -239,6 +246,7 @@ class Log implements LogSeverityFunctions {
    * log.debug(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   debug(
     entry: Entry | Entry[],
@@ -273,6 +281,7 @@ class Log implements LogSeverityFunctions {
    * @returns {Promise<DeleteLogResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -290,6 +299,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/logs.js</caption>
    * region_tag:logging_delete_log
    * Another example:
@@ -325,6 +335,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -341,6 +352,7 @@ class Log implements LogSeverityFunctions {
    * log.emergency(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   emergency(
     entry: Entry | Entry[],
@@ -377,6 +389,7 @@ class Log implements LogSeverityFunctions {
    * @returns {Entry}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -409,6 +422,7 @@ class Log implements LogSeverityFunctions {
    * //     delegate: 'my_username'
    * //   }
    * // }
+   * ```
    */
   entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
@@ -445,6 +459,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -461,6 +476,7 @@ class Log implements LogSeverityFunctions {
    * log.error(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   error(
     entry: Entry | Entry[],
@@ -486,6 +502,7 @@ class Log implements LogSeverityFunctions {
    * @returns {Promise<GetEntriesResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -516,6 +533,7 @@ class Log implements LogSeverityFunctions {
    * log.getEntries().then(data => {
    *   const entries = data[0];
    * });
+   * ```
    */
   async getEntries(
     opts?: GetEntriesRequest | GetEntriesCallback
@@ -542,6 +560,7 @@ class Log implements LogSeverityFunctions {
    *     instances.
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -564,6 +583,7 @@ class Log implements LogSeverityFunctions {
    *   .on('data', function(entry) {
    *     this.end();
    *   });
+   * ```
    */
   getEntriesStream(options: GetEntriesRequest) {
     options = extend(
@@ -586,6 +606,7 @@ class Log implements LogSeverityFunctions {
    * containing an array of {@link Entry} instances.
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -608,6 +629,7 @@ class Log implements LogSeverityFunctions {
    *   .on('data', function(entry) {
    *     this.end();
    *   });
+   * ```
    */
   tailEntries(options?: TailEntriesRequest) {
     options = extend(
@@ -637,6 +659,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -653,6 +676,7 @@ class Log implements LogSeverityFunctions {
    * log.info(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   info(
     entry: Entry | Entry[],
@@ -682,6 +706,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -698,6 +723,7 @@ class Log implements LogSeverityFunctions {
    * log.notice(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   notice(
     entry: Entry | Entry[],
@@ -727,6 +753,7 @@ class Log implements LogSeverityFunctions {
    * @param {LogWriteCallback} [callback] Callback function.
    * @returns {Promise<LogWriteResponse>}
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
@@ -743,6 +770,7 @@ class Log implements LogSeverityFunctions {
    * log.warning(entry).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   warning(
     entry: Entry | Entry[],
@@ -801,6 +829,7 @@ class Log implements LogSeverityFunctions {
    * @returns {Promise<LogWriteResponse>}
    *
    * @example
+   * ```
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
@@ -854,6 +883,7 @@ class Log implements LogSeverityFunctions {
    *   const apiResponse = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/logs.js</caption>
    * region_tag:logging_write_log_entry
    * Another example:

@@ -121,6 +121,7 @@ export interface ToJsonOptions {
  *     Any other types are stringified with `String(value)`.
  *
  * @example
+ * ```
  * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
  * const syslog = logging.log('syslog');
@@ -154,6 +155,7 @@ export interface ToJsonOptions {
  *     // entries[0].data = The data value from the log entry.
  *   }
  * });
+ * ```
  */
 class Entry {
   metadata: LogEntry;

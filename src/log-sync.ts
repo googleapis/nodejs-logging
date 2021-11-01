@@ -50,9 +50,11 @@ import {
  *     Default: process.stdout.
  *
  * @example
+ * ```
  * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
  * const log = logging.logSync('mylog');
+ * ```
  */
 class LogSync implements LogSeverityFunctions {
   formattedName_: string;
@@ -82,6 +84,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -91,6 +94,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.alert(entry);
+   * ```
    */
   alert(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -108,6 +112,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -117,6 +122,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.critical(entry);
+   * ```
    */
   critical(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -134,6 +140,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -143,6 +150,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.debug(entry);
+   * ```
    */
   debug(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -160,6 +168,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -169,6 +178,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.emergency(entry);
+   * ```
    */
   emergency(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -196,6 +206,7 @@ class LogSync implements LogSeverityFunctions {
    * @returns {Entry}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -213,6 +224,7 @@ class LogSync implements LogSeverityFunctions {
    * const entry = log.entry(metadata, {
    *   delegate: 'my_username'
    * });
+   * ```
    */
   entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
@@ -240,6 +252,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -249,6 +262,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.error(entry);
+   * ```
    */
   error(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -266,6 +280,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -275,6 +290,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.info(entry);
+   * ```
    */
   info(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -292,6 +308,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -301,6 +318,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.notice(entry);
+   * ```
    */
   notice(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -318,6 +336,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.logSync('my-log');
@@ -327,6 +346,7 @@ class LogSync implements LogSeverityFunctions {
    * });
    *
    * log.warning(entry);
+   * ```
    */
   warning(entry: Entry | Entry[], options?: WriteOptions) {
     this.write(
@@ -342,6 +362,7 @@ class LogSync implements LogSeverityFunctions {
    * @param {?WriteOptions} [options] Write options
    *
    * @example
+   * ```
    * const entry = log.entry('gce_instance', {
    *   instance: 'my_instance'
    * });
@@ -379,6 +400,7 @@ class LogSync implements LogSeverityFunctions {
    *
    * log.write(entries);
    * });
+   * ```
    */
   write(entry: Entry | Entry[], opts?: WriteOptions) {
     const options = opts ? (opts as WriteOptions) : {};

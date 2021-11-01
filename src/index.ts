@@ -234,17 +234,23 @@ export interface ServiceContext {
  *
  * @param {ClientConfig} [options] Configuration options.
  *
- * @example <caption>Import the client library</caption>
+ * @example Import the client library
+ * ```
  * const {Logging} = require('@google-cloud/logging');
  *
- * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
+ * ```
+ * @example Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:
+ * ```
  * const logging = new Logging();
  *
- * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicitcredentials</a>:</caption>
+ * ```
+ * @example Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicitcredentials</a>:
+ * ```
  * const logging = new Logging({ projectId:
  *  'your-project-id', keyFilename: '/path/to/keyfile.json'
  * });
  *
+ * ```
  * @example <caption>include:samples/quickstart.js</caption>
  * region_tag:logging_quickstart
  * Full quickstart example:
@@ -343,6 +349,7 @@ class Logging {
    * @see Sink#create
    *
    * @example
+   * ```
    * const {Storage} = require('@google-cloud/storage');
    * const storage = new Storage({
    *   projectId: 'grape-spaceship-123'
@@ -369,6 +376,7 @@ class Logging {
    *   const apiResponse = data[1];
    * });
    *
+   * ```
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_create_sink
    * Another example:
@@ -431,6 +439,7 @@ class Logging {
    * @returns {Entry}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -459,6 +468,7 @@ class Logging {
    * //     delegate: 'my_username'
    * //   }
    * // }
+   * ```
    */
   entry(resource?: LogEntry, data?: {} | string) {
     return new Entry(resource, data);
@@ -513,6 +523,7 @@ class Logging {
    * @returns {Promise<GetEntriesResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -543,6 +554,7 @@ class Logging {
    *   const entries = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/logs.js</caption>
    * region_tag:logging_list_log_entries
    * Another example:
@@ -601,6 +613,7 @@ class Logging {
    *     instances.
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -622,6 +635,7 @@ class Logging {
    *   .on('data', function(entry) {
    *     this.end();
    *   });
+   * ```
    */
   getEntriesStream(options: GetEntriesRequest = {}) {
     let requestStream: Duplex;
@@ -735,6 +749,7 @@ class Logging {
    * containing an array of {@link Entry} instances.
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -756,6 +771,7 @@ class Logging {
    *   .on('data', function(entry) {
    *     this.end();
    *   });
+   * ```
    */
   tailEntries(options: TailEntriesRequest = {}) {
     const userStream = streamEvents<Duplex>(pumpify.obj());
@@ -866,6 +882,7 @@ class Logging {
    * @returns {Promise<GetLogsResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -895,6 +912,7 @@ class Logging {
    *   const entries = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/logs.js</caption>
    * region_tag:logging_list_logs
    * Another example:
@@ -932,6 +950,7 @@ class Logging {
    *     instances.
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -952,6 +971,7 @@ class Logging {
    *   .on('data', log => {
    *     this.end();
    *   });
+   * ```
    */
   getLogsStream(options: GetLogsRequest = {}) {
     options = options || {};
@@ -1051,6 +1071,7 @@ class Logging {
    * @returns {Promise<GetSinksResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -1065,6 +1086,7 @@ class Logging {
    *   const sinks = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_list_sinks
    * Another example:
@@ -1107,6 +1129,7 @@ class Logging {
    *     instances.
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -1127,6 +1150,7 @@ class Logging {
    *   .on('data', function(sink) {
    *     this.end();
    *   });
+   * ```
    */
   getSinksStream(options: GetSinksRequest) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -1209,9 +1233,11 @@ class Logging {
    * @returns {Log}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const log = logging.log('my-log');
+   * ```
    */
   log(name: string, options?: LogOptions) {
     return new Log(this, name, options);
@@ -1225,6 +1251,7 @@ class Logging {
    * @returns {LogSync}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    *
@@ -1234,6 +1261,7 @@ class Logging {
    *
    * // Default transport writes to process.stdout
    * const log = logging.logSync('my-log');
+   * ```
    */
   logSync(name: string, transport?: Writable) {
     return new LogSync(this, name, transport);
@@ -1248,9 +1276,11 @@ class Logging {
    * @returns {Sink}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
+   * ```
    */
   sink(name: string) {
     return new Sink(this, name);
@@ -1515,18 +1545,26 @@ export {Sink};
  * @module {Constructor} @google-cloud/logging
  * @alias nodejs-logging
  *
- * @example <caption>Install the client library with <a href="https://www.npmjs.com/">npm</a>:</caption>
+ * @example Install the client library with <a href="https://www.npmjs.com/">npm</a>:
+ * ```
  * npm install --save @google-cloud/logging
  *
- * @example <caption>Import the client library</caption>
+ * ```
+ * @example Import the client library
+ * ```
  * const {Logging} = require('@google-cloud/logging');
  *
- * @example <caption>Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:</caption>
+ * ```
+ * @example Create a client that uses <a href="https://cloud.google.com/docs/authentication/production#providing_credentials_to_your_application">Application Default Credentials (ADC)</a>:
+ * ```
  * const logging = new Logging();
  *
- * @example <caption>Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:</caption>
+ * ```
+ * @example Create a client with <a href="https://cloud.google.com/docs/authentication/production#obtaining_and_providing_service_account_credentials_manually">explicit credentials</a>:
+ * ```
  * const logging = new Logging({ projectId: 'your-project-id', keyFilename: '/path/to/keyfile.json'});
  *
+ * ```
  * @example <caption>include:samples/quickstart.js</caption>
  * region_tag:logging_quickstart
  * Full quickstart example:

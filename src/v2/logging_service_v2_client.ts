@@ -497,7 +497,9 @@ export class LoggingServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.deleteLog(request);
+   * ```
    */
   deleteLog(
     request?: protos.google.logging.v2.IDeleteLogRequest,
@@ -651,7 +653,9 @@ export class LoggingServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.writeLogEntries(request);
+   * ```
    */
   writeLogEntries(
     request?: protos.google.logging.v2.IWriteLogEntriesRequest,
@@ -701,11 +705,13 @@ export class LoggingServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#bi-directional-streaming)
    *   for more details and examples.
    * @example
+   * ```
    * const stream = client.tailLogEntries();
    * stream.on('data', (response) => { ... });
    * stream.on('end', () => { ... });
    * stream.write(request);
    * stream.end();
+   * ```
    */
   tailLogEntries(options?: CallOptions): gax.CancellableStream {
     this.initialize();
@@ -965,10 +971,12 @@ export class LoggingServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listLogEntriesAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listLogEntriesAsync(
     request?: protos.google.logging.v2.IListLogEntriesRequest,
@@ -1151,10 +1159,12 @@ export class LoggingServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listMonitoredResourceDescriptorsAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listMonitoredResourceDescriptorsAsync(
     request?: protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest,
@@ -1395,10 +1405,12 @@ export class LoggingServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listLogsAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listLogsAsync(
     request?: protos.google.logging.v2.IListLogsRequest,

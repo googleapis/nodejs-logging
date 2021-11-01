@@ -486,7 +486,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.getBucket(request);
+   * ```
    */
   getBucket(
     request?: protos.google.logging.v2.IGetBucketRequest,
@@ -582,7 +584,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.createBucket(request);
+   * ```
    */
   createBucket(
     request?: protos.google.logging.v2.ICreateBucketRequest,
@@ -695,7 +699,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.updateBucket(request);
+   * ```
    */
   updateBucket(
     request?: protos.google.logging.v2.IUpdateBucketRequest,
@@ -789,7 +795,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.deleteBucket(request);
+   * ```
    */
   deleteBucket(
     request?: protos.google.logging.v2.IDeleteBucketRequest,
@@ -881,7 +889,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.undeleteBucket(request);
+   * ```
    */
   undeleteBucket(
     request?: protos.google.logging.v2.IUndeleteBucketRequest,
@@ -969,7 +979,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.getView(request);
+   * ```
    */
   getView(
     request?: protos.google.logging.v2.IGetViewRequest,
@@ -1062,7 +1074,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.createView(request);
+   * ```
    */
   createView(
     request?: protos.google.logging.v2.ICreateViewRequest,
@@ -1162,7 +1176,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.updateView(request);
+   * ```
    */
   updateView(
     request?: protos.google.logging.v2.IUpdateViewRequest,
@@ -1250,7 +1266,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.deleteView(request);
+   * ```
    */
   deleteView(
     request?: protos.google.logging.v2.IDeleteViewRequest,
@@ -1340,7 +1358,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.getSink(request);
+   * ```
    */
   getSink(
     request?: protos.google.logging.v2.IGetSinkRequest,
@@ -1448,7 +1468,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.createSink(request);
+   * ```
    */
   createSink(
     request?: protos.google.logging.v2.ICreateSinkRequest,
@@ -1573,7 +1595,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.updateSink(request);
+   * ```
    */
   updateSink(
     request?: protos.google.logging.v2.IUpdateSinkRequest,
@@ -1665,7 +1689,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.deleteSink(request);
+   * ```
    */
   deleteSink(
     request?: protos.google.logging.v2.IDeleteSinkRequest,
@@ -1755,7 +1781,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.getExclusion(request);
+   * ```
    */
   getExclusion(
     request?: protos.google.logging.v2.IGetExclusionRequest,
@@ -1850,7 +1878,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.createExclusion(request);
+   * ```
    */
   createExclusion(
     request?: protos.google.logging.v2.ICreateExclusionRequest,
@@ -1951,7 +1981,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.updateExclusion(request);
+   * ```
    */
   updateExclusion(
     request?: protos.google.logging.v2.IUpdateExclusionRequest,
@@ -2041,7 +2073,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.deleteExclusion(request);
+   * ```
    */
   deleteExclusion(
     request?: protos.google.logging.v2.IDeleteExclusionRequest,
@@ -2143,7 +2177,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.getCmekSettings(request);
+   * ```
    */
   getCmekSettings(
     request?: protos.google.logging.v2.IGetCmekSettingsRequest,
@@ -2265,7 +2301,9 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.updateCmekSettings(request);
+   * ```
    */
   updateCmekSettings(
     request?: protos.google.logging.v2.IUpdateCmekSettingsRequest,
@@ -2508,10 +2546,12 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listBucketsAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listBucketsAsync(
     request?: protos.google.logging.v2.IListBucketsRequest,
@@ -2712,10 +2752,12 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listViewsAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listViewsAsync(
     request?: protos.google.logging.v2.IListViewsRequest,
@@ -2925,10 +2967,12 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listSinksAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listSinksAsync(
     request?: protos.google.logging.v2.IListSinksRequest,
@@ -3138,10 +3182,12 @@ export class ConfigServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listExclusionsAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listExclusionsAsync(
     request?: protos.google.logging.v2.IListExclusionsRequest,
