@@ -445,7 +445,9 @@ export class MetricsServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.getLogMetric(request);
+   * ```
    */
   getLogMetric(
     request?: protos.google.logging.v2.IGetLogMetricRequest,
@@ -535,7 +537,9 @@ export class MetricsServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.createLogMetric(request);
+   * ```
    */
   createLogMetric(
     request?: protos.google.logging.v2.ICreateLogMetricRequest,
@@ -626,7 +630,9 @@ export class MetricsServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.updateLogMetric(request);
+   * ```
    */
   updateLogMetric(
     request?: protos.google.logging.v2.IUpdateLogMetricRequest,
@@ -711,7 +717,9 @@ export class MetricsServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
    * @example
+   * ```
    * const [response] = await client.deleteLogMetric(request);
+   * ```
    */
   deleteLogMetric(
     request?: protos.google.logging.v2.IDeleteLogMetricRequest,
@@ -931,10 +939,12 @@ export class MetricsServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    * @example
+   * ```
    * const iterable = client.listLogMetricsAsync(request);
    * for await (const response of iterable) {
    *   // process response
    * }
+   * ```
    */
   listLogMetricsAsync(
     request?: protos.google.logging.v2.IListLogMetricsRequest,

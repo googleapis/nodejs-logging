@@ -54,9 +54,11 @@ export interface SetSinkMetadata extends LogSink {
  * @param {string} name Name of the sink.
  *
  * @example
+ * ```
  * const {Logging} = require('@google-cloud/logging');
  * const logging = new Logging();
  * const sink = logging.sink('my-sink');
+ * ```
  */
 class Sink {
   logging: Logging;
@@ -85,6 +87,7 @@ class Sink {
    * @see Logging#createSink
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
@@ -109,6 +112,7 @@ class Sink {
    *   const apiResponse = data[1];
    * });
    *
+   * ```
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_create_sink
    * Another example:
@@ -140,6 +144,7 @@ class Sink {
    * @returns {Promise<DeleteSinkResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
@@ -157,6 +162,7 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_delete_sink
    * Another example:
@@ -201,6 +207,7 @@ class Sink {
    * @returns {Promise<SinkMetadataResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
@@ -214,6 +221,7 @@ class Sink {
    *   const metadata = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_get_sink
    * Another example:
@@ -257,6 +265,7 @@ class Sink {
    * @returns {Promise<SetSinkFilterResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
@@ -271,6 +280,7 @@ class Sink {
    * sink.setFilter(filter).then(data => {
    *   const apiResponse = data[0];
    * });
+   * ```
    */
   setFilter(filter: string): Promise<SinkMetadataResponse> {
     return this.setMetadata({
@@ -310,6 +320,7 @@ class Sink {
    * @returns {Promise<SetSinkMetadataResponse>}
    *
    * @example
+   * ```
    * const {Logging} = require('@google-cloud/logging');
    * const logging = new Logging();
    * const sink = logging.sink('my-sink');
@@ -327,6 +338,7 @@ class Sink {
    *   const apiResponse = data[0];
    * });
    *
+   * ```
    * @example <caption>include:samples/sinks.js</caption>
    * region_tag:logging_update_sink
    * Another example:

@@ -54,6 +54,7 @@ export class ObjectToStructConverter {
    * @return {object} - The encoded value.
    *
    * @example
+   * ```
    * ObjectToStructConverter.convert({
    *   aString: 'Hi'
    * });
@@ -64,6 +65,7 @@ export class ObjectToStructConverter {
    * //     }
    * //   }
    * // }
+   * ```
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   convert(obj: any) {
@@ -94,10 +96,12 @@ export class ObjectToStructConverter {
    * @return {*} - The encoded value.
    *
    * @example
+   * ```
    * ObjectToStructConverter.encodeValue('Hi');
    * // {
    * //   stringValue: 'Hello!'
    * // }
+   * ```
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   encodeValue_(value: {} | null): any {
@@ -169,6 +173,7 @@ export class ObjectToStructConverter {
  * @return {object} - The simplified object.
  *
  * @example
+ * ```
  * GrpcService.structToObj_({
  *   fields: {
  *     name: {
@@ -180,6 +185,7 @@ export class ObjectToStructConverter {
  * // {
  * //   name: 'Stephen'
  * // }
+ * ```
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function structToObj(struct: any) {
