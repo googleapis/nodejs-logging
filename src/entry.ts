@@ -317,7 +317,7 @@ class Entry {
    * @private
    *
    * @param {object} entry An API representation of an entry. See a
-   *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
+   *     {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry| LogEntry}.
    * @returns {Entry}
    */
   static fromApiResponse_(entry: google.logging.v2.LogEntry) {
