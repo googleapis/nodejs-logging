@@ -130,11 +130,11 @@ class Log implements LogSeverityFunctions {
     // Prepend all custom fields to be truncated to a list with defaults, thus
     // custom fields will be truncated first
     if (options.jsonFieldsToTruncate !== undefined) {
-      const filteredSet = options.jsonFieldsToTruncate.filter(
+      const filteredList = options.jsonFieldsToTruncate.filter(
         str => !this.jsonFieldsToTruncate.includes(str)
       );
-      const fieldsToTruncate = new Set(filteredSet);
-      this.jsonFieldsToTruncate = Array.from(fieldsToTruncate).concat(
+      const uniqueSet = new Set(filteredList);
+      this.jsonFieldsToTruncate = Array.from(uniqueSet).concat(
         this.jsonFieldsToTruncate
       );
     }
