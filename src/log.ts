@@ -59,6 +59,7 @@ export interface TailEntriesRequest {
 export interface LogOptions {
   removeCircular?: boolean;
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
+  jsonFieldsToTruncate?: string[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,6 +87,8 @@ export type DeleteCallback = ApiResponseCallback;
  * @param {boolean} [options.removeCircular] Replace circular references in
  *     logged objects with a string value, `[Circular]`. (Default: false)
  * @param {number} [options.maxEntrySize] A max entry size
+ * @param {string[]} [options.jsonFieldsToTruncate] A list of JSON properties at the given full path to be truncated.
+ *     Received values will be prepended to predefined list in the order received and duplicates discarded.
  *
  * @example
  * ```
@@ -100,6 +103,7 @@ class Log implements LogSeverityFunctions {
   maxEntrySize?: number;
   logging: Logging;
   name: string;
+  jsonFieldsToTruncate: string[];
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
@@ -112,6 +116,28 @@ class Log implements LogSeverityFunctions {
      * @type {string}
      */
     this.name = this.formattedName_.split('/').pop()!;
+    this.jsonFieldsToTruncate = [
+      // Winston:
+      'jsonPayload.fields.metadata.structValue.fields.stack.stringValue',
+      // Bunyan:
+      'jsonPayload.fields.msg.stringValue',
+      'jsonPayload.fields.err.structValue.fields.stack.stringValue',
+      'jsonPayload.fields.err.structValue.fields.message.stringValue',
+      // All:
+      'jsonPayload.fields.message.stringValue',
+    ];
+
+    // Prepend all custom fields to be truncated to a list with defaults, thus
+    // custom fields will be truncated first
+    if (options.jsonFieldsToTruncate !== undefined) {
+      const filteredSet = options.jsonFieldsToTruncate.filter(
+        str => !this.jsonFieldsToTruncate.includes(str)
+      );
+      const fieldsToTruncate = new Set(filteredSet);
+      this.jsonFieldsToTruncate = Array.from(fieldsToTruncate).concat(
+        this.jsonFieldsToTruncate
+      );
+    }
   }
 
   alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
@@ -988,17 +1014,7 @@ class Log implements LogSeverityFunctions {
           Math.max(entry.textPayload.length - delta, 0)
         );
       } else {
-        const fieldsToTruncate = [
-          // Winston:
-          'jsonPayload.fields.metadata.structValue.fields.stack.stringValue',
-          // Bunyan:
-          'jsonPayload.fields.msg.stringValue',
-          'jsonPayload.fields.err.structValue.fields.stack.stringValue',
-          'jsonPayload.fields.err.structValue.fields.message.stringValue',
-          // All:
-          'jsonPayload.fields.message.stringValue',
-        ];
-        for (const field of fieldsToTruncate) {
+        for (const field of this.jsonFieldsToTruncate) {
           const msg: string = dotProp.get(entry, field, '');
           if (msg !== '') {
             dotProp.set(
