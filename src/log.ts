@@ -128,10 +128,13 @@ class Log implements LogSeverityFunctions {
     ];
 
     // Prepend all custom fields to be truncated to a list with defaults, thus
-    // custom fields will be truncated first
+    // custom fields will be truncated first. Make sure to filter out fields
+    // which are not in EntryJson.jsonPayload
     if (options.jsonFieldsToTruncate !== undefined) {
       const filteredList = options.jsonFieldsToTruncate.filter(
-        str => !this.jsonFieldsToTruncate.includes(str)
+        str =>
+          !this.jsonFieldsToTruncate.includes(str) &&
+          str.startsWith('jsonPayload')
       );
       const uniqueSet = new Set(filteredList);
       this.jsonFieldsToTruncate = Array.from(uniqueSet).concat(
@@ -1023,6 +1026,9 @@ class Log implements LogSeverityFunctions {
               msg.slice(0, Math.max(msg.length - delta, 0))
             );
             delta -= Math.min(msg.length, delta);
+            if (delta <= 0) {
+              break;
+            }
           }
         }
       }

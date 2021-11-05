@@ -33,6 +33,7 @@ describe('Log', () => {
   const LOG_NAME = 'escaping/required/for/this/log-name';
   const TRUNCATE_FIELD =
     'jsonPayload.fields.metadata.structValue.fields.custom.stringValue';
+  const INVALID_TRUNCATE_FIELD = 'insertId';
   const LOG_NAME_ENCODED = encodeURIComponent(LOG_NAME);
   const LOG_NAME_FORMATTED = [
     'projects',
@@ -99,9 +100,14 @@ describe('Log', () => {
 
     // Add some custom defined field to truncate which can be tested later - the idea is to
     // see that constructor works properly and provides correct order of fields to be truncated.
-    // Also append same value twice to validate that duplicates should be discarded
+    // Also append same value twice to make sure that duplicates should be discarded.
+    // Adding illegal field to be truncated should be discared as well
     const options: LogOptions = {
-      jsonFieldsToTruncate: [TRUNCATE_FIELD, TRUNCATE_FIELD],
+      jsonFieldsToTruncate: [
+        INVALID_TRUNCATE_FIELD,
+        TRUNCATE_FIELD,
+        TRUNCATE_FIELD,
+      ],
     };
     if (maxEntrySize) {
       options.maxEntrySize = maxEntrySize;
@@ -641,13 +647,17 @@ describe('Log', () => {
       assert.ok(message.length < maxSize + entryMetaMaxLength);
     });
 
-    it('should not contin duplicate fields to be truncated and defaults should remain intact', async () => {
+    it('should not contin duplicate or illegal fields to be truncated and defaults should present', async () => {
       assert.ok(log.jsonFieldsToTruncate.length > 1);
       assert.ok(log.jsonFieldsToTruncate[0] === TRUNCATE_FIELD);
-      const result = log.jsonFieldsToTruncate.filter(
+      const notExists = log.jsonFieldsToTruncate.filter(
+        (str: string) => str === INVALID_TRUNCATE_FIELD
+      );
+      assert.strictEqual(notExists.length, 0);
+      const existOnce = log.jsonFieldsToTruncate.filter(
         (str: string) => str === TRUNCATE_FIELD
       );
-      assert.strictEqual(result.length, 1);
+      assert.strictEqual(existOnce.length, 1);
     });
 
     it('should truncate custom defined field', async () => {
