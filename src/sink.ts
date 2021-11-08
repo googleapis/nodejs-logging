@@ -75,8 +75,6 @@ class Sink {
     this.formattedName_ = 'projects/' + logging.projectId + '/sinks/' + name;
   }
 
-  create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
-  create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
   /**
    * Create a sink.
    *
@@ -117,13 +115,12 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
+  create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
   create(config: CreateSinkRequest): Promise<[Sink, LogSink]> {
     return this.logging.createSink(this.name, config);
   }
 
-  delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
-  delete(callback: DeleteCallback): void;
-  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   /**
    * @typedef {array} DeleteSinkResponse
    * @property {object} 0 The full API response.
@@ -167,6 +164,9 @@ class Sink {
    * region_tag:logging_delete_sink
    * Another example:
    */
+  delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
+  delete(callback: DeleteCallback): void;
+  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   async delete(
     gaxOptions?: CallOptions | DeleteCallback
   ): Promise<DeleteResponse> {
@@ -181,9 +181,6 @@ class Sink {
     );
   }
 
-  getMetadata(gaxOptions?: CallOptions): Promise<SinkMetadataResponse>;
-  getMetadata(callback: SinkMetadataCallback): void;
-  getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
   /**
    * @typedef {array} GetSinkMetadataResponse
    * @property {object} 0 The {@link Sink} metadata.
@@ -226,6 +223,9 @@ class Sink {
    * region_tag:logging_get_sink
    * Another example:
    */
+  getMetadata(gaxOptions?: CallOptions): Promise<SinkMetadataResponse>;
+  getMetadata(callback: SinkMetadataCallback): void;
+  getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
   async getMetadata(
     gaxOptions?: CallOptions | SinkMetadataCallback
   ): Promise<SinkMetadataResponse> {
@@ -242,8 +242,6 @@ class Sink {
     return [this.metadata!];
   }
 
-  setFilter(filter: string): Promise<SinkMetadataResponse>;
-  setFilter(filter: string, callback: SinkMetadataCallback): void;
   /**
    * @typedef {array} SetSinkFilterResponse
    * @property {object} 0 The full API response.
@@ -282,14 +280,14 @@ class Sink {
    * });
    * ```
    */
+  setFilter(filter: string): Promise<SinkMetadataResponse>;
+  setFilter(filter: string, callback: SinkMetadataCallback): void;
   setFilter(filter: string): Promise<SinkMetadataResponse> {
     return this.setMetadata({
       filter,
     });
   }
 
-  setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse>;
-  setMetadata(metadata: SetSinkMetadata, callback: SinkMetadataCallback): void;
   /**
    * @typedef {array} SetSinkMetadataResponse
    * @property {object} 0 The full API response.
@@ -343,6 +341,8 @@ class Sink {
    * region_tag:logging_update_sink
    * Another example:
    */
+  setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse>;
+  setMetadata(metadata: SetSinkMetadata, callback: SinkMetadataCallback): void;
   async setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse> {
     const [currentMetadata] = await this.getMetadata();
     const uniqueWriterIdentity = metadata.uniqueWriterIdentity;

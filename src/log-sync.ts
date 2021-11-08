@@ -188,9 +188,6 @@ class LogSync implements LogSeverityFunctions {
   }
 
   // TODO(future): dedupe entry code across LogSync & Log classes.
-  entry(metadata?: LogEntry): Entry;
-  entry(data?: string | {}): Entry;
-  entry(metadata?: LogEntry, data?: string | {}): Entry;
   /**
    * Create an entry object for this log.
    *
@@ -226,6 +223,9 @@ class LogSync implements LogSeverityFunctions {
    * });
    * ```
    */
+  entry(metadata?: LogEntry): Entry;
+  entry(data?: string | {}): Entry;
+  entry(metadata?: LogEntry, data?: string | {}): Entry;
   entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
     if (!data && metadataOrData?.hasOwnProperty('httpRequest')) {

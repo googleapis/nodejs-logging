@@ -296,12 +296,6 @@ class Logging {
     this.loggingService = new v2.LoggingServiceV2Client(this.options);
   }
 
-  createSink(name: string, config: CreateSinkRequest): Promise<[Sink, LogSink]>;
-  createSink(
-    name: string,
-    config: CreateSinkRequest,
-    callback: CreateSinkCallback
-  ): void;
   /**
    * Config to set for the sink. Not all available options are listed here, see
    * the [Sink
@@ -332,6 +326,12 @@ class Logging {
    * @param {Sink} sink The new {@link Sink}.
    * @param {object} apiResponse The full API response.
    */
+  createSink(name: string, config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  createSink(
+    name: string,
+    config: CreateSinkRequest,
+    callback: CreateSinkCallback
+  ): void;
   // jscs:disable maximumLineLength
   /**
    * Create a sink.
@@ -474,9 +474,6 @@ class Logging {
     return new Entry(resource, data);
   }
 
-  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
-  getEntries(callback: GetEntriesCallback): void;
-  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
   /**
    * Query object for listing entries.
    *
@@ -563,6 +560,9 @@ class Logging {
    * region_tag:logging_list_log_entries_advanced
    * Another example:
    */
+  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
+  getEntries(callback: GetEntriesCallback): void;
+  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
   async getEntries(
     opts?: GetEntriesRequest | GetEntriesCallback
   ): Promise<GetEntriesResponse> {
@@ -842,9 +842,6 @@ class Logging {
     return userStream;
   }
 
-  getLogs(options?: GetLogsRequest): Promise<GetLogsResponse>;
-  getLogs(callback: GetLogsCallback): void;
-  getLogs(options: GetLogsRequest, callback: GetLogsCallback): void;
   /**
    * Query object for listing entries.
    *
@@ -917,6 +914,9 @@ class Logging {
    * region_tag:logging_list_logs
    * Another example:
    */
+  getLogs(options?: GetLogsRequest): Promise<GetLogsResponse>;
+  getLogs(callback: GetLogsCallback): void;
+  getLogs(options: GetLogsRequest, callback: GetLogsCallback): void;
   async getLogs(
     opts?: GetLogsRequest | GetLogsCallback
   ): Promise<GetLogsResponse> {
@@ -1032,9 +1032,6 @@ class Logging {
     return userStream;
   }
 
-  getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
-  getSinks(callback: GetSinksCallback): void;
-  getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
   /**
    * Query object for listing sinks.
    *
@@ -1091,6 +1088,9 @@ class Logging {
    * region_tag:logging_list_sinks
    * Another example:
    */
+  getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
+  getSinks(callback: GetSinksCallback): void;
+  getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
   async getSinks(
     opts?: GetSinksRequest | GetSinksCallback
   ): Promise<GetSinksResponse> {
