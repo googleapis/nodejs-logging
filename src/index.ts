@@ -221,16 +221,16 @@ export interface ServiceContext {
  *     native Promises.
  */
 /**
- * [Cloud Logging](https://cloud.google.com/logging/docs) allows you to
+ * {@link https://cloud.google.com/logging/docs| Cloud Logging} allows you to
  * store, search, analyze, monitor, and alert on log data and events from Google
  * Cloud Platform and Amazon Web Services (AWS).
  *
  * @class
  *
- * @see [What is Cloud Logging?](https://cloud.google.com/logging/docs)
- * @see [Introduction to the Cloud Logging API](https://cloud.google.com/logging/docs/api)
- * @see [Logging to Google Cloud from Bunyan](https://www.npmjs.com/package/@google-cloud/logging-bunyan)
- * @see [Logging to Google Cloud from Winston](https://www.npmjs.com/package/@google-cloud/logging-winston)
+ * See {@link https://cloud.google.com/logging/docs| What is Cloud Logging?}
+ * See {@link https://cloud.google.com/logging/docs/api| Introduction to the Cloud Logging API}
+ * See {@link https://www.npmjs.com/package/@google-cloud/logging-bunyan| Logging to Google Cloud from Bunyan}
+ * See {@link https://www.npmjs.com/package/@google-cloud/logging-winston| Logging to Google Cloud from Winston}
  *
  * @param {ClientConfig} [options] Configuration options.
  *
