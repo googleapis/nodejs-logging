@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.6.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.2...v9.6.3) (2021-11-08)
+
+
+### Bug Fixes
+
+* **cloud-rad:** move comments for TSDoc ([#1181](https://www.github.com/googleapis/nodejs-logging/issues/1181)) ([51d6efd](https://www.github.com/googleapis/nodejs-logging/commit/51d6efd3341e6a02ffd130e36eb1491f410e1dc1))
+
 ### [9.6.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.1...v9.6.2) (2021-11-01)
 
 

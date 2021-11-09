@@ -114,13 +114,6 @@ class Log implements LogSeverityFunctions {
     this.name = this.formattedName_.split('/').pop()!;
   }
 
-  alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  alert(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  alert(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "ALERT".
    *
@@ -151,6 +144,13 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  alert(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  alert(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  alert(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   alert(
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
@@ -161,16 +161,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  critical(
-    entry: Entry | Entry[],
-    options?: WriteOptions
-  ): Promise<ApiResponse>;
-  critical(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  critical(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "CRITICAL".
    *
@@ -203,6 +193,16 @@ class Log implements LogSeverityFunctions {
    */
   critical(
     entry: Entry | Entry[],
+    options?: WriteOptions
+  ): Promise<ApiResponse>;
+  critical(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  critical(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  critical(
+    entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
@@ -211,13 +211,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  debug(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  debug(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  debug(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "DEBUG".
    *
@@ -248,6 +241,13 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  debug(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  debug(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  debug(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   debug(
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
@@ -258,9 +258,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  delete(gaxOptions?: CallOptions): Promise<ApiResponse>;
-  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
-  delete(callback: DeleteCallback): void;
   /**
    * @typedef {array} DeleteLogResponse
    * @property {object} 0 The full API response.
@@ -304,6 +301,9 @@ class Log implements LogSeverityFunctions {
    * region_tag:logging_delete_log
    * Another example:
    */
+  delete(gaxOptions?: CallOptions): Promise<ApiResponse>;
+  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
+  delete(callback: DeleteCallback): void;
   async delete(
     gaxOptions?: CallOptions | DeleteCallback
   ): Promise<ApiResponse> {
@@ -318,12 +318,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  emergency(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  emergency(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "EMERGENCY".
    *
@@ -356,6 +350,12 @@ class Log implements LogSeverityFunctions {
    */
   emergency(
     entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  emergency(entry: Entry | Entry[], callback: ApiResponseCallback): void;
+  emergency(
+    entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
     return this.write(
@@ -364,9 +364,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  entry(metadata?: LogEntry): Entry;
-  entry(data?: string | {}): Entry;
-  entry(metadata?: LogEntry, data?: string | {}): Entry;
   /**
    * Create an entry object for this log.
    *
@@ -424,6 +421,9 @@ class Log implements LogSeverityFunctions {
    * // }
    * ```
    */
+  entry(metadata?: LogEntry): Entry;
+  entry(data?: string | {}): Entry;
+  entry(metadata?: LogEntry, data?: string | {}): Entry;
   entry(metadataOrData?: LogEntry | string | {}, data?: string | {}) {
     let metadata: LogEntry;
     if (!data && metadataOrData?.hasOwnProperty('httpRequest')) {
@@ -441,13 +441,6 @@ class Log implements LogSeverityFunctions {
     return this.logging.entry(metadata, data);
   }
 
-  error(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  error(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  error(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "ERROR".
    *
@@ -478,6 +471,13 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  error(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  error(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  error(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   error(
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
@@ -488,9 +488,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
-  getEntries(callback: GetEntriesCallback): void;
-  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
   /**
    * This method is a wrapper around {module:logging#getEntries}, but with a
    * filter specified to only return entries from this log.
@@ -535,6 +532,9 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
+  getEntries(callback: GetEntriesCallback): void;
+  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
   async getEntries(
     opts?: GetEntriesRequest | GetEntriesCallback
   ): Promise<GetEntriesResponse> {
@@ -641,13 +641,6 @@ class Log implements LogSeverityFunctions {
     return this.logging.tailEntries(options);
   }
 
-  info(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  info(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  info(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "INFO".
    *
@@ -678,6 +671,13 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  info(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  info(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  info(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   info(
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
@@ -688,13 +688,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  notice(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  notice(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  notice(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "NOTICE".
    *
@@ -725,6 +718,13 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  notice(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  notice(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  notice(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   notice(
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
@@ -735,13 +735,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  warning(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  warning(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  warning(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * Write a log entry with a severity of "WARNING".
    *
@@ -772,6 +765,13 @@ class Log implements LogSeverityFunctions {
    * });
    * ```
    */
+  warning(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  warning(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  warning(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   warning(
     entry: Entry | Entry[],
     options?: WriteOptions | ApiResponseCallback
@@ -782,13 +782,6 @@ class Log implements LogSeverityFunctions {
     );
   }
 
-  write(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
-  write(
-    entry: Entry | Entry[],
-    options: WriteOptions,
-    callback: ApiResponseCallback
-  ): void;
-  write(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   /**
    * @typedef {array} LogWriteResponse
    * @property {object} 0 The full API response.
@@ -892,6 +885,13 @@ class Log implements LogSeverityFunctions {
    * region_tag:logging_write_log_entry_advanced
    * Another example:
    */
+  write(entry: Entry | Entry[], options?: WriteOptions): Promise<ApiResponse>;
+  write(
+    entry: Entry | Entry[],
+    options: WriteOptions,
+    callback: ApiResponseCallback
+  ): void;
+  write(entry: Entry | Entry[], callback: ApiResponseCallback): void;
   async write(
     entry: Entry | Entry[],
     opts?: WriteOptions | ApiResponseCallback
