@@ -57,7 +57,7 @@ async function writeLogEntry(logName) {
     // Asynchronously batch write the log entries
     await log.write([text_entry, json_Entry]);
 
-    // Let the logging library dispatch logs synchronously
+    // Let the logging library dispatch logs
     log.write(text_entry);
 
     console.log(`Wrote to ${logName}`);
