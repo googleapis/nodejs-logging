@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.6.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.3...v9.6.4) (2021-12-13)
+
+
+### Bug Fixes
+
+* Correct a comment in sample regarding asynchronous log writing ([#1189](https://www.github.com/googleapis/nodejs-logging/issues/1189)) ([c4abb7e](https://www.github.com/googleapis/nodejs-logging/commit/c4abb7eb1012e5a95d3b68a647a3c2d63d85610f))
+
 ### [9.6.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.2...v9.6.3) (2021-11-08)
 
 
