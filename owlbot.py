@@ -26,6 +26,7 @@ node.owlbot_main(
         "src/index.ts",
         ".eslintignore",
         ".prettierignore",
+        ".kokoro/release/docs-devsite.sh",
         "CONTRIBUTING.md"
     ]
 )
