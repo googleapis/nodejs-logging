@@ -95,12 +95,12 @@ export interface ToJsonOptions {
 /**
  * Create an entry object to define new data to insert into a meta.
  *
- * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+ * Note, {@link https://cloud.google.com/logging/quotas|Cloud Logging Quotas and limits}
  * dictates that the maximum log entry size, including all
  * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
- * cannot exceed _approximately_ 256 KB.
+ * cannot exceed approximately 256 KB.
  *
- * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+ * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry JSON representation}
  *
  * @class
  *
@@ -317,7 +317,7 @@ class Entry {
    * @private
    *
    * @param {object} entry An API representation of an entry. See a
-   *     [LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry).
+   *     {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry| LogEntry}.
    * @returns {Entry}
    */
   static fromApiResponse_(entry: google.logging.v2.LogEntry) {

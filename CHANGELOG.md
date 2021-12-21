@@ -4,6 +4,27 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.6.5](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.4...v9.6.5) (2021-12-21)
+
+
+### Bug Fixes
+
+* update links for TSDoc ([#1194](https://www.github.com/googleapis/nodejs-logging/issues/1194)) ([b66e158](https://www.github.com/googleapis/nodejs-logging/commit/b66e1580f958e4213e3eecbbceaae2c5ded7e14d))
+
+### [9.6.4](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.3...v9.6.4) (2021-12-13)
+
+
+### Bug Fixes
+
+* Correct a comment in sample regarding asynchronous log writing ([#1189](https://www.github.com/googleapis/nodejs-logging/issues/1189)) ([c4abb7e](https://www.github.com/googleapis/nodejs-logging/commit/c4abb7eb1012e5a95d3b68a647a3c2d63d85610f))
+
+### [9.6.3](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.2...v9.6.3) (2021-11-08)
+
+
+### Bug Fixes
+
+* **cloud-rad:** move comments for TSDoc ([#1181](https://www.github.com/googleapis/nodejs-logging/issues/1181)) ([51d6efd](https://www.github.com/googleapis/nodejs-logging/commit/51d6efd3341e6a02ffd130e36eb1491f410e1dc1))
+
 ### [9.6.2](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.1...v9.6.2) (2021-11-01)
 
 

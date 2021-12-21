@@ -327,7 +327,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesResponse()
       );
@@ -350,7 +350,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesResponse()
       );
@@ -389,7 +389,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedError = new Error('expected');
       client.innerApiCalls.writeLogEntries = stubSimpleCall(
         undefined,
@@ -499,7 +499,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
@@ -524,7 +524,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
@@ -565,7 +565,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedError = new Error('expected');
       client.innerApiCalls.listLogEntries = stubSimpleCall(
         undefined,
@@ -718,7 +718,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(
           new protos.google.api.MonitoredResourceDescriptor()
@@ -750,7 +750,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(
           new protos.google.api.MonitoredResourceDescriptor()
@@ -797,7 +797,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
-      const expectedOptions = {};
+      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedError = new Error('expected');
       client.innerApiCalls.listMonitoredResourceDescriptors = stubSimpleCall(
         undefined,

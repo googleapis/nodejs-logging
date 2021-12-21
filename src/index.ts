@@ -221,16 +221,19 @@ export interface ServiceContext {
  *     native Promises.
  */
 /**
- * [Cloud Logging](https://cloud.google.com/logging/docs) allows you to
+ * {@link https://cloud.google.com/logging/docs| Cloud Logging} allows you to
  * store, search, analyze, monitor, and alert on log data and events from Google
  * Cloud Platform and Amazon Web Services (AWS).
  *
  * @class
  *
- * @see [What is Cloud Logging?](https://cloud.google.com/logging/docs)
- * @see [Introduction to the Cloud Logging API](https://cloud.google.com/logging/docs/api)
- * @see [Logging to Google Cloud from Bunyan](https://www.npmjs.com/package/@google-cloud/logging-bunyan)
- * @see [Logging to Google Cloud from Winston](https://www.npmjs.com/package/@google-cloud/logging-winston)
+ * See {@link https://cloud.google.com/logging/docs| What is Cloud Logging?}
+ *
+ * See {@link https://cloud.google.com/logging/docs/api| Introduction to the Cloud Logging API}
+ *
+ * See {@link https://www.npmjs.com/package/@google-cloud/logging-bunyan| Logging to Google Cloud from Bunyan}
+ *
+ * See {@link https://www.npmjs.com/package/@google-cloud/logging-winston| Logging to Google Cloud from Winston}
  *
  * @param {ClientConfig} [options] Configuration options.
  *
@@ -296,12 +299,6 @@ class Logging {
     this.loggingService = new v2.LoggingServiceV2Client(this.options);
   }
 
-  createSink(name: string, config: CreateSinkRequest): Promise<[Sink, LogSink]>;
-  createSink(
-    name: string,
-    config: CreateSinkRequest,
-    callback: CreateSinkCallback
-  ): void;
   /**
    * Config to set for the sink. Not all available options are listed here, see
    * the [Sink
@@ -332,13 +329,19 @@ class Logging {
    * @param {Sink} sink The new {@link Sink}.
    * @param {object} apiResponse The full API response.
    */
+  createSink(name: string, config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  createSink(
+    name: string,
+    config: CreateSinkRequest,
+    callback: CreateSinkCallback
+  ): void;
   // jscs:disable maximumLineLength
   /**
    * Create a sink.
    *
-   * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
-   * @see [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
-   * @see [projects.sinks.create API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks|Sink Overview}
+   * See {@link https://cloud.google.com/logging/docs/view/advanced_filters|Advanced Logs Filters}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create|projects.sinks.create API Documentation}
    *
    * @param {string} name Name of the sink.
    * @param {CreateSinkRequest} config Config to set for the sink.
@@ -424,12 +427,12 @@ class Logging {
    * the object returned in other API calls, such as
    * {@link Log#write}.
    *
-   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * Note, {@link https://cloud.google.com/logging/quotas|Cloud Logging Quotas and limits}
    * dictates that the maximum log entry size, including all
    * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
    * cannot exceed _approximately_ 256 KB.
    *
-   * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry JSON representation}
    *
    * @param {?object|?string} [resource] See a
    *     [Monitored
@@ -474,9 +477,6 @@ class Logging {
     return new Entry(resource, data);
   }
 
-  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
-  getEntries(callback: GetEntriesCallback): void;
-  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
   /**
    * Query object for listing entries.
    *
@@ -516,7 +516,7 @@ class Logging {
   /**
    * List the entries in your logs.
    *
-   * @see [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list|entries.list API Documentation}
    *
    * @param {GetEntriesRequest} [query] Query object for listing entries.
    * @param {GetEntriesCallback} [callback] Callback function.
@@ -563,6 +563,9 @@ class Logging {
    * region_tag:logging_list_log_entries_advanced
    * Another example:
    */
+  getEntries(options?: GetEntriesRequest): Promise<GetEntriesResponse>;
+  getEntries(callback: GetEntriesCallback): void;
+  getEntries(options: GetEntriesRequest, callback: GetEntriesCallback): void;
   async getEntries(
     opts?: GetEntriesRequest | GetEntriesCallback
   ): Promise<GetEntriesResponse> {
@@ -842,9 +845,6 @@ class Logging {
     return userStream;
   }
 
-  getLogs(options?: GetLogsRequest): Promise<GetLogsResponse>;
-  getLogs(callback: GetLogsCallback): void;
-  getLogs(options: GetLogsRequest, callback: GetLogsCallback): void;
   /**
    * Query object for listing entries.
    *
@@ -875,7 +875,7 @@ class Logging {
   /**
    * List the entries in your logs.
    *
-   * @see [logs.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/logs/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/logs/list|logs.list API Documentation}
    *
    * @param {GetLogsRequest} [query] Query object for listing entries.
    * @param {GetLogsCallback} [callback] Callback function.
@@ -917,6 +917,9 @@ class Logging {
    * region_tag:logging_list_logs
    * Another example:
    */
+  getLogs(options?: GetLogsRequest): Promise<GetLogsResponse>;
+  getLogs(callback: GetLogsCallback): void;
+  getLogs(options: GetLogsRequest, callback: GetLogsCallback): void;
   async getLogs(
     opts?: GetLogsRequest | GetLogsCallback
   ): Promise<GetLogsResponse> {
@@ -1032,9 +1035,6 @@ class Logging {
     return userStream;
   }
 
-  getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
-  getSinks(callback: GetSinksCallback): void;
-  getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
   /**
    * Query object for listing sinks.
    *
@@ -1064,7 +1064,7 @@ class Logging {
   /**
    * Get the sinks associated with this project.
    *
-   * @see [projects.sinks.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list|projects.sinks.list API Documentation}
    *
    * @param {GetSinksRequest} [query] Query object for listing sinks.
    * @param {GetSinksCallback} [callback] Callback function.
@@ -1091,6 +1091,9 @@ class Logging {
    * region_tag:logging_list_sinks
    * Another example:
    */
+  getSinks(options?: GetSinksRequest): Promise<GetSinksResponse>;
+  getSinks(callback: GetSinksCallback): void;
+  getSinks(options: GetSinksRequest, callback: GetSinksCallback): void;
   async getSinks(
     opts?: GetSinksRequest | GetSinksCallback
   ): Promise<GetSinksResponse> {
@@ -1224,7 +1227,7 @@ class Logging {
   /**
    * Get a reference to a Cloud Logging log.
    *
-   * @see [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs|Log Overview}
    *
    * @param {string} name Name of the existing log.
    * @param {object} [options] Configuration object.
@@ -1270,7 +1273,7 @@ class Logging {
   /**
    * Get a reference to a Cloud Logging sink.
    *
-   * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks|Sink Overview}
    *
    * @param {string} name Name of the existing sink.
    * @returns {Sink}

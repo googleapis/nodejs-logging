@@ -46,7 +46,7 @@ export interface SetSinkMetadata extends LogSink {
  * storage), Google BigQuery datasets (for log analysis), Google Pub/Sub (for
  * streaming to other applications).
  *
- * @see [Introduction to Sinks]{@link https://cloud.google.com/logging/docs/basic-concepts#sinks}
+ * See {@link https://cloud.google.com/logging/docs/basic-concepts#sinks|Introduction to Sinks}
  *
  * @class
  *
@@ -75,8 +75,6 @@ class Sink {
     this.formattedName_ = 'projects/' + logging.projectId + '/sinks/' + name;
   }
 
-  create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
-  create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
   /**
    * Create a sink.
    *
@@ -117,13 +115,12 @@ class Sink {
    * region_tag:logging_create_sink
    * Another example:
    */
+  create(config: CreateSinkRequest): Promise<[Sink, LogSink]>;
+  create(config: CreateSinkRequest, callback: CreateSinkCallback): void;
   create(config: CreateSinkRequest): Promise<[Sink, LogSink]> {
     return this.logging.createSink(this.name, config);
   }
 
-  delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
-  delete(callback: DeleteCallback): void;
-  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   /**
    * @typedef {array} DeleteSinkResponse
    * @property {object} 0 The full API response.
@@ -136,7 +133,7 @@ class Sink {
   /**
    * Delete the sink.
    *
-   * @see [projects.sink.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/delete}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/delete|projects.sink.delete API Documentation}
    *
    * @param {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
@@ -167,6 +164,9 @@ class Sink {
    * region_tag:logging_delete_sink
    * Another example:
    */
+  delete(gaxOptions?: CallOptions): Promise<DeleteResponse>;
+  delete(callback: DeleteCallback): void;
+  delete(gaxOptions: CallOptions, callback: DeleteCallback): void;
   async delete(
     gaxOptions?: CallOptions | DeleteCallback
   ): Promise<DeleteResponse> {
@@ -181,9 +181,6 @@ class Sink {
     );
   }
 
-  getMetadata(gaxOptions?: CallOptions): Promise<SinkMetadataResponse>;
-  getMetadata(callback: SinkMetadataCallback): void;
-  getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
   /**
    * @typedef {array} GetSinkMetadataResponse
    * @property {object} 0 The {@link Sink} metadata.
@@ -198,8 +195,8 @@ class Sink {
   /**
    * Get the sink's metadata.
    *
-   * @see [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
-   * @see [projects.sink.get API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink|Sink Resource}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/get|projects.sink.get API Documentation}
    *
    * @param {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
@@ -226,6 +223,9 @@ class Sink {
    * region_tag:logging_get_sink
    * Another example:
    */
+  getMetadata(gaxOptions?: CallOptions): Promise<SinkMetadataResponse>;
+  getMetadata(callback: SinkMetadataCallback): void;
+  getMetadata(gaxOptions: CallOptions, callback: SinkMetadataCallback): void;
   async getMetadata(
     gaxOptions?: CallOptions | SinkMetadataCallback
   ): Promise<SinkMetadataResponse> {
@@ -242,8 +242,6 @@ class Sink {
     return [this.metadata!];
   }
 
-  setFilter(filter: string): Promise<SinkMetadataResponse>;
-  setFilter(filter: string, callback: SinkMetadataCallback): void;
   /**
    * @typedef {array} SetSinkFilterResponse
    * @property {object} 0 The full API response.
@@ -258,7 +256,7 @@ class Sink {
    *
    * This will override any filter that was previously set.
    *
-   * @see [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
+   * See {@link https://cloud.google.com/logging/docs/view/advanced_filters|Advanced Logs Filters}
    *
    * @param {string} filter The new filter.
    * @param {SetSinkFilterCallback} [callback] Callback function.
@@ -282,14 +280,14 @@ class Sink {
    * });
    * ```
    */
+  setFilter(filter: string): Promise<SinkMetadataResponse>;
+  setFilter(filter: string, callback: SinkMetadataCallback): void;
   setFilter(filter: string): Promise<SinkMetadataResponse> {
     return this.setMetadata({
       filter,
     });
   }
 
-  setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse>;
-  setMetadata(metadata: SetSinkMetadata, callback: SinkMetadataCallback): void;
   /**
    * @typedef {array} SetSinkMetadataResponse
    * @property {object} 0 The full API response.
@@ -307,8 +305,8 @@ class Sink {
    * uniqueWriterIdentity = true. Read more about using a unique writer identity
    * here: https://cloud.google.com/logging/docs/api/tasks/exporting-logs#using_a_unique_writer_identity
    *
-   * @see [Sink Resource]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink}
-   * @see [projects.sink.update API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks#LogSink|Sink Resource}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/update|projects.sink.update API Documentation}
    *
    * @param {object} metadata See a
    *     [Sink
@@ -343,6 +341,8 @@ class Sink {
    * region_tag:logging_update_sink
    * Another example:
    */
+  setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse>;
+  setMetadata(metadata: SetSinkMetadata, callback: SinkMetadataCallback): void;
   async setMetadata(metadata: SetSinkMetadata): Promise<SinkMetadataResponse> {
     const [currentMetadata] = await this.getMetadata();
     const uniqueWriterIdentity = metadata.uniqueWriterIdentity;

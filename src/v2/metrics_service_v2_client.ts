@@ -401,6 +401,25 @@ export class MetricsServiceV2Client {
   // -------------------
   // -- Service calls --
   // -------------------
+  /**
+   * Gets a logs-based metric.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.metricName
+   *   Required. The resource name of the desired metric:
+   *
+   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.get_log_metric.js</caption>
+   * region_tag:logging_v2_generated_MetricsServiceV2_GetLogMetric_async
+   */
   getLogMetric(
     request?: protos.google.logging.v2.IGetLogMetricRequest,
     options?: CallOptions
@@ -428,27 +447,6 @@ export class MetricsServiceV2Client {
       {} | null | undefined
     >
   ): void;
-  /**
-   * Gets a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.metricName
-   *   Required. The resource name of the desired metric:
-   *
-   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
-   *   for more details and examples.
-   * @example
-   * ```
-   * const [response] = await client.getLogMetric(request);
-   * ```
-   */
   getLogMetric(
     request?: protos.google.logging.v2.IGetLogMetricRequest,
     optionsOrCallback?:
@@ -488,6 +486,30 @@ export class MetricsServiceV2Client {
     this.initialize();
     return this.innerApiCalls.getLogMetric(request, options, callback);
   }
+  /**
+   * Creates a logs-based metric.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The resource name of the project in which to create the metric:
+   *
+   *       "projects/[PROJECT_ID]"
+   *
+   *   The new metric must be provided in the request.
+   * @param {google.logging.v2.LogMetric} request.metric
+   *   Required. The new logs-based metric, which must not have an identifier that
+   *   already exists.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.create_log_metric.js</caption>
+   * region_tag:logging_v2_generated_MetricsServiceV2_CreateLogMetric_async
+   */
   createLogMetric(
     request?: protos.google.logging.v2.ICreateLogMetricRequest,
     options?: CallOptions
@@ -515,32 +537,6 @@ export class MetricsServiceV2Client {
       {} | null | undefined
     >
   ): void;
-  /**
-   * Creates a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Required. The resource name of the project in which to create the metric:
-   *
-   *       "projects/[PROJECT_ID]"
-   *
-   *   The new metric must be provided in the request.
-   * @param {google.logging.v2.LogMetric} request.metric
-   *   Required. The new logs-based metric, which must not have an identifier that
-   *   already exists.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
-   *   for more details and examples.
-   * @example
-   * ```
-   * const [response] = await client.createLogMetric(request);
-   * ```
-   */
   createLogMetric(
     request?: protos.google.logging.v2.ICreateLogMetricRequest,
     optionsOrCallback?:
@@ -580,6 +576,31 @@ export class MetricsServiceV2Client {
     this.initialize();
     return this.innerApiCalls.createLogMetric(request, options, callback);
   }
+  /**
+   * Creates or updates a logs-based metric.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.metricName
+   *   Required. The resource name of the metric to update:
+   *
+   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+   *
+   *   The updated metric must be provided in the request and it's
+   *   `name` field must be the same as `[METRIC_ID]` If the metric
+   *   does not exist in `[PROJECT_ID]`, then a new metric is created.
+   * @param {google.logging.v2.LogMetric} request.metric
+   *   Required. The updated metric.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.update_log_metric.js</caption>
+   * region_tag:logging_v2_generated_MetricsServiceV2_UpdateLogMetric_async
+   */
   updateLogMetric(
     request?: protos.google.logging.v2.IUpdateLogMetricRequest,
     options?: CallOptions
@@ -607,33 +628,6 @@ export class MetricsServiceV2Client {
       {} | null | undefined
     >
   ): void;
-  /**
-   * Creates or updates a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.metricName
-   *   Required. The resource name of the metric to update:
-   *
-   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-   *
-   *   The updated metric must be provided in the request and it's
-   *   `name` field must be the same as `[METRIC_ID]` If the metric
-   *   does not exist in `[PROJECT_ID]`, then a new metric is created.
-   * @param {google.logging.v2.LogMetric} request.metric
-   *   Required. The updated metric.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [LogMetric]{@link google.logging.v2.LogMetric}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
-   *   for more details and examples.
-   * @example
-   * ```
-   * const [response] = await client.updateLogMetric(request);
-   * ```
-   */
   updateLogMetric(
     request?: protos.google.logging.v2.IUpdateLogMetricRequest,
     optionsOrCallback?:
@@ -673,6 +667,25 @@ export class MetricsServiceV2Client {
     this.initialize();
     return this.innerApiCalls.updateLogMetric(request, options, callback);
   }
+  /**
+   * Deletes a logs-based metric.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.metricName
+   *   Required. The resource name of the metric to delete:
+   *
+   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.delete_log_metric.js</caption>
+   * region_tag:logging_v2_generated_MetricsServiceV2_DeleteLogMetric_async
+   */
   deleteLogMetric(
     request?: protos.google.logging.v2.IDeleteLogMetricRequest,
     options?: CallOptions
@@ -700,27 +713,6 @@ export class MetricsServiceV2Client {
       {} | null | undefined
     >
   ): void;
-  /**
-   * Deletes a logs-based metric.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.metricName
-   *   Required. The resource name of the metric to delete:
-   *
-   *       "projects/[PROJECT_ID]/metrics/[METRIC_ID]"
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
-   *   for more details and examples.
-   * @example
-   * ```
-   * const [response] = await client.deleteLogMetric(request);
-   * ```
-   */
   deleteLogMetric(
     request?: protos.google.logging.v2.IDeleteLogMetricRequest,
     optionsOrCallback?:
@@ -761,33 +753,6 @@ export class MetricsServiceV2Client {
     return this.innerApiCalls.deleteLogMetric(request, options, callback);
   }
 
-  listLogMetrics(
-    request?: protos.google.logging.v2.IListLogMetricsRequest,
-    options?: CallOptions
-  ): Promise<
-    [
-      protos.google.logging.v2.ILogMetric[],
-      protos.google.logging.v2.IListLogMetricsRequest | null,
-      protos.google.logging.v2.IListLogMetricsResponse
-    ]
-  >;
-  listLogMetrics(
-    request: protos.google.logging.v2.IListLogMetricsRequest,
-    options: CallOptions,
-    callback: PaginationCallback<
-      protos.google.logging.v2.IListLogMetricsRequest,
-      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
-      protos.google.logging.v2.ILogMetric
-    >
-  ): void;
-  listLogMetrics(
-    request: protos.google.logging.v2.IListLogMetricsRequest,
-    callback: PaginationCallback<
-      protos.google.logging.v2.IListLogMetricsRequest,
-      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
-      protos.google.logging.v2.ILogMetric
-    >
-  ): void;
   /**
    * Lists logs-based metrics.
    *
@@ -819,6 +784,33 @@ export class MetricsServiceV2Client {
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
    */
+  listLogMetrics(
+    request?: protos.google.logging.v2.IListLogMetricsRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILogMetric[],
+      protos.google.logging.v2.IListLogMetricsRequest | null,
+      protos.google.logging.v2.IListLogMetricsResponse
+    ]
+  >;
+  listLogMetrics(
+    request: protos.google.logging.v2.IListLogMetricsRequest,
+    options: CallOptions,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogMetricsRequest,
+      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
+      protos.google.logging.v2.ILogMetric
+    >
+  ): void;
+  listLogMetrics(
+    request: protos.google.logging.v2.IListLogMetricsRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLogMetricsRequest,
+      protos.google.logging.v2.IListLogMetricsResponse | null | undefined,
+      protos.google.logging.v2.ILogMetric
+    >
+  ): void;
   listLogMetrics(
     request?: protos.google.logging.v2.IListLogMetricsRequest,
     optionsOrCallback?:
@@ -900,7 +892,8 @@ export class MetricsServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogMetrics'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.createStream(
       this.innerApiCalls.listLogMetrics as gax.GaxCall,
@@ -938,13 +931,8 @@ export class MetricsServiceV2Client {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
-   * @example
-   * ```
-   * const iterable = client.listLogMetricsAsync(request);
-   * for await (const response of iterable) {
-   *   // process response
-   * }
-   * ```
+   * @example <caption>include:samples/generated/v2/metrics_service_v2.list_log_metrics.js</caption>
+   * region_tag:logging_v2_generated_MetricsServiceV2_ListLogMetrics_async
    */
   listLogMetricsAsync(
     request?: protos.google.logging.v2.IListLogMetricsRequest,
@@ -958,8 +946,8 @@ export class MetricsServiceV2Client {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listLogMetrics'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.asyncIterate(
       this.innerApiCalls['listLogMetrics'] as GaxCall,
