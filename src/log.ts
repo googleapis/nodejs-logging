@@ -76,7 +76,7 @@ export type DeleteCallback = ApiResponseCallback;
  * produced by the Apache Web Server, but the log
  * `compute.googleapis.com/activity_log` is produced by Google Compute Engine.
  *
- * @see [Introduction to Logs]{@link https://cloud.google.com/logging/docs/basic-concepts#logs}
+ * See {@link https://cloud.google.com/logging/docs/basic-concepts#logs|Introduction to Logs}
  *
  * @class
  *
@@ -270,7 +270,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Delete the log.
    *
-   * @see [projects.logs.delete API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs/delete|projects.logs.delete API Documentation}
    *
    * @param {object} [gaxOptions] Request configuration options, outlined
    *     here: https://googleapis.github.io/gax-nodejs/global.html#CallOptions.
@@ -371,12 +371,12 @@ class Log implements LogSeverityFunctions {
    * the object returned in other API calls, such as
    * {@link Log#write}.
    *
-   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * Note, {@link https://cloud.google.com/logging/quotas|Cloud Logging Quotas and limits}
    * dictates that the maximum log entry size, including all
    * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
    * cannot exceed _approximately_ 256 KB.
    *
-   * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry JSON representation}
    *
    * @param {?object} metadata See a
    *     [LogEntry
@@ -492,7 +492,7 @@ class Log implements LogSeverityFunctions {
    * This method is a wrapper around {module:logging#getEntries}, but with a
    * filter specified to only return entries from this log.
    *
-   * @see [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list|entries.list API Documentation}
    *
    * @param {GetEntriesRequest} [query] Query object for listing entries.
    * @param {GetEntriesCallback} [callback] Callback function.
@@ -809,12 +809,12 @@ class Log implements LogSeverityFunctions {
   /**
    * Write log entries to Cloud Logging.
    *
-   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * Note, {@link https://cloud.google.com/logging/quotas|Cloud Logging Quotas and limits}
    * dictates that the maximum cumulative size of all entries per write,
    * including all [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
    * cannot exceed _approximately_ 10 MB.
    *
-   * @see [entries.write API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write|entries.write API Documentation}
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
    * @param {?WriteOptions} [options] Write options
