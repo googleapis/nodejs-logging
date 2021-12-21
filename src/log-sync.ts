@@ -40,7 +40,7 @@ import {
  * Recommended for Serverless environment logging, especially where async log
  * calls made by the `Log` class can be dropped by the CPU.
  *
- * @see [Structured Logging]{@link https://cloud.google.com/logging/docs/structured-logging}
+ * See {@link https://cloud.google.com/logging/docs/structured-logging|Structured Logging}
  *
  * @class
  *
@@ -193,7 +193,7 @@ class LogSync implements LogSeverityFunctions {
    *
    * Using this method will not itself do any logging.
    *
-   * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry JSON representation}
    *
    * @param {?object} metadata See a
    *     [LogEntry
