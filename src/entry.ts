@@ -97,7 +97,7 @@ export interface ToJsonOptions {
  *
  * Note, {@link https://cloud.google.com/logging/quotas|Cloud Logging Quotas and limits}
  * dictates that the maximum log entry size, including all
- * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
+ * {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry Resource properties},
  * cannot exceed approximately 256 KB.
  *
  * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry JSON representation}
