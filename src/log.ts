@@ -117,7 +117,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "ALERT".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -164,7 +164,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "CRITICAL".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -214,7 +214,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "DEBUG".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -321,7 +321,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "EMERGENCY".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -444,7 +444,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "ERROR".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -644,7 +644,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "INFO".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -691,7 +691,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "NOTICE".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
@@ -738,7 +738,7 @@ class Log implements LogSeverityFunctions {
   /**
    * Write a log entry with a severity of "WARNING".
    *
-   * This is a simple wrapper around {@link Log#write}. All arguments are
+   * This is a simple wrapper around {@link Log.write|Log.write}. All arguments are
    * the same as documented there.
    *
    * @param {Entry|Entry[]} entry A log entry, or array of entries, to write.
