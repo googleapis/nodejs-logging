@@ -228,8 +228,11 @@ export interface ServiceContext {
  * @class
  *
  * See {@link https://cloud.google.com/logging/docs| What is Cloud Logging?}
+ *
  * See {@link https://cloud.google.com/logging/docs/api| Introduction to the Cloud Logging API}
+ *
  * See {@link https://www.npmjs.com/package/@google-cloud/logging-bunyan| Logging to Google Cloud from Bunyan}
+ *
  * See {@link https://www.npmjs.com/package/@google-cloud/logging-winston| Logging to Google Cloud from Winston}
  *
  * @param {ClientConfig} [options] Configuration options.
@@ -336,9 +339,9 @@ class Logging {
   /**
    * Create a sink.
    *
-   * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
-   * @see [Advanced Logs Filters]{@link https://cloud.google.com/logging/docs/view/advanced_filters}
-   * @see [projects.sinks.create API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks|Sink Overview}
+   * See {@link https://cloud.google.com/logging/docs/view/advanced_filters|Advanced Logs Filters}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/create|projects.sinks.create API Documentation}
    *
    * @param {string} name Name of the sink.
    * @param {CreateSinkRequest} config Config to set for the sink.
@@ -424,12 +427,12 @@ class Logging {
    * the object returned in other API calls, such as
    * {@link Log#write}.
    *
-   * Note, [Cloud Logging Quotas and limits]{@link https://cloud.google.com/logging/quotas}
+   * Note, {@link https://cloud.google.com/logging/quotas|Cloud Logging Quotas and limits}
    * dictates that the maximum log entry size, including all
    * [LogEntry Resource properties]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry},
    * cannot exceed _approximately_ 256 KB.
    *
-   * @see [LogEntry JSON representation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry|LogEntry JSON representation}
    *
    * @param {?object|?string} [resource] See a
    *     [Monitored
@@ -513,7 +516,7 @@ class Logging {
   /**
    * List the entries in your logs.
    *
-   * @see [entries.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/list|entries.list API Documentation}
    *
    * @param {GetEntriesRequest} [query] Query object for listing entries.
    * @param {GetEntriesCallback} [callback] Callback function.
@@ -872,7 +875,7 @@ class Logging {
   /**
    * List the entries in your logs.
    *
-   * @see [logs.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/logs/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/logs/list|logs.list API Documentation}
    *
    * @param {GetLogsRequest} [query] Query object for listing entries.
    * @param {GetLogsCallback} [callback] Callback function.
@@ -1061,7 +1064,7 @@ class Logging {
   /**
    * Get the sinks associated with this project.
    *
-   * @see [projects.sinks.list API Documentation]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks/list|projects.sinks.list API Documentation}
    *
    * @param {GetSinksRequest} [query] Query object for listing sinks.
    * @param {GetSinksCallback} [callback] Callback function.
@@ -1224,7 +1227,7 @@ class Logging {
   /**
    * Get a reference to a Cloud Logging log.
    *
-   * @see [Log Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.logs|Log Overview}
    *
    * @param {string} name Name of the existing log.
    * @param {object} [options] Configuration object.
@@ -1270,7 +1273,7 @@ class Logging {
   /**
    * Get a reference to a Cloud Logging sink.
    *
-   * @see [Sink Overview]{@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks}
+   * See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.sinks|Sink Overview}
    *
    * @param {string} name Name of the existing sink.
    * @returns {Sink}
