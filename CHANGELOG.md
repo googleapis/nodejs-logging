@@ -4,6 +4,13 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
+### [9.6.6](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.5...v9.6.6) (2021-12-22)
+
+
+### Bug Fixes
+
+* update links for TSDoc ([#1197](https://www.github.com/googleapis/nodejs-logging/issues/1197)) ([154dffc](https://www.github.com/googleapis/nodejs-logging/commit/154dffc6197d6be711b8186ed81efa3f7512714d))
+
 ### [9.6.5](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.4...v9.6.5) (2021-12-21)
 
 
