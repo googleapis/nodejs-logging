@@ -28,8 +28,8 @@ async function logHttpRequest(
   latencySeconds = 3,
   responseSize = 256 // response size in bytes.
 ) {
-  // [START logging_http_request]
   // [START logging_write_log_entry_advanced]
+  // [START logging_http_request]
   /*
   const projectId = 'YOUR_PROJECT_ID'; // Your Google Cloud Platform project ID
   const logName = 'my-log'; // The name of the log to write to
@@ -77,8 +77,8 @@ async function logHttpRequest(
     console.log(`Logged: ${text}`);
   }
   writeLog();
-  // [END logging_write_log_entry_advanced]
   // [END logging_http_request]
+  // [END logging_write_log_entry_advanced]
 }
 
 const args = process.argv.slice(2);
