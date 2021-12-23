@@ -362,7 +362,7 @@ describe('Entry', () => {
         headers: {
           ['x-cloud-trace-context']: '1/1',
         },
-      } as any as http.IncomingMessage;
+      } as unknown as http.IncomingMessage;
       const json = entry.toStructuredJSON();
       assert.strictEqual(json[entryTypes.TRACE_KEY], 'projects//traces/1');
       assert.strictEqual(json[entryTypes.SPAN_ID_KEY], '1');

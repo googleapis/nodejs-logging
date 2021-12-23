@@ -1772,6 +1772,7 @@ describe('Logging', () => {
       logging = new Logging();
       sinon.stub(metadata, 'getDefaultResource').resolves({type: 'bar'});
       await logging.setDetectedResource();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       assert.strictEqual((logging.detectedResource as any).type, 'bar');
       sinon.restore();
     });
