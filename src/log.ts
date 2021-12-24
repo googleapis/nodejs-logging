@@ -1023,7 +1023,7 @@ class Log implements LogSeverityFunctions {
       } else {
         for (const field of this.jsonFieldsToTruncate) {
           const msg: string = dotProp.get(entry, field, '');
-          if (msg !== '') {
+          if (msg !== null && msg !== undefined && msg !== '') {
             dotProp.set(
               entry,
               field,
