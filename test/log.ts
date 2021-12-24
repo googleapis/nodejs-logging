@@ -31,6 +31,9 @@ describe('Log', () => {
   const PROJECT_ID = 'project-id';
   const FAKE_RESOURCE = 'fake-resource';
   const LOG_NAME = 'escaping/required/for/this/log-name';
+  const TRUNCATE_FIELD =
+    'jsonPayload.fields.metadata.structValue.fields.custom.stringValue';
+  const INVALID_TRUNCATE_FIELD = 'insertId';
   const LOG_NAME_ENCODED = encodeURIComponent(LOG_NAME);
   const LOG_NAME_FORMATTED = [
     'projects',
@@ -95,7 +98,17 @@ describe('Log', () => {
       },
     } as {} as Logging;
 
-    const options: LogOptions = {};
+    // Add some custom defined field to truncate which can be tested later - the idea is to
+    // see that constructor works properly and provides correct order of fields to be truncated.
+    // Also append same value twice to make sure that duplicates should be discarded.
+    // Adding illegal field to be truncated should be discared as well
+    const options: LogOptions = {
+      jsonFieldsToTruncate: [
+        INVALID_TRUNCATE_FIELD,
+        TRUNCATE_FIELD,
+        TRUNCATE_FIELD,
+      ],
+    };
     if (maxEntrySize) {
       options.maxEntrySize = maxEntrySize;
     }
@@ -631,6 +644,41 @@ describe('Log', () => {
           .stringValue!;
       assert.strictEqual(stack, '');
       assert.ok(message.startsWith('hello world'));
+      assert.ok(message.length < maxSize + entryMetaMaxLength);
+    });
+
+    it('should not contin duplicate or illegal fields to be truncated and defaults should present', async () => {
+      assert.ok(log.jsonFieldsToTruncate.length > 1);
+      assert.ok(log.jsonFieldsToTruncate[0] === TRUNCATE_FIELD);
+      const notExists = log.jsonFieldsToTruncate.filter(
+        (str: string) => str === INVALID_TRUNCATE_FIELD
+      );
+      assert.strictEqual(notExists.length, 0);
+      const existOnce = log.jsonFieldsToTruncate.filter(
+        (str: string) => str === TRUNCATE_FIELD
+      );
+      assert.strictEqual(existOnce.length, 1);
+    });
+
+    it('should truncate custom defined field', async () => {
+      const maxSize = 300;
+      const entries = entriesFactory({
+        message: 'hello world'.padEnd(2000, '.'),
+        metadata: {
+          custom: 'custom world'.padEnd(2000, '.'),
+        },
+      });
+
+      log.maxEntrySize = maxSize;
+      log.truncateEntries(entries);
+
+      const message: string =
+        entries[0].jsonPayload!.fields!.message.stringValue!;
+      const custom: string =
+        entries[0].jsonPayload!.fields!.metadata.structValue!.fields!.custom
+          .stringValue!;
+      assert.ok(message.startsWith('hello world'));
+      assert.strictEqual(custom, '');
       assert.ok(message.length < maxSize + entryMetaMaxLength);
     });
   });
