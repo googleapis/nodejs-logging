@@ -12,5 +12,5 @@
   "name_pretty": "Cloud Logging",
   "default_version": "v2",
   "api_shortname": "logging",
-  "library_type": ""
+  "library_type": "GAPIC_COMBO"
 }
