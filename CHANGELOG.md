@@ -4,12 +4,14 @@
 
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
-### [9.6.7](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.6...v9.6.7) (2021-12-30)
+
+### [9.6.7](https://github.com/googleapis/nodejs-logging/compare/v9.6.6...v9.6.7) (2022-01-11)
 
 
 ### Bug Fixes
 
 * Setting maxEntrySize does not truncate big json payloads correctly ([#1177](https://www.github.com/googleapis/nodejs-logging/issues/1177)) ([ec66e4d](https://www.github.com/googleapis/nodejs-logging/commit/ec66e4dc96a89259852688d395e647e9a019089d))
+
 
 ### [9.6.6](https://www.github.com/googleapis/nodejs-logging/compare/v9.6.5...v9.6.6) (2021-12-22)
 
