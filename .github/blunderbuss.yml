@@ -1,4 +1,4 @@
 assign_issues:
-  - losalex
+  - googleapis/api-logging-reviewers
 assign_prs:
-  - losalex
+  - googleapis/api-logging-reviewers
