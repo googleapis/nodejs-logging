@@ -99,11 +99,15 @@ describe('Log Common', () => {
       const labels = {
         projectId: 'id',
         fooBarBaz: 'foobar',
+        some_other: 'value',
+        AnotherOne: 'another',
       };
       const result = snakecaseKeys(labels);
       assert.deepStrictEqual(result, {
         project_id: 'id',
         foo_bar_baz: 'foobar',
+        some_other: 'value',
+        _another_one: 'another',
       });
     });
   });
