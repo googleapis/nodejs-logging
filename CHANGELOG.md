@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [9.6.8](https://github.com/googleapis/nodejs-logging/compare/v9.6.7...v9.6.8) (2022-01-21)
+
+
+### Bug Fixes
+
+* log.write removed option.resource.labels ([#1219](https://github.com/googleapis/nodejs-logging/issues/1219)) ([6d7e9ed](https://github.com/googleapis/nodejs-logging/commit/6d7e9ed9cd8b607009b0000aad92041a88107e4c))
+
 ### [9.6.7](https://github.com/googleapis/nodejs-logging/compare/v9.6.6...v9.6.7) (2022-01-11)
 
 
