@@ -57,12 +57,18 @@ export function snakecaseKeys(
   labels: {[p: string]: string} | null | undefined
 ) {
   for (const key in labels) {
+    const replaced = key.replace(
+      /[A-Z]/g,
+      letter => `_${letter.toLowerCase()}`
+    );
     Object.defineProperty(
       labels,
-      key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`),
+      replaced,
       Object.getOwnPropertyDescriptor(labels, key) as PropertyDescriptor
     );
-    delete labels[key];
+    if (replaced !== key) {
+      delete labels[key];
+    }
   }
   return labels;
 }
