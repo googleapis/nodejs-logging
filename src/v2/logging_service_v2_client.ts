@@ -707,7 +707,7 @@ export class LoggingServiceV2Client {
    */
   tailLogEntries(options?: CallOptions): gax.CancellableStream {
     this.initialize();
-    return this.innerApiCalls.tailLogEntries(options);
+    return this.innerApiCalls.tailLogEntries(null, options);
   }
 
   /**
