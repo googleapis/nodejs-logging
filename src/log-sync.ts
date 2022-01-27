@@ -30,6 +30,11 @@ import {
   WriteOptions,
 } from './utils/log-common';
 
+export interface LogSyncOptions {
+  // A flag indicating if written log entries should be wrapped with write request. See {@link  https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write|entries.write}
+  useWriteRequest?: boolean;
+}
+
 /**
  * A logSync is a named collection of entries in structured log format. In Cloud
  * Logging, structured logs refer to log entries that use the jsonPayload field
@@ -61,9 +66,15 @@ class LogSync implements LogSeverityFunctions {
   logging: Logging;
   name: string;
   transport: Writable;
+  options: LogSyncOptions;
 
   // not projectId, formattedname is expected
-  constructor(logging: Logging, name: string, transport?: Writable) {
+  constructor(
+    logging: Logging,
+    name: string,
+    transport?: Writable,
+    options?: LogSyncOptions
+  ) {
     this.formattedName_ = formatLogName(logging.projectId, name);
     this.logging = logging;
     /**
@@ -73,6 +84,7 @@ class LogSync implements LogSeverityFunctions {
     this.name = this.formattedName_.split('/').pop()!;
     // Default to writing to stdout
     this.transport = transport || process.stdout;
+    this.options = options || {};
   }
 
   /**
@@ -425,7 +437,13 @@ class LogSync implements LogSeverityFunctions {
           entry.resource ||
           this.logging.detectedResource;
         entry[LABELS_KEY] = options.labels || entry[LABELS_KEY];
-        this.transport.write(JSON.stringify(entry) + '\n');
+        if (this.options.useWriteRequest) {
+          const reqOpts = {
+            logName: this.formattedName_,
+            entries: arrify(entry) as StructuredJson[],
+          };
+          this.transport.write(JSON.stringify(reqOpts) + '\n');
+        } else this.transport.write(JSON.stringify(entry) + '\n');
       }
     } catch (err) {
       // Ignore errors (client libraries do not panic).

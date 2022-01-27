@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import arrify = require('arrify');
 import * as assert from 'assert';
 import {describe, it, before, beforeEach, afterEach} from 'mocha';
 import * as sinon from 'sinon';
 import {Entry, Logging} from '../src';
-import {LogSync} from '../src/log-sync';
-import {LABELS_KEY} from '../src/entry';
+import {LogSync, LogSyncOptions} from '../src/log-sync';
+import {LABELS_KEY, StructuredJson} from '../src/entry';
 import {WriteOptions} from '../src/utils/log-common';
 import * as logCommon from '../src/utils/log-common';
 import * as stream from 'stream';
@@ -232,6 +233,60 @@ describe('LogSync', () => {
           assert(writeStub.calledOnceWith(assignedEntries));
         });
       });
+    });
+  });
+
+  describe('write request', () => {
+    let ENTRY: Entry;
+    let ENTRIES: Entry[];
+    let writeStub: sinon.SinonStub;
+
+    // For ease of testing, we write to a filestream instead of stdout.
+    let buffer: stream.Writable;
+
+    beforeEach(() => {
+      ENTRY = new Entry(undefined, 'testlog');
+      ENTRIES = [ENTRY] as Entry[];
+      log = createLogger();
+    });
+
+    afterEach(() => {
+      writeStub.restore();
+    });
+
+    function createLogger() {
+      LOGGING = {
+        projectId: PROJECT_ID,
+        entry: sinon.stub(),
+      } as {} as Logging;
+      buffer = new stream.Writable();
+      writeStub = sinon.stub(buffer, 'write');
+      const options: LogSyncOptions = {
+        useWriteRequest: true,
+      };
+
+      return new LogSync(LOGGING, LOG_NAME, buffer, options);
+    }
+
+    it('should wrap entries with write request', done => {
+      log.write(ENTRIES);
+      const entry = ENTRY.toStructuredJSON();
+      entry.logName = LOG_NAME_FORMATTED;
+      const reqOpts = {
+        logName: LOG_NAME_FORMATTED,
+        entries: arrify(entry) as StructuredJson[],
+      };
+      assert(writeStub.calledOnceWith(JSON.stringify(reqOpts) + '\n'));
+      done();
+    });
+
+    it('should not wrap entries with write request', done => {
+      log.options.useWriteRequest = false;
+      log.write(ENTRIES);
+      const entry = ENTRY.toStructuredJSON();
+      entry.logName = LOG_NAME_FORMATTED;
+      assert(writeStub.calledOnceWith(JSON.stringify(entry) + '\n'));
+      done();
     });
   });
 });
