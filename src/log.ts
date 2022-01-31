@@ -60,6 +60,7 @@ export interface LogOptions {
   removeCircular?: boolean;
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
   jsonFieldsToTruncate?: string[];
+  defaultWriteDeleteCallback?: ApiResponseCallback;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,6 +105,7 @@ class Log implements LogSeverityFunctions {
   logging: Logging;
   name: string;
   jsonFieldsToTruncate: string[];
+  defaultWriteDeleteCallback?: ApiResponseCallback;
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
@@ -145,6 +147,10 @@ class Log implements LogSeverityFunctions {
         this.jsonFieldsToTruncate
       );
     }
+
+    // The default callback for write and delete APIs is going to be used only when
+    // was set by user and only for APIs which does not accept a callback as parameter
+    this.defaultWriteDeleteCallback = options.defaultWriteDeleteCallback;
   }
 
   /**
@@ -347,7 +353,8 @@ class Log implements LogSeverityFunctions {
     };
     return this.logging.loggingService.deleteLog(
       reqOpts,
-      gaxOptions! as CallOptions
+      gaxOptions! as CallOptions,
+      this.defaultWriteDeleteCallback
     );
   }
 
@@ -953,7 +960,8 @@ class Log implements LogSeverityFunctions {
     delete reqOpts.gaxOptions;
     return this.logging.loggingService.writeLogEntries(
       reqOpts,
-      options.gaxOptions
+      options.gaxOptions,
+      this.defaultWriteDeleteCallback
     );
   }
 
