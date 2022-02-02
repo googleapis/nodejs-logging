@@ -91,7 +91,10 @@ export type DeleteCallback = ApiResponseCallback;
  * @param {string[]} [options.jsonFieldsToTruncate] A list of JSON properties at the given full path to be truncated.
  *     Received values will be prepended to predefined list in the order received and duplicates discarded.
  * @param {ApiResponseCallback} [options.defaultWriteDeleteCallback] A default global callback to be used for {@link Log#write}
- *     and {@link Log#delete} APIs when {@link ApiResponseCallback} callback was not supplied by caller as API parameter.
+ *     and {@link Log#delete} APIs when {@link ApiResponseCallback} callback was not supplied by caller in function parameters.
+ *     Note that {@link LogOptions#defaultWriteDeleteCallback} is useful when {@link Log#write} and {@link Log#delete} APIs are called
+ *     without `await` and without callback added explicitly to every call - this way {@link LogOptions#defaultWriteDeleteCallback}
+ *     can serve as global callback handler, which for example could be used to catch all errors and eliminate crashes.
  * @example
  * ```
  * import {Logging} from '@google-cloud/logging';
