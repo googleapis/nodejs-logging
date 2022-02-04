@@ -88,7 +88,8 @@ body: |-
   ```
 
   However, awaiting for every `log.write` or `log.delete` calls may introduce delays which could be avoided by 
-  simply adding a callback like in example below:
+  simply adding a callback like in example below - this way the log entry can be queued for processing and code
+  execution will continue without further delays, so callback will be called once operation is complete:
 
   ```js
       // Asynchronously write the log entry and handle respone or any errors in provided callback
