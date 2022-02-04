@@ -162,58 +162,6 @@ how to populate the Http request metadata for log entries.
 If you already have a "raw" Http `request` object you can assign it to `entry.metadata.httpRequest` directly. More information about
 how the `request` is interpreted as raw can be found in the [code](https://github.com/googleapis/nodejs-logging/blob/15849160116a814ab71113138cb211c2e0c2d4b4/src/entry.ts#L224-L238).
 
-## Error handling with logs written or deleted asynchronously
-
-The `Log` class provide users the ability to write and delete logs asynchronously. However, there are cases when log entries
-cannot be written or deleted and error is thrown - if error is not handled properly, it could crash the application.
-One possible way to catch all errors is to `await` the log write/delete calls and wrap it with `try/catch` like in example below:
-
-```js
-    // Write log entry and and catch any errors
-    try {
-      await log.write(entry);
-    } catch (err) {
-      console.log('Error is: ' + err);
-    }
-```
-
-However, awaiting for every `log.write` or `log.delete` calls may introduce delays which could be avoided by 
-simply adding a callback like in example below:
-
-```js
-    // Asynchronously write the log entry and handle respone or any errors in provided callback
-    log.write(entry, err => {
-      if (err) {
-        // The log entry was not written.
-        console.log(err.message);
-      } else {
-        console.log('No error in write callback!');
-      }
-    });
-```
-
-Adding a callback to every `log.write` or `log.delete` calls could be a burden, especially if code
-handling the error is always the same. For this purpose we introduced an ability to provide a default callback
-for `Log` class which could be set through `LogOptions` passed to `Log` constructor as in example below - this
-way you can define a global callback once for all `log.write` and `log.delete` calls and be able to handle errors:
-
-```js
-  const {Logging} = require('@google-cloud/logging');
-  const logging = new Logging();
-  
-  // Create options with default callback to be called on every write/delete response or error
-  const options = {
-    defaultWriteDeleteCallback: function (err) {
-      if (err) {
-        console.log('Error is: ' + err);
-      } else {
-        console.log('No error, all is good!');
-      }
-    },
-  };
-
-  const log = logging.log('my-log', options);
-``` 
 
 ## Samples
 
