@@ -210,7 +210,6 @@ async function deleteLog(logName) {
 }
 
 async function writeLogWithCallback(logName) {
-  // [START logging_write_log_error_handling]
   const {Logging} = require('@google-cloud/logging');
   const logging = new Logging();
 
@@ -251,7 +250,6 @@ async function writeLogWithCallback(logName) {
     console.log(`Wrote to ${logName}`);
   }
   writeLogEntry();
-  // [END logging_write_log_error_handling]
 }
 
 async function main() {

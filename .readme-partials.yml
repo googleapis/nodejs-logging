@@ -125,3 +125,4 @@ body: |-
 
     const log = logging.log('my-log', options);
   ``` 
+  See the full sample in `writeLogWithCallback` function [here](https://github.com/googleapis/nodejs-logging/blob/master/samples/logs.js).
