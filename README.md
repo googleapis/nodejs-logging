@@ -215,6 +215,7 @@ way you can define a global callback once for all `log.write` and `log.delete` c
 
   const log = logging.log('my-log', options);
 ``` 
+See the full sample in `writeLogWithCallback` function [here](https://github.com/googleapis/nodejs-logging/blob/master/samples/logs.js).
 
 
 ## Samples
