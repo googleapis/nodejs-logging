@@ -166,7 +166,7 @@ how the `request` is interpreted as raw can be found in the [code](https://githu
 
 The `Log` class provide users the ability to write and delete logs asynchronously. However, there are cases when log entries
 cannot be written or deleted and error is thrown - if error is not handled properly, it could crash the application.
-One possible way to catch all errors is to `await` the log write/delete calls and wrap it with `try/catch` like in example below:
+One possible way to catch the error is to `await` the log write/delete calls and wrap it with `try/catch` like in example below:
 
 ```js
     // Write log entry and and catch any errors
@@ -178,8 +178,8 @@ One possible way to catch all errors is to `await` the log write/delete calls an
 ```
 
 However, awaiting for every `log.write` or `log.delete` calls may introduce delays which could be avoided by 
-simply adding a callback like in example below - this way the log entry can be queued for processing and code
-execution will continue without further delays, so callback will be called once operation is complete:
+simply adding a callback like in the example below. This way the log entry can be queued for processing and code
+execution will continue without further delays. The callback will be called once the operation is complete:
 
 ```js
     // Asynchronously write the log entry and handle respone or any errors in provided callback
