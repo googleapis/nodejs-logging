@@ -209,6 +209,49 @@ async function deleteLog(logName) {
   // [END logging_delete_log]
 }
 
+async function writeLogWithCallback(logName) {
+  const {Logging} = require('@google-cloud/logging');
+  const logging = new Logging();
+
+  // Create options with default callback to be called on every write/delete response or error
+  const options = {
+    defaultWriteDeleteCallback: function (err) {
+      if (err) {
+        console.log('Error is: ' + err);
+      } else {
+        console.log('No error in default callback!');
+      }
+    },
+  };
+
+  /**
+   * TODO(developer): Uncomment the following line and replace with your values.
+   */
+  // const logName = 'my-log';
+  const log = logging.log(logName, options);
+
+  // A text log entry
+  const text_entry = log.entry('Hello world!');
+
+  async function writeLogEntry() {
+    // Asynchronously write the log entry and handle respone or any errors in provided callback
+    log.write(text_entry, err => {
+      if (err) {
+        // The log entry was not written.
+        console.log(err.message);
+      } else {
+        console.log('No error in write callback!');
+      }
+    });
+
+    // Let the logging library dispatch logs and handle response or any errors in defaultWriteDeleteCallback
+    log.write(text_entry);
+
+    console.log(`Wrote to ${logName}`);
+  }
+  writeLogEntry();
+}
+
 async function main() {
   require('yargs')
     .demand(1)
@@ -278,6 +321,14 @@ async function main() {
       'Write a JSON log entry.'
     )
     .example('node $0 delete my-log', 'Delete "my-log".')
+    .command(
+      'write-callback <logName>',
+      'Writes a text log entry to the specified log and handles response or error in callback.',
+      {},
+      opts => {
+        writeLogWithCallback(opts.logName);
+      }
+    )
     .wrap(120)
     .recommendCommands()
     .epilogue('For more information, see https://cloud.google.com/logging/docs')

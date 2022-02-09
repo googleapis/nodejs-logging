@@ -60,6 +60,7 @@ export interface LogOptions {
   removeCircular?: boolean;
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
   jsonFieldsToTruncate?: string[];
+  defaultWriteDeleteCallback?: ApiResponseCallback;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,12 +90,28 @@ export type DeleteCallback = ApiResponseCallback;
  * @param {number} [options.maxEntrySize] A max entry size
  * @param {string[]} [options.jsonFieldsToTruncate] A list of JSON properties at the given full path to be truncated.
  *     Received values will be prepended to predefined list in the order received and duplicates discarded.
- *
+ * @param {ApiResponseCallback} [options.defaultWriteDeleteCallback] A default global callback to be used for {@link Log#write}
+ *     and {@link Log#delete} APIs when {@link ApiResponseCallback} callback was not supplied by caller in function parameters.
+ *     Note that {@link LogOptions#defaultWriteDeleteCallback} is useful when {@link Log#write} and {@link Log#delete} APIs are called
+ *     without `await` and without callback added explicitly to every call - this way {@link LogOptions#defaultWriteDeleteCallback}
+ *     can serve as global callback handler, which for example could be used to catch all errors and eliminate crashes.
  * @example
  * ```
- * const {Logging} = require('@google-cloud/logging');
+ * import {Logging} from '@google-cloud/logging';
+ * import {LogOptions} from '@google-cloud/logging/build/src/log';
+ * const options: LogOptions = {
+ *   maxEntrySize: 256,
+ *   jsonFieldsToTruncate: [
+ *     'jsonPayload.fields.metadata.structValue.fields.custom.stringValue',
+ *   ],
+ *   defaultWriteDeleteCallback: (err: any) => {
+ *     if (err) {
+ *       console.log('Error: ' + err);
+ *     }
+ *   },
+ * };
  * const logging = new Logging();
- * const log = logging.log('syslog');
+ * const log = logging.log('syslog', options);
  * ```
  */
 class Log implements LogSeverityFunctions {
@@ -104,6 +121,7 @@ class Log implements LogSeverityFunctions {
   logging: Logging;
   name: string;
   jsonFieldsToTruncate: string[];
+  defaultWriteDeleteCallback?: ApiResponseCallback;
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
@@ -145,6 +163,13 @@ class Log implements LogSeverityFunctions {
         this.jsonFieldsToTruncate
       );
     }
+
+    /**
+     * The default callback for {@link Log#write} and {@link Log#delete} APIs
+     * is going to be used only when {@link LogOptions#defaultWriteDeleteCallback}
+     * was set by user and only for APIs which does not accept a callback as parameter
+     */
+    this.defaultWriteDeleteCallback = options.defaultWriteDeleteCallback;
   }
 
   /**
@@ -347,7 +372,8 @@ class Log implements LogSeverityFunctions {
     };
     return this.logging.loggingService.deleteLog(
       reqOpts,
-      gaxOptions! as CallOptions
+      gaxOptions! as CallOptions,
+      this.defaultWriteDeleteCallback
     );
   }
 
@@ -953,7 +979,8 @@ class Log implements LogSeverityFunctions {
     delete reqOpts.gaxOptions;
     return this.logging.loggingService.writeLogEntries(
       reqOpts,
-      options.gaxOptions
+      options.gaxOptions,
+      this.defaultWriteDeleteCallback
     );
   }
 

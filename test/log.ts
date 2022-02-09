@@ -169,9 +169,25 @@ describe('Log', () => {
           {
             logName: log.formattedName_,
           },
+          undefined,
           undefined
         )
       );
+    });
+
+    it('should execute global callback for delete', async () => {
+      log.defaultWriteDeleteCallback = () => {};
+      await log.delete();
+      assert(
+        log.logging.loggingService.deleteLog.calledWithExactly(
+          {
+            logName: log.formattedName_,
+          },
+          undefined,
+          log.defaultWriteDeleteCallback
+        )
+      );
+      log.defaultWriteDeleteCallback = undefined;
     });
 
     it('should accept gaxOptions', async () => {
@@ -368,6 +384,7 @@ describe('Log', () => {
               },
             },
           },
+          undefined,
           undefined
         )
       );
@@ -432,6 +449,7 @@ describe('Log', () => {
             entries: ENTRIES,
             resource: EXPECTED_RESOURCE,
           },
+          undefined,
           undefined
         )
       );
@@ -446,9 +464,27 @@ describe('Log', () => {
             entries: ENTRIES,
             resource: FAKE_RESOURCE,
           },
+          undefined,
           undefined
         )
       );
+    });
+
+    it('should call gax write method with global callback', async () => {
+      log.defaultWriteDeleteCallback = () => {};
+      await log.write(ENTRIES, OPTIONS);
+      assert(
+        log.logging.loggingService.writeLogEntries.calledOnceWithExactly(
+          {
+            logName: log.formattedName_,
+            entries: ENTRIES,
+            resource: FAKE_RESOURCE,
+          },
+          undefined,
+          log.defaultWriteDeleteCallback
+        )
+      );
+      log.defaultWriteDeleteCallback = undefined;
     });
 
     it('should decorate the entries', async () => {
@@ -498,6 +534,7 @@ describe('Log', () => {
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWithExactly(
           sinon.match.object,
+          undefined,
           undefined
         )
       );
