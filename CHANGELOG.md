@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [9.6.9](https://github.com/googleapis/nodejs-logging/compare/v9.6.8...v9.6.9) (2022-02-09)
+
+
+### Bug Fixes
+
+* Regular error showing Total timeout of API google.logging.v2.LoggingServiceV2 exceeded 600000 milliseconds ([#1225](https://github.com/googleapis/nodejs-logging/issues/1225)) ([7f584bc](https://github.com/googleapis/nodejs-logging/commit/7f584bc307ed18e333002177436046b3c30f4aa0))
+
 ### [9.6.8](https://github.com/googleapis/nodejs-logging/compare/v9.6.7...v9.6.8) (2022-01-21)
 
 
