@@ -21,9 +21,9 @@ function main(parent, viewId, view) {
    */
   /**
    *  Required. The bucket in which to create the view
-   *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *  Example:
-   *  `"projects/my-logging-project/locations/my-location/buckets/my-bucket"`
+   *      `"projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"`
+   *  For example:
+   *    `"projects/my-project/locations/global/buckets/my-bucket"`
    */
   // const parent = 'abc123'
   /**

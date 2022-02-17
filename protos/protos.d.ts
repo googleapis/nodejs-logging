@@ -2508,6 +2508,9 @@ export namespace google {
 
             /** MethodOptions .google.api.methodSignature */
             ".google.api.methodSignature"?: (string[]|null);
+
+            /** MethodOptions .google.longrunning.operationInfo */
+            ".google.longrunning.operationInfo"?: (google.longrunning.IOperationInfo|null);
         }
 
         /** Represents a MethodOptions. */
@@ -4164,6 +4167,9 @@ export namespace google {
 
                 /** LogEntry sourceLocation */
                 sourceLocation?: (google.logging.v2.ILogEntrySourceLocation|null);
+
+                /** LogEntry split */
+                split?: (google.logging.v2.ILogSplit|null);
             }
 
             /** Represents a LogEntry. */
@@ -4222,6 +4228,9 @@ export namespace google {
 
                 /** LogEntry sourceLocation. */
                 public sourceLocation?: (google.logging.v2.ILogEntrySourceLocation|null);
+
+                /** LogEntry split. */
+                public split?: (google.logging.v2.ILogSplit|null);
 
                 /** LogEntry payload. */
                 public payload?: ("protoPayload"|"textPayload"|"jsonPayload");
@@ -4502,6 +4511,108 @@ export namespace google {
 
                 /**
                  * Converts this LogEntrySourceLocation to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a LogSplit. */
+            interface ILogSplit {
+
+                /** LogSplit uid */
+                uid?: (string|null);
+
+                /** LogSplit index */
+                index?: (number|null);
+
+                /** LogSplit totalSplits */
+                totalSplits?: (number|null);
+            }
+
+            /** Represents a LogSplit. */
+            class LogSplit implements ILogSplit {
+
+                /**
+                 * Constructs a new LogSplit.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILogSplit);
+
+                /** LogSplit uid. */
+                public uid: string;
+
+                /** LogSplit index. */
+                public index: number;
+
+                /** LogSplit totalSplits. */
+                public totalSplits: number;
+
+                /**
+                 * Creates a new LogSplit instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LogSplit instance
+                 */
+                public static create(properties?: google.logging.v2.ILogSplit): google.logging.v2.LogSplit;
+
+                /**
+                 * Encodes the specified LogSplit message. Does not implicitly {@link google.logging.v2.LogSplit.verify|verify} messages.
+                 * @param message LogSplit message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILogSplit, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LogSplit message, length delimited. Does not implicitly {@link google.logging.v2.LogSplit.verify|verify} messages.
+                 * @param message LogSplit message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILogSplit, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LogSplit message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LogSplit
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LogSplit;
+
+                /**
+                 * Decodes a LogSplit message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LogSplit
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LogSplit;
+
+                /**
+                 * Verifies a LogSplit message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LogSplit message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LogSplit
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LogSplit;
+
+                /**
+                 * Creates a plain object from a LogSplit message. Also converts values to other types if specified.
+                 * @param message LogSplit
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LogSplit, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LogSplit to JSON.
                  * @returns JSON object
                  */
                 public toJSON(): { [k: string]: any };
@@ -6295,6 +6406,48 @@ export namespace google {
                  * @returns Promise
                  */
                 public updateCmekSettings(request: google.logging.v2.IUpdateCmekSettingsRequest): Promise<google.logging.v2.CmekSettings>;
+
+                /**
+                 * Calls GetSettings.
+                 * @param request GetSettingsRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Settings
+                 */
+                public getSettings(request: google.logging.v2.IGetSettingsRequest, callback: google.logging.v2.ConfigServiceV2.GetSettingsCallback): void;
+
+                /**
+                 * Calls GetSettings.
+                 * @param request GetSettingsRequest message or plain object
+                 * @returns Promise
+                 */
+                public getSettings(request: google.logging.v2.IGetSettingsRequest): Promise<google.logging.v2.Settings>;
+
+                /**
+                 * Calls UpdateSettings.
+                 * @param request UpdateSettingsRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Settings
+                 */
+                public updateSettings(request: google.logging.v2.IUpdateSettingsRequest, callback: google.logging.v2.ConfigServiceV2.UpdateSettingsCallback): void;
+
+                /**
+                 * Calls UpdateSettings.
+                 * @param request UpdateSettingsRequest message or plain object
+                 * @returns Promise
+                 */
+                public updateSettings(request: google.logging.v2.IUpdateSettingsRequest): Promise<google.logging.v2.Settings>;
+
+                /**
+                 * Calls CopyLogEntries.
+                 * @param request CopyLogEntriesRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Operation
+                 */
+                public copyLogEntries(request: google.logging.v2.ICopyLogEntriesRequest, callback: google.logging.v2.ConfigServiceV2.CopyLogEntriesCallback): void;
+
+                /**
+                 * Calls CopyLogEntries.
+                 * @param request CopyLogEntriesRequest message or plain object
+                 * @returns Promise
+                 */
+                public copyLogEntries(request: google.logging.v2.ICopyLogEntriesRequest): Promise<google.longrunning.Operation>;
             }
 
             namespace ConfigServiceV2 {
@@ -6459,6 +6612,27 @@ export namespace google {
                  * @param [response] CmekSettings
                  */
                 type UpdateCmekSettingsCallback = (error: (Error|null), response?: google.logging.v2.CmekSettings) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#getSettings}.
+                 * @param error Error, if any
+                 * @param [response] Settings
+                 */
+                type GetSettingsCallback = (error: (Error|null), response?: google.logging.v2.Settings) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#updateSettings}.
+                 * @param error Error, if any
+                 * @param [response] Settings
+                 */
+                type UpdateSettingsCallback = (error: (Error|null), response?: google.logging.v2.Settings) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2#copyLogEntries}.
+                 * @param error Error, if any
+                 * @param [response] Operation
+                 */
+                type CopyLogEntriesCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
             }
 
             /** Properties of a LogBucket. */
@@ -6484,6 +6658,12 @@ export namespace google {
 
                 /** LogBucket lifecycleState */
                 lifecycleState?: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState|null);
+
+                /** LogBucket restrictedFields */
+                restrictedFields?: (string[]|null);
+
+                /** LogBucket cmekSettings */
+                cmekSettings?: (google.logging.v2.ICmekSettings|null);
             }
 
             /** Represents a LogBucket. */
@@ -6515,6 +6695,12 @@ export namespace google {
 
                 /** LogBucket lifecycleState. */
                 public lifecycleState: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState);
+
+                /** LogBucket restrictedFields. */
+                public restrictedFields: string[];
+
+                /** LogBucket cmekSettings. */
+                public cmekSettings?: (google.logging.v2.ICmekSettings|null);
 
                 /**
                  * Creates a new LogBucket instance using the specified properties.
@@ -6585,13 +6771,6 @@ export namespace google {
                  * @returns JSON object
                  */
                 public toJSON(): { [k: string]: any };
-            }
-
-            /** LifecycleState enum. */
-            enum LifecycleState {
-                LIFECYCLE_STATE_UNSPECIFIED = 0,
-                ACTIVE = 1,
-                DELETE_REQUESTED = 2
             }
 
             /** Properties of a LogView. */
@@ -9805,6 +9984,636 @@ export namespace google {
                 public toJSON(): { [k: string]: any };
             }
 
+            /** Properties of a GetSettingsRequest. */
+            interface IGetSettingsRequest {
+
+                /** GetSettingsRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a GetSettingsRequest. */
+            class GetSettingsRequest implements IGetSettingsRequest {
+
+                /**
+                 * Constructs a new GetSettingsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IGetSettingsRequest);
+
+                /** GetSettingsRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new GetSettingsRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns GetSettingsRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IGetSettingsRequest): google.logging.v2.GetSettingsRequest;
+
+                /**
+                 * Encodes the specified GetSettingsRequest message. Does not implicitly {@link google.logging.v2.GetSettingsRequest.verify|verify} messages.
+                 * @param message GetSettingsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IGetSettingsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified GetSettingsRequest message, length delimited. Does not implicitly {@link google.logging.v2.GetSettingsRequest.verify|verify} messages.
+                 * @param message GetSettingsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IGetSettingsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a GetSettingsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns GetSettingsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.GetSettingsRequest;
+
+                /**
+                 * Decodes a GetSettingsRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns GetSettingsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.GetSettingsRequest;
+
+                /**
+                 * Verifies a GetSettingsRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a GetSettingsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns GetSettingsRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.GetSettingsRequest;
+
+                /**
+                 * Creates a plain object from a GetSettingsRequest message. Also converts values to other types if specified.
+                 * @param message GetSettingsRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.GetSettingsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this GetSettingsRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of an UpdateSettingsRequest. */
+            interface IUpdateSettingsRequest {
+
+                /** UpdateSettingsRequest name */
+                name?: (string|null);
+
+                /** UpdateSettingsRequest settings */
+                settings?: (google.logging.v2.ISettings|null);
+
+                /** UpdateSettingsRequest updateMask */
+                updateMask?: (google.protobuf.IFieldMask|null);
+            }
+
+            /** Represents an UpdateSettingsRequest. */
+            class UpdateSettingsRequest implements IUpdateSettingsRequest {
+
+                /**
+                 * Constructs a new UpdateSettingsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IUpdateSettingsRequest);
+
+                /** UpdateSettingsRequest name. */
+                public name: string;
+
+                /** UpdateSettingsRequest settings. */
+                public settings?: (google.logging.v2.ISettings|null);
+
+                /** UpdateSettingsRequest updateMask. */
+                public updateMask?: (google.protobuf.IFieldMask|null);
+
+                /**
+                 * Creates a new UpdateSettingsRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UpdateSettingsRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IUpdateSettingsRequest): google.logging.v2.UpdateSettingsRequest;
+
+                /**
+                 * Encodes the specified UpdateSettingsRequest message. Does not implicitly {@link google.logging.v2.UpdateSettingsRequest.verify|verify} messages.
+                 * @param message UpdateSettingsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IUpdateSettingsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified UpdateSettingsRequest message, length delimited. Does not implicitly {@link google.logging.v2.UpdateSettingsRequest.verify|verify} messages.
+                 * @param message UpdateSettingsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IUpdateSettingsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an UpdateSettingsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UpdateSettingsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.UpdateSettingsRequest;
+
+                /**
+                 * Decodes an UpdateSettingsRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns UpdateSettingsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.UpdateSettingsRequest;
+
+                /**
+                 * Verifies an UpdateSettingsRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates an UpdateSettingsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns UpdateSettingsRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.UpdateSettingsRequest;
+
+                /**
+                 * Creates a plain object from an UpdateSettingsRequest message. Also converts values to other types if specified.
+                 * @param message UpdateSettingsRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.UpdateSettingsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this UpdateSettingsRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a Settings. */
+            interface ISettings {
+
+                /** Settings name */
+                name?: (string|null);
+
+                /** Settings storageLocation */
+                storageLocation?: (string|null);
+
+                /** Settings disableDefaultSink */
+                disableDefaultSink?: (boolean|null);
+            }
+
+            /** Represents a Settings. */
+            class Settings implements ISettings {
+
+                /**
+                 * Constructs a new Settings.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ISettings);
+
+                /** Settings name. */
+                public name: string;
+
+                /** Settings storageLocation. */
+                public storageLocation: string;
+
+                /** Settings disableDefaultSink. */
+                public disableDefaultSink: boolean;
+
+                /**
+                 * Creates a new Settings instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Settings instance
+                 */
+                public static create(properties?: google.logging.v2.ISettings): google.logging.v2.Settings;
+
+                /**
+                 * Encodes the specified Settings message. Does not implicitly {@link google.logging.v2.Settings.verify|verify} messages.
+                 * @param message Settings message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ISettings, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified Settings message, length delimited. Does not implicitly {@link google.logging.v2.Settings.verify|verify} messages.
+                 * @param message Settings message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ISettings, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Settings message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Settings
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.Settings;
+
+                /**
+                 * Decodes a Settings message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns Settings
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.Settings;
+
+                /**
+                 * Verifies a Settings message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a Settings message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns Settings
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.Settings;
+
+                /**
+                 * Creates a plain object from a Settings message. Also converts values to other types if specified.
+                 * @param message Settings
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.Settings, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this Settings to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a CopyLogEntriesRequest. */
+            interface ICopyLogEntriesRequest {
+
+                /** CopyLogEntriesRequest name */
+                name?: (string|null);
+
+                /** CopyLogEntriesRequest filter */
+                filter?: (string|null);
+
+                /** CopyLogEntriesRequest destination */
+                destination?: (string|null);
+            }
+
+            /** Represents a CopyLogEntriesRequest. */
+            class CopyLogEntriesRequest implements ICopyLogEntriesRequest {
+
+                /**
+                 * Constructs a new CopyLogEntriesRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ICopyLogEntriesRequest);
+
+                /** CopyLogEntriesRequest name. */
+                public name: string;
+
+                /** CopyLogEntriesRequest filter. */
+                public filter: string;
+
+                /** CopyLogEntriesRequest destination. */
+                public destination: string;
+
+                /**
+                 * Creates a new CopyLogEntriesRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CopyLogEntriesRequest instance
+                 */
+                public static create(properties?: google.logging.v2.ICopyLogEntriesRequest): google.logging.v2.CopyLogEntriesRequest;
+
+                /**
+                 * Encodes the specified CopyLogEntriesRequest message. Does not implicitly {@link google.logging.v2.CopyLogEntriesRequest.verify|verify} messages.
+                 * @param message CopyLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ICopyLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified CopyLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.CopyLogEntriesRequest.verify|verify} messages.
+                 * @param message CopyLogEntriesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ICopyLogEntriesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CopyLogEntriesRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CopyLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.CopyLogEntriesRequest;
+
+                /**
+                 * Decodes a CopyLogEntriesRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns CopyLogEntriesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.CopyLogEntriesRequest;
+
+                /**
+                 * Verifies a CopyLogEntriesRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a CopyLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns CopyLogEntriesRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.CopyLogEntriesRequest;
+
+                /**
+                 * Creates a plain object from a CopyLogEntriesRequest message. Also converts values to other types if specified.
+                 * @param message CopyLogEntriesRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.CopyLogEntriesRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this CopyLogEntriesRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a CopyLogEntriesMetadata. */
+            interface ICopyLogEntriesMetadata {
+
+                /** CopyLogEntriesMetadata startTime */
+                startTime?: (google.protobuf.ITimestamp|null);
+
+                /** CopyLogEntriesMetadata endTime */
+                endTime?: (google.protobuf.ITimestamp|null);
+
+                /** CopyLogEntriesMetadata state */
+                state?: (google.logging.v2.OperationState|keyof typeof google.logging.v2.OperationState|null);
+
+                /** CopyLogEntriesMetadata cancellationRequested */
+                cancellationRequested?: (boolean|null);
+
+                /** CopyLogEntriesMetadata request */
+                request?: (google.logging.v2.ICopyLogEntriesRequest|null);
+
+                /** CopyLogEntriesMetadata progress */
+                progress?: (number|null);
+
+                /** CopyLogEntriesMetadata writerIdentity */
+                writerIdentity?: (string|null);
+            }
+
+            /** Represents a CopyLogEntriesMetadata. */
+            class CopyLogEntriesMetadata implements ICopyLogEntriesMetadata {
+
+                /**
+                 * Constructs a new CopyLogEntriesMetadata.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ICopyLogEntriesMetadata);
+
+                /** CopyLogEntriesMetadata startTime. */
+                public startTime?: (google.protobuf.ITimestamp|null);
+
+                /** CopyLogEntriesMetadata endTime. */
+                public endTime?: (google.protobuf.ITimestamp|null);
+
+                /** CopyLogEntriesMetadata state. */
+                public state: (google.logging.v2.OperationState|keyof typeof google.logging.v2.OperationState);
+
+                /** CopyLogEntriesMetadata cancellationRequested. */
+                public cancellationRequested: boolean;
+
+                /** CopyLogEntriesMetadata request. */
+                public request?: (google.logging.v2.ICopyLogEntriesRequest|null);
+
+                /** CopyLogEntriesMetadata progress. */
+                public progress: number;
+
+                /** CopyLogEntriesMetadata writerIdentity. */
+                public writerIdentity: string;
+
+                /**
+                 * Creates a new CopyLogEntriesMetadata instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CopyLogEntriesMetadata instance
+                 */
+                public static create(properties?: google.logging.v2.ICopyLogEntriesMetadata): google.logging.v2.CopyLogEntriesMetadata;
+
+                /**
+                 * Encodes the specified CopyLogEntriesMetadata message. Does not implicitly {@link google.logging.v2.CopyLogEntriesMetadata.verify|verify} messages.
+                 * @param message CopyLogEntriesMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ICopyLogEntriesMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified CopyLogEntriesMetadata message, length delimited. Does not implicitly {@link google.logging.v2.CopyLogEntriesMetadata.verify|verify} messages.
+                 * @param message CopyLogEntriesMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ICopyLogEntriesMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CopyLogEntriesMetadata message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CopyLogEntriesMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.CopyLogEntriesMetadata;
+
+                /**
+                 * Decodes a CopyLogEntriesMetadata message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns CopyLogEntriesMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.CopyLogEntriesMetadata;
+
+                /**
+                 * Verifies a CopyLogEntriesMetadata message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a CopyLogEntriesMetadata message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns CopyLogEntriesMetadata
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.CopyLogEntriesMetadata;
+
+                /**
+                 * Creates a plain object from a CopyLogEntriesMetadata message. Also converts values to other types if specified.
+                 * @param message CopyLogEntriesMetadata
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.CopyLogEntriesMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this CopyLogEntriesMetadata to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** Properties of a CopyLogEntriesResponse. */
+            interface ICopyLogEntriesResponse {
+
+                /** CopyLogEntriesResponse logEntriesCopiedCount */
+                logEntriesCopiedCount?: (number|Long|string|null);
+            }
+
+            /** Represents a CopyLogEntriesResponse. */
+            class CopyLogEntriesResponse implements ICopyLogEntriesResponse {
+
+                /**
+                 * Constructs a new CopyLogEntriesResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ICopyLogEntriesResponse);
+
+                /** CopyLogEntriesResponse logEntriesCopiedCount. */
+                public logEntriesCopiedCount: (number|Long|string);
+
+                /**
+                 * Creates a new CopyLogEntriesResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CopyLogEntriesResponse instance
+                 */
+                public static create(properties?: google.logging.v2.ICopyLogEntriesResponse): google.logging.v2.CopyLogEntriesResponse;
+
+                /**
+                 * Encodes the specified CopyLogEntriesResponse message. Does not implicitly {@link google.logging.v2.CopyLogEntriesResponse.verify|verify} messages.
+                 * @param message CopyLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ICopyLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified CopyLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.CopyLogEntriesResponse.verify|verify} messages.
+                 * @param message CopyLogEntriesResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ICopyLogEntriesResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CopyLogEntriesResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CopyLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.CopyLogEntriesResponse;
+
+                /**
+                 * Decodes a CopyLogEntriesResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns CopyLogEntriesResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.CopyLogEntriesResponse;
+
+                /**
+                 * Verifies a CopyLogEntriesResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a CopyLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns CopyLogEntriesResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.CopyLogEntriesResponse;
+
+                /**
+                 * Creates a plain object from a CopyLogEntriesResponse message. Also converts values to other types if specified.
+                 * @param message CopyLogEntriesResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.CopyLogEntriesResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this CopyLogEntriesResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+            }
+
+            /** LifecycleState enum. */
+            enum LifecycleState {
+                LIFECYCLE_STATE_UNSPECIFIED = 0,
+                ACTIVE = 1,
+                DELETE_REQUESTED = 2
+            }
+
+            /** OperationState enum. */
+            enum OperationState {
+                OPERATION_STATE_UNSPECIFIED = 0,
+                OPERATION_STATE_SCHEDULED = 1,
+                OPERATION_STATE_WAITING_FOR_PERMISSIONS = 2,
+                OPERATION_STATE_RUNNING = 3,
+                OPERATION_STATE_SUCCEEDED = 4,
+                OPERATION_STATE_FAILED = 5,
+                OPERATION_STATE_CANCELLED = 6
+            }
+
             /** Represents a MetricsServiceV2 */
             class MetricsServiceV2 extends $protobuf.rpc.Service {
 
@@ -9946,6 +10755,9 @@ export namespace google {
                 /** LogMetric filter */
                 filter?: (string|null);
 
+                /** LogMetric disabled */
+                disabled?: (boolean|null);
+
                 /** LogMetric metricDescriptor */
                 metricDescriptor?: (google.api.IMetricDescriptor|null);
 
@@ -9985,6 +10797,9 @@ export namespace google {
 
                 /** LogMetric filter. */
                 public filter: string;
+
+                /** LogMetric disabled. */
+                public disabled: boolean;
 
                 /** LogMetric metricDescriptor. */
                 public metricDescriptor?: (google.api.IMetricDescriptor|null);
@@ -12781,6 +13596,922 @@ export namespace google {
 
             /**
              * Converts this Metric to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+    }
+
+    /** Namespace longrunning. */
+    namespace longrunning {
+
+        /** Represents an Operations */
+        class Operations extends $protobuf.rpc.Service {
+
+            /**
+             * Constructs a new Operations service.
+             * @param rpcImpl RPC implementation
+             * @param [requestDelimited=false] Whether requests are length-delimited
+             * @param [responseDelimited=false] Whether responses are length-delimited
+             */
+            constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+
+            /**
+             * Creates new Operations service using the specified rpc implementation.
+             * @param rpcImpl RPC implementation
+             * @param [requestDelimited=false] Whether requests are length-delimited
+             * @param [responseDelimited=false] Whether responses are length-delimited
+             * @returns RPC service. Useful where requests and/or responses are streamed.
+             */
+            public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): Operations;
+
+            /**
+             * Calls ListOperations.
+             * @param request ListOperationsRequest message or plain object
+             * @param callback Node-style callback called with the error, if any, and ListOperationsResponse
+             */
+            public listOperations(request: google.longrunning.IListOperationsRequest, callback: google.longrunning.Operations.ListOperationsCallback): void;
+
+            /**
+             * Calls ListOperations.
+             * @param request ListOperationsRequest message or plain object
+             * @returns Promise
+             */
+            public listOperations(request: google.longrunning.IListOperationsRequest): Promise<google.longrunning.ListOperationsResponse>;
+
+            /**
+             * Calls GetOperation.
+             * @param request GetOperationRequest message or plain object
+             * @param callback Node-style callback called with the error, if any, and Operation
+             */
+            public getOperation(request: google.longrunning.IGetOperationRequest, callback: google.longrunning.Operations.GetOperationCallback): void;
+
+            /**
+             * Calls GetOperation.
+             * @param request GetOperationRequest message or plain object
+             * @returns Promise
+             */
+            public getOperation(request: google.longrunning.IGetOperationRequest): Promise<google.longrunning.Operation>;
+
+            /**
+             * Calls DeleteOperation.
+             * @param request DeleteOperationRequest message or plain object
+             * @param callback Node-style callback called with the error, if any, and Empty
+             */
+            public deleteOperation(request: google.longrunning.IDeleteOperationRequest, callback: google.longrunning.Operations.DeleteOperationCallback): void;
+
+            /**
+             * Calls DeleteOperation.
+             * @param request DeleteOperationRequest message or plain object
+             * @returns Promise
+             */
+            public deleteOperation(request: google.longrunning.IDeleteOperationRequest): Promise<google.protobuf.Empty>;
+
+            /**
+             * Calls CancelOperation.
+             * @param request CancelOperationRequest message or plain object
+             * @param callback Node-style callback called with the error, if any, and Empty
+             */
+            public cancelOperation(request: google.longrunning.ICancelOperationRequest, callback: google.longrunning.Operations.CancelOperationCallback): void;
+
+            /**
+             * Calls CancelOperation.
+             * @param request CancelOperationRequest message or plain object
+             * @returns Promise
+             */
+            public cancelOperation(request: google.longrunning.ICancelOperationRequest): Promise<google.protobuf.Empty>;
+
+            /**
+             * Calls WaitOperation.
+             * @param request WaitOperationRequest message or plain object
+             * @param callback Node-style callback called with the error, if any, and Operation
+             */
+            public waitOperation(request: google.longrunning.IWaitOperationRequest, callback: google.longrunning.Operations.WaitOperationCallback): void;
+
+            /**
+             * Calls WaitOperation.
+             * @param request WaitOperationRequest message or plain object
+             * @returns Promise
+             */
+            public waitOperation(request: google.longrunning.IWaitOperationRequest): Promise<google.longrunning.Operation>;
+        }
+
+        namespace Operations {
+
+            /**
+             * Callback as used by {@link google.longrunning.Operations#listOperations}.
+             * @param error Error, if any
+             * @param [response] ListOperationsResponse
+             */
+            type ListOperationsCallback = (error: (Error|null), response?: google.longrunning.ListOperationsResponse) => void;
+
+            /**
+             * Callback as used by {@link google.longrunning.Operations#getOperation}.
+             * @param error Error, if any
+             * @param [response] Operation
+             */
+            type GetOperationCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
+
+            /**
+             * Callback as used by {@link google.longrunning.Operations#deleteOperation}.
+             * @param error Error, if any
+             * @param [response] Empty
+             */
+            type DeleteOperationCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
+
+            /**
+             * Callback as used by {@link google.longrunning.Operations#cancelOperation}.
+             * @param error Error, if any
+             * @param [response] Empty
+             */
+            type CancelOperationCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
+
+            /**
+             * Callback as used by {@link google.longrunning.Operations#waitOperation}.
+             * @param error Error, if any
+             * @param [response] Operation
+             */
+            type WaitOperationCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
+        }
+
+        /** Properties of an Operation. */
+        interface IOperation {
+
+            /** Operation name */
+            name?: (string|null);
+
+            /** Operation metadata */
+            metadata?: (google.protobuf.IAny|null);
+
+            /** Operation done */
+            done?: (boolean|null);
+
+            /** Operation error */
+            error?: (google.rpc.IStatus|null);
+
+            /** Operation response */
+            response?: (google.protobuf.IAny|null);
+        }
+
+        /** Represents an Operation. */
+        class Operation implements IOperation {
+
+            /**
+             * Constructs a new Operation.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IOperation);
+
+            /** Operation name. */
+            public name: string;
+
+            /** Operation metadata. */
+            public metadata?: (google.protobuf.IAny|null);
+
+            /** Operation done. */
+            public done: boolean;
+
+            /** Operation error. */
+            public error?: (google.rpc.IStatus|null);
+
+            /** Operation response. */
+            public response?: (google.protobuf.IAny|null);
+
+            /** Operation result. */
+            public result?: ("error"|"response");
+
+            /**
+             * Creates a new Operation instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns Operation instance
+             */
+            public static create(properties?: google.longrunning.IOperation): google.longrunning.Operation;
+
+            /**
+             * Encodes the specified Operation message. Does not implicitly {@link google.longrunning.Operation.verify|verify} messages.
+             * @param message Operation message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IOperation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified Operation message, length delimited. Does not implicitly {@link google.longrunning.Operation.verify|verify} messages.
+             * @param message Operation message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IOperation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an Operation message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns Operation
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.Operation;
+
+            /**
+             * Decodes an Operation message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns Operation
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.Operation;
+
+            /**
+             * Verifies an Operation message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates an Operation message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns Operation
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.Operation;
+
+            /**
+             * Creates a plain object from an Operation message. Also converts values to other types if specified.
+             * @param message Operation
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.Operation, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this Operation to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a GetOperationRequest. */
+        interface IGetOperationRequest {
+
+            /** GetOperationRequest name */
+            name?: (string|null);
+        }
+
+        /** Represents a GetOperationRequest. */
+        class GetOperationRequest implements IGetOperationRequest {
+
+            /**
+             * Constructs a new GetOperationRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IGetOperationRequest);
+
+            /** GetOperationRequest name. */
+            public name: string;
+
+            /**
+             * Creates a new GetOperationRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns GetOperationRequest instance
+             */
+            public static create(properties?: google.longrunning.IGetOperationRequest): google.longrunning.GetOperationRequest;
+
+            /**
+             * Encodes the specified GetOperationRequest message. Does not implicitly {@link google.longrunning.GetOperationRequest.verify|verify} messages.
+             * @param message GetOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IGetOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified GetOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.GetOperationRequest.verify|verify} messages.
+             * @param message GetOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IGetOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a GetOperationRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns GetOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.GetOperationRequest;
+
+            /**
+             * Decodes a GetOperationRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns GetOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.GetOperationRequest;
+
+            /**
+             * Verifies a GetOperationRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a GetOperationRequest message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns GetOperationRequest
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.GetOperationRequest;
+
+            /**
+             * Creates a plain object from a GetOperationRequest message. Also converts values to other types if specified.
+             * @param message GetOperationRequest
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.GetOperationRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this GetOperationRequest to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a ListOperationsRequest. */
+        interface IListOperationsRequest {
+
+            /** ListOperationsRequest name */
+            name?: (string|null);
+
+            /** ListOperationsRequest filter */
+            filter?: (string|null);
+
+            /** ListOperationsRequest pageSize */
+            pageSize?: (number|null);
+
+            /** ListOperationsRequest pageToken */
+            pageToken?: (string|null);
+        }
+
+        /** Represents a ListOperationsRequest. */
+        class ListOperationsRequest implements IListOperationsRequest {
+
+            /**
+             * Constructs a new ListOperationsRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IListOperationsRequest);
+
+            /** ListOperationsRequest name. */
+            public name: string;
+
+            /** ListOperationsRequest filter. */
+            public filter: string;
+
+            /** ListOperationsRequest pageSize. */
+            public pageSize: number;
+
+            /** ListOperationsRequest pageToken. */
+            public pageToken: string;
+
+            /**
+             * Creates a new ListOperationsRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ListOperationsRequest instance
+             */
+            public static create(properties?: google.longrunning.IListOperationsRequest): google.longrunning.ListOperationsRequest;
+
+            /**
+             * Encodes the specified ListOperationsRequest message. Does not implicitly {@link google.longrunning.ListOperationsRequest.verify|verify} messages.
+             * @param message ListOperationsRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IListOperationsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ListOperationsRequest message, length delimited. Does not implicitly {@link google.longrunning.ListOperationsRequest.verify|verify} messages.
+             * @param message ListOperationsRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IListOperationsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ListOperationsRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns ListOperationsRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.ListOperationsRequest;
+
+            /**
+             * Decodes a ListOperationsRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns ListOperationsRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.ListOperationsRequest;
+
+            /**
+             * Verifies a ListOperationsRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a ListOperationsRequest message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns ListOperationsRequest
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.ListOperationsRequest;
+
+            /**
+             * Creates a plain object from a ListOperationsRequest message. Also converts values to other types if specified.
+             * @param message ListOperationsRequest
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.ListOperationsRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this ListOperationsRequest to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a ListOperationsResponse. */
+        interface IListOperationsResponse {
+
+            /** ListOperationsResponse operations */
+            operations?: (google.longrunning.IOperation[]|null);
+
+            /** ListOperationsResponse nextPageToken */
+            nextPageToken?: (string|null);
+        }
+
+        /** Represents a ListOperationsResponse. */
+        class ListOperationsResponse implements IListOperationsResponse {
+
+            /**
+             * Constructs a new ListOperationsResponse.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IListOperationsResponse);
+
+            /** ListOperationsResponse operations. */
+            public operations: google.longrunning.IOperation[];
+
+            /** ListOperationsResponse nextPageToken. */
+            public nextPageToken: string;
+
+            /**
+             * Creates a new ListOperationsResponse instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ListOperationsResponse instance
+             */
+            public static create(properties?: google.longrunning.IListOperationsResponse): google.longrunning.ListOperationsResponse;
+
+            /**
+             * Encodes the specified ListOperationsResponse message. Does not implicitly {@link google.longrunning.ListOperationsResponse.verify|verify} messages.
+             * @param message ListOperationsResponse message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IListOperationsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ListOperationsResponse message, length delimited. Does not implicitly {@link google.longrunning.ListOperationsResponse.verify|verify} messages.
+             * @param message ListOperationsResponse message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IListOperationsResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ListOperationsResponse message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns ListOperationsResponse
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.ListOperationsResponse;
+
+            /**
+             * Decodes a ListOperationsResponse message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns ListOperationsResponse
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.ListOperationsResponse;
+
+            /**
+             * Verifies a ListOperationsResponse message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a ListOperationsResponse message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns ListOperationsResponse
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.ListOperationsResponse;
+
+            /**
+             * Creates a plain object from a ListOperationsResponse message. Also converts values to other types if specified.
+             * @param message ListOperationsResponse
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.ListOperationsResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this ListOperationsResponse to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a CancelOperationRequest. */
+        interface ICancelOperationRequest {
+
+            /** CancelOperationRequest name */
+            name?: (string|null);
+        }
+
+        /** Represents a CancelOperationRequest. */
+        class CancelOperationRequest implements ICancelOperationRequest {
+
+            /**
+             * Constructs a new CancelOperationRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.ICancelOperationRequest);
+
+            /** CancelOperationRequest name. */
+            public name: string;
+
+            /**
+             * Creates a new CancelOperationRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CancelOperationRequest instance
+             */
+            public static create(properties?: google.longrunning.ICancelOperationRequest): google.longrunning.CancelOperationRequest;
+
+            /**
+             * Encodes the specified CancelOperationRequest message. Does not implicitly {@link google.longrunning.CancelOperationRequest.verify|verify} messages.
+             * @param message CancelOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.ICancelOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CancelOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.CancelOperationRequest.verify|verify} messages.
+             * @param message CancelOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.ICancelOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CancelOperationRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns CancelOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.CancelOperationRequest;
+
+            /**
+             * Decodes a CancelOperationRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns CancelOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.CancelOperationRequest;
+
+            /**
+             * Verifies a CancelOperationRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a CancelOperationRequest message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns CancelOperationRequest
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.CancelOperationRequest;
+
+            /**
+             * Creates a plain object from a CancelOperationRequest message. Also converts values to other types if specified.
+             * @param message CancelOperationRequest
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.CancelOperationRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this CancelOperationRequest to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a DeleteOperationRequest. */
+        interface IDeleteOperationRequest {
+
+            /** DeleteOperationRequest name */
+            name?: (string|null);
+        }
+
+        /** Represents a DeleteOperationRequest. */
+        class DeleteOperationRequest implements IDeleteOperationRequest {
+
+            /**
+             * Constructs a new DeleteOperationRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IDeleteOperationRequest);
+
+            /** DeleteOperationRequest name. */
+            public name: string;
+
+            /**
+             * Creates a new DeleteOperationRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns DeleteOperationRequest instance
+             */
+            public static create(properties?: google.longrunning.IDeleteOperationRequest): google.longrunning.DeleteOperationRequest;
+
+            /**
+             * Encodes the specified DeleteOperationRequest message. Does not implicitly {@link google.longrunning.DeleteOperationRequest.verify|verify} messages.
+             * @param message DeleteOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IDeleteOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified DeleteOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.DeleteOperationRequest.verify|verify} messages.
+             * @param message DeleteOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IDeleteOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a DeleteOperationRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns DeleteOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.DeleteOperationRequest;
+
+            /**
+             * Decodes a DeleteOperationRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns DeleteOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.DeleteOperationRequest;
+
+            /**
+             * Verifies a DeleteOperationRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a DeleteOperationRequest message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns DeleteOperationRequest
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.DeleteOperationRequest;
+
+            /**
+             * Creates a plain object from a DeleteOperationRequest message. Also converts values to other types if specified.
+             * @param message DeleteOperationRequest
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.DeleteOperationRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this DeleteOperationRequest to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of a WaitOperationRequest. */
+        interface IWaitOperationRequest {
+
+            /** WaitOperationRequest name */
+            name?: (string|null);
+
+            /** WaitOperationRequest timeout */
+            timeout?: (google.protobuf.IDuration|null);
+        }
+
+        /** Represents a WaitOperationRequest. */
+        class WaitOperationRequest implements IWaitOperationRequest {
+
+            /**
+             * Constructs a new WaitOperationRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IWaitOperationRequest);
+
+            /** WaitOperationRequest name. */
+            public name: string;
+
+            /** WaitOperationRequest timeout. */
+            public timeout?: (google.protobuf.IDuration|null);
+
+            /**
+             * Creates a new WaitOperationRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WaitOperationRequest instance
+             */
+            public static create(properties?: google.longrunning.IWaitOperationRequest): google.longrunning.WaitOperationRequest;
+
+            /**
+             * Encodes the specified WaitOperationRequest message. Does not implicitly {@link google.longrunning.WaitOperationRequest.verify|verify} messages.
+             * @param message WaitOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IWaitOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WaitOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.WaitOperationRequest.verify|verify} messages.
+             * @param message WaitOperationRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IWaitOperationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WaitOperationRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns WaitOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.WaitOperationRequest;
+
+            /**
+             * Decodes a WaitOperationRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns WaitOperationRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.WaitOperationRequest;
+
+            /**
+             * Verifies a WaitOperationRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates a WaitOperationRequest message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns WaitOperationRequest
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.WaitOperationRequest;
+
+            /**
+             * Creates a plain object from a WaitOperationRequest message. Also converts values to other types if specified.
+             * @param message WaitOperationRequest
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.WaitOperationRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this WaitOperationRequest to JSON.
+             * @returns JSON object
+             */
+            public toJSON(): { [k: string]: any };
+        }
+
+        /** Properties of an OperationInfo. */
+        interface IOperationInfo {
+
+            /** OperationInfo responseType */
+            responseType?: (string|null);
+
+            /** OperationInfo metadataType */
+            metadataType?: (string|null);
+        }
+
+        /** Represents an OperationInfo. */
+        class OperationInfo implements IOperationInfo {
+
+            /**
+             * Constructs a new OperationInfo.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: google.longrunning.IOperationInfo);
+
+            /** OperationInfo responseType. */
+            public responseType: string;
+
+            /** OperationInfo metadataType. */
+            public metadataType: string;
+
+            /**
+             * Creates a new OperationInfo instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns OperationInfo instance
+             */
+            public static create(properties?: google.longrunning.IOperationInfo): google.longrunning.OperationInfo;
+
+            /**
+             * Encodes the specified OperationInfo message. Does not implicitly {@link google.longrunning.OperationInfo.verify|verify} messages.
+             * @param message OperationInfo message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encode(message: google.longrunning.IOperationInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified OperationInfo message, length delimited. Does not implicitly {@link google.longrunning.OperationInfo.verify|verify} messages.
+             * @param message OperationInfo message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            public static encodeDelimited(message: google.longrunning.IOperationInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an OperationInfo message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns OperationInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.longrunning.OperationInfo;
+
+            /**
+             * Decodes an OperationInfo message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns OperationInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.longrunning.OperationInfo;
+
+            /**
+             * Verifies an OperationInfo message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            public static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Creates an OperationInfo message from a plain object. Also converts values to their respective internal types.
+             * @param object Plain object
+             * @returns OperationInfo
+             */
+            public static fromObject(object: { [k: string]: any }): google.longrunning.OperationInfo;
+
+            /**
+             * Creates a plain object from an OperationInfo message. Also converts values to other types if specified.
+             * @param message OperationInfo
+             * @param [options] Conversion options
+             * @returns Plain object
+             */
+            public static toObject(message: google.longrunning.OperationInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+            /**
+             * Converts this OperationInfo to JSON.
              * @returns JSON object
              */
             public toJSON(): { [k: string]: any };

@@ -25,10 +25,10 @@ function main(parent) {
    */
   // const parent = 'abc123'
   /**
-   *  Optional. If present, then retrieve the next batch of results from the
-   *  preceding call to this method. `pageToken` must be the value of
-   *  `nextPageToken` from the previous response. The values of other method
-   *  parameters should be identical to those in the previous call.
+   *  Optional. If present, then retrieve the next batch of results from the preceding call
+   *  to this method. `pageToken` must be the value of `nextPageToken` from the
+   *  previous response. The values of other method parameters should be
+   *  identical to those in the previous call.
    */
   // const pageToken = 'abc123'
   /**

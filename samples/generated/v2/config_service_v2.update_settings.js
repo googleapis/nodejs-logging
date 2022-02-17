@@ -12,28 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 'use strict';
 
-function main(name) {
-  // [START logging_v2_generated_ConfigServiceV2_GetSettings_async]
+function main(name, settings) {
+  // [START logging_v2_generated_ConfigServiceV2_UpdateSettings_async]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource for which to retrieve settings.
-   *      "projects/[PROJECT_ID]/settings"
+   *  Required. The resource name for the settings to update.
    *      "organizations/[ORGANIZATION_ID]/settings"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/settings"
-   *      "folders/[FOLDER_ID]/settings"
    *  For example:
    *    `"organizations/12345/settings"`
-   *  Note: Settings for the Log Router can be get for Google Cloud projects,
-   *  folders, organizations and billing accounts. Currently it can only be
-   *  configured for organizations. Once configured for an organization, it
-   *  applies to all projects and folders in the Google Cloud organization.
+   *  Note: Settings for the Log Router can currently only be configured for
+   *  Google Cloud organizations. Once configured, it applies to all projects and
+   *  folders in the Google Cloud organization.
    */
   // const name = 'abc123'
+  /**
+   *  Required. The settings to update.
+   *  See Enabling CMEK for Log
+   *  Router (https://cloud.google.com/logging/docs/routing/managed-encryption)
+   *  for more information.
+   */
+  // const settings = {}
+  /**
+   *  Optional. Field mask identifying which fields from `settings` should
+   *  be updated. A field will be overwritten if and only if it is in the update
+   *  mask. Output only fields cannot be updated.
+   *  See FieldMask google.protobuf.FieldMask  for more information.
+   *  For example: `"updateMask=kmsKeyName"`
+   */
+  // const updateMask = {}
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -41,19 +51,20 @@ function main(name) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callGetSettings() {
+  async function callUpdateSettings() {
     // Construct request
     const request = {
       name,
+      settings,
     };
 
     // Run request
-    const response = await loggingClient.getSettings(request);
+    const response = await loggingClient.updateSettings(request);
     console.log(response);
   }
 
-  callGetSettings();
-  // [END logging_v2_generated_ConfigServiceV2_GetSettings_async]
+  callUpdateSettings();
+  // [END logging_v2_generated_ConfigServiceV2_UpdateSettings_async]
 }
 
 process.on('unhandledRejection', err => {

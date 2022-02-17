@@ -181,6 +181,9 @@ export class MetricsServiceV2Client {
       billingAccountLogPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
+      billingAccountSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'billingAccounts/{billing_account}/settings'
+      ),
       billingAccountSinkPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/sinks/{sink}'
       ),
@@ -198,6 +201,9 @@ export class MetricsServiceV2Client {
       ),
       folderLogPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
+      ),
+      folderSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/settings'
       ),
       folderSinkPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/sinks/{sink}'
@@ -221,6 +227,9 @@ export class MetricsServiceV2Client {
       organizationLogPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
+      organizationSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}/settings'
+      ),
       organizationSinkPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/sinks/{sink}'
       ),
@@ -241,6 +250,9 @@ export class MetricsServiceV2Client {
       ),
       projectLogPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/logs/{log}'
+      ),
+      projectSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/settings'
       ),
       projectSinkPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/sinks/{sink}'
@@ -1221,6 +1233,33 @@ export class MetricsServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified billingAccountSettings resource name string.
+   *
+   * @param {string} billing_account
+   * @returns {string} Resource name string.
+   */
+  billingAccountSettingsPath(billingAccount: string) {
+    return this.pathTemplates.billingAccountSettingsPathTemplate.render({
+      billing_account: billingAccount,
+    });
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountSettings resource.
+   *
+   * @param {string} billingAccountSettingsName
+   *   A fully-qualified path representing billing_account_settings resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountSettingsName(
+    billingAccountSettingsName: string
+  ) {
+    return this.pathTemplates.billingAccountSettingsPathTemplate.match(
+      billingAccountSettingsName
+    ).billing_account;
+  }
+
+  /**
    * Return a fully-qualified billingAccountSink resource name string.
    *
    * @param {string} billing_account
@@ -1499,6 +1538,31 @@ export class MetricsServiceV2Client {
    */
   matchLogFromFolderLogName(folderLogName: string) {
     return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+  }
+
+  /**
+   * Return a fully-qualified folderSettings resource name string.
+   *
+   * @param {string} folder
+   * @returns {string} Resource name string.
+   */
+  folderSettingsPath(folder: string) {
+    return this.pathTemplates.folderSettingsPathTemplate.render({
+      folder: folder,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderSettings resource.
+   *
+   * @param {string} folderSettingsName
+   *   A fully-qualified path representing folder_settings resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderSettingsName(folderSettingsName: string) {
+    return this.pathTemplates.folderSettingsPathTemplate.match(
+      folderSettingsName
+    ).folder;
   }
 
   /**
@@ -1837,6 +1901,33 @@ export class MetricsServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationSettings resource name string.
+   *
+   * @param {string} organization
+   * @returns {string} Resource name string.
+   */
+  organizationSettingsPath(organization: string) {
+    return this.pathTemplates.organizationSettingsPathTemplate.render({
+      organization: organization,
+    });
+  }
+
+  /**
+   * Parse the organization from OrganizationSettings resource.
+   *
+   * @param {string} organizationSettingsName
+   *   A fully-qualified path representing organization_settings resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationSettingsName(
+    organizationSettingsName: string
+  ) {
+    return this.pathTemplates.organizationSettingsPathTemplate.match(
+      organizationSettingsName
+    ).organization;
+  }
+
+  /**
    * Return a fully-qualified organizationSink resource name string.
    *
    * @param {string} organization
@@ -2139,6 +2230,31 @@ export class MetricsServiceV2Client {
    */
   matchLogFromProjectLogName(projectLogName: string) {
     return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+  }
+
+  /**
+   * Return a fully-qualified projectSettings resource name string.
+   *
+   * @param {string} project
+   * @returns {string} Resource name string.
+   */
+  projectSettingsPath(project: string) {
+    return this.pathTemplates.projectSettingsPathTemplate.render({
+      project: project,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectSettings resource.
+   *
+   * @param {string} projectSettingsName
+   *   A fully-qualified path representing project_settings resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectSettingsName(projectSettingsName: string) {
+    return this.pathTemplates.projectSettingsPathTemplate.match(
+      projectSettingsName
+    ).project;
   }
 
   /**

@@ -25,7 +25,9 @@ function main(parent, exclusion) {
    *      "organizations/[ORGANIZATION_ID]"
    *      "billingAccounts/[BILLING_ACCOUNT_ID]"
    *      "folders/[FOLDER_ID]"
-   *  Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+   *  For examples:
+   *    `"projects/my-logging-project"`
+   *    `"organizations/123456789"`
    */
   // const parent = 'abc123'
   /**

@@ -105,6 +105,21 @@
                 "updateCmekSettings"
               ]
             },
+            "GetSettings": {
+              "methods": [
+                "getSettings"
+              ]
+            },
+            "UpdateSettings": {
+              "methods": [
+                "updateSettings"
+              ]
+            },
+            "CopyLogEntries": {
+              "methods": [
+                "copyLogEntries"
+              ]
+            },
             "ListBuckets": {
               "methods": [
                 "listBuckets",
@@ -231,6 +246,21 @@
             "UpdateCmekSettings": {
               "methods": [
                 "updateCmekSettings"
+              ]
+            },
+            "GetSettings": {
+              "methods": [
+                "getSettings"
+              ]
+            },
+            "UpdateSettings": {
+              "methods": [
+                "updateSettings"
+              ]
+            },
+            "CopyLogEntries": {
+              "methods": [
+                "copyLogEntries"
               ]
             },
             "ListBuckets": {

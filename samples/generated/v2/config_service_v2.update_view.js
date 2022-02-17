@@ -22,8 +22,8 @@ function main(name, view) {
   /**
    *  Required. The full resource name of the view to update
    *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
-   *  Example:
-   *    `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   *  For example:
+   *    `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
    */
   // const name = 'abc123'
   /**
@@ -36,7 +36,7 @@ function main(name, view) {
    *  in the update mask. `name` and output only fields cannot be updated.
    *  For a detailed `FieldMask` definition, see
    *  https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-   *  Example: `updateMask=filter`.
+   *  For example: `updateMask=filter`
    */
   // const updateMask = {}
 

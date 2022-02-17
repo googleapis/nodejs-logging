@@ -12,29 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 'use strict';
 
-function main(parent, viewId, view) {
-  // [START logging_v2_generated_ConfigServiceV2_CreateView_async]
+function main(name, destination) {
+  // [START logging_v2_generated_ConfigServiceV2_CopyLogEntries_async]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The bucket in which to create the view
-   *      `"projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"`
+   *  Required. Log bucket from which to copy log entries.
    *  For example:
-   *    `"projects/my-project/locations/global/buckets/my-bucket"`
+   *    `"projects/my-project/locations/global/buckets/my-source-bucket"`
    */
-  // const parent = 'abc123'
+  // const name = 'abc123'
   /**
-   *  Required. The id to use for this view.
+   *  Optional. A filter specifying which log entries to copy. The filter must be no more
+   *  than 20k characters. An empty filter matches all log entries.
    */
-  // const viewId = 'abc123'
+  // const filter = 'abc123'
   /**
-   *  Required. The new view.
+   *  Required. Destination to which to copy log entries.
    */
-  // const view = {}
+  // const destination = 'abc123'
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -42,21 +41,21 @@ function main(parent, viewId, view) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callCreateView() {
+  async function callCopyLogEntries() {
     // Construct request
     const request = {
-      parent,
-      viewId,
-      view,
+      name,
+      destination,
     };
 
     // Run request
-    const response = await loggingClient.createView(request);
+    const [operation] = await loggingClient.copyLogEntries(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callCreateView();
-  // [END logging_v2_generated_ConfigServiceV2_CreateView_async]
+  callCopyLogEntries();
+  // [END logging_v2_generated_ConfigServiceV2_CopyLogEntries_async]
 }
 
 process.on('unhandledRejection', err => {

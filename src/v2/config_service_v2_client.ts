@@ -23,6 +23,7 @@ import {
   CallOptions,
   Descriptors,
   ClientOptions,
+  LROperation,
   PaginationCallback,
   GaxCall,
 } from 'google-gax';
@@ -37,7 +38,7 @@ import jsonProtos = require('../../protos/protos.json');
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
 import * as gapicConfig from './config_service_v2_client_config.json';
-
+import {operationsProtos} from 'google-gax';
 const version = require('../../../package.json').version;
 
 /**
@@ -63,6 +64,7 @@ export class ConfigServiceV2Client {
   warn: (code: string, message: string, warnType?: string) => void;
   innerApiCalls: {[name: string]: Function};
   pathTemplates: {[name: string]: gax.PathTemplate};
+  operationsClient: gax.OperationsClient;
   configServiceV2Stub?: Promise<{[name: string]: Function}>;
 
   /**
@@ -181,6 +183,9 @@ export class ConfigServiceV2Client {
       billingAccountLogPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
+      billingAccountSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'billingAccounts/{billing_account}/settings'
+      ),
       billingAccountSinkPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/sinks/{sink}'
       ),
@@ -198,6 +203,9 @@ export class ConfigServiceV2Client {
       ),
       folderLogPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
+      ),
+      folderSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/settings'
       ),
       folderSinkPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/sinks/{sink}'
@@ -224,6 +232,9 @@ export class ConfigServiceV2Client {
       organizationLogPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
+      organizationSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}/settings'
+      ),
       organizationSinkPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/sinks/{sink}'
       ),
@@ -244,6 +255,9 @@ export class ConfigServiceV2Client {
       ),
       projectLogPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/logs/{log}'
+      ),
+      projectSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/settings'
       ),
       projectSinkPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/sinks/{sink}'
@@ -273,6 +287,33 @@ export class ConfigServiceV2Client {
         'pageToken',
         'nextPageToken',
         'exclusions'
+      ),
+    };
+
+    const protoFilesRoot = this._gaxModule.protobuf.Root.fromJSON(jsonProtos);
+
+    // This API contains "long-running operations", which return a
+    // an Operation object that allows for tracking of the operation,
+    // rather than holding a request open.
+
+    this.operationsClient = this._gaxModule
+      .lro({
+        auth: this.auth,
+        grpc: 'grpc' in this._gaxGrpc ? this._gaxGrpc.grpc : undefined,
+      })
+      .operationsClient(opts);
+    const copyLogEntriesResponse = protoFilesRoot.lookup(
+      '.google.logging.v2.CopyLogEntriesResponse'
+    ) as gax.protobuf.Type;
+    const copyLogEntriesMetadata = protoFilesRoot.lookup(
+      '.google.logging.v2.CopyLogEntriesMetadata'
+    ) as gax.protobuf.Type;
+
+    this.descriptors.longrunning = {
+      copyLogEntries: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        copyLogEntriesResponse.decode.bind(copyLogEntriesResponse),
+        copyLogEntriesMetadata.decode.bind(copyLogEntriesMetadata)
       ),
     };
 
@@ -349,6 +390,9 @@ export class ConfigServiceV2Client {
       'deleteExclusion',
       'getCmekSettings',
       'updateCmekSettings',
+      'getSettings',
+      'updateSettings',
+      'copyLogEntries',
     ];
     for (const methodName of configServiceV2StubMethods) {
       const callPromise = this.configServiceV2Stub.then(
@@ -365,7 +409,10 @@ export class ConfigServiceV2Client {
         }
       );
 
-      const descriptor = this.descriptors.page[methodName] || undefined;
+      const descriptor =
+        this.descriptors.page[methodName] ||
+        this.descriptors.longrunning[methodName] ||
+        undefined;
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
         this._defaults[methodName],
@@ -437,7 +484,7 @@ export class ConfigServiceV2Client {
   // -- Service calls --
   // -------------------
   /**
-   * Gets a bucket.
+   * Gets a log bucket.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -449,8 +496,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -528,21 +576,23 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getBucket(request, options, callback);
   }
   /**
-   * Creates a bucket that can be used to store log entries. Once a bucket has
-   * been created, the region cannot be changed.
+   * Creates a log bucket that can be used to store log entries. After a bucket
+   * has been created, the bucket's location cannot be changed.
    *
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.parent
-   *   Required. The resource in which to create the bucket:
+   *   Required. The resource in which to create the log bucket:
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
    *
-   *   Example: `"projects/my-logging-project/locations/global"`
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global"`
    * @param {string} request.bucketId
-   *   Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are
-   *   limited to 100 characters and can include only letters, digits,
-   *   underscores, hyphens, and periods.
+   *   Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are limited
+   *   to 100 characters and can include only letters, digits, underscores,
+   *   hyphens, and periods.
    * @param {google.logging.v2.LogBucket} request.bucket
    *   Required. The new bucket. The region specified in the new bucket must be compliant
    *   with any Location Restriction Org Policy. The name field in the bucket is
@@ -624,16 +674,16 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createBucket(request, options, callback);
   }
   /**
-   * Updates a bucket. This method replaces the following fields in the
+   * Updates a log bucket. This method replaces the following fields in the
    * existing bucket with values from the new bucket: `retention_period`
    *
    * If the retention period is decreased and the bucket is locked,
-   * FAILED_PRECONDITION will be returned.
+   * `FAILED_PRECONDITION` will be returned.
    *
-   * If the bucket has a LifecycleState of DELETE_REQUESTED, FAILED_PRECONDITION
-   * will be returned.
+   * If the bucket has a `lifecycle_state` of `DELETE_REQUESTED`, then
+   * `FAILED_PRECONDITION` will be returned.
    *
-   * A buckets region may not be modified after it is created.
+   * After a bucket has been created, the bucket's location cannot be changed.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -645,21 +695,20 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`. Also
-   *   requires permission "resourcemanager.projects.updateLiens" to set the
-   *   locked property
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket"`
    * @param {google.logging.v2.LogBucket} request.bucket
    *   Required. The updated bucket.
    * @param {google.protobuf.FieldMask} request.updateMask
    *   Required. Field mask that specifies the fields in `bucket` that need an update. A
-   *   bucket field will be overwritten if, and only if, it is in the update
-   *   mask. `name` and output only fields cannot be updated.
+   *   bucket field will be overwritten if, and only if, it is in the update mask.
+   *   `name` and output only fields cannot be updated.
    *
-   *   For a detailed `FieldMask` definition, see
+   *   For a detailed `FieldMask` definition, see:
    *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
    *
-   *   Example: `updateMask=retention_days`.
+   *   For example: `updateMask=retention_days`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -737,10 +786,11 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateBucket(request, options, callback);
   }
   /**
-   * Deletes a bucket.
-   * Moves the bucket to the DELETE_REQUESTED state. After 7 days, the
-   * bucket will be purged and all logs in the bucket will be permanently
-   * deleted.
+   * Deletes a log bucket.
+   *
+   * Changes the bucket's `lifecycle_state` to the `DELETE_REQUESTED` state.
+   * After 7 days, the bucket will be purged and all log entries in the bucket
+   * will be permanently deleted.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -752,8 +802,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -831,8 +882,8 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteBucket(request, options, callback);
   }
   /**
-   * Undeletes a bucket. A bucket that has been deleted may be undeleted within
-   * the grace period of 7 days.
+   * Undeletes a log bucket. A bucket that has been deleted can be undeleted
+   * within the grace period of 7 days.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -844,8 +895,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -923,7 +975,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.undeleteBucket(request, options, callback);
   }
   /**
-   * Gets a view.
+   * Gets a view on a log bucket..
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -932,8 +984,9 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
    *
-   *   Example:
-   *   `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1011,18 +1064,19 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getView(request, options, callback);
   }
   /**
-   * Creates a view over logs in a bucket. A bucket may contain a maximum of
-   * 50 views.
+   * Creates a view over log entries in a log bucket. A bucket may contain a
+   * maximum of 30 views.
    *
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.parent
    *   Required. The bucket in which to create the view
    *
-   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       `"projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"`
    *
-   *   Example:
-   *   `"projects/my-logging-project/locations/my-location/buckets/my-bucket"`
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket"`
    * @param {string} request.viewId
    *   Required. The id to use for this view.
    * @param {google.logging.v2.LogView} request.view
@@ -1104,8 +1158,11 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createView(request, options, callback);
   }
   /**
-   * Updates a view. This method replaces the following fields in the existing
-   * view with values from the new view: `filter`.
+   * Updates a view on a log bucket. This method replaces the following fields
+   * in the existing view with values from the new view: `filter`.
+   * If an `UNAVAILABLE` error is returned, this indicates that system is not in
+   * a state where it can update the view. If this occurs, please try again in a
+   * few minutes.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1114,8 +1171,9 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
    *
-   *   Example:
-   *     `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
    * @param {google.logging.v2.LogView} request.view
    *   Required. The updated view.
    * @param {google.protobuf.FieldMask} [request.updateMask]
@@ -1126,7 +1184,7 @@ export class ConfigServiceV2Client {
    *   For a detailed `FieldMask` definition, see
    *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
    *
-   *   Example: `updateMask=filter`.
+   *   For example: `updateMask=filter`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1204,7 +1262,10 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateView(request, options, callback);
   }
   /**
-   * Deletes a view from a bucket.
+   * Deletes a view on a log bucket.
+   * If an `UNAVAILABLE` error is returned, this indicates that system is not in
+   * a state where it can delete the view. If this occurs, please try again in a
+   * few minutes.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1213,8 +1274,9 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]"
    *
-   *   Example:
-   *      `"projects/my-project-id/locations/my-location/buckets/my-bucket-id/views/my-view-id"`.
+   *   For example:
+   *
+   *      `"projects/my-project/locations/global/buckets/my-bucket/views/my-view"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1304,7 +1366,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
    *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
    *
-   *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/sinks/my-sink"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1397,7 +1461,10 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
    *
-   *   Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+   *   For examples:
+   *
+   *     `"projects/my-project"`
+   *     `"organizations/123456789"`
    * @param {google.logging.v2.LogSink} request.sink
    *   Required. The new sink, whose `name` parameter is a sink identifier that
    *   is not already in use.
@@ -1405,9 +1472,9 @@ export class ConfigServiceV2Client {
    *   Optional. Determines the kind of IAM identity returned as `writer_identity`
    *   in the new sink. If this value is omitted or set to false, and if the
    *   sink's parent is a project, then the value returned as `writer_identity` is
-   *   the same group or service account used by Logging before the addition of
-   *   writer identities to this API. The sink's destination must be in the same
-   *   project as the sink itself.
+   *   the same group or service account used by Cloud Logging before the addition
+   *   of writer identities to this API. The sink's destination must be in the
+   *   same project as the sink itself.
    *
    *   If this field is set to true, or if the sink is owned by a non-project
    *   resource such as an organization, then the value of `writer_identity` will
@@ -1507,7 +1574,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
    *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
    *
-   *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/sinks/my-sink"`
    * @param {google.logging.v2.LogSink} request.sink
    *   Required. The updated sink, whose name is the same identifier that appears as part
    *   of `sink_name`.
@@ -1528,16 +1597,18 @@ export class ConfigServiceV2Client {
    *   an update. A sink field will be overwritten if, and only if, it is
    *   in the update mask. `name` and output only fields cannot be updated.
    *
-   *   An empty updateMask is temporarily treated as using the following mask
+   *   An empty `updateMask` is temporarily treated as using the following mask
    *   for backwards compatibility purposes:
-   *     destination,filter,includeChildren
+   *
+   *     `destination,filter,includeChildren`
+   *
    *   At some point in the future, behavior will be removed and specifying an
-   *   empty updateMask will be an error.
+   *   empty `updateMask` will be an error.
    *
    *   For a detailed `FieldMask` definition, see
    *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
    *
-   *   Example: `updateMask=filter`.
+   *   For example: `updateMask=filter`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1629,7 +1700,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
    *       "folders/[FOLDER_ID]/sinks/[SINK_ID]"
    *
-   *   Example: `"projects/my-project-id/sinks/my-sink-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/sinks/my-sink"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1707,7 +1780,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteSink(request, options, callback);
   }
   /**
-   * Gets the description of an exclusion.
+   * Gets the description of an exclusion in the _Default sink.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1719,7 +1792,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
    *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
    *
-   *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/exclusions/my-exclusion"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1797,9 +1872,9 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getExclusion(request, options, callback);
   }
   /**
-   * Creates a new exclusion in a specified parent resource.
-   * Only log entries belonging to that resource can be excluded.
-   * You can have up to 10 exclusions in a resource.
+   * Creates a new exclusion in the _Default sink in a specified parent
+   * resource. Only log entries belonging to that resource can be excluded. You
+   * can have up to 10 exclusions in a resource.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1811,7 +1886,10 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]"
    *       "folders/[FOLDER_ID]"
    *
-   *   Examples: `"projects/my-logging-project"`, `"organizations/123456789"`.
+   *   For examples:
+   *
+   *     `"projects/my-logging-project"`
+   *     `"organizations/123456789"`
    * @param {google.logging.v2.LogExclusion} request.exclusion
    *   Required. The new exclusion, whose `name` parameter is an exclusion name
    *   that is not already used in the parent resource.
@@ -1892,7 +1970,8 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createExclusion(request, options, callback);
   }
   /**
-   * Changes one or more properties of an existing exclusion.
+   * Changes one or more properties of an existing exclusion in the _Default
+   * sink.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -1904,7 +1983,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
    *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
    *
-   *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/exclusions/my-exclusion"`
    * @param {google.logging.v2.LogExclusion} request.exclusion
    *   Required. New values for the existing exclusion. Only the fields specified in
    *   `update_mask` are relevant.
@@ -1993,7 +2074,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.updateExclusion(request, options, callback);
   }
   /**
-   * Deletes an exclusion.
+   * Deletes an exclusion in the _Default sink.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -2005,7 +2086,9 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
    *       "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
    *
-   *   Example: `"projects/my-project-id/exclusions/my-exclusion-id"`.
+   *   For example:
+   *
+   *     `"projects/my-project/exclusions/my-exclusion"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -2083,13 +2166,14 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.deleteExclusion(request, options, callback);
   }
   /**
-   * Gets the Logs Router CMEK settings for the given resource.
+   * Gets the Logging CMEK settings for the given resource.
    *
-   * Note: CMEK for the Logs Router can currently only be configured for GCP
-   * organizations. Once configured, it applies to all projects and folders in
-   * the GCP organization.
+   * Note: CMEK for the Log Router can be configured for Google Cloud projects,
+   * folders, organizations and billing accounts. Once configured for an
+   * organization, it applies to all projects and folders in the Google Cloud
+   * organization.
    *
-   * See [Enabling CMEK for Logs
+   * See [Enabling CMEK for Log
    * Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
    * for more information.
    *
@@ -2103,11 +2187,14 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
    *       "folders/[FOLDER_ID]/cmekSettings"
    *
-   *   Example: `"organizations/12345/cmekSettings"`.
+   *   For example:
    *
-   *   Note: CMEK for the Logs Router can currently only be configured for GCP
-   *   organizations. Once configured, it applies to all projects and folders in
-   *   the GCP organization.
+   *     `"organizations/12345/cmekSettings"`
+   *
+   *   Note: CMEK for the Log Router can be configured for Google Cloud projects,
+   *   folders, organizations and billing accounts. Once configured for an
+   *   organization, it applies to all projects and folders in the Google Cloud
+   *   organization.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -2185,11 +2272,11 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.getCmekSettings(request, options, callback);
   }
   /**
-   * Updates the Logs Router CMEK settings for the given resource.
+   * Updates the Log Router CMEK settings for the given resource.
    *
-   * Note: CMEK for the Logs Router can currently only be configured for GCP
-   * organizations. Once configured, it applies to all projects and folders in
-   * the GCP organization.
+   * Note: CMEK for the Log Router can currently only be configured for Google
+   * Cloud organizations. Once configured, it applies to all projects and
+   * folders in the Google Cloud organization.
    *
    * {@link google.logging.v2.ConfigServiceV2.UpdateCmekSettings|UpdateCmekSettings}
    * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
@@ -2197,7 +2284,7 @@ export class ConfigServiceV2Client {
    * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
    * 3) access to the key is disabled.
    *
-   * See [Enabling CMEK for Logs
+   * See [Enabling CMEK for Log
    * Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
    * for more information.
    *
@@ -2211,15 +2298,17 @@ export class ConfigServiceV2Client {
    *       "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
    *       "folders/[FOLDER_ID]/cmekSettings"
    *
-   *   Example: `"organizations/12345/cmekSettings"`.
+   *   For example:
    *
-   *   Note: CMEK for the Logs Router can currently only be configured for GCP
-   *   organizations. Once configured, it applies to all projects and folders in
-   *   the GCP organization.
+   *     `"organizations/12345/cmekSettings"`
+   *
+   *   Note: CMEK for the Log Router can currently only be configured for Google
+   *   Cloud organizations. Once configured, it applies to all projects and
+   *   folders in the Google Cloud organization.
    * @param {google.logging.v2.CmekSettings} request.cmekSettings
    *   Required. The CMEK settings to update.
    *
-   *   See [Enabling CMEK for Logs
+   *   See [Enabling CMEK for Log
    *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
    *   for more information.
    * @param {google.protobuf.FieldMask} [request.updateMask]
@@ -2229,7 +2318,7 @@ export class ConfigServiceV2Client {
    *
    *   See {@link google.protobuf.FieldMask|FieldMask} for more information.
    *
-   *   Example: `"updateMask=kmsKeyName"`
+   *   For example: `"updateMask=kmsKeyName"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -2308,9 +2397,379 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.innerApiCalls.updateCmekSettings(request, options, callback);
   }
+  /**
+   * Gets the Log Router settings for the given resource.
+   *
+   * Note: Settings for the Log Router can be get for Google Cloud projects,
+   * folders, organizations and billing accounts. Currently it can only be
+   * configured for organizations. Once configured for an organization, it
+   * applies to all projects and folders in the Google Cloud organization.
+   *
+   * See [Enabling CMEK for Log
+   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+   * for more information.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The resource for which to retrieve settings.
+   *
+   *       "projects/[PROJECT_ID]/settings"
+   *       "organizations/[ORGANIZATION_ID]/settings"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/settings"
+   *       "folders/[FOLDER_ID]/settings"
+   *
+   *   For example:
+   *
+   *     `"organizations/12345/settings"`
+   *
+   *   Note: Settings for the Log Router can be get for Google Cloud projects,
+   *   folders, organizations and billing accounts. Currently it can only be
+   *   configured for organizations. Once configured for an organization, it
+   *   applies to all projects and folders in the Google Cloud organization.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Settings]{@link google.logging.v2.Settings}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_settings.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_GetSettings_async
+   */
+  getSettings(
+    request?: protos.google.logging.v2.IGetSettingsRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IGetSettingsRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  getSettings(
+    request: protos.google.logging.v2.IGetSettingsRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IGetSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getSettings(
+    request: protos.google.logging.v2.IGetSettingsRequest,
+    callback: Callback<
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IGetSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getSettings(
+    request?: protos.google.logging.v2.IGetSettingsRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ISettings,
+          protos.google.logging.v2.IGetSettingsRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IGetSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IGetSettingsRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        name: request.name || '',
+      });
+    this.initialize();
+    return this.innerApiCalls.getSettings(request, options, callback);
+  }
+  /**
+   * Updates the Log Router settings for the given resource.
+   *
+   * Note: Settings for the Log Router can currently only be configured for
+   * Google Cloud organizations. Once configured, it applies to all projects and
+   * folders in the Google Cloud organization.
+   *
+   * {@link google.logging.v2.ConfigServiceV2.UpdateSettings|UpdateSettings}
+   * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
+   * account does not have the required
+   * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
+   * 3) access to the key is disabled. 4) `location_id` is not supported by
+   * Logging. 5) `location_id` violate OrgPolicy.
+   *
+   * See [Enabling CMEK for Log
+   * Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+   * for more information.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The resource name for the settings to update.
+   *
+   *       "organizations/[ORGANIZATION_ID]/settings"
+   *
+   *   For example:
+   *
+   *     `"organizations/12345/settings"`
+   *
+   *   Note: Settings for the Log Router can currently only be configured for
+   *   Google Cloud organizations. Once configured, it applies to all projects and
+   *   folders in the Google Cloud organization.
+   * @param {google.logging.v2.Settings} request.settings
+   *   Required. The settings to update.
+   *
+   *   See [Enabling CMEK for Log
+   *   Router](https://cloud.google.com/logging/docs/routing/managed-encryption)
+   *   for more information.
+   * @param {google.protobuf.FieldMask} [request.updateMask]
+   *   Optional. Field mask identifying which fields from `settings` should
+   *   be updated. A field will be overwritten if and only if it is in the update
+   *   mask. Output only fields cannot be updated.
+   *
+   *   See {@link google.protobuf.FieldMask|FieldMask} for more information.
+   *
+   *   For example: `"updateMask=kmsKeyName"`
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Settings]{@link google.logging.v2.Settings}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_settings.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_UpdateSettings_async
+   */
+  updateSettings(
+    request?: protos.google.logging.v2.IUpdateSettingsRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IUpdateSettingsRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  updateSettings(
+    request: protos.google.logging.v2.IUpdateSettingsRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IUpdateSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateSettings(
+    request: protos.google.logging.v2.IUpdateSettingsRequest,
+    callback: Callback<
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IUpdateSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateSettings(
+    request?: protos.google.logging.v2.IUpdateSettingsRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ISettings,
+          protos.google.logging.v2.IUpdateSettingsRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IUpdateSettingsRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ISettings,
+      protos.google.logging.v2.IUpdateSettingsRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      gax.routingHeader.fromParams({
+        name: request.name || '',
+      });
+    this.initialize();
+    return this.innerApiCalls.updateSettings(request, options, callback);
+  }
 
   /**
-   * Lists buckets.
+   * Copies a set of log entries from a log bucket to a Cloud Storage bucket.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. Log bucket from which to copy log entries.
+   *
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-source-bucket"`
+   * @param {string} [request.filter]
+   *   Optional. A filter specifying which log entries to copy. The filter must be no more
+   *   than 20k characters. An empty filter matches all log entries.
+   * @param {string} request.destination
+   *   Required. Destination to which to copy log entries.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.copy_log_entries.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_CopyLogEntries_async
+   */
+  copyLogEntries(
+    request?: protos.google.logging.v2.ICopyLogEntriesRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ICopyLogEntriesResponse,
+        protos.google.logging.v2.ICopyLogEntriesMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
+  copyLogEntries(
+    request: protos.google.logging.v2.ICopyLogEntriesRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ICopyLogEntriesResponse,
+        protos.google.logging.v2.ICopyLogEntriesMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  copyLogEntries(
+    request: protos.google.logging.v2.ICopyLogEntriesRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ICopyLogEntriesResponse,
+        protos.google.logging.v2.ICopyLogEntriesMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  copyLogEntries(
+    request?: protos.google.logging.v2.ICopyLogEntriesRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.logging.v2.ICopyLogEntriesResponse,
+            protos.google.logging.v2.ICopyLogEntriesMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.logging.v2.ICopyLogEntriesResponse,
+        protos.google.logging.v2.ICopyLogEntriesMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ICopyLogEntriesResponse,
+        protos.google.logging.v2.ICopyLogEntriesMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    this.initialize();
+    return this.innerApiCalls.copyLogEntries(request, options, callback);
+  }
+  /**
+   * Check the status of the long running operation returned by `copyLogEntries()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.copy_log_entries.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_CopyLogEntries_async
+   */
+  async checkCopyLogEntriesProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.logging.v2.CopyLogEntriesResponse,
+      protos.google.logging.v2.CopyLogEntriesMetadata
+    >
+  > {
+    const request = new operationsProtos.google.longrunning.GetOperationRequest(
+      {name}
+    );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new gax.Operation(
+      operation,
+      this.descriptors.longrunning.copyLogEntries,
+      gax.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.logging.v2.CopyLogEntriesResponse,
+      protos.google.logging.v2.CopyLogEntriesMetadata
+    >;
+  }
+  /**
+   * Lists log buckets.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -2326,14 +2785,14 @@ export class ConfigServiceV2Client {
    *   supplying the character `-` in place of [LOCATION_ID] will return all
    *   buckets.
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the preceding call
+   *   to this method. `pageToken` must be the value of `nextPageToken` from the
+   *   previous response. The values of other method parameters should be
+   *   identical to those in the previous call.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request. Non-positive
+   *   values are ignored. The presence of `nextPageToken` in the response
+   *   indicates that more results might be available.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -2430,14 +2889,14 @@ export class ConfigServiceV2Client {
    *   supplying the character `-` in place of [LOCATION_ID] will return all
    *   buckets.
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the preceding call
+   *   to this method. `pageToken` must be the value of `nextPageToken` from the
+   *   previous response. The values of other method parameters should be
+   *   identical to those in the previous call.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request. Non-positive
+   *   values are ignored. The presence of `nextPageToken` in the response
+   *   indicates that more results might be available.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
@@ -2490,14 +2949,14 @@ export class ConfigServiceV2Client {
    *   supplying the character `-` in place of [LOCATION_ID] will return all
    *   buckets.
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the preceding call
+   *   to this method. `pageToken` must be the value of `nextPageToken` from the
+   *   previous response. The values of other method parameters should be
+   *   identical to those in the previous call.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored. The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request. Non-positive
+   *   values are ignored. The presence of `nextPageToken` in the response
+   *   indicates that more results might be available.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
@@ -2533,7 +2992,7 @@ export class ConfigServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogBucket>;
   }
   /**
-   * Lists views on a bucket.
+   * Lists views on a log bucket.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -2542,12 +3001,13 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the preceding call
+   *   to this method. `pageToken` must be the value of `nextPageToken` from the
+   *   previous response. The values of other method parameters should be
+   *   identical to those in the previous call.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
+   *
    *   Non-positive values are ignored. The presence of `nextPageToken` in the
    *   response indicates that more results might be available.
    * @param {object} [options]
@@ -2639,12 +3099,13 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the preceding call
+   *   to this method. `pageToken` must be the value of `nextPageToken` from the
+   *   previous response. The values of other method parameters should be
+   *   identical to those in the previous call.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
+   *
    *   Non-positive values are ignored. The presence of `nextPageToken` in the
    *   response indicates that more results might be available.
    * @param {object} [options]
@@ -2692,12 +3153,13 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method. `pageToken` must be the value of
-   *   `nextPageToken` from the previous response. The values of other method
-   *   parameters should be identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the preceding call
+   *   to this method. `pageToken` must be the value of `nextPageToken` from the
+   *   previous response. The values of other method parameters should be
+   *   identical to those in the previous call.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
+   *
    *   Non-positive values are ignored. The presence of `nextPageToken` in the
    *   response indicates that more results might be available.
    * @param {object} [options]
@@ -2946,7 +3408,7 @@ export class ConfigServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogSink>;
   }
   /**
-   * Lists all the exclusions in a parent resource.
+   * Lists all the exclusions on the _Default sink in a parent resource.
    *
    * @param {Object} request
    *   The request object that will be sent.
@@ -3422,6 +3884,33 @@ export class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified billingAccountSettings resource name string.
+   *
+   * @param {string} billing_account
+   * @returns {string} Resource name string.
+   */
+  billingAccountSettingsPath(billingAccount: string) {
+    return this.pathTemplates.billingAccountSettingsPathTemplate.render({
+      billing_account: billingAccount,
+    });
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountSettings resource.
+   *
+   * @param {string} billingAccountSettingsName
+   *   A fully-qualified path representing billing_account_settings resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountSettingsName(
+    billingAccountSettingsName: string
+  ) {
+    return this.pathTemplates.billingAccountSettingsPathTemplate.match(
+      billingAccountSettingsName
+    ).billing_account;
+  }
+
+  /**
    * Return a fully-qualified billingAccountSink resource name string.
    *
    * @param {string} billing_account
@@ -3700,6 +4189,31 @@ export class ConfigServiceV2Client {
    */
   matchLogFromFolderLogName(folderLogName: string) {
     return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+  }
+
+  /**
+   * Return a fully-qualified folderSettings resource name string.
+   *
+   * @param {string} folder
+   * @returns {string} Resource name string.
+   */
+  folderSettingsPath(folder: string) {
+    return this.pathTemplates.folderSettingsPathTemplate.render({
+      folder: folder,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderSettings resource.
+   *
+   * @param {string} folderSettingsName
+   *   A fully-qualified path representing folder_settings resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderSettingsName(folderSettingsName: string) {
+    return this.pathTemplates.folderSettingsPathTemplate.match(
+      folderSettingsName
+    ).folder;
   }
 
   /**
@@ -4074,6 +4588,33 @@ export class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationSettings resource name string.
+   *
+   * @param {string} organization
+   * @returns {string} Resource name string.
+   */
+  organizationSettingsPath(organization: string) {
+    return this.pathTemplates.organizationSettingsPathTemplate.render({
+      organization: organization,
+    });
+  }
+
+  /**
+   * Parse the organization from OrganizationSettings resource.
+   *
+   * @param {string} organizationSettingsName
+   *   A fully-qualified path representing organization_settings resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationSettingsName(
+    organizationSettingsName: string
+  ) {
+    return this.pathTemplates.organizationSettingsPathTemplate.match(
+      organizationSettingsName
+    ).organization;
+  }
+
+  /**
    * Return a fully-qualified organizationSink resource name string.
    *
    * @param {string} organization
@@ -4379,6 +4920,31 @@ export class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified projectSettings resource name string.
+   *
+   * @param {string} project
+   * @returns {string} Resource name string.
+   */
+  projectSettingsPath(project: string) {
+    return this.pathTemplates.projectSettingsPathTemplate.render({
+      project: project,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectSettings resource.
+   *
+   * @param {string} projectSettingsName
+   *   A fully-qualified path representing project_settings resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectSettingsName(projectSettingsName: string) {
+    return this.pathTemplates.projectSettingsPathTemplate.match(
+      projectSettingsName
+    ).project;
+  }
+
+  /**
    * Return a fully-qualified projectSink resource name string.
    *
    * @param {string} project
@@ -4428,6 +4994,7 @@ export class ConfigServiceV2Client {
       return this.configServiceV2Stub!.then(stub => {
         this._terminated = true;
         stub.close();
+        this.operationsClient.close();
       });
     }
     return Promise.resolve();

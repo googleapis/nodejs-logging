@@ -21,10 +21,10 @@ function main(parent) {
    */
   /**
    *  Required. The resource name that owns the logs:
-   *      "projects/[PROJECT_ID]"
-   *      "organizations/[ORGANIZATION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *      "folders/[FOLDER_ID]"
+   *  *  `projects/[PROJECT_ID]`
+   *  *  `organizations/[ORGANIZATION_ID]`
+   *  *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *  *  `folders/[FOLDER_ID]`
    */
   // const parent = 'abc123'
   /**
@@ -42,15 +42,15 @@ function main(parent) {
   // const pageToken = 'abc123'
   /**
    *  Optional. The resource name that owns the logs:
-   *    projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *    organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *    billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *    folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *   * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *  To support legacy queries, it could also be:
-   *      "projects/[PROJECT_ID]"
-   *      "organizations/[ORGANIZATION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *      "folders/[FOLDER_ID]"
+   *  *  `projects/[PROJECT_ID]`
+   *  *  `organizations/[ORGANIZATION_ID]`
+   *  *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *  *  `folders/[FOLDER_ID]`
    */
   // const resourceNames = 'abc123'
 

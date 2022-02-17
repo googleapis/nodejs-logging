@@ -12,22 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 'use strict';
 
 function main(name) {
-  // [START logging_v2_generated_ConfigServiceV2_GetExclusion_async]
+  // [START logging_v2_generated_ConfigServiceV2_GetSettings_async]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name of an existing exclusion:
-   *      "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+   *  Required. The resource for which to retrieve settings.
+   *      "projects/[PROJECT_ID]/settings"
+   *      "organizations/[ORGANIZATION_ID]/settings"
+   *      "billingAccounts/[BILLING_ACCOUNT_ID]/settings"
+   *      "folders/[FOLDER_ID]/settings"
    *  For example:
-   *    `"projects/my-project/exclusions/my-exclusion"`
+   *    `"organizations/12345/settings"`
+   *  Note: Settings for the Log Router can be get for Google Cloud projects,
+   *  folders, organizations and billing accounts. Currently it can only be
+   *  configured for organizations. Once configured for an organization, it
+   *  applies to all projects and folders in the Google Cloud organization.
    */
   // const name = 'abc123'
 
@@ -37,19 +40,19 @@ function main(name) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callGetExclusion() {
+  async function callGetSettings() {
     // Construct request
     const request = {
       name,
     };
 
     // Run request
-    const response = await loggingClient.getExclusion(request);
+    const response = await loggingClient.getSettings(request);
     console.log(response);
   }
 
-  callGetExclusion();
-  // [END logging_v2_generated_ConfigServiceV2_GetExclusion_async]
+  callGetSettings();
+  // [END logging_v2_generated_ConfigServiceV2_GetSettings_async]
 }
 
 process.on('unhandledRejection', err => {

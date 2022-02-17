@@ -181,6 +181,9 @@ export class LoggingServiceV2Client {
       billingAccountLogPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/logs/{log}'
       ),
+      billingAccountSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'billingAccounts/{billing_account}/settings'
+      ),
       billingAccountSinkPathTemplate: new this._gaxModule.PathTemplate(
         'billingAccounts/{billing_account}/sinks/{sink}'
       ),
@@ -198,6 +201,9 @@ export class LoggingServiceV2Client {
       ),
       folderLogPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/logs/{log}'
+      ),
+      folderSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/settings'
       ),
       folderSinkPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/sinks/{sink}'
@@ -221,6 +227,9 @@ export class LoggingServiceV2Client {
       organizationLogPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/logs/{log}'
       ),
+      organizationSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}/settings'
+      ),
       organizationSinkPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/sinks/{sink}'
       ),
@@ -241,6 +250,9 @@ export class LoggingServiceV2Client {
       ),
       projectLogPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/logs/{log}'
+      ),
+      projectSettingsPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/settings'
       ),
       projectSinkPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/sinks/{sink}'
@@ -442,24 +454,25 @@ export class LoggingServiceV2Client {
   // -- Service calls --
   // -------------------
   /**
-   * Deletes all the log entries in a log. The log reappears if it receives new
-   * entries. Log entries written shortly before the delete operation might not
-   * be deleted. Entries received after the delete operation with a timestamp
-   * before the operation will be deleted.
+   * Deletes all the log entries in a log for the _Default Log Bucket. The log
+   * reappears if it receives new entries. Log entries written shortly before
+   * the delete operation might not be deleted. Entries received after the
+   * delete operation with a timestamp before the operation will be deleted.
    *
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.logName
    *   Required. The resource name of the log to delete:
    *
-   *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
-   *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-   *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
+   *   * `projects/[PROJECT_ID]/logs/[LOG_ID]`
+   *   * `organizations/[ORGANIZATION_ID]/logs/[LOG_ID]`
+   *   * `billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]`
+   *   * `folders/[FOLDER_ID]/logs/[LOG_ID]`
    *
    *   `[LOG_ID]` must be URL-encoded. For example,
    *   `"projects/my-project-id/logs/syslog"`,
-   *   `"organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"`.
+   *   `"organizations/123/logs/cloudaudit.googleapis.com%2Factivity"`.
+   *
    *   For more information about log names, see
    *   {@link google.logging.v2.LogEntry|LogEntry}.
    * @param {object} [options]
@@ -553,15 +566,15 @@ export class LoggingServiceV2Client {
    *   Optional. A default log resource name that is assigned to all log entries
    *   in `entries` that do not specify a value for `log_name`:
    *
-   *       "projects/[PROJECT_ID]/logs/[LOG_ID]"
-   *       "organizations/[ORGANIZATION_ID]/logs/[LOG_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]"
-   *       "folders/[FOLDER_ID]/logs/[LOG_ID]"
+   *   * `projects/[PROJECT_ID]/logs/[LOG_ID]`
+   *   * `organizations/[ORGANIZATION_ID]/logs/[LOG_ID]`
+   *   * `billingAccounts/[BILLING_ACCOUNT_ID]/logs/[LOG_ID]`
+   *   * `folders/[FOLDER_ID]/logs/[LOG_ID]`
    *
    *   `[LOG_ID]` must be URL-encoded. For example:
    *
    *       "projects/my-project-id/logs/syslog"
-   *       "organizations/1234567890/logs/cloudresourcemanager.googleapis.com%2Factivity"
+   *       "organizations/123/logs/cloudaudit.googleapis.com%2Factivity"
    *
    *   The permission `logging.logEntries.create` is needed on each project,
    *   organization, billing account, or folder that is receiving new log
@@ -596,14 +609,14 @@ export class LoggingServiceV2Client {
    *   the entries later in the list. See the `entries.list` method.
    *
    *   Log entries with timestamps that are more than the
-   *   [logs retention period](https://cloud.google.com/logging/quota-policy) in
+   *   [logs retention period](https://cloud.google.com/logging/quotas) in
    *   the past or more than 24 hours in the future will not be available when
    *   calling `entries.list`. However, those log entries can still be [exported
    *   with
    *   LogSinks](https://cloud.google.com/logging/docs/api/tasks/exporting-logs).
    *
    *   To improve throughput and to avoid exceeding the
-   *   [quota limit](https://cloud.google.com/logging/quota-policy) for calls to
+   *   [quota limit](https://cloud.google.com/logging/quotas) for calls to
    *   `entries.write`, you should try to include several log entries in this
    *   list, rather than calling this method for each individual log entry.
    * @param {boolean} [request.partialSuccess]
@@ -722,16 +735,17 @@ export class LoggingServiceV2Client {
    *   Required. Names of one or more parent resources from which to
    *   retrieve log entries:
    *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    *
-   *   May alternatively be one or more views
-   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *   May alternatively be one or more views:
+   *
+   *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
@@ -750,10 +764,10 @@ export class LoggingServiceV2Client {
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Default is 50. If the value is negative or exceeds 1000,
-   *   the request is rejected. The presence of `next_page_token` in the
-   *   response indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request. Default is 50.
+   *   If the value is negative or exceeds 1000, the request is rejected. The
+   *   presence of `next_page_token` in the response indicates that more results
+   *   might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
    *   preceding call to this method.  `page_token` must be the value of
@@ -843,16 +857,17 @@ export class LoggingServiceV2Client {
    *   Required. Names of one or more parent resources from which to
    *   retrieve log entries:
    *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    *
-   *   May alternatively be one or more views
-   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *   May alternatively be one or more views:
+   *
+   *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
@@ -871,10 +886,10 @@ export class LoggingServiceV2Client {
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Default is 50. If the value is negative or exceeds 1000,
-   *   the request is rejected. The presence of `next_page_token` in the
-   *   response indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request. Default is 50.
+   *   If the value is negative or exceeds 1000, the request is rejected. The
+   *   presence of `next_page_token` in the response indicates that more results
+   *   might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
    *   preceding call to this method.  `page_token` must be the value of
@@ -920,16 +935,17 @@ export class LoggingServiceV2Client {
    *   Required. Names of one or more parent resources from which to
    *   retrieve log entries:
    *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    *
-   *   May alternatively be one or more views
-   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *   May alternatively be one or more views:
+   *
+   *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   Projects listed in the `project_ids` field are added to this list.
    * @param {string} [request.filter]
@@ -948,10 +964,10 @@ export class LoggingServiceV2Client {
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Default is 50. If the value is negative or exceeds 1000,
-   *   the request is rejected. The presence of `next_page_token` in the
-   *   response indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request. Default is 50.
+   *   If the value is negative or exceeds 1000, the request is rejected. The
+   *   presence of `next_page_token` in the response indicates that more results
+   *   might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
    *   preceding call to this method.  `page_token` must be the value of
@@ -1188,10 +1204,10 @@ export class LoggingServiceV2Client {
    * @param {string} request.parent
    *   Required. The resource name that owns the logs:
    *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
    *   Non-positive values are ignored.  The presence of `nextPageToken` in the
@@ -1203,16 +1219,18 @@ export class LoggingServiceV2Client {
    *   parameters should be identical to those in the previous call.
    * @param {string[]} [request.resourceNames]
    *   Optional. The resource name that owns the logs:
-   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *
+   *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   To support legacy queries, it could also be:
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1300,10 +1318,10 @@ export class LoggingServiceV2Client {
    * @param {string} request.parent
    *   Required. The resource name that owns the logs:
    *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
    *   Non-positive values are ignored.  The presence of `nextPageToken` in the
@@ -1315,16 +1333,18 @@ export class LoggingServiceV2Client {
    *   parameters should be identical to those in the previous call.
    * @param {string[]} [request.resourceNames]
    *   Optional. The resource name that owns the logs:
-   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *
+   *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   To support legacy queries, it could also be:
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
@@ -1368,10 +1388,10 @@ export class LoggingServiceV2Client {
    * @param {string} request.parent
    *   Required. The resource name that owns the logs:
    *
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
    *   Non-positive values are ignored.  The presence of `nextPageToken` in the
@@ -1383,16 +1403,18 @@ export class LoggingServiceV2Client {
    *   parameters should be identical to those in the previous call.
    * @param {string[]} [request.resourceNames]
    *   Optional. The resource name that owns the logs:
-   *     projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *     folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *
+   *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   To support legacy queries, it could also be:
-   *       "projects/[PROJECT_ID]"
-   *       "organizations/[ORGANIZATION_ID]"
-   *       "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *       "folders/[FOLDER_ID]"
+   *
+   *   *  `projects/[PROJECT_ID]`
+   *   *  `organizations/[ORGANIZATION_ID]`
+   *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *   *  `folders/[FOLDER_ID]`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
@@ -1693,6 +1715,33 @@ export class LoggingServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified billingAccountSettings resource name string.
+   *
+   * @param {string} billing_account
+   * @returns {string} Resource name string.
+   */
+  billingAccountSettingsPath(billingAccount: string) {
+    return this.pathTemplates.billingAccountSettingsPathTemplate.render({
+      billing_account: billingAccount,
+    });
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountSettings resource.
+   *
+   * @param {string} billingAccountSettingsName
+   *   A fully-qualified path representing billing_account_settings resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountSettingsName(
+    billingAccountSettingsName: string
+  ) {
+    return this.pathTemplates.billingAccountSettingsPathTemplate.match(
+      billingAccountSettingsName
+    ).billing_account;
+  }
+
+  /**
    * Return a fully-qualified billingAccountSink resource name string.
    *
    * @param {string} billing_account
@@ -1971,6 +2020,31 @@ export class LoggingServiceV2Client {
    */
   matchLogFromFolderLogName(folderLogName: string) {
     return this.pathTemplates.folderLogPathTemplate.match(folderLogName).log;
+  }
+
+  /**
+   * Return a fully-qualified folderSettings resource name string.
+   *
+   * @param {string} folder
+   * @returns {string} Resource name string.
+   */
+  folderSettingsPath(folder: string) {
+    return this.pathTemplates.folderSettingsPathTemplate.render({
+      folder: folder,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderSettings resource.
+   *
+   * @param {string} folderSettingsName
+   *   A fully-qualified path representing folder_settings resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderSettingsName(folderSettingsName: string) {
+    return this.pathTemplates.folderSettingsPathTemplate.match(
+      folderSettingsName
+    ).folder;
   }
 
   /**
@@ -2309,6 +2383,33 @@ export class LoggingServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationSettings resource name string.
+   *
+   * @param {string} organization
+   * @returns {string} Resource name string.
+   */
+  organizationSettingsPath(organization: string) {
+    return this.pathTemplates.organizationSettingsPathTemplate.render({
+      organization: organization,
+    });
+  }
+
+  /**
+   * Parse the organization from OrganizationSettings resource.
+   *
+   * @param {string} organizationSettingsName
+   *   A fully-qualified path representing organization_settings resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationSettingsName(
+    organizationSettingsName: string
+  ) {
+    return this.pathTemplates.organizationSettingsPathTemplate.match(
+      organizationSettingsName
+    ).organization;
+  }
+
+  /**
    * Return a fully-qualified organizationSink resource name string.
    *
    * @param {string} organization
@@ -2611,6 +2712,31 @@ export class LoggingServiceV2Client {
    */
   matchLogFromProjectLogName(projectLogName: string) {
     return this.pathTemplates.projectLogPathTemplate.match(projectLogName).log;
+  }
+
+  /**
+   * Return a fully-qualified projectSettings resource name string.
+   *
+   * @param {string} project
+   * @returns {string} Resource name string.
+   */
+  projectSettingsPath(project: string) {
+    return this.pathTemplates.projectSettingsPathTemplate.render({
+      project: project,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectSettings resource.
+   *
+   * @param {string} projectSettingsName
+   *   A fully-qualified path representing project_settings resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectSettingsName(projectSettingsName: string) {
+    return this.pathTemplates.projectSettingsPathTemplate.match(
+      projectSettingsName
+    ).project;
   }
 
   /**

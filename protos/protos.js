@@ -6988,6 +6988,7 @@
                  * @property {Array.<google.protobuf.IUninterpretedOption>|null} [uninterpretedOption] MethodOptions uninterpretedOption
                  * @property {google.api.IHttpRule|null} [".google.api.http"] MethodOptions .google.api.http
                  * @property {Array.<string>|null} [".google.api.methodSignature"] MethodOptions .google.api.methodSignature
+                 * @property {google.longrunning.IOperationInfo|null} [".google.longrunning.operationInfo"] MethodOptions .google.longrunning.operationInfo
                  */
     
                 /**
@@ -7048,6 +7049,14 @@
                 MethodOptions.prototype[".google.api.methodSignature"] = $util.emptyArray;
     
                 /**
+                 * MethodOptions .google.longrunning.operationInfo.
+                 * @member {google.longrunning.IOperationInfo|null|undefined} .google.longrunning.operationInfo
+                 * @memberof google.protobuf.MethodOptions
+                 * @instance
+                 */
+                MethodOptions.prototype[".google.longrunning.operationInfo"] = null;
+    
+                /**
                  * Creates a new MethodOptions instance using the specified properties.
                  * @function create
                  * @memberof google.protobuf.MethodOptions
@@ -7078,6 +7087,8 @@
                     if (message.uninterpretedOption != null && message.uninterpretedOption.length)
                         for (var i = 0; i < message.uninterpretedOption.length; ++i)
                             $root.google.protobuf.UninterpretedOption.encode(message.uninterpretedOption[i], writer.uint32(/* id 999, wireType 2 =*/7994).fork()).ldelim();
+                    if (message[".google.longrunning.operationInfo"] != null && Object.hasOwnProperty.call(message, ".google.longrunning.operationInfo"))
+                        $root.google.longrunning.OperationInfo.encode(message[".google.longrunning.operationInfo"], writer.uint32(/* id 1049, wireType 2 =*/8394).fork()).ldelim();
                     if (message[".google.api.methodSignature"] != null && message[".google.api.methodSignature"].length)
                         for (var i = 0; i < message[".google.api.methodSignature"].length; ++i)
                             writer.uint32(/* id 1051, wireType 2 =*/8410).string(message[".google.api.methodSignature"][i]);
@@ -7135,6 +7146,9 @@
                             if (!(message[".google.api.methodSignature"] && message[".google.api.methodSignature"].length))
                                 message[".google.api.methodSignature"] = [];
                             message[".google.api.methodSignature"].push(reader.string());
+                            break;
+                        case 1049:
+                            message[".google.longrunning.operationInfo"] = $root.google.longrunning.OperationInfo.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -7204,6 +7218,11 @@
                             if (!$util.isString(message[".google.api.methodSignature"][i]))
                                 return ".google.api.methodSignature: string[] expected";
                     }
+                    if (message[".google.longrunning.operationInfo"] != null && message.hasOwnProperty(".google.longrunning.operationInfo")) {
+                        var error = $root.google.longrunning.OperationInfo.verify(message[".google.longrunning.operationInfo"]);
+                        if (error)
+                            return ".google.longrunning.operationInfo." + error;
+                    }
                     return null;
                 };
     
@@ -7257,6 +7276,11 @@
                         for (var i = 0; i < object[".google.api.methodSignature"].length; ++i)
                             message[".google.api.methodSignature"][i] = String(object[".google.api.methodSignature"][i]);
                     }
+                    if (object[".google.longrunning.operationInfo"] != null) {
+                        if (typeof object[".google.longrunning.operationInfo"] !== "object")
+                            throw TypeError(".google.protobuf.MethodOptions..google.longrunning.operationInfo: object expected");
+                        message[".google.longrunning.operationInfo"] = $root.google.longrunning.OperationInfo.fromObject(object[".google.longrunning.operationInfo"]);
+                    }
                     return message;
                 };
     
@@ -7280,6 +7304,7 @@
                     if (options.defaults) {
                         object.deprecated = false;
                         object.idempotencyLevel = options.enums === String ? "IDEMPOTENCY_UNKNOWN" : 0;
+                        object[".google.longrunning.operationInfo"] = null;
                         object[".google.api.http"] = null;
                     }
                     if (message.deprecated != null && message.hasOwnProperty("deprecated"))
@@ -7291,6 +7316,8 @@
                         for (var j = 0; j < message.uninterpretedOption.length; ++j)
                             object.uninterpretedOption[j] = $root.google.protobuf.UninterpretedOption.toObject(message.uninterpretedOption[j], options);
                     }
+                    if (message[".google.longrunning.operationInfo"] != null && message.hasOwnProperty(".google.longrunning.operationInfo"))
+                        object[".google.longrunning.operationInfo"] = $root.google.longrunning.OperationInfo.toObject(message[".google.longrunning.operationInfo"], options);
                     if (message[".google.api.methodSignature"] && message[".google.api.methodSignature"].length) {
                         object[".google.api.methodSignature"] = [];
                         for (var j = 0; j < message[".google.api.methodSignature"].length; ++j)
@@ -11203,6 +11230,7 @@
                      * @property {string|null} [spanId] LogEntry spanId
                      * @property {boolean|null} [traceSampled] LogEntry traceSampled
                      * @property {google.logging.v2.ILogEntrySourceLocation|null} [sourceLocation] LogEntry sourceLocation
+                     * @property {google.logging.v2.ILogSplit|null} [split] LogEntry split
                      */
     
                     /**
@@ -11349,6 +11377,14 @@
                      */
                     LogEntry.prototype.sourceLocation = null;
     
+                    /**
+                     * LogEntry split.
+                     * @member {google.logging.v2.ILogSplit|null|undefined} split
+                     * @memberof google.logging.v2.LogEntry
+                     * @instance
+                     */
+                    LogEntry.prototype.split = null;
+    
                     // OneOf field names bound to virtual getters and setters
                     var $oneOfFields;
     
@@ -11420,6 +11456,8 @@
                             writer.uint32(/* id 27, wireType 2 =*/218).string(message.spanId);
                         if (message.traceSampled != null && Object.hasOwnProperty.call(message, "traceSampled"))
                             writer.uint32(/* id 30, wireType 0 =*/240).bool(message.traceSampled);
+                        if (message.split != null && Object.hasOwnProperty.call(message, "split"))
+                            $root.google.logging.v2.LogSplit.encode(message.split, writer.uint32(/* id 35, wireType 2 =*/282).fork()).ldelim();
                         return writer;
                     };
     
@@ -11520,6 +11558,9 @@
                                 break;
                             case 23:
                                 message.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.decode(reader, reader.uint32());
+                                break;
+                            case 35:
+                                message.split = $root.google.logging.v2.LogSplit.decode(reader, reader.uint32());
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -11650,6 +11691,11 @@
                             if (error)
                                 return "sourceLocation." + error;
                         }
+                        if (message.split != null && message.hasOwnProperty("split")) {
+                            var error = $root.google.logging.v2.LogSplit.verify(message.split);
+                            if (error)
+                                return "split." + error;
+                        }
                         return null;
                     };
     
@@ -11762,6 +11808,11 @@
                                 throw TypeError(".google.logging.v2.LogEntry.sourceLocation: object expected");
                             message.sourceLocation = $root.google.logging.v2.LogEntrySourceLocation.fromObject(object.sourceLocation);
                         }
+                        if (object.split != null) {
+                            if (typeof object.split !== "object")
+                                throw TypeError(".google.logging.v2.LogEntry.split: object expected");
+                            message.split = $root.google.logging.v2.LogSplit.fromObject(object.split);
+                        }
                         return message;
                     };
     
@@ -11793,6 +11844,7 @@
                             object.receiveTimestamp = null;
                             object.spanId = "";
                             object.traceSampled = false;
+                            object.split = null;
                         }
                         if (message.protoPayload != null && message.hasOwnProperty("protoPayload")) {
                             object.protoPayload = $root.google.protobuf.Any.toObject(message.protoPayload, options);
@@ -11839,6 +11891,8 @@
                             object.spanId = message.spanId;
                         if (message.traceSampled != null && message.hasOwnProperty("traceSampled"))
                             object.traceSampled = message.traceSampled;
+                        if (message.split != null && message.hasOwnProperty("split"))
+                            object.split = $root.google.logging.v2.LogSplit.toObject(message.split, options);
                         return object;
                     };
     
@@ -12354,6 +12408,238 @@
                     };
     
                     return LogEntrySourceLocation;
+                })();
+    
+                v2.LogSplit = (function() {
+    
+                    /**
+                     * Properties of a LogSplit.
+                     * @memberof google.logging.v2
+                     * @interface ILogSplit
+                     * @property {string|null} [uid] LogSplit uid
+                     * @property {number|null} [index] LogSplit index
+                     * @property {number|null} [totalSplits] LogSplit totalSplits
+                     */
+    
+                    /**
+                     * Constructs a new LogSplit.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a LogSplit.
+                     * @implements ILogSplit
+                     * @constructor
+                     * @param {google.logging.v2.ILogSplit=} [properties] Properties to set
+                     */
+                    function LogSplit(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * LogSplit uid.
+                     * @member {string} uid
+                     * @memberof google.logging.v2.LogSplit
+                     * @instance
+                     */
+                    LogSplit.prototype.uid = "";
+    
+                    /**
+                     * LogSplit index.
+                     * @member {number} index
+                     * @memberof google.logging.v2.LogSplit
+                     * @instance
+                     */
+                    LogSplit.prototype.index = 0;
+    
+                    /**
+                     * LogSplit totalSplits.
+                     * @member {number} totalSplits
+                     * @memberof google.logging.v2.LogSplit
+                     * @instance
+                     */
+                    LogSplit.prototype.totalSplits = 0;
+    
+                    /**
+                     * Creates a new LogSplit instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {google.logging.v2.ILogSplit=} [properties] Properties to set
+                     * @returns {google.logging.v2.LogSplit} LogSplit instance
+                     */
+                    LogSplit.create = function create(properties) {
+                        return new LogSplit(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified LogSplit message. Does not implicitly {@link google.logging.v2.LogSplit.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {google.logging.v2.ILogSplit} message LogSplit message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogSplit.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.uid != null && Object.hasOwnProperty.call(message, "uid"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.uid);
+                        if (message.index != null && Object.hasOwnProperty.call(message, "index"))
+                            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.index);
+                        if (message.totalSplits != null && Object.hasOwnProperty.call(message, "totalSplits"))
+                            writer.uint32(/* id 3, wireType 0 =*/24).int32(message.totalSplits);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified LogSplit message, length delimited. Does not implicitly {@link google.logging.v2.LogSplit.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {google.logging.v2.ILogSplit} message LogSplit message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    LogSplit.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a LogSplit message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.LogSplit} LogSplit
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogSplit.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.LogSplit();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.uid = reader.string();
+                                break;
+                            case 2:
+                                message.index = reader.int32();
+                                break;
+                            case 3:
+                                message.totalSplits = reader.int32();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a LogSplit message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.LogSplit} LogSplit
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    LogSplit.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a LogSplit message.
+                     * @function verify
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    LogSplit.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.uid != null && message.hasOwnProperty("uid"))
+                            if (!$util.isString(message.uid))
+                                return "uid: string expected";
+                        if (message.index != null && message.hasOwnProperty("index"))
+                            if (!$util.isInteger(message.index))
+                                return "index: integer expected";
+                        if (message.totalSplits != null && message.hasOwnProperty("totalSplits"))
+                            if (!$util.isInteger(message.totalSplits))
+                                return "totalSplits: integer expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a LogSplit message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.LogSplit} LogSplit
+                     */
+                    LogSplit.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.LogSplit)
+                            return object;
+                        var message = new $root.google.logging.v2.LogSplit();
+                        if (object.uid != null)
+                            message.uid = String(object.uid);
+                        if (object.index != null)
+                            message.index = object.index | 0;
+                        if (object.totalSplits != null)
+                            message.totalSplits = object.totalSplits | 0;
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a LogSplit message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.LogSplit
+                     * @static
+                     * @param {google.logging.v2.LogSplit} message LogSplit
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    LogSplit.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.uid = "";
+                            object.index = 0;
+                            object.totalSplits = 0;
+                        }
+                        if (message.uid != null && message.hasOwnProperty("uid"))
+                            object.uid = message.uid;
+                        if (message.index != null && message.hasOwnProperty("index"))
+                            object.index = message.index;
+                        if (message.totalSplits != null && message.hasOwnProperty("totalSplits"))
+                            object.totalSplits = message.totalSplits;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this LogSplit to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.LogSplit
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    LogSplit.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return LogSplit;
                 })();
     
                 v2.LoggingServiceV2 = (function() {
@@ -16533,6 +16819,105 @@
                      * @variation 2
                      */
     
+                    /**
+                     * Callback as used by {@link google.logging.v2.ConfigServiceV2#getSettings}.
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @typedef GetSettingsCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.Settings} [response] Settings
+                     */
+    
+                    /**
+                     * Calls GetSettings.
+                     * @function getSettings
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IGetSettingsRequest} request GetSettingsRequest message or plain object
+                     * @param {google.logging.v2.ConfigServiceV2.GetSettingsCallback} callback Node-style callback called with the error, if any, and Settings
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(ConfigServiceV2.prototype.getSettings = function getSettings(request, callback) {
+                        return this.rpcCall(getSettings, $root.google.logging.v2.GetSettingsRequest, $root.google.logging.v2.Settings, request, callback);
+                    }, "name", { value: "GetSettings" });
+    
+                    /**
+                     * Calls GetSettings.
+                     * @function getSettings
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IGetSettingsRequest} request GetSettingsRequest message or plain object
+                     * @returns {Promise<google.logging.v2.Settings>} Promise
+                     * @variation 2
+                     */
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.ConfigServiceV2#updateSettings}.
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @typedef UpdateSettingsCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.logging.v2.Settings} [response] Settings
+                     */
+    
+                    /**
+                     * Calls UpdateSettings.
+                     * @function updateSettings
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IUpdateSettingsRequest} request UpdateSettingsRequest message or plain object
+                     * @param {google.logging.v2.ConfigServiceV2.UpdateSettingsCallback} callback Node-style callback called with the error, if any, and Settings
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(ConfigServiceV2.prototype.updateSettings = function updateSettings(request, callback) {
+                        return this.rpcCall(updateSettings, $root.google.logging.v2.UpdateSettingsRequest, $root.google.logging.v2.Settings, request, callback);
+                    }, "name", { value: "UpdateSettings" });
+    
+                    /**
+                     * Calls UpdateSettings.
+                     * @function updateSettings
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @instance
+                     * @param {google.logging.v2.IUpdateSettingsRequest} request UpdateSettingsRequest message or plain object
+                     * @returns {Promise<google.logging.v2.Settings>} Promise
+                     * @variation 2
+                     */
+    
+                    /**
+                     * Callback as used by {@link google.logging.v2.ConfigServiceV2#copyLogEntries}.
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @typedef CopyLogEntriesCallback
+                     * @type {function}
+                     * @param {Error|null} error Error, if any
+                     * @param {google.longrunning.Operation} [response] Operation
+                     */
+    
+                    /**
+                     * Calls CopyLogEntries.
+                     * @function copyLogEntries
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @instance
+                     * @param {google.logging.v2.ICopyLogEntriesRequest} request CopyLogEntriesRequest message or plain object
+                     * @param {google.logging.v2.ConfigServiceV2.CopyLogEntriesCallback} callback Node-style callback called with the error, if any, and Operation
+                     * @returns {undefined}
+                     * @variation 1
+                     */
+                    Object.defineProperty(ConfigServiceV2.prototype.copyLogEntries = function copyLogEntries(request, callback) {
+                        return this.rpcCall(copyLogEntries, $root.google.logging.v2.CopyLogEntriesRequest, $root.google.longrunning.Operation, request, callback);
+                    }, "name", { value: "CopyLogEntries" });
+    
+                    /**
+                     * Calls CopyLogEntries.
+                     * @function copyLogEntries
+                     * @memberof google.logging.v2.ConfigServiceV2
+                     * @instance
+                     * @param {google.logging.v2.ICopyLogEntriesRequest} request CopyLogEntriesRequest message or plain object
+                     * @returns {Promise<google.longrunning.Operation>} Promise
+                     * @variation 2
+                     */
+    
                     return ConfigServiceV2;
                 })();
     
@@ -16549,6 +16934,8 @@
                      * @property {number|null} [retentionDays] LogBucket retentionDays
                      * @property {boolean|null} [locked] LogBucket locked
                      * @property {google.logging.v2.LifecycleState|null} [lifecycleState] LogBucket lifecycleState
+                     * @property {Array.<string>|null} [restrictedFields] LogBucket restrictedFields
+                     * @property {google.logging.v2.ICmekSettings|null} [cmekSettings] LogBucket cmekSettings
                      */
     
                     /**
@@ -16560,6 +16947,7 @@
                      * @param {google.logging.v2.ILogBucket=} [properties] Properties to set
                      */
                     function LogBucket(properties) {
+                        this.restrictedFields = [];
                         if (properties)
                             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                                 if (properties[keys[i]] != null)
@@ -16623,6 +17011,22 @@
                     LogBucket.prototype.lifecycleState = 0;
     
                     /**
+                     * LogBucket restrictedFields.
+                     * @member {Array.<string>} restrictedFields
+                     * @memberof google.logging.v2.LogBucket
+                     * @instance
+                     */
+                    LogBucket.prototype.restrictedFields = $util.emptyArray;
+    
+                    /**
+                     * LogBucket cmekSettings.
+                     * @member {google.logging.v2.ICmekSettings|null|undefined} cmekSettings
+                     * @memberof google.logging.v2.LogBucket
+                     * @instance
+                     */
+                    LogBucket.prototype.cmekSettings = null;
+    
+                    /**
                      * Creates a new LogBucket instance using the specified properties.
                      * @function create
                      * @memberof google.logging.v2.LogBucket
@@ -16660,6 +17064,11 @@
                             writer.uint32(/* id 11, wireType 0 =*/88).int32(message.retentionDays);
                         if (message.lifecycleState != null && Object.hasOwnProperty.call(message, "lifecycleState"))
                             writer.uint32(/* id 12, wireType 0 =*/96).int32(message.lifecycleState);
+                        if (message.restrictedFields != null && message.restrictedFields.length)
+                            for (var i = 0; i < message.restrictedFields.length; ++i)
+                                writer.uint32(/* id 15, wireType 2 =*/122).string(message.restrictedFields[i]);
+                        if (message.cmekSettings != null && Object.hasOwnProperty.call(message, "cmekSettings"))
+                            $root.google.logging.v2.CmekSettings.encode(message.cmekSettings, writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
                         return writer;
                     };
     
@@ -16714,6 +17123,14 @@
                                 break;
                             case 12:
                                 message.lifecycleState = reader.int32();
+                                break;
+                            case 15:
+                                if (!(message.restrictedFields && message.restrictedFields.length))
+                                    message.restrictedFields = [];
+                                message.restrictedFields.push(reader.string());
+                                break;
+                            case 19:
+                                message.cmekSettings = $root.google.logging.v2.CmekSettings.decode(reader, reader.uint32());
                                 break;
                             default:
                                 reader.skipType(tag & 7);
@@ -16781,6 +17198,18 @@
                             case 2:
                                 break;
                             }
+                        if (message.restrictedFields != null && message.hasOwnProperty("restrictedFields")) {
+                            if (!Array.isArray(message.restrictedFields))
+                                return "restrictedFields: array expected";
+                            for (var i = 0; i < message.restrictedFields.length; ++i)
+                                if (!$util.isString(message.restrictedFields[i]))
+                                    return "restrictedFields: string[] expected";
+                        }
+                        if (message.cmekSettings != null && message.hasOwnProperty("cmekSettings")) {
+                            var error = $root.google.logging.v2.CmekSettings.verify(message.cmekSettings);
+                            if (error)
+                                return "cmekSettings." + error;
+                        }
                         return null;
                     };
     
@@ -16828,6 +17257,18 @@
                             message.lifecycleState = 2;
                             break;
                         }
+                        if (object.restrictedFields) {
+                            if (!Array.isArray(object.restrictedFields))
+                                throw TypeError(".google.logging.v2.LogBucket.restrictedFields: array expected");
+                            message.restrictedFields = [];
+                            for (var i = 0; i < object.restrictedFields.length; ++i)
+                                message.restrictedFields[i] = String(object.restrictedFields[i]);
+                        }
+                        if (object.cmekSettings != null) {
+                            if (typeof object.cmekSettings !== "object")
+                                throw TypeError(".google.logging.v2.LogBucket.cmekSettings: object expected");
+                            message.cmekSettings = $root.google.logging.v2.CmekSettings.fromObject(object.cmekSettings);
+                        }
                         return message;
                     };
     
@@ -16844,6 +17285,8 @@
                         if (!options)
                             options = {};
                         var object = {};
+                        if (options.arrays || options.defaults)
+                            object.restrictedFields = [];
                         if (options.defaults) {
                             object.name = "";
                             object.description = "";
@@ -16852,6 +17295,7 @@
                             object.locked = false;
                             object.retentionDays = 0;
                             object.lifecycleState = options.enums === String ? "LIFECYCLE_STATE_UNSPECIFIED" : 0;
+                            object.cmekSettings = null;
                         }
                         if (message.name != null && message.hasOwnProperty("name"))
                             object.name = message.name;
@@ -16867,6 +17311,13 @@
                             object.retentionDays = message.retentionDays;
                         if (message.lifecycleState != null && message.hasOwnProperty("lifecycleState"))
                             object.lifecycleState = options.enums === String ? $root.google.logging.v2.LifecycleState[message.lifecycleState] : message.lifecycleState;
+                        if (message.restrictedFields && message.restrictedFields.length) {
+                            object.restrictedFields = [];
+                            for (var j = 0; j < message.restrictedFields.length; ++j)
+                                object.restrictedFields[j] = message.restrictedFields[j];
+                        }
+                        if (message.cmekSettings != null && message.hasOwnProperty("cmekSettings"))
+                            object.cmekSettings = $root.google.logging.v2.CmekSettings.toObject(message.cmekSettings, options);
                         return object;
                     };
     
@@ -16882,22 +17333,6 @@
                     };
     
                     return LogBucket;
-                })();
-    
-                /**
-                 * LifecycleState enum.
-                 * @name google.logging.v2.LifecycleState
-                 * @enum {number}
-                 * @property {number} LIFECYCLE_STATE_UNSPECIFIED=0 LIFECYCLE_STATE_UNSPECIFIED value
-                 * @property {number} ACTIVE=1 ACTIVE value
-                 * @property {number} DELETE_REQUESTED=2 DELETE_REQUESTED value
-                 */
-                v2.LifecycleState = (function() {
-                    var valuesById = {}, values = Object.create(valuesById);
-                    values[valuesById[0] = "LIFECYCLE_STATE_UNSPECIFIED"] = 0;
-                    values[valuesById[1] = "ACTIVE"] = 1;
-                    values[valuesById[2] = "DELETE_REQUESTED"] = 2;
-                    return values;
                 })();
     
                 v2.LogView = (function() {
@@ -24337,6 +24772,1513 @@
                     return CmekSettings;
                 })();
     
+                v2.GetSettingsRequest = (function() {
+    
+                    /**
+                     * Properties of a GetSettingsRequest.
+                     * @memberof google.logging.v2
+                     * @interface IGetSettingsRequest
+                     * @property {string|null} [name] GetSettingsRequest name
+                     */
+    
+                    /**
+                     * Constructs a new GetSettingsRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a GetSettingsRequest.
+                     * @implements IGetSettingsRequest
+                     * @constructor
+                     * @param {google.logging.v2.IGetSettingsRequest=} [properties] Properties to set
+                     */
+                    function GetSettingsRequest(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * GetSettingsRequest name.
+                     * @member {string} name
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @instance
+                     */
+                    GetSettingsRequest.prototype.name = "";
+    
+                    /**
+                     * Creates a new GetSettingsRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.IGetSettingsRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.GetSettingsRequest} GetSettingsRequest instance
+                     */
+                    GetSettingsRequest.create = function create(properties) {
+                        return new GetSettingsRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified GetSettingsRequest message. Does not implicitly {@link google.logging.v2.GetSettingsRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.IGetSettingsRequest} message GetSettingsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    GetSettingsRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified GetSettingsRequest message, length delimited. Does not implicitly {@link google.logging.v2.GetSettingsRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.IGetSettingsRequest} message GetSettingsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    GetSettingsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a GetSettingsRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.GetSettingsRequest} GetSettingsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    GetSettingsRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.GetSettingsRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.name = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a GetSettingsRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.GetSettingsRequest} GetSettingsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    GetSettingsRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a GetSettingsRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    GetSettingsRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            if (!$util.isString(message.name))
+                                return "name: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a GetSettingsRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.GetSettingsRequest} GetSettingsRequest
+                     */
+                    GetSettingsRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.GetSettingsRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.GetSettingsRequest();
+                        if (object.name != null)
+                            message.name = String(object.name);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a GetSettingsRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.GetSettingsRequest} message GetSettingsRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    GetSettingsRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults)
+                            object.name = "";
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            object.name = message.name;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this GetSettingsRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.GetSettingsRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    GetSettingsRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return GetSettingsRequest;
+                })();
+    
+                v2.UpdateSettingsRequest = (function() {
+    
+                    /**
+                     * Properties of an UpdateSettingsRequest.
+                     * @memberof google.logging.v2
+                     * @interface IUpdateSettingsRequest
+                     * @property {string|null} [name] UpdateSettingsRequest name
+                     * @property {google.logging.v2.ISettings|null} [settings] UpdateSettingsRequest settings
+                     * @property {google.protobuf.IFieldMask|null} [updateMask] UpdateSettingsRequest updateMask
+                     */
+    
+                    /**
+                     * Constructs a new UpdateSettingsRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents an UpdateSettingsRequest.
+                     * @implements IUpdateSettingsRequest
+                     * @constructor
+                     * @param {google.logging.v2.IUpdateSettingsRequest=} [properties] Properties to set
+                     */
+                    function UpdateSettingsRequest(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * UpdateSettingsRequest name.
+                     * @member {string} name
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @instance
+                     */
+                    UpdateSettingsRequest.prototype.name = "";
+    
+                    /**
+                     * UpdateSettingsRequest settings.
+                     * @member {google.logging.v2.ISettings|null|undefined} settings
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @instance
+                     */
+                    UpdateSettingsRequest.prototype.settings = null;
+    
+                    /**
+                     * UpdateSettingsRequest updateMask.
+                     * @member {google.protobuf.IFieldMask|null|undefined} updateMask
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @instance
+                     */
+                    UpdateSettingsRequest.prototype.updateMask = null;
+    
+                    /**
+                     * Creates a new UpdateSettingsRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.IUpdateSettingsRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.UpdateSettingsRequest} UpdateSettingsRequest instance
+                     */
+                    UpdateSettingsRequest.create = function create(properties) {
+                        return new UpdateSettingsRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified UpdateSettingsRequest message. Does not implicitly {@link google.logging.v2.UpdateSettingsRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.IUpdateSettingsRequest} message UpdateSettingsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    UpdateSettingsRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                        if (message.settings != null && Object.hasOwnProperty.call(message, "settings"))
+                            $root.google.logging.v2.Settings.encode(message.settings, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        if (message.updateMask != null && Object.hasOwnProperty.call(message, "updateMask"))
+                            $root.google.protobuf.FieldMask.encode(message.updateMask, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified UpdateSettingsRequest message, length delimited. Does not implicitly {@link google.logging.v2.UpdateSettingsRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.IUpdateSettingsRequest} message UpdateSettingsRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    UpdateSettingsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes an UpdateSettingsRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.UpdateSettingsRequest} UpdateSettingsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    UpdateSettingsRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.UpdateSettingsRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.name = reader.string();
+                                break;
+                            case 2:
+                                message.settings = $root.google.logging.v2.Settings.decode(reader, reader.uint32());
+                                break;
+                            case 3:
+                                message.updateMask = $root.google.protobuf.FieldMask.decode(reader, reader.uint32());
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes an UpdateSettingsRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.UpdateSettingsRequest} UpdateSettingsRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    UpdateSettingsRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies an UpdateSettingsRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    UpdateSettingsRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            if (!$util.isString(message.name))
+                                return "name: string expected";
+                        if (message.settings != null && message.hasOwnProperty("settings")) {
+                            var error = $root.google.logging.v2.Settings.verify(message.settings);
+                            if (error)
+                                return "settings." + error;
+                        }
+                        if (message.updateMask != null && message.hasOwnProperty("updateMask")) {
+                            var error = $root.google.protobuf.FieldMask.verify(message.updateMask);
+                            if (error)
+                                return "updateMask." + error;
+                        }
+                        return null;
+                    };
+    
+                    /**
+                     * Creates an UpdateSettingsRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.UpdateSettingsRequest} UpdateSettingsRequest
+                     */
+                    UpdateSettingsRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.UpdateSettingsRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.UpdateSettingsRequest();
+                        if (object.name != null)
+                            message.name = String(object.name);
+                        if (object.settings != null) {
+                            if (typeof object.settings !== "object")
+                                throw TypeError(".google.logging.v2.UpdateSettingsRequest.settings: object expected");
+                            message.settings = $root.google.logging.v2.Settings.fromObject(object.settings);
+                        }
+                        if (object.updateMask != null) {
+                            if (typeof object.updateMask !== "object")
+                                throw TypeError(".google.logging.v2.UpdateSettingsRequest.updateMask: object expected");
+                            message.updateMask = $root.google.protobuf.FieldMask.fromObject(object.updateMask);
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from an UpdateSettingsRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @static
+                     * @param {google.logging.v2.UpdateSettingsRequest} message UpdateSettingsRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    UpdateSettingsRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.name = "";
+                            object.settings = null;
+                            object.updateMask = null;
+                        }
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            object.name = message.name;
+                        if (message.settings != null && message.hasOwnProperty("settings"))
+                            object.settings = $root.google.logging.v2.Settings.toObject(message.settings, options);
+                        if (message.updateMask != null && message.hasOwnProperty("updateMask"))
+                            object.updateMask = $root.google.protobuf.FieldMask.toObject(message.updateMask, options);
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this UpdateSettingsRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.UpdateSettingsRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    UpdateSettingsRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return UpdateSettingsRequest;
+                })();
+    
+                v2.Settings = (function() {
+    
+                    /**
+                     * Properties of a Settings.
+                     * @memberof google.logging.v2
+                     * @interface ISettings
+                     * @property {string|null} [name] Settings name
+                     * @property {string|null} [storageLocation] Settings storageLocation
+                     * @property {boolean|null} [disableDefaultSink] Settings disableDefaultSink
+                     */
+    
+                    /**
+                     * Constructs a new Settings.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a Settings.
+                     * @implements ISettings
+                     * @constructor
+                     * @param {google.logging.v2.ISettings=} [properties] Properties to set
+                     */
+                    function Settings(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * Settings name.
+                     * @member {string} name
+                     * @memberof google.logging.v2.Settings
+                     * @instance
+                     */
+                    Settings.prototype.name = "";
+    
+                    /**
+                     * Settings storageLocation.
+                     * @member {string} storageLocation
+                     * @memberof google.logging.v2.Settings
+                     * @instance
+                     */
+                    Settings.prototype.storageLocation = "";
+    
+                    /**
+                     * Settings disableDefaultSink.
+                     * @member {boolean} disableDefaultSink
+                     * @memberof google.logging.v2.Settings
+                     * @instance
+                     */
+                    Settings.prototype.disableDefaultSink = false;
+    
+                    /**
+                     * Creates a new Settings instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {google.logging.v2.ISettings=} [properties] Properties to set
+                     * @returns {google.logging.v2.Settings} Settings instance
+                     */
+                    Settings.create = function create(properties) {
+                        return new Settings(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified Settings message. Does not implicitly {@link google.logging.v2.Settings.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {google.logging.v2.ISettings} message Settings message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Settings.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                        if (message.storageLocation != null && Object.hasOwnProperty.call(message, "storageLocation"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.storageLocation);
+                        if (message.disableDefaultSink != null && Object.hasOwnProperty.call(message, "disableDefaultSink"))
+                            writer.uint32(/* id 5, wireType 0 =*/40).bool(message.disableDefaultSink);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified Settings message, length delimited. Does not implicitly {@link google.logging.v2.Settings.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {google.logging.v2.ISettings} message Settings message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Settings.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a Settings message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.Settings} Settings
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Settings.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.Settings();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.name = reader.string();
+                                break;
+                            case 4:
+                                message.storageLocation = reader.string();
+                                break;
+                            case 5:
+                                message.disableDefaultSink = reader.bool();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a Settings message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.Settings} Settings
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Settings.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a Settings message.
+                     * @function verify
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Settings.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            if (!$util.isString(message.name))
+                                return "name: string expected";
+                        if (message.storageLocation != null && message.hasOwnProperty("storageLocation"))
+                            if (!$util.isString(message.storageLocation))
+                                return "storageLocation: string expected";
+                        if (message.disableDefaultSink != null && message.hasOwnProperty("disableDefaultSink"))
+                            if (typeof message.disableDefaultSink !== "boolean")
+                                return "disableDefaultSink: boolean expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a Settings message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.Settings} Settings
+                     */
+                    Settings.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.Settings)
+                            return object;
+                        var message = new $root.google.logging.v2.Settings();
+                        if (object.name != null)
+                            message.name = String(object.name);
+                        if (object.storageLocation != null)
+                            message.storageLocation = String(object.storageLocation);
+                        if (object.disableDefaultSink != null)
+                            message.disableDefaultSink = Boolean(object.disableDefaultSink);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a Settings message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.Settings
+                     * @static
+                     * @param {google.logging.v2.Settings} message Settings
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Settings.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.name = "";
+                            object.storageLocation = "";
+                            object.disableDefaultSink = false;
+                        }
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            object.name = message.name;
+                        if (message.storageLocation != null && message.hasOwnProperty("storageLocation"))
+                            object.storageLocation = message.storageLocation;
+                        if (message.disableDefaultSink != null && message.hasOwnProperty("disableDefaultSink"))
+                            object.disableDefaultSink = message.disableDefaultSink;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this Settings to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.Settings
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Settings.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return Settings;
+                })();
+    
+                v2.CopyLogEntriesRequest = (function() {
+    
+                    /**
+                     * Properties of a CopyLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @interface ICopyLogEntriesRequest
+                     * @property {string|null} [name] CopyLogEntriesRequest name
+                     * @property {string|null} [filter] CopyLogEntriesRequest filter
+                     * @property {string|null} [destination] CopyLogEntriesRequest destination
+                     */
+    
+                    /**
+                     * Constructs a new CopyLogEntriesRequest.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a CopyLogEntriesRequest.
+                     * @implements ICopyLogEntriesRequest
+                     * @constructor
+                     * @param {google.logging.v2.ICopyLogEntriesRequest=} [properties] Properties to set
+                     */
+                    function CopyLogEntriesRequest(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * CopyLogEntriesRequest name.
+                     * @member {string} name
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @instance
+                     */
+                    CopyLogEntriesRequest.prototype.name = "";
+    
+                    /**
+                     * CopyLogEntriesRequest filter.
+                     * @member {string} filter
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @instance
+                     */
+                    CopyLogEntriesRequest.prototype.filter = "";
+    
+                    /**
+                     * CopyLogEntriesRequest destination.
+                     * @member {string} destination
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @instance
+                     */
+                    CopyLogEntriesRequest.prototype.destination = "";
+    
+                    /**
+                     * Creates a new CopyLogEntriesRequest instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesRequest=} [properties] Properties to set
+                     * @returns {google.logging.v2.CopyLogEntriesRequest} CopyLogEntriesRequest instance
+                     */
+                    CopyLogEntriesRequest.create = function create(properties) {
+                        return new CopyLogEntriesRequest(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified CopyLogEntriesRequest message. Does not implicitly {@link google.logging.v2.CopyLogEntriesRequest.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesRequest} message CopyLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CopyLogEntriesRequest.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                        if (message.filter != null && Object.hasOwnProperty.call(message, "filter"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.filter);
+                        if (message.destination != null && Object.hasOwnProperty.call(message, "destination"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.destination);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified CopyLogEntriesRequest message, length delimited. Does not implicitly {@link google.logging.v2.CopyLogEntriesRequest.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesRequest} message CopyLogEntriesRequest message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CopyLogEntriesRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a CopyLogEntriesRequest message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.CopyLogEntriesRequest} CopyLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CopyLogEntriesRequest.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.CopyLogEntriesRequest();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.name = reader.string();
+                                break;
+                            case 3:
+                                message.filter = reader.string();
+                                break;
+                            case 4:
+                                message.destination = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a CopyLogEntriesRequest message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.CopyLogEntriesRequest} CopyLogEntriesRequest
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CopyLogEntriesRequest.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a CopyLogEntriesRequest message.
+                     * @function verify
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    CopyLogEntriesRequest.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            if (!$util.isString(message.name))
+                                return "name: string expected";
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            if (!$util.isString(message.filter))
+                                return "filter: string expected";
+                        if (message.destination != null && message.hasOwnProperty("destination"))
+                            if (!$util.isString(message.destination))
+                                return "destination: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a CopyLogEntriesRequest message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.CopyLogEntriesRequest} CopyLogEntriesRequest
+                     */
+                    CopyLogEntriesRequest.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.CopyLogEntriesRequest)
+                            return object;
+                        var message = new $root.google.logging.v2.CopyLogEntriesRequest();
+                        if (object.name != null)
+                            message.name = String(object.name);
+                        if (object.filter != null)
+                            message.filter = String(object.filter);
+                        if (object.destination != null)
+                            message.destination = String(object.destination);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a CopyLogEntriesRequest message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @static
+                     * @param {google.logging.v2.CopyLogEntriesRequest} message CopyLogEntriesRequest
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    CopyLogEntriesRequest.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.name = "";
+                            object.filter = "";
+                            object.destination = "";
+                        }
+                        if (message.name != null && message.hasOwnProperty("name"))
+                            object.name = message.name;
+                        if (message.filter != null && message.hasOwnProperty("filter"))
+                            object.filter = message.filter;
+                        if (message.destination != null && message.hasOwnProperty("destination"))
+                            object.destination = message.destination;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this CopyLogEntriesRequest to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.CopyLogEntriesRequest
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    CopyLogEntriesRequest.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return CopyLogEntriesRequest;
+                })();
+    
+                v2.CopyLogEntriesMetadata = (function() {
+    
+                    /**
+                     * Properties of a CopyLogEntriesMetadata.
+                     * @memberof google.logging.v2
+                     * @interface ICopyLogEntriesMetadata
+                     * @property {google.protobuf.ITimestamp|null} [startTime] CopyLogEntriesMetadata startTime
+                     * @property {google.protobuf.ITimestamp|null} [endTime] CopyLogEntriesMetadata endTime
+                     * @property {google.logging.v2.OperationState|null} [state] CopyLogEntriesMetadata state
+                     * @property {boolean|null} [cancellationRequested] CopyLogEntriesMetadata cancellationRequested
+                     * @property {google.logging.v2.ICopyLogEntriesRequest|null} [request] CopyLogEntriesMetadata request
+                     * @property {number|null} [progress] CopyLogEntriesMetadata progress
+                     * @property {string|null} [writerIdentity] CopyLogEntriesMetadata writerIdentity
+                     */
+    
+                    /**
+                     * Constructs a new CopyLogEntriesMetadata.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a CopyLogEntriesMetadata.
+                     * @implements ICopyLogEntriesMetadata
+                     * @constructor
+                     * @param {google.logging.v2.ICopyLogEntriesMetadata=} [properties] Properties to set
+                     */
+                    function CopyLogEntriesMetadata(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * CopyLogEntriesMetadata startTime.
+                     * @member {google.protobuf.ITimestamp|null|undefined} startTime
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.startTime = null;
+    
+                    /**
+                     * CopyLogEntriesMetadata endTime.
+                     * @member {google.protobuf.ITimestamp|null|undefined} endTime
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.endTime = null;
+    
+                    /**
+                     * CopyLogEntriesMetadata state.
+                     * @member {google.logging.v2.OperationState} state
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.state = 0;
+    
+                    /**
+                     * CopyLogEntriesMetadata cancellationRequested.
+                     * @member {boolean} cancellationRequested
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.cancellationRequested = false;
+    
+                    /**
+                     * CopyLogEntriesMetadata request.
+                     * @member {google.logging.v2.ICopyLogEntriesRequest|null|undefined} request
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.request = null;
+    
+                    /**
+                     * CopyLogEntriesMetadata progress.
+                     * @member {number} progress
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.progress = 0;
+    
+                    /**
+                     * CopyLogEntriesMetadata writerIdentity.
+                     * @member {string} writerIdentity
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     */
+                    CopyLogEntriesMetadata.prototype.writerIdentity = "";
+    
+                    /**
+                     * Creates a new CopyLogEntriesMetadata instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesMetadata=} [properties] Properties to set
+                     * @returns {google.logging.v2.CopyLogEntriesMetadata} CopyLogEntriesMetadata instance
+                     */
+                    CopyLogEntriesMetadata.create = function create(properties) {
+                        return new CopyLogEntriesMetadata(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified CopyLogEntriesMetadata message. Does not implicitly {@link google.logging.v2.CopyLogEntriesMetadata.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesMetadata} message CopyLogEntriesMetadata message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CopyLogEntriesMetadata.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.startTime != null && Object.hasOwnProperty.call(message, "startTime"))
+                            $root.google.protobuf.Timestamp.encode(message.startTime, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        if (message.endTime != null && Object.hasOwnProperty.call(message, "endTime"))
+                            $root.google.protobuf.Timestamp.encode(message.endTime, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        if (message.state != null && Object.hasOwnProperty.call(message, "state"))
+                            writer.uint32(/* id 3, wireType 0 =*/24).int32(message.state);
+                        if (message.cancellationRequested != null && Object.hasOwnProperty.call(message, "cancellationRequested"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).bool(message.cancellationRequested);
+                        if (message.request != null && Object.hasOwnProperty.call(message, "request"))
+                            $root.google.logging.v2.CopyLogEntriesRequest.encode(message.request, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                        if (message.progress != null && Object.hasOwnProperty.call(message, "progress"))
+                            writer.uint32(/* id 6, wireType 0 =*/48).int32(message.progress);
+                        if (message.writerIdentity != null && Object.hasOwnProperty.call(message, "writerIdentity"))
+                            writer.uint32(/* id 7, wireType 2 =*/58).string(message.writerIdentity);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified CopyLogEntriesMetadata message, length delimited. Does not implicitly {@link google.logging.v2.CopyLogEntriesMetadata.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesMetadata} message CopyLogEntriesMetadata message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CopyLogEntriesMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a CopyLogEntriesMetadata message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.CopyLogEntriesMetadata} CopyLogEntriesMetadata
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CopyLogEntriesMetadata.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.CopyLogEntriesMetadata();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.startTime = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                break;
+                            case 2:
+                                message.endTime = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                break;
+                            case 3:
+                                message.state = reader.int32();
+                                break;
+                            case 4:
+                                message.cancellationRequested = reader.bool();
+                                break;
+                            case 5:
+                                message.request = $root.google.logging.v2.CopyLogEntriesRequest.decode(reader, reader.uint32());
+                                break;
+                            case 6:
+                                message.progress = reader.int32();
+                                break;
+                            case 7:
+                                message.writerIdentity = reader.string();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a CopyLogEntriesMetadata message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.CopyLogEntriesMetadata} CopyLogEntriesMetadata
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CopyLogEntriesMetadata.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a CopyLogEntriesMetadata message.
+                     * @function verify
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    CopyLogEntriesMetadata.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.startTime != null && message.hasOwnProperty("startTime")) {
+                            var error = $root.google.protobuf.Timestamp.verify(message.startTime);
+                            if (error)
+                                return "startTime." + error;
+                        }
+                        if (message.endTime != null && message.hasOwnProperty("endTime")) {
+                            var error = $root.google.protobuf.Timestamp.verify(message.endTime);
+                            if (error)
+                                return "endTime." + error;
+                        }
+                        if (message.state != null && message.hasOwnProperty("state"))
+                            switch (message.state) {
+                            default:
+                                return "state: enum value expected";
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                                break;
+                            }
+                        if (message.cancellationRequested != null && message.hasOwnProperty("cancellationRequested"))
+                            if (typeof message.cancellationRequested !== "boolean")
+                                return "cancellationRequested: boolean expected";
+                        if (message.request != null && message.hasOwnProperty("request")) {
+                            var error = $root.google.logging.v2.CopyLogEntriesRequest.verify(message.request);
+                            if (error)
+                                return "request." + error;
+                        }
+                        if (message.progress != null && message.hasOwnProperty("progress"))
+                            if (!$util.isInteger(message.progress))
+                                return "progress: integer expected";
+                        if (message.writerIdentity != null && message.hasOwnProperty("writerIdentity"))
+                            if (!$util.isString(message.writerIdentity))
+                                return "writerIdentity: string expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a CopyLogEntriesMetadata message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.CopyLogEntriesMetadata} CopyLogEntriesMetadata
+                     */
+                    CopyLogEntriesMetadata.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.CopyLogEntriesMetadata)
+                            return object;
+                        var message = new $root.google.logging.v2.CopyLogEntriesMetadata();
+                        if (object.startTime != null) {
+                            if (typeof object.startTime !== "object")
+                                throw TypeError(".google.logging.v2.CopyLogEntriesMetadata.startTime: object expected");
+                            message.startTime = $root.google.protobuf.Timestamp.fromObject(object.startTime);
+                        }
+                        if (object.endTime != null) {
+                            if (typeof object.endTime !== "object")
+                                throw TypeError(".google.logging.v2.CopyLogEntriesMetadata.endTime: object expected");
+                            message.endTime = $root.google.protobuf.Timestamp.fromObject(object.endTime);
+                        }
+                        switch (object.state) {
+                        case "OPERATION_STATE_UNSPECIFIED":
+                        case 0:
+                            message.state = 0;
+                            break;
+                        case "OPERATION_STATE_SCHEDULED":
+                        case 1:
+                            message.state = 1;
+                            break;
+                        case "OPERATION_STATE_WAITING_FOR_PERMISSIONS":
+                        case 2:
+                            message.state = 2;
+                            break;
+                        case "OPERATION_STATE_RUNNING":
+                        case 3:
+                            message.state = 3;
+                            break;
+                        case "OPERATION_STATE_SUCCEEDED":
+                        case 4:
+                            message.state = 4;
+                            break;
+                        case "OPERATION_STATE_FAILED":
+                        case 5:
+                            message.state = 5;
+                            break;
+                        case "OPERATION_STATE_CANCELLED":
+                        case 6:
+                            message.state = 6;
+                            break;
+                        }
+                        if (object.cancellationRequested != null)
+                            message.cancellationRequested = Boolean(object.cancellationRequested);
+                        if (object.request != null) {
+                            if (typeof object.request !== "object")
+                                throw TypeError(".google.logging.v2.CopyLogEntriesMetadata.request: object expected");
+                            message.request = $root.google.logging.v2.CopyLogEntriesRequest.fromObject(object.request);
+                        }
+                        if (object.progress != null)
+                            message.progress = object.progress | 0;
+                        if (object.writerIdentity != null)
+                            message.writerIdentity = String(object.writerIdentity);
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a CopyLogEntriesMetadata message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @static
+                     * @param {google.logging.v2.CopyLogEntriesMetadata} message CopyLogEntriesMetadata
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    CopyLogEntriesMetadata.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults) {
+                            object.startTime = null;
+                            object.endTime = null;
+                            object.state = options.enums === String ? "OPERATION_STATE_UNSPECIFIED" : 0;
+                            object.cancellationRequested = false;
+                            object.request = null;
+                            object.progress = 0;
+                            object.writerIdentity = "";
+                        }
+                        if (message.startTime != null && message.hasOwnProperty("startTime"))
+                            object.startTime = $root.google.protobuf.Timestamp.toObject(message.startTime, options);
+                        if (message.endTime != null && message.hasOwnProperty("endTime"))
+                            object.endTime = $root.google.protobuf.Timestamp.toObject(message.endTime, options);
+                        if (message.state != null && message.hasOwnProperty("state"))
+                            object.state = options.enums === String ? $root.google.logging.v2.OperationState[message.state] : message.state;
+                        if (message.cancellationRequested != null && message.hasOwnProperty("cancellationRequested"))
+                            object.cancellationRequested = message.cancellationRequested;
+                        if (message.request != null && message.hasOwnProperty("request"))
+                            object.request = $root.google.logging.v2.CopyLogEntriesRequest.toObject(message.request, options);
+                        if (message.progress != null && message.hasOwnProperty("progress"))
+                            object.progress = message.progress;
+                        if (message.writerIdentity != null && message.hasOwnProperty("writerIdentity"))
+                            object.writerIdentity = message.writerIdentity;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this CopyLogEntriesMetadata to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.CopyLogEntriesMetadata
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    CopyLogEntriesMetadata.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return CopyLogEntriesMetadata;
+                })();
+    
+                v2.CopyLogEntriesResponse = (function() {
+    
+                    /**
+                     * Properties of a CopyLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @interface ICopyLogEntriesResponse
+                     * @property {number|Long|null} [logEntriesCopiedCount] CopyLogEntriesResponse logEntriesCopiedCount
+                     */
+    
+                    /**
+                     * Constructs a new CopyLogEntriesResponse.
+                     * @memberof google.logging.v2
+                     * @classdesc Represents a CopyLogEntriesResponse.
+                     * @implements ICopyLogEntriesResponse
+                     * @constructor
+                     * @param {google.logging.v2.ICopyLogEntriesResponse=} [properties] Properties to set
+                     */
+                    function CopyLogEntriesResponse(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * CopyLogEntriesResponse logEntriesCopiedCount.
+                     * @member {number|Long} logEntriesCopiedCount
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @instance
+                     */
+                    CopyLogEntriesResponse.prototype.logEntriesCopiedCount = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+                    /**
+                     * Creates a new CopyLogEntriesResponse instance using the specified properties.
+                     * @function create
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesResponse=} [properties] Properties to set
+                     * @returns {google.logging.v2.CopyLogEntriesResponse} CopyLogEntriesResponse instance
+                     */
+                    CopyLogEntriesResponse.create = function create(properties) {
+                        return new CopyLogEntriesResponse(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified CopyLogEntriesResponse message. Does not implicitly {@link google.logging.v2.CopyLogEntriesResponse.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesResponse} message CopyLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CopyLogEntriesResponse.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.logEntriesCopiedCount != null && Object.hasOwnProperty.call(message, "logEntriesCopiedCount"))
+                            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.logEntriesCopiedCount);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified CopyLogEntriesResponse message, length delimited. Does not implicitly {@link google.logging.v2.CopyLogEntriesResponse.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.ICopyLogEntriesResponse} message CopyLogEntriesResponse message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    CopyLogEntriesResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a CopyLogEntriesResponse message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.logging.v2.CopyLogEntriesResponse} CopyLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CopyLogEntriesResponse.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.logging.v2.CopyLogEntriesResponse();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 1:
+                                message.logEntriesCopiedCount = reader.int64();
+                                break;
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a CopyLogEntriesResponse message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.logging.v2.CopyLogEntriesResponse} CopyLogEntriesResponse
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    CopyLogEntriesResponse.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a CopyLogEntriesResponse message.
+                     * @function verify
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    CopyLogEntriesResponse.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        if (message.logEntriesCopiedCount != null && message.hasOwnProperty("logEntriesCopiedCount"))
+                            if (!$util.isInteger(message.logEntriesCopiedCount) && !(message.logEntriesCopiedCount && $util.isInteger(message.logEntriesCopiedCount.low) && $util.isInteger(message.logEntriesCopiedCount.high)))
+                                return "logEntriesCopiedCount: integer|Long expected";
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a CopyLogEntriesResponse message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.logging.v2.CopyLogEntriesResponse} CopyLogEntriesResponse
+                     */
+                    CopyLogEntriesResponse.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.logging.v2.CopyLogEntriesResponse)
+                            return object;
+                        var message = new $root.google.logging.v2.CopyLogEntriesResponse();
+                        if (object.logEntriesCopiedCount != null)
+                            if ($util.Long)
+                                (message.logEntriesCopiedCount = $util.Long.fromValue(object.logEntriesCopiedCount)).unsigned = false;
+                            else if (typeof object.logEntriesCopiedCount === "string")
+                                message.logEntriesCopiedCount = parseInt(object.logEntriesCopiedCount, 10);
+                            else if (typeof object.logEntriesCopiedCount === "number")
+                                message.logEntriesCopiedCount = object.logEntriesCopiedCount;
+                            else if (typeof object.logEntriesCopiedCount === "object")
+                                message.logEntriesCopiedCount = new $util.LongBits(object.logEntriesCopiedCount.low >>> 0, object.logEntriesCopiedCount.high >>> 0).toNumber();
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a CopyLogEntriesResponse message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @static
+                     * @param {google.logging.v2.CopyLogEntriesResponse} message CopyLogEntriesResponse
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    CopyLogEntriesResponse.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (options.defaults)
+                            if ($util.Long) {
+                                var long = new $util.Long(0, 0, false);
+                                object.logEntriesCopiedCount = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                            } else
+                                object.logEntriesCopiedCount = options.longs === String ? "0" : 0;
+                        if (message.logEntriesCopiedCount != null && message.hasOwnProperty("logEntriesCopiedCount"))
+                            if (typeof message.logEntriesCopiedCount === "number")
+                                object.logEntriesCopiedCount = options.longs === String ? String(message.logEntriesCopiedCount) : message.logEntriesCopiedCount;
+                            else
+                                object.logEntriesCopiedCount = options.longs === String ? $util.Long.prototype.toString.call(message.logEntriesCopiedCount) : options.longs === Number ? new $util.LongBits(message.logEntriesCopiedCount.low >>> 0, message.logEntriesCopiedCount.high >>> 0).toNumber() : message.logEntriesCopiedCount;
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this CopyLogEntriesResponse to JSON.
+                     * @function toJSON
+                     * @memberof google.logging.v2.CopyLogEntriesResponse
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    CopyLogEntriesResponse.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    return CopyLogEntriesResponse;
+                })();
+    
+                /**
+                 * LifecycleState enum.
+                 * @name google.logging.v2.LifecycleState
+                 * @enum {number}
+                 * @property {number} LIFECYCLE_STATE_UNSPECIFIED=0 LIFECYCLE_STATE_UNSPECIFIED value
+                 * @property {number} ACTIVE=1 ACTIVE value
+                 * @property {number} DELETE_REQUESTED=2 DELETE_REQUESTED value
+                 */
+                v2.LifecycleState = (function() {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "LIFECYCLE_STATE_UNSPECIFIED"] = 0;
+                    values[valuesById[1] = "ACTIVE"] = 1;
+                    values[valuesById[2] = "DELETE_REQUESTED"] = 2;
+                    return values;
+                })();
+    
+                /**
+                 * OperationState enum.
+                 * @name google.logging.v2.OperationState
+                 * @enum {number}
+                 * @property {number} OPERATION_STATE_UNSPECIFIED=0 OPERATION_STATE_UNSPECIFIED value
+                 * @property {number} OPERATION_STATE_SCHEDULED=1 OPERATION_STATE_SCHEDULED value
+                 * @property {number} OPERATION_STATE_WAITING_FOR_PERMISSIONS=2 OPERATION_STATE_WAITING_FOR_PERMISSIONS value
+                 * @property {number} OPERATION_STATE_RUNNING=3 OPERATION_STATE_RUNNING value
+                 * @property {number} OPERATION_STATE_SUCCEEDED=4 OPERATION_STATE_SUCCEEDED value
+                 * @property {number} OPERATION_STATE_FAILED=5 OPERATION_STATE_FAILED value
+                 * @property {number} OPERATION_STATE_CANCELLED=6 OPERATION_STATE_CANCELLED value
+                 */
+                v2.OperationState = (function() {
+                    var valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "OPERATION_STATE_UNSPECIFIED"] = 0;
+                    values[valuesById[1] = "OPERATION_STATE_SCHEDULED"] = 1;
+                    values[valuesById[2] = "OPERATION_STATE_WAITING_FOR_PERMISSIONS"] = 2;
+                    values[valuesById[3] = "OPERATION_STATE_RUNNING"] = 3;
+                    values[valuesById[4] = "OPERATION_STATE_SUCCEEDED"] = 4;
+                    values[valuesById[5] = "OPERATION_STATE_FAILED"] = 5;
+                    values[valuesById[6] = "OPERATION_STATE_CANCELLED"] = 6;
+                    return values;
+                })();
+    
                 v2.MetricsServiceV2 = (function() {
     
                     /**
@@ -24546,6 +26488,7 @@
                      * @property {string|null} [name] LogMetric name
                      * @property {string|null} [description] LogMetric description
                      * @property {string|null} [filter] LogMetric filter
+                     * @property {boolean|null} [disabled] LogMetric disabled
                      * @property {google.api.IMetricDescriptor|null} [metricDescriptor] LogMetric metricDescriptor
                      * @property {string|null} [valueExtractor] LogMetric valueExtractor
                      * @property {Object.<string,string>|null} [labelExtractors] LogMetric labelExtractors
@@ -24594,6 +26537,14 @@
                      * @instance
                      */
                     LogMetric.prototype.filter = "";
+    
+                    /**
+                     * LogMetric disabled.
+                     * @member {boolean} disabled
+                     * @memberof google.logging.v2.LogMetric
+                     * @instance
+                     */
+                    LogMetric.prototype.disabled = false;
     
                     /**
                      * LogMetric metricDescriptor.
@@ -24696,6 +26647,8 @@
                             $root.google.protobuf.Timestamp.encode(message.createTime, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                         if (message.updateTime != null && Object.hasOwnProperty.call(message, "updateTime"))
                             $root.google.protobuf.Timestamp.encode(message.updateTime, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                        if (message.disabled != null && Object.hasOwnProperty.call(message, "disabled"))
+                            writer.uint32(/* id 12, wireType 0 =*/96).bool(message.disabled);
                         return writer;
                     };
     
@@ -24738,6 +26691,9 @@
                                 break;
                             case 3:
                                 message.filter = reader.string();
+                                break;
+                            case 12:
+                                message.disabled = reader.bool();
                                 break;
                             case 5:
                                 message.metricDescriptor = $root.google.api.MetricDescriptor.decode(reader, reader.uint32());
@@ -24823,6 +26779,9 @@
                         if (message.filter != null && message.hasOwnProperty("filter"))
                             if (!$util.isString(message.filter))
                                 return "filter: string expected";
+                        if (message.disabled != null && message.hasOwnProperty("disabled"))
+                            if (typeof message.disabled !== "boolean")
+                                return "disabled: boolean expected";
                         if (message.metricDescriptor != null && message.hasOwnProperty("metricDescriptor")) {
                             var error = $root.google.api.MetricDescriptor.verify(message.metricDescriptor);
                             if (error)
@@ -24883,6 +26842,8 @@
                             message.description = String(object.description);
                         if (object.filter != null)
                             message.filter = String(object.filter);
+                        if (object.disabled != null)
+                            message.disabled = Boolean(object.disabled);
                         if (object.metricDescriptor != null) {
                             if (typeof object.metricDescriptor !== "object")
                                 throw TypeError(".google.logging.v2.LogMetric.metricDescriptor: object expected");
@@ -24950,6 +26911,7 @@
                             object.bucketOptions = null;
                             object.createTime = null;
                             object.updateTime = null;
+                            object.disabled = false;
                         }
                         if (message.name != null && message.hasOwnProperty("name"))
                             object.name = message.name;
@@ -24975,6 +26937,8 @@
                             object.createTime = $root.google.protobuf.Timestamp.toObject(message.createTime, options);
                         if (message.updateTime != null && message.hasOwnProperty("updateTime"))
                             object.updateTime = $root.google.protobuf.Timestamp.toObject(message.updateTime, options);
+                        if (message.disabled != null && message.hasOwnProperty("disabled"))
+                            object.disabled = message.disabled;
                         return object;
                     };
     
@@ -31956,6 +33920,2007 @@
             })();
     
             return api;
+        })();
+    
+        google.longrunning = (function() {
+    
+            /**
+             * Namespace longrunning.
+             * @memberof google
+             * @namespace
+             */
+            var longrunning = {};
+    
+            longrunning.Operations = (function() {
+    
+                /**
+                 * Constructs a new Operations service.
+                 * @memberof google.longrunning
+                 * @classdesc Represents an Operations
+                 * @extends $protobuf.rpc.Service
+                 * @constructor
+                 * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
+                 * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
+                 * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+                 */
+                function Operations(rpcImpl, requestDelimited, responseDelimited) {
+                    $protobuf.rpc.Service.call(this, rpcImpl, requestDelimited, responseDelimited);
+                }
+    
+                (Operations.prototype = Object.create($protobuf.rpc.Service.prototype)).constructor = Operations;
+    
+                /**
+                 * Creates new Operations service using the specified rpc implementation.
+                 * @function create
+                 * @memberof google.longrunning.Operations
+                 * @static
+                 * @param {$protobuf.RPCImpl} rpcImpl RPC implementation
+                 * @param {boolean} [requestDelimited=false] Whether requests are length-delimited
+                 * @param {boolean} [responseDelimited=false] Whether responses are length-delimited
+                 * @returns {Operations} RPC service. Useful where requests and/or responses are streamed.
+                 */
+                Operations.create = function create(rpcImpl, requestDelimited, responseDelimited) {
+                    return new this(rpcImpl, requestDelimited, responseDelimited);
+                };
+    
+                /**
+                 * Callback as used by {@link google.longrunning.Operations#listOperations}.
+                 * @memberof google.longrunning.Operations
+                 * @typedef ListOperationsCallback
+                 * @type {function}
+                 * @param {Error|null} error Error, if any
+                 * @param {google.longrunning.ListOperationsResponse} [response] ListOperationsResponse
+                 */
+    
+                /**
+                 * Calls ListOperations.
+                 * @function listOperations
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IListOperationsRequest} request ListOperationsRequest message or plain object
+                 * @param {google.longrunning.Operations.ListOperationsCallback} callback Node-style callback called with the error, if any, and ListOperationsResponse
+                 * @returns {undefined}
+                 * @variation 1
+                 */
+                Object.defineProperty(Operations.prototype.listOperations = function listOperations(request, callback) {
+                    return this.rpcCall(listOperations, $root.google.longrunning.ListOperationsRequest, $root.google.longrunning.ListOperationsResponse, request, callback);
+                }, "name", { value: "ListOperations" });
+    
+                /**
+                 * Calls ListOperations.
+                 * @function listOperations
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IListOperationsRequest} request ListOperationsRequest message or plain object
+                 * @returns {Promise<google.longrunning.ListOperationsResponse>} Promise
+                 * @variation 2
+                 */
+    
+                /**
+                 * Callback as used by {@link google.longrunning.Operations#getOperation}.
+                 * @memberof google.longrunning.Operations
+                 * @typedef GetOperationCallback
+                 * @type {function}
+                 * @param {Error|null} error Error, if any
+                 * @param {google.longrunning.Operation} [response] Operation
+                 */
+    
+                /**
+                 * Calls GetOperation.
+                 * @function getOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IGetOperationRequest} request GetOperationRequest message or plain object
+                 * @param {google.longrunning.Operations.GetOperationCallback} callback Node-style callback called with the error, if any, and Operation
+                 * @returns {undefined}
+                 * @variation 1
+                 */
+                Object.defineProperty(Operations.prototype.getOperation = function getOperation(request, callback) {
+                    return this.rpcCall(getOperation, $root.google.longrunning.GetOperationRequest, $root.google.longrunning.Operation, request, callback);
+                }, "name", { value: "GetOperation" });
+    
+                /**
+                 * Calls GetOperation.
+                 * @function getOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IGetOperationRequest} request GetOperationRequest message or plain object
+                 * @returns {Promise<google.longrunning.Operation>} Promise
+                 * @variation 2
+                 */
+    
+                /**
+                 * Callback as used by {@link google.longrunning.Operations#deleteOperation}.
+                 * @memberof google.longrunning.Operations
+                 * @typedef DeleteOperationCallback
+                 * @type {function}
+                 * @param {Error|null} error Error, if any
+                 * @param {google.protobuf.Empty} [response] Empty
+                 */
+    
+                /**
+                 * Calls DeleteOperation.
+                 * @function deleteOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IDeleteOperationRequest} request DeleteOperationRequest message or plain object
+                 * @param {google.longrunning.Operations.DeleteOperationCallback} callback Node-style callback called with the error, if any, and Empty
+                 * @returns {undefined}
+                 * @variation 1
+                 */
+                Object.defineProperty(Operations.prototype.deleteOperation = function deleteOperation(request, callback) {
+                    return this.rpcCall(deleteOperation, $root.google.longrunning.DeleteOperationRequest, $root.google.protobuf.Empty, request, callback);
+                }, "name", { value: "DeleteOperation" });
+    
+                /**
+                 * Calls DeleteOperation.
+                 * @function deleteOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IDeleteOperationRequest} request DeleteOperationRequest message or plain object
+                 * @returns {Promise<google.protobuf.Empty>} Promise
+                 * @variation 2
+                 */
+    
+                /**
+                 * Callback as used by {@link google.longrunning.Operations#cancelOperation}.
+                 * @memberof google.longrunning.Operations
+                 * @typedef CancelOperationCallback
+                 * @type {function}
+                 * @param {Error|null} error Error, if any
+                 * @param {google.protobuf.Empty} [response] Empty
+                 */
+    
+                /**
+                 * Calls CancelOperation.
+                 * @function cancelOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.ICancelOperationRequest} request CancelOperationRequest message or plain object
+                 * @param {google.longrunning.Operations.CancelOperationCallback} callback Node-style callback called with the error, if any, and Empty
+                 * @returns {undefined}
+                 * @variation 1
+                 */
+                Object.defineProperty(Operations.prototype.cancelOperation = function cancelOperation(request, callback) {
+                    return this.rpcCall(cancelOperation, $root.google.longrunning.CancelOperationRequest, $root.google.protobuf.Empty, request, callback);
+                }, "name", { value: "CancelOperation" });
+    
+                /**
+                 * Calls CancelOperation.
+                 * @function cancelOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.ICancelOperationRequest} request CancelOperationRequest message or plain object
+                 * @returns {Promise<google.protobuf.Empty>} Promise
+                 * @variation 2
+                 */
+    
+                /**
+                 * Callback as used by {@link google.longrunning.Operations#waitOperation}.
+                 * @memberof google.longrunning.Operations
+                 * @typedef WaitOperationCallback
+                 * @type {function}
+                 * @param {Error|null} error Error, if any
+                 * @param {google.longrunning.Operation} [response] Operation
+                 */
+    
+                /**
+                 * Calls WaitOperation.
+                 * @function waitOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IWaitOperationRequest} request WaitOperationRequest message or plain object
+                 * @param {google.longrunning.Operations.WaitOperationCallback} callback Node-style callback called with the error, if any, and Operation
+                 * @returns {undefined}
+                 * @variation 1
+                 */
+                Object.defineProperty(Operations.prototype.waitOperation = function waitOperation(request, callback) {
+                    return this.rpcCall(waitOperation, $root.google.longrunning.WaitOperationRequest, $root.google.longrunning.Operation, request, callback);
+                }, "name", { value: "WaitOperation" });
+    
+                /**
+                 * Calls WaitOperation.
+                 * @function waitOperation
+                 * @memberof google.longrunning.Operations
+                 * @instance
+                 * @param {google.longrunning.IWaitOperationRequest} request WaitOperationRequest message or plain object
+                 * @returns {Promise<google.longrunning.Operation>} Promise
+                 * @variation 2
+                 */
+    
+                return Operations;
+            })();
+    
+            longrunning.Operation = (function() {
+    
+                /**
+                 * Properties of an Operation.
+                 * @memberof google.longrunning
+                 * @interface IOperation
+                 * @property {string|null} [name] Operation name
+                 * @property {google.protobuf.IAny|null} [metadata] Operation metadata
+                 * @property {boolean|null} [done] Operation done
+                 * @property {google.rpc.IStatus|null} [error] Operation error
+                 * @property {google.protobuf.IAny|null} [response] Operation response
+                 */
+    
+                /**
+                 * Constructs a new Operation.
+                 * @memberof google.longrunning
+                 * @classdesc Represents an Operation.
+                 * @implements IOperation
+                 * @constructor
+                 * @param {google.longrunning.IOperation=} [properties] Properties to set
+                 */
+                function Operation(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * Operation name.
+                 * @member {string} name
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 */
+                Operation.prototype.name = "";
+    
+                /**
+                 * Operation metadata.
+                 * @member {google.protobuf.IAny|null|undefined} metadata
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 */
+                Operation.prototype.metadata = null;
+    
+                /**
+                 * Operation done.
+                 * @member {boolean} done
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 */
+                Operation.prototype.done = false;
+    
+                /**
+                 * Operation error.
+                 * @member {google.rpc.IStatus|null|undefined} error
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 */
+                Operation.prototype.error = null;
+    
+                /**
+                 * Operation response.
+                 * @member {google.protobuf.IAny|null|undefined} response
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 */
+                Operation.prototype.response = null;
+    
+                // OneOf field names bound to virtual getters and setters
+                var $oneOfFields;
+    
+                /**
+                 * Operation result.
+                 * @member {"error"|"response"|undefined} result
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 */
+                Object.defineProperty(Operation.prototype, "result", {
+                    get: $util.oneOfGetter($oneOfFields = ["error", "response"]),
+                    set: $util.oneOfSetter($oneOfFields)
+                });
+    
+                /**
+                 * Creates a new Operation instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {google.longrunning.IOperation=} [properties] Properties to set
+                 * @returns {google.longrunning.Operation} Operation instance
+                 */
+                Operation.create = function create(properties) {
+                    return new Operation(properties);
+                };
+    
+                /**
+                 * Encodes the specified Operation message. Does not implicitly {@link google.longrunning.Operation.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {google.longrunning.IOperation} message Operation message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Operation.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                    if (message.metadata != null && Object.hasOwnProperty.call(message, "metadata"))
+                        $root.google.protobuf.Any.encode(message.metadata, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    if (message.done != null && Object.hasOwnProperty.call(message, "done"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).bool(message.done);
+                    if (message.error != null && Object.hasOwnProperty.call(message, "error"))
+                        $root.google.rpc.Status.encode(message.error, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    if (message.response != null && Object.hasOwnProperty.call(message, "response"))
+                        $root.google.protobuf.Any.encode(message.response, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified Operation message, length delimited. Does not implicitly {@link google.longrunning.Operation.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {google.longrunning.IOperation} message Operation message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Operation.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes an Operation message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.Operation} Operation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Operation.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.Operation();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.name = reader.string();
+                            break;
+                        case 2:
+                            message.metadata = $root.google.protobuf.Any.decode(reader, reader.uint32());
+                            break;
+                        case 3:
+                            message.done = reader.bool();
+                            break;
+                        case 4:
+                            message.error = $root.google.rpc.Status.decode(reader, reader.uint32());
+                            break;
+                        case 5:
+                            message.response = $root.google.protobuf.Any.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes an Operation message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.Operation} Operation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Operation.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies an Operation message.
+                 * @function verify
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                Operation.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    var properties = {};
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    if (message.metadata != null && message.hasOwnProperty("metadata")) {
+                        var error = $root.google.protobuf.Any.verify(message.metadata);
+                        if (error)
+                            return "metadata." + error;
+                    }
+                    if (message.done != null && message.hasOwnProperty("done"))
+                        if (typeof message.done !== "boolean")
+                            return "done: boolean expected";
+                    if (message.error != null && message.hasOwnProperty("error")) {
+                        properties.result = 1;
+                        {
+                            var error = $root.google.rpc.Status.verify(message.error);
+                            if (error)
+                                return "error." + error;
+                        }
+                    }
+                    if (message.response != null && message.hasOwnProperty("response")) {
+                        if (properties.result === 1)
+                            return "result: multiple values";
+                        properties.result = 1;
+                        {
+                            var error = $root.google.protobuf.Any.verify(message.response);
+                            if (error)
+                                return "response." + error;
+                        }
+                    }
+                    return null;
+                };
+    
+                /**
+                 * Creates an Operation message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.Operation} Operation
+                 */
+                Operation.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.Operation)
+                        return object;
+                    var message = new $root.google.longrunning.Operation();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    if (object.metadata != null) {
+                        if (typeof object.metadata !== "object")
+                            throw TypeError(".google.longrunning.Operation.metadata: object expected");
+                        message.metadata = $root.google.protobuf.Any.fromObject(object.metadata);
+                    }
+                    if (object.done != null)
+                        message.done = Boolean(object.done);
+                    if (object.error != null) {
+                        if (typeof object.error !== "object")
+                            throw TypeError(".google.longrunning.Operation.error: object expected");
+                        message.error = $root.google.rpc.Status.fromObject(object.error);
+                    }
+                    if (object.response != null) {
+                        if (typeof object.response !== "object")
+                            throw TypeError(".google.longrunning.Operation.response: object expected");
+                        message.response = $root.google.protobuf.Any.fromObject(object.response);
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from an Operation message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.Operation
+                 * @static
+                 * @param {google.longrunning.Operation} message Operation
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                Operation.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.name = "";
+                        object.metadata = null;
+                        object.done = false;
+                    }
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    if (message.metadata != null && message.hasOwnProperty("metadata"))
+                        object.metadata = $root.google.protobuf.Any.toObject(message.metadata, options);
+                    if (message.done != null && message.hasOwnProperty("done"))
+                        object.done = message.done;
+                    if (message.error != null && message.hasOwnProperty("error")) {
+                        object.error = $root.google.rpc.Status.toObject(message.error, options);
+                        if (options.oneofs)
+                            object.result = "error";
+                    }
+                    if (message.response != null && message.hasOwnProperty("response")) {
+                        object.response = $root.google.protobuf.Any.toObject(message.response, options);
+                        if (options.oneofs)
+                            object.result = "response";
+                    }
+                    return object;
+                };
+    
+                /**
+                 * Converts this Operation to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.Operation
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                Operation.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return Operation;
+            })();
+    
+            longrunning.GetOperationRequest = (function() {
+    
+                /**
+                 * Properties of a GetOperationRequest.
+                 * @memberof google.longrunning
+                 * @interface IGetOperationRequest
+                 * @property {string|null} [name] GetOperationRequest name
+                 */
+    
+                /**
+                 * Constructs a new GetOperationRequest.
+                 * @memberof google.longrunning
+                 * @classdesc Represents a GetOperationRequest.
+                 * @implements IGetOperationRequest
+                 * @constructor
+                 * @param {google.longrunning.IGetOperationRequest=} [properties] Properties to set
+                 */
+                function GetOperationRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * GetOperationRequest name.
+                 * @member {string} name
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @instance
+                 */
+                GetOperationRequest.prototype.name = "";
+    
+                /**
+                 * Creates a new GetOperationRequest instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {google.longrunning.IGetOperationRequest=} [properties] Properties to set
+                 * @returns {google.longrunning.GetOperationRequest} GetOperationRequest instance
+                 */
+                GetOperationRequest.create = function create(properties) {
+                    return new GetOperationRequest(properties);
+                };
+    
+                /**
+                 * Encodes the specified GetOperationRequest message. Does not implicitly {@link google.longrunning.GetOperationRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {google.longrunning.IGetOperationRequest} message GetOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                GetOperationRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified GetOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.GetOperationRequest.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {google.longrunning.IGetOperationRequest} message GetOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                GetOperationRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a GetOperationRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.GetOperationRequest} GetOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                GetOperationRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.GetOperationRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.name = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a GetOperationRequest message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.GetOperationRequest} GetOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                GetOperationRequest.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a GetOperationRequest message.
+                 * @function verify
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                GetOperationRequest.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a GetOperationRequest message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.GetOperationRequest} GetOperationRequest
+                 */
+                GetOperationRequest.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.GetOperationRequest)
+                        return object;
+                    var message = new $root.google.longrunning.GetOperationRequest();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a GetOperationRequest message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @static
+                 * @param {google.longrunning.GetOperationRequest} message GetOperationRequest
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                GetOperationRequest.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        object.name = "";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    return object;
+                };
+    
+                /**
+                 * Converts this GetOperationRequest to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.GetOperationRequest
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                GetOperationRequest.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return GetOperationRequest;
+            })();
+    
+            longrunning.ListOperationsRequest = (function() {
+    
+                /**
+                 * Properties of a ListOperationsRequest.
+                 * @memberof google.longrunning
+                 * @interface IListOperationsRequest
+                 * @property {string|null} [name] ListOperationsRequest name
+                 * @property {string|null} [filter] ListOperationsRequest filter
+                 * @property {number|null} [pageSize] ListOperationsRequest pageSize
+                 * @property {string|null} [pageToken] ListOperationsRequest pageToken
+                 */
+    
+                /**
+                 * Constructs a new ListOperationsRequest.
+                 * @memberof google.longrunning
+                 * @classdesc Represents a ListOperationsRequest.
+                 * @implements IListOperationsRequest
+                 * @constructor
+                 * @param {google.longrunning.IListOperationsRequest=} [properties] Properties to set
+                 */
+                function ListOperationsRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * ListOperationsRequest name.
+                 * @member {string} name
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @instance
+                 */
+                ListOperationsRequest.prototype.name = "";
+    
+                /**
+                 * ListOperationsRequest filter.
+                 * @member {string} filter
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @instance
+                 */
+                ListOperationsRequest.prototype.filter = "";
+    
+                /**
+                 * ListOperationsRequest pageSize.
+                 * @member {number} pageSize
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @instance
+                 */
+                ListOperationsRequest.prototype.pageSize = 0;
+    
+                /**
+                 * ListOperationsRequest pageToken.
+                 * @member {string} pageToken
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @instance
+                 */
+                ListOperationsRequest.prototype.pageToken = "";
+    
+                /**
+                 * Creates a new ListOperationsRequest instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {google.longrunning.IListOperationsRequest=} [properties] Properties to set
+                 * @returns {google.longrunning.ListOperationsRequest} ListOperationsRequest instance
+                 */
+                ListOperationsRequest.create = function create(properties) {
+                    return new ListOperationsRequest(properties);
+                };
+    
+                /**
+                 * Encodes the specified ListOperationsRequest message. Does not implicitly {@link google.longrunning.ListOperationsRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {google.longrunning.IListOperationsRequest} message ListOperationsRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                ListOperationsRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.filter != null && Object.hasOwnProperty.call(message, "filter"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.filter);
+                    if (message.pageSize != null && Object.hasOwnProperty.call(message, "pageSize"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.pageSize);
+                    if (message.pageToken != null && Object.hasOwnProperty.call(message, "pageToken"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.pageToken);
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                        writer.uint32(/* id 4, wireType 2 =*/34).string(message.name);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified ListOperationsRequest message, length delimited. Does not implicitly {@link google.longrunning.ListOperationsRequest.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {google.longrunning.IListOperationsRequest} message ListOperationsRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                ListOperationsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a ListOperationsRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.ListOperationsRequest} ListOperationsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                ListOperationsRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.ListOperationsRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 4:
+                            message.name = reader.string();
+                            break;
+                        case 1:
+                            message.filter = reader.string();
+                            break;
+                        case 2:
+                            message.pageSize = reader.int32();
+                            break;
+                        case 3:
+                            message.pageToken = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a ListOperationsRequest message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.ListOperationsRequest} ListOperationsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                ListOperationsRequest.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a ListOperationsRequest message.
+                 * @function verify
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                ListOperationsRequest.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    if (message.filter != null && message.hasOwnProperty("filter"))
+                        if (!$util.isString(message.filter))
+                            return "filter: string expected";
+                    if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                        if (!$util.isInteger(message.pageSize))
+                            return "pageSize: integer expected";
+                    if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                        if (!$util.isString(message.pageToken))
+                            return "pageToken: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a ListOperationsRequest message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.ListOperationsRequest} ListOperationsRequest
+                 */
+                ListOperationsRequest.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.ListOperationsRequest)
+                        return object;
+                    var message = new $root.google.longrunning.ListOperationsRequest();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    if (object.filter != null)
+                        message.filter = String(object.filter);
+                    if (object.pageSize != null)
+                        message.pageSize = object.pageSize | 0;
+                    if (object.pageToken != null)
+                        message.pageToken = String(object.pageToken);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a ListOperationsRequest message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @static
+                 * @param {google.longrunning.ListOperationsRequest} message ListOperationsRequest
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                ListOperationsRequest.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.filter = "";
+                        object.pageSize = 0;
+                        object.pageToken = "";
+                        object.name = "";
+                    }
+                    if (message.filter != null && message.hasOwnProperty("filter"))
+                        object.filter = message.filter;
+                    if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                        object.pageSize = message.pageSize;
+                    if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                        object.pageToken = message.pageToken;
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    return object;
+                };
+    
+                /**
+                 * Converts this ListOperationsRequest to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.ListOperationsRequest
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                ListOperationsRequest.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return ListOperationsRequest;
+            })();
+    
+            longrunning.ListOperationsResponse = (function() {
+    
+                /**
+                 * Properties of a ListOperationsResponse.
+                 * @memberof google.longrunning
+                 * @interface IListOperationsResponse
+                 * @property {Array.<google.longrunning.IOperation>|null} [operations] ListOperationsResponse operations
+                 * @property {string|null} [nextPageToken] ListOperationsResponse nextPageToken
+                 */
+    
+                /**
+                 * Constructs a new ListOperationsResponse.
+                 * @memberof google.longrunning
+                 * @classdesc Represents a ListOperationsResponse.
+                 * @implements IListOperationsResponse
+                 * @constructor
+                 * @param {google.longrunning.IListOperationsResponse=} [properties] Properties to set
+                 */
+                function ListOperationsResponse(properties) {
+                    this.operations = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * ListOperationsResponse operations.
+                 * @member {Array.<google.longrunning.IOperation>} operations
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @instance
+                 */
+                ListOperationsResponse.prototype.operations = $util.emptyArray;
+    
+                /**
+                 * ListOperationsResponse nextPageToken.
+                 * @member {string} nextPageToken
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @instance
+                 */
+                ListOperationsResponse.prototype.nextPageToken = "";
+    
+                /**
+                 * Creates a new ListOperationsResponse instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {google.longrunning.IListOperationsResponse=} [properties] Properties to set
+                 * @returns {google.longrunning.ListOperationsResponse} ListOperationsResponse instance
+                 */
+                ListOperationsResponse.create = function create(properties) {
+                    return new ListOperationsResponse(properties);
+                };
+    
+                /**
+                 * Encodes the specified ListOperationsResponse message. Does not implicitly {@link google.longrunning.ListOperationsResponse.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {google.longrunning.IListOperationsResponse} message ListOperationsResponse message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                ListOperationsResponse.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.operations != null && message.operations.length)
+                        for (var i = 0; i < message.operations.length; ++i)
+                            $root.google.longrunning.Operation.encode(message.operations[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.nextPageToken != null && Object.hasOwnProperty.call(message, "nextPageToken"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified ListOperationsResponse message, length delimited. Does not implicitly {@link google.longrunning.ListOperationsResponse.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {google.longrunning.IListOperationsResponse} message ListOperationsResponse message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                ListOperationsResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a ListOperationsResponse message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.ListOperationsResponse} ListOperationsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                ListOperationsResponse.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.ListOperationsResponse();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            if (!(message.operations && message.operations.length))
+                                message.operations = [];
+                            message.operations.push($root.google.longrunning.Operation.decode(reader, reader.uint32()));
+                            break;
+                        case 2:
+                            message.nextPageToken = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a ListOperationsResponse message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.ListOperationsResponse} ListOperationsResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                ListOperationsResponse.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a ListOperationsResponse message.
+                 * @function verify
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                ListOperationsResponse.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.operations != null && message.hasOwnProperty("operations")) {
+                        if (!Array.isArray(message.operations))
+                            return "operations: array expected";
+                        for (var i = 0; i < message.operations.length; ++i) {
+                            var error = $root.google.longrunning.Operation.verify(message.operations[i]);
+                            if (error)
+                                return "operations." + error;
+                        }
+                    }
+                    if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                        if (!$util.isString(message.nextPageToken))
+                            return "nextPageToken: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a ListOperationsResponse message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.ListOperationsResponse} ListOperationsResponse
+                 */
+                ListOperationsResponse.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.ListOperationsResponse)
+                        return object;
+                    var message = new $root.google.longrunning.ListOperationsResponse();
+                    if (object.operations) {
+                        if (!Array.isArray(object.operations))
+                            throw TypeError(".google.longrunning.ListOperationsResponse.operations: array expected");
+                        message.operations = [];
+                        for (var i = 0; i < object.operations.length; ++i) {
+                            if (typeof object.operations[i] !== "object")
+                                throw TypeError(".google.longrunning.ListOperationsResponse.operations: object expected");
+                            message.operations[i] = $root.google.longrunning.Operation.fromObject(object.operations[i]);
+                        }
+                    }
+                    if (object.nextPageToken != null)
+                        message.nextPageToken = String(object.nextPageToken);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a ListOperationsResponse message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @static
+                 * @param {google.longrunning.ListOperationsResponse} message ListOperationsResponse
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                ListOperationsResponse.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.arrays || options.defaults)
+                        object.operations = [];
+                    if (options.defaults)
+                        object.nextPageToken = "";
+                    if (message.operations && message.operations.length) {
+                        object.operations = [];
+                        for (var j = 0; j < message.operations.length; ++j)
+                            object.operations[j] = $root.google.longrunning.Operation.toObject(message.operations[j], options);
+                    }
+                    if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                        object.nextPageToken = message.nextPageToken;
+                    return object;
+                };
+    
+                /**
+                 * Converts this ListOperationsResponse to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.ListOperationsResponse
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                ListOperationsResponse.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return ListOperationsResponse;
+            })();
+    
+            longrunning.CancelOperationRequest = (function() {
+    
+                /**
+                 * Properties of a CancelOperationRequest.
+                 * @memberof google.longrunning
+                 * @interface ICancelOperationRequest
+                 * @property {string|null} [name] CancelOperationRequest name
+                 */
+    
+                /**
+                 * Constructs a new CancelOperationRequest.
+                 * @memberof google.longrunning
+                 * @classdesc Represents a CancelOperationRequest.
+                 * @implements ICancelOperationRequest
+                 * @constructor
+                 * @param {google.longrunning.ICancelOperationRequest=} [properties] Properties to set
+                 */
+                function CancelOperationRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * CancelOperationRequest name.
+                 * @member {string} name
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @instance
+                 */
+                CancelOperationRequest.prototype.name = "";
+    
+                /**
+                 * Creates a new CancelOperationRequest instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {google.longrunning.ICancelOperationRequest=} [properties] Properties to set
+                 * @returns {google.longrunning.CancelOperationRequest} CancelOperationRequest instance
+                 */
+                CancelOperationRequest.create = function create(properties) {
+                    return new CancelOperationRequest(properties);
+                };
+    
+                /**
+                 * Encodes the specified CancelOperationRequest message. Does not implicitly {@link google.longrunning.CancelOperationRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {google.longrunning.ICancelOperationRequest} message CancelOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                CancelOperationRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified CancelOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.CancelOperationRequest.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {google.longrunning.ICancelOperationRequest} message CancelOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                CancelOperationRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a CancelOperationRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.CancelOperationRequest} CancelOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                CancelOperationRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.CancelOperationRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.name = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a CancelOperationRequest message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.CancelOperationRequest} CancelOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                CancelOperationRequest.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a CancelOperationRequest message.
+                 * @function verify
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                CancelOperationRequest.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a CancelOperationRequest message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.CancelOperationRequest} CancelOperationRequest
+                 */
+                CancelOperationRequest.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.CancelOperationRequest)
+                        return object;
+                    var message = new $root.google.longrunning.CancelOperationRequest();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a CancelOperationRequest message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @static
+                 * @param {google.longrunning.CancelOperationRequest} message CancelOperationRequest
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                CancelOperationRequest.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        object.name = "";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    return object;
+                };
+    
+                /**
+                 * Converts this CancelOperationRequest to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.CancelOperationRequest
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                CancelOperationRequest.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return CancelOperationRequest;
+            })();
+    
+            longrunning.DeleteOperationRequest = (function() {
+    
+                /**
+                 * Properties of a DeleteOperationRequest.
+                 * @memberof google.longrunning
+                 * @interface IDeleteOperationRequest
+                 * @property {string|null} [name] DeleteOperationRequest name
+                 */
+    
+                /**
+                 * Constructs a new DeleteOperationRequest.
+                 * @memberof google.longrunning
+                 * @classdesc Represents a DeleteOperationRequest.
+                 * @implements IDeleteOperationRequest
+                 * @constructor
+                 * @param {google.longrunning.IDeleteOperationRequest=} [properties] Properties to set
+                 */
+                function DeleteOperationRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * DeleteOperationRequest name.
+                 * @member {string} name
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @instance
+                 */
+                DeleteOperationRequest.prototype.name = "";
+    
+                /**
+                 * Creates a new DeleteOperationRequest instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {google.longrunning.IDeleteOperationRequest=} [properties] Properties to set
+                 * @returns {google.longrunning.DeleteOperationRequest} DeleteOperationRequest instance
+                 */
+                DeleteOperationRequest.create = function create(properties) {
+                    return new DeleteOperationRequest(properties);
+                };
+    
+                /**
+                 * Encodes the specified DeleteOperationRequest message. Does not implicitly {@link google.longrunning.DeleteOperationRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {google.longrunning.IDeleteOperationRequest} message DeleteOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                DeleteOperationRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified DeleteOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.DeleteOperationRequest.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {google.longrunning.IDeleteOperationRequest} message DeleteOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                DeleteOperationRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a DeleteOperationRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.DeleteOperationRequest} DeleteOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                DeleteOperationRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.DeleteOperationRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.name = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a DeleteOperationRequest message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.DeleteOperationRequest} DeleteOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                DeleteOperationRequest.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a DeleteOperationRequest message.
+                 * @function verify
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                DeleteOperationRequest.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates a DeleteOperationRequest message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.DeleteOperationRequest} DeleteOperationRequest
+                 */
+                DeleteOperationRequest.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.DeleteOperationRequest)
+                        return object;
+                    var message = new $root.google.longrunning.DeleteOperationRequest();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a DeleteOperationRequest message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @static
+                 * @param {google.longrunning.DeleteOperationRequest} message DeleteOperationRequest
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                DeleteOperationRequest.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults)
+                        object.name = "";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    return object;
+                };
+    
+                /**
+                 * Converts this DeleteOperationRequest to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.DeleteOperationRequest
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                DeleteOperationRequest.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return DeleteOperationRequest;
+            })();
+    
+            longrunning.WaitOperationRequest = (function() {
+    
+                /**
+                 * Properties of a WaitOperationRequest.
+                 * @memberof google.longrunning
+                 * @interface IWaitOperationRequest
+                 * @property {string|null} [name] WaitOperationRequest name
+                 * @property {google.protobuf.IDuration|null} [timeout] WaitOperationRequest timeout
+                 */
+    
+                /**
+                 * Constructs a new WaitOperationRequest.
+                 * @memberof google.longrunning
+                 * @classdesc Represents a WaitOperationRequest.
+                 * @implements IWaitOperationRequest
+                 * @constructor
+                 * @param {google.longrunning.IWaitOperationRequest=} [properties] Properties to set
+                 */
+                function WaitOperationRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * WaitOperationRequest name.
+                 * @member {string} name
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @instance
+                 */
+                WaitOperationRequest.prototype.name = "";
+    
+                /**
+                 * WaitOperationRequest timeout.
+                 * @member {google.protobuf.IDuration|null|undefined} timeout
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @instance
+                 */
+                WaitOperationRequest.prototype.timeout = null;
+    
+                /**
+                 * Creates a new WaitOperationRequest instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {google.longrunning.IWaitOperationRequest=} [properties] Properties to set
+                 * @returns {google.longrunning.WaitOperationRequest} WaitOperationRequest instance
+                 */
+                WaitOperationRequest.create = function create(properties) {
+                    return new WaitOperationRequest(properties);
+                };
+    
+                /**
+                 * Encodes the specified WaitOperationRequest message. Does not implicitly {@link google.longrunning.WaitOperationRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {google.longrunning.IWaitOperationRequest} message WaitOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                WaitOperationRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                    if (message.timeout != null && Object.hasOwnProperty.call(message, "timeout"))
+                        $root.google.protobuf.Duration.encode(message.timeout, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified WaitOperationRequest message, length delimited. Does not implicitly {@link google.longrunning.WaitOperationRequest.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {google.longrunning.IWaitOperationRequest} message WaitOperationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                WaitOperationRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes a WaitOperationRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.WaitOperationRequest} WaitOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                WaitOperationRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.WaitOperationRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.name = reader.string();
+                            break;
+                        case 2:
+                            message.timeout = $root.google.protobuf.Duration.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes a WaitOperationRequest message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.WaitOperationRequest} WaitOperationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                WaitOperationRequest.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies a WaitOperationRequest message.
+                 * @function verify
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                WaitOperationRequest.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        if (!$util.isString(message.name))
+                            return "name: string expected";
+                    if (message.timeout != null && message.hasOwnProperty("timeout")) {
+                        var error = $root.google.protobuf.Duration.verify(message.timeout);
+                        if (error)
+                            return "timeout." + error;
+                    }
+                    return null;
+                };
+    
+                /**
+                 * Creates a WaitOperationRequest message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.WaitOperationRequest} WaitOperationRequest
+                 */
+                WaitOperationRequest.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.WaitOperationRequest)
+                        return object;
+                    var message = new $root.google.longrunning.WaitOperationRequest();
+                    if (object.name != null)
+                        message.name = String(object.name);
+                    if (object.timeout != null) {
+                        if (typeof object.timeout !== "object")
+                            throw TypeError(".google.longrunning.WaitOperationRequest.timeout: object expected");
+                        message.timeout = $root.google.protobuf.Duration.fromObject(object.timeout);
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from a WaitOperationRequest message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @static
+                 * @param {google.longrunning.WaitOperationRequest} message WaitOperationRequest
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                WaitOperationRequest.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.name = "";
+                        object.timeout = null;
+                    }
+                    if (message.name != null && message.hasOwnProperty("name"))
+                        object.name = message.name;
+                    if (message.timeout != null && message.hasOwnProperty("timeout"))
+                        object.timeout = $root.google.protobuf.Duration.toObject(message.timeout, options);
+                    return object;
+                };
+    
+                /**
+                 * Converts this WaitOperationRequest to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.WaitOperationRequest
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                WaitOperationRequest.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return WaitOperationRequest;
+            })();
+    
+            longrunning.OperationInfo = (function() {
+    
+                /**
+                 * Properties of an OperationInfo.
+                 * @memberof google.longrunning
+                 * @interface IOperationInfo
+                 * @property {string|null} [responseType] OperationInfo responseType
+                 * @property {string|null} [metadataType] OperationInfo metadataType
+                 */
+    
+                /**
+                 * Constructs a new OperationInfo.
+                 * @memberof google.longrunning
+                 * @classdesc Represents an OperationInfo.
+                 * @implements IOperationInfo
+                 * @constructor
+                 * @param {google.longrunning.IOperationInfo=} [properties] Properties to set
+                 */
+                function OperationInfo(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+    
+                /**
+                 * OperationInfo responseType.
+                 * @member {string} responseType
+                 * @memberof google.longrunning.OperationInfo
+                 * @instance
+                 */
+                OperationInfo.prototype.responseType = "";
+    
+                /**
+                 * OperationInfo metadataType.
+                 * @member {string} metadataType
+                 * @memberof google.longrunning.OperationInfo
+                 * @instance
+                 */
+                OperationInfo.prototype.metadataType = "";
+    
+                /**
+                 * Creates a new OperationInfo instance using the specified properties.
+                 * @function create
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {google.longrunning.IOperationInfo=} [properties] Properties to set
+                 * @returns {google.longrunning.OperationInfo} OperationInfo instance
+                 */
+                OperationInfo.create = function create(properties) {
+                    return new OperationInfo(properties);
+                };
+    
+                /**
+                 * Encodes the specified OperationInfo message. Does not implicitly {@link google.longrunning.OperationInfo.verify|verify} messages.
+                 * @function encode
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {google.longrunning.IOperationInfo} message OperationInfo message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                OperationInfo.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.responseType != null && Object.hasOwnProperty.call(message, "responseType"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.responseType);
+                    if (message.metadataType != null && Object.hasOwnProperty.call(message, "metadataType"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.metadataType);
+                    return writer;
+                };
+    
+                /**
+                 * Encodes the specified OperationInfo message, length delimited. Does not implicitly {@link google.longrunning.OperationInfo.verify|verify} messages.
+                 * @function encodeDelimited
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {google.longrunning.IOperationInfo} message OperationInfo message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                OperationInfo.encodeDelimited = function encodeDelimited(message, writer) {
+                    return this.encode(message, writer).ldelim();
+                };
+    
+                /**
+                 * Decodes an OperationInfo message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {google.longrunning.OperationInfo} OperationInfo
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                OperationInfo.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.longrunning.OperationInfo();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.responseType = reader.string();
+                            break;
+                        case 2:
+                            message.metadataType = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+    
+                /**
+                 * Decodes an OperationInfo message from the specified reader or buffer, length delimited.
+                 * @function decodeDelimited
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @returns {google.longrunning.OperationInfo} OperationInfo
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                OperationInfo.decodeDelimited = function decodeDelimited(reader) {
+                    if (!(reader instanceof $Reader))
+                        reader = new $Reader(reader);
+                    return this.decode(reader, reader.uint32());
+                };
+    
+                /**
+                 * Verifies an OperationInfo message.
+                 * @function verify
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {Object.<string,*>} message Plain object to verify
+                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                 */
+                OperationInfo.verify = function verify(message) {
+                    if (typeof message !== "object" || message === null)
+                        return "object expected";
+                    if (message.responseType != null && message.hasOwnProperty("responseType"))
+                        if (!$util.isString(message.responseType))
+                            return "responseType: string expected";
+                    if (message.metadataType != null && message.hasOwnProperty("metadataType"))
+                        if (!$util.isString(message.metadataType))
+                            return "metadataType: string expected";
+                    return null;
+                };
+    
+                /**
+                 * Creates an OperationInfo message from a plain object. Also converts values to their respective internal types.
+                 * @function fromObject
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {Object.<string,*>} object Plain object
+                 * @returns {google.longrunning.OperationInfo} OperationInfo
+                 */
+                OperationInfo.fromObject = function fromObject(object) {
+                    if (object instanceof $root.google.longrunning.OperationInfo)
+                        return object;
+                    var message = new $root.google.longrunning.OperationInfo();
+                    if (object.responseType != null)
+                        message.responseType = String(object.responseType);
+                    if (object.metadataType != null)
+                        message.metadataType = String(object.metadataType);
+                    return message;
+                };
+    
+                /**
+                 * Creates a plain object from an OperationInfo message. Also converts values to other types if specified.
+                 * @function toObject
+                 * @memberof google.longrunning.OperationInfo
+                 * @static
+                 * @param {google.longrunning.OperationInfo} message OperationInfo
+                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                 * @returns {Object.<string,*>} Plain object
+                 */
+                OperationInfo.toObject = function toObject(message, options) {
+                    if (!options)
+                        options = {};
+                    var object = {};
+                    if (options.defaults) {
+                        object.responseType = "";
+                        object.metadataType = "";
+                    }
+                    if (message.responseType != null && message.hasOwnProperty("responseType"))
+                        object.responseType = message.responseType;
+                    if (message.metadataType != null && message.hasOwnProperty("metadataType"))
+                        object.metadataType = message.metadataType;
+                    return object;
+                };
+    
+                /**
+                 * Converts this OperationInfo to JSON.
+                 * @function toJSON
+                 * @memberof google.longrunning.OperationInfo
+                 * @instance
+                 * @returns {Object.<string,*>} JSON object
+                 */
+                OperationInfo.prototype.toJSON = function toJSON() {
+                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                };
+    
+                return OperationInfo;
+            })();
+    
+            return longrunning;
         })();
     
         google.rpc = (function() {

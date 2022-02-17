@@ -25,10 +25,12 @@ function main(name) {
    *      "organizations/[ORGANIZATION_ID]/cmekSettings"
    *      "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
    *      "folders/[FOLDER_ID]/cmekSettings"
-   *  Example: `"organizations/12345/cmekSettings"`.
-   *  Note: CMEK for the Logs Router can currently only be configured for GCP
-   *  organizations. Once configured, it applies to all projects and folders in
-   *  the GCP organization.
+   *  For example:
+   *    `"organizations/12345/cmekSettings"`
+   *  Note: CMEK for the Log Router can be configured for Google Cloud projects,
+   *  folders, organizations and billing accounts. Once configured for an
+   *  organization, it applies to all projects and folders in the Google Cloud
+   *  organization.
    */
   // const name = 'abc123'
 

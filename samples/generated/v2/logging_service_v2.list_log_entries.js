@@ -22,15 +22,15 @@ function main(resourceNames) {
   /**
    *  Required. Names of one or more parent resources from which to
    *  retrieve log entries:
-   *      "projects/[PROJECT_ID]"
-   *      "organizations/[ORGANIZATION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]"
-   *      "folders/[FOLDER_ID]"
-   *  May alternatively be one or more views
-   *    projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *    organization/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *    billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
-   *    folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]
+   *  *  `projects/[PROJECT_ID]`
+   *  *  `organizations/[ORGANIZATION_ID]`
+   *  *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *  *  `folders/[FOLDER_ID]`
+   *  May alternatively be one or more views:
+   *   * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *  Projects listed in the `project_ids` field are added to this list.
    */
   // const resourceNames = 'abc123'
@@ -54,10 +54,10 @@ function main(resourceNames) {
    */
   // const orderBy = 'abc123'
   /**
-   *  Optional. The maximum number of results to return from this request.
-   *  Default is 50. If the value is negative or exceeds 1000,
-   *  the request is rejected. The presence of `next_page_token` in the
-   *  response indicates that more results might be available.
+   *  Optional. The maximum number of results to return from this request. Default is 50.
+   *  If the value is negative or exceeds 1000, the request is rejected. The
+   *  presence of `next_page_token` in the response indicates that more results
+   *  might be available.
    */
   // const pageSize = 1234
   /**

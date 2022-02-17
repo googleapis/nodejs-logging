@@ -1577,6 +1577,51 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
+    describe('billingAccountSettings', () => {
+      const fakePath = '/rendered/path/billingAccountSettings';
+      const expectedParameters = {
+        billing_account: 'billingAccountValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.billingAccountSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.billingAccountSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('billingAccountSettingsPath', () => {
+        const result = client.billingAccountSettingsPath('billingAccountValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.billingAccountSettingsPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchBillingAccountFromBillingAccountSettingsName', () => {
+        const result =
+          client.matchBillingAccountFromBillingAccountSettingsName(fakePath);
+        assert.strictEqual(result, 'billingAccountValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountSettingsPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('billingAccountSink', () => {
       const fakePath = '/rendered/path/billingAccountSink';
       const expectedParameters = {
@@ -1950,6 +1995,44 @@ describe('v2.LoggingServiceV2Client', () => {
         assert.strictEqual(result, 'logValue');
         assert(
           (client.pathTemplates.folderLogPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('folderSettings', () => {
+      const fakePath = '/rendered/path/folderSettings';
+      const expectedParameters = {
+        folder: 'folderValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.folderSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.folderSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('folderSettingsPath', () => {
+        const result = client.folderSettingsPath('folderValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.folderSettingsPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchFolderFromFolderSettingsName', () => {
+        const result = client.matchFolderFromFolderSettingsName(fakePath);
+        assert.strictEqual(result, 'folderValue');
+        assert(
+          (client.pathTemplates.folderSettingsPathTemplate.match as SinonStub)
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2389,6 +2472,51 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
+    describe('organizationSettings', () => {
+      const fakePath = '/rendered/path/organizationSettings';
+      const expectedParameters = {
+        organization: 'organizationValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.organizationSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.organizationSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('organizationSettingsPath', () => {
+        const result = client.organizationSettingsPath('organizationValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.organizationSettingsPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchOrganizationFromOrganizationSettingsName', () => {
+        const result =
+          client.matchOrganizationFromOrganizationSettingsName(fakePath);
+        assert.strictEqual(result, 'organizationValue');
+        assert(
+          (
+            client.pathTemplates.organizationSettingsPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('organizationSink', () => {
       const fakePath = '/rendered/path/organizationSink';
       const expectedParameters = {
@@ -2799,6 +2927,44 @@ describe('v2.LoggingServiceV2Client', () => {
         assert.strictEqual(result, 'logValue');
         assert(
           (client.pathTemplates.projectLogPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('projectSettings', () => {
+      const fakePath = '/rendered/path/projectSettings';
+      const expectedParameters = {
+        project: 'projectValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.projectSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.projectSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('projectSettingsPath', () => {
+        const result = client.projectSettingsPath('projectValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.projectSettingsPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchProjectFromProjectSettingsName', () => {
+        const result = client.matchProjectFromProjectSettingsName(fakePath);
+        assert.strictEqual(result, 'projectValue');
+        assert(
+          (client.pathTemplates.projectSettingsPathTemplate.match as SinonStub)
             .getCall(-1)
             .calledWith(fakePath)
         );

@@ -20,15 +20,16 @@ function main(parent, bucketId, bucket) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource in which to create the bucket:
+   *  Required. The resource in which to create the log bucket:
    *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
-   *  Example: `"projects/my-logging-project/locations/global"`
+   *  For example:
+   *    `"projects/my-project/locations/global"`
    */
   // const parent = 'abc123'
   /**
-   *  Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are
-   *  limited to 100 characters and can include only letters, digits,
-   *  underscores, hyphens, and periods.
+   *  Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are limited
+   *  to 100 characters and can include only letters, digits, underscores,
+   *  hyphens, and periods.
    */
   // const bucketId = 'abc123'
   /**
