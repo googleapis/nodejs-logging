@@ -167,12 +167,27 @@ describe('v2.LoggingServiceV2Client', () => {
     assert(client.loggingServiceV2Stub);
   });
 
-  it('has close method', () => {
+  it('has close method for the initialized client', done => {
     const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
       credentials: {client_email: 'bogus', private_key: 'bogus'},
       projectId: 'bogus',
     });
-    client.close();
+    client.initialize();
+    assert(client.loggingServiceV2Stub);
+    client.close().then(() => {
+      done();
+    });
+  });
+
+  it('has close method for the non-initialized client', done => {
+    const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+      credentials: {client_email: 'bogus', private_key: 'bogus'},
+      projectId: 'bogus',
+    });
+    assert.strictEqual(client.loggingServiceV2Stub, undefined);
+    client.close().then(() => {
+      done();
+    });
   });
 
   it('has getProjectId method', async () => {
@@ -315,6 +330,22 @@ describe('v2.LoggingServiceV2Client', () => {
           .calledWith(request, expectedOptions, undefined)
       );
     });
+
+    it('invokes deleteLog with closed client', async () => {
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLogRequest()
+      );
+      request.logName = '';
+      const expectedHeaderRequestParams = 'log_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.deleteLog(request), expectedError);
+    });
   });
 
   describe('writeLogEntries', () => {
@@ -401,6 +432,20 @@ describe('v2.LoggingServiceV2Client', () => {
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
       );
+    });
+
+    it('invokes writeLogEntries with closed client', async () => {
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.WriteLogEntriesRequest()
+      );
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.writeLogEntries(request), expectedError);
     });
   });
 

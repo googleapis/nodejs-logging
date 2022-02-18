@@ -25,10 +25,12 @@ import {
   ClientOptions,
   PaginationCallback,
   GaxCall,
+  GoogleError,
 } from 'google-gax';
 
 import {Transform} from 'stream';
 import {RequestType} from 'google-gax/build/src/apitypes';
+import {PassThrough} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
 /**
@@ -367,6 +369,16 @@ export class LoggingServiceV2Client {
         stub =>
           (...args: Array<{}>) => {
             if (this._terminated) {
+              if (methodName in this.descriptors.stream) {
+                const stream = new PassThrough();
+                setImmediate(() => {
+                  stream.emit(
+                    'error',
+                    new GoogleError('The client has already been closed.')
+                  );
+                });
+                return stream;
+              }
               return Promise.reject('The client has already been closed.');
             }
             const func = stub[methodName];
@@ -2784,9 +2796,8 @@ export class LoggingServiceV2Client {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    this.initialize();
-    if (!this._terminated) {
-      return this.loggingServiceV2Stub!.then(stub => {
+    if (this.loggingServiceV2Stub && !this._terminated) {
+      return this.loggingServiceV2Stub.then(stub => {
         this._terminated = true;
         stub.close();
       });

@@ -4989,9 +4989,8 @@ export class ConfigServiceV2Client {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    this.initialize();
-    if (!this._terminated) {
-      return this.configServiceV2Stub!.then(stub => {
+    if (this.configServiceV2Stub && !this._terminated) {
+      return this.configServiceV2Stub.then(stub => {
         this._terminated = true;
         stub.close();
         this.operationsClient.close();

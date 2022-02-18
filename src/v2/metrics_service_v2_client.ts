@@ -2302,9 +2302,8 @@ export class MetricsServiceV2Client {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    this.initialize();
-    if (!this._terminated) {
-      return this.metricsServiceV2Stub!.then(stub => {
+    if (this.metricsServiceV2Stub && !this._terminated) {
+      return this.metricsServiceV2Stub.then(stub => {
         this._terminated = true;
         stub.close();
       });

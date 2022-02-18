@@ -153,12 +153,27 @@ describe('v2.MetricsServiceV2Client', () => {
     assert(client.metricsServiceV2Stub);
   });
 
-  it('has close method', () => {
+  it('has close method for the initialized client', done => {
     const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
       credentials: {client_email: 'bogus', private_key: 'bogus'},
       projectId: 'bogus',
     });
-    client.close();
+    client.initialize();
+    assert(client.metricsServiceV2Stub);
+    client.close().then(() => {
+      done();
+    });
+  });
+
+  it('has close method for the non-initialized client', done => {
+    const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+      credentials: {client_email: 'bogus', private_key: 'bogus'},
+      projectId: 'bogus',
+    });
+    assert.strictEqual(client.metricsServiceV2Stub, undefined);
+    client.close().then(() => {
+      done();
+    });
   });
 
   it('has getProjectId method', async () => {
@@ -304,6 +319,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .calledWith(request, expectedOptions, undefined)
       );
     });
+
+    it('invokes getLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetLogMetricRequest()
+      );
+      request.metricName = '';
+      const expectedHeaderRequestParams = 'metric_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.getLogMetric(request), expectedError);
+    });
   });
 
   describe('createLogMetric', () => {
@@ -414,6 +445,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
       );
+    });
+
+    it('invokes createLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateLogMetricRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.createLogMetric(request), expectedError);
     });
   });
 
@@ -526,6 +573,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .calledWith(request, expectedOptions, undefined)
       );
     });
+
+    it('invokes updateLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateLogMetricRequest()
+      );
+      request.metricName = '';
+      const expectedHeaderRequestParams = 'metric_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.updateLogMetric(request), expectedError);
+    });
   });
 
   describe('deleteLogMetric', () => {
@@ -636,6 +699,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
       );
+    });
+
+    it('invokes deleteLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLogMetricRequest()
+      );
+      request.metricName = '';
+      const expectedHeaderRequestParams = 'metric_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.deleteLogMetric(request), expectedError);
     });
   });
 
