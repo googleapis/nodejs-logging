@@ -153,12 +153,27 @@ describe('v2.MetricsServiceV2Client', () => {
     assert(client.metricsServiceV2Stub);
   });
 
-  it('has close method', () => {
+  it('has close method for the initialized client', done => {
     const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
       credentials: {client_email: 'bogus', private_key: 'bogus'},
       projectId: 'bogus',
     });
-    client.close();
+    client.initialize();
+    assert(client.metricsServiceV2Stub);
+    client.close().then(() => {
+      done();
+    });
+  });
+
+  it('has close method for the non-initialized client', done => {
+    const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+      credentials: {client_email: 'bogus', private_key: 'bogus'},
+      projectId: 'bogus',
+    });
+    assert.strictEqual(client.metricsServiceV2Stub, undefined);
+    client.close().then(() => {
+      done();
+    });
   });
 
   it('has getProjectId method', async () => {
@@ -304,6 +319,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .calledWith(request, expectedOptions, undefined)
       );
     });
+
+    it('invokes getLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetLogMetricRequest()
+      );
+      request.metricName = '';
+      const expectedHeaderRequestParams = 'metric_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.getLogMetric(request), expectedError);
+    });
   });
 
   describe('createLogMetric', () => {
@@ -414,6 +445,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
       );
+    });
+
+    it('invokes createLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateLogMetricRequest()
+      );
+      request.parent = '';
+      const expectedHeaderRequestParams = 'parent=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.createLogMetric(request), expectedError);
     });
   });
 
@@ -526,6 +573,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .calledWith(request, expectedOptions, undefined)
       );
     });
+
+    it('invokes updateLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateLogMetricRequest()
+      );
+      request.metricName = '';
+      const expectedHeaderRequestParams = 'metric_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.updateLogMetric(request), expectedError);
+    });
   });
 
   describe('deleteLogMetric', () => {
@@ -636,6 +699,22 @@ describe('v2.MetricsServiceV2Client', () => {
           .getCall(0)
           .calledWith(request, expectedOptions, undefined)
       );
+    });
+
+    it('invokes deleteLogMetric with closed client', async () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLogMetricRequest()
+      );
+      request.metricName = '';
+      const expectedHeaderRequestParams = 'metric_name=';
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.deleteLogMetric(request), expectedError);
     });
   });
 
@@ -1265,6 +1344,51 @@ describe('v2.MetricsServiceV2Client', () => {
       });
     });
 
+    describe('billingAccountSettings', () => {
+      const fakePath = '/rendered/path/billingAccountSettings';
+      const expectedParameters = {
+        billing_account: 'billingAccountValue',
+      };
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.billingAccountSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.billingAccountSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('billingAccountSettingsPath', () => {
+        const result = client.billingAccountSettingsPath('billingAccountValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.billingAccountSettingsPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchBillingAccountFromBillingAccountSettingsName', () => {
+        const result =
+          client.matchBillingAccountFromBillingAccountSettingsName(fakePath);
+        assert.strictEqual(result, 'billingAccountValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountSettingsPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('billingAccountSink', () => {
       const fakePath = '/rendered/path/billingAccountSink';
       const expectedParameters = {
@@ -1638,6 +1762,44 @@ describe('v2.MetricsServiceV2Client', () => {
         assert.strictEqual(result, 'logValue');
         assert(
           (client.pathTemplates.folderLogPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('folderSettings', () => {
+      const fakePath = '/rendered/path/folderSettings';
+      const expectedParameters = {
+        folder: 'folderValue',
+      };
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.folderSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.folderSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('folderSettingsPath', () => {
+        const result = client.folderSettingsPath('folderValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.folderSettingsPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchFolderFromFolderSettingsName', () => {
+        const result = client.matchFolderFromFolderSettingsName(fakePath);
+        assert.strictEqual(result, 'folderValue');
+        assert(
+          (client.pathTemplates.folderSettingsPathTemplate.match as SinonStub)
             .getCall(-1)
             .calledWith(fakePath)
         );
@@ -2077,6 +2239,51 @@ describe('v2.MetricsServiceV2Client', () => {
       });
     });
 
+    describe('organizationSettings', () => {
+      const fakePath = '/rendered/path/organizationSettings';
+      const expectedParameters = {
+        organization: 'organizationValue',
+      };
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.organizationSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.organizationSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('organizationSettingsPath', () => {
+        const result = client.organizationSettingsPath('organizationValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.organizationSettingsPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchOrganizationFromOrganizationSettingsName', () => {
+        const result =
+          client.matchOrganizationFromOrganizationSettingsName(fakePath);
+        assert.strictEqual(result, 'organizationValue');
+        assert(
+          (
+            client.pathTemplates.organizationSettingsPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('organizationSink', () => {
       const fakePath = '/rendered/path/organizationSink';
       const expectedParameters = {
@@ -2487,6 +2694,44 @@ describe('v2.MetricsServiceV2Client', () => {
         assert.strictEqual(result, 'logValue');
         assert(
           (client.pathTemplates.projectLogPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('projectSettings', () => {
+      const fakePath = '/rendered/path/projectSettings';
+      const expectedParameters = {
+        project: 'projectValue',
+      };
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.projectSettingsPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.projectSettingsPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('projectSettingsPath', () => {
+        const result = client.projectSettingsPath('projectValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.projectSettingsPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchProjectFromProjectSettingsName', () => {
+        const result = client.matchProjectFromProjectSettingsName(fakePath);
+        assert.strictEqual(result, 'projectValue');
+        assert(
+          (client.pathTemplates.projectSettingsPathTemplate.match as SinonStub)
             .getCall(-1)
             .calledWith(fakePath)
         );

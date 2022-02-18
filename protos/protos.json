@@ -1246,6 +1246,13 @@
                       "options": {
                         "(google.api.field_behavior)": "OPTIONAL"
                       }
+                    },
+                    "split": {
+                      "type": "LogSplit",
+                      "id": 35,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
                     }
                   }
                 },
@@ -1303,6 +1310,22 @@
                       "options": {
                         "(google.api.field_behavior)": "OPTIONAL"
                       }
+                    }
+                  }
+                },
+                "LogSplit": {
+                  "fields": {
+                    "uid": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "index": {
+                      "type": "int32",
+                      "id": 2
+                    },
+                    "totalSplits": {
+                      "type": "int32",
+                      "id": 3
                     }
                   }
                 },
@@ -1639,7 +1662,8 @@
                       "type": "string",
                       "id": 8,
                       "options": {
-                        "(google.api.field_behavior)": "OPTIONAL"
+                        "(google.api.field_behavior)": "OPTIONAL",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
                       }
                     }
                   }
@@ -2471,15 +2495,26 @@
                       "responseType": "CmekSettings",
                       "options": {
                         "(google.api.http).get": "/v2/{name=*/*}/cmekSettings",
-                        "(google.api.http).additional_bindings.get": "/v2/{name=organizations/*}/cmekSettings"
+                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*}/cmekSettings"
                       },
                       "parsedOptions": [
                         {
                           "(google.api.http)": {
                             "get": "/v2/{name=*/*}/cmekSettings",
-                            "additional_bindings": {
-                              "get": "/v2/{name=organizations/*}/cmekSettings"
-                            }
+                            "additional_bindings": [
+                              {
+                                "get": "/v2/{name=projects/*}/cmekSettings"
+                              },
+                              {
+                                "get": "/v2/{name=organizations/*}/cmekSettings"
+                              },
+                              {
+                                "get": "/v2/{name=folders/*}/cmekSettings"
+                              },
+                              {
+                                "get": "/v2/{name=billingAccounts/*}/cmekSettings"
+                              }
+                            ]
                           }
                         }
                       ]
@@ -2505,6 +2540,95 @@
                           }
                         }
                       ]
+                    },
+                    "GetSettings": {
+                      "requestType": "GetSettingsRequest",
+                      "responseType": "Settings",
+                      "options": {
+                        "(google.api.http).get": "/v2/{name=*/*}/settings",
+                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*}/settings",
+                        "(google.api.method_signature)": "name"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "get": "/v2/{name=*/*}/settings",
+                            "additional_bindings": [
+                              {
+                                "get": "/v2/{name=projects/*}/settings"
+                              },
+                              {
+                                "get": "/v2/{name=organizations/*}/settings"
+                              },
+                              {
+                                "get": "/v2/{name=folders/*}/settings"
+                              },
+                              {
+                                "get": "/v2/{name=billingAccounts/*}/settings"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.api.method_signature)": "name"
+                        }
+                      ]
+                    },
+                    "UpdateSettings": {
+                      "requestType": "UpdateSettingsRequest",
+                      "responseType": "Settings",
+                      "options": {
+                        "(google.api.http).patch": "/v2/{name=*/*}/settings",
+                        "(google.api.http).body": "settings",
+                        "(google.api.http).additional_bindings.patch": "/v2/{name=folders/*}/settings",
+                        "(google.api.http).additional_bindings.body": "settings",
+                        "(google.api.method_signature)": "settings,update_mask"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "patch": "/v2/{name=*/*}/settings",
+                            "body": "settings",
+                            "additional_bindings": [
+                              {
+                                "patch": "/v2/{name=organizations/*}/settings",
+                                "body": "settings"
+                              },
+                              {
+                                "patch": "/v2/{name=folders/*}/settings",
+                                "body": "settings"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.api.method_signature)": "settings,update_mask"
+                        }
+                      ]
+                    },
+                    "CopyLogEntries": {
+                      "requestType": "CopyLogEntriesRequest",
+                      "responseType": "google.longrunning.Operation",
+                      "options": {
+                        "(google.api.http).post": "/v2/entries:copy",
+                        "(google.api.http).body": "*",
+                        "(google.longrunning.operation_info).response_type": "CopyLogEntriesResponse",
+                        "(google.longrunning.operation_info).metadata_type": "CopyLogEntriesMetadata"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "post": "/v2/entries:copy",
+                            "body": "*"
+                          }
+                        },
+                        {
+                          "(google.longrunning.operation_info)": {
+                            "response_type": "CopyLogEntriesResponse",
+                            "metadata_type": "CopyLogEntriesMetadata"
+                          }
+                        }
+                      ]
                     }
                   }
                 },
@@ -2516,7 +2640,10 @@
                   "fields": {
                     "name": {
                       "type": "string",
-                      "id": 1
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
                     },
                     "description": {
                       "type": "string",
@@ -2550,14 +2677,16 @@
                       "options": {
                         "(google.api.field_behavior)": "OUTPUT_ONLY"
                       }
+                    },
+                    "restrictedFields": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 15
+                    },
+                    "cmekSettings": {
+                      "type": "CmekSettings",
+                      "id": 19
                     }
-                  }
-                },
-                "LifecycleState": {
-                  "values": {
-                    "LIFECYCLE_STATE_UNSPECIFIED": 0,
-                    "ACTIVE": 1,
-                    "DELETE_REQUESTED": 2
                   }
                 },
                 "LogView": {
@@ -3304,6 +3433,155 @@
                     }
                   }
                 },
+                "GetSettingsRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Settings"
+                      }
+                    }
+                  }
+                },
+                "UpdateSettingsRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "settings": {
+                      "type": "Settings",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "updateMask": {
+                      "type": "google.protobuf.FieldMask",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    }
+                  }
+                },
+                "Settings": {
+                  "options": {
+                    "(google.api.resource).type": "logging.googleapis.com/Settings",
+                    "(google.api.resource).pattern": "billingAccounts/{billing_account}/settings"
+                  },
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    },
+                    "storageLocation": {
+                      "type": "string",
+                      "id": 4,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    },
+                    "disableDefaultSink": {
+                      "type": "bool",
+                      "id": 5,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    }
+                  }
+                },
+                "CopyLogEntriesRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "filter": {
+                      "type": "string",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    },
+                    "destination": {
+                      "type": "string",
+                      "id": 4,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    }
+                  }
+                },
+                "CopyLogEntriesMetadata": {
+                  "fields": {
+                    "startTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 1
+                    },
+                    "endTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 2
+                    },
+                    "state": {
+                      "type": "OperationState",
+                      "id": 3
+                    },
+                    "cancellationRequested": {
+                      "type": "bool",
+                      "id": 4
+                    },
+                    "request": {
+                      "type": "CopyLogEntriesRequest",
+                      "id": 5
+                    },
+                    "progress": {
+                      "type": "int32",
+                      "id": 6
+                    },
+                    "writerIdentity": {
+                      "type": "string",
+                      "id": 7
+                    }
+                  }
+                },
+                "CopyLogEntriesResponse": {
+                  "fields": {
+                    "logEntriesCopiedCount": {
+                      "type": "int64",
+                      "id": 1
+                    }
+                  }
+                },
+                "LifecycleState": {
+                  "values": {
+                    "LIFECYCLE_STATE_UNSPECIFIED": 0,
+                    "ACTIVE": 1,
+                    "DELETE_REQUESTED": 2
+                  }
+                },
+                "OperationState": {
+                  "values": {
+                    "OPERATION_STATE_UNSPECIFIED": 0,
+                    "OPERATION_STATE_SCHEDULED": 1,
+                    "OPERATION_STATE_WAITING_FOR_PERMISSIONS": 2,
+                    "OPERATION_STATE_RUNNING": 3,
+                    "OPERATION_STATE_SUCCEEDED": 4,
+                    "OPERATION_STATE_FAILED": 5,
+                    "OPERATION_STATE_CANCELLED": 6
+                  }
+                },
                 "MetricsServiceV2": {
                   "options": {
                     "(google.api.default_host)": "logging.googleapis.com",
@@ -3431,6 +3709,13 @@
                       "id": 3,
                       "options": {
                         "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "disabled": {
+                      "type": "bool",
+                      "id": 12,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
                       }
                     },
                     "metricDescriptor": {
@@ -4129,6 +4414,222 @@
                 },
                 "labels": {
                   "keyType": "string",
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            }
+          }
+        },
+        "longrunning": {
+          "options": {
+            "cc_enable_arenas": true,
+            "csharp_namespace": "Google.LongRunning",
+            "go_package": "google.golang.org/genproto/googleapis/longrunning;longrunning",
+            "java_multiple_files": true,
+            "java_outer_classname": "OperationsProto",
+            "java_package": "com.google.longrunning",
+            "php_namespace": "Google\\LongRunning"
+          },
+          "nested": {
+            "operationInfo": {
+              "type": "google.longrunning.OperationInfo",
+              "id": 1049,
+              "extend": "google.protobuf.MethodOptions"
+            },
+            "Operations": {
+              "options": {
+                "(google.api.default_host)": "longrunning.googleapis.com"
+              },
+              "methods": {
+                "ListOperations": {
+                  "requestType": "ListOperationsRequest",
+                  "responseType": "ListOperationsResponse",
+                  "options": {
+                    "(google.api.http).get": "/v1/{name=operations}",
+                    "(google.api.method_signature)": "name,filter"
+                  },
+                  "parsedOptions": [
+                    {
+                      "(google.api.http)": {
+                        "get": "/v1/{name=operations}"
+                      }
+                    },
+                    {
+                      "(google.api.method_signature)": "name,filter"
+                    }
+                  ]
+                },
+                "GetOperation": {
+                  "requestType": "GetOperationRequest",
+                  "responseType": "Operation",
+                  "options": {
+                    "(google.api.http).get": "/v1/{name=operations/**}",
+                    "(google.api.method_signature)": "name"
+                  },
+                  "parsedOptions": [
+                    {
+                      "(google.api.http)": {
+                        "get": "/v1/{name=operations/**}"
+                      }
+                    },
+                    {
+                      "(google.api.method_signature)": "name"
+                    }
+                  ]
+                },
+                "DeleteOperation": {
+                  "requestType": "DeleteOperationRequest",
+                  "responseType": "google.protobuf.Empty",
+                  "options": {
+                    "(google.api.http).delete": "/v1/{name=operations/**}",
+                    "(google.api.method_signature)": "name"
+                  },
+                  "parsedOptions": [
+                    {
+                      "(google.api.http)": {
+                        "delete": "/v1/{name=operations/**}"
+                      }
+                    },
+                    {
+                      "(google.api.method_signature)": "name"
+                    }
+                  ]
+                },
+                "CancelOperation": {
+                  "requestType": "CancelOperationRequest",
+                  "responseType": "google.protobuf.Empty",
+                  "options": {
+                    "(google.api.http).post": "/v1/{name=operations/**}:cancel",
+                    "(google.api.http).body": "*",
+                    "(google.api.method_signature)": "name"
+                  },
+                  "parsedOptions": [
+                    {
+                      "(google.api.http)": {
+                        "post": "/v1/{name=operations/**}:cancel",
+                        "body": "*"
+                      }
+                    },
+                    {
+                      "(google.api.method_signature)": "name"
+                    }
+                  ]
+                },
+                "WaitOperation": {
+                  "requestType": "WaitOperationRequest",
+                  "responseType": "Operation"
+                }
+              }
+            },
+            "Operation": {
+              "oneofs": {
+                "result": {
+                  "oneof": [
+                    "error",
+                    "response"
+                  ]
+                }
+              },
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1
+                },
+                "metadata": {
+                  "type": "google.protobuf.Any",
+                  "id": 2
+                },
+                "done": {
+                  "type": "bool",
+                  "id": 3
+                },
+                "error": {
+                  "type": "google.rpc.Status",
+                  "id": 4
+                },
+                "response": {
+                  "type": "google.protobuf.Any",
+                  "id": 5
+                }
+              }
+            },
+            "GetOperationRequest": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1
+                }
+              }
+            },
+            "ListOperationsRequest": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 4
+                },
+                "filter": {
+                  "type": "string",
+                  "id": 1
+                },
+                "pageSize": {
+                  "type": "int32",
+                  "id": 2
+                },
+                "pageToken": {
+                  "type": "string",
+                  "id": 3
+                }
+              }
+            },
+            "ListOperationsResponse": {
+              "fields": {
+                "operations": {
+                  "rule": "repeated",
+                  "type": "Operation",
+                  "id": 1
+                },
+                "nextPageToken": {
+                  "type": "string",
+                  "id": 2
+                }
+              }
+            },
+            "CancelOperationRequest": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1
+                }
+              }
+            },
+            "DeleteOperationRequest": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1
+                }
+              }
+            },
+            "WaitOperationRequest": {
+              "fields": {
+                "name": {
+                  "type": "string",
+                  "id": 1
+                },
+                "timeout": {
+                  "type": "google.protobuf.Duration",
+                  "id": 2
+                }
+              }
+            },
+            "OperationInfo": {
+              "fields": {
+                "responseType": {
+                  "type": "string",
+                  "id": 1
+                },
+                "metadataType": {
                   "type": "string",
                   "id": 2
                 }

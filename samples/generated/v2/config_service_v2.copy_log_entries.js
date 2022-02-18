@@ -18,35 +18,26 @@
 
 'use strict';
 
-function main(name, exclusion, updateMask) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateExclusion_async]
+function main(name, destination) {
+  // [START logging_v2_generated_ConfigServiceV2_CopyLogEntries_async]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name of the exclusion to update:
-   *      "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+   *  Required. Log bucket from which to copy log entries.
    *  For example:
-   *    `"projects/my-project/exclusions/my-exclusion"`
+   *    `"projects/my-project/locations/global/buckets/my-source-bucket"`
    */
   // const name = 'abc123'
   /**
-   *  Required. New values for the existing exclusion. Only the fields specified in
-   *  `update_mask` are relevant.
+   *  Optional. A filter specifying which log entries to copy. The filter must be no more
+   *  than 20k characters. An empty filter matches all log entries.
    */
-  // const exclusion = {}
+  // const filter = 'abc123'
   /**
-   *  Required. A non-empty list of fields to change in the existing exclusion. New values
-   *  for the fields are taken from the corresponding fields in the
-   *  LogExclusion google.logging.v2.LogExclusion  included in this request. Fields not mentioned in
-   *  `update_mask` are not changed and are ignored in the request.
-   *  For example, to change the filter and description of an exclusion,
-   *  specify an `update_mask` of `"filter,description"`.
+   *  Required. Destination to which to copy log entries.
    */
-  // const updateMask = {}
+  // const destination = 'abc123'
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -54,21 +45,21 @@ function main(name, exclusion, updateMask) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateExclusion() {
+  async function callCopyLogEntries() {
     // Construct request
     const request = {
       name,
-      exclusion,
-      updateMask,
+      destination,
     };
 
     // Run request
-    const response = await loggingClient.updateExclusion(request);
+    const [operation] = await loggingClient.copyLogEntries(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callUpdateExclusion();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateExclusion_async]
+  callCopyLogEntries();
+  // [END logging_v2_generated_ConfigServiceV2_CopyLogEntries_async]
 }
 
 process.on('unhandledRejection', err => {

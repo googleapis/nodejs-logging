@@ -18,33 +18,34 @@
 
 'use strict';
 
-function main(name, exclusion, updateMask) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateExclusion_async]
+function main(name, settings) {
+  // [START logging_v2_generated_ConfigServiceV2_UpdateSettings_async]
   /**
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name of the exclusion to update:
-   *      "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
+   *  Required. The resource name for the settings to update.
+   *      "organizations/[ORGANIZATION_ID]/settings"
    *  For example:
-   *    `"projects/my-project/exclusions/my-exclusion"`
+   *    `"organizations/12345/settings"`
+   *  Note: Settings for the Log Router can currently only be configured for
+   *  Google Cloud organizations. Once configured, it applies to all projects and
+   *  folders in the Google Cloud organization.
    */
   // const name = 'abc123'
   /**
-   *  Required. New values for the existing exclusion. Only the fields specified in
-   *  `update_mask` are relevant.
+   *  Required. The settings to update.
+   *  See Enabling CMEK for Log
+   *  Router (https://cloud.google.com/logging/docs/routing/managed-encryption)
+   *  for more information.
    */
-  // const exclusion = {}
+  // const settings = {}
   /**
-   *  Required. A non-empty list of fields to change in the existing exclusion. New values
-   *  for the fields are taken from the corresponding fields in the
-   *  LogExclusion google.logging.v2.LogExclusion  included in this request. Fields not mentioned in
-   *  `update_mask` are not changed and are ignored in the request.
-   *  For example, to change the filter and description of an exclusion,
-   *  specify an `update_mask` of `"filter,description"`.
+   *  Optional. Field mask identifying which fields from `settings` should
+   *  be updated. A field will be overwritten if and only if it is in the update
+   *  mask. Output only fields cannot be updated.
+   *  See FieldMask google.protobuf.FieldMask  for more information.
+   *  For example: `"updateMask=kmsKeyName"`
    */
   // const updateMask = {}
 
@@ -54,21 +55,20 @@ function main(name, exclusion, updateMask) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateExclusion() {
+  async function callUpdateSettings() {
     // Construct request
     const request = {
       name,
-      exclusion,
-      updateMask,
+      settings,
     };
 
     // Run request
-    const response = await loggingClient.updateExclusion(request);
+    const response = await loggingClient.updateSettings(request);
     console.log(response);
   }
 
-  callUpdateExclusion();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateExclusion_async]
+  callUpdateSettings();
+  // [END logging_v2_generated_ConfigServiceV2_UpdateSettings_async]
 }
 
 process.on('unhandledRejection', err => {
