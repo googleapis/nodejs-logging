@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [9.7.0](https://github.com/googleapis/nodejs-logging/compare/v9.6.9...v9.7.0) (2022-02-18)
+
+
+### Features
+
+* Update Logging API with latest changes ([5eddc7d](https://github.com/googleapis/nodejs-logging/commit/5eddc7d6efeb19bdd01eeba13505b8290763a790))
+
 ### [9.6.9](https://github.com/googleapis/nodejs-logging/compare/v9.6.8...v9.6.9) (2022-02-09)
 
 
