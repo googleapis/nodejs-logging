@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [9.8.0](https://github.com/googleapis/nodejs-logging/compare/v9.7.0...v9.8.0) (2022-02-26)
+
+
+### Features
+
+* KMS configuration in settings ([#1231](https://github.com/googleapis/nodejs-logging/issues/1231)) ([cf3b56f](https://github.com/googleapis/nodejs-logging/commit/cf3b56f5753e1a94b9e89d4714c6da657b875e42))
+
 ## [9.7.0](https://github.com/googleapis/nodejs-logging/compare/v9.6.9...v9.7.0) (2022-02-18)
 
 
