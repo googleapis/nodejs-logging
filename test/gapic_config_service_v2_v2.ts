@@ -359,7 +359,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.GetBucketRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getBucket(request), expectedError);
@@ -486,7 +485,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.CreateBucketRequest()
       );
       request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.createBucket(request), expectedError);
@@ -613,7 +611,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UpdateBucketRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateBucket(request), expectedError);
@@ -740,7 +737,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.DeleteBucketRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteBucket(request), expectedError);
@@ -867,7 +863,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UndeleteBucketRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.undeleteBucket(request), expectedError);
@@ -991,7 +986,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.GetViewRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getView(request), expectedError);
@@ -1118,7 +1112,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.CreateViewRequest()
       );
       request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.createView(request), expectedError);
@@ -1245,7 +1238,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UpdateViewRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateView(request), expectedError);
@@ -1372,7 +1364,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.DeleteViewRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteView(request), expectedError);
@@ -1496,7 +1487,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.GetSinkRequest()
       );
       request.sinkName = '';
-      const expectedHeaderRequestParams = 'sink_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getSink(request), expectedError);
@@ -1623,7 +1613,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.CreateSinkRequest()
       );
       request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.createSink(request), expectedError);
@@ -1750,7 +1739,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UpdateSinkRequest()
       );
       request.sinkName = '';
-      const expectedHeaderRequestParams = 'sink_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateSink(request), expectedError);
@@ -1877,7 +1865,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.DeleteSinkRequest()
       );
       request.sinkName = '';
-      const expectedHeaderRequestParams = 'sink_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteSink(request), expectedError);
@@ -2004,7 +1991,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.GetExclusionRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getExclusion(request), expectedError);
@@ -2131,7 +2117,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.CreateExclusionRequest()
       );
       request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.createExclusion(request), expectedError);
@@ -2258,7 +2243,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UpdateExclusionRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateExclusion(request), expectedError);
@@ -2385,7 +2369,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.DeleteExclusionRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteExclusion(request), expectedError);
@@ -2512,7 +2495,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.GetCmekSettingsRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getCmekSettings(request), expectedError);
@@ -2640,7 +2622,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UpdateCmekSettingsRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateCmekSettings(request), expectedError);
@@ -2767,7 +2748,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.GetSettingsRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getSettings(request), expectedError);
@@ -2894,7 +2874,6 @@ describe('v2.ConfigServiceV2Client', () => {
         new protos.google.logging.v2.UpdateSettingsRequest()
       );
       request.name = '';
-      const expectedHeaderRequestParams = 'name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateSettings(request), expectedError);
