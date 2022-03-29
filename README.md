@@ -54,8 +54,16 @@ Google APIs Client Libraries, in [Client Libraries Explained][explained].
 
 ### Installing the client library
 
+To install `@google-cloud/logging` library run the following command:
+
 ```bash
 npm install @google-cloud/logging
+```
+
+To install `@google-cloud/logging-min` library run the following command:
+
+```bash
+npm install @google-cloud/logging-min
 ```
 
 
