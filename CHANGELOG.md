@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [9.8.2](https://github.com/googleapis/nodejs-logging/compare/v9.8.1...v9.8.2) (2022-03-30)
+
+
+### Bug Fixes
+
+* traceparent traceSampled parsing issue ([#1241](https://github.com/googleapis/nodejs-logging/issues/1241)) ([0e0d86f](https://github.com/googleapis/nodejs-logging/commit/0e0d86f97b0cdab84aa0a5afaa7be148fa7f0403))
+
 ### [9.8.1](https://github.com/googleapis/nodejs-logging/compare/v9.8.0...v9.8.1) (2022-03-29)
 
 
