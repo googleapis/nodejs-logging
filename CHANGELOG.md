@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [9.8.3](https://github.com/googleapis/nodejs-logging/compare/v9.8.2...v9.8.3) (2022-04-14)
+
+
+### Bug Fixes
+
+* Reenable staleness bot ([#1249](https://github.com/googleapis/nodejs-logging/issues/1249)) ([3d29fc8](https://github.com/googleapis/nodejs-logging/commit/3d29fc8ba8106614ac372d86add10e068a67e426))
+
 ### [9.8.2](https://github.com/googleapis/nodejs-logging/compare/v9.8.1...v9.8.2) (2022-03-30)
 
 
