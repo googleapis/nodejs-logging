@@ -5,6 +5,27 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [9.8.3](https://github.com/googleapis/nodejs-logging/compare/v9.8.2...v9.8.3) (2022-04-14)
+
+
+### Bug Fixes
+
+* Reenable staleness bot ([#1249](https://github.com/googleapis/nodejs-logging/issues/1249)) ([3d29fc8](https://github.com/googleapis/nodejs-logging/commit/3d29fc8ba8106614ac372d86add10e068a67e426))
+
+### [9.8.2](https://github.com/googleapis/nodejs-logging/compare/v9.8.1...v9.8.2) (2022-03-30)
+
+
+### Bug Fixes
+
+* traceparent traceSampled parsing issue ([#1241](https://github.com/googleapis/nodejs-logging/issues/1241)) ([0e0d86f](https://github.com/googleapis/nodejs-logging/commit/0e0d86f97b0cdab84aa0a5afaa7be148fa7f0403))
+
+### [9.8.1](https://github.com/googleapis/nodejs-logging/compare/v9.8.0...v9.8.1) (2022-03-29)
+
+
+### Bug Fixes
+
+* Add installation step for @google-cloud/logging-min NPM package in README ([#1239](https://github.com/googleapis/nodejs-logging/issues/1239)) ([f31e3ed](https://github.com/googleapis/nodejs-logging/commit/f31e3ede4d5765fea21e776e27236a2a349b0235))
+
 ## [9.8.0](https://github.com/googleapis/nodejs-logging/compare/v9.7.0...v9.8.0) (2022-02-26)
 
 

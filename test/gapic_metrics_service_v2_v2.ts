@@ -330,7 +330,6 @@ describe('v2.MetricsServiceV2Client', () => {
         new protos.google.logging.v2.GetLogMetricRequest()
       );
       request.metricName = '';
-      const expectedHeaderRequestParams = 'metric_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.getLogMetric(request), expectedError);
@@ -457,7 +456,6 @@ describe('v2.MetricsServiceV2Client', () => {
         new protos.google.logging.v2.CreateLogMetricRequest()
       );
       request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.createLogMetric(request), expectedError);
@@ -584,7 +582,6 @@ describe('v2.MetricsServiceV2Client', () => {
         new protos.google.logging.v2.UpdateLogMetricRequest()
       );
       request.metricName = '';
-      const expectedHeaderRequestParams = 'metric_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.updateLogMetric(request), expectedError);
@@ -711,7 +708,6 @@ describe('v2.MetricsServiceV2Client', () => {
         new protos.google.logging.v2.DeleteLogMetricRequest()
       );
       request.metricName = '';
-      const expectedHeaderRequestParams = 'metric_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteLogMetric(request), expectedError);

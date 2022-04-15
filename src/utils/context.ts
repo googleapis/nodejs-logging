@@ -231,6 +231,6 @@ export function parseTraceParentHeader(
   return {
     trace: match[2],
     spanId: match[3],
-    traceSampled: parseInt(match[4], 16) === 1,
+    traceSampled: (parseInt(match[4], 16) & 1) === 1,
   };
 }

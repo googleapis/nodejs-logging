@@ -341,7 +341,6 @@ describe('v2.LoggingServiceV2Client', () => {
         new protos.google.logging.v2.DeleteLogRequest()
       );
       request.logName = '';
-      const expectedHeaderRequestParams = 'log_name=';
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteLog(request), expectedError);
