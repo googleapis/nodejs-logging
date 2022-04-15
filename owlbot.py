@@ -26,7 +26,8 @@ node.owlbot_main(
         "src/index.ts",
         ".eslintignore",
         ".prettierignore",
-        "CONTRIBUTING.md"
+        "CONTRIBUTING.md",
+        ".github/auto-label.yaml"
     ]
 )
 
