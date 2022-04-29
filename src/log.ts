@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import arrify = require('arrify');
 import {callbackifyAll} from '@google-cloud/promisify';
 import * as dotProp from 'dot-prop';
 import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
+import {populatedInstrumentationInfo} from './utils/instrumentation';
 import {
   LogSeverityFunctions,
   assignSeverityToEntries,
@@ -964,8 +964,8 @@ class Log implements LogSeverityFunctions {
     await this.logging.setProjectId();
     this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     const resource = await this.getOrSetResource(options);
-    // Extract & format additional context from individual entries.
-    const decoratedEntries = this.decorateEntries(arrify(entry) as Entry[]);
+    // Extract & format additional context from individual entries. Make sure to add instrumentation info
+    const decoratedEntries = this.decorateEntries(populatedInstrumentationInfo(entry));
     this.truncateEntries(decoratedEntries);
     // Clobber `labels` and `resource` fields with WriteOptions from the user.
     const reqOpts = extend(
