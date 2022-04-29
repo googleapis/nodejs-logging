@@ -46,7 +46,12 @@ module.exports = {
     systemName: '@google-cloud/logging',
     theme: 'lumen',
     default: {
-      outputSourceFiles: false
+      outputSourceFiles: false,
+      staticFiles: {
+        include: [
+            '_static'
+        ]
+      }
     }
   },
   markdown: {
