@@ -19,7 +19,6 @@ import version = require('../package.json');
 import {Entry} from '../src';
 import * as instrumentation from '../src/utils/instrumentation';
 import {google} from '../protos/protos';
-import {LogEntry} from '../src/entry';
 
 const NAME = 'name';
 const VERSION = 'version';
@@ -41,13 +40,13 @@ describe('instrumentation_info', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ) as any;
     assert.equal(
-      entry.metadata?.jsonPayload?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     assert.equal(
-      entry.metadata?.jsonPayload?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[VERSION],
       version.version
@@ -61,9 +60,9 @@ describe('instrumentation_info', () => {
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[1] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[0]?.[NAME],
+      (entries[1] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
   });
@@ -74,30 +73,30 @@ describe('instrumentation_info', () => {
     assert.equal(entries.length, 1);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.length,
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.length,
       2
     );
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[0]?.[NAME],
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[1]?.[NAME],
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[1]?.[NAME],
       NODEJS_TEST
     );
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[1]?.[VERSION],
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[1]?.[VERSION],
       VERSION_TEST
     );
   });
@@ -108,16 +107,16 @@ describe('instrumentation_info', () => {
     assert.equal(entries.length, 1);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.length,
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.length,
       1
     );
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[0]?.[NAME],
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
   });
@@ -129,16 +128,16 @@ describe('instrumentation_info', () => {
     assert.equal(entries.length, 1);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[1]?.[NAME],
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[1]?.[NAME],
       NODEJS_TEST + '-oo*'
     );
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[1]?.[VERSION],
+      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[1]?.[VERSION],
       VERSION_TEST + '.0.0.0.0.*'
     );
   });
@@ -150,9 +149,9 @@ describe('instrumentation_info', () => {
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[1] as any).metadata?.jsonPayload?.[
-        instrumentation.DIAGNOSTIC_INFO_KEY
-      ]?.[instrumentation.INSTRUMENTATION_SOURCE_KEY]?.[0]?.[NAME],
+      (entries[1] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
@@ -164,13 +163,12 @@ describe('instrumentation_info', () => {
 function createEntry(name: string | undefined, version: string | undefined) {
   const entry = new Entry(
     {
-      jsonPayload: {},
       severity: google.logging.type.LogSeverity.DEBUG,
-    } as LogEntry,
+    },
     undefined
   );
   if (name || version) {
-    entry.metadata.jsonPayload = {
+    entry.data = {
       [instrumentation.DIAGNOSTIC_INFO_KEY]: {
         [instrumentation.INSTRUMENTATION_SOURCE_KEY]: [
           {

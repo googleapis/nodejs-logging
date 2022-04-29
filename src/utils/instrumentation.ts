@@ -16,7 +16,7 @@
 
 import arrify = require('arrify');
 import {google} from '../../protos/protos';
-import {Entry, LogEntry} from '../entry';
+import {Entry} from '../entry';
 import version = require('../../package.json');
 
 // The global variable keeping track if instrumentation record was already written or not.
@@ -48,14 +48,11 @@ export function populatedInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
     for (const entryItem of arrify(entry) as any[]) {
       if (entryItem) {
         const info =
-          entryItem.metadata?.jsonPayload?.[DIAGNOSTIC_INFO_KEY]?.[
-            INSTRUMENTATION_SOURCE_KEY
-          ];
+          entryItem.data?.[DIAGNOSTIC_INFO_KEY]?.[INSTRUMENTATION_SOURCE_KEY];
         if (info) {
           // Validate and update the instrumentation info with current library info
-          entryItem.metadata.jsonPayload[DIAGNOSTIC_INFO_KEY][
-            INSTRUMENTATION_SOURCE_KEY
-          ] = validateAndUpdateInstrumentation(info);
+          entryItem.data[DIAGNOSTIC_INFO_KEY][INSTRUMENTATION_SOURCE_KEY] =
+            validateAndUpdateInstrumentation(info);
           // Indicate that instrumentation info log entry already exists
           // and that current library info was added to existing log entry
           isWritten = true;
@@ -94,19 +91,18 @@ export function createDiagnosticEntry(
   }
   const entry = new Entry(
     {
-      jsonPayload: {
-        [DIAGNOSTIC_INFO_KEY]: {
-          [INSTRUMENTATION_SOURCE_KEY]: [
-            {
-              name: truncateValue(libraryName),
-              version: truncateValue(libraryVersion),
-            },
-          ],
-        },
-      },
       severity: google.logging.type.LogSeverity.INFO,
-    } as LogEntry,
-    undefined
+    },
+    {
+      [DIAGNOSTIC_INFO_KEY]: {
+        [INSTRUMENTATION_SOURCE_KEY]: [
+          {
+            name: truncateValue(libraryName),
+            version: truncateValue(libraryVersion),
+          },
+        ],
+      },
+    }
   );
   return entry;
 }

@@ -372,7 +372,8 @@ describe('Logging', () => {
           {numExpectedMessages: logEntries.length},
           (err, entries) => {
             assert.ifError(err);
-            assert.strictEqual(entries!.length, logEntries.length);
+            // Instrumentation log entry is added automatically, so we should discount it
+            assert.strictEqual(entries!.length - 1, logEntries.length);
             done();
           }
         );
