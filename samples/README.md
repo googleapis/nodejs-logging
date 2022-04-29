@@ -18,7 +18,6 @@ To install `@google-cloud/logging-min` library run the following command:
 npm install @google-cloud/logging-min
 ```
 
-
 ## Table of Contents
 
 * [Before you begin](#before-you-begin)
