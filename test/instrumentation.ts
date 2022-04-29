@@ -145,7 +145,7 @@ describe('instrumentation_info', () => {
 
   it('should add instrumentation log entry only once', () => {
     const dummyEntry = createEntry(undefined, undefined);
-    var entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
+    let entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 2);
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
@@ -158,7 +158,7 @@ describe('instrumentation_info', () => {
     entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 1);
     assert.deepEqual(dummyEntry, entries[0]);
-  });  
+  });
 });
 
 function createEntry(name: string | undefined, version: string | undefined) {

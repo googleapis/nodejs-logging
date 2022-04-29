@@ -38,7 +38,7 @@
     "prepare": "npm run compile-protos && npm run compile",
     "samples-test": "cd samples/ && npm link ../ && npm test && cd ../",
     "presystem-test": "npm run compile",
-    "system-test": "mocha build/system-test --timeout 600000",
+    "system-test": "mocha build/system-test --timeout 900000",
     "pretest": "npm run compile",
     "test": "c8 mocha build/test",
     "precompile": "gts clean",

@@ -965,7 +965,9 @@ class Log implements LogSeverityFunctions {
     this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     const resource = await this.getOrSetResource(options);
     // Extract & format additional context from individual entries. Make sure to add instrumentation info
-    const decoratedEntries = this.decorateEntries(populatedInstrumentationInfo(entry));
+    const decoratedEntries = this.decorateEntries(
+      populatedInstrumentationInfo(entry)
+    );
     this.truncateEntries(decoratedEntries);
     // Clobber `labels` and `resource` fields with WriteOptions from the user.
     const reqOpts = extend(
