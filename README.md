@@ -22,10 +22,6 @@ To install `@google-cloud/logging-min` library run the following command:
 npm install @google-cloud/logging-min
 ```
 
-For an interactive tutorial on using the client library in a Node.js application, click Guide Me:
-
-[![Guide Me](_static/guide-me.svg)](https://console.cloud.google.com/?walkthrough_id=logging__logging-nodejs)
-
 
 A comprehensive list of changes in each version may be found in
 [the CHANGELOG](https://github.com/googleapis/nodejs-logging/blob/main/CHANGELOG.md).
