@@ -22,7 +22,9 @@ import version = require('../../package.json');
 // The global variable keeping track if instrumentation record was already written or not.
 // The instrumentation record should be generated only once per process and contain logging
 // libraries related info.
-export let instrumentationWritten = false;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const global: {[index: string]: any};
+global.instrumentationAdded = false;
 
 const maxDiagnosticValueLen = 14;
 
@@ -33,6 +35,14 @@ export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
 export type InstrumentationInfo = {name: string; version: string};
 
 /**
+ * This method returns the status if instrumentation info was already added or not.
+ * @returns true if the log record with instrumentation info was already added, false otherwise.
+ */
+export function getInstrumentationInfoStatus() {
+  return global.instrumentationAdded;
+}
+
+/**
  * This method helps to populate entries with instrumentation data
  * @param entry {Entry} The entry or array of entries to be populated with instrumentation info
  * @returns {Entry} Array of entries which contains an entry with current library instrumentation info
@@ -40,8 +50,8 @@ export type InstrumentationInfo = {name: string; version: string};
 export function populatedInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
   // Update the flag indicating that instrumentation entry was already added once,
   // so any subsequent calls to this method will not add a separate instrumentation log entry
-  let isWritten = instrumentationWritten;
-  instrumentationWritten = true;
+  let isWritten = global.instrumentationAdded;
+  global.instrumentationAdded = true;
   const entries: Entry[] = [];
   if (entry) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,5 +180,5 @@ function isValidInfo(info: InstrumentationInfo) {
  * The helper method used for tests to reset a status if instrumentation already written.
  */
 export function testResetInstrumentationStatus() {
-  instrumentationWritten = false;
+  global.instrumentationAdded = false;
 }
