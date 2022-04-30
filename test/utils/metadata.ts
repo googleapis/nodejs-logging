@@ -65,7 +65,6 @@ describe('metadata', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let metadata: any;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let AUTH;
   const ENV_CACHED = extend({}, process.env);
 
   const INITIAL_ENV: {[key: string]: string | undefined} = {};
@@ -80,7 +79,6 @@ describe('metadata', () => {
   });
 
   beforeEach(() => {
-    AUTH = {};
     extend(metadata, metadataCached);
     instanceOverride = null;
     readFileShouldError = false;

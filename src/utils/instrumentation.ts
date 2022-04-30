@@ -15,23 +15,27 @@
  */
 
 import arrify = require('arrify');
+import path = require('path');
 import {google} from '../../protos/protos';
 import {Entry} from '../entry';
-import version = require('../../package.json');
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare const global: {[index: string]: any};
 
 // The global variable keeping track if instrumentation record was already written or not.
 // The instrumentation record should be generated only once per process and contain logging
 // libraries related info.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const global: {[index: string]: any};
 global.instrumentationAdded = false;
 
+// The variable to hold cached library version
+let libraryVersion: string;
+
+// Max length for instrumentation library name and version values
 const maxDiagnosticValueLen = 14;
 
 export const DIAGNOSTIC_INFO_KEY = 'logging.googleapis.com/diagnostic';
 export const INSTRUMENTATION_SOURCE_KEY = 'instrumentation_source';
 export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
-
 export type InstrumentationInfo = {name: string; version: string};
 
 /**
@@ -90,14 +94,9 @@ export function createDiagnosticEntry(
   libraryName: string | undefined,
   libraryVersion: string | undefined
 ): Entry {
-  // Validate the libraryName first and make sure it starts with 'nodejs'
-  // prefix. Truncate if more than 14 characters length
+  // Validate the libraryName first and make sure it starts with 'nodejs' prefix.
   if (!libraryName || !libraryName.startsWith(NODEJS_LIBRARY_NAME_PREFIX)) {
     libraryName = NODEJS_LIBRARY_NAME_PREFIX;
-  }
-  // Validate the libraryVersion and truncate if more than 14 characters length
-  if (!libraryVersion) {
-    libraryVersion = version.version;
   }
   const entry = new Entry(
     {
@@ -107,8 +106,9 @@ export function createDiagnosticEntry(
       [DIAGNOSTIC_INFO_KEY]: {
         [INSTRUMENTATION_SOURCE_KEY]: [
           {
+            // Truncate libraryName and libraryVersion if more than 14 characters length
             name: truncateValue(libraryName),
-            version: truncateValue(libraryVersion),
+            version: truncateValue(libraryVersion ?? getLibraryVersion()),
           },
         ],
       },
@@ -129,7 +129,7 @@ function validateAndUpdateInstrumentation(
   // First, add current library information
   finalInfo.push({
     name: NODEJS_LIBRARY_NAME_PREFIX,
-    version: version.version,
+    version: getLibraryVersion(),
   });
   // Iterate through given list of libraries and for each entry perform validations and transformations
   // Limit amount of entries to be up to 3
@@ -157,6 +157,19 @@ function truncateValue(value: string) {
     return value.substring(0, maxDiagnosticValueLen).concat('*');
   }
   return value;
+}
+
+/**
+ * The helper function to retrieve current library version from 'package.json' file. Note that
+ * since we use {path.resolve}, the search for 'package.json' could be impacted by current working directory.
+ * @returns {string} A current library version.
+ */
+export function getLibraryVersion() {
+  if (libraryVersion) {
+    return libraryVersion;
+  }
+  libraryVersion = require(path.resolve('package.json')).version;
+  return libraryVersion;
 }
 
 /**

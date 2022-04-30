@@ -15,7 +15,6 @@
  */
 
 import * as assert from 'assert';
-import version = require('../package.json');
 import {Entry} from '../src';
 import * as instrumentation from '../src/utils/instrumentation';
 import {google} from '../protos/protos';
@@ -34,6 +33,7 @@ describe('instrumentation_info', () => {
   });
 
   it('should generate library info properly by default', () => {
+    console.log('The version is: ' + instrumentation.getLibraryVersion());
     const entry = instrumentation.createDiagnosticEntry(
       undefined,
       undefined
@@ -49,7 +49,7 @@ describe('instrumentation_info', () => {
       entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[VERSION],
-      version.version
+      instrumentation.getLibraryVersion()
     );
   });
 
