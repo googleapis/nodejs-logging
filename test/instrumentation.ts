@@ -33,7 +33,7 @@ describe('instrumentation_info', () => {
   });
 
   it('should generate library info properly by default', () => {
-    console.log('The version is: ' + instrumentation.getLibraryVersion());
+    console.log('The version is: ' + instrumentation.getNodejsLibraryVersion());
     const entry = instrumentation.createDiagnosticEntry(
       undefined,
       undefined
@@ -49,7 +49,7 @@ describe('instrumentation_info', () => {
       entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[VERSION],
-      instrumentation.getLibraryVersion()
+      instrumentation.getNodejsLibraryVersion()
     );
   });
 

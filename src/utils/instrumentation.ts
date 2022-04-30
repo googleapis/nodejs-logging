@@ -108,7 +108,7 @@ export function createDiagnosticEntry(
           {
             // Truncate libraryName and libraryVersion if more than 14 characters length
             name: truncateValue(libraryName),
-            version: truncateValue(libraryVersion ?? getLibraryVersion()),
+            version: truncateValue(libraryVersion ?? getNodejsLibraryVersion()),
           },
         ],
       },
@@ -129,7 +129,7 @@ function validateAndUpdateInstrumentation(
   // First, add current library information
   finalInfo.push({
     name: NODEJS_LIBRARY_NAME_PREFIX,
-    version: getLibraryVersion(),
+    version: getNodejsLibraryVersion(),
   });
   // Iterate through given list of libraries and for each entry perform validations and transformations
   // Limit amount of entries to be up to 3
@@ -164,11 +164,15 @@ function truncateValue(value: string) {
  * since we use {path.resolve}, the search for 'package.json' could be impacted by current working directory.
  * @returns {string} A current library version.
  */
-export function getLibraryVersion() {
+export function getNodejsLibraryVersion() {
   if (libraryVersion) {
     return libraryVersion;
   }
-  libraryVersion = require(path.resolve('package.json')).version;
+  libraryVersion = require(path.resolve(
+    __dirname,
+    '../../../',
+    'package.json'
+  )).version;
   return libraryVersion;
 }
 
