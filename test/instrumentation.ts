@@ -29,7 +29,7 @@ const LONG_VERSION_TEST = VERSION_TEST + '.0.0.0.0.0.0.0.0.11.1.1-ALPHA';
 
 describe('instrumentation_info', () => {
   beforeEach(() => {
-    instrumentation.testResetInstrumentationStatus();
+    instrumentation.resetInstrumentationStatus();
   });
 
   it('should generate library info properly by default', () => {
@@ -55,7 +55,7 @@ describe('instrumentation_info', () => {
 
   it('should add instrumentation log entry to the list', () => {
     const dummyEntry = createEntry(undefined, undefined);
-    const entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
+    const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 2);
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
@@ -69,7 +69,7 @@ describe('instrumentation_info', () => {
 
   it('should add instrumentation info to existing list', () => {
     const dummyEntry = createEntry(NODEJS_TEST, VERSION_TEST);
-    const entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
+    const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 1);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,7 +103,7 @@ describe('instrumentation_info', () => {
 
   it('should replace instrumentation log entry in the list', () => {
     const dummyEntry = createEntry('nodejs-test', undefined);
-    const entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
+    const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 1);
     assert.equal(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,7 +122,7 @@ describe('instrumentation_info', () => {
   });
 
   it('should truncate instrumentation info in log entry', () => {
-    const entries = instrumentation.populatedInstrumentationInfo(
+    const entries = instrumentation.populateInstrumentationInfo(
       createEntry(LONG_NODEJS_TEST, LONG_VERSION_TEST)
     );
     assert.equal(entries.length, 1);
@@ -144,7 +144,7 @@ describe('instrumentation_info', () => {
 
   it('should add instrumentation log entry only once', () => {
     const dummyEntry = createEntry(undefined, undefined);
-    let entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
+    let entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 2);
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
@@ -154,7 +154,7 @@ describe('instrumentation_info', () => {
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
-    entries = instrumentation.populatedInstrumentationInfo(dummyEntry);
+    entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 1);
     assert.deepEqual(dummyEntry, entries[0]);
   });

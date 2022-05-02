@@ -21,7 +21,7 @@
 import {Logging} from '.';
 import {Entry, LABELS_KEY, LogEntry, StructuredJson} from './entry';
 import {Writable} from 'stream';
-import {populatedInstrumentationInfo} from './utils/instrumentation';
+import {populateInstrumentationInfo} from './utils/instrumentation';
 import {
   LogSeverityFunctions,
   assignSeverityToEntries,
@@ -413,7 +413,7 @@ class LogSync implements LogSeverityFunctions {
     this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     try {
       // Make sure to add instrumentation info
-      structuredEntries = populatedInstrumentationInfo(entry).map(entry => {
+      structuredEntries = populateInstrumentationInfo(entry).map(entry => {
         if (!(entry instanceof Entry)) {
           entry = this.entry(entry);
         }

@@ -51,7 +51,7 @@ export function getInstrumentationInfoStatus() {
  * @param entry {Entry} The entry or array of entries to be populated with instrumentation info
  * @returns {Entry} Array of entries which contains an entry with current library instrumentation info
  */
-export function populatedInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
+export function populateInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
   // Update the flag indicating that instrumentation entry was already added once,
   // so any subsequent calls to this method will not add a separate instrumentation log entry
   let isWritten = global.instrumentationAdded;
@@ -85,7 +85,7 @@ export function populatedInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
 
 /**
  * The helper method to generate a log entry with diagnostic instrumentation data.
- * @param libraryName {string} The name of the logging library to ve reported. Should be prefixed with 'nodejs'.
+ * @param libraryName {string} The name of the logging library to be reported. Should be prefixed with 'nodejs'.
  *        Will be truncated if longer than 14 characters.
  * @param libraryVersion {string} The version of the logging library to be reported. Will be truncated if longer than 14 characters.
  * @returns {Entry} The entry with diagnostic instrumentation data.
@@ -107,8 +107,11 @@ export function createDiagnosticEntry(
         [INSTRUMENTATION_SOURCE_KEY]: [
           {
             // Truncate libraryName and libraryVersion if more than 14 characters length
-            name: truncateValue(libraryName),
-            version: truncateValue(libraryVersion ?? getNodejsLibraryVersion()),
+            name: truncateValue(libraryName, maxDiagnosticValueLen),
+            version: truncateValue(
+              libraryVersion ?? getNodejsLibraryVersion(),
+              maxDiagnosticValueLen
+            ),
           },
         ],
       },
@@ -137,8 +140,8 @@ function validateAndUpdateInstrumentation(
   for (const info of infoList) {
     if (isValidInfo(info)) {
       finalInfo.push({
-        name: truncateValue(info.name),
-        version: truncateValue(info.version),
+        name: truncateValue(info.name, maxDiagnosticValueLen),
+        version: truncateValue(info.version, maxDiagnosticValueLen),
       });
     }
     if (++count === 3) break;
@@ -147,14 +150,15 @@ function validateAndUpdateInstrumentation(
 }
 
 /**
- * A helper function to truncate a value (library name or version). The value is truncated
- * when it is longet than 14 chars and '*' is added instead of truncated suffix.
- * @param value {string} The library name or version to be truncated.
+ * A helper function to truncate a value (library name or version for example). The value is truncated
+ * when it is longer than {maxLen} chars and '*' is added instead of truncated suffix.
+ * @param value {string} The value to be truncated.
+ * @param maxLen {number} The max length to be used for truncation.
  * @returns {string} The truncated value.
  */
-function truncateValue(value: string) {
-  if (value && value.length > maxDiagnosticValueLen) {
-    return value.substring(0, maxDiagnosticValueLen).concat('*');
+function truncateValue(value: string, maxLen: number) {
+  if (value && value.length > maxLen) {
+    return value.substring(0, maxLen).concat('*');
   }
   return value;
 }
@@ -194,8 +198,8 @@ function isValidInfo(info: InstrumentationInfo) {
 }
 
 /**
- * The helper method used for tests to reset a status if instrumentation already written.
+ * The helper method used to reset a status if instrumentation already written.
  */
-export function testResetInstrumentationStatus() {
+export function resetInstrumentationStatus() {
   global.instrumentationAdded = false;
 }

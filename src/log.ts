@@ -21,7 +21,7 @@ import {CallOptions} from 'google-gax';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
 import {
-  populatedInstrumentationInfo,
+  populateInstrumentationInfo,
   getInstrumentationInfoStatus,
 } from './utils/instrumentation';
 import {
@@ -977,7 +977,7 @@ class Log implements LogSeverityFunctions {
     const resource = await this.getOrSetResource(options);
     // Extract & format additional context from individual entries. Make sure to add instrumentation info
     const decoratedEntries = this.decorateEntries(
-      populatedInstrumentationInfo(entry)
+      populateInstrumentationInfo(entry)
     );
     this.truncateEntries(decoratedEntries);
     // Clobber `labels` and `resource` fields with WriteOptions from the user.
