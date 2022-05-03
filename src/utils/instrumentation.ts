@@ -198,7 +198,7 @@ function isValidInfo(info: InstrumentationInfo) {
 }
 
 /**
- * The helper method used to reset a status if instrumentation already written.
+ * The helper method used to reset a status of a flag which indicates if instrumentation info already written or not.
  */
 export function resetInstrumentationStatus() {
   global.instrumentationAdded = false;
