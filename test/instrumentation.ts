@@ -33,12 +33,10 @@ describe('instrumentation_info', () => {
   });
 
   it('should generate library info properly by default', () => {
-    console.log('The version is: ' + instrumentation.getNodejsLibraryVersion());
     const entry = instrumentation.createDiagnosticEntry(
       undefined,
       undefined
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ) as any;
+    ) as Entry;
     assert.equal(
       entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
@@ -59,8 +57,7 @@ describe('instrumentation_info', () => {
     assert.equal(entries.length, 2);
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[1] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[1].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
@@ -72,29 +69,25 @@ describe('instrumentation_info', () => {
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 1);
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.length,
       2
     );
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[NAME],
       NODEJS_TEST
     );
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[VERSION],
       VERSION_TEST
@@ -106,15 +99,13 @@ describe('instrumentation_info', () => {
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries.length, 1);
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.length,
       1
     );
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
@@ -127,15 +118,13 @@ describe('instrumentation_info', () => {
     );
     assert.equal(entries.length, 1);
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[NAME],
       NODEJS_TEST + '-oo*'
     );
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[0] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[VERSION],
       VERSION_TEST + '.0.0.0.0.*'
@@ -148,8 +137,7 @@ describe('instrumentation_info', () => {
     assert.equal(entries.length, 2);
     assert.deepEqual(dummyEntry, entries[0]);
     assert.equal(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (entries[1] as any).data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[1].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
