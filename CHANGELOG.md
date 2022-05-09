@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [9.9.0](https://github.com/googleapis/nodejs-logging/compare/v9.8.3...v9.9.0) (2022-05-09)
+
+
+### Features
+
+* Add support for library instrumentation ([#1261](https://github.com/googleapis/nodejs-logging/issues/1261)) ([bb864c8](https://github.com/googleapis/nodejs-logging/commit/bb864c8ff6a57fb70f350d4a15d97e85fdafab29))
+
 ### [9.8.3](https://github.com/googleapis/nodejs-logging/compare/v9.8.2...v9.8.3) (2022-04-14)
 
 
