@@ -28,6 +28,7 @@ import {after, before} from 'mocha';
 const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
 import * as http from 'http';
+import * as instrumentation from '../src/utils/instrumentation';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -372,7 +373,26 @@ describe('Logging', () => {
           {numExpectedMessages: logEntries.length},
           (err, entries) => {
             assert.ifError(err);
-            assert.strictEqual(entries!.length, logEntries.length);
+            // Instrumentation log entry is added automatically, so we should discount it
+            assert.strictEqual(entries!.length - 1, logEntries.length);
+            let entry: Entry | undefined;
+            entries!.forEach(ent => {
+              if (
+                ent &&
+                ent.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+                  instrumentation.INSTRUMENTATION_SOURCE_KEY
+                ]
+              ) {
+                entry = ent;
+              }
+            });
+            assert.ok(entry);
+            assert.equal(
+              entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+                instrumentation.INSTRUMENTATION_SOURCE_KEY
+              ]?.[0]?.['name'],
+              instrumentation.NODEJS_LIBRARY_NAME_PREFIX
+            );
             done();
           }
         );
