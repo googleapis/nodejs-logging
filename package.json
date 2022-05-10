@@ -50,7 +50,7 @@
     "@google-cloud/projectify": "^2.0.0",
     "@google-cloud/promisify": "^3.0.0",
     "arrify": "^2.0.1",
-    "dot-prop": "^7.2.0",
+    "dot-prop": "^6.0.0",
     "eventid": "^2.0.0",
     "extend": "^3.0.2",
     "gcp-metadata": "^4.0.0",
