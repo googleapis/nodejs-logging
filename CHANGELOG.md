@@ -5,6 +5,17 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.0.0](https://github.com/googleapis/nodejs-logging/compare/v9.9.0...v10.0.0) (2022-05-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* update library to use Node 12 (#1272)
+
+### Build System
+
+* update library to use Node 12 ([#1272](https://github.com/googleapis/nodejs-logging/issues/1272)) ([13f909f](https://github.com/googleapis/nodejs-logging/commit/13f909ff1e26fe783599867c3b7992020a76e934))
+
 ## [9.9.0](https://github.com/googleapis/nodejs-logging/compare/v9.8.3...v9.9.0) (2022-05-09)
 
 
