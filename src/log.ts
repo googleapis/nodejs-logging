@@ -20,10 +20,7 @@ import * as extend from 'extend';
 import {CallOptions} from 'google-gax';
 import {GetEntriesCallback, GetEntriesResponse, Logging} from '.';
 import {Entry, EntryJson, LogEntry} from './entry';
-import {
-  populateInstrumentationInfo,
-  getInstrumentationInfoStatus,
-} from './utils/instrumentation';
+import {populateInstrumentationInfo} from './utils/instrumentation';
 import {
   LogSeverityFunctions,
   assignSeverityToEntries,
@@ -962,23 +959,19 @@ class Log implements LogSeverityFunctions {
     entry: Entry | Entry[],
     opts?: WriteOptions | ApiResponseCallback
   ): Promise<ApiResponse> {
-    const isInfoAdded = getInstrumentationInfoStatus();
     const options = opts ? (opts as WriteOptions) : {};
-    // If instrumentation info was not added, means that this is first time
-    // log entry is written and that the instrumentation log entry could be
-    // generated for this request. If yes, then make sure we set partialSuccess, so entire
-    // request will make it through and only oversized entries will be dropped
-    if (!isInfoAdded) {
-      options.partialSuccess = true;
-    }
     // Extract projectId & resource from Logging - inject & memoize if not.
     await this.logging.setProjectId();
     this.formattedName_ = formatLogName(this.logging.projectId, this.name);
     const resource = await this.getOrSetResource(options);
     // Extract & format additional context from individual entries. Make sure to add instrumentation info
-    const decoratedEntries = this.decorateEntries(
-      populateInstrumentationInfo(entry)
-    );
+    const info = populateInstrumentationInfo(entry);
+    const decoratedEntries = this.decorateEntries(info[0]);
+    // If instrumentation info was added make sure we set partialSuccess, so entire
+    // request will make it through and only oversized entries will be dropped if any
+    if (info[1]) {
+      options.partialSuccess = true;
+    }
     this.truncateEntries(decoratedEntries);
     // Clobber `labels` and `resource` fields with WriteOptions from the user.
     const reqOpts = extend(
