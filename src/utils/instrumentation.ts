@@ -208,8 +208,7 @@ export function resetInstrumentationStatus() {
  * @returns the value of the flag before reset
  */
 export function setInstrumentationStatus() {
-  let status = global.instrumentationAdded;
+  const status = global.instrumentationAdded;
   global.instrumentationAdded = true;
   return status;
 }
-
