@@ -54,8 +54,7 @@ export function getInstrumentationInfoStatus() {
 export function populateInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
   // Update the flag indicating that instrumentation entry was already added once,
   // so any subsequent calls to this method will not add a separate instrumentation log entry
-  let isWritten = global.instrumentationAdded;
-  global.instrumentationAdded = true;
+  let isWritten = setInstrumentationStatus();
   const entries: Entry[] = [];
   if (entry) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -203,3 +202,14 @@ function isValidInfo(info: InstrumentationInfo) {
 export function resetInstrumentationStatus() {
   global.instrumentationAdded = false;
 }
+
+/**
+ * The helper method used to set a status of a flag which indicates if instrumentation info already written or not.
+ * @returns the value of the flag before reset
+ */
+export function setInstrumentationStatus() {
+  let status = global.instrumentationAdded;
+  global.instrumentationAdded = true;
+  return status;
+}
+
