@@ -205,7 +205,7 @@ export function resetInstrumentationStatus() {
 
 /**
  * The helper method used to set a status of a flag which indicates if instrumentation info already written or not.
- * @returns the value of the flag before reset
+ * @returns the value of the flag before it is set
  */
 export function setInstrumentationStatus() {
   const status = global.instrumentationAdded;
