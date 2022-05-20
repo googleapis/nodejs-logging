@@ -22,6 +22,7 @@ import {Log as LOG, LogOptions, WriteOptions} from '../src/log';
 import {Data, EntryJson, LogEntry} from '../src/entry';
 
 import * as logCommon from '../src/utils/log-common';
+import * as instrumentation from '../src/utils/instrumentation';
 
 describe('Log', () => {
   let Log: typeof LOG;
@@ -75,6 +76,7 @@ describe('Log', () => {
     log.logging.setDetectedResource = () => {
       log.logging.detectedResource = FAKE_RESOURCE;
     };
+    instrumentation.setInstrumentationStatus(true);
   });
 
   // Create a mock Logging instance
@@ -547,6 +549,31 @@ describe('Log', () => {
           sinon.match({
             dryRun: true,
             partialSuccess: false,
+          })
+        )
+      );
+    });
+
+    it('should set the partialSuccess properly for instrumentation record', async () => {
+      instrumentation.setInstrumentationStatus(false);
+      await log.write(ENTRIES, OPTIONS);
+      assert(
+        log.logging.loggingService.writeLogEntries.calledOnceWith(
+          sinon.match({
+            partialSuccess: true,
+          })
+        )
+      );
+      instrumentation.setInstrumentationStatus(true);
+    });
+
+    it('should set the partialSuccess properly for existing instrumentation record', async () => {
+      ENTRIES.push(instrumentation.createDiagnosticEntry(undefined, undefined));
+      await log.write(ENTRIES, OPTIONS);
+      assert(
+        log.logging.loggingService.writeLogEntries.calledOnceWith(
+          sinon.match({
+            partialSuccess: true,
           })
         )
       );
