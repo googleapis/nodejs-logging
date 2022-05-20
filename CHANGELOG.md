@@ -5,6 +5,14 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [10.0.1](https://github.com/googleapis/nodejs-logging/compare/v10.0.0...v10.0.1) (2022-05-20)
+
+
+### Bug Fixes
+
+* Add support to set an instrumentation flag ([#1279](https://github.com/googleapis/nodejs-logging/issues/1279)) ([6d470fc](https://github.com/googleapis/nodejs-logging/commit/6d470fc26ffb0411ace184d062b0e603e7cf6259))
+* **deps:** update dependency @google-cloud/paginator to v4 ([#1276](https://github.com/googleapis/nodejs-logging/issues/1276)) ([0bfe813](https://github.com/googleapis/nodejs-logging/commit/0bfe813c54a0d63a0b73a2dfe8cd702da5a6c91b))
+
 ## [10.0.0](https://github.com/googleapis/nodejs-logging/compare/v9.9.0...v10.0.0) (2022-05-18)
 
 
