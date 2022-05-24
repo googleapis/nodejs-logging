@@ -286,7 +286,8 @@ export class LoggingServiceV2Client {
     // Provide descriptors for these.
     this.descriptors.stream = {
       tailLogEntries: new this._gaxModule.StreamDescriptor(
-        gax.StreamType.BIDI_STREAMING
+        gax.StreamType.BIDI_STREAMING,
+        opts.fallback === 'rest'
       ),
     };
 
