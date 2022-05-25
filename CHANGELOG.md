@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+### [10.0.2](https://github.com/googleapis/nodejs-logging/compare/v10.0.1...v10.0.2) (2022-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/storage to v6 ([#1283](https://github.com/googleapis/nodejs-logging/issues/1283)) ([090a9fb](https://github.com/googleapis/nodejs-logging/commit/090a9fbeff6253634335225c434731d4fff1d073))
+
 ### [10.0.1](https://github.com/googleapis/nodejs-logging/compare/v10.0.0...v10.0.1) (2022-05-20)
 
 
