@@ -62,7 +62,7 @@
     "uuid": "^8.0.0"
   },
   "devDependencies": {
-    "@google-cloud/bigquery": "^5.0.0",
+    "@google-cloud/bigquery": "^6.0.0",
     "@google-cloud/pubsub": "^3.0.0",
     "@google-cloud/storage": "^6.0.0",
     "@types/extend": "^3.0.1",
