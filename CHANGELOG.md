@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.0.3](https://github.com/googleapis/nodejs-logging/compare/v10.0.2...v10.0.3) (2022-06-01)
+
+
+### Bug Fixes
+
+* fixes for dynamic routing and streaming descriptors ([#1282](https://github.com/googleapis/nodejs-logging/issues/1282)) ([fd0acfc](https://github.com/googleapis/nodejs-logging/commit/fd0acfc7bf41296237af3ec9deca1c0725ebc0dc))
+
 ### [10.0.2](https://github.com/googleapis/nodejs-logging/compare/v10.0.1...v10.0.2) (2022-05-25)
 
 
