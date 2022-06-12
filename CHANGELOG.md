@@ -5,6 +5,14 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.0.4](https://github.com/googleapis/nodejs-logging/compare/v10.0.3...v10.0.4) (2022-06-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/common to v4 ([#1295](https://github.com/googleapis/nodejs-logging/issues/1295)) ([15fb8b8](https://github.com/googleapis/nodejs-logging/commit/15fb8b8e424f89a702a5e3cf5d48e63ee40010db))
+* **deps:** update dependency @google-cloud/projectify to v3 ([#1296](https://github.com/googleapis/nodejs-logging/issues/1296)) ([5e99ce1](https://github.com/googleapis/nodejs-logging/commit/5e99ce1ac6db05fd07dc7bd1447fe28a88073227))
+
 ## [10.0.3](https://github.com/googleapis/nodejs-logging/compare/v10.0.2...v10.0.3) (2022-06-01)
 
 
