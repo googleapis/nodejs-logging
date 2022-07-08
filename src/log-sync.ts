@@ -31,7 +31,9 @@ import {
 } from './utils/log-common';
 
 export interface LogSyncOptions {
-  useMessageStructure?: boolean;
+  // The flag indicating if "message" field should be used to store structured,
+  // non-text data inside jsonPayload field. By default this value is true
+  useMessageField?: boolean;
 }
 
 /**
@@ -65,7 +67,7 @@ class LogSync implements LogSeverityFunctions {
   logging: Logging;
   name: string;
   transport: Writable;
-  useMessageStructure_: boolean;
+  useMessageField_: boolean;
 
   // not projectId, formattedname is expected
   constructor(
@@ -84,7 +86,7 @@ class LogSync implements LogSeverityFunctions {
     this.name = this.formattedName_.split('/').pop()!;
     // Default to writing to stdout
     this.transport = transport || process.stdout;
-    this.useMessageStructure_ = options.useMessageStructure === true;
+    this.useMessageField_ = options.useMessageField ?? true;
   }
 
   /**
@@ -431,7 +433,7 @@ class LogSync implements LogSeverityFunctions {
         }
         return entry.toStructuredJSON(
           this.logging.projectId,
-          this.useMessageStructure_
+          this.useMessageField_
         );
       });
       for (const entry of structuredEntries) {

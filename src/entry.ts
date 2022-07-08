@@ -245,7 +245,7 @@ class Entry {
    * Serialize an entry to a standard format for any transports, e.g. agents.
    * Read more: https://cloud.google.com/logging/docs/structured-logging
    */
-  toStructuredJSON(projectId = '', useMessageStructure = true) {
+  toStructuredJSON(projectId = '', useMessageField = true) {
     const meta = this.metadata;
     // Mask out the keys that need to be renamed.
     /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -277,7 +277,7 @@ class Entry {
     // Format log payload.
     let data =
       meta.textPayload || meta.jsonPayload || meta.protoPayload || undefined;
-    if (useMessageStructure) {
+    if (useMessageField) {
       entry.message = this.data || data;
     } else {
       data = this.data || data;
