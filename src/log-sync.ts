@@ -30,6 +30,10 @@ import {
   WriteOptions,
 } from './utils/log-common';
 
+export interface LogSyncOptions {
+  useMessageStructure?: boolean;
+}
+
 /**
  * A logSync is a named collection of entries in structured log format. In Cloud
  * Logging, structured logs refer to log entries that use the jsonPayload field
@@ -61,9 +65,16 @@ class LogSync implements LogSeverityFunctions {
   logging: Logging;
   name: string;
   transport: Writable;
+  useMessageStructure_: boolean;
 
   // not projectId, formattedname is expected
-  constructor(logging: Logging, name: string, transport?: Writable) {
+  constructor(
+    logging: Logging,
+    name: string,
+    transport?: Writable,
+    options?: LogSyncOptions
+  ) {
+    options = options || {};
     this.formattedName_ = formatLogName(logging.projectId, name);
     this.logging = logging;
     /**
@@ -73,6 +84,7 @@ class LogSync implements LogSeverityFunctions {
     this.name = this.formattedName_.split('/').pop()!;
     // Default to writing to stdout
     this.transport = transport || process.stdout;
+    this.useMessageStructure_ = options.useMessageStructure === true;
   }
 
   /**
@@ -417,7 +429,10 @@ class LogSync implements LogSeverityFunctions {
         if (!(entry instanceof Entry)) {
           entry = this.entry(entry);
         }
-        return entry.toStructuredJSON(this.logging.projectId);
+        return entry.toStructuredJSON(
+          this.logging.projectId,
+          this.useMessageStructure_
+        );
       });
       for (const entry of structuredEntries) {
         entry.logName = this.formattedName_;

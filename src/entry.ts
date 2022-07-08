@@ -86,6 +86,8 @@ export interface StructuredJson {
   // Properties not supported by all agents (e.g. Cloud Run, Functions)
   logName?: string;
   resource?: object;
+  // Properties to be stored in jsonPayload when running in serverless (e.g. Cloud Run , Functions)
+  [key: string]: unknown;
 }
 
 export interface ToJsonOptions {
@@ -202,7 +204,7 @@ class Entry {
   toJSON(options: ToJsonOptions = {}, projectId = '') {
     const entry: EntryJson = extend(true, {}, this.metadata) as {} as EntryJson;
     // Format log message
-    if (Object.prototype.toString.call(this.data) === '[object Object]') {
+    if (this.isObject(this.data)) {
       entry.jsonPayload = objToStruct(this.data, {
         removeCircular: !!options.removeCircular,
         stringify: true,
@@ -243,7 +245,7 @@ class Entry {
    * Serialize an entry to a standard format for any transports, e.g. agents.
    * Read more: https://cloud.google.com/logging/docs/structured-logging
    */
-  toStructuredJSON(projectId = '') {
+  toStructuredJSON(projectId = '', useMessageStructure = true) {
     const meta = this.metadata;
     // Mask out the keys that need to be renamed.
     /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -260,7 +262,7 @@ class Entry {
       ...validKeys
     } = meta;
     /* eslint-enable @typescript-eslint/no-unused-vars */
-    const entry: StructuredJson = extend(true, {}, validKeys) as {};
+    let entry: StructuredJson = extend(true, {}, validKeys) as {};
     // Re-map keys names.
     entry[LABELS_KEY] = meta.labels
       ? Object.assign({}, meta.labels)
@@ -273,9 +275,22 @@ class Entry {
         ? meta.traceSampled
         : undefined;
     // Format log payload.
-    entry.message =
+    let data =
       meta.textPayload || meta.jsonPayload || meta.protoPayload || undefined;
-    entry.message = this.data || entry.message;
+    if (useMessageStructure) {
+      entry.message = this.data || data;
+    } else {
+      data = this.data || data;
+      if (data !== undefined && data !== null) {
+        if (this.isObject(data)) {
+          entry = extend(true, {}, entry, data);
+        } else if (typeof data === 'string') {
+          entry.message = data;
+        } else {
+          entry.message = JSON.stringify(data);
+        }
+      }
+    }
     // Format timestamp
     if (meta.timestamp instanceof Date) {
       entry.timestamp = meta.timestamp.toISOString();
@@ -332,6 +347,15 @@ class Entry {
       serializedEntry.metadata.timestamp = new Date(ms);
     }
     return serializedEntry;
+  }
+
+  /**
+   * Determines whether `value` is a JavaScript object.
+   * @param value The value to be checked
+   * @returns true if `value` is a JavaScript object, false otherwise
+   */
+  private isObject(value: unknown): value is object {
+    return Object.prototype.toString.call(value) === '[object Object]';
   }
 }
 
