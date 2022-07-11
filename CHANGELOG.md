@@ -5,6 +5,19 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.0](https://github.com/googleapis/nodejs-logging/compare/v10.0.4...v10.1.0) (2022-07-11)
+
+
+### Features
+
+* support regapic LRO ([e702831](https://github.com/googleapis/nodejs-logging/commit/e7028312c5762e1e75abe9972d1c9bc07ed540fe))
+
+
+### Bug Fixes
+
+* Change image in readme to a static link ([#1306](https://github.com/googleapis/nodejs-logging/issues/1306)) ([7f778db](https://github.com/googleapis/nodejs-logging/commit/7f778db8d024831f395d2537aeb62807257e3f53)), closes [#1303](https://github.com/googleapis/nodejs-logging/issues/1303)
+* Logging to stdout in Cloud Run creates a JSON object as "message" ([#1305](https://github.com/googleapis/nodejs-logging/issues/1305)) ([cb5f424](https://github.com/googleapis/nodejs-logging/commit/cb5f424d1d5a1876927a79f284646814f9c0ad9d))
+
 ## [10.0.4](https://github.com/googleapis/nodejs-logging/compare/v10.0.3...v10.0.4) (2022-06-12)
 
 
