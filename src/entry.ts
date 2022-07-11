@@ -275,12 +275,19 @@ class Entry {
         ? meta.traceSampled
         : undefined;
     // Format log payload.
-    let data =
-      meta.textPayload || meta.jsonPayload || meta.protoPayload || undefined;
+    const data =
+      this.data ||
+      meta.textPayload ||
+      meta.jsonPayload ||
+      meta.protoPayload ||
+      undefined;
     if (useMessageField) {
-      entry.message = this.data || data;
+      /** If useMessageField is set, we add the payload to {@link StructuredJson#message} field.*/
+      entry.message = data;
     } else {
-      data = this.data || data;
+      /** useMessageField is false, we add the structured payload to {@link StructuredJson} key-value map.
+       * It could be especially useful for serverless environments like Cloud Run/Functions when stdout transport is used.
+       * Note that text still added to {@link StructuredJson#message} field for text payload since it does not have fields within. */
       if (data !== undefined && data !== null) {
         if (this.isObject(data)) {
           entry = extend(true, {}, entry, data);
