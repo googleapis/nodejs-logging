@@ -369,7 +369,7 @@ describe('Entry', () => {
       assert.strictEqual(json[entryTypes.TRACE_SAMPLED_KEY], false);
     });
 
-    it('should add message wrapper for structured data', () => {
+    it('should add message field for structured data', () => {
       entry.data = {message: 'message', test: 'test'};
       let json = entry.toStructuredJSON();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -379,6 +379,17 @@ describe('Entry', () => {
       json = entry.toStructuredJSON(undefined, false);
       assert((json.message = 'message'));
       assert((json.test = 'test'));
+    });
+
+    it('should add message field only when needed', () => {
+      entry.data = 1;
+      let json = entry.toStructuredJSON();
+      assert((json.message = '1'));
+      json = entry.toStructuredJSON(undefined, false);
+      assert((json.message = '1'));
+      entry.data = 'test';
+      json = entry.toStructuredJSON(undefined, false);
+      assert((json.message = 'test'));
     });
   });
 });
