@@ -29,7 +29,7 @@ const LONG_VERSION_TEST = VERSION_TEST + '.0.0.0.0.0.0.0.0.11.1.1-ALPHA';
 
 describe('instrumentation_info', () => {
   beforeEach(() => {
-    instrumentation.resetInstrumentationStatus();
+    instrumentation.setInstrumentationStatus(false);
   });
 
   it('should generate library info properly by default', () => {
@@ -54,10 +54,11 @@ describe('instrumentation_info', () => {
   it('should add instrumentation log entry to the list', () => {
     const dummyEntry = createEntry(undefined, undefined);
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
-    assert.equal(entries.length, 2);
-    assert.deepEqual(dummyEntry, entries[0]);
+    assert.equal(entries[0].length, 2);
+    assert.deepEqual(dummyEntry, entries[0][0]);
+    assert.equal(true, entries[1]);
     assert.equal(
-      entries[1].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][1].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
@@ -67,27 +68,28 @@ describe('instrumentation_info', () => {
   it('should add instrumentation info to existing list', () => {
     const dummyEntry = createEntry(NODEJS_TEST, VERSION_TEST);
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
-    assert.equal(entries.length, 1);
+    assert.equal(entries[0].length, 1);
+    assert.equal(true, entries[1]);
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.length,
       2
     );
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[NAME],
       NODEJS_TEST
     );
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[VERSION],
       VERSION_TEST
@@ -97,15 +99,16 @@ describe('instrumentation_info', () => {
   it('should replace instrumentation log entry in the list', () => {
     const dummyEntry = createEntry('nodejs-test', undefined);
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
-    assert.equal(entries.length, 1);
+    assert.equal(entries[0].length, 1);
+    assert.equal(true, entries[1]);
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.length,
       1
     );
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
@@ -116,15 +119,16 @@ describe('instrumentation_info', () => {
     const entries = instrumentation.populateInstrumentationInfo(
       createEntry(LONG_NODEJS_TEST, LONG_VERSION_TEST)
     );
-    assert.equal(entries.length, 1);
+    assert.equal(entries[0].length, 1);
+    assert.equal(true, entries[1]);
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[NAME],
       NODEJS_TEST + '-oo*'
     );
     assert.equal(
-      entries[0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[1]?.[VERSION],
       VERSION_TEST + '.0.0.0.0.*'
@@ -134,17 +138,18 @@ describe('instrumentation_info', () => {
   it('should add instrumentation log entry only once', () => {
     const dummyEntry = createEntry(undefined, undefined);
     let entries = instrumentation.populateInstrumentationInfo(dummyEntry);
-    assert.equal(entries.length, 2);
-    assert.deepEqual(dummyEntry, entries[0]);
+    assert.equal(entries[0].length, 2);
+    assert.deepEqual(dummyEntry, entries[0][0]);
+    assert.equal(true, entries[1]);
     assert.equal(
-      entries[1].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+      entries[0][1].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     entries = instrumentation.populateInstrumentationInfo(dummyEntry);
-    assert.equal(entries.length, 1);
-    assert.deepEqual(dummyEntry, entries[0]);
+    assert.equal(entries[0].length, 1);
+    assert.deepEqual(dummyEntry, entries[0][0]);
   });
 });
 

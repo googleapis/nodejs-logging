@@ -706,7 +706,7 @@ class Logging {
                 gaxOptions
               );
             } catch (error) {
-              requestStream.destroy(error);
+              requestStream.destroy(error as Error);
               return;
             }
             gaxStream
@@ -1018,7 +1018,7 @@ class Logging {
           try {
             gaxStream = this.loggingService.listLogsStream(reqOpts, gaxOptions);
           } catch (error) {
-            requestStream.destroy(error);
+            requestStream.destroy(error as Error);
             return;
           }
           gaxStream
@@ -1206,7 +1206,7 @@ class Logging {
                 gaxOptions
               );
             } catch (error) {
-              requestStream.destroy(error);
+              requestStream.destroy(error as Error);
               return;
             }
             gaxStream

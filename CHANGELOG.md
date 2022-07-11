@@ -5,6 +5,47 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.0.4](https://github.com/googleapis/nodejs-logging/compare/v10.0.3...v10.0.4) (2022-06-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/common to v4 ([#1295](https://github.com/googleapis/nodejs-logging/issues/1295)) ([15fb8b8](https://github.com/googleapis/nodejs-logging/commit/15fb8b8e424f89a702a5e3cf5d48e63ee40010db))
+* **deps:** update dependency @google-cloud/projectify to v3 ([#1296](https://github.com/googleapis/nodejs-logging/issues/1296)) ([5e99ce1](https://github.com/googleapis/nodejs-logging/commit/5e99ce1ac6db05fd07dc7bd1447fe28a88073227))
+
+## [10.0.3](https://github.com/googleapis/nodejs-logging/compare/v10.0.2...v10.0.3) (2022-06-01)
+
+
+### Bug Fixes
+
+* fixes for dynamic routing and streaming descriptors ([#1282](https://github.com/googleapis/nodejs-logging/issues/1282)) ([fd0acfc](https://github.com/googleapis/nodejs-logging/commit/fd0acfc7bf41296237af3ec9deca1c0725ebc0dc))
+
+### [10.0.2](https://github.com/googleapis/nodejs-logging/compare/v10.0.1...v10.0.2) (2022-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @google-cloud/storage to v6 ([#1283](https://github.com/googleapis/nodejs-logging/issues/1283)) ([090a9fb](https://github.com/googleapis/nodejs-logging/commit/090a9fbeff6253634335225c434731d4fff1d073))
+
+### [10.0.1](https://github.com/googleapis/nodejs-logging/compare/v10.0.0...v10.0.1) (2022-05-20)
+
+
+### Bug Fixes
+
+* Add support to set an instrumentation flag ([#1279](https://github.com/googleapis/nodejs-logging/issues/1279)) ([6d470fc](https://github.com/googleapis/nodejs-logging/commit/6d470fc26ffb0411ace184d062b0e603e7cf6259))
+* **deps:** update dependency @google-cloud/paginator to v4 ([#1276](https://github.com/googleapis/nodejs-logging/issues/1276)) ([0bfe813](https://github.com/googleapis/nodejs-logging/commit/0bfe813c54a0d63a0b73a2dfe8cd702da5a6c91b))
+
+## [10.0.0](https://github.com/googleapis/nodejs-logging/compare/v9.9.0...v10.0.0) (2022-05-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* update library to use Node 12 (#1272)
+
+### Build System
+
+* update library to use Node 12 ([#1272](https://github.com/googleapis/nodejs-logging/issues/1272)) ([13f909f](https://github.com/googleapis/nodejs-logging/commit/13f909ff1e26fe783599867c3b7992020a76e934))
+
 ## [9.9.0](https://github.com/googleapis/nodejs-logging/compare/v9.8.3...v9.9.0) (2022-05-09)
 
 

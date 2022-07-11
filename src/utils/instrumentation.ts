@@ -39,23 +39,19 @@ export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
 export type InstrumentationInfo = {name: string; version: string};
 
 /**
- * This method returns the status if instrumentation info was already added or not.
- * @returns true if the log record with instrumentation info was already added, false otherwise.
- */
-export function getInstrumentationInfoStatus() {
-  return global.instrumentationAdded;
-}
-
-/**
  * This method helps to populate entries with instrumentation data
  * @param entry {Entry} The entry or array of entries to be populated with instrumentation info
- * @returns {Entry} Array of entries which contains an entry with current library instrumentation info
+ * @returns [Entry[], boolean] Array of entries which contains an entry with current library
+ * instrumentation info and boolean flag indicating if instrumentation was added or not in this call
  */
-export function populateInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
+export function populateInstrumentationInfo(
+  entry: Entry | Entry[]
+): [Entry[], boolean] {
   // Update the flag indicating that instrumentation entry was already added once,
   // so any subsequent calls to this method will not add a separate instrumentation log entry
-  let isWritten = global.instrumentationAdded;
-  global.instrumentationAdded = true;
+  let isWritten = setInstrumentationStatus(true);
+  // Flag keeping track if this specific call added any instrumentation info
+  let isInfoAdded = false;
   const entries: Entry[] = [];
   if (entry) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,7 +65,7 @@ export function populateInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
             validateAndUpdateInstrumentation(info);
           // Indicate that instrumentation info log entry already exists
           // and that current library info was added to existing log entry
-          isWritten = true;
+          isInfoAdded = isWritten = true;
         }
         entries.push(entryItem);
       }
@@ -79,8 +75,9 @@ export function populateInstrumentationInfo(entry: Entry | Entry[]): Entry[] {
   // instrumentation data for this library
   if (!isWritten) {
     entries.push(createDiagnosticEntry(undefined, undefined));
+    isInfoAdded = true;
   }
-  return entries;
+  return [entries, isInfoAdded];
 }
 
 /**
@@ -198,8 +195,12 @@ function isValidInfo(info: InstrumentationInfo) {
 }
 
 /**
- * The helper method used to reset a status of a flag which indicates if instrumentation info already written or not.
+ * The helper method used to set a status of a flag which indicates if instrumentation info already written or not.
+ * @param value {boolean} The value to be set.
+ * @returns The value of the flag before it is set.
  */
-export function resetInstrumentationStatus() {
-  global.instrumentationAdded = false;
+export function setInstrumentationStatus(value: boolean) {
+  const status = global.instrumentationAdded;
+  global.instrumentationAdded = value;
+  return status;
 }
