@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.1](https://github.com/googleapis/nodejs-logging/compare/v10.1.0...v10.1.1) (2022-07-14)
+
+
+### Bug Fixes
+
+* Add LogSyncOptions parameter to Logging.logSync() API ([#1307](https://github.com/googleapis/nodejs-logging/issues/1307)) ([89408b0](https://github.com/googleapis/nodejs-logging/commit/89408b0c18a6947ee68da77424e23ac06708b54e))
+
 ## [10.1.0](https://github.com/googleapis/nodejs-logging/compare/v10.0.4...v10.1.0) (2022-07-11)
 
 
