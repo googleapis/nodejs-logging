@@ -49,7 +49,7 @@ import {
   assignSeverityToEntries,
 } from './utils/log-common';
 import {Log, GetEntriesRequest, TailEntriesRequest, LogOptions} from './log';
-import {LogSync} from './log-sync';
+import {LogSync, LogSyncOptions} from './log-sync';
 import {Sink} from './sink';
 import {Duplex, PassThrough, Transform, Writable} from 'stream';
 import {google} from '../protos/protos';
@@ -1251,6 +1251,7 @@ class Logging {
    *
    * @param {string} name Name of the existing log.
    * @param {object} transport An optional write stream.
+   * @param {LogSyncOptions} options An optional configuration object.
    * @returns {LogSync}
    *
    * @example
@@ -1266,8 +1267,8 @@ class Logging {
    * const log = logging.logSync('my-log');
    * ```
    */
-  logSync(name: string, transport?: Writable) {
-    return new LogSync(this, name, transport);
+  logSync(name: string, transport?: Writable, options?: LogSyncOptions) {
+    return new LogSync(this, name, transport, options);
   }
 
   /**

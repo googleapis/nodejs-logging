@@ -1234,6 +1234,18 @@ describe('Logging', () => {
       assert.strictEqual(log.calledWith_[0], logging);
       assert.strictEqual(log.calledWith_[1], NAME);
     });
+
+    it('should pass useMessageField properly', () => {
+      const log = logging.logSync(NAME, undefined, {
+        useMessageField: false,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }) as any;
+      assert(log instanceof FakeLog);
+      assert.strictEqual(log.calledWith_[0], logging);
+      assert.strictEqual(log.calledWith_[1], NAME);
+      assert.strictEqual(log.calledWith_[2], undefined);
+      assert.strictEqual(log.calledWith_[3].useMessageField, false);
+    });
   });
 
   describe('request', () => {
