@@ -14,6 +14,7 @@
 
 """This script is used to synthesize generated parts of this library."""
 
+import os
 import synthtool as s
 import synthtool.languages.node as node
 
@@ -42,3 +43,25 @@ s.replace(
     "pass_down_envvars\+\=\(",
     'pass_down_envvars+=(\n    "ENVIRONMENT"\n    "RUNTIME"'
 )
+
+# --------------------------------------------------------------------------
+# Modify test configs
+# --------------------------------------------------------------------------
+
+# add shared environment variables to test configs
+s.move(
+    ".kokoro/common_env_vars.cfg",
+    ".kokoro/common.cfg",
+    merge=lambda src, dst, _, : f"{dst}\n{src}",
+)
+tracked_subdirs = ["continuous", "presubmit", "release"]
+for subdir in tracked_subdirs:
+    for path, subdirs, files in os.walk(f".kokoro/{subdir}"):
+        for name in files:
+            if name == "common.cfg":
+                file_path = os.path.join(path, name)
+                s.move(
+                    ".kokoro/common_env_vars.cfg",
+                    file_path,
+                    merge=lambda src, dst, _, : f"{dst}\n{src}",
+                )
