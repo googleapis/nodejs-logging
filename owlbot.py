@@ -55,11 +55,6 @@ s.move(
     merge=lambda src, dst, _, : f"{dst}\n{src}",
 )
 
-s.move(
-    ".kokoro/common_env_vars.cfg",
-    ".kokoro/common.cfg",
-    merge=lambda src, dst, _, : f"{dst}\n{src}",
-)
 for path, subdirs, files in os.walk(f".kokoro/continuous"):
     for name in files:
         if name == "common.cfg":
