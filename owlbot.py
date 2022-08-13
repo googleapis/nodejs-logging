@@ -54,7 +54,7 @@ s.move(
     ".kokoro/common.cfg",
     merge=lambda src, dst, _, : f"{dst}\n{src}",
 )
-tracked_subdirs = ["continuous", "presubmit", "release"]
+tracked_subdirs = ["continuous", "release"]
 for subdir in tracked_subdirs:
     for path, subdirs, files in os.walk(f".kokoro/{subdir}"):
         for name in files:
