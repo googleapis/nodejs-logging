@@ -154,6 +154,22 @@ function validateAndUpdateInstrumentation(
  * @returns {string} The truncated value.
  */
 function truncateValue(value: string, maxLen: number) {
+  // Currently there are cases when we get here JSON object instead of string
+  // Adding here additional validation to see if version still can be retrieved
+  if (typeof value !== 'string') {
+    try {
+      if (Object.prototype.hasOwnProperty.call(value, 'version')) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        value = (value as any).version;
+      }
+    } catch (err) {
+      // Ignore error since flow should continue
+    }
+  }
+  // Return 'unknown' if version cannot be retrieved
+  if (typeof value !== 'string') {
+    return 'unknown';
+  }
   if (value && value.length > maxLen) {
     return value.substring(0, maxLen).concat('*');
   }
