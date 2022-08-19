@@ -149,11 +149,11 @@ function validateAndUpdateInstrumentation(
 /**
  * A helper function to truncate a value (library name or version for example). The value is truncated
  * when it is longer than {maxLen} chars and '*' is added instead of truncated suffix.
- * @param value {string} The value to be truncated.
+ * @param value {object|string} The value to be truncated.
  * @param maxLen {number} The max length to be used for truncation.
  * @returns {string} The truncated value.
  */
-function truncateValue(value: string | object, maxLen: number) {
+function truncateValue(value: object | string, maxLen: number) {
   // Currently there are cases when we get here JSON object instead of string
   // Adding here additional validation to see if version still can be retrieved
   if (typeof value !== 'string') {
