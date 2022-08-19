@@ -153,7 +153,7 @@ function validateAndUpdateInstrumentation(
  * @param maxLen {number} The max length to be used for truncation.
  * @returns {string} The truncated value.
  */
-function truncateValue(value: string, maxLen: number) {
+function truncateValue(value: string | object, maxLen: number) {
   // Currently there are cases when we get here JSON object instead of string
   // Adding here additional validation to see if version still can be retrieved
   if (typeof value !== 'string') {
