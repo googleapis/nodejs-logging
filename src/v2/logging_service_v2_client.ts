@@ -29,7 +29,6 @@ import {
 } from 'google-gax';
 
 import {Transform} from 'stream';
-import {RequestType} from 'google-gax/build/src/apitypes';
 import {PassThrough} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
@@ -396,7 +395,8 @@ export class LoggingServiceV2Client {
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
         this._defaults[methodName],
-        descriptor
+        descriptor,
+        this._opts.fallback
       );
 
       this.innerApiCalls[methodName] = apiCall;
@@ -930,7 +930,7 @@ export class LoggingServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogEntries.createStream(
-      this.innerApiCalls.listLogEntries as gax.GaxCall,
+      this.innerApiCalls.listLogEntries as GaxCall,
       request,
       callSettings
     );
@@ -1010,7 +1010,7 @@ export class LoggingServiceV2Client {
     this.initialize();
     return this.descriptors.page.listLogEntries.asyncIterate(
       this.innerApiCalls['listLogEntries'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogEntry>;
   }
@@ -1154,7 +1154,7 @@ export class LoggingServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listMonitoredResourceDescriptors.createStream(
-      this.innerApiCalls.listMonitoredResourceDescriptors as gax.GaxCall,
+      this.innerApiCalls.listMonitoredResourceDescriptors as GaxCall,
       request,
       callSettings
     );
@@ -1202,7 +1202,7 @@ export class LoggingServiceV2Client {
     this.initialize();
     return this.descriptors.page.listMonitoredResourceDescriptors.asyncIterate(
       this.innerApiCalls['listMonitoredResourceDescriptors'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.api.IMonitoredResourceDescriptor>;
   }
@@ -1384,7 +1384,7 @@ export class LoggingServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogs.createStream(
-      this.innerApiCalls.listLogs as gax.GaxCall,
+      this.innerApiCalls.listLogs as GaxCall,
       request,
       callSettings
     );
@@ -1456,7 +1456,7 @@ export class LoggingServiceV2Client {
     this.initialize();
     return this.descriptors.page.listLogs.asyncIterate(
       this.innerApiCalls['listLogs'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<string>;
   }
