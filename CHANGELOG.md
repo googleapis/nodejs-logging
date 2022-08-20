@@ -5,6 +5,15 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.2](https://github.com/googleapis/nodejs-logging/compare/v10.1.1...v10.1.2) (2022-08-20)
+
+
+### Bug Fixes
+
+* better support for fallback mode ([#1312](https://github.com/googleapis/nodejs-logging/issues/1312)) ([91c1222](https://github.com/googleapis/nodejs-logging/commit/91c1222c0a4183776a20e2f5266f577bc4614a6d))
+* Instrumentation version contains package.json content ([#1310](https://github.com/googleapis/nodejs-logging/issues/1310)) ([01e1286](https://github.com/googleapis/nodejs-logging/commit/01e12860556ba74749bebd73b5ee143c1f922e0d))
+* maxResults in getEntries looks broken ([#1311](https://github.com/googleapis/nodejs-logging/issues/1311)) ([208d994](https://github.com/googleapis/nodejs-logging/commit/208d994ecba2a78e667a63c442bf832abc750cc1))
+
 ## [10.1.1](https://github.com/googleapis/nodejs-logging/compare/v10.1.0...v10.1.1) (2022-07-14)
 
 
