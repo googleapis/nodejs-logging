@@ -30,7 +30,6 @@ import {
 } from 'google-gax';
 
 import {Transform} from 'stream';
-import {RequestType} from 'google-gax/build/src/apitypes';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
 /**
@@ -463,7 +462,8 @@ export class ConfigServiceV2Client {
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
         this._defaults[methodName],
-        descriptor
+        descriptor,
+        this._opts.fallback
       );
 
       this.innerApiCalls[methodName] = apiCall;
@@ -2808,7 +2808,7 @@ export class ConfigServiceV2Client {
     const decodeOperation = new gax.Operation(
       operation,
       this.descriptors.longrunning.copyLogEntries,
-      gax.createDefaultBackoffSettings()
+      this._gaxModule.createDefaultBackoffSettings()
     );
     return decodeOperation as LROperation<
       protos.google.logging.v2.CopyLogEntriesResponse,
@@ -2972,7 +2972,7 @@ export class ConfigServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listBuckets.createStream(
-      this.innerApiCalls.listBuckets as gax.GaxCall,
+      this.innerApiCalls.listBuckets as GaxCall,
       request,
       callSettings
     );
@@ -3034,7 +3034,7 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.descriptors.page.listBuckets.asyncIterate(
       this.innerApiCalls['listBuckets'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogBucket>;
   }
@@ -3183,7 +3183,7 @@ export class ConfigServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listViews.createStream(
-      this.innerApiCalls.listViews as gax.GaxCall,
+      this.innerApiCalls.listViews as GaxCall,
       request,
       callSettings
     );
@@ -3239,7 +3239,7 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.descriptors.page.listViews.asyncIterate(
       this.innerApiCalls['listViews'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogView>;
   }
@@ -3392,7 +3392,7 @@ export class ConfigServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listSinks.createStream(
-      this.innerApiCalls.listSinks as gax.GaxCall,
+      this.innerApiCalls.listSinks as GaxCall,
       request,
       callSettings
     );
@@ -3450,7 +3450,7 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.descriptors.page.listSinks.asyncIterate(
       this.innerApiCalls['listSinks'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogSink>;
   }
@@ -3603,7 +3603,7 @@ export class ConfigServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listExclusions.createStream(
-      this.innerApiCalls.listExclusions as gax.GaxCall,
+      this.innerApiCalls.listExclusions as GaxCall,
       request,
       callSettings
     );
@@ -3661,7 +3661,7 @@ export class ConfigServiceV2Client {
     this.initialize();
     return this.descriptors.page.listExclusions.asyncIterate(
       this.innerApiCalls['listExclusions'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogExclusion>;
   }
