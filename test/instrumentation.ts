@@ -51,6 +51,27 @@ describe('instrumentation_info', () => {
     );
   });
 
+  it('should set library version to unknown', () => {
+    const data = {some: 'value'};
+    const entry = instrumentation.createDiagnosticEntry(
+      undefined,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data as any
+    ) as Entry;
+    assert.equal(
+      entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[NAME],
+      instrumentation.NODEJS_LIBRARY_NAME_PREFIX
+    );
+    assert.equal(
+      entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[VERSION],
+      'unknown'
+    );
+  });
+
   it('should add instrumentation log entry to the list', () => {
     const dummyEntry = createEntry(undefined, undefined);
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
