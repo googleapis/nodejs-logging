@@ -592,12 +592,20 @@ class Logging {
     }
     delete reqOpts.autoPaginate;
     delete reqOpts.gaxOptions;
-    const gaxOptions = extend(
+    let gaxOptions = extend(
       {
         autoPaginate: options!.autoPaginate,
       },
       options!.gaxOptions
     );
+    if (options?.maxResults) {
+      gaxOptions = extend(
+        {
+          maxResults: options.maxResults,
+        },
+        gaxOptions
+      );
+    }
     const resp = await this.loggingService.listLogEntries(reqOpts, gaxOptions);
     const [entries] = resp;
     if (entries) {

@@ -28,7 +28,6 @@ import {
 } from 'google-gax';
 
 import {Transform} from 'stream';
-import {RequestType} from 'google-gax/build/src/apitypes';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
 /**
@@ -344,7 +343,8 @@ export class MetricsServiceV2Client {
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
         this._defaults[methodName],
-        descriptor
+        descriptor,
+        this._opts.fallback
       );
 
       this.innerApiCalls[methodName] = apiCall;
@@ -907,7 +907,7 @@ export class MetricsServiceV2Client {
     const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listLogMetrics.createStream(
-      this.innerApiCalls.listLogMetrics as gax.GaxCall,
+      this.innerApiCalls.listLogMetrics as GaxCall,
       request,
       callSettings
     );
@@ -962,7 +962,7 @@ export class MetricsServiceV2Client {
     this.initialize();
     return this.descriptors.page.listLogMetrics.asyncIterate(
       this.innerApiCalls['listLogMetrics'] as GaxCall,
-      request as unknown as RequestType,
+      request as {},
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogMetric>;
   }
