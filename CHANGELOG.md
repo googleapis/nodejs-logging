@@ -5,6 +5,14 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.3](https://github.com/googleapis/nodejs-logging/compare/v10.1.2...v10.1.3) (2022-08-23)
+
+
+### Bug Fixes
+
+* change import long to require ([#1315](https://github.com/googleapis/nodejs-logging/issues/1315)) ([3cca57a](https://github.com/googleapis/nodejs-logging/commit/3cca57adefcd001e71dc3b28a871efaae879d186))
+* remove pip install statements ([#1546](https://github.com/googleapis/nodejs-logging/issues/1546)) ([#1317](https://github.com/googleapis/nodejs-logging/issues/1317)) ([d85c9a0](https://github.com/googleapis/nodejs-logging/commit/d85c9a0caad56670978413da5ddcf12226478505))
+
 ## [10.1.2](https://github.com/googleapis/nodejs-logging/compare/v10.1.1...v10.1.2) (2022-08-20)
 
 
