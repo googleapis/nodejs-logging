@@ -81,6 +81,7 @@ fi
 if [[ $ENVIRONMENT == *"kubernetes"* ]]; then
   gcloud components install kubectl -q
   gcloud components install gke-gcloud-auth-plugin -q
+  export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 fi
 
 # Run the specified environment test
