@@ -80,6 +80,7 @@ fi
 # If Kubernetes, install kubectl component
 if [[ $ENVIRONMENT == *"kubernetes"* ]]; then
   gcloud components install kubectl -q
+  gcloud components install gke-gcloud-auth-plugin -q
 fi
 
 # Run the specified environment test
