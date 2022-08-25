@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.4](https://github.com/googleapis/nodejs-logging/compare/v10.1.3...v10.1.4) (2022-08-25)
+
+
+### Bug Fixes
+
+* npm audit failing ([#1319](https://github.com/googleapis/nodejs-logging/issues/1319)) ([2675622](https://github.com/googleapis/nodejs-logging/commit/267562276b5ff727cb74bbe1c31699f396cca111))
+
 ## [10.1.3](https://github.com/googleapis/nodejs-logging/compare/v10.1.2...v10.1.3) (2022-08-23)
 
 
