@@ -5,6 +5,14 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.5](https://github.com/googleapis/nodejs-logging/compare/v10.1.4...v10.1.5) (2022-08-27)
+
+
+### Bug Fixes
+
+* do not import the whole google-gax from proto JS ([#1553](https://github.com/googleapis/nodejs-logging/issues/1553)) ([#1321](https://github.com/googleapis/nodejs-logging/issues/1321)) ([f8fb563](https://github.com/googleapis/nodejs-logging/commit/f8fb563b8486d6b6adf966ae35147be5ba640f03))
+* use google-gax v3.3.0 ([f8fb563](https://github.com/googleapis/nodejs-logging/commit/f8fb563b8486d6b6adf966ae35147be5ba640f03))
+
 ## [10.1.4](https://github.com/googleapis/nodejs-logging/compare/v10.1.3...v10.1.4) (2022-08-25)
 
 
