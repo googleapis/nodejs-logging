@@ -309,7 +309,7 @@ export class LoggingServiceV2Client {
         'entries',
         ['log_name', 'resource', 'labels'],
         null,
-        gax.createByteLengthFunction(
+        this._gaxModule.GrpcClient.createByteLengthFunction(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           protoFilesRoot.lookupType('google.logging.v2.LogEntry') as any
         )
