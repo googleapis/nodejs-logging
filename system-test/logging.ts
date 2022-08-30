@@ -813,8 +813,9 @@ describe('Logging', () => {
     });
 
     it('should populate x-goog-api-client header', async () => {
-      const {Logging} = http2spy.require(require.resolve('../src'));
-      const {log, logEntries} = getTestLog(new Logging());
+      const gax = http2spy.require(require.resolve('google-gax'));
+      const {Logging} = require('../src');
+      const {log, logEntries} = getTestLog(new Logging({}, gax));
       await log.write(logEntries[0], options);
       assert.ok(
         /gax\/[0-9]+\.[\w.-]+ gapic\/[0-9]+\.[\w.-]+ gl-node\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+/.test(
