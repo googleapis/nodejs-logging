@@ -267,7 +267,7 @@ class Logging {
   configService?: typeof v2.ConfigServiceV2Client;
   loggingService?: typeof v2.LoggingServiceV2Client;
 
-  constructor(options?: LoggingOptions) {
+  constructor(options?: LoggingOptions, gaxInstance?: typeof gax) {
     // Determine what scopes are needed.
     // It is the union of the scopes on all three clients.
     const scopes: Array<{}> = [];
@@ -292,11 +292,17 @@ class Logging {
       options
     );
     this.api = {};
-    this.auth = new gax.GoogleAuth(options_);
+    this.auth = new (gaxInstance ?? gax).GoogleAuth(options_);
     this.options = options_;
     this.projectId = this.options.projectId || '{{projectId}}';
-    this.configService = new v2.ConfigServiceV2Client(this.options);
-    this.loggingService = new v2.LoggingServiceV2Client(this.options);
+    this.configService = new v2.ConfigServiceV2Client(
+      this.options,
+      gaxInstance
+    );
+    this.loggingService = new v2.LoggingServiceV2Client(
+      this.options,
+      gaxInstance
+    );
   }
 
   /**
