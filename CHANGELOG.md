@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.6](https://github.com/googleapis/nodejs-logging/compare/v10.1.5...v10.1.6) (2022-08-31)
+
+
+### Bug Fixes
+
+* use _gaxModule when accessing gax for bundling ([#1322](https://github.com/googleapis/nodejs-logging/issues/1322)) ([9cd207d](https://github.com/googleapis/nodejs-logging/commit/9cd207dffe32f20472ab2e0037dbca07d62786d1))
+
 ## [10.1.5](https://github.com/googleapis/nodejs-logging/compare/v10.1.4...v10.1.5) (2022-08-27)
 
 
