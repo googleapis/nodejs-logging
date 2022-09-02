@@ -243,3 +243,17 @@ export function zuluToDateObj(zuluTime: string) {
     nanos: nanoSecs ? Number(nanoSecs.padEnd(9, '0')) : 0,
   };
 }
+
+/**
+ * Converts Date to nanoseconds format suported by Logging.
+ * See https://cloud.google.com/logging/docs/agent/logging/configuration#timestamp-processing for more details
+ * @param date The date to be converted to Logging nanoseconds format
+ */
+export function toNanoSecondsObj(date: Date) {
+  const seconds = date.getTime() / 1000;
+  const secondsRounded = Math.floor(seconds);
+  return {
+    seconds: secondsRounded,
+    nanos: Math.floor((seconds - secondsRounded) * 1e9),
+  };
+}
