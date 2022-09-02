@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.7](https://github.com/googleapis/nodejs-logging/compare/v10.1.6...v10.1.7) (2022-09-02)
+
+
+### Bug Fixes
+
+* MaxRetries parameter is ignored ([#1326](https://github.com/googleapis/nodejs-logging/issues/1326)) ([caed0af](https://github.com/googleapis/nodejs-logging/commit/caed0afc8dc365024ae4c37d92dd929c9626f36e))
+
 ## [10.1.6](https://github.com/googleapis/nodejs-logging/compare/v10.1.5...v10.1.6) (2022-08-31)
 
 
