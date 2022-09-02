@@ -984,7 +984,7 @@ class Log implements LogSeverityFunctions {
     );
     delete reqOpts.gaxOptions;
     // Propagate maxRetries properly into writeLogEntries call
-    if (this.logging.options.maxRetries) {
+    if (this.logging.options?.maxRetries) {
       options.gaxOptions = extend(
         {
           maxRetries: this.logging.options.maxRetries,
