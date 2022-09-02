@@ -80,8 +80,9 @@ describe('Log', () => {
   });
 
   // Create a mock Logging instance
-  function createLogger(maxEntrySize?: number) {
+  function createLogger(maxEntrySize?: number, maxRetries?: number) {
     LOGGING = {
+      options: maxRetries !== undefined ? {maxRetries: maxRetries} : undefined,
       projectId: '{{project-id}}',
       entry: sinon.stub(),
       setProjectId: sinon.stub(),
@@ -114,7 +115,6 @@ describe('Log', () => {
     if (maxEntrySize) {
       options.maxEntrySize = maxEntrySize;
     }
-
     return new Log(LOGGING, LOG_NAME, options);
   }
 
@@ -575,6 +575,32 @@ describe('Log', () => {
           sinon.match({
             partialSuccess: true,
           })
+        )
+      );
+    });
+
+    it('should pass through global options', async () => {
+      log = createLogger(undefined, 1);
+      decorateEntriesStub = sinon.stub(log, 'decorateEntries').returnsArg(0);
+      await log.write(ENTRIES, OPTIONS);
+      assert(
+        log.logging.loggingService.writeLogEntries.calledWith(
+          sinon.match.any,
+          {
+            maxRetries: 1,
+          },
+          sinon.match.any
+        )
+      );
+      log.logging.loggingService.writeLogEntries.reset();
+      await log.write(ENTRIES, {gaxOptions: {maxRetries: 10}});
+      assert(
+        log.logging.loggingService.writeLogEntries.calledWith(
+          sinon.match.any,
+          {
+            maxRetries: 10,
+          },
+          sinon.match.any
         )
       );
     });
