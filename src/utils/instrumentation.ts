@@ -16,7 +16,6 @@
 
 import arrify = require('arrify');
 import path = require('path');
-import {google} from '../../protos/protos';
 import {Entry} from '../entry';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,25 +94,20 @@ export function createDiagnosticEntry(
   if (!libraryName || !libraryName.startsWith(NODEJS_LIBRARY_NAME_PREFIX)) {
     libraryName = NODEJS_LIBRARY_NAME_PREFIX;
   }
-  const entry = new Entry(
-    {
-      severity: google.logging.type.LogSeverity.INFO,
+  const entry = new Entry(undefined, {
+    [DIAGNOSTIC_INFO_KEY]: {
+      [INSTRUMENTATION_SOURCE_KEY]: [
+        {
+          // Truncate libraryName and libraryVersion if more than 14 characters length
+          name: truncateValue(libraryName, maxDiagnosticValueLen),
+          version: truncateValue(
+            libraryVersion ?? getNodejsLibraryVersion(),
+            maxDiagnosticValueLen
+          ),
+        },
+      ],
     },
-    {
-      [DIAGNOSTIC_INFO_KEY]: {
-        [INSTRUMENTATION_SOURCE_KEY]: [
-          {
-            // Truncate libraryName and libraryVersion if more than 14 characters length
-            name: truncateValue(libraryName, maxDiagnosticValueLen),
-            version: truncateValue(
-              libraryVersion ?? getNodejsLibraryVersion(),
-              maxDiagnosticValueLen
-            ),
-          },
-        ],
-      },
-    }
-  );
+  });
   return entry;
 }
 

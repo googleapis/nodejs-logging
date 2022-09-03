@@ -18,7 +18,12 @@
 const EventId = require('eventid');
 import * as extend from 'extend';
 import {google} from '../protos/protos';
-import {objToStruct, structToObj, zuluToDateObj} from './utils/common';
+import {
+  objToStruct,
+  structToObj,
+  zuluToDateObj,
+  toNanosAndSecondsObj,
+} from './utils/common';
 import {
   makeHttpRequestData,
   CloudLoggingHttpRequest,
@@ -75,7 +80,9 @@ export interface StructuredJson {
   // Universally supported properties
   message?: string | object;
   httpRequest?: object;
-  timestamp?: string;
+  // Based on https://cloud.google.com/logging/docs/agent/logging/configuration#timestamp-processing, the
+  // timestamp should be in nanos and seconds format.
+  timestamp?: Timestamp;
   [INSERT_ID_KEY]?: string;
   [OPERATION_KEY]?: object;
   [SOURCE_LOCATION_KEY]?: object;
@@ -214,12 +221,7 @@ class Entry {
     }
     // Format log timestamp
     if (entry.timestamp instanceof Date) {
-      const seconds = entry.timestamp.getTime() / 1000;
-      const secondsRounded = Math.floor(seconds);
-      entry.timestamp = {
-        seconds: secondsRounded,
-        nanos: Math.floor((seconds - secondsRounded) * 1e9),
-      };
+      entry.timestamp = toNanosAndSecondsObj(entry.timestamp);
     } else if (typeof entry.timestamp === 'string') {
       entry.timestamp = zuluToDateObj(entry.timestamp);
     }
@@ -300,7 +302,7 @@ class Entry {
     }
     // Format timestamp
     if (meta.timestamp instanceof Date) {
-      entry.timestamp = meta.timestamp.toISOString();
+      entry.timestamp = toNanosAndSecondsObj(meta.timestamp);
     }
     // Format httprequest
     const req = meta.httpRequest;

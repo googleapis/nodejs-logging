@@ -56,6 +56,14 @@ function withinExpectedTimeBoundaries(result?: Date): boolean {
   return false;
 }
 
+function nanosAndSecondsToDate(timestamp: entryTypes.Timestamp) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const seconds = (timestamp as any).seconds;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nanos = (timestamp as any).nanos;
+  return new Date(seconds * 1000 + nanos / 1e9);
+}
+
 describe('Entry', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let Entry: typeof entryTypes.Entry;
@@ -319,7 +327,9 @@ describe('Entry', () => {
       entry.metadata.traceSampled = false;
       entry.data = 'this is a log';
       const json = entry.toStructuredJSON();
-      assert(withinExpectedTimeBoundaries(new Date(json.timestamp!)));
+      assert(
+        withinExpectedTimeBoundaries(nanosAndSecondsToDate(json.timestamp!))
+      );
       delete json.timestamp;
       const expectedJSON = {
         [entryTypes.INSERT_ID_KEY]: '👀',
@@ -345,7 +355,9 @@ describe('Entry', () => {
     it('should convert a string timestamp', () => {
       entry.metadata.timestamp = new Date();
       const json = entry.toStructuredJSON();
-      assert(withinExpectedTimeBoundaries(new Date(json.timestamp!)));
+      assert(
+        withinExpectedTimeBoundaries(nanosAndSecondsToDate(json.timestamp!))
+      );
     });
 
     it('should convert a raw http to httprequest', () => {
