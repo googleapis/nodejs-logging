@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.8](https://github.com/googleapis/nodejs-logging/compare/v10.1.7...v10.1.8) (2022-09-03)
+
+
+### Bug Fixes
+
+* Correction for timestamp and instrumentation record severity fields format ([#1328](https://github.com/googleapis/nodejs-logging/issues/1328)) ([057431b](https://github.com/googleapis/nodejs-logging/commit/057431bf7e0157eb6c448973248004b441c6cddb))
+
 ## [10.1.7](https://github.com/googleapis/nodejs-logging/compare/v10.1.6...v10.1.7) (2022-09-02)
 
 
