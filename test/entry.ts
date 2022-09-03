@@ -56,11 +56,11 @@ function withinExpectedTimeBoundaries(result?: Date): boolean {
   return false;
 }
 
-function nanosecondsToDate(timestamp: entryTypes.Timestamp) {
+function nanosAndSecondsToDate(timestamp: entryTypes.Timestamp) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const seconds = (timestamp as any).seconds;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const nanos = (timestamp as any).seconds;
+  const nanos = (timestamp as any).nanos;
   return new Date(seconds * 1000 + nanos / 1e9);
 }
 
@@ -328,9 +328,7 @@ describe('Entry', () => {
       entry.data = 'this is a log';
       const json = entry.toStructuredJSON();
       assert(
-        withinExpectedTimeBoundaries(
-          new Date(nanosecondsToDate(json.timestamp!))
-        )
+        withinExpectedTimeBoundaries(nanosAndSecondsToDate(json.timestamp!))
       );
       delete json.timestamp;
       const expectedJSON = {
@@ -358,9 +356,7 @@ describe('Entry', () => {
       entry.metadata.timestamp = new Date();
       const json = entry.toStructuredJSON();
       assert(
-        withinExpectedTimeBoundaries(
-          new Date(nanosecondsToDate(json.timestamp!))
-        )
+        withinExpectedTimeBoundaries(nanosAndSecondsToDate(json.timestamp!))
       );
     });
 

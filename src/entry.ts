@@ -22,7 +22,7 @@ import {
   objToStruct,
   structToObj,
   zuluToDateObj,
-  toNanoSecondsObj,
+  toNanosAndSecondsObj,
 } from './utils/common';
 import {
   makeHttpRequestData,
@@ -81,7 +81,7 @@ export interface StructuredJson {
   message?: string | object;
   httpRequest?: object;
   // Based on https://cloud.google.com/logging/docs/agent/logging/configuration#timestamp-processing, the
-  // timestamp should be in nanoseconds format.
+  // timestamp should be in nanos and seconds format.
   timestamp?: Timestamp;
   [INSERT_ID_KEY]?: string;
   [OPERATION_KEY]?: object;
@@ -221,7 +221,7 @@ class Entry {
     }
     // Format log timestamp
     if (entry.timestamp instanceof Date) {
-      entry.timestamp = toNanoSecondsObj(entry.timestamp);
+      entry.timestamp = toNanosAndSecondsObj(entry.timestamp);
     } else if (typeof entry.timestamp === 'string') {
       entry.timestamp = zuluToDateObj(entry.timestamp);
     }
@@ -302,7 +302,7 @@ class Entry {
     }
     // Format timestamp
     if (meta.timestamp instanceof Date) {
-      entry.timestamp = toNanoSecondsObj(meta.timestamp);
+      entry.timestamp = toNanosAndSecondsObj(meta.timestamp);
     }
     // Format httprequest
     const req = meta.httpRequest;
