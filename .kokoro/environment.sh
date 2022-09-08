@@ -80,7 +80,7 @@ fi
 # If Kubernetes, install kubectl component
 if [[ $ENVIRONMENT == *"kubernetes"* ]]; then
   gcloud components install kubectl -q
-  gcloud components install gke-gcloud-auth-plugin -q
+  sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
   export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 fi
 
