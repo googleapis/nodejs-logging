@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.9](https://github.com/googleapis/nodejs-logging/compare/v10.1.8...v10.1.9) (2022-09-09)
+
+
+### Bug Fixes
+
+* Google-gax resolution ([#1333](https://github.com/googleapis/nodejs-logging/issues/1333)) ([4491646](https://github.com/googleapis/nodejs-logging/commit/449164633b407770ca791b1e5cdbdf57df7e32ee))
+
 ## [10.1.8](https://github.com/googleapis/nodejs-logging/compare/v10.1.7...v10.1.8) (2022-09-03)
 
 
