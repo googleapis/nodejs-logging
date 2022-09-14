@@ -27,6 +27,21 @@ import {PassThrough} from 'stream';
 
 import {protobuf} from 'google-gax';
 
+// Dynamically loaded proto JSON is needed to get the type information
+// to fill in default values for request objects
+const root = protobuf.Root.fromJSON(
+  require('../protos/protos.json')
+).resolveAll();
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getTypeDefaultValue(typeName: string, fields: string[]) {
+  let type = root.lookupType(typeName) as protobuf.Type;
+  for (const field of fields.slice(0, -1)) {
+    type = type.fields[field]?.resolvedType as protobuf.Type;
+  }
+  return type.fields[fields[fields.length - 1]]?.defaultValue;
+}
+
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
@@ -236,26 +251,25 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      request.logName = '';
-      const expectedHeaderRequestParams = 'log_name=';
-      const expectedOptions = {
-        otherArgs: {
-          headers: {
-            'x-goog-request-params': expectedHeaderRequestParams,
-          },
-        },
-      };
+      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
+        'logName',
+      ]);
+      request.logName = defaultValue1;
+      const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
         new protos.google.protobuf.Empty()
       );
       client.innerApiCalls.deleteLog = stubSimpleCall(expectedResponse);
       const [response] = await client.deleteLog(request);
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.deleteLog as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
+      const actualRequest = (
+        client.innerApiCalls.deleteLog as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLog as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
     });
 
     it('invokes deleteLog without error using callback', async () => {
@@ -267,15 +281,11 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      request.logName = '';
-      const expectedHeaderRequestParams = 'log_name=';
-      const expectedOptions = {
-        otherArgs: {
-          headers: {
-            'x-goog-request-params': expectedHeaderRequestParams,
-          },
-        },
-      };
+      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
+        'logName',
+      ]);
+      request.logName = defaultValue1;
+      const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
         new protos.google.protobuf.Empty()
       );
@@ -298,11 +308,14 @@ describe('v2.LoggingServiceV2Client', () => {
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.deleteLog as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions /*, callback defined above */)
-      );
+      const actualRequest = (
+        client.innerApiCalls.deleteLog as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLog as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
     });
 
     it('invokes deleteLog with error', async () => {
@@ -314,23 +327,22 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      request.logName = '';
-      const expectedHeaderRequestParams = 'log_name=';
-      const expectedOptions = {
-        otherArgs: {
-          headers: {
-            'x-goog-request-params': expectedHeaderRequestParams,
-          },
-        },
-      };
+      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
+        'logName',
+      ]);
+      request.logName = defaultValue1;
+      const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
       const expectedError = new Error('expected');
       client.innerApiCalls.deleteLog = stubSimpleCall(undefined, expectedError);
       await assert.rejects(client.deleteLog(request), expectedError);
-      assert(
-        (client.innerApiCalls.deleteLog as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
+      const actualRequest = (
+        client.innerApiCalls.deleteLog as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLog as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
     });
 
     it('invokes deleteLog with closed client', async () => {
@@ -342,7 +354,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      request.logName = '';
+      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
+        'logName',
+      ]);
+      request.logName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
       await assert.rejects(client.deleteLog(request), expectedError);
@@ -359,18 +374,12 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesResponse()
       );
       client.innerApiCalls.writeLogEntries = stubSimpleCall(expectedResponse);
       const [response] = await client.writeLogEntries(request);
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.writeLogEntries as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
     });
 
     it('invokes writeLogEntries without error using callback', async () => {
@@ -382,7 +391,6 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesResponse()
       );
@@ -405,11 +413,6 @@ describe('v2.LoggingServiceV2Client', () => {
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.writeLogEntries as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions /*, callback defined above */)
-      );
     });
 
     it('invokes writeLogEntries with error', async () => {
@@ -421,18 +424,12 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedError = new Error('expected');
       client.innerApiCalls.writeLogEntries = stubSimpleCall(
         undefined,
         expectedError
       );
       await assert.rejects(client.writeLogEntries(request), expectedError);
-      assert(
-        (client.innerApiCalls.writeLogEntries as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
     });
 
     it('invokes writeLogEntries with closed client', async () => {
@@ -460,6 +457,7 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.TailLogEntriesRequest()
       );
+
       const expectedResponse = generateSampleMessage(
         new protos.google.logging.v2.TailLogEntriesResponse()
       );
@@ -545,7 +543,6 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
@@ -554,11 +551,6 @@ describe('v2.LoggingServiceV2Client', () => {
       client.innerApiCalls.listLogEntries = stubSimpleCall(expectedResponse);
       const [response] = await client.listLogEntries(request);
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.listLogEntries as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
     });
 
     it('invokes listLogEntries without error using callback', async () => {
@@ -570,7 +562,6 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
         generateSampleMessage(new protos.google.logging.v2.LogEntry()),
@@ -595,11 +586,6 @@ describe('v2.LoggingServiceV2Client', () => {
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.listLogEntries as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions /*, callback defined above */)
-      );
     });
 
     it('invokes listLogEntries with error', async () => {
@@ -611,18 +597,12 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedError = new Error('expected');
       client.innerApiCalls.listLogEntries = stubSimpleCall(
         undefined,
         expectedError
       );
       await assert.rejects(client.listLogEntries(request), expectedError);
-      assert(
-        (client.innerApiCalls.listLogEntries as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
     });
 
     it('invokes listLogEntriesStream without error', async () => {
@@ -764,7 +744,6 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(
           new protos.google.api.MonitoredResourceDescriptor()
@@ -780,11 +759,6 @@ describe('v2.LoggingServiceV2Client', () => {
         stubSimpleCall(expectedResponse);
       const [response] = await client.listMonitoredResourceDescriptors(request);
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.listMonitoredResourceDescriptors as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
     });
 
     it('invokes listMonitoredResourceDescriptors without error using callback', async () => {
@@ -796,7 +770,6 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedResponse = [
         generateSampleMessage(
           new protos.google.api.MonitoredResourceDescriptor()
@@ -827,11 +800,6 @@ describe('v2.LoggingServiceV2Client', () => {
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.listMonitoredResourceDescriptors as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions /*, callback defined above */)
-      );
     });
 
     it('invokes listMonitoredResourceDescriptors with error', async () => {
@@ -843,7 +811,6 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
-      const expectedOptions = {otherArgs: {headers: {}}};
       const expectedError = new Error('expected');
       client.innerApiCalls.listMonitoredResourceDescriptors = stubSimpleCall(
         undefined,
@@ -852,11 +819,6 @@ describe('v2.LoggingServiceV2Client', () => {
       await assert.rejects(
         client.listMonitoredResourceDescriptors(request),
         expectedError
-      );
-      assert(
-        (client.innerApiCalls.listMonitoredResourceDescriptors as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
       );
     });
 
@@ -1031,24 +993,21 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
-      const expectedOptions = {
-        otherArgs: {
-          headers: {
-            'x-goog-request-params': expectedHeaderRequestParams,
-          },
-        },
-      };
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.innerApiCalls.listLogs = stubSimpleCall(expectedResponse);
       const [response] = await client.listLogs(request);
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.listLogs as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
+      const actualRequest = (
+        client.innerApiCalls.listLogs as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.listLogs as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
     });
 
     it('invokes listLogs without error using callback', async () => {
@@ -1060,15 +1019,9 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
-      const expectedOptions = {
-        otherArgs: {
-          headers: {
-            'x-goog-request-params': expectedHeaderRequestParams,
-          },
-        },
-      };
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.innerApiCalls.listLogs =
         stubSimpleCallWithCallback(expectedResponse);
@@ -1086,11 +1039,14 @@ describe('v2.LoggingServiceV2Client', () => {
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
-      assert(
-        (client.innerApiCalls.listLogs as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions /*, callback defined above */)
-      );
+      const actualRequest = (
+        client.innerApiCalls.listLogs as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.listLogs as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
     });
 
     it('invokes listLogs with error', async () => {
@@ -1102,23 +1058,20 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
-      const expectedOptions = {
-        otherArgs: {
-          headers: {
-            'x-goog-request-params': expectedHeaderRequestParams,
-          },
-        },
-      };
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
       client.innerApiCalls.listLogs = stubSimpleCall(undefined, expectedError);
       await assert.rejects(client.listLogs(request), expectedError);
-      assert(
-        (client.innerApiCalls.listLogs as SinonStub)
-          .getCall(0)
-          .calledWith(request, expectedOptions, undefined)
-      );
+      const actualRequest = (
+        client.innerApiCalls.listLogs as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.listLogs as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
     });
 
     it('invokes listLogsStream without error', async () => {
@@ -1130,8 +1083,9 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.descriptors.page.listLogs.createStream =
         stubPageStreamingCall(expectedResponse);
@@ -1155,10 +1109,12 @@ describe('v2.LoggingServiceV2Client', () => {
           .getCall(0)
           .calledWith(client.innerApiCalls.listLogs, request)
       );
-      assert.strictEqual(
-        (client.descriptors.page.listLogs.createStream as SinonStub).getCall(0)
-          .args[2].otherArgs.headers['x-goog-request-params'],
-        expectedHeaderRequestParams
+      assert(
+        (client.descriptors.page.listLogs.createStream as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
       );
     });
 
@@ -1171,8 +1127,9 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
       client.descriptors.page.listLogs.createStream = stubPageStreamingCall(
         undefined,
@@ -1197,10 +1154,12 @@ describe('v2.LoggingServiceV2Client', () => {
           .getCall(0)
           .calledWith(client.innerApiCalls.listLogs, request)
       );
-      assert.strictEqual(
-        (client.descriptors.page.listLogs.createStream as SinonStub).getCall(0)
-          .args[2].otherArgs.headers['x-goog-request-params'],
-        expectedHeaderRequestParams
+      assert(
+        (client.descriptors.page.listLogs.createStream as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
       );
     });
 
@@ -1213,8 +1172,9 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.descriptors.page.listLogs.asyncIterate =
         stubAsyncIterationCall(expectedResponse);
@@ -1229,10 +1189,12 @@ describe('v2.LoggingServiceV2Client', () => {
           .args[1],
         request
       );
-      assert.strictEqual(
-        (client.descriptors.page.listLogs.asyncIterate as SinonStub).getCall(0)
-          .args[2].otherArgs.headers['x-goog-request-params'],
-        expectedHeaderRequestParams
+      assert(
+        (client.descriptors.page.listLogs.asyncIterate as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
       );
     });
 
@@ -1245,8 +1207,9 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      request.parent = '';
-      const expectedHeaderRequestParams = 'parent=';
+      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
       client.descriptors.page.listLogs.asyncIterate = stubAsyncIterationCall(
         undefined,
@@ -1264,10 +1227,12 @@ describe('v2.LoggingServiceV2Client', () => {
           .args[1],
         request
       );
-      assert.strictEqual(
-        (client.descriptors.page.listLogs.asyncIterate as SinonStub).getCall(0)
-          .args[2].otherArgs.headers['x-goog-request-params'],
-        expectedHeaderRequestParams
+      assert(
+        (client.descriptors.page.listLogs.asyncIterate as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
       );
     });
   });
