@@ -505,7 +505,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        metric_name: request.metricName || '',
+        metric_name: request.metricName ?? '',
       });
     this.initialize();
     return this.innerApiCalls.getLogMetric(request, options, callback);
@@ -595,7 +595,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        parent: request.parent || '',
+        parent: request.parent ?? '',
       });
     this.initialize();
     return this.innerApiCalls.createLogMetric(request, options, callback);
@@ -686,7 +686,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        metric_name: request.metricName || '',
+        metric_name: request.metricName ?? '',
       });
     this.initialize();
     return this.innerApiCalls.updateLogMetric(request, options, callback);
@@ -771,7 +771,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        metric_name: request.metricName || '',
+        metric_name: request.metricName ?? '',
       });
     this.initialize();
     return this.innerApiCalls.deleteLogMetric(request, options, callback);
@@ -869,7 +869,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        parent: request.parent || '',
+        parent: request.parent ?? '',
       });
     this.initialize();
     return this.innerApiCalls.listLogMetrics(request, options, callback);
@@ -914,7 +914,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        parent: request.parent || '',
+        parent: request.parent ?? '',
       });
     const defaultCallSettings = this._defaults['listLogMetrics'];
     const callSettings = defaultCallSettings.merge(options);
@@ -968,7 +968,7 @@ export class MetricsServiceV2Client {
     options.otherArgs.headers = options.otherArgs.headers || {};
     options.otherArgs.headers['x-goog-request-params'] =
       this._gaxModule.routingHeader.fromParams({
-        parent: request.parent || '',
+        parent: request.parent ?? '',
       });
     const defaultCallSettings = this._defaults['listLogMetrics'];
     const callSettings = defaultCallSettings.merge(options);
