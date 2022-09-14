@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.1.10](https://github.com/googleapis/nodejs-logging/compare/v10.1.9...v10.1.10) (2022-09-14)
+
+
+### Bug Fixes
+
+* Preserve default values in x-goog-request-params header ([#1337](https://github.com/googleapis/nodejs-logging/issues/1337)) ([87c8d1f](https://github.com/googleapis/nodejs-logging/commit/87c8d1f034d6318d4b0841099f844a9474aae165))
+
 ## [10.1.9](https://github.com/googleapis/nodejs-logging/compare/v10.1.8...v10.1.9) (2022-09-09)
 
 
