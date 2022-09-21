@@ -237,9 +237,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -267,9 +268,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -313,9 +315,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -343,9 +346,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -363,9 +367,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateLogMetricRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLogMetricRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -393,9 +398,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateLogMetricRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLogMetricRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -439,9 +445,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateLogMetricRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLogMetricRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -469,9 +476,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateLogMetricRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLogMetricRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -489,9 +497,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -519,9 +528,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -565,9 +575,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -595,9 +606,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -615,9 +627,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -645,9 +658,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -691,9 +705,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedHeaderRequestParams = `metric_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -721,9 +736,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogMetricRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogMetricRequest', [
-        'metricName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogMetricRequest',
+        ['metricName']
+      );
       request.metricName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -741,9 +757,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -773,9 +790,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -821,9 +839,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -851,9 +870,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -901,9 +921,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -946,9 +967,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -988,9 +1010,10 @@ describe('v2.MetricsServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogMetricsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogMetricsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogMetricsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
