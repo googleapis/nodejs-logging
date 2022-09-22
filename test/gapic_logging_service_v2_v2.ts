@@ -251,9 +251,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
-        'logName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogRequest',
+        ['logName']
+      );
       request.logName = defaultValue1;
       const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -281,9 +282,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
-        'logName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogRequest',
+        ['logName']
+      );
       request.logName = defaultValue1;
       const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -327,9 +329,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
-        'logName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogRequest',
+        ['logName']
+      );
       request.logName = defaultValue1;
       const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -354,9 +357,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteLogRequest', [
-        'logName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLogRequest',
+        ['logName']
+      );
       request.logName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -993,7 +997,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
@@ -1019,7 +1026,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
@@ -1058,7 +1068,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1083,7 +1096,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
@@ -1127,7 +1143,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1172,7 +1191,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [new String(), new String(), new String()];
@@ -1207,7 +1229,10 @@ describe('v2.LoggingServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListLogsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLogsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');

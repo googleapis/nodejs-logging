@@ -269,7 +269,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetBucketRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -297,7 +300,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetBucketRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -341,7 +347,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetBucketRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -366,7 +375,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetBucketRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -384,9 +396,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateBucketRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -414,9 +427,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateBucketRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -460,9 +474,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateBucketRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -490,9 +505,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateBucketRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -510,9 +526,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -540,9 +557,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -586,9 +604,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -616,9 +635,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -636,9 +656,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -666,9 +687,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -712,9 +734,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -742,9 +765,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -762,9 +786,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UndeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UndeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UndeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -792,9 +817,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UndeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UndeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UndeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -838,9 +864,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UndeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UndeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UndeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -868,9 +895,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UndeleteBucketRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UndeleteBucketRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UndeleteBucketRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -888,7 +916,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -916,7 +947,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -960,7 +994,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -985,7 +1022,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1003,9 +1043,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateViewRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateViewRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1033,9 +1074,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateViewRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateViewRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1079,9 +1121,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateViewRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateViewRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1109,9 +1152,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateViewRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateViewRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1129,7 +1173,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1157,7 +1204,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1201,7 +1251,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1229,7 +1282,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1247,7 +1303,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1275,7 +1334,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1319,7 +1381,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1347,7 +1412,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteViewRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteViewRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteViewRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1365,7 +1433,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSinkRequest', ['sinkName']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1393,7 +1464,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSinkRequest', ['sinkName']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1437,7 +1511,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSinkRequest', ['sinkName']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1462,7 +1539,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSinkRequest', ['sinkName']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1480,9 +1560,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateSinkRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateSinkRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1510,9 +1591,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateSinkRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateSinkRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1556,9 +1638,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateSinkRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateSinkRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1586,9 +1669,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateSinkRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateSinkRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1606,9 +1690,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1636,9 +1721,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1682,9 +1768,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1712,9 +1799,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1732,9 +1820,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1762,9 +1851,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1808,9 +1898,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedHeaderRequestParams = `sink_name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1838,9 +1929,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteSinkRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteSinkRequest', [
-        'sinkName',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteSinkRequest',
+        ['sinkName']
+      );
       request.sinkName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1858,9 +1950,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1888,9 +1981,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -1934,9 +2028,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -1964,9 +2059,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -1984,9 +2080,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateExclusionRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateExclusionRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2014,9 +2111,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateExclusionRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateExclusionRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2060,9 +2158,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateExclusionRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateExclusionRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2090,9 +2189,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.CreateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('CreateExclusionRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateExclusionRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2110,9 +2210,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2140,9 +2241,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2186,9 +2288,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2216,9 +2319,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2236,9 +2340,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2266,9 +2371,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2312,9 +2418,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2342,9 +2449,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteExclusionRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('DeleteExclusionRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteExclusionRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2362,9 +2470,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2392,9 +2501,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2438,9 +2548,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2468,9 +2579,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2488,9 +2600,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2519,9 +2632,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2565,9 +2679,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2595,9 +2710,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateCmekSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateCmekSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateCmekSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2615,7 +2731,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSettingsRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2643,7 +2762,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSettingsRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2687,7 +2809,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSettingsRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2715,7 +2840,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.GetSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('GetSettingsRequest', ['name']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2733,9 +2861,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2763,9 +2892,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedResponse = generateSampleMessage(
@@ -2809,9 +2939,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedHeaderRequestParams = `name=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -2839,9 +2970,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.UpdateSettingsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('UpdateSettingsRequest', [
-        'name',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateSettingsRequest',
+        ['name']
+      );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
       client.close();
@@ -2997,9 +3129,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3029,9 +3162,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3077,9 +3211,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3107,9 +3242,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3157,9 +3293,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3204,9 +3341,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3246,9 +3384,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListBucketsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListBucketsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListBucketsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3289,7 +3428,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3319,7 +3461,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3365,7 +3510,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3390,7 +3538,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3438,7 +3589,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3483,7 +3637,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3522,7 +3679,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListViewsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListViewsRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListViewsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3562,7 +3722,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3592,7 +3755,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3638,7 +3804,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3663,7 +3832,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3711,7 +3883,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3756,7 +3931,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3795,7 +3973,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListSinksRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListSinksRequest', ['parent']);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListSinksRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3835,9 +4016,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3867,9 +4049,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3915,9 +4098,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -3945,9 +4129,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -3995,9 +4180,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
@@ -4040,9 +4226,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedResponse = [
@@ -4082,9 +4269,10 @@ describe('v2.ConfigServiceV2Client', () => {
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListExclusionsRequest()
       );
-      const defaultValue1 = getTypeDefaultValue('ListExclusionsRequest', [
-        'parent',
-      ]);
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListExclusionsRequest',
+        ['parent']
+      );
       request.parent = defaultValue1;
       const expectedHeaderRequestParams = `parent=${defaultValue1}`;
       const expectedError = new Error('expected');
