@@ -31,7 +31,7 @@ describe('instrumentation_info', () => {
   beforeEach(() => {
     instrumentation.setInstrumentationStatus(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (global as any).instrumentationWritten = false;
+    (global as any).shouldSkipInstrumentationCheck = false;
   });
 
   it('should generate library info properly by default', () => {
