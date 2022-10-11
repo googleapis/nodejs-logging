@@ -30,6 +30,8 @@ const LONG_VERSION_TEST = VERSION_TEST + '.0.0.0.0.0.0.0.0.11.1.1-ALPHA';
 describe('instrumentation_info', () => {
   beforeEach(() => {
     instrumentation.setInstrumentationStatus(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (global as any).instrumentationWritten = false;
   });
 
   it('should generate library info properly by default', () => {

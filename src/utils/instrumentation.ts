@@ -26,6 +26,8 @@ declare const global: {[index: string]: any};
 // The instrumentation record should be generated only once per process and contain logging
 // libraries related info.
 global.instrumentationAdded = false;
+// The global variable to avoid records inspection once instrumentation already written to prevent perf impact
+global.instrumentationWritten = false;
 
 // The variable to hold cached library version
 let libraryVersion: string;
@@ -47,6 +49,11 @@ export type InstrumentationInfo = {name: string; version: string};
 export function populateInstrumentationInfo(
   entry: Entry | Entry[]
 ): [Entry[], boolean] {
+  // Check if instrumentation data was already written once. This prevents also inspection of
+  // the entries for instrumentation data to prevent perf degradation
+  if (global.instrumentationWritten) {
+    return [arrify(entry), false];
+  }
   // Update the flag indicating that instrumentation entry was already added once,
   // so any subsequent calls to this method will not add a separate instrumentation log entry
   let isWritten = setInstrumentationStatus(true);
@@ -65,7 +72,7 @@ export function populateInstrumentationInfo(
             validateAndUpdateInstrumentation(info);
           // Indicate that instrumentation info log entry already exists
           // and that current library info was added to existing log entry
-          isInfoAdded = isWritten = true;
+          global.instrumentationWritten = isInfoAdded = isWritten = true;
         }
         entries.push(entryItem);
       }
@@ -75,7 +82,7 @@ export function populateInstrumentationInfo(
   // instrumentation data for this library
   if (!isWritten) {
     entries.push(createDiagnosticEntry(undefined, undefined));
-    isInfoAdded = true;
+    global.instrumentationWritten = isInfoAdded = true;
   }
   return [entries, isInfoAdded];
 }
