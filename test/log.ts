@@ -556,6 +556,8 @@ describe('Log', () => {
 
     it('should set the partialSuccess properly for instrumentation record', async () => {
       instrumentation.setInstrumentationStatus(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).shouldSkipInstrumentationCheck = false;
       await log.write(ENTRIES, OPTIONS);
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
@@ -569,6 +571,8 @@ describe('Log', () => {
 
     it('should set the partialSuccess properly for existing instrumentation record', async () => {
       ENTRIES.push(instrumentation.createDiagnosticEntry(undefined, undefined));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (global as any).shouldSkipInstrumentationCheck = false;
       await log.write(ENTRIES, OPTIONS);
       assert(
         log.logging.loggingService.writeLogEntries.calledOnceWith(
