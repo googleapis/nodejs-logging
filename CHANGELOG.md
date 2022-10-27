@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.2.0](https://github.com/googleapis/nodejs-logging/compare/v10.1.11...v10.2.0) (2022-10-27)
+
+
+### Features
+
+* Add support for partialSuccess global configuration ([#1359](https://github.com/googleapis/nodejs-logging/issues/1359)) ([178b19f](https://github.com/googleapis/nodejs-logging/commit/178b19f55e8d50415aee62cc770b2244c590ff67))
+
 ## [10.1.11](https://github.com/googleapis/nodejs-logging/compare/v10.1.10...v10.1.11) (2022-10-11)
 
 
