@@ -379,6 +379,7 @@ describe('Log', () => {
           {
             logName: log.formattedName_,
             entries: ENTRIES,
+            partialSuccess: true,
             resource: {
               labels: {
                 project_id: 'fake-project',
@@ -449,6 +450,7 @@ describe('Log', () => {
           {
             logName: log.formattedName_,
             entries: ENTRIES,
+            partialSuccess: true,
             resource: EXPECTED_RESOURCE,
           },
           undefined,
@@ -464,6 +466,7 @@ describe('Log', () => {
           {
             logName: log.formattedName_,
             entries: ENTRIES,
+            partialSuccess: true,
             resource: FAKE_RESOURCE,
           },
           undefined,
@@ -480,6 +483,7 @@ describe('Log', () => {
           {
             logName: log.formattedName_,
             entries: ENTRIES,
+            partialSuccess: true,
             resource: FAKE_RESOURCE,
           },
           undefined,
@@ -534,10 +538,10 @@ describe('Log', () => {
     it('should not require options', async () => {
       await log.write(ENTRY);
       assert(
-        log.logging.loggingService.writeLogEntries.calledOnceWithExactly(
-          sinon.match.object,
-          undefined,
-          undefined
+        log.logging.loggingService.writeLogEntries.calledOnceWith(
+          sinon.match({
+            partialSuccess: true,
+          })
         )
       );
     });
