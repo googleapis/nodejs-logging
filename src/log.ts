@@ -96,7 +96,7 @@ export type DeleteCallback = ApiResponseCallback;
  *     Note that {@link LogOptions#defaultWriteDeleteCallback} is useful when {@link Log#write} and {@link Log#delete} APIs are called
  *     without `await` and without callback added explicitly to every call - this way {@link LogOptions#defaultWriteDeleteCallback}
  *     can serve as global callback handler, which for example could be used to catch all errors and eliminate crashes.
- * @param {boolean} [options.partialSuccess] Global flag indicating Whether a batch's valid entries should be written even if 
+ * @param {boolean} [options.partialSuccess] Global flag indicating Whether a batch's valid entries should be written even if
  *     some other entry failed due to errors. Default is true.
  *     See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write#body.request_body.FIELDS.partial_success|partialSuccess} for more info.
  * @example
