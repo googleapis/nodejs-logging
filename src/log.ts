@@ -61,6 +61,7 @@ export interface LogOptions {
   maxEntrySize?: number; // see: https://cloud.google.com/logging/quotas
   jsonFieldsToTruncate?: string[];
   defaultWriteDeleteCallback?: ApiResponseCallback;
+  partialSuccess?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,6 +96,9 @@ export type DeleteCallback = ApiResponseCallback;
  *     Note that {@link LogOptions#defaultWriteDeleteCallback} is useful when {@link Log#write} and {@link Log#delete} APIs are called
  *     without `await` and without callback added explicitly to every call - this way {@link LogOptions#defaultWriteDeleteCallback}
  *     can serve as global callback handler, which for example could be used to catch all errors and eliminate crashes.
+ * @param {boolean} [options.partialSuccess] Global flag indicating Whether a batch's valid entries should be written even if
+ *     some other entry failed due to errors. Default is true.
+ *     See {@link https://cloud.google.com/logging/docs/reference/v2/rest/v2/entries/write#body.request_body.FIELDS.partial_success|partialSuccess} for more info.
  * @example
  * ```
  * import {Logging} from '@google-cloud/logging';
@@ -122,6 +126,7 @@ class Log implements LogSeverityFunctions {
   name: string;
   jsonFieldsToTruncate: string[];
   defaultWriteDeleteCallback?: ApiResponseCallback;
+  partialSuccess: boolean;
 
   constructor(logging: Logging, name: string, options?: LogOptions) {
     options = options || {};
@@ -170,6 +175,13 @@ class Log implements LogSeverityFunctions {
      * was set by user and only for APIs which does not accept a callback as parameter
      */
     this.defaultWriteDeleteCallback = options.defaultWriteDeleteCallback;
+
+    /**
+    Turning partialSuccess by default to be true if not provided in options. This should improve
+    overall logging reliability since only oversized entries will be dropped
+    from request. See {@link https://cloud.google.com/logging/quotas#log-limits} for more info
+     */
+    this.partialSuccess = options.partialSuccess ?? true;
   }
 
   /**
@@ -967,9 +979,10 @@ class Log implements LogSeverityFunctions {
     // Extract & format additional context from individual entries. Make sure to add instrumentation info
     const info = populateInstrumentationInfo(entry);
     const decoratedEntries = this.decorateEntries(info[0]);
-    // If instrumentation info was added make sure we set partialSuccess, so entire
-    // request will make it through and only oversized entries will be dropped if any
-    if (info[1]) {
+    // If instrumentation info was added or this.partialSuccess was set, make sure we set
+    // partialSuccess in outgoing write request, so entire request will make it through and
+    // only oversized entries will be dropped if any
+    if (info[1] || (options.partialSuccess ?? this.partialSuccess)) {
       options.partialSuccess = true;
     }
     this.truncateEntries(decoratedEntries);
