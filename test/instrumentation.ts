@@ -88,7 +88,7 @@ describe('instrumentation_info', () => {
     );
   });
 
-  it('should add instrumentation info to existing list', () => {
+  it('should add instrumentation info to existing list in right order', () => {
     const dummyEntry = createEntry(NODEJS_TEST, VERSION_TEST);
     const entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries[0].length, 1);
@@ -102,19 +102,19 @@ describe('instrumentation_info', () => {
     assert.equal(
       entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
-      ]?.[0]?.[NAME],
+      ]?.[1]?.[NAME],
       instrumentation.NODEJS_LIBRARY_NAME_PREFIX
     );
     assert.equal(
       entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
-      ]?.[1]?.[NAME],
+      ]?.[0]?.[NAME],
       NODEJS_TEST
     );
     assert.equal(
       entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
-      ]?.[1]?.[VERSION],
+      ]?.[0]?.[VERSION],
       VERSION_TEST
     );
   });
@@ -147,13 +147,13 @@ describe('instrumentation_info', () => {
     assert.equal(
       entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
-      ]?.[1]?.[NAME],
+      ]?.[0]?.[NAME],
       NODEJS_TEST + '-oo*'
     );
     assert.equal(
       entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
-      ]?.[1]?.[VERSION],
+      ]?.[0]?.[VERSION],
       VERSION_TEST + '.0.0.0.0.*'
     );
   });
@@ -173,6 +173,60 @@ describe('instrumentation_info', () => {
     entries = instrumentation.populateInstrumentationInfo(dummyEntry);
     assert.equal(entries[0].length, 1);
     assert.deepEqual(dummyEntry, entries[0][0]);
+  });
+
+  it('should discard extra instrumentation records', () => {
+    // Add 4 library versions and make sure that last 2 are discarded and the "nodejs" base
+    // library version is always added as a third one
+    const dummy = createEntry(
+      instrumentation.NODEJS_LIBRARY_NAME_PREFIX + '-one',
+      'v1'
+    );
+    dummy.data?.[instrumentation.DIAGNOSTIC_INFO_KEY][
+      instrumentation.INSTRUMENTATION_SOURCE_KEY
+    ].push({
+      name: instrumentation.NODEJS_LIBRARY_NAME_PREFIX + '-two',
+      version: 'v2',
+    });
+    dummy.data?.[instrumentation.DIAGNOSTIC_INFO_KEY][
+      instrumentation.INSTRUMENTATION_SOURCE_KEY
+    ].push({
+      name: NODEJS_TEST,
+      version: VERSION_TEST,
+    });
+    dummy.data?.[instrumentation.DIAGNOSTIC_INFO_KEY][
+      instrumentation.INSTRUMENTATION_SOURCE_KEY
+    ].push({
+      name: LONG_NODEJS_TEST,
+      version: LONG_VERSION_TEST,
+    });
+    const entries = instrumentation.populateInstrumentationInfo(dummy);
+    assert.equal(entries[0].length, 1);
+    assert.equal(
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.length,
+      3
+    );
+    assert.equal(true, entries[1]);
+    assert.equal(
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[0]?.[NAME],
+      instrumentation.NODEJS_LIBRARY_NAME_PREFIX + '-one'
+    );
+    assert.equal(
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[1]?.[NAME],
+      instrumentation.NODEJS_LIBRARY_NAME_PREFIX + '-two'
+    );
+    assert.equal(
+      entries[0][0].data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
+        instrumentation.INSTRUMENTATION_SOURCE_KEY
+      ]?.[2]?.[NAME],
+      instrumentation.NODEJS_LIBRARY_NAME_PREFIX
+    );
   });
 });
 
