@@ -38,6 +38,7 @@ const maxDiagnosticValueLen = 14;
 export const DIAGNOSTIC_INFO_KEY = 'logging.googleapis.com/diagnostic';
 export const INSTRUMENTATION_SOURCE_KEY = 'instrumentation_source';
 export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
+export const MAX_INSTRUMENTATION_COUNT = 3;
 export type InstrumentationInfo = {name: string; version: string};
 
 /**
@@ -132,15 +133,15 @@ function validateAndUpdateInstrumentation(
 ): InstrumentationInfo[] {
   const finalInfo: InstrumentationInfo[] = [];
   // First, iterate through given list of libraries and for each entry perform validations and transformations.
-  // Limit amount of entries to be up to 3
-  let count = 0;
+  // Limit amount of entries to be up to MAX_INSTRUMENTATION_COUNT
+  let count = 1;
   for (const info of infoList) {
     if (isValidInfo(info)) {
       finalInfo.push({
         name: truncateValue(info.name, maxDiagnosticValueLen),
         version: truncateValue(info.version, maxDiagnosticValueLen),
       });
-      if (++count === 2) break;
+      if (++count === MAX_INSTRUMENTATION_COUNT) break;
     }
   }
   // Finally, add current library information to be the last entry added
