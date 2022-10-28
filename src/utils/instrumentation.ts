@@ -131,23 +131,23 @@ function validateAndUpdateInstrumentation(
   infoList: InstrumentationInfo[]
 ): InstrumentationInfo[] {
   const finalInfo: InstrumentationInfo[] = [];
-  // First, add current library information
-  finalInfo.push({
-    name: NODEJS_LIBRARY_NAME_PREFIX,
-    version: getNodejsLibraryVersion(),
-  });
-  // Iterate through given list of libraries and for each entry perform validations and transformations
+  // First, iterate through given list of libraries and for each entry perform validations and transformations.
   // Limit amount of entries to be up to 3
-  let count = 1;
+  let count = 0;
   for (const info of infoList) {
     if (isValidInfo(info)) {
       finalInfo.push({
         name: truncateValue(info.name, maxDiagnosticValueLen),
         version: truncateValue(info.version, maxDiagnosticValueLen),
       });
+      if (++count === 2) break;
     }
-    if (++count === 3) break;
   }
+  // Finally, add current library information to be the last entry added
+  finalInfo.push({
+    name: NODEJS_LIBRARY_NAME_PREFIX,
+    version: getNodejsLibraryVersion(),
+  });
   return finalInfo;
 }
 
