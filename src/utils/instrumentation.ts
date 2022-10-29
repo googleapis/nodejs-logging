@@ -38,6 +38,7 @@ const maxDiagnosticValueLen = 14;
 export const DIAGNOSTIC_INFO_KEY = 'logging.googleapis.com/diagnostic';
 export const INSTRUMENTATION_SOURCE_KEY = 'instrumentation_source';
 export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
+export const NODEJS_DEFAULT_LIBRARY_VERSION = 'unknown';
 export const MAX_INSTRUMENTATION_COUNT = 3;
 export type InstrumentationInfo = {name: string; version: string};
 
@@ -191,11 +192,15 @@ export function getNodejsLibraryVersion() {
   if (libraryVersion) {
     return libraryVersion;
   }
-  libraryVersion = require(path.resolve(
-    __dirname,
-    '../../../',
-    'package.json'
-  )).version;
+  try {
+    libraryVersion = require(path.resolve(
+      __dirname,
+      '../../../',
+      'package.json'
+    )).version;
+  } catch (err) {
+    libraryVersion = NODEJS_DEFAULT_LIBRARY_VERSION;
+  }
   return libraryVersion;
 }
 
