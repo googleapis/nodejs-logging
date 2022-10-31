@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.2.2](https://github.com/googleapis/nodejs-logging/compare/v10.2.1...v10.2.2) (2022-10-31)
+
+
+### Bug Fixes
+
+* Runtime package.json check causes breakage when bundled ([#1364](https://github.com/googleapis/nodejs-logging/issues/1364)) ([ec40231](https://github.com/googleapis/nodejs-logging/commit/ec4023165368eea7fd6fc05002a7da1a065b128e))
+
 ## [10.2.1](https://github.com/googleapis/nodejs-logging/compare/v10.2.0...v10.2.1) (2022-10-28)
 
 
