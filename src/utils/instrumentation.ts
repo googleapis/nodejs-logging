@@ -175,7 +175,7 @@ function truncateValue(value: object | string, maxLen: number) {
   }
   // Return 'unknown' if version cannot be retrieved
   if (typeof value !== 'string') {
-    return 'unknown';
+    return NODEJS_DEFAULT_LIBRARY_VERSION;
   }
   if (value && value.length > maxLen) {
     return value.substring(0, maxLen).concat('*');
