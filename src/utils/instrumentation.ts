@@ -173,7 +173,7 @@ function truncateValue(value: object | string, maxLen: number) {
       // Ignore error since flow should continue
     }
   }
-  // Return 'unknown' if version cannot be retrieved
+  // Return NODEJS_DEFAULT_LIBRARY_VERSION if version cannot be retrieved
   if (typeof value !== 'string') {
     return NODEJS_DEFAULT_LIBRARY_VERSION;
   }
