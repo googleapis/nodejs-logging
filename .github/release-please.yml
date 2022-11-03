@@ -1,2 +1,3 @@
 handleGHRelease: true
 releaseType: node
+extraFiles: ["src/utils/instrumentation.ts"]

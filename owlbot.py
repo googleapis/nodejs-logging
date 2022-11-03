@@ -28,7 +28,8 @@ node.owlbot_main(
         ".eslintignore",
         ".prettierignore",
         "CONTRIBUTING.md",
-        ".github/auto-label.yaml"
+        ".github/auto-label.yaml",
+        ".github/release-please.yml"
     ]
 )
 
