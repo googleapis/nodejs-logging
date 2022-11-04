@@ -53,7 +53,7 @@ describe('instrumentation_info', () => {
     );
   });
 
-  it('should set library version to unknown', () => {
+  it('should set library version to NODEJS_DEFAULT_LIBRARY_VERSION', () => {
     const data = {some: 'value'};
     const entry = instrumentation.createDiagnosticEntry(
       undefined,
@@ -70,7 +70,7 @@ describe('instrumentation_info', () => {
       entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
         instrumentation.INSTRUMENTATION_SOURCE_KEY
       ]?.[0]?.[VERSION],
-      'unknown'
+      instrumentation.NODEJS_DEFAULT_LIBRARY_VERSION
     );
   });
 
