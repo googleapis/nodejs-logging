@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.3.0](https://github.com/googleapis/nodejs-logging/compare/v10.2.3...v10.3.0) (2022-11-04)
+
+
+### Features
+
+* Add support for instrumentation version annotations ([#1370](https://github.com/googleapis/nodejs-logging/issues/1370)) ([c039022](https://github.com/googleapis/nodejs-logging/commit/c039022783d7507b9cb14152e1e370b03f6f864f))
+
 ## [10.2.3](https://github.com/googleapis/nodejs-logging/compare/v10.2.2...v10.2.3) (2022-11-03)
 
 
