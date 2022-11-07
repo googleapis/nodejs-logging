@@ -15,7 +15,6 @@
  */
 
 import arrify = require('arrify');
-import path = require('path');
 import {Entry} from '../entry';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,15 +28,17 @@ global.instrumentationAdded = false;
 // The global variable to avoid records inspection once instrumentation already written to prevent perf impact
 global.shouldSkipInstrumentationCheck = false;
 
-// The variable to hold cached library version
-let libraryVersion: string;
-
 // Max length for instrumentation library name and version values
 const maxDiagnosticValueLen = 14;
 
 export const DIAGNOSTIC_INFO_KEY = 'logging.googleapis.com/diagnostic';
 export const INSTRUMENTATION_SOURCE_KEY = 'instrumentation_source';
 export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
+/**
+ * Default library version to be used
+ * Using release-please annotations to update DEFAULT_INSTRUMENTATION_VERSION with latest version.
+ * See https://github.com/googleapis/release-please/blob/main/docs/customizing.md#updating-arbitrary-files
+ */
 export const NODEJS_DEFAULT_LIBRARY_VERSION = '10.3.0'; // {x-release-please-version}
 export const MAX_INSTRUMENTATION_COUNT = 3;
 export type InstrumentationInfo = {name: string; version: string};
@@ -184,24 +185,11 @@ function truncateValue(value: object | string, maxLen: number) {
 }
 
 /**
- * The helper function to retrieve current library version from 'package.json' file. Note that
- * since we use {path.resolve}, the search for 'package.json' could be impacted by current working directory.
+ * The helper function to retrieve current library version from annotated NODEJS_DEFAULT_LIBRARY_VERSION
  * @returns {string} A current library version.
  */
 export function getNodejsLibraryVersion() {
-  if (libraryVersion) {
-    return libraryVersion;
-  }
-  try {
-    libraryVersion = require(path.resolve(
-      __dirname,
-      '../../../',
-      'package.json'
-    )).version;
-  } catch (err) {
-    libraryVersion = NODEJS_DEFAULT_LIBRARY_VERSION;
-  }
-  return libraryVersion;
+  return NODEJS_DEFAULT_LIBRARY_VERSION;
 }
 
 /**
