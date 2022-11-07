@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.3.1](https://github.com/googleapis/nodejs-logging/compare/v10.3.0...v10.3.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* Switch instrumentation code to work with NODEJS_DEFAULT_LIBRARY_VERSION only ([#1373](https://github.com/googleapis/nodejs-logging/issues/1373)) ([32b22b4](https://github.com/googleapis/nodejs-logging/commit/32b22b4c17376a51f413481b3e412a88c0f83f06))
+
 ## [10.3.0](https://github.com/googleapis/nodejs-logging/compare/v10.2.3...v10.3.0) (2022-11-04)
 
 
