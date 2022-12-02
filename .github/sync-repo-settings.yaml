@@ -22,3 +22,6 @@ permissionRules:
     permission: admin
   - team: jsteam
     permission: push
+  - team: api-logging-partners
+    permission: push
+ 
