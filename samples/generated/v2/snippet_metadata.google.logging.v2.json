@@ -1,7 +1,7 @@
 {
     "clientLibrary": {
         "name": "nodejs-logging",
-        "version": "10.3.1",
+        "version": "10.3.2",
         "language": "TYPESCRIPT",
         "apis": [
             {
