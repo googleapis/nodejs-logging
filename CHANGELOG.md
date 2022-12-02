@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.3.2](https://github.com/googleapis/nodejs-logging/compare/v10.3.1...v10.3.2) (2022-12-02)
+
+
+### Bug Fixes
+
+* Add a partner team as approvers for PRs ([#1380](https://github.com/googleapis/nodejs-logging/issues/1380)) ([ca1f4fa](https://github.com/googleapis/nodejs-logging/commit/ca1f4fa30baa4f9786d6c112313c4fe06773524d))
+
 ## [10.3.1](https://github.com/googleapis/nodejs-logging/compare/v10.3.0...v10.3.1) (2022-11-07)
 
 
