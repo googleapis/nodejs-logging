@@ -29,7 +29,9 @@ node.owlbot_main(
         ".prettierignore",
         "CONTRIBUTING.md",
         ".github/auto-label.yaml",
-        ".github/release-please.yml"
+        ".github/release-please.yml",
+        ".github/CODEOWNERS",
+        ".github/sync-repo-settings.yaml"
     ]
 )
 
