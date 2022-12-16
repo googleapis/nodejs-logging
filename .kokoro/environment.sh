@@ -45,6 +45,8 @@ cd "env-tests-logging/"
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
 
+export CLOUDSDK_PYTHON=python3
+
 # Debug: show build environment
 env | grep KOKORO
 
