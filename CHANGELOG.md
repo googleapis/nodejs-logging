@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.3.3](https://github.com/googleapis/nodejs-logging/compare/v10.3.2...v10.3.3) (2022-12-16)
+
+
+### Bug Fixes
+
+* Add CLOUDSDK_PYTHON env var to environment tests ([#1385](https://github.com/googleapis/nodejs-logging/issues/1385)) ([8ac3e6b](https://github.com/googleapis/nodejs-logging/commit/8ac3e6b69c7a862942a40427ddefa07b0cf50554))
+
 ## [10.3.2](https://github.com/googleapis/nodejs-logging/compare/v10.3.1...v10.3.2) (2022-12-02)
 
 
