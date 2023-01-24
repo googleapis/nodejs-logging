@@ -88,7 +88,7 @@ fi
 
 # Run the specified environment test
 set +e
-nox --python 3.10 --session "tests(language='nodejs', platform='$ENVIRONMENT')"
+nox --session "tests(language='nodejs', platform='$ENVIRONMENT')"
 TEST_STATUS_CODE=$?
 
 # destroy resources
