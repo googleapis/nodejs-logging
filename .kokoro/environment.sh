@@ -24,7 +24,7 @@ if [[ -z "${ENVIRONMENT:-}" ]]; then
 fi
 
 # Setup service account credentials.
-export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/service-account.json
+export GOOGLE_APPLICATION_CREDENTIALS=${KOKORO_GFILE_DIR}/secret_manager/long-door-651-kokoro-system-test-service-account
 export GCLOUD_PROJECT=long-door-651
 gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 
@@ -41,6 +41,8 @@ npm run compile
 # make sure submodule is up to date
 git submodule update --init --recursive
 cd "env-tests-logging/"
+export ENV_TEST_PY_VERSION=3.7
+echo "using python version: $ENV_TEST_PY_VERSION"
 
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
@@ -88,7 +90,7 @@ fi
 
 # Run the specified environment test
 set +e
-nox --python 3.7 --session "tests(language='nodejs', platform='$ENVIRONMENT')"
+python3 -m nox --session "tests(language='nodejs', platform='$ENVIRONMENT')"
 TEST_STATUS_CODE=$?
 
 # destroy resources
