@@ -41,6 +41,9 @@ npm run compile
 # make sure submodule is up to date
 git submodule update --init --recursive
 cd "env-tests-logging/"
+export ENV_TEST_PY_VERSION=3.7
+echo "using python version: $ENV_TEST_PY_VERSION"
+python3 --version
 
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
