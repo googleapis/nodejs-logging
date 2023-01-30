@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.4.0](https://github.com/googleapis/nodejs-logging/compare/v10.3.3...v10.4.0) (2023-01-30)
+
+
+### Features
+
+* Added SuggestConversationSummary RPC ([#1399](https://github.com/googleapis/nodejs-logging/issues/1399)) ([f176209](https://github.com/googleapis/nodejs-logging/commit/f17620919e8f528f197218c97a6a839a7c480a80))
+
 ## [10.3.3](https://github.com/googleapis/nodejs-logging/compare/v10.3.2...v10.3.3) (2022-12-16)
 
 
