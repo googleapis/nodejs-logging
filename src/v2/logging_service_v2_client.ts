@@ -505,7 +505,7 @@ export class LoggingServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [Empty]{@link google.protobuf.Empty}.
+   *   The first element of the array is an object representing {@link google.protobuf.Empty | Empty}.
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
@@ -659,7 +659,7 @@ export class LoggingServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing [WriteLogEntriesResponse]{@link google.logging.v2.WriteLogEntriesResponse}.
+   *   The first element of the array is an object representing {@link google.logging.v2.WriteLogEntriesResponse | WriteLogEntriesResponse}.
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
    *   for more details and examples.
@@ -737,8 +737,8 @@ export class LoggingServiceV2Client {
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
    *   An object stream which is both readable and writable. It accepts objects
-   *   representing [TailLogEntriesRequest]{@link google.logging.v2.TailLogEntriesRequest} for write() method, and
-   *   will emit objects representing [TailLogEntriesResponse]{@link google.logging.v2.TailLogEntriesResponse} on 'data' event asynchronously.
+   *   representing {@link google.logging.v2.TailLogEntriesRequest | TailLogEntriesRequest} for write() method, and
+   *   will emit objects representing {@link google.logging.v2.TailLogEntriesResponse | TailLogEntriesResponse} on 'data' event asynchronously.
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#bi-directional-streaming)
    *   for more details and examples.
@@ -803,7 +803,7 @@ export class LoggingServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [LogEntry]{@link google.logging.v2.LogEntry}.
+   *   The first element of the array is Array of {@link google.logging.v2.LogEntry | LogEntry}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
@@ -925,7 +925,7 @@ export class LoggingServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing [LogEntry]{@link google.logging.v2.LogEntry} on 'data' event.
+   *   An object stream which emits an object representing {@link google.logging.v2.LogEntry | LogEntry} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listLogEntriesAsync()`
@@ -1005,7 +1005,7 @@ export class LoggingServiceV2Client {
    * @returns {Object}
    *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
    *   When you iterate the returned iterable, each element will be an object representing
-   *   [LogEntry]{@link google.logging.v2.LogEntry}. The API will be called under the hood as needed, once per the page,
+   *   {@link google.logging.v2.LogEntry | LogEntry}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
@@ -1047,7 +1047,7 @@ export class LoggingServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}.
+   *   The first element of the array is Array of {@link google.api.MonitoredResourceDescriptor | MonitoredResourceDescriptor}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
@@ -1148,7 +1148,7 @@ export class LoggingServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor} on 'data' event.
+   *   An object stream which emits an object representing {@link google.api.MonitoredResourceDescriptor | MonitoredResourceDescriptor} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listMonitoredResourceDescriptorsAsync()`
@@ -1196,7 +1196,7 @@ export class LoggingServiceV2Client {
    * @returns {Object}
    *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
    *   When you iterate the returned iterable, each element will be an object representing
-   *   [MonitoredResourceDescriptor]{@link google.api.MonitoredResourceDescriptor}. The API will be called under the hood as needed, once per the page,
+   *   {@link google.api.MonitoredResourceDescriptor | MonitoredResourceDescriptor}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
