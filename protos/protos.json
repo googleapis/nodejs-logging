@@ -1141,7 +1141,7 @@
               "options": {
                 "cc_enable_arenas": true,
                 "csharp_namespace": "Google.Cloud.Logging.V2",
-                "go_package": "google.golang.org/genproto/googleapis/logging/v2;logging",
+                "go_package": "cloud.google.com/go/logging/apiv2/loggingpb;loggingpb",
                 "java_multiple_files": true,
                 "java_outer_classname": "LoggingMetricsProto",
                 "java_package": "com.google.logging.v2",
