@@ -1940,6 +1940,133 @@ describe('v2.ConfigServiceV2Client', () => {
     });
   });
 
+  describe('getLink', () => {
+    it('invokes getLink without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.Link()
+      );
+      client.innerApiCalls.getLink = stubSimpleCall(expectedResponse);
+      const [response] = await client.getLink(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (client.innerApiCalls.getLink as SinonStub).getCall(
+        0
+      ).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.getLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes getLink without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.logging.v2.Link()
+      );
+      client.innerApiCalls.getLink =
+        stubSimpleCallWithCallback(expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.getLink(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILink | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (client.innerApiCalls.getLink as SinonStub).getCall(
+        0
+      ).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.getLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes getLink with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.getLink = stubSimpleCall(undefined, expectedError);
+      await assert.rejects(client.getLink(request), expectedError);
+      const actualRequest = (client.innerApiCalls.getLink as SinonStub).getCall(
+        0
+      ).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.getLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes getLink with closed client', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.GetLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.GetLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedError = new Error('The client has already been closed.');
+      client.close();
+      await assert.rejects(client.getLink(request), expectedError);
+    });
+  });
+
   describe('getExclusion', () => {
     it('invokes getExclusion without error', async () => {
       const client = new configservicev2Module.v2.ConfigServiceV2Client({
@@ -2981,6 +3108,774 @@ describe('v2.ConfigServiceV2Client', () => {
     });
   });
 
+  describe('createBucketAsync', () => {
+    it('invokes createBucketAsync without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.createBucketAsync =
+        stubLongRunningCall(expectedResponse);
+      const [operation] = await client.createBucketAsync(request);
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes createBucketAsync without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.createBucketAsync =
+        stubLongRunningCallWithCallback(expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.createBucketAsync(
+          request,
+          (
+            err?: Error | null,
+            result?: LROperation<
+              protos.google.logging.v2.ILogBucket,
+              protos.google.logging.v2.IBucketMetadata
+            > | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const operation = (await promise) as LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >;
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes createBucketAsync with call error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.createBucketAsync = stubLongRunningCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.createBucketAsync(request), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes createBucketAsync with LRO error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateBucketRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.createBucketAsync = stubLongRunningCall(
+        undefined,
+        undefined,
+        expectedError
+      );
+      const [operation] = await client.createBucketAsync(request);
+      await assert.rejects(operation.promise(), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes checkCreateBucketAsyncProgress without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedResponse = generateSampleMessage(
+        new operationsProtos.google.longrunning.Operation()
+      );
+      expectedResponse.name = 'test';
+      expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+      expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')};
+
+      client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
+      const decodedOperation = await client.checkCreateBucketAsyncProgress(
+        expectedResponse.name
+      );
+      assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
+      assert(decodedOperation.metadata);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+
+    it('invokes checkCreateBucketAsyncProgress with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedError = new Error('expected');
+
+      client.operationsClient.getOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(
+        client.checkCreateBucketAsyncProgress(''),
+        expectedError
+      );
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+  });
+
+  describe('updateBucketAsync', () => {
+    it('invokes updateBucketAsync without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.updateBucketAsync =
+        stubLongRunningCall(expectedResponse);
+      const [operation] = await client.updateBucketAsync(request);
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes updateBucketAsync without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.updateBucketAsync =
+        stubLongRunningCallWithCallback(expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.updateBucketAsync(
+          request,
+          (
+            err?: Error | null,
+            result?: LROperation<
+              protos.google.logging.v2.ILogBucket,
+              protos.google.logging.v2.IBucketMetadata
+            > | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const operation = (await promise) as LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >;
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes updateBucketAsync with call error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.updateBucketAsync = stubLongRunningCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.updateBucketAsync(request), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes updateBucketAsync with LRO error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.UpdateBucketRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.UpdateBucketRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.updateBucketAsync = stubLongRunningCall(
+        undefined,
+        undefined,
+        expectedError
+      );
+      const [operation] = await client.updateBucketAsync(request);
+      await assert.rejects(operation.promise(), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.updateBucketAsync as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes checkUpdateBucketAsyncProgress without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedResponse = generateSampleMessage(
+        new operationsProtos.google.longrunning.Operation()
+      );
+      expectedResponse.name = 'test';
+      expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+      expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')};
+
+      client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
+      const decodedOperation = await client.checkUpdateBucketAsyncProgress(
+        expectedResponse.name
+      );
+      assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
+      assert(decodedOperation.metadata);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+
+    it('invokes checkUpdateBucketAsyncProgress with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedError = new Error('expected');
+
+      client.operationsClient.getOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(
+        client.checkUpdateBucketAsyncProgress(''),
+        expectedError
+      );
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+  });
+
+  describe('createLink', () => {
+    it('invokes createLink without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLinkRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.createLink = stubLongRunningCall(expectedResponse);
+      const [operation] = await client.createLink(request);
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes createLink without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLinkRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.createLink =
+        stubLongRunningCallWithCallback(expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.createLink(
+          request,
+          (
+            err?: Error | null,
+            result?: LROperation<
+              protos.google.logging.v2.ILink,
+              protos.google.logging.v2.ILinkMetadata
+            > | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const operation = (await promise) as LROperation<
+        protos.google.logging.v2.ILink,
+        protos.google.logging.v2.ILinkMetadata
+      >;
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes createLink with call error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLinkRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.createLink = stubLongRunningCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.createLink(request), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes createLink with LRO error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.CreateLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.CreateLinkRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.createLink = stubLongRunningCall(
+        undefined,
+        undefined,
+        expectedError
+      );
+      const [operation] = await client.createLink(request);
+      await assert.rejects(operation.promise(), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.createLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes checkCreateLinkProgress without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedResponse = generateSampleMessage(
+        new operationsProtos.google.longrunning.Operation()
+      );
+      expectedResponse.name = 'test';
+      expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+      expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')};
+
+      client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
+      const decodedOperation = await client.checkCreateLinkProgress(
+        expectedResponse.name
+      );
+      assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
+      assert(decodedOperation.metadata);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+
+    it('invokes checkCreateLinkProgress with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedError = new Error('expected');
+
+      client.operationsClient.getOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.checkCreateLinkProgress(''), expectedError);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+  });
+
+  describe('deleteLink', () => {
+    it('invokes deleteLink without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.deleteLink = stubLongRunningCall(expectedResponse);
+      const [operation] = await client.deleteLink(request);
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes deleteLink without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedResponse = generateSampleMessage(
+        new protos.google.longrunning.Operation()
+      );
+      client.innerApiCalls.deleteLink =
+        stubLongRunningCallWithCallback(expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.deleteLink(
+          request,
+          (
+            err?: Error | null,
+            result?: LROperation<
+              protos.google.protobuf.IEmpty,
+              protos.google.logging.v2.ILinkMetadata
+            > | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const operation = (await promise) as LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.ILinkMetadata
+      >;
+      const [response] = await operation.promise();
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes deleteLink with call error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.deleteLink = stubLongRunningCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.deleteLink(request), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes deleteLink with LRO error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.DeleteLinkRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.DeleteLinkRequest',
+        ['name']
+      );
+      request.name = defaultValue1;
+      const expectedHeaderRequestParams = `name=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.deleteLink = stubLongRunningCall(
+        undefined,
+        undefined,
+        expectedError
+      );
+      const [operation] = await client.deleteLink(request);
+      await assert.rejects(operation.promise(), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.deleteLink as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes checkDeleteLinkProgress without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedResponse = generateSampleMessage(
+        new operationsProtos.google.longrunning.Operation()
+      );
+      expectedResponse.name = 'test';
+      expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+      expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')};
+
+      client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
+      const decodedOperation = await client.checkDeleteLinkProgress(
+        expectedResponse.name
+      );
+      assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
+      assert(decodedOperation.metadata);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+
+    it('invokes checkDeleteLinkProgress with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const expectedError = new Error('expected');
+
+      client.operationsClient.getOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(client.checkDeleteLinkProgress(''), expectedError);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+  });
+
   describe('copyLogEntries', () => {
     it('invokes copyLogEntries without error', async () => {
       const client = new configservicev2Module.v2.ConfigServiceV2Client({
@@ -4006,6 +4901,300 @@ describe('v2.ConfigServiceV2Client', () => {
     });
   });
 
+  describe('listLinks', () => {
+    it('invokes listLinks without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+      ];
+      client.innerApiCalls.listLinks = stubSimpleCall(expectedResponse);
+      const [response] = await client.listLinks(request);
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.listLinks as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.listLinks as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes listLinks without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+      ];
+      client.innerApiCalls.listLinks =
+        stubSimpleCallWithCallback(expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.listLinks(
+          request,
+          (
+            err?: Error | null,
+            result?: protos.google.logging.v2.ILink[] | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      const actualRequest = (
+        client.innerApiCalls.listLinks as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.listLinks as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes listLinks with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.innerApiCalls.listLinks = stubSimpleCall(undefined, expectedError);
+      await assert.rejects(client.listLinks(request), expectedError);
+      const actualRequest = (
+        client.innerApiCalls.listLinks as SinonStub
+      ).getCall(0).args[0];
+      assert.deepStrictEqual(actualRequest, request);
+      const actualHeaderRequestParams = (
+        client.innerApiCalls.listLinks as SinonStub
+      ).getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+      assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+    });
+
+    it('invokes listLinksStream without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+      ];
+      client.descriptors.page.listLinks.createStream =
+        stubPageStreamingCall(expectedResponse);
+      const stream = client.listLinksStream(request);
+      const promise = new Promise((resolve, reject) => {
+        const responses: protos.google.logging.v2.Link[] = [];
+        stream.on('data', (response: protos.google.logging.v2.Link) => {
+          responses.push(response);
+        });
+        stream.on('end', () => {
+          resolve(responses);
+        });
+        stream.on('error', (err: Error) => {
+          reject(err);
+        });
+      });
+      const responses = await promise;
+      assert.deepStrictEqual(responses, expectedResponse);
+      assert(
+        (client.descriptors.page.listLinks.createStream as SinonStub)
+          .getCall(0)
+          .calledWith(client.innerApiCalls.listLinks, request)
+      );
+      assert(
+        (client.descriptors.page.listLinks.createStream as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
+      );
+    });
+
+    it('invokes listLinksStream with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.descriptors.page.listLinks.createStream = stubPageStreamingCall(
+        undefined,
+        expectedError
+      );
+      const stream = client.listLinksStream(request);
+      const promise = new Promise((resolve, reject) => {
+        const responses: protos.google.logging.v2.Link[] = [];
+        stream.on('data', (response: protos.google.logging.v2.Link) => {
+          responses.push(response);
+        });
+        stream.on('end', () => {
+          resolve(responses);
+        });
+        stream.on('error', (err: Error) => {
+          reject(err);
+        });
+      });
+      await assert.rejects(promise, expectedError);
+      assert(
+        (client.descriptors.page.listLinks.createStream as SinonStub)
+          .getCall(0)
+          .calledWith(client.innerApiCalls.listLinks, request)
+      );
+      assert(
+        (client.descriptors.page.listLinks.createStream as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
+      );
+    });
+
+    it('uses async iteration with listLinks without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedResponse = [
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+        generateSampleMessage(new protos.google.logging.v2.Link()),
+      ];
+      client.descriptors.page.listLinks.asyncIterate =
+        stubAsyncIterationCall(expectedResponse);
+      const responses: protos.google.logging.v2.ILink[] = [];
+      const iterable = client.listLinksAsync(request);
+      for await (const resource of iterable) {
+        responses.push(resource!);
+      }
+      assert.deepStrictEqual(responses, expectedResponse);
+      assert.deepStrictEqual(
+        (client.descriptors.page.listLinks.asyncIterate as SinonStub).getCall(0)
+          .args[1],
+        request
+      );
+      assert(
+        (client.descriptors.page.listLinks.asyncIterate as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
+      );
+    });
+
+    it('uses async iteration with listLinks with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new protos.google.logging.v2.ListLinksRequest()
+      );
+      const defaultValue1 = getTypeDefaultValue(
+        '.google.logging.v2.ListLinksRequest',
+        ['parent']
+      );
+      request.parent = defaultValue1;
+      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedError = new Error('expected');
+      client.descriptors.page.listLinks.asyncIterate = stubAsyncIterationCall(
+        undefined,
+        expectedError
+      );
+      const iterable = client.listLinksAsync(request);
+      await assert.rejects(async () => {
+        const responses: protos.google.logging.v2.ILink[] = [];
+        for await (const resource of iterable) {
+          responses.push(resource!);
+        }
+      });
+      assert.deepStrictEqual(
+        (client.descriptors.page.listLinks.asyncIterate as SinonStub).getCall(0)
+          .args[1],
+        request
+      );
+      assert(
+        (client.descriptors.page.listLinks.asyncIterate as SinonStub)
+          .getCall(0)
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams
+          )
+      );
+    });
+  });
+
   describe('listExclusions', () => {
     it('invokes listExclusions without error', async () => {
       const client = new configservicev2Module.v2.ConfigServiceV2Client({
@@ -4300,6 +5489,311 @@ describe('v2.ConfigServiceV2Client', () => {
       );
     });
   });
+  describe('getOperation', () => {
+    it('invokes getOperation without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.GetOperationRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new operationsProtos.google.longrunning.Operation()
+      );
+      client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
+      const response = await client.getOperation(request);
+      assert.deepStrictEqual(response, [expectedResponse]);
+      assert(
+        (client.operationsClient.getOperation as SinonStub)
+          .getCall(0)
+          .calledWith(request)
+      );
+    });
+    it('invokes getOperation without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.GetOperationRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new operationsProtos.google.longrunning.Operation()
+      );
+      client.operationsClient.getOperation = sinon
+        .stub()
+        .callsArgWith(2, null, expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.operationsClient.getOperation(
+          request,
+          undefined,
+          (
+            err?: Error | null,
+            result?: operationsProtos.google.longrunning.Operation | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+    });
+    it('invokes getOperation with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.GetOperationRequest()
+      );
+      const expectedError = new Error('expected');
+      client.operationsClient.getOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(async () => {
+        await client.getOperation(request);
+      }, expectedError);
+      assert(
+        (client.operationsClient.getOperation as SinonStub)
+          .getCall(0)
+          .calledWith(request)
+      );
+    });
+  });
+  describe('cancelOperation', () => {
+    it('invokes cancelOperation without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.CancelOperationRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.operationsClient.cancelOperation =
+        stubSimpleCall(expectedResponse);
+      const response = await client.cancelOperation(request);
+      assert.deepStrictEqual(response, [expectedResponse]);
+      assert(
+        (client.operationsClient.cancelOperation as SinonStub)
+          .getCall(0)
+          .calledWith(request)
+      );
+    });
+    it('invokes cancelOperation without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.CancelOperationRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.operationsClient.cancelOperation = sinon
+        .stub()
+        .callsArgWith(2, null, expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.operationsClient.cancelOperation(
+          request,
+          undefined,
+          (
+            err?: Error | null,
+            result?: protos.google.protobuf.Empty | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert((client.operationsClient.cancelOperation as SinonStub).getCall(0));
+    });
+    it('invokes cancelOperation with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.CancelOperationRequest()
+      );
+      const expectedError = new Error('expected');
+      client.operationsClient.cancelOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(async () => {
+        await client.cancelOperation(request);
+      }, expectedError);
+      assert(
+        (client.operationsClient.cancelOperation as SinonStub)
+          .getCall(0)
+          .calledWith(request)
+      );
+    });
+  });
+  describe('deleteOperation', () => {
+    it('invokes deleteOperation without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.DeleteOperationRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.operationsClient.deleteOperation =
+        stubSimpleCall(expectedResponse);
+      const response = await client.deleteOperation(request);
+      assert.deepStrictEqual(response, [expectedResponse]);
+      assert(
+        (client.operationsClient.deleteOperation as SinonStub)
+          .getCall(0)
+          .calledWith(request)
+      );
+    });
+    it('invokes deleteOperation without error using callback', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.DeleteOperationRequest()
+      );
+      const expectedResponse = generateSampleMessage(
+        new protos.google.protobuf.Empty()
+      );
+      client.operationsClient.deleteOperation = sinon
+        .stub()
+        .callsArgWith(2, null, expectedResponse);
+      const promise = new Promise((resolve, reject) => {
+        client.operationsClient.deleteOperation(
+          request,
+          undefined,
+          (
+            err?: Error | null,
+            result?: protos.google.protobuf.Empty | null
+          ) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
+      const response = await promise;
+      assert.deepStrictEqual(response, expectedResponse);
+      assert((client.operationsClient.deleteOperation as SinonStub).getCall(0));
+    });
+    it('invokes deleteOperation with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.DeleteOperationRequest()
+      );
+      const expectedError = new Error('expected');
+      client.operationsClient.deleteOperation = stubSimpleCall(
+        undefined,
+        expectedError
+      );
+      await assert.rejects(async () => {
+        await client.deleteOperation(request);
+      }, expectedError);
+      assert(
+        (client.operationsClient.deleteOperation as SinonStub)
+          .getCall(0)
+          .calledWith(request)
+      );
+    });
+  });
+  describe('listOperationsAsync', () => {
+    it('uses async iteration with listOperations without error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.ListOperationsRequest()
+      );
+      const expectedResponse = [
+        generateSampleMessage(
+          new operationsProtos.google.longrunning.ListOperationsResponse()
+        ),
+        generateSampleMessage(
+          new operationsProtos.google.longrunning.ListOperationsResponse()
+        ),
+        generateSampleMessage(
+          new operationsProtos.google.longrunning.ListOperationsResponse()
+        ),
+      ];
+      client.operationsClient.descriptor.listOperations.asyncIterate =
+        stubAsyncIterationCall(expectedResponse);
+      const responses: operationsProtos.google.longrunning.ListOperationsResponse[] =
+        [];
+      const iterable = client.operationsClient.listOperationsAsync(request);
+      for await (const resource of iterable) {
+        responses.push(resource!);
+      }
+      assert.deepStrictEqual(responses, expectedResponse);
+      assert.deepStrictEqual(
+        (
+          client.operationsClient.descriptor.listOperations
+            .asyncIterate as SinonStub
+        ).getCall(0).args[1],
+        request
+      );
+    });
+    it('uses async iteration with listOperations with error', async () => {
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      const request = generateSampleMessage(
+        new operationsProtos.google.longrunning.ListOperationsRequest()
+      );
+      const expectedError = new Error('expected');
+      client.operationsClient.descriptor.listOperations.asyncIterate =
+        stubAsyncIterationCall(undefined, expectedError);
+      const iterable = client.operationsClient.listOperationsAsync(request);
+      await assert.rejects(async () => {
+        const responses: operationsProtos.google.longrunning.ListOperationsResponse[] =
+          [];
+        for await (const resource of iterable) {
+          responses.push(resource!);
+        }
+      });
+      assert.deepStrictEqual(
+        (
+          client.operationsClient.descriptor.listOperations
+            .asyncIterate as SinonStub
+        ).getCall(0).args[1],
+        request
+      );
+    });
+  });
 
   describe('Path templates', () => {
     describe('billingAccountCmekSettings', () => {
@@ -4485,6 +5979,103 @@ describe('v2.ConfigServiceV2Client', () => {
         assert(
           (
             client.pathTemplates.billingAccountLocationBucketPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('billingAccountLocationBucketLink', () => {
+      const fakePath = '/rendered/path/billingAccountLocationBucketLink';
+      const expectedParameters = {
+        billing_account: 'billingAccountValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.billingAccountLocationBucketLinkPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('billingAccountLocationBucketLinkPath', () => {
+        const result = client.billingAccountLocationBucketLinkPath(
+          'billingAccountValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchBillingAccountFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchBillingAccountFromBillingAccountLocationBucketLinkName(
+            fakePath
+          );
+        assert.strictEqual(result, 'billingAccountValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromBillingAccountLocationBucketLinkName(
+            fakePath
+          );
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromBillingAccountLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromBillingAccountLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
               .match as SinonStub
           )
             .getCall(-1)
@@ -4924,6 +6515,101 @@ describe('v2.ConfigServiceV2Client', () => {
         assert(
           (
             client.pathTemplates.folderLocationBucketPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('folderLocationBucketLink', () => {
+      const fakePath = '/rendered/path/folderLocationBucketLink';
+      const expectedParameters = {
+        folder: 'folderValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.folderLocationBucketLinkPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.folderLocationBucketLinkPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('folderLocationBucketLinkPath', () => {
+        const result = client.folderLocationBucketLinkPath(
+          'folderValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchFolderFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchFolderFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'folderValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
               .match as SinonStub
           )
             .getCall(-1)
@@ -5448,6 +7134,101 @@ describe('v2.ConfigServiceV2Client', () => {
       });
     });
 
+    describe('organizationLocationBucketLink', () => {
+      const fakePath = '/rendered/path/organizationLocationBucketLink';
+      const expectedParameters = {
+        organization: 'organizationValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.organizationLocationBucketLinkPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.organizationLocationBucketLinkPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('organizationLocationBucketLinkPath', () => {
+        const result = client.organizationLocationBucketLinkPath(
+          'organizationValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchOrganizationFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchOrganizationFromOrganizationLocationBucketLinkName(
+            fakePath
+          );
+        assert.strictEqual(result, 'organizationValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromOrganizationLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromOrganizationLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromOrganizationLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('organizationLocationBucketView', () => {
       const fakePath = '/rendered/path/organizationLocationBucketView';
       const expectedParameters = {
@@ -5905,6 +7686,101 @@ describe('v2.ConfigServiceV2Client', () => {
         assert(
           (
             client.pathTemplates.projectLocationBucketPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('projectLocationBucketLink', () => {
+      const fakePath = '/rendered/path/projectLocationBucketLink';
+      const expectedParameters = {
+        project: 'projectValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new configservicev2Module.v2.ConfigServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.projectLocationBucketLinkPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.projectLocationBucketLinkPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('projectLocationBucketLinkPath', () => {
+        const result = client.projectLocationBucketLinkPath(
+          'projectValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchProjectFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchProjectFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'projectValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
               .match as SinonStub
           )
             .getCall(-1)

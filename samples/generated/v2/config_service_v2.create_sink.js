@@ -52,7 +52,8 @@ function main(parent, sink) {
    *  If this field is set to true, or if the sink is owned by a non-project
    *  resource such as an organization, then the value of `writer_identity` will
    *  be a unique service account used only for exports from the new sink. For
-   *  more information, see `writer_identity` in LogSink google.logging.v2.LogSink.
+   *  more information, see `writer_identity` in
+   *  LogSink google.logging.v2.LogSink.
    */
   // const uniqueWriterIdentity = true
 

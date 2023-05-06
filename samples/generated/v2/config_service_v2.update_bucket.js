@@ -41,9 +41,9 @@ function main(name, bucket, updateMask) {
    */
   // const bucket = {}
   /**
-   *  Required. Field mask that specifies the fields in `bucket` that need an update. A
-   *  bucket field will be overwritten if, and only if, it is in the update mask.
-   *  `name` and output only fields cannot be updated.
+   *  Required. Field mask that specifies the fields in `bucket` that need an
+   *  update. A bucket field will be overwritten if, and only if, it is in the
+   *  update mask. `name` and output only fields cannot be updated.
    *  For a detailed `FieldMask` definition, see:
    *  https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
    *  For example: `updateMask=retention_days`

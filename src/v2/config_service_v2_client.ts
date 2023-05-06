@@ -191,6 +191,10 @@ export class ConfigServiceV2Client {
         new this._gaxModule.PathTemplate(
           'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
         ),
+      billingAccountLocationBucketLinkPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/links/{link}'
+        ),
       billingAccountLocationBucketViewPathTemplate:
         new this._gaxModule.PathTemplate(
           'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -212,6 +216,9 @@ export class ConfigServiceV2Client {
       ),
       folderLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}'
+      ),
+      folderLocationBucketLinkPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/locations/{location}/buckets/{bucket}/links/{link}'
       ),
       folderLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -240,6 +247,10 @@ export class ConfigServiceV2Client {
       organizationLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/buckets/{bucket}'
       ),
+      organizationLocationBucketLinkPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'organizations/{organization}/locations/{location}/buckets/{bucket}/links/{link}'
+        ),
       organizationLocationBucketViewPathTemplate:
         new this._gaxModule.PathTemplate(
           'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -264,6 +275,9 @@ export class ConfigServiceV2Client {
       ),
       projectLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}'
+      ),
+      projectLocationBucketLinkPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/locations/{location}/buckets/{bucket}/links/{link}'
       ),
       projectLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -297,6 +311,11 @@ export class ConfigServiceV2Client {
         'pageToken',
         'nextPageToken',
         'sinks'
+      ),
+      listLinks: new this._gaxModule.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'links'
       ),
       listExclusions: new this._gaxModule.PageDescriptor(
         'pageToken',
@@ -346,7 +365,7 @@ export class ConfigServiceV2Client {
             {get: '/v2/{name=projects/*/locations/*/operations/*}'},
             {get: '/v2/{name=organizations/*/locations/*/operations/*}'},
             {get: '/v2/{name=folders/*/locations/*/operations/*}'},
-            {get: '/v2/{name=billingAccounts/*/operations/*}'},
+            {get: '/v2/{name=billingAccounts/*/locations/*/operations/*}'},
           ],
         },
         {
@@ -364,6 +383,30 @@ export class ConfigServiceV2Client {
     this.operationsClient = this._gaxModule
       .lro(lroOptions)
       .operationsClient(opts);
+    const createBucketAsyncResponse = protoFilesRoot.lookup(
+      '.google.logging.v2.LogBucket'
+    ) as gax.protobuf.Type;
+    const createBucketAsyncMetadata = protoFilesRoot.lookup(
+      '.google.logging.v2.BucketMetadata'
+    ) as gax.protobuf.Type;
+    const updateBucketAsyncResponse = protoFilesRoot.lookup(
+      '.google.logging.v2.LogBucket'
+    ) as gax.protobuf.Type;
+    const updateBucketAsyncMetadata = protoFilesRoot.lookup(
+      '.google.logging.v2.BucketMetadata'
+    ) as gax.protobuf.Type;
+    const createLinkResponse = protoFilesRoot.lookup(
+      '.google.logging.v2.Link'
+    ) as gax.protobuf.Type;
+    const createLinkMetadata = protoFilesRoot.lookup(
+      '.google.logging.v2.LinkMetadata'
+    ) as gax.protobuf.Type;
+    const deleteLinkResponse = protoFilesRoot.lookup(
+      '.google.protobuf.Empty'
+    ) as gax.protobuf.Type;
+    const deleteLinkMetadata = protoFilesRoot.lookup(
+      '.google.logging.v2.LinkMetadata'
+    ) as gax.protobuf.Type;
     const copyLogEntriesResponse = protoFilesRoot.lookup(
       '.google.logging.v2.CopyLogEntriesResponse'
     ) as gax.protobuf.Type;
@@ -372,6 +415,26 @@ export class ConfigServiceV2Client {
     ) as gax.protobuf.Type;
 
     this.descriptors.longrunning = {
+      createBucketAsync: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        createBucketAsyncResponse.decode.bind(createBucketAsyncResponse),
+        createBucketAsyncMetadata.decode.bind(createBucketAsyncMetadata)
+      ),
+      updateBucketAsync: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        updateBucketAsyncResponse.decode.bind(updateBucketAsyncResponse),
+        updateBucketAsyncMetadata.decode.bind(updateBucketAsyncMetadata)
+      ),
+      createLink: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        createLinkResponse.decode.bind(createLinkResponse),
+        createLinkMetadata.decode.bind(createLinkMetadata)
+      ),
+      deleteLink: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        deleteLinkResponse.decode.bind(deleteLinkResponse),
+        deleteLinkMetadata.decode.bind(deleteLinkMetadata)
+      ),
       copyLogEntries: new this._gaxModule.LongrunningDescriptor(
         this.operationsClient,
         copyLogEntriesResponse.decode.bind(copyLogEntriesResponse),
@@ -431,6 +494,8 @@ export class ConfigServiceV2Client {
     const configServiceV2StubMethods = [
       'listBuckets',
       'getBucket',
+      'createBucketAsync',
+      'updateBucketAsync',
       'createBucket',
       'updateBucket',
       'deleteBucket',
@@ -445,6 +510,10 @@ export class ConfigServiceV2Client {
       'createSink',
       'updateSink',
       'deleteSink',
+      'createLink',
+      'deleteLink',
+      'listLinks',
+      'getLink',
       'listExclusions',
       'getExclusion',
       'createExclusion',
@@ -653,13 +722,13 @@ export class ConfigServiceV2Client {
    *
    *     `"projects/my-project/locations/global"`
    * @param {string} request.bucketId
-   *   Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are limited
-   *   to 100 characters and can include only letters, digits, underscores,
-   *   hyphens, and periods.
+   *   Required. A client-assigned identifier such as `"my-bucket"`. Identifiers
+   *   are limited to 100 characters and can include only letters, digits,
+   *   underscores, hyphens, and periods.
    * @param {google.logging.v2.LogBucket} request.bucket
-   *   Required. The new bucket. The region specified in the new bucket must be compliant
-   *   with any Location Restriction Org Policy. The name field in the bucket is
-   *   ignored.
+   *   Required. The new bucket. The region specified in the new bucket must be
+   *   compliant with any Location Restriction Org Policy. The name field in the
+   *   bucket is ignored.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -737,11 +806,7 @@ export class ConfigServiceV2Client {
     return this.innerApiCalls.createBucket(request, options, callback);
   }
   /**
-   * Updates a log bucket. This method replaces the following fields in the
-   * existing bucket with values from the new bucket: `retention_period`
-   *
-   * If the retention period is decreased and the bucket is locked,
-   * `FAILED_PRECONDITION` will be returned.
+   * Updates a log bucket.
    *
    * If the bucket has a `lifecycle_state` of `DELETE_REQUESTED`, then
    * `FAILED_PRECONDITION` will be returned.
@@ -764,9 +829,9 @@ export class ConfigServiceV2Client {
    * @param {google.logging.v2.LogBucket} request.bucket
    *   Required. The updated bucket.
    * @param {google.protobuf.FieldMask} request.updateMask
-   *   Required. Field mask that specifies the fields in `bucket` that need an update. A
-   *   bucket field will be overwritten if, and only if, it is in the update mask.
-   *   `name` and output only fields cannot be updated.
+   *   Required. Field mask that specifies the fields in `bucket` that need an
+   *   update. A bucket field will be overwritten if, and only if, it is in the
+   *   update mask. `name` and output only fields cannot be updated.
    *
    *   For a detailed `FieldMask` definition, see:
    *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
@@ -1141,7 +1206,9 @@ export class ConfigServiceV2Client {
    *
    *     `"projects/my-project/locations/global/buckets/my-bucket"`
    * @param {string} request.viewId
-   *   Required. The id to use for this view.
+   *   Required. A client-assigned identifier such as `"my-view"`. Identifiers are
+   *   limited to 100 characters and can include only letters, digits,
+   *   underscores, hyphens, and periods.
    * @param {google.logging.v2.LogView} request.view
    *   Required. The new view.
    * @param {object} [options]
@@ -1542,7 +1609,8 @@ export class ConfigServiceV2Client {
    *   If this field is set to true, or if the sink is owned by a non-project
    *   resource such as an organization, then the value of `writer_identity` will
    *   be a unique service account used only for exports from the new sink. For
-   *   more information, see `writer_identity` in {@link google.logging.v2.LogSink|LogSink}.
+   *   more information, see `writer_identity` in
+   *   {@link google.logging.v2.LogSink|LogSink}.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1629,8 +1697,8 @@ export class ConfigServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.sinkName
-   *   Required. The full resource name of the sink to update, including the parent
-   *   resource and the sink identifier:
+   *   Required. The full resource name of the sink to update, including the
+   *   parent resource and the sink identifier:
    *
    *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
    *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
@@ -1641,8 +1709,8 @@ export class ConfigServiceV2Client {
    *
    *     `"projects/my-project/sinks/my-sink"`
    * @param {google.logging.v2.LogSink} request.sink
-   *   Required. The updated sink, whose name is the same identifier that appears as part
-   *   of `sink_name`.
+   *   Required. The updated sink, whose name is the same identifier that appears
+   *   as part of `sink_name`.
    * @param {boolean} [request.uniqueWriterIdentity]
    *   Optional. See {@link google.logging.v2.ConfigServiceV2.CreateSink|sinks.create}
    *   for a description of this field. When updating a sink, the effect of this
@@ -1755,8 +1823,8 @@ export class ConfigServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.sinkName
-   *   Required. The full resource name of the sink to delete, including the parent
-   *   resource and the sink identifier:
+   *   Required. The full resource name of the sink to delete, including the
+   *   parent resource and the sink identifier:
    *
    *       "projects/[PROJECT_ID]/sinks/[SINK_ID]"
    *       "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
@@ -1841,6 +1909,94 @@ export class ConfigServiceV2Client {
       });
     this.initialize();
     return this.innerApiCalls.deleteSink(request, options, callback);
+  }
+  /**
+   * Gets a link.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The resource name of the link:
+   *
+   *     "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *     "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *     "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *     "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link google.logging.v2.Link | Link}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.get_link.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_GetLink_async
+   */
+  getLink(
+    request?: protos.google.logging.v2.IGetLinkRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILink,
+      protos.google.logging.v2.IGetLinkRequest | undefined,
+      {} | undefined
+    ]
+  >;
+  getLink(
+    request: protos.google.logging.v2.IGetLinkRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.logging.v2.ILink,
+      protos.google.logging.v2.IGetLinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getLink(
+    request: protos.google.logging.v2.IGetLinkRequest,
+    callback: Callback<
+      protos.google.logging.v2.ILink,
+      protos.google.logging.v2.IGetLinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  getLink(
+    request?: protos.google.logging.v2.IGetLinkRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.logging.v2.ILink,
+          protos.google.logging.v2.IGetLinkRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.logging.v2.ILink,
+      protos.google.logging.v2.IGetLinkRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILink,
+      protos.google.logging.v2.IGetLinkRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        name: request.name ?? '',
+      });
+    this.initialize();
+    return this.innerApiCalls.getLink(request, options, callback);
   }
   /**
    * Gets the description of an exclusion in the _Default sink.
@@ -2050,13 +2206,14 @@ export class ConfigServiceV2Client {
    *
    *     `"projects/my-project/exclusions/my-exclusion"`
    * @param {google.logging.v2.LogExclusion} request.exclusion
-   *   Required. New values for the existing exclusion. Only the fields specified in
-   *   `update_mask` are relevant.
+   *   Required. New values for the existing exclusion. Only the fields specified
+   *   in `update_mask` are relevant.
    * @param {google.protobuf.FieldMask} request.updateMask
-   *   Required. A non-empty list of fields to change in the existing exclusion. New values
-   *   for the fields are taken from the corresponding fields in the
-   *   {@link google.logging.v2.LogExclusion|LogExclusion} included in this request. Fields not mentioned in
-   *   `update_mask` are not changed and are ignored in the request.
+   *   Required. A non-empty list of fields to change in the existing exclusion.
+   *   New values for the fields are taken from the corresponding fields in the
+   *   {@link google.logging.v2.LogExclusion|LogExclusion} included in this request.
+   *   Fields not mentioned in `update_mask` are not changed and are ignored in
+   *   the request.
    *
    *   For example, to change the filter and description of an exclusion,
    *   specify an `update_mask` of `"filter,description"`.
@@ -2690,6 +2847,618 @@ export class ConfigServiceV2Client {
   }
 
   /**
+   * Creates a log bucket asynchronously that can be used to store log entries.
+   *
+   * After a bucket has been created, the bucket's location cannot be changed.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The resource in which to create the log bucket:
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
+   *
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global"`
+   * @param {string} request.bucketId
+   *   Required. A client-assigned identifier such as `"my-bucket"`. Identifiers
+   *   are limited to 100 characters and can include only letters, digits,
+   *   underscores, hyphens, and periods.
+   * @param {google.logging.v2.LogBucket} request.bucket
+   *   Required. The new bucket. The region specified in the new bucket must be
+   *   compliant with any Location Restriction Org Policy. The name field in the
+   *   bucket is ignored.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_bucket_async.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async
+   */
+  createBucketAsync(
+    request?: protos.google.logging.v2.ICreateBucketRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
+  createBucketAsync(
+    request: protos.google.logging.v2.ICreateBucketRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createBucketAsync(
+    request: protos.google.logging.v2.ICreateBucketRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createBucketAsync(
+    request?: protos.google.logging.v2.ICreateBucketRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.logging.v2.ILogBucket,
+            protos.google.logging.v2.IBucketMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize();
+    return this.innerApiCalls.createBucketAsync(request, options, callback);
+  }
+  /**
+   * Check the status of the long running operation returned by `createBucketAsync()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_bucket_async.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async
+   */
+  async checkCreateBucketAsyncProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.logging.v2.LogBucket,
+      protos.google.logging.v2.BucketMetadata
+    >
+  > {
+    const request =
+      new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest(
+        {name}
+      );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(
+      operation,
+      this.descriptors.longrunning.createBucketAsync,
+      this._gaxModule.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.logging.v2.LogBucket,
+      protos.google.logging.v2.BucketMetadata
+    >;
+  }
+  /**
+   * Updates a log bucket asynchronously.
+   *
+   * If the bucket has a `lifecycle_state` of `DELETE_REQUESTED`, then
+   * `FAILED_PRECONDITION` will be returned.
+   *
+   * After a bucket has been created, the bucket's location cannot be changed.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the bucket to update.
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *
+   *   For example:
+   *
+   *     `"projects/my-project/locations/global/buckets/my-bucket"`
+   * @param {google.logging.v2.LogBucket} request.bucket
+   *   Required. The updated bucket.
+   * @param {google.protobuf.FieldMask} request.updateMask
+   *   Required. Field mask that specifies the fields in `bucket` that need an
+   *   update. A bucket field will be overwritten if, and only if, it is in the
+   *   update mask. `name` and output only fields cannot be updated.
+   *
+   *   For a detailed `FieldMask` definition, see:
+   *   https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
+   *
+   *   For example: `updateMask=retention_days`
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_bucket_async.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_UpdateBucketAsync_async
+   */
+  updateBucketAsync(
+    request?: protos.google.logging.v2.IUpdateBucketRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
+  updateBucketAsync(
+    request: protos.google.logging.v2.IUpdateBucketRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateBucketAsync(
+    request: protos.google.logging.v2.IUpdateBucketRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  updateBucketAsync(
+    request?: protos.google.logging.v2.IUpdateBucketRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.logging.v2.ILogBucket,
+            protos.google.logging.v2.IBucketMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ILogBucket,
+        protos.google.logging.v2.IBucketMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        name: request.name ?? '',
+      });
+    this.initialize();
+    return this.innerApiCalls.updateBucketAsync(request, options, callback);
+  }
+  /**
+   * Check the status of the long running operation returned by `updateBucketAsync()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.update_bucket_async.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_UpdateBucketAsync_async
+   */
+  async checkUpdateBucketAsyncProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.logging.v2.LogBucket,
+      protos.google.logging.v2.BucketMetadata
+    >
+  > {
+    const request =
+      new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest(
+        {name}
+      );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(
+      operation,
+      this.descriptors.longrunning.updateBucketAsync,
+      this._gaxModule.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.logging.v2.LogBucket,
+      protos.google.logging.v2.BucketMetadata
+    >;
+  }
+  /**
+   * Asynchronously creates a linked dataset in BigQuery which makes it possible
+   * to use BigQuery to read the logs stored in the log bucket. A log bucket may
+   * currently only contain one link.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The full resource name of the bucket to create a link for.
+   *
+   *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *       "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   * @param {google.logging.v2.Link} request.link
+   *   Required. The new link.
+   * @param {string} request.linkId
+   *   Required. The ID to use for the link. The link_id can have up to 100
+   *   characters. A valid link_id must only have alphanumeric characters and
+   *   underscores within it.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_link.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_CreateLink_async
+   */
+  createLink(
+    request?: protos.google.logging.v2.ICreateLinkRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ILink,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
+  createLink(
+    request: protos.google.logging.v2.ICreateLinkRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ILink,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createLink(
+    request: protos.google.logging.v2.ICreateLinkRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.logging.v2.ILink,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  createLink(
+    request?: protos.google.logging.v2.ICreateLinkRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.logging.v2.ILink,
+            protos.google.logging.v2.ILinkMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.logging.v2.ILink,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.logging.v2.ILink,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize();
+    return this.innerApiCalls.createLink(request, options, callback);
+  }
+  /**
+   * Check the status of the long running operation returned by `createLink()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.create_link.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_CreateLink_async
+   */
+  async checkCreateLinkProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.logging.v2.Link,
+      protos.google.logging.v2.LinkMetadata
+    >
+  > {
+    const request =
+      new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest(
+        {name}
+      );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(
+      operation,
+      this.descriptors.longrunning.createLink,
+      this._gaxModule.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.logging.v2.Link,
+      protos.google.logging.v2.LinkMetadata
+    >;
+  }
+  /**
+   * Deletes a link. This will also delete the corresponding BigQuery linked
+   * dataset.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The full resource name of the link to delete.
+   *
+   *    "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *     "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *     "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *     "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.delete_link.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_DeleteLink_async
+   */
+  deleteLink(
+    request?: protos.google.logging.v2.IDeleteLinkRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
+  deleteLink(
+    request: protos.google.logging.v2.IDeleteLinkRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteLink(
+    request: protos.google.logging.v2.IDeleteLinkRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  deleteLink(
+    request?: protos.google.logging.v2.IDeleteLinkRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.protobuf.IEmpty,
+            protos.google.logging.v2.ILinkMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.logging.v2.ILinkMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        name: request.name ?? '',
+      });
+    this.initialize();
+    return this.innerApiCalls.deleteLink(request, options, callback);
+  }
+  /**
+   * Check the status of the long running operation returned by `deleteLink()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.delete_link.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_DeleteLink_async
+   */
+  async checkDeleteLinkProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.protobuf.Empty,
+      protos.google.logging.v2.LinkMetadata
+    >
+  > {
+    const request =
+      new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest(
+        {name}
+      );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(
+      operation,
+      this.descriptors.longrunning.deleteLink,
+      this._gaxModule.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.protobuf.Empty,
+      protos.google.logging.v2.LinkMetadata
+    >;
+  }
+  /**
    * Copies a set of log entries from a log bucket to a Cloud Storage bucket.
    *
    * @param {Object} request
@@ -2701,8 +3470,8 @@ export class ConfigServiceV2Client {
    *
    *     `"projects/my-project/locations/global/buckets/my-source-bucket"`
    * @param {string} [request.filter]
-   *   Optional. A filter specifying which log entries to copy. The filter must be no more
-   *   than 20k characters. An empty filter matches all log entries.
+   *   Optional. A filter specifying which log entries to copy. The filter must be
+   *   no more than 20k characters. An empty filter matches all log entries.
    * @param {string} request.destination
    *   Required. Destination to which to copy log entries.
    * @param {object} [options]
@@ -2849,14 +3618,14 @@ export class ConfigServiceV2Client {
    *   supplying the character `-` in place of [LOCATION_ID] will return all
    *   buckets.
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the preceding call
-   *   to this method. `pageToken` must be the value of `nextPageToken` from the
-   *   previous response. The values of other method parameters should be
-   *   identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request. Non-positive
-   *   values are ignored. The presence of `nextPageToken` in the response
-   *   indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -2953,14 +3722,14 @@ export class ConfigServiceV2Client {
    *   supplying the character `-` in place of [LOCATION_ID] will return all
    *   buckets.
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the preceding call
-   *   to this method. `pageToken` must be the value of `nextPageToken` from the
-   *   previous response. The values of other method parameters should be
-   *   identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request. Non-positive
-   *   values are ignored. The presence of `nextPageToken` in the response
-   *   indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
@@ -3013,14 +3782,14 @@ export class ConfigServiceV2Client {
    *   supplying the character `-` in place of [LOCATION_ID] will return all
    *   buckets.
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the preceding call
-   *   to this method. `pageToken` must be the value of `nextPageToken` from the
-   *   previous response. The values of other method parameters should be
-   *   identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request. Non-positive
-   *   values are ignored. The presence of `nextPageToken` in the response
-   *   indicates that more results might be available.
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored. The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
@@ -3065,10 +3834,10 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the preceding call
-   *   to this method. `pageToken` must be the value of `nextPageToken` from the
-   *   previous response. The values of other method parameters should be
-   *   identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
    *
@@ -3163,10 +3932,10 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the preceding call
-   *   to this method. `pageToken` must be the value of `nextPageToken` from the
-   *   previous response. The values of other method parameters should be
-   *   identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
    *
@@ -3217,10 +3986,10 @@ export class ConfigServiceV2Client {
    *
    *       "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the preceding call
-   *   to this method. `pageToken` must be the value of `nextPageToken` from the
-   *   previous response. The values of other method parameters should be
-   *   identical to those in the previous call.
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response. The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {number} [request.pageSize]
    *   Optional. The maximum number of results to return from this request.
    *
@@ -3472,6 +4241,208 @@ export class ConfigServiceV2Client {
     ) as AsyncIterable<protos.google.logging.v2.ILogSink>;
   }
   /**
+   * Lists links.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose links are to be listed:
+   *
+   *     "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/"
+   *     "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *     "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *     "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is Array of {@link google.logging.v2.Link | Link}.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed and will merge results from all the pages into this array.
+   *   Note that it can affect your quota.
+   *   We recommend using `listLinksAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   */
+  listLinks(
+    request?: protos.google.logging.v2.IListLinksRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.logging.v2.ILink[],
+      protos.google.logging.v2.IListLinksRequest | null,
+      protos.google.logging.v2.IListLinksResponse
+    ]
+  >;
+  listLinks(
+    request: protos.google.logging.v2.IListLinksRequest,
+    options: CallOptions,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLinksRequest,
+      protos.google.logging.v2.IListLinksResponse | null | undefined,
+      protos.google.logging.v2.ILink
+    >
+  ): void;
+  listLinks(
+    request: protos.google.logging.v2.IListLinksRequest,
+    callback: PaginationCallback<
+      protos.google.logging.v2.IListLinksRequest,
+      protos.google.logging.v2.IListLinksResponse | null | undefined,
+      protos.google.logging.v2.ILink
+    >
+  ): void;
+  listLinks(
+    request?: protos.google.logging.v2.IListLinksRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | PaginationCallback<
+          protos.google.logging.v2.IListLinksRequest,
+          protos.google.logging.v2.IListLinksResponse | null | undefined,
+          protos.google.logging.v2.ILink
+        >,
+    callback?: PaginationCallback<
+      protos.google.logging.v2.IListLinksRequest,
+      protos.google.logging.v2.IListLinksResponse | null | undefined,
+      protos.google.logging.v2.ILink
+    >
+  ): Promise<
+    [
+      protos.google.logging.v2.ILink[],
+      protos.google.logging.v2.IListLinksRequest | null,
+      protos.google.logging.v2.IListLinksResponse
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize();
+    return this.innerApiCalls.listLinks(request, options, callback);
+  }
+
+  /**
+   * Equivalent to `method.name.toCamelCase()`, but returns a NodeJS Stream object.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose links are to be listed:
+   *
+   *     "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/"
+   *     "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *     "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *     "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Stream}
+   *   An object stream which emits an object representing {@link google.logging.v2.Link | Link} on 'data' event.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed. Note that it can affect your quota.
+   *   We recommend using `listLinksAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   */
+  listLinksStream(
+    request?: protos.google.logging.v2.IListLinksRequest,
+    options?: CallOptions
+  ): Transform {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    const defaultCallSettings = this._defaults['listLinks'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize();
+    return this.descriptors.page.listLinks.createStream(
+      this.innerApiCalls.listLinks as GaxCall,
+      request,
+      callSettings
+    );
+  }
+
+  /**
+   * Equivalent to `listLinks`, but returns an iterable object.
+   *
+   * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource whose links are to be listed:
+   *
+   *     "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/"
+   *     "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *     "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *     "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method. `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   When you iterate the returned iterable, each element will be an object representing
+   *   {@link google.logging.v2.Link | Link}. The API will be called under the hood as needed, once per the page,
+   *   so you can stop the iteration when you don't need more results.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/config_service_v2.list_links.js</caption>
+   * region_tag:logging_v2_generated_ConfigServiceV2_ListLinks_async
+   */
+  listLinksAsync(
+    request?: protos.google.logging.v2.IListLinksRequest,
+    options?: CallOptions
+  ): AsyncIterable<protos.google.logging.v2.ILink> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    const defaultCallSettings = this._defaults['listLinks'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize();
+    return this.descriptors.page.listLinks.asyncIterate(
+      this.innerApiCalls['listLinks'] as GaxCall,
+      request as {},
+      callSettings
+    ) as AsyncIterable<protos.google.logging.v2.ILink>;
+  }
+  /**
    * Lists all the exclusions on the _Default sink in a parent resource.
    *
    * @param {Object} request
@@ -3682,6 +4653,181 @@ export class ConfigServiceV2Client {
       callSettings
     ) as AsyncIterable<protos.google.logging.v2.ILogExclusion>;
   }
+  /**
+   * Gets the latest state of a long-running operation.  Clients can use this
+   * method to poll the operation result at intervals as recommended by the API
+   * service.
+   *
+   * @param {Object} request - The request object that will be sent.
+   * @param {string} request.name - The name of the operation resource.
+   * @param {Object=} options
+   *   Optional parameters. You can override the default settings for this call,
+   *   e.g, timeout, retries, paginations, etc. See {@link
+   *   https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions}
+   *   for the details.
+   * @param {function(?Error, ?Object)=} callback
+   *   The function which will be called with the result of the API call.
+   *
+   *   The second parameter to the callback is an object representing
+   *   {@link google.longrunning.Operation | google.longrunning.Operation}.
+   * @return {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   * {@link google.longrunning.Operation | google.longrunning.Operation}.
+   * The promise has a method named "cancel" which cancels the ongoing API call.
+   *
+   * @example
+   * ```
+   * const client = longrunning.operationsClient();
+   * const name = '';
+   * const [response] = await client.getOperation({name});
+   * // doThingsWith(response)
+   * ```
+   */
+  getOperation(
+    request: protos.google.longrunning.GetOperationRequest,
+    options?:
+      | gax.CallOptions
+      | Callback<
+          protos.google.longrunning.Operation,
+          protos.google.longrunning.GetOperationRequest,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.longrunning.Operation,
+      protos.google.longrunning.GetOperationRequest,
+      {} | null | undefined
+    >
+  ): Promise<[protos.google.longrunning.Operation]> {
+    return this.operationsClient.getOperation(request, options, callback);
+  }
+  /**
+   * Lists operations that match the specified filter in the request. If the
+   * server doesn't support this method, it returns `UNIMPLEMENTED`. Returns an iterable object.
+   *
+   * For-await-of syntax is used with the iterable to recursively get response element on-demand.
+   *
+   * @param {Object} request - The request object that will be sent.
+   * @param {string} request.name - The name of the operation collection.
+   * @param {string} request.filter - The standard list filter.
+   * @param {number=} request.pageSize -
+   *   The maximum number of resources contained in the underlying API
+   *   response. If page streaming is performed per-resource, this
+   *   parameter does not affect the return value. If page streaming is
+   *   performed per-page, this determines the maximum number of
+   *   resources in a page.
+   * @param {Object=} options
+   *   Optional parameters. You can override the default settings for this call,
+   *   e.g, timeout, retries, paginations, etc. See {@link
+   *   https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions} for the
+   *   details.
+   * @returns {Object}
+   *   An iterable Object that conforms to {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | iteration protocols}.
+   *
+   * @example
+   * ```
+   * const client = longrunning.operationsClient();
+   * for await (const response of client.listOperationsAsync(request));
+   * // doThingsWith(response)
+   * ```
+   */
+  listOperationsAsync(
+    request: protos.google.longrunning.ListOperationsRequest,
+    options?: gax.CallOptions
+  ): AsyncIterable<protos.google.longrunning.ListOperationsResponse> {
+    return this.operationsClient.listOperationsAsync(request, options);
+  }
+  /**
+   * Starts asynchronous cancellation on a long-running operation.  The server
+   * makes a best effort to cancel the operation, but success is not
+   * guaranteed.  If the server doesn't support this method, it returns
+   * `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
+   * {@link Operations.GetOperation} or
+   * other methods to check whether the cancellation succeeded or whether the
+   * operation completed despite cancellation. On successful cancellation,
+   * the operation is not deleted; instead, it becomes an operation with
+   * an {@link Operation.error} value with a {@link google.rpc.Status.code} of
+   * 1, corresponding to `Code.CANCELLED`.
+   *
+   * @param {Object} request - The request object that will be sent.
+   * @param {string} request.name - The name of the operation resource to be cancelled.
+   * @param {Object=} options
+   *   Optional parameters. You can override the default settings for this call,
+   * e.g, timeout, retries, paginations, etc. See {@link
+   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions} for the
+   * details.
+   * @param {function(?Error)=} callback
+   *   The function which will be called with the result of the API call.
+   * @return {Promise} - The promise which resolves when API call finishes.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   * call.
+   *
+   * @example
+   * ```
+   * const client = longrunning.operationsClient();
+   * await client.cancelOperation({name: ''});
+   * ```
+   */
+  cancelOperation(
+    request: protos.google.longrunning.CancelOperationRequest,
+    options?:
+      | gax.CallOptions
+      | Callback<
+          protos.google.protobuf.Empty,
+          protos.google.longrunning.CancelOperationRequest,
+          {} | undefined | null
+        >,
+    callback?: Callback<
+      protos.google.longrunning.CancelOperationRequest,
+      protos.google.protobuf.Empty,
+      {} | undefined | null
+    >
+  ): Promise<protos.google.protobuf.Empty> {
+    return this.operationsClient.cancelOperation(request, options, callback);
+  }
+
+  /**
+   * Deletes a long-running operation. This method indicates that the client is
+   * no longer interested in the operation result. It does not cancel the
+   * operation. If the server doesn't support this method, it returns
+   * `google.rpc.Code.UNIMPLEMENTED`.
+   *
+   * @param {Object} request - The request object that will be sent.
+   * @param {string} request.name - The name of the operation resource to be deleted.
+   * @param {Object=} options
+   *   Optional parameters. You can override the default settings for this call,
+   * e.g, timeout, retries, paginations, etc. See {@link
+   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions}
+   * for the details.
+   * @param {function(?Error)=} callback
+   *   The function which will be called with the result of the API call.
+   * @return {Promise} - The promise which resolves when API call finishes.
+   *   The promise has a method named "cancel" which cancels the ongoing API
+   * call.
+   *
+   * @example
+   * ```
+   * const client = longrunning.operationsClient();
+   * await client.deleteOperation({name: ''});
+   * ```
+   */
+  deleteOperation(
+    request: protos.google.longrunning.DeleteOperationRequest,
+    options?:
+      | gax.CallOptions
+      | Callback<
+          protos.google.protobuf.Empty,
+          protos.google.longrunning.DeleteOperationRequest,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.protobuf.Empty,
+      protos.google.longrunning.DeleteOperationRequest,
+      {} | null | undefined
+    >
+  ): Promise<protos.google.protobuf.Empty> {
+    return this.operationsClient.deleteOperation(request, options, callback);
+  }
+
   // --------------------
   // -- Path templates --
   // --------------------
@@ -3820,6 +4966,91 @@ export class ConfigServiceV2Client {
     return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified billingAccountLocationBucketLink resource name string.
+   *
+   * @param {string} billing_account
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  billingAccountLocationBucketLinkPath(
+    billingAccount: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.render(
+      {
+        billing_account: billingAccount,
+        location: location,
+        bucket: bucket,
+        link: link,
+      }
+    );
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the location from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).link;
   }
 
   /**
@@ -4134,6 +5365,89 @@ export class ConfigServiceV2Client {
     return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified folderLocationBucketLink resource name string.
+   *
+   * @param {string} folder
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  folderLocationBucketLinkPath(
+    folder: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
+      link: link,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).folder;
+  }
+
+  /**
+   * Parse the location from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).link;
   }
 
   /**
@@ -4527,6 +5841,91 @@ export class ConfigServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationLocationBucketLink resource name string.
+   *
+   * @param {string} organization
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  organizationLocationBucketLinkPath(
+    organization: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.render(
+      {
+        organization: organization,
+        location: location,
+        bucket: bucket,
+        link: link,
+      }
+    );
+  }
+
+  /**
+   * Parse the organization from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).organization;
+  }
+
+  /**
+   * Parse the location from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).link;
+  }
+
+  /**
    * Return a fully-qualified organizationLocationBucketView resource name string.
    *
    * @param {string} organization
@@ -4861,6 +6260,89 @@ export class ConfigServiceV2Client {
     return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified projectLocationBucketLink resource name string.
+   *
+   * @param {string} project
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  projectLocationBucketLinkPath(
+    project: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
+      link: link,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).project;
+  }
+
+  /**
+   * Parse the location from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).link;
   }
 
   /**

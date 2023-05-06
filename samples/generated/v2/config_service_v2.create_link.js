@@ -16,12 +16,10 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-
-
 'use strict';
 
-function main(name, cmekSettings) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateCmekSettings_async]
+function main(parent, link, linkId) {
+  // [START logging_v2_generated_ConfigServiceV2_CreateLink_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,33 +27,23 @@ function main(name, cmekSettings) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name for the CMEK settings to update.
-   *      "projects/[PROJECT_ID]/cmekSettings"
-   *      "organizations/[ORGANIZATION_ID]/cmekSettings"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-   *      "folders/[FOLDER_ID]/cmekSettings"
-   *  For example:
-   *    `"organizations/12345/cmekSettings"`
-   *  Note: CMEK for the Log Router can currently only be configured for Google
-   *  Cloud organizations. Once configured, it applies to all projects and
-   *  folders in the Google Cloud organization.
+   *  Required. The full resource name of the bucket to create a link for.
+   *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *      "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *      "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *      "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Required. The CMEK settings to update.
-   *  See Enabling CMEK for Log
-   *  Router (https://cloud.google.com/logging/docs/routing/managed-encryption)
-   *  for more information.
+   *  Required. The new link.
    */
-  // const cmekSettings = {}
+  // const link = {}
   /**
-   *  Optional. Field mask identifying which fields from `cmek_settings` should
-   *  be updated. A field will be overwritten if and only if it is in the update
-   *  mask. Output only fields cannot be updated.
-   *  See FieldMask google.protobuf.FieldMask  for more information.
-   *  For example: `"updateMask=kmsKeyName"`
+   *  Required. The ID to use for the link. The link_id can have up to 100
+   *  characters. A valid link_id must only have alphanumeric characters and
+   *  underscores within it.
    */
-  // const updateMask = {}
+  // const linkId = 'abc123'
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -63,20 +51,22 @@ function main(name, cmekSettings) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateCmekSettings() {
+  async function callCreateLink() {
     // Construct request
     const request = {
-      name,
-      cmekSettings,
+      parent,
+      link,
+      linkId,
     };
 
     // Run request
-    const response = await loggingClient.updateCmekSettings(request);
+    const [operation] = await loggingClient.createLink(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callUpdateCmekSettings();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateCmekSettings_async]
+  callCreateLink();
+  // [END logging_v2_generated_ConfigServiceV2_CreateLink_async]
 }
 
 process.on('unhandledRejection', err => {

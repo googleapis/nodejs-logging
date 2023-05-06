@@ -16,12 +16,10 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-
-
 'use strict';
 
-function main(name, exclusion, updateMask) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateExclusion_async]
+function main(name) {
+  // [START logging_v2_generated_ConfigServiceV2_GetLink_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,30 +27,13 @@ function main(name, exclusion, updateMask) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name of the exclusion to update:
-   *      "projects/[PROJECT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "organizations/[ORGANIZATION_ID]/exclusions/[EXCLUSION_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/exclusions/[EXCLUSION_ID]"
-   *      "folders/[FOLDER_ID]/exclusions/[EXCLUSION_ID]"
-   *  For example:
-   *    `"projects/my-project/exclusions/my-exclusion"`
+   *  Required. The resource name of the link:
+   *    "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *    "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]
    */
   // const name = 'abc123'
-  /**
-   *  Required. New values for the existing exclusion. Only the fields specified
-   *  in `update_mask` are relevant.
-   */
-  // const exclusion = {}
-  /**
-   *  Required. A non-empty list of fields to change in the existing exclusion.
-   *  New values for the fields are taken from the corresponding fields in the
-   *  LogExclusion google.logging.v2.LogExclusion  included in this request.
-   *  Fields not mentioned in `update_mask` are not changed and are ignored in
-   *  the request.
-   *  For example, to change the filter and description of an exclusion,
-   *  specify an `update_mask` of `"filter,description"`.
-   */
-  // const updateMask = {}
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -60,21 +41,19 @@ function main(name, exclusion, updateMask) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateExclusion() {
+  async function callGetLink() {
     // Construct request
     const request = {
       name,
-      exclusion,
-      updateMask,
     };
 
     // Run request
-    const response = await loggingClient.updateExclusion(request);
+    const response = await loggingClient.getLink(request);
     console.log(response);
   }
 
-  callUpdateExclusion();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateExclusion_async]
+  callGetLink();
+  // [END logging_v2_generated_ConfigServiceV2_GetLink_async]
 }
 
 process.on('unhandledRejection', err => {

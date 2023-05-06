@@ -1454,6 +1454,103 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
+    describe('billingAccountLocationBucketLink', () => {
+      const fakePath = '/rendered/path/billingAccountLocationBucketLink';
+      const expectedParameters = {
+        billing_account: 'billingAccountValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.billingAccountLocationBucketLinkPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('billingAccountLocationBucketLinkPath', () => {
+        const result = client.billingAccountLocationBucketLinkPath(
+          'billingAccountValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchBillingAccountFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchBillingAccountFromBillingAccountLocationBucketLinkName(
+            fakePath
+          );
+        assert.strictEqual(result, 'billingAccountValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromBillingAccountLocationBucketLinkName(
+            fakePath
+          );
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromBillingAccountLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromBillingAccountLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromBillingAccountLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.billingAccountLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('billingAccountLocationBucketView', () => {
       const fakePath = '/rendered/path/billingAccountLocationBucketView';
       const expectedParameters = {
@@ -1885,6 +1982,101 @@ describe('v2.LoggingServiceV2Client', () => {
         assert(
           (
             client.pathTemplates.folderLocationBucketPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('folderLocationBucketLink', () => {
+      const fakePath = '/rendered/path/folderLocationBucketLink';
+      const expectedParameters = {
+        folder: 'folderValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.folderLocationBucketLinkPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.folderLocationBucketLinkPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('folderLocationBucketLinkPath', () => {
+        const result = client.folderLocationBucketLinkPath(
+          'folderValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchFolderFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchFolderFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'folderValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromFolderLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromFolderLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.folderLocationBucketLinkPathTemplate
               .match as SinonStub
           )
             .getCall(-1)
@@ -2360,6 +2552,101 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
+    describe('organizationLocationBucketLink', () => {
+      const fakePath = '/rendered/path/organizationLocationBucketLink';
+      const expectedParameters = {
+        organization: 'organizationValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.organizationLocationBucketLinkPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.organizationLocationBucketLinkPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('organizationLocationBucketLinkPath', () => {
+        const result = client.organizationLocationBucketLinkPath(
+          'organizationValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchOrganizationFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchOrganizationFromOrganizationLocationBucketLinkName(
+            fakePath
+          );
+        assert.strictEqual(result, 'organizationValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromOrganizationLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromOrganizationLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromOrganizationLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromOrganizationLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.organizationLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
     describe('organizationLocationBucketView', () => {
       const fakePath = '/rendered/path/organizationLocationBucketView';
       const expectedParameters = {
@@ -2817,6 +3104,101 @@ describe('v2.LoggingServiceV2Client', () => {
         assert(
           (
             client.pathTemplates.projectLocationBucketPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+    });
+
+    describe('projectLocationBucketLink', () => {
+      const fakePath = '/rendered/path/projectLocationBucketLink';
+      const expectedParameters = {
+        project: 'projectValue',
+        location: 'locationValue',
+        bucket: 'bucketValue',
+        link: 'linkValue',
+      };
+      const client = new loggingservicev2Module.v2.LoggingServiceV2Client({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      client.initialize();
+      client.pathTemplates.projectLocationBucketLinkPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.projectLocationBucketLinkPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('projectLocationBucketLinkPath', () => {
+        const result = client.projectLocationBucketLinkPath(
+          'projectValue',
+          'locationValue',
+          'bucketValue',
+          'linkValue'
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters)
+        );
+      });
+
+      it('matchProjectFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchProjectFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'projectValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLocationFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchLocationFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'locationValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchBucketFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchBucketFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'bucketValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath)
+        );
+      });
+
+      it('matchLinkFromProjectLocationBucketLinkName', () => {
+        const result =
+          client.matchLinkFromProjectLocationBucketLinkName(fakePath);
+        assert.strictEqual(result, 'linkValue');
+        assert(
+          (
+            client.pathTemplates.projectLocationBucketLinkPathTemplate
               .match as SinonStub
           )
             .getCall(-1)

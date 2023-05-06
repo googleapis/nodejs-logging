@@ -34,15 +34,15 @@ function main(parent, bucketId, bucket) {
    */
   // const parent = 'abc123'
   /**
-   *  Required. A client-assigned identifier such as `"my-bucket"`. Identifiers are limited
-   *  to 100 characters and can include only letters, digits, underscores,
-   *  hyphens, and periods.
+   *  Required. A client-assigned identifier such as `"my-bucket"`. Identifiers
+   *  are limited to 100 characters and can include only letters, digits,
+   *  underscores, hyphens, and periods.
    */
   // const bucketId = 'abc123'
   /**
-   *  Required. The new bucket. The region specified in the new bucket must be compliant
-   *  with any Location Restriction Org Policy. The name field in the bucket is
-   *  ignored.
+   *  Required. The new bucket. The region specified in the new bucket must be
+   *  compliant with any Location Restriction Org Policy. The name field in the
+   *  bucket is ignored.
    */
   // const bucket = {}
 

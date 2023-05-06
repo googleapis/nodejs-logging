@@ -33,6 +33,14 @@
           "retry_codes_name": "non_idempotent",
           "retry_params_name": "default"
         },
+        "CreateBucketAsync": {
+          "retry_codes_name": "non_idempotent",
+          "retry_params_name": "default"
+        },
+        "UpdateBucketAsync": {
+          "retry_codes_name": "non_idempotent",
+          "retry_params_name": "default"
+        },
         "CreateBucket": {
           "retry_codes_name": "non_idempotent",
           "retry_params_name": "default"
@@ -92,6 +100,22 @@
         "DeleteSink": {
           "timeout_millis": 60000,
           "retry_codes_name": "deadline_exceeded_internal_unavailable",
+          "retry_params_name": "default"
+        },
+        "CreateLink": {
+          "retry_codes_name": "non_idempotent",
+          "retry_params_name": "default"
+        },
+        "DeleteLink": {
+          "retry_codes_name": "non_idempotent",
+          "retry_params_name": "default"
+        },
+        "ListLinks": {
+          "retry_codes_name": "non_idempotent",
+          "retry_params_name": "default"
+        },
+        "GetLink": {
+          "retry_codes_name": "non_idempotent",
           "retry_params_name": "default"
         },
         "ListExclusions": {

@@ -16,12 +16,10 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-
-
 'use strict';
 
-function main(parent, viewId, view) {
-  // [START logging_v2_generated_ConfigServiceV2_CreateView_async]
+function main(name) {
+  // [START logging_v2_generated_ConfigServiceV2_DeleteLink_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,22 +27,13 @@ function main(parent, viewId, view) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The bucket in which to create the view
-   *      `"projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"`
-   *  For example:
-   *    `"projects/my-project/locations/global/buckets/my-bucket"`
+   *  Required. The full resource name of the link to delete.
+   *   "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
+   *    "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/[LINK_ID]"
    */
-  // const parent = 'abc123'
-  /**
-   *  Required. A client-assigned identifier such as `"my-view"`. Identifiers are
-   *  limited to 100 characters and can include only letters, digits,
-   *  underscores, hyphens, and periods.
-   */
-  // const viewId = 'abc123'
-  /**
-   *  Required. The new view.
-   */
-  // const view = {}
+  // const name = 'abc123'
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -52,21 +41,20 @@ function main(parent, viewId, view) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callCreateView() {
+  async function callDeleteLink() {
     // Construct request
     const request = {
-      parent,
-      viewId,
-      view,
+      name,
     };
 
     // Run request
-    const response = await loggingClient.createView(request);
+    const [operation] = await loggingClient.deleteLink(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callCreateView();
-  // [END logging_v2_generated_ConfigServiceV2_CreateView_async]
+  callDeleteLink();
+  // [END logging_v2_generated_ConfigServiceV2_DeleteLink_async]
 }
 
 process.on('unhandledRejection', err => {

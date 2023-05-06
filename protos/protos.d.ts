@@ -5924,14 +5924,14 @@ export namespace google {
                 /** ListLogsRequest parent */
                 parent?: (string|null);
 
+                /** ListLogsRequest resourceNames */
+                resourceNames?: (string[]|null);
+
                 /** ListLogsRequest pageSize */
                 pageSize?: (number|null);
 
                 /** ListLogsRequest pageToken */
                 pageToken?: (string|null);
-
-                /** ListLogsRequest resourceNames */
-                resourceNames?: (string[]|null);
             }
 
             /** Represents a ListLogsRequest. */
@@ -5946,14 +5946,14 @@ export namespace google {
                 /** ListLogsRequest parent. */
                 public parent: string;
 
+                /** ListLogsRequest resourceNames. */
+                public resourceNames: string[];
+
                 /** ListLogsRequest pageSize. */
                 public pageSize: number;
 
                 /** ListLogsRequest pageToken. */
                 public pageToken: string;
-
-                /** ListLogsRequest resourceNames. */
-                public resourceNames: string[];
 
                 /**
                  * Creates a new ListLogsRequest instance using the specified properties.
@@ -6513,6 +6513,34 @@ export namespace google {
                 public getBucket(request: google.logging.v2.IGetBucketRequest): Promise<google.logging.v2.LogBucket>;
 
                 /**
+                 * Calls CreateBucketAsync.
+                 * @param request CreateBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Operation
+                 */
+                public createBucketAsync(request: google.logging.v2.ICreateBucketRequest, callback: google.logging.v2.ConfigServiceV2.CreateBucketAsyncCallback): void;
+
+                /**
+                 * Calls CreateBucketAsync.
+                 * @param request CreateBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public createBucketAsync(request: google.logging.v2.ICreateBucketRequest): Promise<google.longrunning.Operation>;
+
+                /**
+                 * Calls UpdateBucketAsync.
+                 * @param request UpdateBucketRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Operation
+                 */
+                public updateBucketAsync(request: google.logging.v2.IUpdateBucketRequest, callback: google.logging.v2.ConfigServiceV2.UpdateBucketAsyncCallback): void;
+
+                /**
+                 * Calls UpdateBucketAsync.
+                 * @param request UpdateBucketRequest message or plain object
+                 * @returns Promise
+                 */
+                public updateBucketAsync(request: google.logging.v2.IUpdateBucketRequest): Promise<google.longrunning.Operation>;
+
+                /**
                  * Calls CreateBucket.
                  * @param request CreateBucketRequest message or plain object
                  * @param callback Node-style callback called with the error, if any, and LogBucket
@@ -6709,6 +6737,62 @@ export namespace google {
                 public deleteSink(request: google.logging.v2.IDeleteSinkRequest): Promise<google.protobuf.Empty>;
 
                 /**
+                 * Calls CreateLink.
+                 * @param request CreateLinkRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Operation
+                 */
+                public createLink(request: google.logging.v2.ICreateLinkRequest, callback: google.logging.v2.ConfigServiceV2.CreateLinkCallback): void;
+
+                /**
+                 * Calls CreateLink.
+                 * @param request CreateLinkRequest message or plain object
+                 * @returns Promise
+                 */
+                public createLink(request: google.logging.v2.ICreateLinkRequest): Promise<google.longrunning.Operation>;
+
+                /**
+                 * Calls DeleteLink.
+                 * @param request DeleteLinkRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Operation
+                 */
+                public deleteLink(request: google.logging.v2.IDeleteLinkRequest, callback: google.logging.v2.ConfigServiceV2.DeleteLinkCallback): void;
+
+                /**
+                 * Calls DeleteLink.
+                 * @param request DeleteLinkRequest message or plain object
+                 * @returns Promise
+                 */
+                public deleteLink(request: google.logging.v2.IDeleteLinkRequest): Promise<google.longrunning.Operation>;
+
+                /**
+                 * Calls ListLinks.
+                 * @param request ListLinksRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListLinksResponse
+                 */
+                public listLinks(request: google.logging.v2.IListLinksRequest, callback: google.logging.v2.ConfigServiceV2.ListLinksCallback): void;
+
+                /**
+                 * Calls ListLinks.
+                 * @param request ListLinksRequest message or plain object
+                 * @returns Promise
+                 */
+                public listLinks(request: google.logging.v2.IListLinksRequest): Promise<google.logging.v2.ListLinksResponse>;
+
+                /**
+                 * Calls GetLink.
+                 * @param request GetLinkRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Link
+                 */
+                public getLink(request: google.logging.v2.IGetLinkRequest, callback: google.logging.v2.ConfigServiceV2.GetLinkCallback): void;
+
+                /**
+                 * Calls GetLink.
+                 * @param request GetLinkRequest message or plain object
+                 * @returns Promise
+                 */
+                public getLink(request: google.logging.v2.IGetLinkRequest): Promise<google.logging.v2.Link>;
+
+                /**
                  * Calls ListExclusions.
                  * @param request ListExclusionsRequest message or plain object
                  * @param callback Node-style callback called with the error, if any, and ListExclusionsResponse
@@ -6866,6 +6950,20 @@ export namespace google {
                 type GetBucketCallback = (error: (Error|null), response?: google.logging.v2.LogBucket) => void;
 
                 /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2|createBucketAsync}.
+                 * @param error Error, if any
+                 * @param [response] Operation
+                 */
+                type CreateBucketAsyncCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2|updateBucketAsync}.
+                 * @param error Error, if any
+                 * @param [response] Operation
+                 */
+                type UpdateBucketAsyncCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
+
+                /**
                  * Callback as used by {@link google.logging.v2.ConfigServiceV2|createBucket}.
                  * @param error Error, if any
                  * @param [response] LogBucket
@@ -6964,6 +7062,34 @@ export namespace google {
                 type DeleteSinkCallback = (error: (Error|null), response?: google.protobuf.Empty) => void;
 
                 /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2|createLink}.
+                 * @param error Error, if any
+                 * @param [response] Operation
+                 */
+                type CreateLinkCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2|deleteLink}.
+                 * @param error Error, if any
+                 * @param [response] Operation
+                 */
+                type DeleteLinkCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2|listLinks}.
+                 * @param error Error, if any
+                 * @param [response] ListLinksResponse
+                 */
+                type ListLinksCallback = (error: (Error|null), response?: google.logging.v2.ListLinksResponse) => void;
+
+                /**
+                 * Callback as used by {@link google.logging.v2.ConfigServiceV2|getLink}.
+                 * @param error Error, if any
+                 * @param [response] Link
+                 */
+                type GetLinkCallback = (error: (Error|null), response?: google.logging.v2.Link) => void;
+
+                /**
                  * Callback as used by {@link google.logging.v2.ConfigServiceV2|listExclusions}.
                  * @param error Error, if any
                  * @param [response] ListExclusionsResponse
@@ -7034,6 +7160,115 @@ export namespace google {
                 type CopyLogEntriesCallback = (error: (Error|null), response?: google.longrunning.Operation) => void;
             }
 
+            /** Properties of an IndexConfig. */
+            interface IIndexConfig {
+
+                /** IndexConfig fieldPath */
+                fieldPath?: (string|null);
+
+                /** IndexConfig type */
+                type?: (google.logging.v2.IndexType|keyof typeof google.logging.v2.IndexType|null);
+
+                /** IndexConfig createTime */
+                createTime?: (google.protobuf.ITimestamp|null);
+            }
+
+            /** Represents an IndexConfig. */
+            class IndexConfig implements IIndexConfig {
+
+                /**
+                 * Constructs a new IndexConfig.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IIndexConfig);
+
+                /** IndexConfig fieldPath. */
+                public fieldPath: string;
+
+                /** IndexConfig type. */
+                public type: (google.logging.v2.IndexType|keyof typeof google.logging.v2.IndexType);
+
+                /** IndexConfig createTime. */
+                public createTime?: (google.protobuf.ITimestamp|null);
+
+                /**
+                 * Creates a new IndexConfig instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns IndexConfig instance
+                 */
+                public static create(properties?: google.logging.v2.IIndexConfig): google.logging.v2.IndexConfig;
+
+                /**
+                 * Encodes the specified IndexConfig message. Does not implicitly {@link google.logging.v2.IndexConfig.verify|verify} messages.
+                 * @param message IndexConfig message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IIndexConfig, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified IndexConfig message, length delimited. Does not implicitly {@link google.logging.v2.IndexConfig.verify|verify} messages.
+                 * @param message IndexConfig message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IIndexConfig, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an IndexConfig message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns IndexConfig
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.IndexConfig;
+
+                /**
+                 * Decodes an IndexConfig message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns IndexConfig
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.IndexConfig;
+
+                /**
+                 * Verifies an IndexConfig message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates an IndexConfig message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns IndexConfig
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.IndexConfig;
+
+                /**
+                 * Creates a plain object from an IndexConfig message. Also converts values to other types if specified.
+                 * @param message IndexConfig
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.IndexConfig, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this IndexConfig to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for IndexConfig
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
             /** Properties of a LogBucket. */
             interface ILogBucket {
 
@@ -7058,8 +7293,14 @@ export namespace google {
                 /** LogBucket lifecycleState */
                 lifecycleState?: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState|null);
 
+                /** LogBucket analyticsEnabled */
+                analyticsEnabled?: (boolean|null);
+
                 /** LogBucket restrictedFields */
                 restrictedFields?: (string[]|null);
+
+                /** LogBucket indexConfigs */
+                indexConfigs?: (google.logging.v2.IIndexConfig[]|null);
 
                 /** LogBucket cmekSettings */
                 cmekSettings?: (google.logging.v2.ICmekSettings|null);
@@ -7095,8 +7336,14 @@ export namespace google {
                 /** LogBucket lifecycleState. */
                 public lifecycleState: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState);
 
+                /** LogBucket analyticsEnabled. */
+                public analyticsEnabled: boolean;
+
                 /** LogBucket restrictedFields. */
                 public restrictedFields: string[];
+
+                /** LogBucket indexConfigs. */
+                public indexConfigs: google.logging.v2.IIndexConfig[];
 
                 /** LogBucket cmekSettings. */
                 public cmekSettings?: (google.logging.v2.ICmekSettings|null);
@@ -7474,6 +7721,224 @@ export namespace google {
                     V2 = 1,
                     V1 = 2
                 }
+            }
+
+            /** Properties of a BigQueryDataset. */
+            interface IBigQueryDataset {
+
+                /** BigQueryDataset datasetId */
+                datasetId?: (string|null);
+            }
+
+            /** Represents a BigQueryDataset. */
+            class BigQueryDataset implements IBigQueryDataset {
+
+                /**
+                 * Constructs a new BigQueryDataset.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IBigQueryDataset);
+
+                /** BigQueryDataset datasetId. */
+                public datasetId: string;
+
+                /**
+                 * Creates a new BigQueryDataset instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns BigQueryDataset instance
+                 */
+                public static create(properties?: google.logging.v2.IBigQueryDataset): google.logging.v2.BigQueryDataset;
+
+                /**
+                 * Encodes the specified BigQueryDataset message. Does not implicitly {@link google.logging.v2.BigQueryDataset.verify|verify} messages.
+                 * @param message BigQueryDataset message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IBigQueryDataset, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified BigQueryDataset message, length delimited. Does not implicitly {@link google.logging.v2.BigQueryDataset.verify|verify} messages.
+                 * @param message BigQueryDataset message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IBigQueryDataset, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a BigQueryDataset message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns BigQueryDataset
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.BigQueryDataset;
+
+                /**
+                 * Decodes a BigQueryDataset message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns BigQueryDataset
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.BigQueryDataset;
+
+                /**
+                 * Verifies a BigQueryDataset message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a BigQueryDataset message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns BigQueryDataset
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.BigQueryDataset;
+
+                /**
+                 * Creates a plain object from a BigQueryDataset message. Also converts values to other types if specified.
+                 * @param message BigQueryDataset
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.BigQueryDataset, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this BigQueryDataset to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for BigQueryDataset
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Link. */
+            interface ILink {
+
+                /** Link name */
+                name?: (string|null);
+
+                /** Link description */
+                description?: (string|null);
+
+                /** Link createTime */
+                createTime?: (google.protobuf.ITimestamp|null);
+
+                /** Link lifecycleState */
+                lifecycleState?: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState|null);
+
+                /** Link bigqueryDataset */
+                bigqueryDataset?: (google.logging.v2.IBigQueryDataset|null);
+            }
+
+            /** Represents a Link. */
+            class Link implements ILink {
+
+                /**
+                 * Constructs a new Link.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILink);
+
+                /** Link name. */
+                public name: string;
+
+                /** Link description. */
+                public description: string;
+
+                /** Link createTime. */
+                public createTime?: (google.protobuf.ITimestamp|null);
+
+                /** Link lifecycleState. */
+                public lifecycleState: (google.logging.v2.LifecycleState|keyof typeof google.logging.v2.LifecycleState);
+
+                /** Link bigqueryDataset. */
+                public bigqueryDataset?: (google.logging.v2.IBigQueryDataset|null);
+
+                /**
+                 * Creates a new Link instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Link instance
+                 */
+                public static create(properties?: google.logging.v2.ILink): google.logging.v2.Link;
+
+                /**
+                 * Encodes the specified Link message. Does not implicitly {@link google.logging.v2.Link.verify|verify} messages.
+                 * @param message Link message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILink, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified Link message, length delimited. Does not implicitly {@link google.logging.v2.Link.verify|verify} messages.
+                 * @param message Link message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILink, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Link message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Link
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.Link;
+
+                /**
+                 * Decodes a Link message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns Link
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.Link;
+
+                /**
+                 * Verifies a Link message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a Link message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns Link
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.Link;
+
+                /**
+                 * Creates a plain object from a Link message. Also converts values to other types if specified.
+                 * @param message Link
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.Link, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this Link to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for Link
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** Properties of a BigQueryOptions. */
@@ -9554,6 +10019,521 @@ export namespace google {
                 public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
+            /** Properties of a CreateLinkRequest. */
+            interface ICreateLinkRequest {
+
+                /** CreateLinkRequest parent */
+                parent?: (string|null);
+
+                /** CreateLinkRequest link */
+                link?: (google.logging.v2.ILink|null);
+
+                /** CreateLinkRequest linkId */
+                linkId?: (string|null);
+            }
+
+            /** Represents a CreateLinkRequest. */
+            class CreateLinkRequest implements ICreateLinkRequest {
+
+                /**
+                 * Constructs a new CreateLinkRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ICreateLinkRequest);
+
+                /** CreateLinkRequest parent. */
+                public parent: string;
+
+                /** CreateLinkRequest link. */
+                public link?: (google.logging.v2.ILink|null);
+
+                /** CreateLinkRequest linkId. */
+                public linkId: string;
+
+                /**
+                 * Creates a new CreateLinkRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateLinkRequest instance
+                 */
+                public static create(properties?: google.logging.v2.ICreateLinkRequest): google.logging.v2.CreateLinkRequest;
+
+                /**
+                 * Encodes the specified CreateLinkRequest message. Does not implicitly {@link google.logging.v2.CreateLinkRequest.verify|verify} messages.
+                 * @param message CreateLinkRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ICreateLinkRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified CreateLinkRequest message, length delimited. Does not implicitly {@link google.logging.v2.CreateLinkRequest.verify|verify} messages.
+                 * @param message CreateLinkRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ICreateLinkRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CreateLinkRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CreateLinkRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.CreateLinkRequest;
+
+                /**
+                 * Decodes a CreateLinkRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns CreateLinkRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.CreateLinkRequest;
+
+                /**
+                 * Verifies a CreateLinkRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a CreateLinkRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns CreateLinkRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.CreateLinkRequest;
+
+                /**
+                 * Creates a plain object from a CreateLinkRequest message. Also converts values to other types if specified.
+                 * @param message CreateLinkRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.CreateLinkRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this CreateLinkRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for CreateLinkRequest
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a DeleteLinkRequest. */
+            interface IDeleteLinkRequest {
+
+                /** DeleteLinkRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a DeleteLinkRequest. */
+            class DeleteLinkRequest implements IDeleteLinkRequest {
+
+                /**
+                 * Constructs a new DeleteLinkRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IDeleteLinkRequest);
+
+                /** DeleteLinkRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new DeleteLinkRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeleteLinkRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IDeleteLinkRequest): google.logging.v2.DeleteLinkRequest;
+
+                /**
+                 * Encodes the specified DeleteLinkRequest message. Does not implicitly {@link google.logging.v2.DeleteLinkRequest.verify|verify} messages.
+                 * @param message DeleteLinkRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IDeleteLinkRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified DeleteLinkRequest message, length delimited. Does not implicitly {@link google.logging.v2.DeleteLinkRequest.verify|verify} messages.
+                 * @param message DeleteLinkRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IDeleteLinkRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteLinkRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteLinkRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.DeleteLinkRequest;
+
+                /**
+                 * Decodes a DeleteLinkRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns DeleteLinkRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.DeleteLinkRequest;
+
+                /**
+                 * Verifies a DeleteLinkRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a DeleteLinkRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns DeleteLinkRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.DeleteLinkRequest;
+
+                /**
+                 * Creates a plain object from a DeleteLinkRequest message. Also converts values to other types if specified.
+                 * @param message DeleteLinkRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.DeleteLinkRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this DeleteLinkRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for DeleteLinkRequest
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a ListLinksRequest. */
+            interface IListLinksRequest {
+
+                /** ListLinksRequest parent */
+                parent?: (string|null);
+
+                /** ListLinksRequest pageToken */
+                pageToken?: (string|null);
+
+                /** ListLinksRequest pageSize */
+                pageSize?: (number|null);
+            }
+
+            /** Represents a ListLinksRequest. */
+            class ListLinksRequest implements IListLinksRequest {
+
+                /**
+                 * Constructs a new ListLinksRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListLinksRequest);
+
+                /** ListLinksRequest parent. */
+                public parent: string;
+
+                /** ListLinksRequest pageToken. */
+                public pageToken: string;
+
+                /** ListLinksRequest pageSize. */
+                public pageSize: number;
+
+                /**
+                 * Creates a new ListLinksRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListLinksRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IListLinksRequest): google.logging.v2.ListLinksRequest;
+
+                /**
+                 * Encodes the specified ListLinksRequest message. Does not implicitly {@link google.logging.v2.ListLinksRequest.verify|verify} messages.
+                 * @param message ListLinksRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListLinksRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListLinksRequest message, length delimited. Does not implicitly {@link google.logging.v2.ListLinksRequest.verify|verify} messages.
+                 * @param message ListLinksRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListLinksRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListLinksRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListLinksRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLinksRequest;
+
+                /**
+                 * Decodes a ListLinksRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListLinksRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLinksRequest;
+
+                /**
+                 * Verifies a ListLinksRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListLinksRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListLinksRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLinksRequest;
+
+                /**
+                 * Creates a plain object from a ListLinksRequest message. Also converts values to other types if specified.
+                 * @param message ListLinksRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListLinksRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListLinksRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for ListLinksRequest
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a ListLinksResponse. */
+            interface IListLinksResponse {
+
+                /** ListLinksResponse links */
+                links?: (google.logging.v2.ILink[]|null);
+
+                /** ListLinksResponse nextPageToken */
+                nextPageToken?: (string|null);
+            }
+
+            /** Represents a ListLinksResponse. */
+            class ListLinksResponse implements IListLinksResponse {
+
+                /**
+                 * Constructs a new ListLinksResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IListLinksResponse);
+
+                /** ListLinksResponse links. */
+                public links: google.logging.v2.ILink[];
+
+                /** ListLinksResponse nextPageToken. */
+                public nextPageToken: string;
+
+                /**
+                 * Creates a new ListLinksResponse instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ListLinksResponse instance
+                 */
+                public static create(properties?: google.logging.v2.IListLinksResponse): google.logging.v2.ListLinksResponse;
+
+                /**
+                 * Encodes the specified ListLinksResponse message. Does not implicitly {@link google.logging.v2.ListLinksResponse.verify|verify} messages.
+                 * @param message ListLinksResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IListLinksResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified ListLinksResponse message, length delimited. Does not implicitly {@link google.logging.v2.ListLinksResponse.verify|verify} messages.
+                 * @param message ListLinksResponse message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IListLinksResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ListLinksResponse message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ListLinksResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.ListLinksResponse;
+
+                /**
+                 * Decodes a ListLinksResponse message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns ListLinksResponse
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.ListLinksResponse;
+
+                /**
+                 * Verifies a ListLinksResponse message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a ListLinksResponse message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns ListLinksResponse
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.ListLinksResponse;
+
+                /**
+                 * Creates a plain object from a ListLinksResponse message. Also converts values to other types if specified.
+                 * @param message ListLinksResponse
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.ListLinksResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this ListLinksResponse to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for ListLinksResponse
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a GetLinkRequest. */
+            interface IGetLinkRequest {
+
+                /** GetLinkRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a GetLinkRequest. */
+            class GetLinkRequest implements IGetLinkRequest {
+
+                /**
+                 * Constructs a new GetLinkRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IGetLinkRequest);
+
+                /** GetLinkRequest name. */
+                public name: string;
+
+                /**
+                 * Creates a new GetLinkRequest instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns GetLinkRequest instance
+                 */
+                public static create(properties?: google.logging.v2.IGetLinkRequest): google.logging.v2.GetLinkRequest;
+
+                /**
+                 * Encodes the specified GetLinkRequest message. Does not implicitly {@link google.logging.v2.GetLinkRequest.verify|verify} messages.
+                 * @param message GetLinkRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IGetLinkRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified GetLinkRequest message, length delimited. Does not implicitly {@link google.logging.v2.GetLinkRequest.verify|verify} messages.
+                 * @param message GetLinkRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IGetLinkRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a GetLinkRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns GetLinkRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.GetLinkRequest;
+
+                /**
+                 * Decodes a GetLinkRequest message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns GetLinkRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.GetLinkRequest;
+
+                /**
+                 * Verifies a GetLinkRequest message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a GetLinkRequest message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns GetLinkRequest
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.GetLinkRequest;
+
+                /**
+                 * Creates a plain object from a GetLinkRequest message. Also converts values to other types if specified.
+                 * @param message GetLinkRequest
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.GetLinkRequest, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this GetLinkRequest to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for GetLinkRequest
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
             /** Properties of a LogExclusion. */
             interface ILogExclusion {
 
@@ -10514,6 +11494,9 @@ export namespace google {
                 /** CmekSettings kmsKeyName */
                 kmsKeyName?: (string|null);
 
+                /** CmekSettings kmsKeyVersionName */
+                kmsKeyVersionName?: (string|null);
+
                 /** CmekSettings serviceAccountId */
                 serviceAccountId?: (string|null);
             }
@@ -10532,6 +11515,9 @@ export namespace google {
 
                 /** CmekSettings kmsKeyName. */
                 public kmsKeyName: string;
+
+                /** CmekSettings kmsKeyVersionName. */
+                public kmsKeyVersionName: string;
 
                 /** CmekSettings serviceAccountId. */
                 public serviceAccountId: string;
@@ -11280,11 +12266,252 @@ export namespace google {
                 public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            /** LifecycleState enum. */
-            enum LifecycleState {
-                LIFECYCLE_STATE_UNSPECIFIED = 0,
-                ACTIVE = 1,
-                DELETE_REQUESTED = 2
+            /** Properties of a BucketMetadata. */
+            interface IBucketMetadata {
+
+                /** BucketMetadata startTime */
+                startTime?: (google.protobuf.ITimestamp|null);
+
+                /** BucketMetadata endTime */
+                endTime?: (google.protobuf.ITimestamp|null);
+
+                /** BucketMetadata state */
+                state?: (google.logging.v2.OperationState|keyof typeof google.logging.v2.OperationState|null);
+
+                /** BucketMetadata createBucketRequest */
+                createBucketRequest?: (google.logging.v2.ICreateBucketRequest|null);
+
+                /** BucketMetadata updateBucketRequest */
+                updateBucketRequest?: (google.logging.v2.IUpdateBucketRequest|null);
+            }
+
+            /** Represents a BucketMetadata. */
+            class BucketMetadata implements IBucketMetadata {
+
+                /**
+                 * Constructs a new BucketMetadata.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.IBucketMetadata);
+
+                /** BucketMetadata startTime. */
+                public startTime?: (google.protobuf.ITimestamp|null);
+
+                /** BucketMetadata endTime. */
+                public endTime?: (google.protobuf.ITimestamp|null);
+
+                /** BucketMetadata state. */
+                public state: (google.logging.v2.OperationState|keyof typeof google.logging.v2.OperationState);
+
+                /** BucketMetadata createBucketRequest. */
+                public createBucketRequest?: (google.logging.v2.ICreateBucketRequest|null);
+
+                /** BucketMetadata updateBucketRequest. */
+                public updateBucketRequest?: (google.logging.v2.IUpdateBucketRequest|null);
+
+                /** BucketMetadata request. */
+                public request?: ("createBucketRequest"|"updateBucketRequest");
+
+                /**
+                 * Creates a new BucketMetadata instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns BucketMetadata instance
+                 */
+                public static create(properties?: google.logging.v2.IBucketMetadata): google.logging.v2.BucketMetadata;
+
+                /**
+                 * Encodes the specified BucketMetadata message. Does not implicitly {@link google.logging.v2.BucketMetadata.verify|verify} messages.
+                 * @param message BucketMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.IBucketMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified BucketMetadata message, length delimited. Does not implicitly {@link google.logging.v2.BucketMetadata.verify|verify} messages.
+                 * @param message BucketMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.IBucketMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a BucketMetadata message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns BucketMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.BucketMetadata;
+
+                /**
+                 * Decodes a BucketMetadata message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns BucketMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.BucketMetadata;
+
+                /**
+                 * Verifies a BucketMetadata message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a BucketMetadata message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns BucketMetadata
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.BucketMetadata;
+
+                /**
+                 * Creates a plain object from a BucketMetadata message. Also converts values to other types if specified.
+                 * @param message BucketMetadata
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.BucketMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this BucketMetadata to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for BucketMetadata
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a LinkMetadata. */
+            interface ILinkMetadata {
+
+                /** LinkMetadata startTime */
+                startTime?: (google.protobuf.ITimestamp|null);
+
+                /** LinkMetadata endTime */
+                endTime?: (google.protobuf.ITimestamp|null);
+
+                /** LinkMetadata state */
+                state?: (google.logging.v2.OperationState|keyof typeof google.logging.v2.OperationState|null);
+
+                /** LinkMetadata createLinkRequest */
+                createLinkRequest?: (google.logging.v2.ICreateLinkRequest|null);
+
+                /** LinkMetadata deleteLinkRequest */
+                deleteLinkRequest?: (google.logging.v2.IDeleteLinkRequest|null);
+            }
+
+            /** Represents a LinkMetadata. */
+            class LinkMetadata implements ILinkMetadata {
+
+                /**
+                 * Constructs a new LinkMetadata.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILinkMetadata);
+
+                /** LinkMetadata startTime. */
+                public startTime?: (google.protobuf.ITimestamp|null);
+
+                /** LinkMetadata endTime. */
+                public endTime?: (google.protobuf.ITimestamp|null);
+
+                /** LinkMetadata state. */
+                public state: (google.logging.v2.OperationState|keyof typeof google.logging.v2.OperationState);
+
+                /** LinkMetadata createLinkRequest. */
+                public createLinkRequest?: (google.logging.v2.ICreateLinkRequest|null);
+
+                /** LinkMetadata deleteLinkRequest. */
+                public deleteLinkRequest?: (google.logging.v2.IDeleteLinkRequest|null);
+
+                /** LinkMetadata request. */
+                public request?: ("createLinkRequest"|"deleteLinkRequest");
+
+                /**
+                 * Creates a new LinkMetadata instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LinkMetadata instance
+                 */
+                public static create(properties?: google.logging.v2.ILinkMetadata): google.logging.v2.LinkMetadata;
+
+                /**
+                 * Encodes the specified LinkMetadata message. Does not implicitly {@link google.logging.v2.LinkMetadata.verify|verify} messages.
+                 * @param message LinkMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILinkMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LinkMetadata message, length delimited. Does not implicitly {@link google.logging.v2.LinkMetadata.verify|verify} messages.
+                 * @param message LinkMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILinkMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LinkMetadata message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LinkMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LinkMetadata;
+
+                /**
+                 * Decodes a LinkMetadata message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LinkMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LinkMetadata;
+
+                /**
+                 * Verifies a LinkMetadata message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LinkMetadata message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LinkMetadata
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LinkMetadata;
+
+                /**
+                 * Creates a plain object from a LinkMetadata message. Also converts values to other types if specified.
+                 * @param message LinkMetadata
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LinkMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LinkMetadata to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for LinkMetadata
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** OperationState enum. */
@@ -11296,6 +12523,120 @@ export namespace google {
                 OPERATION_STATE_SUCCEEDED = 4,
                 OPERATION_STATE_FAILED = 5,
                 OPERATION_STATE_CANCELLED = 6
+            }
+
+            /** LifecycleState enum. */
+            enum LifecycleState {
+                LIFECYCLE_STATE_UNSPECIFIED = 0,
+                ACTIVE = 1,
+                DELETE_REQUESTED = 2,
+                UPDATING = 3,
+                CREATING = 4,
+                FAILED = 5
+            }
+
+            /** IndexType enum. */
+            enum IndexType {
+                INDEX_TYPE_UNSPECIFIED = 0,
+                INDEX_TYPE_STRING = 1,
+                INDEX_TYPE_INTEGER = 2
+            }
+
+            /** Properties of a LocationMetadata. */
+            interface ILocationMetadata {
+
+                /** LocationMetadata logAnalyticsEnabled */
+                logAnalyticsEnabled?: (boolean|null);
+            }
+
+            /** Represents a LocationMetadata. */
+            class LocationMetadata implements ILocationMetadata {
+
+                /**
+                 * Constructs a new LocationMetadata.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.logging.v2.ILocationMetadata);
+
+                /** LocationMetadata logAnalyticsEnabled. */
+                public logAnalyticsEnabled: boolean;
+
+                /**
+                 * Creates a new LocationMetadata instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LocationMetadata instance
+                 */
+                public static create(properties?: google.logging.v2.ILocationMetadata): google.logging.v2.LocationMetadata;
+
+                /**
+                 * Encodes the specified LocationMetadata message. Does not implicitly {@link google.logging.v2.LocationMetadata.verify|verify} messages.
+                 * @param message LocationMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: google.logging.v2.ILocationMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Encodes the specified LocationMetadata message, length delimited. Does not implicitly {@link google.logging.v2.LocationMetadata.verify|verify} messages.
+                 * @param message LocationMetadata message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encodeDelimited(message: google.logging.v2.ILocationMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LocationMetadata message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LocationMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.logging.v2.LocationMetadata;
+
+                /**
+                 * Decodes a LocationMetadata message from the specified reader or buffer, length delimited.
+                 * @param reader Reader or buffer to decode from
+                 * @returns LocationMetadata
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.logging.v2.LocationMetadata;
+
+                /**
+                 * Verifies a LocationMetadata message.
+                 * @param message Plain object to verify
+                 * @returns `null` if valid, otherwise the reason why it is not
+                 */
+                public static verify(message: { [k: string]: any }): (string|null);
+
+                /**
+                 * Creates a LocationMetadata message from a plain object. Also converts values to their respective internal types.
+                 * @param object Plain object
+                 * @returns LocationMetadata
+                 */
+                public static fromObject(object: { [k: string]: any }): google.logging.v2.LocationMetadata;
+
+                /**
+                 * Creates a plain object from a LocationMetadata message. Also converts values to other types if specified.
+                 * @param message LocationMetadata
+                 * @param [options] Conversion options
+                 * @returns Plain object
+                 */
+                public static toObject(message: google.logging.v2.LocationMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                /**
+                 * Converts this LocationMetadata to JSON.
+                 * @returns JSON object
+                 */
+                public toJSON(): { [k: string]: any };
+
+                /**
+                 * Gets the default type url for LocationMetadata
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** Represents a MetricsServiceV2 */
@@ -11439,6 +12780,9 @@ export namespace google {
                 /** LogMetric filter */
                 filter?: (string|null);
 
+                /** LogMetric bucketName */
+                bucketName?: (string|null);
+
                 /** LogMetric disabled */
                 disabled?: (boolean|null);
 
@@ -11481,6 +12825,9 @@ export namespace google {
 
                 /** LogMetric filter. */
                 public filter: string;
+
+                /** LogMetric bucketName. */
+                public bucketName: string;
 
                 /** LogMetric disabled. */
                 public disabled: boolean;

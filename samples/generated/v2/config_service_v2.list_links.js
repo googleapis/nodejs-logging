@@ -16,12 +16,10 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-
-
 'use strict';
 
-function main(sinkName) {
-  // [START logging_v2_generated_ConfigServiceV2_DeleteSink_async]
+function main(parent) {
+  // [START logging_v2_generated_ConfigServiceV2_ListLinks_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +27,23 @@ function main(sinkName) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The full resource name of the sink to delete, including the
-   *  parent resource and the sink identifier:
-   *      "projects/[PROJECT_ID]/sinks/[SINK_ID]"
-   *      "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
-   *      "folders/[FOLDER_ID]/sinks/[SINK_ID]"
-   *  For example:
-   *    `"projects/my-project/sinks/my-sink"`
+   *  Required. The parent resource whose links are to be listed:
+   *    "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/"
+   *    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *    "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/
    */
-  // const sinkName = 'abc123'
+  // const parent = 'abc123'
+  /**
+   *  Optional. If present, then retrieve the next batch of results from the
+   *  preceding call to this method. `pageToken` must be the value of
+   *  `nextPageToken` from the previous response.
+   */
+  // const pageToken = 'abc123'
+  /**
+   *  Optional. The maximum number of results to return from this request.
+   */
+  // const pageSize = 1234
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -46,19 +51,21 @@ function main(sinkName) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callDeleteSink() {
+  async function callListLinks() {
     // Construct request
     const request = {
-      sinkName,
+      parent,
     };
 
     // Run request
-    const response = await loggingClient.deleteSink(request);
-    console.log(response);
+    const iterable = await loggingClient.listLinksAsync(request);
+    for await (const response of iterable) {
+      console.log(response);
+    }
   }
 
-  callDeleteSink();
-  // [END logging_v2_generated_ConfigServiceV2_DeleteSink_async]
+  callListLinks();
+  // [END logging_v2_generated_ConfigServiceV2_ListLinks_async]
 }
 
 process.on('unhandledRejection', err => {

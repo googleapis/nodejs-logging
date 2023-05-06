@@ -39,16 +39,15 @@ function main(resourceNames) {
    *   * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *   * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *  Projects listed in the `project_ids` field are added to this list.
+   *  A maximum of 100 resources may be specified in a single request.
    */
   // const resourceNames = 'abc123'
   /**
-   *  Optional. A filter that chooses which log entries to return.  See Advanced
-   *  Logs Queries (https://cloud.google.com/logging/docs/view/advanced-queries).
-   *  Only log entries that match the filter are returned.  An empty filter
-   *  matches all log entries in the resources listed in `resource_names`.
+   *  Optional. Only log entries that match the filter are returned.  An empty
+   *  filter matches all log entries in the resources listed in `resource_names`.
    *  Referencing a parent resource that is not listed in `resource_names` will
-   *  cause the filter to return no results. The maximum length of the filter is
-   *  20000 characters.
+   *  cause the filter to return no results. The maximum length of a filter is
+   *  20,000 characters.
    */
   // const filter = 'abc123'
   /**
@@ -61,10 +60,10 @@ function main(resourceNames) {
    */
   // const orderBy = 'abc123'
   /**
-   *  Optional. The maximum number of results to return from this request. Default is 50.
-   *  If the value is negative or exceeds 1000, the request is rejected. The
-   *  presence of `next_page_token` in the response indicates that more results
-   *  might be available.
+   *  Optional. The maximum number of results to return from this request.
+   *  Default is 50. If the value is negative or exceeds 1000, the request is
+   *  rejected. The presence of `next_page_token` in the response indicates that
+   *  more results might be available.
    */
   // const pageSize = 1234
   /**

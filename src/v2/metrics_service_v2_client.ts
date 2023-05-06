@@ -188,6 +188,10 @@ export class MetricsServiceV2Client {
         new this._gaxModule.PathTemplate(
           'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
         ),
+      billingAccountLocationBucketLinkPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/links/{link}'
+        ),
       billingAccountLocationBucketViewPathTemplate:
         new this._gaxModule.PathTemplate(
           'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -209,6 +213,9 @@ export class MetricsServiceV2Client {
       ),
       folderLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}'
+      ),
+      folderLocationBucketLinkPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/locations/{location}/buckets/{bucket}/links/{link}'
       ),
       folderLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -234,6 +241,10 @@ export class MetricsServiceV2Client {
       organizationLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/buckets/{bucket}'
       ),
+      organizationLocationBucketLinkPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'organizations/{organization}/locations/{location}/buckets/{bucket}/links/{link}'
+        ),
       organizationLocationBucketViewPathTemplate:
         new this._gaxModule.PathTemplate(
           'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -258,6 +269,9 @@ export class MetricsServiceV2Client {
       ),
       projectLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}'
+      ),
+      projectLocationBucketLinkPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/locations/{location}/buckets/{bucket}/links/{link}'
       ),
       projectLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -1123,6 +1137,91 @@ export class MetricsServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified billingAccountLocationBucketLink resource name string.
+   *
+   * @param {string} billing_account
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  billingAccountLocationBucketLinkPath(
+    billingAccount: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.render(
+      {
+        billing_account: billingAccount,
+        location: location,
+        bucket: bucket,
+        link: link,
+      }
+    );
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the location from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).link;
+  }
+
+  /**
    * Return a fully-qualified billingAccountLocationBucketView resource name string.
    *
    * @param {string} billing_account
@@ -1434,6 +1533,89 @@ export class MetricsServiceV2Client {
     return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified folderLocationBucketLink resource name string.
+   *
+   * @param {string} folder
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  folderLocationBucketLinkPath(
+    folder: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
+      link: link,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).folder;
+  }
+
+  /**
+   * Parse the location from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).link;
   }
 
   /**
@@ -1791,6 +1973,91 @@ export class MetricsServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationLocationBucketLink resource name string.
+   *
+   * @param {string} organization
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  organizationLocationBucketLinkPath(
+    organization: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.render(
+      {
+        organization: organization,
+        location: location,
+        bucket: bucket,
+        link: link,
+      }
+    );
+  }
+
+  /**
+   * Parse the organization from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).organization;
+  }
+
+  /**
+   * Parse the location from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).link;
+  }
+
+  /**
    * Return a fully-qualified organizationLocationBucketView resource name string.
    *
    * @param {string} organization
@@ -2125,6 +2392,89 @@ export class MetricsServiceV2Client {
     return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified projectLocationBucketLink resource name string.
+   *
+   * @param {string} project
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  projectLocationBucketLinkPath(
+    project: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
+      link: link,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).project;
+  }
+
+  /**
+   * Parse the location from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).link;
   }
 
   /**

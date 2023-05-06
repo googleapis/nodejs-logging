@@ -16,12 +16,10 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
-
-
 'use strict';
 
-function main(name) {
-  // [START logging_v2_generated_ConfigServiceV2_GetCmekSettings_async]
+function main(parent, bucketId, bucket) {
+  // [START logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,19 +27,24 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource for which to retrieve CMEK settings.
-   *      "projects/[PROJECT_ID]/cmekSettings"
-   *      "organizations/[ORGANIZATION_ID]/cmekSettings"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/cmekSettings"
-   *      "folders/[FOLDER_ID]/cmekSettings"
+   *  Required. The resource in which to create the log bucket:
+   *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
    *  For example:
-   *    `"organizations/12345/cmekSettings"`
-   *  Note: CMEK for the Log Router can be configured for Google Cloud projects,
-   *  folders, organizations and billing accounts. Once configured for an
-   *  organization, it applies to all projects and folders in the Google Cloud
-   *  organization.
+   *    `"projects/my-project/locations/global"`
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
+  /**
+   *  Required. A client-assigned identifier such as `"my-bucket"`. Identifiers
+   *  are limited to 100 characters and can include only letters, digits,
+   *  underscores, hyphens, and periods.
+   */
+  // const bucketId = 'abc123'
+  /**
+   *  Required. The new bucket. The region specified in the new bucket must be
+   *  compliant with any Location Restriction Org Policy. The name field in the
+   *  bucket is ignored.
+   */
+  // const bucket = {}
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -49,19 +52,22 @@ function main(name) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callGetCmekSettings() {
+  async function callCreateBucketAsync() {
     // Construct request
     const request = {
-      name,
+      parent,
+      bucketId,
+      bucket,
     };
 
     // Run request
-    const response = await loggingClient.getCmekSettings(request);
+    const [operation] = await loggingClient.createBucketAsync(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callGetCmekSettings();
-  // [END logging_v2_generated_ConfigServiceV2_GetCmekSettings_async]
+  callCreateBucketAsync();
+  // [END logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async]
 }
 
 process.on('unhandledRejection', err => {
