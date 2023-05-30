@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [10.5.0](https://github.com/googleapis/nodejs-logging/compare/v10.4.1...v10.5.0) (2023-05-30)
+
+
+### Features
+
+* Log Analytics features of the Cloud Logging API ([#1416](https://github.com/googleapis/nodejs-logging/issues/1416)) ([3c3de6d](https://github.com/googleapis/nodejs-logging/commit/3c3de6d3e472fa7d0a9ebbe05cf90abfa173db64))
+
 ## [10.4.1](https://github.com/googleapis/nodejs-logging/compare/v10.4.0...v10.4.1) (2023-04-28)
 
 
