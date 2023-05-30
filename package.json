@@ -1,6 +1,6 @@
 {
   "name": "@google-cloud/logging",
-  "version": "10.4.1",
+  "version": "10.5.0",
   "description": "Cloud Logging Client Library for Node.js",
   "keywords": [
     "google apis client",
