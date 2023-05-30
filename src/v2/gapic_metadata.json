@@ -75,6 +75,11 @@
                 "deleteSink"
               ]
             },
+            "GetLink": {
+              "methods": [
+                "getLink"
+              ]
+            },
             "GetExclusion": {
               "methods": [
                 "getExclusion"
@@ -115,6 +120,26 @@
                 "updateSettings"
               ]
             },
+            "CreateBucketAsync": {
+              "methods": [
+                "createBucketAsync"
+              ]
+            },
+            "UpdateBucketAsync": {
+              "methods": [
+                "updateBucketAsync"
+              ]
+            },
+            "CreateLink": {
+              "methods": [
+                "createLink"
+              ]
+            },
+            "DeleteLink": {
+              "methods": [
+                "deleteLink"
+              ]
+            },
             "CopyLogEntries": {
               "methods": [
                 "copyLogEntries"
@@ -139,6 +164,13 @@
                 "listSinks",
                 "listSinksStream",
                 "listSinksAsync"
+              ]
+            },
+            "ListLinks": {
+              "methods": [
+                "listLinks",
+                "listLinksStream",
+                "listLinksAsync"
               ]
             },
             "ListExclusions": {
@@ -218,6 +250,11 @@
                 "deleteSink"
               ]
             },
+            "GetLink": {
+              "methods": [
+                "getLink"
+              ]
+            },
             "GetExclusion": {
               "methods": [
                 "getExclusion"
@@ -258,6 +295,26 @@
                 "updateSettings"
               ]
             },
+            "CreateBucketAsync": {
+              "methods": [
+                "createBucketAsync"
+              ]
+            },
+            "UpdateBucketAsync": {
+              "methods": [
+                "updateBucketAsync"
+              ]
+            },
+            "CreateLink": {
+              "methods": [
+                "createLink"
+              ]
+            },
+            "DeleteLink": {
+              "methods": [
+                "deleteLink"
+              ]
+            },
             "CopyLogEntries": {
               "methods": [
                 "copyLogEntries"
@@ -282,6 +339,13 @@
                 "listSinks",
                 "listSinksStream",
                 "listSinksAsync"
+              ]
+            },
+            "ListLinks": {
+              "methods": [
+                "listLinks",
+                "listLinksStream",
+                "listLinksAsync"
               ]
             },
             "ListExclusions": {

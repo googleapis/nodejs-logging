@@ -27,13 +27,27 @@ function main(parent) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name that owns the logs:
+   *  Required. The resource name to list logs for:
    *  *  `projects/[PROJECT_ID]`
    *  *  `organizations/[ORGANIZATION_ID]`
    *  *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *  *  `folders/[FOLDER_ID]`
    */
   // const parent = 'abc123'
+  /**
+   *  Optional. List of resource names to list logs for:
+   *   * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *   * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
+   *  To support legacy queries, it could also be:
+   *  *  `projects/[PROJECT_ID]`
+   *  *  `organizations/[ORGANIZATION_ID]`
+   *  *  `billingAccounts/[BILLING_ACCOUNT_ID]`
+   *  *  `folders/[FOLDER_ID]`
+   *  The resource name in the `parent` field is added to this list.
+   */
+  // const resourceNames = 'abc123'
   /**
    *  Optional. The maximum number of results to return from this request.
    *  Non-positive values are ignored.  The presence of `nextPageToken` in the
@@ -47,19 +61,6 @@ function main(parent) {
    *  parameters should be identical to those in the previous call.
    */
   // const pageToken = 'abc123'
-  /**
-   *  Optional. The resource name that owns the logs:
-   *   * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
-   *   * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
-   *   * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
-   *   * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
-   *  To support legacy queries, it could also be:
-   *  *  `projects/[PROJECT_ID]`
-   *  *  `organizations/[ORGANIZATION_ID]`
-   *  *  `billingAccounts/[BILLING_ACCOUNT_ID]`
-   *  *  `folders/[FOLDER_ID]`
-   */
-  // const resourceNames = 'abc123'
 
   // Imports the Logging library
   const {LoggingServiceV2Client} = require('@google-cloud/logging').v2;

@@ -1451,7 +1451,7 @@
                       "responseType": "ListLogsResponse",
                       "options": {
                         "(google.api.http).get": "/v2/{parent=*/*}/logs",
-                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*}/logs",
+                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*/locations/*/buckets/*/views/*}/logs",
                         "(google.api.method_signature)": "parent"
                       },
                       "parsedOptions": [
@@ -1470,6 +1470,18 @@
                               },
                               {
                                 "get": "/v2/{parent=billingAccounts/*}/logs"
+                              },
+                              {
+                                "get": "/v2/{parent=projects/*/locations/*/buckets/*/views/*}/logs"
+                              },
+                              {
+                                "get": "/v2/{parent=organizations/*/locations/*/buckets/*/views/*}/logs"
+                              },
+                              {
+                                "get": "/v2/{parent=folders/*/locations/*/buckets/*/views/*}/logs"
+                              },
+                              {
+                                "get": "/v2/{parent=billingAccounts/*/locations/*/buckets/*/views/*}/logs"
                               }
                             ]
                           }
@@ -1667,6 +1679,15 @@
                         "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
                       }
                     },
+                    "resourceNames": {
+                      "rule": "repeated",
+                      "type": "string",
+                      "id": 8,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
+                      }
+                    },
                     "pageSize": {
                       "type": "int32",
                       "id": 2,
@@ -1679,15 +1700,6 @@
                       "id": 3,
                       "options": {
                         "(google.api.field_behavior)": "OPTIONAL"
-                      }
-                    },
-                    "resourceNames": {
-                      "rule": "repeated",
-                      "type": "string",
-                      "id": 8,
-                      "options": {
-                        "(google.api.field_behavior)": "OPTIONAL",
-                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Log"
                       }
                     }
                   }
@@ -1812,7 +1824,7 @@
                       "responseType": "LogBucket",
                       "options": {
                         "(google.api.http).get": "/v2/{name=*/*/locations/*/buckets/*}",
-                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/buckets/*}"
+                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/locations/*/buckets/*}"
                       },
                       "parsedOptions": [
                         {
@@ -1829,9 +1841,97 @@
                                 "get": "/v2/{name=folders/*/locations/*/buckets/*}"
                               },
                               {
-                                "get": "/v2/{name=billingAccounts/*/buckets/*}"
+                                "get": "/v2/{name=billingAccounts/*/locations/*/buckets/*}"
                               }
                             ]
+                          }
+                        }
+                      ]
+                    },
+                    "CreateBucketAsync": {
+                      "requestType": "CreateBucketRequest",
+                      "responseType": "google.longrunning.Operation",
+                      "options": {
+                        "(google.api.http).post": "/v2/{parent=*/*/locations/*}/buckets:createAsync",
+                        "(google.api.http).body": "bucket",
+                        "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*/locations/*}/buckets:createAsync",
+                        "(google.api.http).additional_bindings.body": "bucket",
+                        "(google.longrunning.operation_info).response_type": "LogBucket",
+                        "(google.longrunning.operation_info).metadata_type": "BucketMetadata"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "post": "/v2/{parent=*/*/locations/*}/buckets:createAsync",
+                            "body": "bucket",
+                            "additional_bindings": [
+                              {
+                                "post": "/v2/{parent=projects/*/locations/*}/buckets:createAsync",
+                                "body": "bucket"
+                              },
+                              {
+                                "post": "/v2/{parent=organizations/*/locations/*}/buckets:createAsync",
+                                "body": "bucket"
+                              },
+                              {
+                                "post": "/v2/{parent=folders/*/locations/*}/buckets:createAsync",
+                                "body": "bucket"
+                              },
+                              {
+                                "post": "/v2/{parent=billingAccounts/*/locations/*}/buckets:createAsync",
+                                "body": "bucket"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.longrunning.operation_info)": {
+                            "response_type": "LogBucket",
+                            "metadata_type": "BucketMetadata"
+                          }
+                        }
+                      ]
+                    },
+                    "UpdateBucketAsync": {
+                      "requestType": "UpdateBucketRequest",
+                      "responseType": "google.longrunning.Operation",
+                      "options": {
+                        "(google.api.http).post": "/v2/{name=*/*/locations/*/buckets/*}:updateAsync",
+                        "(google.api.http).body": "bucket",
+                        "(google.api.http).additional_bindings.post": "/v2/{name=billingAccounts/*/locations/*/buckets/*}:updateAsync",
+                        "(google.api.http).additional_bindings.body": "bucket",
+                        "(google.longrunning.operation_info).response_type": "LogBucket",
+                        "(google.longrunning.operation_info).metadata_type": "BucketMetadata"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "post": "/v2/{name=*/*/locations/*/buckets/*}:updateAsync",
+                            "body": "bucket",
+                            "additional_bindings": [
+                              {
+                                "post": "/v2/{name=projects/*/locations/*/buckets/*}:updateAsync",
+                                "body": "bucket"
+                              },
+                              {
+                                "post": "/v2/{name=organizations/*/locations/*/buckets/*}:updateAsync",
+                                "body": "bucket"
+                              },
+                              {
+                                "post": "/v2/{name=folders/*/locations/*/buckets/*}:updateAsync",
+                                "body": "bucket"
+                              },
+                              {
+                                "post": "/v2/{name=billingAccounts/*/locations/*/buckets/*}:updateAsync",
+                                "body": "bucket"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.longrunning.operation_info)": {
+                            "response_type": "LogBucket",
+                            "metadata_type": "BucketMetadata"
                           }
                         }
                       ]
@@ -2011,7 +2111,7 @@
                       "responseType": "LogView",
                       "options": {
                         "(google.api.http).get": "/v2/{name=*/*/locations/*/buckets/*/views/*}",
-                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/buckets/*/views/*}"
+                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/locations/*/buckets/*/views/*}"
                       },
                       "parsedOptions": [
                         {
@@ -2028,7 +2128,7 @@
                                 "get": "/v2/{name=folders/*/locations/*/buckets/*/views/*}"
                               },
                               {
-                                "get": "/v2/{name=billingAccounts/*/buckets/*/views/*}"
+                                "get": "/v2/{name=billingAccounts/*/locations/*/buckets/*/views/*}"
                               }
                             ]
                           }
@@ -2332,6 +2432,161 @@
                         },
                         {
                           "(google.api.method_signature)": "sink_name"
+                        }
+                      ]
+                    },
+                    "CreateLink": {
+                      "requestType": "CreateLinkRequest",
+                      "responseType": "google.longrunning.Operation",
+                      "options": {
+                        "(google.api.http).post": "/v2/{parent=*/*/locations/*/buckets/*}/links",
+                        "(google.api.http).body": "link",
+                        "(google.api.http).additional_bindings.post": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/links",
+                        "(google.api.http).additional_bindings.body": "link",
+                        "(google.api.method_signature)": "parent,link,link_id",
+                        "(google.longrunning.operation_info).response_type": "Link",
+                        "(google.longrunning.operation_info).metadata_type": "LinkMetadata"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "post": "/v2/{parent=*/*/locations/*/buckets/*}/links",
+                            "body": "link",
+                            "additional_bindings": [
+                              {
+                                "post": "/v2/{parent=projects/*/locations/*/buckets/*}/links",
+                                "body": "link"
+                              },
+                              {
+                                "post": "/v2/{parent=organizations/*/locations/*/buckets/*}/links",
+                                "body": "link"
+                              },
+                              {
+                                "post": "/v2/{parent=folders/*/locations/*/buckets/*}/links",
+                                "body": "link"
+                              },
+                              {
+                                "post": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/links",
+                                "body": "link"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.api.method_signature)": "parent,link,link_id"
+                        },
+                        {
+                          "(google.longrunning.operation_info)": {
+                            "response_type": "Link",
+                            "metadata_type": "LinkMetadata"
+                          }
+                        }
+                      ]
+                    },
+                    "DeleteLink": {
+                      "requestType": "DeleteLinkRequest",
+                      "responseType": "google.longrunning.Operation",
+                      "options": {
+                        "(google.api.http).delete": "/v2/{name=*/*/locations/*/buckets/*/links/*}",
+                        "(google.api.http).additional_bindings.delete": "/v2/{name=billingAccounts/*/locations/*/buckets/*/links/*}",
+                        "(google.api.method_signature)": "name",
+                        "(google.longrunning.operation_info).response_type": "google.protobuf.Empty",
+                        "(google.longrunning.operation_info).metadata_type": "LinkMetadata"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "delete": "/v2/{name=*/*/locations/*/buckets/*/links/*}",
+                            "additional_bindings": [
+                              {
+                                "delete": "/v2/{name=projects/*/locations/*/buckets/*/links/*}"
+                              },
+                              {
+                                "delete": "/v2/{name=organizations/*/locations/*/buckets/*/links/*}"
+                              },
+                              {
+                                "delete": "/v2/{name=folders/*/locations/*/buckets/*/links/*}"
+                              },
+                              {
+                                "delete": "/v2/{name=billingAccounts/*/locations/*/buckets/*/links/*}"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.api.method_signature)": "name"
+                        },
+                        {
+                          "(google.longrunning.operation_info)": {
+                            "response_type": "google.protobuf.Empty",
+                            "metadata_type": "LinkMetadata"
+                          }
+                        }
+                      ]
+                    },
+                    "ListLinks": {
+                      "requestType": "ListLinksRequest",
+                      "responseType": "ListLinksResponse",
+                      "options": {
+                        "(google.api.http).get": "/v2/{parent=*/*/locations/*/buckets/*}/links",
+                        "(google.api.http).additional_bindings.get": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/links",
+                        "(google.api.method_signature)": "parent"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "get": "/v2/{parent=*/*/locations/*/buckets/*}/links",
+                            "additional_bindings": [
+                              {
+                                "get": "/v2/{parent=projects/*/locations/*/buckets/*}/links"
+                              },
+                              {
+                                "get": "/v2/{parent=organizations/*/locations/*/buckets/*}/links"
+                              },
+                              {
+                                "get": "/v2/{parent=folders/*/locations/*/buckets/*}/links"
+                              },
+                              {
+                                "get": "/v2/{parent=billingAccounts/*/locations/*/buckets/*}/links"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.api.method_signature)": "parent"
+                        }
+                      ]
+                    },
+                    "GetLink": {
+                      "requestType": "GetLinkRequest",
+                      "responseType": "Link",
+                      "options": {
+                        "(google.api.http).get": "/v2/{name=*/*/locations/*/buckets/*/links/*}",
+                        "(google.api.http).additional_bindings.get": "/v2/{name=billingAccounts/*/locations/*/buckets/*/links/*}",
+                        "(google.api.method_signature)": "name"
+                      },
+                      "parsedOptions": [
+                        {
+                          "(google.api.http)": {
+                            "get": "/v2/{name=*/*/locations/*/buckets/*/links/*}",
+                            "additional_bindings": [
+                              {
+                                "get": "/v2/{name=projects/*/locations/*/buckets/*/links/*}"
+                              },
+                              {
+                                "get": "/v2/{name=organizations/*/locations/*/buckets/*/links/*}"
+                              },
+                              {
+                                "get": "/v2/{name=folders/*/locations/*/buckets/*/links/*}"
+                              },
+                              {
+                                "get": "/v2/{name=billingAccounts/*/locations/*/buckets/*/links/*}"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "(google.api.method_signature)": "name"
                         }
                       ]
                     },
@@ -2656,6 +2911,31 @@
                     }
                   }
                 },
+                "IndexConfig": {
+                  "fields": {
+                    "fieldPath": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "type": {
+                      "type": "IndexType",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "createTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    }
+                  }
+                },
                 "LogBucket": {
                   "options": {
                     "(google.api.resource).type": "logging.googleapis.com/LogBucket",
@@ -2702,10 +2982,19 @@
                         "(google.api.field_behavior)": "OUTPUT_ONLY"
                       }
                     },
+                    "analyticsEnabled": {
+                      "type": "bool",
+                      "id": 14
+                    },
                     "restrictedFields": {
                       "rule": "repeated",
                       "type": "string",
                       "id": 15
+                    },
+                    "indexConfigs": {
+                      "rule": "repeated",
+                      "type": "IndexConfig",
+                      "id": 17
                     },
                     "cmekSettings": {
                       "type": "CmekSettings",
@@ -2854,6 +3143,51 @@
                         "V2": 1,
                         "V1": 2
                       }
+                    }
+                  }
+                },
+                "BigQueryDataset": {
+                  "fields": {
+                    "datasetId": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    }
+                  }
+                },
+                "Link": {
+                  "options": {
+                    "(google.api.resource).type": "logging.googleapis.com/Link",
+                    "(google.api.resource).pattern": "billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/links/{link}"
+                  },
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1
+                    },
+                    "description": {
+                      "type": "string",
+                      "id": 2
+                    },
+                    "createTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    },
+                    "lifecycleState": {
+                      "type": "LifecycleState",
+                      "id": 4,
+                      "options": {
+                        "(google.api.field_behavior)": "OUTPUT_ONLY"
+                      }
+                    },
+                    "bigqueryDataset": {
+                      "type": "BigQueryDataset",
+                      "id": 5
                     }
                   }
                 },
@@ -3236,6 +3570,95 @@
                     }
                   }
                 },
+                "CreateLinkRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Link"
+                      }
+                    },
+                    "link": {
+                      "type": "Link",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "linkId": {
+                      "type": "string",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    }
+                  }
+                },
+                "DeleteLinkRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Link"
+                      }
+                    }
+                  }
+                },
+                "ListLinksRequest": {
+                  "fields": {
+                    "parent": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).child_type": "logging.googleapis.com/Link"
+                      }
+                    },
+                    "pageToken": {
+                      "type": "string",
+                      "id": 2,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    },
+                    "pageSize": {
+                      "type": "int32",
+                      "id": 3,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
+                      }
+                    }
+                  }
+                },
+                "ListLinksResponse": {
+                  "fields": {
+                    "links": {
+                      "rule": "repeated",
+                      "type": "Link",
+                      "id": 1
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "id": 2
+                    }
+                  }
+                },
+                "GetLinkRequest": {
+                  "fields": {
+                    "name": {
+                      "type": "string",
+                      "id": 1,
+                      "options": {
+                        "(google.api.field_behavior)": "REQUIRED",
+                        "(google.api.resource_reference).type": "logging.googleapis.com/Link"
+                      }
+                    }
+                  }
+                },
                 "LogExclusion": {
                   "options": {
                     "(google.api.resource).type": "logging.googleapis.com/LogExclusion",
@@ -3448,6 +3871,10 @@
                       "type": "string",
                       "id": 2
                     },
+                    "kmsKeyVersionName": {
+                      "type": "string",
+                      "id": 4
+                    },
                     "serviceAccountId": {
                       "type": "string",
                       "id": 3,
@@ -3602,11 +4029,68 @@
                     }
                   }
                 },
-                "LifecycleState": {
-                  "values": {
-                    "LIFECYCLE_STATE_UNSPECIFIED": 0,
-                    "ACTIVE": 1,
-                    "DELETE_REQUESTED": 2
+                "BucketMetadata": {
+                  "oneofs": {
+                    "request": {
+                      "oneof": [
+                        "createBucketRequest",
+                        "updateBucketRequest"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "startTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 1
+                    },
+                    "endTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 2
+                    },
+                    "state": {
+                      "type": "OperationState",
+                      "id": 3
+                    },
+                    "createBucketRequest": {
+                      "type": "CreateBucketRequest",
+                      "id": 4
+                    },
+                    "updateBucketRequest": {
+                      "type": "UpdateBucketRequest",
+                      "id": 5
+                    }
+                  }
+                },
+                "LinkMetadata": {
+                  "oneofs": {
+                    "request": {
+                      "oneof": [
+                        "createLinkRequest",
+                        "deleteLinkRequest"
+                      ]
+                    }
+                  },
+                  "fields": {
+                    "startTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 1
+                    },
+                    "endTime": {
+                      "type": "google.protobuf.Timestamp",
+                      "id": 2
+                    },
+                    "state": {
+                      "type": "OperationState",
+                      "id": 3
+                    },
+                    "createLinkRequest": {
+                      "type": "CreateLinkRequest",
+                      "id": 4
+                    },
+                    "deleteLinkRequest": {
+                      "type": "DeleteLinkRequest",
+                      "id": 5
+                    }
                   }
                 },
                 "OperationState": {
@@ -3618,6 +4102,31 @@
                     "OPERATION_STATE_SUCCEEDED": 4,
                     "OPERATION_STATE_FAILED": 5,
                     "OPERATION_STATE_CANCELLED": 6
+                  }
+                },
+                "LifecycleState": {
+                  "values": {
+                    "LIFECYCLE_STATE_UNSPECIFIED": 0,
+                    "ACTIVE": 1,
+                    "DELETE_REQUESTED": 2,
+                    "UPDATING": 3,
+                    "CREATING": 4,
+                    "FAILED": 5
+                  }
+                },
+                "IndexType": {
+                  "values": {
+                    "INDEX_TYPE_UNSPECIFIED": 0,
+                    "INDEX_TYPE_STRING": 1,
+                    "INDEX_TYPE_INTEGER": 2
+                  }
+                },
+                "LocationMetadata": {
+                  "fields": {
+                    "logAnalyticsEnabled": {
+                      "type": "bool",
+                      "id": 1
+                    }
                   }
                 },
                 "MetricsServiceV2": {
@@ -3747,6 +4256,13 @@
                       "id": 3,
                       "options": {
                         "(google.api.field_behavior)": "REQUIRED"
+                      }
+                    },
+                    "bucketName": {
+                      "type": "string",
+                      "id": 13,
+                      "options": {
+                        "(google.api.field_behavior)": "OPTIONAL"
                       }
                     },
                     "disabled": {

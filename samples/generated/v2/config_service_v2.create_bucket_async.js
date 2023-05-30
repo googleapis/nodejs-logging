@@ -18,8 +18,8 @@
 
 'use strict';
 
-function main(name, bucket, updateMask) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateBucket_async]
+function main(parent, bucketId, bucket) {
+  // [START logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -27,28 +27,24 @@ function main(name, bucket, updateMask) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The full resource name of the bucket to update.
-   *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *      "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *      "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
+   *  Required. The resource in which to create the log bucket:
+   *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]"
    *  For example:
-   *    `"projects/my-project/locations/global/buckets/my-bucket"`
+   *    `"projects/my-project/locations/global"`
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Required. The updated bucket.
+   *  Required. A client-assigned identifier such as `"my-bucket"`. Identifiers
+   *  are limited to 100 characters and can include only letters, digits,
+   *  underscores, hyphens, and periods.
+   */
+  // const bucketId = 'abc123'
+  /**
+   *  Required. The new bucket. The region specified in the new bucket must be
+   *  compliant with any Location Restriction Org Policy. The name field in the
+   *  bucket is ignored.
    */
   // const bucket = {}
-  /**
-   *  Required. Field mask that specifies the fields in `bucket` that need an
-   *  update. A bucket field will be overwritten if, and only if, it is in the
-   *  update mask. `name` and output only fields cannot be updated.
-   *  For a detailed `FieldMask` definition, see:
-   *  https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-   *  For example: `updateMask=retention_days`
-   */
-  // const updateMask = {}
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -56,21 +52,22 @@ function main(name, bucket, updateMask) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateBucket() {
+  async function callCreateBucketAsync() {
     // Construct request
     const request = {
-      name,
+      parent,
+      bucketId,
       bucket,
-      updateMask,
     };
 
     // Run request
-    const response = await loggingClient.updateBucket(request);
+    const [operation] = await loggingClient.createBucketAsync(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callUpdateBucket();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateBucket_async]
+  callCreateBucketAsync();
+  // [END logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async]
 }
 
 process.on('unhandledRejection', err => {

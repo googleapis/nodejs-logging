@@ -27,8 +27,8 @@ function main(sinkName, sink) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The full resource name of the sink to update, including the parent
-   *  resource and the sink identifier:
+   *  Required. The full resource name of the sink to update, including the
+   *  parent resource and the sink identifier:
    *      "projects/[PROJECT_ID]/sinks/[SINK_ID]"
    *      "organizations/[ORGANIZATION_ID]/sinks/[SINK_ID]"
    *      "billingAccounts/[BILLING_ACCOUNT_ID]/sinks/[SINK_ID]"
@@ -38,8 +38,8 @@ function main(sinkName, sink) {
    */
   // const sinkName = 'abc123'
   /**
-   *  Required. The updated sink, whose name is the same identifier that appears as part
-   *  of `sink_name`.
+   *  Required. The updated sink, whose name is the same identifier that appears
+   *  as part of `sink_name`.
    */
   // const sink = {}
   /**

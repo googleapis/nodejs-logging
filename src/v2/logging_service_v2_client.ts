@@ -188,6 +188,10 @@ export class LoggingServiceV2Client {
         new this._gaxModule.PathTemplate(
           'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}'
         ),
+      billingAccountLocationBucketLinkPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/links/{link}'
+        ),
       billingAccountLocationBucketViewPathTemplate:
         new this._gaxModule.PathTemplate(
           'billingAccounts/{billing_account}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -209,6 +213,9 @@ export class LoggingServiceV2Client {
       ),
       folderLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}'
+      ),
+      folderLocationBucketLinkPathTemplate: new this._gaxModule.PathTemplate(
+        'folders/{folder}/locations/{location}/buckets/{bucket}/links/{link}'
       ),
       folderLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
         'folders/{folder}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -234,6 +241,10 @@ export class LoggingServiceV2Client {
       organizationLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/buckets/{bucket}'
       ),
+      organizationLocationBucketLinkPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'organizations/{organization}/locations/{location}/buckets/{bucket}/links/{link}'
+        ),
       organizationLocationBucketViewPathTemplate:
         new this._gaxModule.PathTemplate(
           'organizations/{organization}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -258,6 +269,9 @@ export class LoggingServiceV2Client {
       ),
       projectLocationBucketPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}'
+      ),
+      projectLocationBucketLinkPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/locations/{location}/buckets/{bucket}/links/{link}'
       ),
       projectLocationBucketViewPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}/buckets/{bucket}/views/{view}'
@@ -647,11 +661,13 @@ export class LoggingServiceV2Client {
    *   `entries.write`, you should try to include several log entries in this
    *   list, rather than calling this method for each individual log entry.
    * @param {boolean} [request.partialSuccess]
-   *   Optional. Whether valid entries should be written even if some other
-   *   entries fail due to INVALID_ARGUMENT or PERMISSION_DENIED errors. If any
-   *   entry is not written, then the response status is the error associated
-   *   with one of the failed entries and the response includes error details
-   *   keyed by the entries' zero-based index in the `entries.write` method.
+   *   Optional. Whether a batch's valid entries should be written even if some
+   *   other entry failed due to a permanent error such as INVALID_ARGUMENT or
+   *   PERMISSION_DENIED. If any entry failed, then the response status is the
+   *   response status of one of the failed entries. The response will include
+   *   error details in `WriteLogEntriesPartialErrors.log_entry_errors` keyed by
+   *   the entries' zero-based index in the `entries`. Failed requests for which
+   *   no entries are written will not include per-entry errors.
    * @param {boolean} [request.dryRun]
    *   Optional. If true, the request should expect normal response, but the
    *   entries won't be persisted nor exported. Useful for checking whether the
@@ -775,14 +791,13 @@ export class LoggingServiceV2Client {
    *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   Projects listed in the `project_ids` field are added to this list.
+   *   A maximum of 100 resources may be specified in a single request.
    * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).
-   *   Only log entries that match the filter are returned.  An empty filter
-   *   matches all log entries in the resources listed in `resource_names`.
+   *   Optional. Only log entries that match the filter are returned.  An empty
+   *   filter matches all log entries in the resources listed in `resource_names`.
    *   Referencing a parent resource that is not listed in `resource_names` will
-   *   cause the filter to return no results. The maximum length of the filter is
-   *   20000 characters.
+   *   cause the filter to return no results. The maximum length of a filter is
+   *   20,000 characters.
    * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
@@ -791,10 +806,10 @@ export class LoggingServiceV2Client {
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request. Default is 50.
-   *   If the value is negative or exceeds 1000, the request is rejected. The
-   *   presence of `next_page_token` in the response indicates that more results
-   *   might be available.
+   *   Optional. The maximum number of results to return from this request.
+   *   Default is 50. If the value is negative or exceeds 1000, the request is
+   *   rejected. The presence of `next_page_token` in the response indicates that
+   *   more results might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
    *   preceding call to this method.  `page_token` must be the value of
@@ -897,14 +912,13 @@ export class LoggingServiceV2Client {
    *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   Projects listed in the `project_ids` field are added to this list.
+   *   A maximum of 100 resources may be specified in a single request.
    * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).
-   *   Only log entries that match the filter are returned.  An empty filter
-   *   matches all log entries in the resources listed in `resource_names`.
+   *   Optional. Only log entries that match the filter are returned.  An empty
+   *   filter matches all log entries in the resources listed in `resource_names`.
    *   Referencing a parent resource that is not listed in `resource_names` will
-   *   cause the filter to return no results. The maximum length of the filter is
-   *   20000 characters.
+   *   cause the filter to return no results. The maximum length of a filter is
+   *   20,000 characters.
    * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
@@ -913,10 +927,10 @@ export class LoggingServiceV2Client {
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request. Default is 50.
-   *   If the value is negative or exceeds 1000, the request is rejected. The
-   *   presence of `next_page_token` in the response indicates that more results
-   *   might be available.
+   *   Optional. The maximum number of results to return from this request.
+   *   Default is 50. If the value is negative or exceeds 1000, the request is
+   *   rejected. The presence of `next_page_token` in the response indicates that
+   *   more results might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
    *   preceding call to this method.  `page_token` must be the value of
@@ -975,14 +989,13 @@ export class LoggingServiceV2Client {
    *    * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *
    *   Projects listed in the `project_ids` field are added to this list.
+   *   A maximum of 100 resources may be specified in a single request.
    * @param {string} [request.filter]
-   *   Optional. A filter that chooses which log entries to return.  See [Advanced
-   *   Logs Queries](https://cloud.google.com/logging/docs/view/advanced-queries).
-   *   Only log entries that match the filter are returned.  An empty filter
-   *   matches all log entries in the resources listed in `resource_names`.
+   *   Optional. Only log entries that match the filter are returned.  An empty
+   *   filter matches all log entries in the resources listed in `resource_names`.
    *   Referencing a parent resource that is not listed in `resource_names` will
-   *   cause the filter to return no results. The maximum length of the filter is
-   *   20000 characters.
+   *   cause the filter to return no results. The maximum length of a filter is
+   *   20,000 characters.
    * @param {string} [request.orderBy]
    *   Optional. How the results should be sorted.  Presently, the only permitted
    *   values are `"timestamp asc"` (default) and `"timestamp desc"`. The first
@@ -991,10 +1004,10 @@ export class LoggingServiceV2Client {
    *   in order of decreasing timestamps (newest first).  Entries with equal
    *   timestamps are returned in order of their `insert_id` values.
    * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request. Default is 50.
-   *   If the value is negative or exceeds 1000, the request is rejected. The
-   *   presence of `next_page_token` in the response indicates that more results
-   *   might be available.
+   *   Optional. The maximum number of results to return from this request.
+   *   Default is 50. If the value is negative or exceeds 1000, the request is
+   *   rejected. The presence of `next_page_token` in the response indicates that
+   *   more results might be available.
    * @param {string} [request.pageToken]
    *   Optional. If present, then retrieve the next batch of results from the
    *   preceding call to this method.  `page_token` must be the value of
@@ -1229,23 +1242,14 @@ export class LoggingServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.parent
-   *   Required. The resource name that owns the logs:
+   *   Required. The resource name to list logs for:
    *
    *   *  `projects/[PROJECT_ID]`
    *   *  `organizations/[ORGANIZATION_ID]`
    *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *   *  `folders/[FOLDER_ID]`
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
    * @param {string[]} [request.resourceNames]
-   *   Optional. The resource name that owns the logs:
+   *   Optional. List of resource names to list logs for:
    *
    *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
@@ -1258,6 +1262,17 @@ export class LoggingServiceV2Client {
    *   *  `organizations/[ORGANIZATION_ID]`
    *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *   *  `folders/[FOLDER_ID]`
+   *
+   *   The resource name in the `parent` field is added to this list.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method.  `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.  The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -1343,23 +1358,14 @@ export class LoggingServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.parent
-   *   Required. The resource name that owns the logs:
+   *   Required. The resource name to list logs for:
    *
    *   *  `projects/[PROJECT_ID]`
    *   *  `organizations/[ORGANIZATION_ID]`
    *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *   *  `folders/[FOLDER_ID]`
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
    * @param {string[]} [request.resourceNames]
-   *   Optional. The resource name that owns the logs:
+   *   Optional. List of resource names to list logs for:
    *
    *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
@@ -1372,6 +1378,17 @@ export class LoggingServiceV2Client {
    *   *  `organizations/[ORGANIZATION_ID]`
    *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *   *  `folders/[FOLDER_ID]`
+   *
+   *   The resource name in the `parent` field is added to this list.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method.  `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.  The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
@@ -1413,23 +1430,14 @@ export class LoggingServiceV2Client {
    * @param {Object} request
    *   The request object that will be sent.
    * @param {string} request.parent
-   *   Required. The resource name that owns the logs:
+   *   Required. The resource name to list logs for:
    *
    *   *  `projects/[PROJECT_ID]`
    *   *  `organizations/[ORGANIZATION_ID]`
    *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *   *  `folders/[FOLDER_ID]`
-   * @param {number} [request.pageSize]
-   *   Optional. The maximum number of results to return from this request.
-   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
-   *   response indicates that more results might be available.
-   * @param {string} [request.pageToken]
-   *   Optional. If present, then retrieve the next batch of results from the
-   *   preceding call to this method.  `pageToken` must be the value of
-   *   `nextPageToken` from the previous response.  The values of other method
-   *   parameters should be identical to those in the previous call.
    * @param {string[]} [request.resourceNames]
-   *   Optional. The resource name that owns the logs:
+   *   Optional. List of resource names to list logs for:
    *
    *    * `projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *    * `organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
@@ -1442,6 +1450,17 @@ export class LoggingServiceV2Client {
    *   *  `organizations/[ORGANIZATION_ID]`
    *   *  `billingAccounts/[BILLING_ACCOUNT_ID]`
    *   *  `folders/[FOLDER_ID]`
+   *
+   *   The resource name in the `parent` field is added to this list.
+   * @param {number} [request.pageSize]
+   *   Optional. The maximum number of results to return from this request.
+   *   Non-positive values are ignored.  The presence of `nextPageToken` in the
+   *   response indicates that more results might be available.
+   * @param {string} [request.pageToken]
+   *   Optional. If present, then retrieve the next batch of results from the
+   *   preceding call to this method.  `pageToken` must be the value of
+   *   `nextPageToken` from the previous response.  The values of other method
+   *   parameters should be identical to those in the previous call.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
@@ -1614,6 +1633,91 @@ export class LoggingServiceV2Client {
     return this.pathTemplates.billingAccountLocationBucketPathTemplate.match(
       billingAccountLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified billingAccountLocationBucketLink resource name string.
+   *
+   * @param {string} billing_account
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  billingAccountLocationBucketLinkPath(
+    billingAccount: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.render(
+      {
+        billing_account: billingAccount,
+        location: location,
+        bucket: bucket,
+        link: link,
+      }
+    );
+  }
+
+  /**
+   * Parse the billing_account from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the billing_account.
+   */
+  matchBillingAccountFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).billing_account;
+  }
+
+  /**
+   * Parse the location from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from BillingAccountLocationBucketLink resource.
+   *
+   * @param {string} billingAccountLocationBucketLinkName
+   *   A fully-qualified path representing billing_account_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromBillingAccountLocationBucketLinkName(
+    billingAccountLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match(
+      billingAccountLocationBucketLinkName
+    ).link;
   }
 
   /**
@@ -1928,6 +2032,89 @@ export class LoggingServiceV2Client {
     return this.pathTemplates.folderLocationBucketPathTemplate.match(
       folderLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified folderLocationBucketLink resource name string.
+   *
+   * @param {string} folder
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  folderLocationBucketLinkPath(
+    folder: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.render({
+      folder: folder,
+      location: location,
+      bucket: bucket,
+      link: link,
+    });
+  }
+
+  /**
+   * Parse the folder from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the folder.
+   */
+  matchFolderFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).folder;
+  }
+
+  /**
+   * Parse the location from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from FolderLocationBucketLink resource.
+   *
+   * @param {string} folderLocationBucketLinkName
+   *   A fully-qualified path representing folder_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromFolderLocationBucketLinkName(
+    folderLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.folderLocationBucketLinkPathTemplate.match(
+      folderLocationBucketLinkName
+    ).link;
   }
 
   /**
@@ -2285,6 +2472,91 @@ export class LoggingServiceV2Client {
   }
 
   /**
+   * Return a fully-qualified organizationLocationBucketLink resource name string.
+   *
+   * @param {string} organization
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  organizationLocationBucketLinkPath(
+    organization: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.render(
+      {
+        organization: organization,
+        location: location,
+        bucket: bucket,
+        link: link,
+      }
+    );
+  }
+
+  /**
+   * Parse the organization from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).organization;
+  }
+
+  /**
+   * Parse the location from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from OrganizationLocationBucketLink resource.
+   *
+   * @param {string} organizationLocationBucketLinkName
+   *   A fully-qualified path representing organization_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromOrganizationLocationBucketLinkName(
+    organizationLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.organizationLocationBucketLinkPathTemplate.match(
+      organizationLocationBucketLinkName
+    ).link;
+  }
+
+  /**
    * Return a fully-qualified organizationLocationBucketView resource name string.
    *
    * @param {string} organization
@@ -2619,6 +2891,89 @@ export class LoggingServiceV2Client {
     return this.pathTemplates.projectLocationBucketPathTemplate.match(
       projectLocationBucketName
     ).bucket;
+  }
+
+  /**
+   * Return a fully-qualified projectLocationBucketLink resource name string.
+   *
+   * @param {string} project
+   * @param {string} location
+   * @param {string} bucket
+   * @param {string} link
+   * @returns {string} Resource name string.
+   */
+  projectLocationBucketLinkPath(
+    project: string,
+    location: string,
+    bucket: string,
+    link: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.render({
+      project: project,
+      location: location,
+      bucket: bucket,
+      link: link,
+    });
+  }
+
+  /**
+   * Parse the project from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).project;
+  }
+
+  /**
+   * Parse the location from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).location;
+  }
+
+  /**
+   * Parse the bucket from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the bucket.
+   */
+  matchBucketFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).bucket;
+  }
+
+  /**
+   * Parse the link from ProjectLocationBucketLink resource.
+   *
+   * @param {string} projectLocationBucketLinkName
+   *   A fully-qualified path representing project_location_bucket_link resource.
+   * @returns {string} A string representing the link.
+   */
+  matchLinkFromProjectLocationBucketLinkName(
+    projectLocationBucketLinkName: string
+  ) {
+    return this.pathTemplates.projectLocationBucketLinkPathTemplate.match(
+      projectLocationBucketLinkName
+    ).link;
   }
 
   /**

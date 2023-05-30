@@ -19,7 +19,7 @@
 'use strict';
 
 function main(name, bucket, updateMask) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateBucket_async]
+  // [START logging_v2_generated_ConfigServiceV2_UpdateBucketAsync_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -56,7 +56,7 @@ function main(name, bucket, updateMask) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateBucket() {
+  async function callUpdateBucketAsync() {
     // Construct request
     const request = {
       name,
@@ -65,12 +65,13 @@ function main(name, bucket, updateMask) {
     };
 
     // Run request
-    const response = await loggingClient.updateBucket(request);
+    const [operation] = await loggingClient.updateBucketAsync(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callUpdateBucket();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateBucket_async]
+  callUpdateBucketAsync();
+  // [END logging_v2_generated_ConfigServiceV2_UpdateBucketAsync_async]
 }
 
 process.on('unhandledRejection', err => {

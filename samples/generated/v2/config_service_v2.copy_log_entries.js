@@ -33,8 +33,8 @@ function main(name, destination) {
    */
   // const name = 'abc123'
   /**
-   *  Optional. A filter specifying which log entries to copy. The filter must be no more
-   *  than 20k characters. An empty filter matches all log entries.
+   *  Optional. A filter specifying which log entries to copy. The filter must be
+   *  no more than 20k characters. An empty filter matches all log entries.
    */
   // const filter = 'abc123'
   /**

@@ -18,8 +18,8 @@
 
 'use strict';
 
-function main(name, bucket, updateMask) {
-  // [START logging_v2_generated_ConfigServiceV2_UpdateBucket_async]
+function main(parent) {
+  // [START logging_v2_generated_ConfigServiceV2_ListLinks_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -27,28 +27,23 @@ function main(name, bucket, updateMask) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The full resource name of the bucket to update.
-   *      "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *      "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *      "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *      "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]"
-   *  For example:
-   *    `"projects/my-project/locations/global/buckets/my-bucket"`
+   *  Required. The parent resource whose links are to be listed:
+   *    "projects/[PROJECT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/links/"
+   *    "organizations/[ORGANIZATION_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *    "billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/"
+   *    "folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Required. The updated bucket.
+   *  Optional. If present, then retrieve the next batch of results from the
+   *  preceding call to this method. `pageToken` must be the value of
+   *  `nextPageToken` from the previous response.
    */
-  // const bucket = {}
+  // const pageToken = 'abc123'
   /**
-   *  Required. Field mask that specifies the fields in `bucket` that need an
-   *  update. A bucket field will be overwritten if, and only if, it is in the
-   *  update mask. `name` and output only fields cannot be updated.
-   *  For a detailed `FieldMask` definition, see:
-   *  https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.FieldMask
-   *  For example: `updateMask=retention_days`
+   *  Optional. The maximum number of results to return from this request.
    */
-  // const updateMask = {}
+  // const pageSize = 1234
 
   // Imports the Logging library
   const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
@@ -56,21 +51,21 @@ function main(name, bucket, updateMask) {
   // Instantiates a client
   const loggingClient = new ConfigServiceV2Client();
 
-  async function callUpdateBucket() {
+  async function callListLinks() {
     // Construct request
     const request = {
-      name,
-      bucket,
-      updateMask,
+      parent,
     };
 
     // Run request
-    const response = await loggingClient.updateBucket(request);
-    console.log(response);
+    const iterable = await loggingClient.listLinksAsync(request);
+    for await (const response of iterable) {
+      console.log(response);
+    }
   }
 
-  callUpdateBucket();
-  // [END logging_v2_generated_ConfigServiceV2_UpdateBucket_async]
+  callListLinks();
+  // [END logging_v2_generated_ConfigServiceV2_ListLinks_async]
 }
 
 process.on('unhandledRejection', err => {
