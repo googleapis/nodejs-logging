@@ -20,6 +20,7 @@ import * as http from 'http';
 type ServerResponse = http.ServerResponse;
 import {
   ServerRequest,
+  CustomRequestLoggingData,
   CloudLoggingHttpRequest,
   makeHttpRequestData,
   isRawHttpRequest,
@@ -123,6 +124,21 @@ describe('http-request', () => {
         1.0000000001
       );
       assert.deepStrictEqual(h3.latency, {seconds: 0, nanos: 1e6});
+    });
+    it('should include custom data if provided', () => {
+      const req = {
+        method: 'GET',
+        originalUrl: 'invalid/url/',
+        customRequestLoggingData: {
+          '🏃': '👻',
+        } as CustomRequestLoggingData,
+      } as ServerRequest;
+      const cloudReq = makeHttpRequestData(req);
+      console.log(cloudReq.customData);
+      assert.strictEqual(cloudReq.protocol, undefined);
+      assert.strictEqual(cloudReq.requestUrl, 'invalid/url/');
+      assert.strictEqual(cloudReq.requestMethod, 'GET');
+      assert.deepEqual(cloudReq.customData, {'🏃': '👻'});
     });
   });
 

@@ -25,6 +25,10 @@
 import * as http from 'http';
 export type RawHttpRequest = http.IncomingMessage & CloudLoggingHttpRequest;
 
+export interface CustomRequestLoggingData {
+  [index: string]: string | number | boolean;
+}
+
 export interface CloudLoggingHttpRequest {
   requestMethod?: string;
   requestUrl?: string;
@@ -41,13 +45,15 @@ export interface CloudLoggingHttpRequest {
   cacheValidatedWithOriginServer?: boolean;
   cacheFillBytes?: number;
   protocol?: string;
+  customData?: CustomRequestLoggingData;
 }
 
 /**
  * Abstraction of http.IncomingMessage used by middleware implementation.
  */
 export interface ServerRequest extends http.IncomingMessage {
-  originalUrl: string;
+  originalUrl?: string;
+  customRequestLoggingData?: CustomRequestLoggingData;
 }
 
 /**
@@ -59,7 +65,7 @@ export interface ServerRequest extends http.IncomingMessage {
  * @param latencyMilliseconds
  */
 export function makeHttpRequestData(
-  req: ServerRequest | http.IncomingMessage,
+  req: ServerRequest,
   res?: http.ServerResponse,
   latencyMilliseconds?: number
 ): CloudLoggingHttpRequest {
@@ -70,7 +76,9 @@ export function makeHttpRequestData(
     referer,
     status,
     responseSize,
-    latency;
+    latency,
+    customData;
+
   // Format request properties
   if (req.url) requestUrl = req.url;
   // OriginalURL overwrites inferred url
@@ -102,6 +110,9 @@ export function makeHttpRequestData(
       nanos: Math.floor((latencyMilliseconds % 1e3) * 1e6),
     };
   }
+  if (req.customRequestLoggingData) {
+    customData = req.customRequestLoggingData;
+  }
   // Only include the property if its value exists
   return Object.assign(
     {},
@@ -112,7 +123,8 @@ export function makeHttpRequestData(
     referer ? {referer} : null,
     responseSize ? {responseSize} : null,
     status ? {status} : null,
-    latency ? {latency} : null
+    latency ? {latency} : null,
+    customData ? {customData} : null
   );
 }
 
