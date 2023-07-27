@@ -41,7 +41,7 @@ function main(resourceNames) {
    *  Projects listed in the `project_ids` field are added to this list.
    *  A maximum of 100 resources may be specified in a single request.
    */
-  // const resourceNames = 'abc123'
+  // const resourceNames = ['abc','def']
   /**
    *  Optional. Only log entries that match the filter are returned.  An empty
    *  filter matches all log entries in the resources listed in `resource_names`.
