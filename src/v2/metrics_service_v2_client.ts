@@ -468,7 +468,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric,
       protos.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getLogMetric(
@@ -506,7 +506,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric,
       protos.google.logging.v2.IGetLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -558,7 +558,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric,
       protos.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createLogMetric(
@@ -596,7 +596,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric,
       protos.google.logging.v2.ICreateLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -649,7 +649,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric,
       protos.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateLogMetric(
@@ -687,7 +687,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric,
       protos.google.logging.v2.IUpdateLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -734,7 +734,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteLogMetric(
@@ -772,7 +772,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteLogMetricRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -832,7 +832,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric[],
       protos.google.logging.v2.IListLogMetricsRequest | null,
-      protos.google.logging.v2.IListLogMetricsResponse
+      protos.google.logging.v2.IListLogMetricsResponse,
     ]
   >;
   listLogMetrics(
@@ -870,7 +870,7 @@ export class MetricsServiceV2Client {
     [
       protos.google.logging.v2.ILogMetric[],
       protos.google.logging.v2.IListLogMetricsRequest | null,
-      protos.google.logging.v2.IListLogMetricsResponse
+      protos.google.logging.v2.IListLogMetricsResponse,
     ]
   > | void {
     request = request || {};
