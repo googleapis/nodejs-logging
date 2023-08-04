@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^6.0.0",
-    "@google-cloud/pubsub": "^3.0.0",
+    "@google-cloud/pubsub": "^4.0.0",
     "@google-cloud/storage": "^6.0.0",
     "@types/extend": "^3.0.1",
     "@types/mocha": "^9.0.0",
