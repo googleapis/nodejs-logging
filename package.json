@@ -53,7 +53,7 @@
     "dot-prop": "^6.0.0",
     "eventid": "^2.0.0",
     "extend": "^3.0.2",
-    "gcp-metadata": "^4.0.0",
+    "gcp-metadata": "^6.0.0",
     "google-auth-library": "^9.0.0",
     "google-gax": "^4.0.3",
     "on-finished": "^2.3.0",
@@ -62,9 +62,9 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@google-cloud/bigquery": "^6.0.0",
-    "@google-cloud/pubsub": "^3.0.0",
-    "@google-cloud/storage": "^6.0.0",
+    "@google-cloud/bigquery": "^7.0.0",
+    "@google-cloud/pubsub": "^4.0.0",
+    "@google-cloud/storage": "^7.0.0",
     "@types/extend": "^3.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^20.4.9",
