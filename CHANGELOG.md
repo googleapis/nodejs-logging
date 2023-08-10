@@ -5,6 +5,17 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [11.0.0](https://github.com/googleapis/nodejs-logging/compare/v10.5.0...v11.0.0) (2023-08-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to Node 14
+
+### Miscellaneous Chores
+
+* Migrate to Node 14 ([c294f5d](https://github.com/googleapis/nodejs-logging/commit/c294f5d439eea69826d9ba6cb66f00adaf428878))
+
 ## [10.5.0](https://github.com/googleapis/nodejs-logging/compare/v10.4.1...v10.5.0) (2023-05-30)
 
 
