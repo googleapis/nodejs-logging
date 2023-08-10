@@ -85,15 +85,13 @@ describe('Logging', () => {
     // Fixes: https://github.com/googleapis/nodejs-logging/issues/953
     async function deleteBuckets() {
       const [buckets] = await storage.getBuckets({prefix: TESTS_PREFIX});
-      const bucketsToDelete = buckets.filter(
-        (bucket: {metadata: {timeCreated: string | number | Date}}) => {
-          if (bucket.metadata.timeCreated) {
-            return new Date(bucket.metadata.timeCreated) < twoDaysAgo;
-          } else {
-            return undefined;
-          }
+      const bucketsToDelete = buckets.filter((bucket: any) => {
+        if (bucket.metadata.timeCreated) {
+          return new Date(bucket.metadata.timeCreated) < twoDaysAgo;
+        } else {
+          return undefined;
         }
-      );
+      });
 
       for (const bucket of bucketsToDelete) {
         await bucket.deleteFiles();
