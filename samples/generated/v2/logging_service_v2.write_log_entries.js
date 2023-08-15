@@ -57,7 +57,7 @@ function main(entries) {
    *  as a label in this parameter, then the log entry's label is not changed.
    *  See LogEntry google.logging.v2.LogEntry.
    */
-  // const labels = 1234
+  // const labels = [1,2,3,4]
   /**
    *  Required. The log entries to send to Logging. The order of log
    *  entries in this list does not matter. Values supplied in this method's
@@ -81,7 +81,7 @@ function main(entries) {
    *  `entries.write`, you should try to include several log entries in this
    *  list, rather than calling this method for each individual log entry.
    */
-  // const entries = 1234
+  // const entries = [1,2,3,4]
   /**
    *  Optional. Whether a batch's valid entries should be written even if some
    *  other entry failed due to a permanent error such as INVALID_ARGUMENT or

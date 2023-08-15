@@ -38,7 +38,7 @@ function main(resourceNames) {
    *   * `billingAccounts/[BILLING_ACCOUNT_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    *   * `folders/[FOLDER_ID]/locations/[LOCATION_ID]/buckets/[BUCKET_ID]/views/[VIEW_ID]`
    */
-  // const resourceNames = 'abc123'
+  // const resourceNames = ['abc','def']
   /**
    *  Optional. Only log entries that match the filter are returned.  An empty
    *  filter matches all log entries in the resources listed in `resource_names`.

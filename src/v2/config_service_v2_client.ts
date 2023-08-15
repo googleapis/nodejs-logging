@@ -634,9 +634,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogBucket | LogBucket}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogBucket|LogBucket}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_bucket.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetBucket_async
@@ -732,9 +731,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogBucket | LogBucket}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogBucket|LogBucket}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_bucket.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateBucket_async
@@ -840,9 +838,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogBucket | LogBucket}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogBucket|LogBucket}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_bucket.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateBucket_async
@@ -936,9 +933,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.protobuf.Empty | Empty}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.delete_bucket.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_DeleteBucket_async
@@ -1029,9 +1025,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.protobuf.Empty | Empty}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.undelete_bucket.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UndeleteBucket_async
@@ -1118,9 +1113,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogView | LogView}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogView|LogView}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_view.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetView_async
@@ -1214,9 +1208,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogView | LogView}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogView|LogView}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_view.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateView_async
@@ -1318,9 +1311,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogView | LogView}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogView|LogView}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_view.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateView_async
@@ -1410,9 +1402,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.protobuf.Empty | Empty}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.delete_view.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_DeleteView_async
@@ -1502,9 +1493,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogSink | LogSink}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogSink|LogSink}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_sink.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetSink_async
@@ -1610,13 +1600,12 @@ export class ConfigServiceV2Client {
    *   resource such as an organization, then the value of `writer_identity` will
    *   be a unique service account used only for exports from the new sink. For
    *   more information, see `writer_identity` in
-   *   {@link google.logging.v2.LogSink|LogSink}.
+   *   {@link protos.google.logging.v2.LogSink|LogSink}.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogSink | LogSink}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogSink|LogSink}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_sink.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateSink_async
@@ -1712,7 +1701,7 @@ export class ConfigServiceV2Client {
    *   Required. The updated sink, whose name is the same identifier that appears
    *   as part of `sink_name`.
    * @param {boolean} [request.uniqueWriterIdentity]
-   *   Optional. See {@link google.logging.v2.ConfigServiceV2.CreateSink|sinks.create}
+   *   Optional. See {@link protos.google.logging.v2.ConfigServiceV2.CreateSink|sinks.create}
    *   for a description of this field. When updating a sink, the effect of this
    *   field on the value of `writer_identity` in the updated sink depends on both
    *   the old and new values of this field:
@@ -1743,9 +1732,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogSink | LogSink}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogSink|LogSink}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_sink.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateSink_async
@@ -1837,9 +1825,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.protobuf.Empty | Empty}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.delete_sink.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_DeleteSink_async
@@ -1925,9 +1912,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.Link | Link}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.Link|Link}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_link.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetLink_async
@@ -2017,9 +2003,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogExclusion | LogExclusion}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogExclusion|LogExclusion}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_exclusion.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetExclusion_async
@@ -2115,9 +2100,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogExclusion | LogExclusion}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogExclusion|LogExclusion}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_exclusion.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateExclusion_async
@@ -2211,7 +2195,7 @@ export class ConfigServiceV2Client {
    * @param {google.protobuf.FieldMask} request.updateMask
    *   Required. A non-empty list of fields to change in the existing exclusion.
    *   New values for the fields are taken from the corresponding fields in the
-   *   {@link google.logging.v2.LogExclusion|LogExclusion} included in this request.
+   *   {@link protos.google.logging.v2.LogExclusion|LogExclusion} included in this request.
    *   Fields not mentioned in `update_mask` are not changed and are ignored in
    *   the request.
    *
@@ -2220,9 +2204,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.LogExclusion | LogExclusion}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.LogExclusion|LogExclusion}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_exclusion.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateExclusion_async
@@ -2312,9 +2295,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.protobuf.Empty | Empty}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.delete_exclusion.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_DeleteExclusion_async
@@ -2418,9 +2400,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.CmekSettings | CmekSettings}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.CmekSettings|CmekSettings}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_cmek_settings.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetCmekSettings_async
@@ -2498,7 +2479,7 @@ export class ConfigServiceV2Client {
    * Cloud organizations. Once configured, it applies to all projects and
    * folders in the Google Cloud organization.
    *
-   * {@link google.logging.v2.ConfigServiceV2.UpdateCmekSettings|UpdateCmekSettings}
+   * {@link protos.google.logging.v2.ConfigServiceV2.UpdateCmekSettings|UpdateCmekSettings}
    * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
    * account does not have the required
    * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
@@ -2536,15 +2517,14 @@ export class ConfigServiceV2Client {
    *   be updated. A field will be overwritten if and only if it is in the update
    *   mask. Output only fields cannot be updated.
    *
-   *   See {@link google.protobuf.FieldMask|FieldMask} for more information.
+   *   See {@link protos.google.protobuf.FieldMask|FieldMask} for more information.
    *
    *   For example: `"updateMask=kmsKeyName"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.CmekSettings | CmekSettings}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.CmekSettings|CmekSettings}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_cmek_settings.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateCmekSettings_async
@@ -2650,9 +2630,8 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.Settings | Settings}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.Settings|Settings}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.get_settings.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_GetSettings_async
@@ -2730,7 +2709,7 @@ export class ConfigServiceV2Client {
    * Google Cloud organizations. Once configured, it applies to all projects and
    * folders in the Google Cloud organization.
    *
-   * {@link google.logging.v2.ConfigServiceV2.UpdateSettings|UpdateSettings}
+   * {@link protos.google.logging.v2.ConfigServiceV2.UpdateSettings|UpdateSettings}
    * will fail if 1) `kms_key_name` is invalid, or 2) the associated service
    * account does not have the required
    * `roles/cloudkms.cryptoKeyEncrypterDecrypter` role assigned for the key, or
@@ -2766,15 +2745,14 @@ export class ConfigServiceV2Client {
    *   be updated. A field will be overwritten if and only if it is in the update
    *   mask. Output only fields cannot be updated.
    *
-   *   See {@link google.protobuf.FieldMask|FieldMask} for more information.
+   *   See {@link protos.google.protobuf.FieldMask|FieldMask} for more information.
    *
    *   For example: `"updateMask=kmsKeyName"`
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing {@link google.logging.v2.Settings | Settings}.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   The first element of the array is an object representing {@link protos.google.logging.v2.Settings|Settings}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_settings.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateSettings_async
@@ -2875,8 +2853,7 @@ export class ConfigServiceV2Client {
    *   The first element of the array is an object representing
    *   a long running operation. Its `promise()` method returns a promise
    *   you can `await` for.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_bucket_async.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async
@@ -2971,8 +2948,7 @@ export class ConfigServiceV2Client {
    *   The operation name that will be passed.
    * @returns {Promise} - The promise which resolves to an object.
    *   The decoded operation object has result and metadata field to get information from.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_bucket_async.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateBucketAsync_async
@@ -3038,8 +3014,7 @@ export class ConfigServiceV2Client {
    *   The first element of the array is an object representing
    *   a long running operation. Its `promise()` method returns a promise
    *   you can `await` for.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_bucket_async.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateBucketAsync_async
@@ -3134,8 +3109,7 @@ export class ConfigServiceV2Client {
    *   The operation name that will be passed.
    * @returns {Promise} - The promise which resolves to an object.
    *   The decoded operation object has result and metadata field to get information from.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.update_bucket_async.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_UpdateBucketAsync_async
@@ -3189,8 +3163,7 @@ export class ConfigServiceV2Client {
    *   The first element of the array is an object representing
    *   a long running operation. Its `promise()` method returns a promise
    *   you can `await` for.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_link.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateLink_async
@@ -3285,8 +3258,7 @@ export class ConfigServiceV2Client {
    *   The operation name that will be passed.
    * @returns {Promise} - The promise which resolves to an object.
    *   The decoded operation object has result and metadata field to get information from.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.create_link.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CreateLink_async
@@ -3333,8 +3305,7 @@ export class ConfigServiceV2Client {
    *   The first element of the array is an object representing
    *   a long running operation. Its `promise()` method returns a promise
    *   you can `await` for.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.delete_link.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_DeleteLink_async
@@ -3429,8 +3400,7 @@ export class ConfigServiceV2Client {
    *   The operation name that will be passed.
    * @returns {Promise} - The promise which resolves to an object.
    *   The decoded operation object has result and metadata field to get information from.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.delete_link.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_DeleteLink_async
@@ -3480,8 +3450,7 @@ export class ConfigServiceV2Client {
    *   The first element of the array is an object representing
    *   a long running operation. Its `promise()` method returns a promise
    *   you can `await` for.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.copy_log_entries.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CopyLogEntries_async
@@ -3572,8 +3541,7 @@ export class ConfigServiceV2Client {
    *   The operation name that will be passed.
    * @returns {Promise} - The promise which resolves to an object.
    *   The decoded operation object has result and metadata field to get information from.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.copy_log_entries.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_CopyLogEntries_async
@@ -3629,14 +3597,13 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of {@link google.logging.v2.LogBucket | LogBucket}.
+   *   The first element of the array is Array of {@link protos.google.logging.v2.LogBucket|LogBucket}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
    *   We recommend using `listBucketsAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listBuckets(
@@ -3733,13 +3700,12 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing {@link google.logging.v2.LogBucket | LogBucket} on 'data' event.
+   *   An object stream which emits an object representing {@link protos.google.logging.v2.LogBucket|LogBucket} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listBucketsAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listBucketsStream(
@@ -3793,12 +3759,11 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
-   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
    *   When you iterate the returned iterable, each element will be an object representing
-   *   {@link google.logging.v2.LogBucket | LogBucket}. The API will be called under the hood as needed, once per the page,
+   *   {@link protos.google.logging.v2.LogBucket|LogBucket}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.list_buckets.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_ListBuckets_async
@@ -3846,14 +3811,13 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of {@link google.logging.v2.LogView | LogView}.
+   *   The first element of the array is Array of {@link protos.google.logging.v2.LogView|LogView}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
    *   We recommend using `listViewsAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listViews(
@@ -3944,13 +3908,12 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing {@link google.logging.v2.LogView | LogView} on 'data' event.
+   *   An object stream which emits an object representing {@link protos.google.logging.v2.LogView|LogView} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listViewsAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listViewsStream(
@@ -3998,12 +3961,11 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
-   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
    *   When you iterate the returned iterable, each element will be an object representing
-   *   {@link google.logging.v2.LogView | LogView}. The API will be called under the hood as needed, once per the page,
+   *   {@link protos.google.logging.v2.LogView|LogView}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.list_views.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_ListViews_async
@@ -4053,14 +4015,13 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of {@link google.logging.v2.LogSink | LogSink}.
+   *   The first element of the array is Array of {@link protos.google.logging.v2.LogSink|LogSink}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
    *   We recommend using `listSinksAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listSinks(
@@ -4153,13 +4114,12 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing {@link google.logging.v2.LogSink | LogSink} on 'data' event.
+   *   An object stream which emits an object representing {@link protos.google.logging.v2.LogSink|LogSink} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listSinksAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listSinksStream(
@@ -4209,12 +4169,11 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
-   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
    *   When you iterate the returned iterable, each element will be an object representing
-   *   {@link google.logging.v2.LogSink | LogSink}. The API will be called under the hood as needed, once per the page,
+   *   {@link protos.google.logging.v2.LogSink|LogSink}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.list_sinks.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_ListSinks_async
@@ -4261,14 +4220,13 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of {@link google.logging.v2.Link | Link}.
+   *   The first element of the array is Array of {@link protos.google.logging.v2.Link|Link}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
    *   We recommend using `listLinksAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listLinks(
@@ -4358,13 +4316,12 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing {@link google.logging.v2.Link | Link} on 'data' event.
+   *   An object stream which emits an object representing {@link protos.google.logging.v2.Link|Link} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listLinksAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listLinksStream(
@@ -4411,12 +4368,11 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
-   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
    *   When you iterate the returned iterable, each element will be an object representing
-   *   {@link google.logging.v2.Link | Link}. The API will be called under the hood as needed, once per the page,
+   *   {@link protos.google.logging.v2.Link|Link}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.list_links.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_ListLinks_async
@@ -4466,14 +4422,13 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of {@link google.logging.v2.LogExclusion | LogExclusion}.
+   *   The first element of the array is Array of {@link protos.google.logging.v2.LogExclusion|LogExclusion}.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed and will merge results from all the pages into this array.
    *   Note that it can affect your quota.
    *   We recommend using `listExclusionsAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listExclusions(
@@ -4566,13 +4521,12 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
-   *   An object stream which emits an object representing {@link google.logging.v2.LogExclusion | LogExclusion} on 'data' event.
+   *   An object stream which emits an object representing {@link protos.google.logging.v2.LogExclusion|LogExclusion} on 'data' event.
    *   The client library will perform auto-pagination by default: it will call the API as many
    *   times as needed. Note that it can affect your quota.
    *   We recommend using `listExclusionsAsync()`
    *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    */
   listExclusionsStream(
@@ -4622,12 +4576,11 @@ export class ConfigServiceV2Client {
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
-   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
    *   When you iterate the returned iterable, each element will be an object representing
-   *   {@link google.logging.v2.LogExclusion | LogExclusion}. The API will be called under the hood as needed, once per the page,
+   *   {@link protos.google.logging.v2.LogExclusion|LogExclusion}. The API will be called under the hood as needed, once per the page,
    *   so you can stop the iteration when you don't need more results.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
    *   for more details and examples.
    * @example <caption>include:samples/generated/v2/config_service_v2.list_exclusions.js</caption>
    * region_tag:logging_v2_generated_ConfigServiceV2_ListExclusions_async

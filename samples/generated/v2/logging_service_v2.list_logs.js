@@ -47,7 +47,7 @@ function main(parent) {
    *  *  `folders/[FOLDER_ID]`
    *  The resource name in the `parent` field is added to this list.
    */
-  // const resourceNames = 'abc123'
+  // const resourceNames = ['abc','def']
   /**
    *  Optional. The maximum number of results to return from this request.
    *  Non-positive values are ignored.  The presence of `nextPageToken` in the
