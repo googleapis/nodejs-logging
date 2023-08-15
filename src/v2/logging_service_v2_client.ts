@@ -532,7 +532,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteLog(
@@ -570,7 +570,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteLogRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -687,7 +687,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.logging.v2.IWriteLogEntriesResponse,
       protos.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   writeLogEntries(
@@ -725,7 +725,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.logging.v2.IWriteLogEntriesResponse,
       protos.google.logging.v2.IWriteLogEntriesRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -831,7 +831,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.logging.v2.ILogEntry[],
       protos.google.logging.v2.IListLogEntriesRequest | null,
-      protos.google.logging.v2.IListLogEntriesResponse
+      protos.google.logging.v2.IListLogEntriesResponse,
     ]
   >;
   listLogEntries(
@@ -869,7 +869,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.logging.v2.ILogEntry[],
       protos.google.logging.v2.IListLogEntriesRequest | null,
-      protos.google.logging.v2.IListLogEntriesResponse
+      protos.google.logging.v2.IListLogEntriesResponse,
     ]
   > | void {
     request = request || {};
@@ -1070,7 +1070,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.api.IMonitoredResourceDescriptor[],
       protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse,
     ]
   >;
   listMonitoredResourceDescriptors(
@@ -1116,7 +1116,7 @@ export class LoggingServiceV2Client {
     [
       protos.google.api.IMonitoredResourceDescriptor[],
       protos.google.logging.v2.IListMonitoredResourceDescriptorsRequest | null,
-      protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse
+      protos.google.logging.v2.IListMonitoredResourceDescriptorsResponse,
     ]
   > | void {
     request = request || {};
@@ -1283,7 +1283,7 @@ export class LoggingServiceV2Client {
     [
       string[],
       protos.google.logging.v2.IListLogsRequest | null,
-      protos.google.logging.v2.IListLogsResponse
+      protos.google.logging.v2.IListLogsResponse,
     ]
   >;
   listLogs(
@@ -1321,7 +1321,7 @@ export class LoggingServiceV2Client {
     [
       string[],
       protos.google.logging.v2.IListLogsRequest | null,
-      protos.google.logging.v2.IListLogsResponse
+      protos.google.logging.v2.IListLogsResponse,
     ]
   > | void {
     request = request || {};

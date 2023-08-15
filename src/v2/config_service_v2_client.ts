@@ -647,7 +647,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getBucket(
@@ -685,7 +685,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.IGetBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -744,7 +744,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.ICreateBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createBucket(
@@ -782,7 +782,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.ICreateBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -851,7 +851,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateBucket(
@@ -889,7 +889,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket,
       protos.google.logging.v2.IUpdateBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -946,7 +946,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteBucket(
@@ -984,7 +984,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1038,7 +1038,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IUndeleteBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   undeleteBucket(
@@ -1076,7 +1076,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IUndeleteBucketRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1126,7 +1126,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView,
       protos.google.logging.v2.IGetViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getView(
@@ -1164,7 +1164,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView,
       protos.google.logging.v2.IGetViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1221,7 +1221,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView,
       protos.google.logging.v2.ICreateViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createView(
@@ -1259,7 +1259,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView,
       protos.google.logging.v2.ICreateViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1324,7 +1324,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView,
       protos.google.logging.v2.IUpdateViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateView(
@@ -1362,7 +1362,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView,
       protos.google.logging.v2.IUpdateViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1415,7 +1415,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteView(
@@ -1453,7 +1453,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteViewRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1506,7 +1506,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getSink(
@@ -1544,7 +1544,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.IGetSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1617,7 +1617,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createSink(
@@ -1655,7 +1655,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.ICreateSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1745,7 +1745,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateSink(
@@ -1783,7 +1783,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink,
       protos.google.logging.v2.IUpdateSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1838,7 +1838,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteSink(
@@ -1876,7 +1876,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteSinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -1925,7 +1925,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILink,
       protos.google.logging.v2.IGetLinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getLink(
@@ -1963,7 +1963,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILink,
       protos.google.logging.v2.IGetLinkRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2016,7 +2016,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getExclusion(
@@ -2054,7 +2054,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.IGetExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2113,7 +2113,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createExclusion(
@@ -2151,7 +2151,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.ICreateExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2217,7 +2217,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateExclusion(
@@ -2255,7 +2255,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion,
       protos.google.logging.v2.IUpdateExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2308,7 +2308,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteExclusion(
@@ -2346,7 +2346,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.protobuf.IEmpty,
       protos.google.logging.v2.IDeleteExclusionRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2413,7 +2413,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ICmekSettings,
       protos.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getCmekSettings(
@@ -2451,7 +2451,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ICmekSettings,
       protos.google.logging.v2.IGetCmekSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2536,7 +2536,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ICmekSettings,
       protos.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateCmekSettings(
@@ -2576,7 +2576,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ICmekSettings,
       protos.google.logging.v2.IUpdateCmekSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2643,7 +2643,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ISettings,
       protos.google.logging.v2.IGetSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   getSettings(
@@ -2681,7 +2681,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ISettings,
       protos.google.logging.v2.IGetSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2764,7 +2764,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ISettings,
       protos.google.logging.v2.IUpdateSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateSettings(
@@ -2802,7 +2802,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ISettings,
       protos.google.logging.v2.IUpdateSettingsRequest | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -2868,7 +2868,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.IBucketMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createBucketAsync(
@@ -2921,7 +2921,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.IBucketMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -3029,7 +3029,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.IBucketMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   updateBucketAsync(
@@ -3082,7 +3082,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.IBucketMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -3178,7 +3178,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.ILinkMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   createLink(
@@ -3231,7 +3231,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.ILinkMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -3320,7 +3320,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.ILinkMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   deleteLink(
@@ -3373,7 +3373,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.ILinkMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -3465,7 +3465,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.ICopyLogEntriesMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   >;
   copyLogEntries(
@@ -3518,7 +3518,7 @@ export class ConfigServiceV2Client {
         protos.google.logging.v2.ICopyLogEntriesMetadata
       >,
       protos.google.longrunning.IOperation | undefined,
-      {} | undefined
+      {} | undefined,
     ]
   > | void {
     request = request || {};
@@ -3613,7 +3613,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket[],
       protos.google.logging.v2.IListBucketsRequest | null,
-      protos.google.logging.v2.IListBucketsResponse
+      protos.google.logging.v2.IListBucketsResponse,
     ]
   >;
   listBuckets(
@@ -3651,7 +3651,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogBucket[],
       protos.google.logging.v2.IListBucketsRequest | null,
-      protos.google.logging.v2.IListBucketsResponse
+      protos.google.logging.v2.IListBucketsResponse,
     ]
   > | void {
     request = request || {};
@@ -3827,7 +3827,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView[],
       protos.google.logging.v2.IListViewsRequest | null,
-      protos.google.logging.v2.IListViewsResponse
+      protos.google.logging.v2.IListViewsResponse,
     ]
   >;
   listViews(
@@ -3865,7 +3865,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogView[],
       protos.google.logging.v2.IListViewsRequest | null,
-      protos.google.logging.v2.IListViewsResponse
+      protos.google.logging.v2.IListViewsResponse,
     ]
   > | void {
     request = request || {};
@@ -4031,7 +4031,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink[],
       protos.google.logging.v2.IListSinksRequest | null,
-      protos.google.logging.v2.IListSinksResponse
+      protos.google.logging.v2.IListSinksResponse,
     ]
   >;
   listSinks(
@@ -4069,7 +4069,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogSink[],
       protos.google.logging.v2.IListSinksRequest | null,
-      protos.google.logging.v2.IListSinksResponse
+      protos.google.logging.v2.IListSinksResponse,
     ]
   > | void {
     request = request || {};
@@ -4236,7 +4236,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILink[],
       protos.google.logging.v2.IListLinksRequest | null,
-      protos.google.logging.v2.IListLinksResponse
+      protos.google.logging.v2.IListLinksResponse,
     ]
   >;
   listLinks(
@@ -4274,7 +4274,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILink[],
       protos.google.logging.v2.IListLinksRequest | null,
-      protos.google.logging.v2.IListLinksResponse
+      protos.google.logging.v2.IListLinksResponse,
     ]
   > | void {
     request = request || {};
@@ -4438,7 +4438,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion[],
       protos.google.logging.v2.IListExclusionsRequest | null,
-      protos.google.logging.v2.IListExclusionsResponse
+      protos.google.logging.v2.IListExclusionsResponse,
     ]
   >;
   listExclusions(
@@ -4476,7 +4476,7 @@ export class ConfigServiceV2Client {
     [
       protos.google.logging.v2.ILogExclusion[],
       protos.google.logging.v2.IListExclusionsRequest | null,
-      protos.google.logging.v2.IListExclusionsResponse
+      protos.google.logging.v2.IListExclusionsResponse,
     ]
   > | void {
     request = request || {};

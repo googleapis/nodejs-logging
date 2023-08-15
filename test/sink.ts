@@ -233,7 +233,7 @@ describe('Sink', () => {
 
       sandbox
         .stub(sink.logging.configService, 'updateSink')
-        .callsFake(async (reqOpts, gaxOpts) => {
+        .callsFake(async (reqOpts: any, gaxOpts: any) => {
           assert.strictEqual(reqOpts.sink.gaxOptions, undefined);
           assert.strictEqual(gaxOpts, metadata.gaxOptions);
           return [];
