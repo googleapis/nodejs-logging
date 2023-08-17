@@ -51,9 +51,8 @@ function main() {
     const request = {};
 
     // Run request
-    const iterable = await loggingClient.listMonitoredResourceDescriptorsAsync(
-      request
-    );
+    const iterable =
+      await loggingClient.listMonitoredResourceDescriptorsAsync(request);
     for await (const response of iterable) {
       console.log(response);
     }
