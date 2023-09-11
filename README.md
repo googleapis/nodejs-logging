@@ -228,7 +228,7 @@ See the full sample in `writeLogWithCallback` function [here](https://github.com
 
 ## Samples
 
-Samples are in the [`samples/`](https://github.com/googleapis/nodejs-logging/tree/main/samples) directory. Each sample's `README.md` has instructions for running its sample.
+Samples are in the [`samples/`](https://github.com/googleapis/nodejs-logging/tree/main/packages/google-cloud-functions/samples) directory. Each sample's `README.md` has instructions for running its sample.
 
 | Sample                      | Source Code                       | Try it |
 | --------------------------- | --------------------------------- | ------ |
