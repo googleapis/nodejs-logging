@@ -74,7 +74,7 @@ body: |-
 
   Metadata about Http request is a part of the [structured log info](https://cloud.google.com/logging/docs/structured-logging)
   that can be captured within each log entry. It can provide a context for the application logs and
-  is used to group multiple log entries under the load balancer request logs. See the [sample](https://github.com/googleapis/nodejs-logging/blob/master/samples/http-request.js)
+  is used to group multiple log entries under the load balancer request logs. See the [samples](https://github.com/googleapis/nodejs-logging/blob/master/samples/http-request.js)
   how to populate the Http request metadata for log entries.
 
   If you already have a "raw" Http `request` object you can assign it to `entry.metadata.httpRequest` directly. More information about
