@@ -40,7 +40,7 @@ const version = require('../../package.json').version;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const v2 = require('./v2');
 
-import {Entry, LogEntry, LogSeverity} from './entry';
+import {Entry, LogEntry} from './entry';
 import {
   MonitoredResource,
   Severity,
@@ -1522,7 +1522,7 @@ export {Log};
  */
 export {Severity};
 export {SeverityNames};
-export {LogSeverity};
+export type LogSeverity = google.logging.type.LogSeverity;
 
 export {assignSeverityToEntries};
 export {formatLogName};
