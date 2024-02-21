@@ -45,6 +45,8 @@
     "postpublish": "./.kokoro/publish-min.sh"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.7.0",
+    "@opentelemetry/core": "^1.21.0",
     "@google-cloud/common": "^5.0.0",
     "@google-cloud/paginator": "^5.0.0",
     "@google-cloud/projectify": "^4.0.0",
@@ -54,8 +56,8 @@
     "eventid": "^2.0.0",
     "extend": "^3.0.2",
     "gcp-metadata": "^6.0.0",
-    "google-auth-library": "^9.0.0",
-    "google-gax": "^4.0.3",
+    "google-auth-library": "^9.3.0",
+    "google-gax": "^4.3.0",
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.1",
     "stream-events": "^1.0.5",

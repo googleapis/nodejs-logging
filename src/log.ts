@@ -979,13 +979,16 @@ class Log implements LogSeverityFunctions {
     // Extract & format additional context from individual entries. Make sure to add instrumentation info
     const info = populateInstrumentationInfo(entry);
     const decoratedEntries = this.decorateEntries(info[0]);
+    console.log("rawreq decoratedEntries 1", decoratedEntries);
     // If instrumentation info was added or this.partialSuccess was set, make sure we set
     // partialSuccess in outgoing write request, so entire request will make it through and
     // only oversized entries will be dropped if any
     if (info[1] || (options.partialSuccess ?? this.partialSuccess)) {
       options.partialSuccess = true;
+      console.log("rawreq partial success 2");
     }
     this.truncateEntries(decoratedEntries);
+    console.log("rawreq truncated decoratedEntries 3", decoratedEntries);
     // Clobber `labels` and `resource` fields with WriteOptions from the user.
     const reqOpts = extend(
       {
