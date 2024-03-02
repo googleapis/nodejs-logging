@@ -5,6 +5,14 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [11.0.1](https://github.com/googleapis/nodejs-logging/compare/v11.0.0...v11.0.1) (2024-03-02)
+
+
+### Bug Fixes
+
+* Correct long audio synthesis HTTP binding ([#1479](https://github.com/googleapis/nodejs-logging/issues/1479)) ([1f94504](https://github.com/googleapis/nodejs-logging/commit/1f945042478bfc9fba4fb348705f903d05b41821))
+* Improve retry logic for streaming API calls ([#1484](https://github.com/googleapis/nodejs-logging/issues/1484)) ([7e11e11](https://github.com/googleapis/nodejs-logging/commit/7e11e11bcb2c3dd346b589cf01cb75626ff10f4c))
+
 ## [11.0.0](https://github.com/googleapis/nodejs-logging/compare/v10.5.0...v11.0.0) (2023-08-10)
 
 
