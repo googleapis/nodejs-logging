@@ -64,7 +64,7 @@ function main(parent) {
     };
 
     // Run request
-    const iterable = await loggingClient.listBucketsAsync(request);
+    const iterable = loggingClient.listBucketsAsync(request);
     for await (const response of iterable) {
       console.log(response);
     }

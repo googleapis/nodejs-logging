@@ -129,16 +129,62 @@ function stubAsyncIterationCall<ResponseType>(
 
 describe('v2.MetricsServiceV2Client', () => {
   describe('Common methods', () => {
-    it('has servicePath', () => {
-      const servicePath =
-        metricsservicev2Module.v2.MetricsServiceV2Client.servicePath;
-      assert(servicePath);
+    it('has apiEndpoint', () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client();
+      const apiEndpoint = client.apiEndpoint;
+      assert.strictEqual(apiEndpoint, 'logging.googleapis.com');
     });
 
-    it('has apiEndpoint', () => {
-      const apiEndpoint =
-        metricsservicev2Module.v2.MetricsServiceV2Client.apiEndpoint;
-      assert(apiEndpoint);
+    it('has universeDomain', () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client();
+      const universeDomain = client.universeDomain;
+      assert.strictEqual(universeDomain, 'googleapis.com');
+    });
+
+    if (
+      typeof process !== 'undefined' &&
+      typeof process.emitWarning === 'function'
+    ) {
+      it('throws DeprecationWarning if static servicePath is used', () => {
+        const stub = sinon.stub(process, 'emitWarning');
+        const servicePath =
+          metricsservicev2Module.v2.MetricsServiceV2Client.servicePath;
+        assert.strictEqual(servicePath, 'logging.googleapis.com');
+        assert(stub.called);
+        stub.restore();
+      });
+
+      it('throws DeprecationWarning if static apiEndpoint is used', () => {
+        const stub = sinon.stub(process, 'emitWarning');
+        const apiEndpoint =
+          metricsservicev2Module.v2.MetricsServiceV2Client.apiEndpoint;
+        assert.strictEqual(apiEndpoint, 'logging.googleapis.com');
+        assert(stub.called);
+        stub.restore();
+      });
+    }
+    it('sets apiEndpoint according to universe domain camelCase', () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        universeDomain: 'example.com',
+      });
+      const servicePath = client.apiEndpoint;
+      assert.strictEqual(servicePath, 'logging.example.com');
+    });
+
+    it('sets apiEndpoint according to universe domain snakeCase', () => {
+      const client = new metricsservicev2Module.v2.MetricsServiceV2Client({
+        universe_domain: 'example.com',
+      });
+      const servicePath = client.apiEndpoint;
+      assert.strictEqual(servicePath, 'logging.example.com');
+    });
+    it('does not allow setting both universeDomain and universe_domain', () => {
+      assert.throws(() => {
+        new metricsservicev2Module.v2.MetricsServiceV2Client({
+          universe_domain: 'example.com',
+          universeDomain: 'example.net',
+        });
+      });
     });
 
     it('has port', () => {
