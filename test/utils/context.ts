@@ -15,7 +15,7 @@
  */
 
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
+import { describe, it} from 'mocha';
 import * as http from 'http';
 import {
   getOrInjectContext,
@@ -23,6 +23,30 @@ import {
   parseXCloudTraceHeader,
   parseTraceParentHeader,
 } from '../../src/utils/context';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
+import {
+  InMemorySpanExporter,
+  SimpleSpanProcessor,
+} from '@opentelemetry/sdk-trace-base';
+import { NodeSDK } from '@opentelemetry/sdk-node';
+
+import {
+  context,
+  ContextManager,
+  propagation,
+  SpanKind,
+  trace,
+} from '@opentelemetry/api';
+
+const { Resource } = require('@opentelemetry/resources');
+const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
+import * as api from '@opentelemetry/api';
+//const opentelemetry = require('@opentelemetry/sdk-node');
+const { BasicTracerProvider, ConsoleSpanExporter, BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base');
+const {
+  TraceExporter,
+} = require("@google-cloud/opentelemetry-cloud-trace-exporter");
+
 
 describe('context', () => {
   describe('makeHeaderWrapper', () => {
@@ -51,7 +75,7 @@ describe('context', () => {
     });
   });
 
-  describe('getOrInjectContext', () => {
+  describe.only('getOrInjectContext', () => {
     it('should return a default trace context when all detection fails', () => {
       const req = {
         method: 'GET',
@@ -95,6 +119,51 @@ describe('context', () => {
       assert(context.spanId!.length > 0);
       assert.strictEqual(context.traceSampled, false);
     });
+
+    describe('get context from Otel', () => {
+      let sdk: NodeSDK;
+      before(() => {
+        sdk = new NodeSDK({
+          resource: new Resource({
+            [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
+          }),
+          traceExporter: new TraceExporter(),
+        });
+        
+        sdk.start();
+      })
+  
+      after(() => {
+        sdk.shutdown();
+      })
+
+      it('should return a formatted open telemetry trace context', () => {
+        const req = {headers: {}} as http.IncomingMessage;
+        const projectId = 'myProj';
+    
+        trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+
+       
+          const traceId = parentSpan.spanContext().traceId;
+          const spanId = parentSpan.spanContext().spanId;
+          const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+          const req = {headers: {}} as http.IncomingMessage;
+          const projectId = 'myProj';
+          const context = getOrInjectContext(req, projectId, true);
+
+          console.log("traceId", context.trace, `projects/${projectId}/traces/${traceId}`);
+          console.log("spanId", context.spanId, spanId);
+          console.log("traceSampled", context.traceSampled, traceSampled);
+
+          assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
+          assert.strictEqual(context.spanId,  spanId);
+          assert.strictEqual(context.traceSampled, traceSampled);
+       
+      })
+
+      });
+
+    })
   });
 
   describe('parseXCloudTraceHeader', () => {
@@ -187,6 +256,46 @@ describe('context', () => {
     });
   });
 
+//   describe('parseOtelContext', ()=> {
+//     before(() => {
+//       const sdk = new opentelemetry.NodeSDK({
+//         resource: new Resource({
+//           [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
+//         }),
+//         traceExporter: new TraceExporter(),
+//       });
+      
+//       sdk.start();
+//     })
+
+//     after(() => {
+
+//     })
+
+//     it('should extract trace context from open telemetry context', () => {
+//      trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+
+       
+//         const traceId = parentSpan.spanContext().traceId;
+//         const spanId = parentSpan.spanContext().spanId;
+//         const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+//         const req = {headers: {}} as http.IncomingMessage;
+//         const projectId = 'myProj';
+
+//         getOrInjectContext(req, projectId);
+//         //;
+
+//         console.log("traceId, spanId", traceId, spanId);
+//         //
+//         // Be sure to end the span!
+
+
+     
+     
+//     })
+//   });
+// });
+
   describe('parseTraceParentHeader', () => {
     it('should extract trace properties from traceparent', () => {
       const tests = [
@@ -250,4 +359,4 @@ describe('context', () => {
       }
     });
   });
-});
+})

@@ -94,7 +94,7 @@ describe('Logging', () => {
 //const traceExporter = new ConsoleSpanExporter();
 const sdk = new opentelemetry.NodeSDK({
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'my-service',
+    [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-system-test',
   }),
   traceExporter: new TraceExporter(),
 });
