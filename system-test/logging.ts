@@ -29,6 +29,30 @@ const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
 import * as http from 'http';
 import * as instrumentation from '../src/utils/instrumentation';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
+import {
+  InMemorySpanExporter,
+  SimpleSpanProcessor,
+} from '@opentelemetry/sdk-trace-base';
+
+import {
+  context,
+  ContextManager,
+  propagation,
+  SpanKind,
+  trace,
+} from '@opentelemetry/api';
+
+const { Resource } = require('@opentelemetry/resources');
+const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
+
+//const opentelemetry1 = require('@opentelemetry/api');
+import * as api from '@opentelemetry/api';
+const opentelemetry = require('@opentelemetry/sdk-node');
+const { BasicTracerProvider, ConsoleSpanExporter, BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base');
+const {
+  TraceExporter,
+} = require("@google-cloud/opentelemetry-cloud-trace-exporter");
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
@@ -51,10 +75,62 @@ describe('Logging', () => {
   const topic = pubsub.topic(generateName());
 
   let PROJECT_ID: string;
+
+  //const provider = new NodeTracerProvider();
+   const memoryExporter = new InMemorySpanExporter();
+  // provider.addSpanProcessor(new SimpleSpanProcessor(memoryExporter));
+  // provider.register();
+ // (new BasicTracerProvider()).addSpanProcessor(new BatchSpanProcessor(new ConsoleSpanExporter())).register();
+
+
+//const provider = new BasicTracerProvider();
+// const exporter = new ConsoleSpanExporter();
+// const processor = new BatchSpanProcessor(exporter);
+// provider.addSpanProcessor(processor);
+
+// provider.register();
+
+
+//const traceExporter = new ConsoleSpanExporter();
+const sdk = new opentelemetry.NodeSDK({
+  resource: new Resource({
+    [SemanticResourceAttributes.SERVICE_NAME]: 'my-service',
+  }),
+  traceExporter: new TraceExporter(),
+});
+
+
+
+
+
+// const sdk = new NodeSDK({
+// resource: new Resource({
+//   [SemanticResourceAttributes.SERVICE_NAME]: 'dice-server',
+//   [SemanticResourceAttributes.SERVICE_VERSION]: '0.1.0',
+// }),
+// //   traceExporter: new ConsoleSpanExporter(),
+// //   metricReader: new PeriodicExportingMetricReader({
+// //     exporter: new ConsoleMetricExporter(),
+// //   }),
+// traceExporter: new TraceExporter(),
+// metricReader: new PeriodicExportingMetricReader({
+// exporter: new TraceExporter(),
+// }),
+// });
+
+
+// initialize the SDK and register with the OpenTelemetry API
+// this enables the API to record telemetry
+sdk.start();
+
+
   before(async () => {
+    console.log("Starting 1");
     const serviceAccount = (await logging.auth.getCredentials()).client_email;
     PROJECT_ID = await logging.auth.getProjectId();
+    console.log("Starting 1, project Id, service account", PROJECT_ID, serviceAccount);
     await bucket.create();
+    console.log("Starting 2");
     await bucket.iam.setPolicy({
       bindings: [
         {
@@ -64,7 +140,10 @@ describe('Logging', () => {
       ],
     });
     await dataset.create();
+    console.log("Starting 3");
     await topic.create();
+    console.log("Starting 4");
+   
   });
 
   after(async () => {
@@ -270,8 +349,8 @@ describe('Logging', () => {
   });
 
   describe('logs', () => {
-    function getTestLog(loggingInstnce = null) {
-      const log = (loggingInstnce || logging).log(generateName());
+    function getTestLog(loggingInstance = null) {
+      const log = (loggingInstance || logging).log(generateName());
 
       const logEntries = [
         // string data
@@ -648,7 +727,7 @@ describe('Logging', () => {
       });
     });
 
-    it('should write a structured httpRequest log with no message', done => {
+    it.only('should write a structured httpRequest log with no message', done => {
       const {log} = getTestLog();
       const metadata = {
         httpRequest: {status: 200},
@@ -731,6 +810,110 @@ describe('Logging', () => {
           });
         });
       });
+    });
+
+    it.only('should write a log with trace and spans from OpenTelemetry context', done => {
+     
+
+      // const span = provider
+      // .getTracer('default')
+      // .startSpan('TestSpan', { kind: SpanKind.PRODUCER });
+
+     
+
+
+//       const span = trace.getTracer('nodejs-system-test').startSpan('foo');
+//       // Set a span attribute
+// span.setAttribute('key', 'value');
+
+
+
+//  const spanId = span.spanContext().spanId;
+//       const traceId = span.spanContext().traceId;
+
+      trace.getTracer('nodejs-system-test').startActiveSpan('foo', (parentSpan) => {
+
+        // const parentSpanContext = trace.getSpanContext(parentContext);
+        // console.log("parentSpancontext", parentSpanContext);
+        const result = [1, 2];
+       
+        const traceId = parentSpan.spanContext().traceId;
+        const spanId = parentSpan.spanContext().spanId;
+        const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+
+        //;
+
+        console.log("traceId, spanId", traceId, spanId);
+        //
+        // Be sure to end the span!
+
+
+        ///////////////////logging
+        const {log} = getTestLog();
+        const metadata = {metadata: "spantest"};
+        const spanTestMessage = "span test log message";
+        const logEntry = log.entry(spanTestMessage);
+        console.log("get logEntry", logEntry);
+        log.write(logEntry, err => {
+          assert.ifError(err);
+          getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+            assert.ifError(err);
+            
+            const entry = entries![0];
+            console.log("entries", entries);
+            console.log("entries1", entries![1]);
+            console.log("entry, metadata ", entry, entry.metadata);
+            console.log("entry.data.diagnostic ", entry.data['logging.googleapis.com/diagnostic']);
+            console.log("testingmessage", entry.data, "message:",  spanTestMessage);
+            console.log("testingtrace", entry.metadata.trace, " :",  `projects/${PROJECT_ID}/traces/${traceId}`);
+            
+            assert.strictEqual(entry.data, spanTestMessage);
+           
+           // assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
+          //  assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
+         
+            assert.strictEqual(
+              entry.metadata.trace,
+              `projects/${PROJECT_ID}/traces/${traceId}`
+            );
+
+            console.log("testingspan", entry.metadata.spanId, " :",  spanId);
+            assert.strictEqual(entry.metadata.spanId, spanId);
+            console.log("testingSampled", entry.metadata.traceSampled, " :",  traceSampled);
+            assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+  
+          });
+        });
+
+        ////////////////////////
+        // const spanContext1 = trace.getActiveSpan()?.spanContext();
+   
+        // console.log(" testing from context span context, t_id, s_id", spanContext1, spanContext1?.traceId, spanContext1?.spanId, spanContext1?.traceFlags);
+        parentSpan.end();
+        return result;
+      });
+
+
+
+
+      // console.log("testing spanId, traceId: ", spanId, traceId);
+
+      // const spanContext1 = trace.getActiveSpan()?.spanContext();
+   
+      // console.log(" testing from context span context, t_id, s_id", spanContext1, spanContext1?.traceId, spanContext1?.spanId, spanContext1?.traceFlags);
+
+      // const spanContext2 = api.context.active();
+   
+      // console.log(" testing2 from context span context, t_id, s_id", spanContext2);
+
+      
+      // span.end();
+
+
+     
+
+
+      done();
     });
 
     it('should set the default resource', done => {
