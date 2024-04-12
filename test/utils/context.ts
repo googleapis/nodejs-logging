@@ -47,7 +47,6 @@ const {
   TraceExporter,
 } = require("@google-cloud/opentelemetry-cloud-trace-exporter");
 
-
 describe('context', () => {
   describe('makeHeaderWrapper', () => {
     const HEADER_NAME = 'Content-Type';
@@ -127,7 +126,7 @@ describe('context', () => {
           resource: new Resource({
             [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
           }),
-          traceExporter: new TraceExporter(),
+          traceExporter: new InMemorySpanExporter(),
         });
         
         sdk.start();
@@ -136,34 +135,86 @@ describe('context', () => {
       after(() => {
         sdk.shutdown();
       })
-
-      it('should return a formatted open telemetry trace context', () => {
-        const req = {headers: {}} as http.IncomingMessage;
-        const projectId = 'myProj';
-    
+      
+      it('should ignore a default trace context when open telemetry context detected', () => {
         trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
-
-       
+          const req = {
+            method: 'GET',
+          } as http.IncomingMessage;
+          const projectId = 'myProj';
+          const context = getOrInjectContext(req, projectId);
           const traceId = parentSpan.spanContext().traceId;
           const spanId = parentSpan.spanContext().spanId;
           const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
-          const req = {headers: {}} as http.IncomingMessage;
-          const projectId = 'myProj';
-          const context = getOrInjectContext(req, projectId, true);
-
-          console.log("traceId", context.trace, `projects/${projectId}/traces/${traceId}`);
-          console.log("spanId", context.spanId, spanId);
-          console.log("traceSampled", context.traceSampled, traceSampled);
-
           assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
           assert.strictEqual(context.spanId,  spanId);
           assert.strictEqual(context.traceSampled, traceSampled);
-       
-      })
-
+      });
       });
 
+      it('should return a formatted open telemetry trace context', () => {
+        trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+          const req = {headers: {}} as http.IncomingMessage;
+          const projectId = 'myProj';
+          const context = getOrInjectContext(req, projectId);
+          const traceId = parentSpan.spanContext().traceId;
+          const spanId = parentSpan.spanContext().spanId;
+          const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+          assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
+          assert.strictEqual(context.spanId,  spanId);
+          assert.strictEqual(context.traceSampled, traceSampled);
+      });
     })
+
+    it('should ignore W3C trace context and return open telemetry context', () => {
+      trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+        const projectId = 'myProj';
+        const req = {
+          headers: {
+            ['traceparent']:
+              '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+          },
+        } as unknown as http.IncomingMessage;
+        const context = getOrInjectContext(req, projectId);
+        const traceId = parentSpan.spanContext().traceId;
+        const spanId = parentSpan.spanContext().spanId;
+        const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+        assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
+        assert.strictEqual(context.spanId,  spanId);
+        assert.strictEqual(context.traceSampled, traceSampled);
+    })
+    });
+
+    it('should ignore google trace context and return open telemetry context', () => {
+      trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+        const projectId = 'myProj';
+        const req = {
+          headers: {['x-cloud-trace-context']: '1/2;o=1'},
+        } as unknown as http.IncomingMessage;
+        const context = getOrInjectContext(req, projectId);
+        const traceId = parentSpan.spanContext().traceId;
+        const spanId = parentSpan.spanContext().spanId;
+        const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+        assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
+        assert.strictEqual(context.spanId,  spanId);
+        assert.strictEqual(context.traceSampled, traceSampled);
+    })
+    });
+
+
+    it('should ignore injecting Google trace context option', () => {
+      trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+        const projectId = 'myProj';
+        const req = {headers: {}} as http.IncomingMessage;
+        const context = getOrInjectContext(req, projectId, true);
+        const traceId = parentSpan.spanContext().traceId;
+        const spanId = parentSpan.spanContext().spanId;
+        const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+        assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
+        assert.strictEqual(context.spanId,  spanId);
+        assert.strictEqual(context.traceSampled, traceSampled);
+    })
+    });
   });
 
   describe('parseXCloudTraceHeader', () => {
@@ -256,45 +307,50 @@ describe('context', () => {
     });
   });
 
-//   describe('parseOtelContext', ()=> {
-//     before(() => {
-//       const sdk = new opentelemetry.NodeSDK({
-//         resource: new Resource({
-//           [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
-//         }),
-//         traceExporter: new TraceExporter(),
-//       });
+  describe('parseOtelContext', ()=> {
+    // let sdk: NodeSDK;
+    // before(() => {
+    //   const sdk = new NodeSDK({
+    //     resource: new Resource({
+    //       [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
+    //     }),
+    //     traceExporter: new InMemorySpanExporter(),
+    //   });
       
-//       sdk.start();
-//     })
-
-//     after(() => {
-
-//     })
-
-//     it('should extract trace context from open telemetry context', () => {
-//      trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
-
-       
-//         const traceId = parentSpan.spanContext().traceId;
-//         const spanId = parentSpan.spanContext().spanId;
-//         const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
-//         const req = {headers: {}} as http.IncomingMessage;
-//         const projectId = 'myProj';
-
-//         getOrInjectContext(req, projectId);
-//         //;
-
-//         console.log("traceId, spanId", traceId, spanId);
-//         //
-//         // Be sure to end the span!
+    //   sdk.start();
+    // });
 
 
-     
-     
-//     })
-//   });
-// });
+    let sdk: NodeSDK;
+    before(() => {
+      sdk = new NodeSDK({
+        resource: new Resource({
+          [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
+        }),
+        traceExporter: new InMemorySpanExporter(),
+      });
+      
+      sdk.start();
+    });
+
+     after(() => {
+      sdk.shutdown();
+    });
+
+    it('should extract trace context from open telemetry context', () => {
+     trace.getTracer('nodejs-context-test').startActiveSpan('boo', (parentSpan) => {
+        const req = {headers: {}} as http.IncomingMessage;
+        const projectId = 'myProj';
+        const context = getOrInjectContext(req, projectId);
+        const traceId = parentSpan.spanContext().traceId;
+        const spanId = parentSpan.spanContext().spanId;
+        const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
+        assert.strictEqual(context.trace, `projects/${projectId}/traces/${traceId}`);
+        assert.strictEqual(context.spanId,  spanId);
+        assert.strictEqual(context.traceSampled, traceSampled);
+    })
+  });
+});
 
   describe('parseTraceParentHeader', () => {
     it('should extract trace properties from traceparent', () => {
@@ -359,4 +415,5 @@ describe('context', () => {
       }
     });
   });
+})
 })
