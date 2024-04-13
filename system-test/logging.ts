@@ -628,7 +628,7 @@ describe('Logging', () => {
       });
     });
 
-    it.only('should write a log with metadata', done => {
+    it('should write a log with metadata', done => {
       const { log } = getTestLog();
 
       const metadata = Object.assign({}, options, {
@@ -740,7 +740,7 @@ describe('Logging', () => {
       });
     });
 
-    describe.only('logs with open telemetry context', () => {
+    describe('logs with open telemetry context', () => {
       let sdk: NodeSDK;
       before(() => {
         // initialize the SDK and register with the OpenTelemetry API
