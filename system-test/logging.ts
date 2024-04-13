@@ -14,50 +14,33 @@
  * limitations under the License.
  */
 
-import {BigQuery} from '@google-cloud/bigquery';
-import {PubSub} from '@google-cloud/pubsub';
-import {Storage} from '@google-cloud/storage';
+import { BigQuery } from '@google-cloud/bigquery';
+import { PubSub } from '@google-cloud/pubsub';
+import { Storage } from '@google-cloud/storage';
 import * as assert from 'assert';
-import {describe, it} from 'mocha';
-import {HOST_ADDRESS} from 'gcp-metadata';
+import { describe, it } from 'mocha';
+import { HOST_ADDRESS } from 'gcp-metadata';
 import * as nock from 'nock';
-import {Duplex} from 'stream';
-import {v4} from 'uuid';
-import {after, before} from 'mocha';
+import { Duplex } from 'stream';
+import { v4 } from 'uuid';
+import { after, before } from 'mocha';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http2spy = require('http2spy');
-import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
+import { Logging, Sink, Log, Entry, TailEntriesResponse } from '../src';
 import * as http from 'http';
 import * as instrumentation from '../src/utils/instrumentation';
-import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
-import {
-  InMemorySpanExporter,
-  SimpleSpanProcessor,
-} from '@opentelemetry/sdk-trace-base';
-
-import {
-  context,
-  ContextManager,
-  propagation,
-  SpanKind,
-  trace,
-} from '@opentelemetry/api';
-
+import { trace } from '@opentelemetry/api';
 const { Resource } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
-
-//const opentelemetry1 = require('@opentelemetry/api');
-import * as api from '@opentelemetry/api';
-const opentelemetry = require('@opentelemetry/sdk-node');
-const { BasicTracerProvider, ConsoleSpanExporter, BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base');
 const {
   TraceExporter,
 } = require("@google-cloud/opentelemetry-cloud-trace-exporter");
+import { NodeSDK } from '@opentelemetry/sdk-node';
 
 // block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
   .get(() => true)
-  .replyWithError({code: 'ENOTFOUND'})
+  .replyWithError({ code: 'ENOTFOUND' })
   .persist();
 
 describe('Logging', () => {
@@ -75,62 +58,10 @@ describe('Logging', () => {
   const topic = pubsub.topic(generateName());
 
   let PROJECT_ID: string;
-
-  //const provider = new NodeTracerProvider();
-   const memoryExporter = new InMemorySpanExporter();
-  // provider.addSpanProcessor(new SimpleSpanProcessor(memoryExporter));
-  // provider.register();
- // (new BasicTracerProvider()).addSpanProcessor(new BatchSpanProcessor(new ConsoleSpanExporter())).register();
-
-
-//const provider = new BasicTracerProvider();
-// const exporter = new ConsoleSpanExporter();
-// const processor = new BatchSpanProcessor(exporter);
-// provider.addSpanProcessor(processor);
-
-// provider.register();
-
-
-//const traceExporter = new ConsoleSpanExporter();
-const sdk = new opentelemetry.NodeSDK({
-  resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-system-test',
-  }),
-  traceExporter: new TraceExporter(),
-});
-
-
-
-
-
-// const sdk = new NodeSDK({
-// resource: new Resource({
-//   [SemanticResourceAttributes.SERVICE_NAME]: 'dice-server',
-//   [SemanticResourceAttributes.SERVICE_VERSION]: '0.1.0',
-// }),
-// //   traceExporter: new ConsoleSpanExporter(),
-// //   metricReader: new PeriodicExportingMetricReader({
-// //     exporter: new ConsoleMetricExporter(),
-// //   }),
-// traceExporter: new TraceExporter(),
-// metricReader: new PeriodicExportingMetricReader({
-// exporter: new TraceExporter(),
-// }),
-// });
-
-
-// initialize the SDK and register with the OpenTelemetry API
-// this enables the API to record telemetry
-sdk.start();
-
-
   before(async () => {
-    console.log("Starting 1");
     const serviceAccount = (await logging.auth.getCredentials()).client_email;
     PROJECT_ID = await logging.auth.getProjectId();
-    console.log("Starting 1, project Id, service account", PROJECT_ID, serviceAccount);
     await bucket.create();
-    console.log("Starting 2");
     await bucket.iam.setPolicy({
       bindings: [
         {
@@ -140,10 +71,7 @@ sdk.start();
       ],
     });
     await dataset.create();
-    console.log("Starting 3");
     await topic.create();
-    console.log("Starting 4");
-   
   });
 
   after(async () => {
@@ -163,7 +91,7 @@ sdk.start();
     // Only delete log buckets that are at least 2 days old
     // Fixes: https://github.com/googleapis/nodejs-logging/issues/953
     async function deleteBuckets() {
-      const [buckets] = await storage.getBuckets({prefix: TESTS_PREFIX});
+      const [buckets] = await storage.getBuckets({ prefix: TESTS_PREFIX });
       const bucketsToDelete = buckets.filter((bucket: any) => {
         if (bucket.metadata.timeCreated) {
           return new Date(bucket.metadata.timeCreated) < twoDaysAgo;
@@ -227,7 +155,7 @@ sdk.start();
     it('should create a sink with a Dataset destination', async () => {
       const sink = logging.sink(generateName());
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, apiResponse] = await sink.create({destination: dataset});
+      const [_, apiResponse] = await sink.create({ destination: dataset });
 
       const destination = `bigquery.googleapis.com/datasets/${dataset.id}`;
 
@@ -243,7 +171,7 @@ sdk.start();
     it('should create a sink with a Topic destination', async () => {
       const sink = logging.sink(generateName());
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, apiResponse] = await sink.create({destination: topic});
+      const [_, apiResponse] = await sink.create({ destination: topic });
       const destination = 'pubsub.googleapis.com/' + topic.name;
 
       // The projectId may have been replaced depending on how the system
@@ -259,11 +187,11 @@ sdk.start();
       const FILTER = 'severity = ALERT';
 
       before(async () => {
-        await sink.create({destination: topic});
+        await sink.create({ destination: topic });
       });
 
       it('should set metadata', async () => {
-        const metadata = {filter: FILTER};
+        const metadata = { filter: FILTER };
         const [apiResponse] = await sink.setMetadata(metadata);
         assert.strictEqual(apiResponse.filter, FILTER);
       });
@@ -315,7 +243,7 @@ sdk.start();
       const sink = logging.sink(generateName());
 
       before(async () => {
-        await sink.create({destination: topic});
+        await sink.create({ destination: topic });
       });
 
       it('should list sinks', async () => {
@@ -325,7 +253,7 @@ sdk.start();
 
       it('should list sinks as a stream', done => {
         const logstream: Duplex = logging
-          .getSinksStream({pageSize: 1})
+          .getSinksStream({ pageSize: 1 })
           .on('error', done)
           .once('data', () => {
             logstream.end();
@@ -335,7 +263,7 @@ sdk.start();
 
       it('should get metadata', done => {
         logging
-          .getSinksStream({pageSize: 1})
+          .getSinksStream({ pageSize: 1 })
           .on('error', done)
           .once('data', (sink: Sink) => {
             sink.getMetadata((err, metadata) => {
@@ -357,7 +285,7 @@ sdk.start();
         log.entry('log entry 1'),
 
         // object data
-        log.entry({delegate: 'my_username'}),
+        log.entry({ delegate: 'my_username' }),
 
         // various data types
         log.entry({
@@ -374,12 +302,12 @@ sdk.start();
         }),
       ];
 
-      return {log, logEntries};
+      return { log, logEntries };
     }
 
     function getEntriesFromLog(
       log: Log,
-      config: {numExpectedMessages: number},
+      config: { numExpectedMessages: number },
       callback: (err: Error | null, entries?: Entry[]) => void
     ) {
       let numAttempts = 0;
@@ -395,7 +323,7 @@ sdk.start();
         time.setHours(time.getHours() - 1);
 
         log.getEntries(
-          {autoPaginate: false, filter: `timestamp > "${time.toISOString()}"`},
+          { autoPaginate: false, filter: `timestamp > "${time.toISOString()}"` },
           (err, entries) => {
             if (err) {
               callback(err);
@@ -425,7 +353,7 @@ sdk.start();
 
     describe('listing logs', () => {
       before(async () => {
-        const {log, logEntries} = getTestLog();
+        const { log, logEntries } = getTestLog();
         await log.write(logEntries, options);
       });
 
@@ -436,7 +364,7 @@ sdk.start();
 
       it('should list logs as a stream', done => {
         const stream: Duplex = logging
-          .getLogsStream({pageSize: 1})
+          .getLogsStream({ pageSize: 1 })
           .on('error', done)
           .once('data', () => {
             stream.end();
@@ -446,14 +374,14 @@ sdk.start();
     });
 
     it('should list log entries', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
 
       log.write(logEntries, options, err => {
         assert.ifError(err);
 
         getEntriesFromLog(
           log,
-          {numExpectedMessages: logEntries.length},
+          { numExpectedMessages: logEntries.length },
           (err, entries) => {
             assert.ifError(err);
             // Instrumentation log entry is added automatically, so we should discount it
@@ -463,7 +391,7 @@ sdk.start();
               if (
                 ent &&
                 ent.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
-                  instrumentation.INSTRUMENTATION_SOURCE_KEY
+                instrumentation.INSTRUMENTATION_SOURCE_KEY
                 ]
               ) {
                 entry = ent;
@@ -472,7 +400,7 @@ sdk.start();
             assert.ok(entry);
             assert.equal(
               entry.data?.[instrumentation.DIAGNOSTIC_INFO_KEY]?.[
-                instrumentation.INSTRUMENTATION_SOURCE_KEY
+              instrumentation.INSTRUMENTATION_SOURCE_KEY
               ]?.[0]?.['name'],
               instrumentation.NODEJS_LIBRARY_NAME_PREFIX
             );
@@ -483,7 +411,7 @@ sdk.start();
     });
 
     it('should list log entries as a stream', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
 
       log.write(logEntries, options, err => {
         assert.ifError(err);
@@ -500,7 +428,7 @@ sdk.start();
     });
 
     it('should tail log entries as a stream', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
 
       const logInterval = setInterval(() => {
         log.write(logEntries, options, err => {
@@ -530,7 +458,7 @@ sdk.start();
       let logEntriesExpected: Entry[];
 
       before(done => {
-        const {log, logEntries} = getTestLog();
+        const { log, logEntries } = getTestLog();
         logExpected = log;
         logEntriesExpected = logEntries;
         log.write(logEntries, options, done);
@@ -539,7 +467,7 @@ sdk.start();
       it('should list log entries', done => {
         getEntriesFromLog(
           logExpected,
-          {numExpectedMessages: logEntriesExpected.length},
+          { numExpectedMessages: logEntriesExpected.length },
           (err, entries) => {
             assert.ifError(err);
             assert.strictEqual(entries!.length, logEntriesExpected.length);
@@ -580,30 +508,30 @@ sdk.start();
     });
 
     it('should write a single entry to a log', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.write(logEntries[0], options, done);
     });
 
     it('should write a single entry to a log as a Promise', async () => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       await log.write(logEntries[1], options);
     });
 
     it('should write multiple entries to a log', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
 
       log.write(logEntries, options, err => {
         assert.ifError(err);
 
         getEntriesFromLog(
           log,
-          {numExpectedMessages: logEntries.length},
+          { numExpectedMessages: logEntries.length },
           (err, entries) => {
             assert.ifError(err);
 
             assert.deepStrictEqual(entries!.map(x => x.data).reverse(), [
               'log entry 1',
-              {delegate: 'my_username'},
+              { delegate: 'my_username' },
               {
                 nonValue: null,
                 boolValue: true,
@@ -623,19 +551,19 @@ sdk.start();
     });
 
     it('should preserve order of entries', done => {
-      const {log} = getTestLog();
+      const { log } = getTestLog();
 
       const entry1 = log.entry('1');
 
       setTimeout(() => {
         const entry2 = log.entry('2');
-        const entry3 = log.entry({timestamp: entry2.metadata.timestamp}, '3');
+        const entry3 = log.entry({ timestamp: entry2.metadata.timestamp }, '3');
 
         // Re-arrange to confirm the timestamp is sent and honored.
         log.write([entry2, entry3, entry1], options, err => {
           assert.ifError(err);
 
-          getEntriesFromLog(log, {numExpectedMessages: 3}, (err, entries) => {
+          getEntriesFromLog(log, { numExpectedMessages: 3 }, (err, entries) => {
             assert.ifError(err);
             assert.deepStrictEqual(
               entries!.map(x => x.data),
@@ -648,7 +576,7 @@ sdk.start();
     });
 
     it('should preserve order for sequential write calls', done => {
-      const {log} = getTestLog();
+      const { log } = getTestLog();
       const messages = ['1', '2', '3', '4', '5'];
 
       (async () => {
@@ -658,7 +586,7 @@ sdk.start();
 
         getEntriesFromLog(
           log,
-          {numExpectedMessages: messages.length},
+          { numExpectedMessages: messages.length },
           (err, entries) => {
             assert.ifError(err);
             assert.deepStrictEqual(
@@ -672,7 +600,7 @@ sdk.start();
     });
 
     it('should write an entry with primitive values', done => {
-      const {log} = getTestLog();
+      const { log } = getTestLog();
 
       const logEntry = log.entry({
         when: new Date(),
@@ -684,7 +612,7 @@ sdk.start();
       log.write(logEntry, options, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+        getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
           assert.ifError(err);
 
           const entry = entries![0];
@@ -700,8 +628,8 @@ sdk.start();
       });
     });
 
-    it('should write a log with metadata', done => {
-      const {log} = getTestLog();
+    it.only('should write a log with metadata', done => {
+      const { log } = getTestLog();
 
       const metadata = Object.assign({}, options, {
         severity: 'DEBUG',
@@ -716,7 +644,7 @@ sdk.start();
       log.write(logEntry, err => {
         assert.ifError(err);
 
-        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+        getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
           assert.ifError(err);
 
           const entry = entries![0];
@@ -727,16 +655,16 @@ sdk.start();
       });
     });
 
-    it.only('should write a structured httpRequest log with no message', done => {
-      const {log} = getTestLog();
+    it('should write a structured httpRequest log with no message', done => {
+      const { log } = getTestLog();
       const metadata = {
-        httpRequest: {status: 200},
+        httpRequest: { status: 200 },
       };
       const logEntry = log.entry(metadata);
 
       log.write(logEntry, err => {
         assert.ifError(err);
-        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+        getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
           assert.ifError(err);
           const entry = entries![0];
           assert.strictEqual(
@@ -750,7 +678,7 @@ sdk.start();
     });
 
     it('should write a request log with x-cloud-trace-context header', done => {
-      const {log} = getTestLog();
+      const { log } = getTestLog();
       const URL = 'http://www.google.com';
       // Use the response of a http request as the incomingmessage request obj.
       http.get(URL, res => {
@@ -758,11 +686,11 @@ sdk.start();
         res.headers = {
           'x-cloud-trace-context': '1/2;o=1',
         };
-        const metadata = {httpRequest: res};
+        const metadata = { httpRequest: res };
         const logEntry = log.entry(metadata, 'some log message');
         log.write(logEntry, err => {
           assert.ifError(err);
-          getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+          getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
             assert.ifError(err);
             const entry = entries![0];
             assert.strictEqual(entry.data, 'some log message');
@@ -781,7 +709,7 @@ sdk.start();
     });
 
     it('should write a http request log with traceparent header', done => {
-      const {log} = getTestLog();
+      const { log } = getTestLog();
       const URL = 'http://www.google.com';
       // Use the response of a http request as the incomingmessage request obj.
       http.get(URL, res => {
@@ -790,11 +718,11 @@ sdk.start();
           traceparent:
             '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
         };
-        const metadata = {httpRequest: res};
+        const metadata = { httpRequest: res };
         const logEntry = log.entry(metadata, 'some log message');
         log.write(logEntry, err => {
           assert.ifError(err);
-          getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+          getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
             assert.ifError(err);
             const entry = entries![0];
             assert.strictEqual(entry.data, 'some log message');
@@ -812,120 +740,165 @@ sdk.start();
       });
     });
 
-    it.only('should write a log with trace and spans from OpenTelemetry context', done => {
-     
-
-      // const span = provider
-      // .getTracer('default')
-      // .startSpan('TestSpan', { kind: SpanKind.PRODUCER });
-
-     
-
-
-//       const span = trace.getTracer('nodejs-system-test').startSpan('foo');
-//       // Set a span attribute
-// span.setAttribute('key', 'value');
-
-
-
-//  const spanId = span.spanContext().spanId;
-//       const traceId = span.spanContext().traceId;
-
-      trace.getTracer('nodejs-system-test').startActiveSpan('foo', (parentSpan) => {
-
-        // const parentSpanContext = trace.getSpanContext(parentContext);
-        // console.log("parentSpancontext", parentSpanContext);
-        const result = [1, 2];
-       
-        const traceId = parentSpan.spanContext().traceId;
-        const spanId = parentSpan.spanContext().spanId;
-        const traceSampled = (parentSpan.spanContext().traceFlags & 1) !== 0;
-
-        //;
-
-        console.log("traceId, spanId", traceId, spanId);
-        //
-        // Be sure to end the span!
-
-
-        ///////////////////logging
-        const {log} = getTestLog();
-        const metadata = {metadata: "spantest"};
-        const spanTestMessage = "span test log message";
-        const logEntry = log.entry(spanTestMessage);
-        console.log("get logEntry", logEntry);
-        log.write(logEntry, err => {
-          assert.ifError(err);
-          getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
-            assert.ifError(err);
-            
-            const entry = entries![0];
-            console.log("entries", entries);
-            console.log("entries1", entries![1]);
-            console.log("entry, metadata ", entry, entry.metadata);
-            console.log("entry.data.diagnostic ", entry.data['logging.googleapis.com/diagnostic']);
-            console.log("testingmessage", entry.data, "message:",  spanTestMessage);
-            console.log("testingtrace", entry.metadata.trace, " :",  `projects/${PROJECT_ID}/traces/${traceId}`);
-            
-            assert.strictEqual(entry.data, spanTestMessage);
-           
-           // assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
-          //  assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
-         
-            assert.strictEqual(
-              entry.metadata.trace,
-              `projects/${PROJECT_ID}/traces/${traceId}`
-            );
-
-            console.log("testingspan", entry.metadata.spanId, " :",  spanId);
-            assert.strictEqual(entry.metadata.spanId, spanId);
-            console.log("testingSampled", entry.metadata.traceSampled, " :",  traceSampled);
-            assert.strictEqual(entry.metadata.traceSampled, traceSampled);
-  
-          });
+    describe.only('logs with open telemetry context', () => {
+      let sdk: NodeSDK;
+      before(() => {
+        // initialize the SDK and register with the OpenTelemetry API
+        // this enables the API to record telemetry
+        sdk = new NodeSDK({
+          resource: new Resource({
+            [SemanticResourceAttributes.SERVICE_NAME]: TESTS_PREFIX,
+          }),
+          // Add cloud trace exporter as SDK trace exporter
+          traceExporter: new TraceExporter(),
         });
+        sdk.start();
+      })
 
-        ////////////////////////
-        // const spanContext1 = trace.getActiveSpan()?.spanContext();
-   
-        // console.log(" testing from context span context, t_id, s_id", spanContext1, spanContext1?.traceId, spanContext1?.spanId, spanContext1?.traceFlags);
-        parentSpan.end();
-        return result;
+      after(() => {
+        sdk.shutdown();
+      })
+
+      it('should not overwrite user defined trace and spans with OpenTelemetry context', done => {
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', (span) => {
+          const { log } = getTestLog();
+          const spanTestMessage = "span test log message";
+          const metadata = {
+            trace: "1",
+            spanId: "1",
+            traceSampled: false
+          };
+          const logEntry = log.entry(metadata, spanTestMessage);
+          log.write(logEntry, err => {
+            assert.ifError(err);
+            getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
+              assert.ifError(err);
+              const entry = entries![0];
+              assert.strictEqual(entry.data, spanTestMessage);
+              assert.strictEqual(
+                entry.metadata.trace,
+                metadata.trace
+              );
+              assert.strictEqual(entry.metadata.spanId, metadata.spanId);
+              assert.strictEqual(entry.metadata.traceSampled, metadata.traceSampled);
+            });
+          });
+          span.end();
+        });
+        done();
       });
 
+      it('should write a log with trace and spans from OpenTelemetry context', done => {
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', (span) => {
+          const traceId = span.spanContext().traceId;
+          const spanId = span.spanContext().spanId;
+          const traceSampled = (span.spanContext().traceFlags & 1) !== 0;
+          const { log } = getTestLog();
+          const spanTestMessage = "span test log message";
+          const logEntry = log.entry(spanTestMessage);
+          log.write(logEntry, err => {
+            assert.ifError(err);
+            getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
+              assert.ifError(err);
+              const entry = entries![0];
+              assert.strictEqual(entry.data, spanTestMessage);
+              assert.strictEqual(
+                entry.metadata.trace,
+                `projects/${PROJECT_ID}/traces/${traceId}`
+              );
+              assert.strictEqual(entry.metadata.spanId, spanId);
+              assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+            });
+          });
+          span.end();
+        });
+        done();
+      });
 
+      it('should write a log with  OpenTelemetry trace and spans and ignore http requests traceparent header', done => {
+        const { log } = getTestLog();
+        const URL = 'http://www.google.com';
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', (span) => {
+          // Use the response of a http request as the incomingmessage request obj.
+          http.get(URL, res => {
+            res.url = URL;
+            res.headers = {
+              traceparent:
+                '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+            };
+            const metadata = { httpRequest: res };
+            const logEntry = log.entry(metadata, 'some log message');
 
+            const traceId = span.spanContext().traceId;
+            const spanId = span.spanContext().spanId;
+            const traceSampled = (span.spanContext().traceFlags & 1) !== 0;
 
-      // console.log("testing spanId, traceId: ", spanId, traceId);
+            log.write(logEntry, err => {
+              assert.ifError(err);
+              getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
+                assert.ifError(err);
+                const entry = entries![0];
+                assert.strictEqual(entry.data, 'some log message');
+                assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
+                assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
+                assert.strictEqual(
+                  entry.metadata.trace,
+                  `projects/${PROJECT_ID}/traces/${traceId}`
+                );
+                assert.strictEqual(entry.metadata.spanId, spanId);
+                assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+                done();
+              });
+            });
+          });
+        });
+      });
 
-      // const spanContext1 = trace.getActiveSpan()?.spanContext();
-   
-      // console.log(" testing from context span context, t_id, s_id", spanContext1, spanContext1?.traceId, spanContext1?.spanId, spanContext1?.traceFlags);
+      it('should write a log with OpenTelemetry trace and spans and ignore http requests x-cloud-trace-context header', done => {
+        const { log } = getTestLog();
+        const URL = 'http://www.google.com';
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', (span) => {
+          // Use the response of a http request as the incomingmessage request obj.
+          http.get(URL, res => {
+            res.url = URL;
+            res.headers = {
+              'x-cloud-trace-context': '1/2;o=1',
+            };
+            const metadata = { httpRequest: res };
+            const logEntry = log.entry(metadata, 'some log message');
+            const traceId = span.spanContext().traceId;
+            const spanId = span.spanContext().spanId;
+            const traceSampled = (span.spanContext().traceFlags & 1) !== 0;
+            log.write(logEntry, err => {
+              assert.ifError(err);
+              getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
+                assert.ifError(err);
+                const entry = entries![0];
+                assert.strictEqual(entry.data, 'some log message');
+                assert.strictEqual(entry.metadata.httpRequest?.requestUrl, URL);
+                assert.strictEqual(entry.metadata.httpRequest?.protocol, 'http:');
+                assert.strictEqual(
+                  entry.metadata.trace,
+                  `projects/${PROJECT_ID}/traces/${traceId}`
+                );
+                assert.strictEqual(entry.metadata.spanId, spanId);
+                assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+                done();
+              });
+            });
+          });
+        });
+      });
 
-      // const spanContext2 = api.context.active();
-   
-      // console.log(" testing2 from context span context, t_id, s_id", spanContext2);
-
-      
-      // span.end();
-
-
-     
-
-
-      done();
-    });
+    })
 
     it('should set the default resource', done => {
-      const {log} = getTestLog();
-
+      const { log } = getTestLog();
       const text = 'entry-text';
       const entry = log.entry(text);
-
       log.write(entry, err => {
         assert.ifError(err);
-
-        getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+        getEntriesFromLog(log, { numExpectedMessages: 1 }, (err, entries) => {
           assert.ifError(err);
           const entry = entries![0];
 
@@ -943,7 +916,7 @@ sdk.start();
     });
 
     it('should write a log with camelcase resource label keys', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.write(
         logEntries,
         {
@@ -960,49 +933,49 @@ sdk.start();
     });
 
     it('should write to a log with alert helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.alert(logEntries, options, done);
     });
 
     it('should write to a log with critical helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.critical(logEntries, options, done);
     });
 
     it('should write to a log with debug helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.debug(logEntries, options, done);
     });
 
     it('should write to a log with emergency helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.emergency(logEntries, options, done);
     });
 
     it('should write to a log with error helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.error(logEntries, options, done);
     });
 
     it('should write to a log with info helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.info(logEntries, options, done);
     });
 
     it('should write to a log with notice helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.notice(logEntries, options, done);
     });
 
     it('should write to a log with warning helper', done => {
-      const {log, logEntries} = getTestLog();
+      const { log, logEntries } = getTestLog();
       log.warning(logEntries, options, done);
     });
 
     it('should populate x-goog-api-client header', async () => {
       const gax = http2spy.require(require.resolve('google-gax'));
-      const {Logging} = require('../src');
-      const {log, logEntries} = getTestLog(new Logging({}, gax));
+      const { Logging } = require('../src');
+      const { log, logEntries } = getTestLog(new Logging({}, gax));
       await log.write(logEntries[0], options);
       assert.ok(
         /gax\/[0-9]+\.[\w.-]+ gapic\/[0-9]+\.[\w.-]+ gl-node\/[0-9]+\.[\w.-]+ grpc\/[0-9]+\.[\w.-]+ gccl\/[0-9]+\.[\w.-]+/.test(
