@@ -233,7 +233,6 @@ class Entry {
 
     // Format trace and span
     const traceContext = this.extractTraceContext(projectId);
-    console.log("rawreq traceContext in entry:", traceContext);
     if (traceContext) {
       if (!this.metadata.trace && traceContext.trace)
         entry.trace = traceContext.trace;
@@ -242,8 +241,6 @@ class Entry {
       if (this.metadata.traceSampled === undefined)
         entry.traceSampled = traceContext.traceSampled;
     }
-
-    console.log("rawreq get traceContext in final entry:", entry);
     return entry;
   }
 
@@ -316,7 +313,6 @@ class Entry {
 
     // Detected trace context from OpenTelemetry context or http headers if applicable.
     const traceContext = this.extractTraceContext(projectId);
-    console.log("rawreq traceContext in entry:", traceContext);
     if (traceContext) {
       if (!entry[TRACE_KEY] && traceContext.trace)
         entry[TRACE_KEY] = traceContext.trace;
@@ -325,7 +321,6 @@ class Entry {
       if (entry[TRACE_SAMPLED_KEY] === undefined)
         entry[TRACE_SAMPLED_KEY] = traceContext.traceSampled;
     }
-
     return entry;
   }
 
@@ -335,12 +330,9 @@ class Entry {
    * @private
    */
   private extractTraceContext(projectId: string): CloudTraceContext | null {
-    console.log("find context in otel");
     // Extract trace context from OpenTelemetry span context.
     const otelContext = getContextFromOtelContext(projectId);
     if (otelContext) return otelContext;
-    
-    console.log("find context in http");
     // Extract trace context from http request headers.
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {

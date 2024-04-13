@@ -23,29 +23,13 @@ import {
   parseXCloudTraceHeader,
   parseTraceParentHeader,
 } from '../../src/utils/context';
-import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import {
   InMemorySpanExporter,
-  SimpleSpanProcessor,
 } from '@opentelemetry/sdk-trace-base';
 import { NodeSDK } from '@opentelemetry/sdk-node';
-
-import {
-  context,
-  ContextManager,
-  propagation,
-  SpanKind,
-  trace,
-} from '@opentelemetry/api';
-
+import { trace } from '@opentelemetry/api';
 const { Resource } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
-import * as api from '@opentelemetry/api';
-//const opentelemetry = require('@opentelemetry/sdk-node');
-const { BasicTracerProvider, ConsoleSpanExporter, BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base');
-const {
-  TraceExporter,
-} = require("@google-cloud/opentelemetry-cloud-trace-exporter");
 
 describe('context', () => {
   describe('makeHeaderWrapper', () => {
@@ -74,7 +58,7 @@ describe('context', () => {
     });
   });
 
-  describe.only('getOrInjectContext', () => {
+  describe('getOrInjectContext', () => {
     it('should return a default trace context when all detection fails', () => {
       const req = {
         method: 'GET',
@@ -119,12 +103,12 @@ describe('context', () => {
       assert.strictEqual(context.traceSampled, false);
     });
 
-    describe('get context from Otel', () => {
+    describe.only('getOrInjectContextWithOtel', () => {
       let sdk: NodeSDK;
       before(() => {
         sdk = new NodeSDK({
           resource: new Resource({
-            [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
+            [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-logging-context-test',
           }),
           traceExporter: new InMemorySpanExporter(),
         });
@@ -137,7 +121,7 @@ describe('context', () => {
       })
       
       it('should ignore a default trace context when open telemetry context detected', () => {
-        trace.getTracer('nodejs-context-test').startActiveSpan('foo', (parentSpan) => {
+        trace.getTracer('nodejs-logging-context-test').startActiveSpan('foo', (parentSpan) => {
           const req = {
             method: 'GET',
           } as http.IncomingMessage;
@@ -308,19 +292,6 @@ describe('context', () => {
   });
 
   describe('parseOtelContext', ()=> {
-    // let sdk: NodeSDK;
-    // before(() => {
-    //   const sdk = new NodeSDK({
-    //     resource: new Resource({
-    //       [SemanticResourceAttributes.SERVICE_NAME]: 'nodejs-context-test',
-    //     }),
-    //     traceExporter: new InMemorySpanExporter(),
-    //   });
-      
-    //   sdk.start();
-    // });
-
-
     let sdk: NodeSDK;
     before(() => {
       sdk = new NodeSDK({

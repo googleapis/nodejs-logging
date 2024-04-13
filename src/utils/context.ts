@@ -168,8 +168,6 @@ export function getContextFromOtelContext(
   projectId: string
 ): CloudTraceContext | null {
      const spanContext = trace.getActiveSpan()?.spanContext();
-     console.log(" span context, t_id, s_id", spanContext, spanContext?.traceId, spanContext?.spanId, spanContext?.traceFlags);
-
     if (spanContext != undefined && isSpanContextValid(spanContext)) {
       const otelSpanContext = {
         // trace: "projects/cindy-cloud-sdk-test/traces/"+spanContext?.traceId,
@@ -179,7 +177,6 @@ export function getContextFromOtelContext(
       };
 
       const return_context = toCloudTraceContext(otelSpanContext, projectId);
-      console.log("get valid span context: ", return_context);
       return return_context;
     }
 
