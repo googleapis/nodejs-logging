@@ -30,8 +30,7 @@
 import * as http from 'http';
 import * as uuid from 'uuid';
 import * as crypto from 'crypto';
-import { trace, context, isSpanContextValid} from '@opentelemetry/api';
-
+import { trace, isSpanContextValid } from '@opentelemetry/api';
 
 /** Header that carries span context across Google infrastructure. */
 export const X_CLOUD_TRACE_HEADER = 'x-cloud-trace-context';
@@ -99,7 +98,6 @@ export function getOrInjectContext(
   projectId: string,
   inject?: boolean
 ): CloudTraceContext {
-
   const defaultContext = toCloudTraceContext({}, projectId);
 
   // Get trace context from OpenTelemetry span context.
@@ -107,7 +105,7 @@ export function getOrInjectContext(
   if (otelContext) return otelContext;
 
   const wrapper = makeHeaderWrapper(req);
-  
+
   if (wrapper) {
     // Detect 'traceparent' header.
     const traceContext = getContextFromTraceParent(wrapper, projectId);
@@ -161,24 +159,24 @@ function makeCloudTraceHeader(): string {
 /**
  * getContextFromOtelContext looks for the active open telemetry span context
  * per Open Telemetry specifications for tracing contexts.
- *  
+ *
  * @param projectId
  */
 export function getContextFromOtelContext(
   projectId: string
 ): CloudTraceContext | null {
-     const spanContext = trace.getActiveSpan()?.spanContext();
-    if (spanContext != undefined && isSpanContextValid(spanContext)) {
-      const otelSpanContext = {
-        // trace: "projects/cindy-cloud-sdk-test/traces/"+spanContext?.traceId,
-        trace: spanContext?.traceId,
-        spanId: spanContext?.spanId,
-        traceSampled: spanContext?.traceFlags === 1,
-      };
+  const spanContext = trace.getActiveSpan()?.spanContext();
+  if (spanContext !== undefined && isSpanContextValid(spanContext)) {
+    const otelSpanContext = {
+      // trace: "projects/cindy-cloud-sdk-test/traces/"+spanContext?.traceId,
+      trace: spanContext?.traceId,
+      spanId: spanContext?.spanId,
+      traceSampled: spanContext?.traceFlags === 1,
+    };
 
-      const return_context = toCloudTraceContext(otelSpanContext, projectId);
-      return return_context;
-    }
+    const return_context = toCloudTraceContext(otelSpanContext, projectId);
+    return return_context;
+  }
 
   return null;
 }

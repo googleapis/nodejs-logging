@@ -30,7 +30,11 @@ import {
   RawHttpRequest,
   isRawHttpRequest,
 } from './utils/http-request';
-import {CloudTraceContext, getContextFromOtelContext, getOrInjectContext} from './utils/context';
+import {
+  CloudTraceContext,
+  getContextFromOtelContext,
+  getOrInjectContext,
+} from './utils/context';
 
 const eventId = new EventId();
 
