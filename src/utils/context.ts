@@ -30,7 +30,7 @@
 import * as http from 'http';
 import * as uuid from 'uuid';
 import * as crypto from 'crypto';
-import { trace, isSpanContextValid } from '@opentelemetry/api';
+import {trace, isSpanContextValid} from '@opentelemetry/api';
 
 /** Header that carries span context across Google infrastructure. */
 export const X_CLOUD_TRACE_HEADER = 'x-cloud-trace-context';

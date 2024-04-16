@@ -98,7 +98,9 @@
     "webpack-cli": "^5.0.0",
     "@opentelemetry/sdk-trace-node": "^1.23.0",
     "@opentelemetry/sdk-node": "^0.50.0",
-    "@opentelemetry/semantic-conventions": "1.23.0",
+    "@opentelemetry/semantic-conventions": "^1.23.0",
+    "@opentelemetry/sdk-trace-base": "^1.23.0",
+    "@opentelemetry/resources": "^1.23.0",
     "@google-cloud/opentelemetry-cloud-trace-exporter": "^2.1.0"
   },
   "engines": {
