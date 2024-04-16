@@ -861,7 +861,8 @@ describe('Logging', () => {
                   );
                   assert.strictEqual(entry.metadata.spanId, spanId);
                   assert.strictEqual(entry.metadata.traceSampled, traceSampled);
-                });
+                }
+              );
             });
           });
           span.end();
