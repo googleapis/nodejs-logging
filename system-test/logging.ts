@@ -820,7 +820,7 @@ describe('Logging', () => {
         done();
       });
 
-      it('should write a log with  OpenTelemetry trace and spans and ignore http requests traceparent header', done => {
+      it('should write a log with OpenTelemetry trace and spans and ignore http requests traceparent header', done => {
         const {log} = getTestLog();
         const URL = 'http://www.google.com';
         trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', span => {
@@ -861,12 +861,12 @@ describe('Logging', () => {
                   );
                   assert.strictEqual(entry.metadata.spanId, spanId);
                   assert.strictEqual(entry.metadata.traceSampled, traceSampled);
-                  done();
-                }
-              );
+                });
             });
           });
+          span.end();
         });
+        done();
       });
 
       it('should write a log with OpenTelemetry trace and spans and ignore http requests x-cloud-trace-context header', done => {
@@ -907,12 +907,13 @@ describe('Logging', () => {
                   );
                   assert.strictEqual(entry.metadata.spanId, spanId);
                   assert.strictEqual(entry.metadata.traceSampled, traceSampled);
-                  done();
                 }
               );
             });
           });
+          span.end();
         });
+        done();
       });
     });
 
