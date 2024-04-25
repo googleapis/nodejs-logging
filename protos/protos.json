@@ -1141,6 +1141,12 @@
                   999
                 ]
               ],
+              "reserved": [
+                [
+                  999,
+                  999
+                ]
+              ],
               "nested": {
                 "FieldPresence": {
                   "values": {
