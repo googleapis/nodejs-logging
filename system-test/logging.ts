@@ -31,18 +31,9 @@ import * as http from 'http';
 import * as instrumentation from '../src/utils/instrumentation';
 import {trace} from '@opentelemetry/api';
 import {Resource} from '@opentelemetry/resources';
-//const {Resource} = require('@opentelemetry/resources');
 import {SEMRESATTRS_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
 import {TraceExporter} from '@google-cloud/opentelemetry-cloud-trace-exporter';
 import {NodeSDK} from '@opentelemetry/sdk-node';
-// const {
-//   SemanticResourceAttributes,
-// } = require('@opentelemetry/semantic-conventions');
-// const {
-//   TraceExporter,
-// } = require('@google-cloud/opentelemetry-cloud-trace-exporter');
-
-// block all attempts to chat with the metadata server (kokoro runs on GCE)
 nock(HOST_ADDRESS)
   .get(() => true)
   .replyWithError({code: 'ENOTFOUND'})

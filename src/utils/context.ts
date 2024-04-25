@@ -168,7 +168,6 @@ export function getContextFromOtelContext(
   const spanContext = trace.getActiveSpan()?.spanContext();
   if (spanContext !== undefined && isSpanContextValid(spanContext)) {
     const otelSpanContext = {
-      // trace: "projects/cindy-cloud-sdk-test/traces/"+spanContext?.traceId,
       trace: spanContext?.traceId,
       spanId: spanContext?.spanId,
       traceSampled: spanContext?.traceFlags === 1,
