@@ -166,11 +166,12 @@ export function getContextFromOtelContext(
   projectId: string
 ): CloudTraceContext | null {
   const spanContext = trace.getActiveSpan()?.spanContext();
+  const FLAG_SAMPLED = 1; // 00000001
   if (spanContext !== undefined && isSpanContextValid(spanContext)) {
     const otelSpanContext = {
       trace: spanContext?.traceId,
       spanId: spanContext?.spanId,
-      traceSampled: spanContext?.traceFlags === 1,
+      traceSampled: (spanContext.traceFlags & FLAG_SAMPLED) !== 0,
     };
 
     const return_context = toCloudTraceContext(otelSpanContext, projectId);
