@@ -41,7 +41,7 @@ describe('📦 pack-n-play test', () => {
       packageDir: process.cwd(),
       sample: {
         description: 'JavaScript user can use the library',
-        ts: readFileSync(
+        js: readFileSync(
           './system-test/fixtures/sample/src/index.js'
         ).toString(),
       },
