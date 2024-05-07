@@ -1604,3 +1604,4 @@ module.exports.v2 = v2;
 import * as protos from '../protos/protos';
 export {protos};
 export {v2};
+export * from '@opentelemetry/api';
