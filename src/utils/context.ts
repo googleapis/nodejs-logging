@@ -174,8 +174,7 @@ export function getContextFromOtelContext(
       traceSampled: (spanContext.traceFlags & FLAG_SAMPLED) !== 0,
     };
 
-    const return_context = toCloudTraceContext(otelSpanContext, projectId);
-    return return_context;
+    return toCloudTraceContext(otelSpanContext, projectId);
   }
 
   return null;
