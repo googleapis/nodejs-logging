@@ -5,6 +5,20 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [11.1.0](https://github.com/googleapis/nodejs-logging/compare/v11.0.0...v11.1.0) (2024-05-29)
+
+
+### Features
+
+* Add several fields to manage state of database encryption update ([#1495](https://github.com/googleapis/nodejs-logging/issues/1495)) ([4137f7b](https://github.com/googleapis/nodejs-logging/commit/4137f7b276aaf419125de2f913bf0d61afc7cde7))
+* Update Nodejs generator to send API versions in headers for GAPICs ([#1502](https://github.com/googleapis/nodejs-logging/issues/1502)) ([346e646](https://github.com/googleapis/nodejs-logging/commit/346e646367e7e1d6d9456ed4f8ff4a7464eb16a9))
+
+
+### Bug Fixes
+
+* Correct long audio synthesis HTTP binding ([#1479](https://github.com/googleapis/nodejs-logging/issues/1479)) ([1f94504](https://github.com/googleapis/nodejs-logging/commit/1f945042478bfc9fba4fb348705f903d05b41821))
+* Improve retry logic for streaming API calls ([#1484](https://github.com/googleapis/nodejs-logging/issues/1484)) ([7e11e11](https://github.com/googleapis/nodejs-logging/commit/7e11e11bcb2c3dd346b589cf01cb75626ff10f4c))
+
 ## [11.0.0](https://github.com/googleapis/nodejs-logging/compare/v10.5.0...v11.0.0) (2023-08-10)
 
 
