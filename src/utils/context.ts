@@ -30,6 +30,7 @@
 import * as http from 'http';
 import * as uuid from 'uuid';
 import * as crypto from 'crypto';
+import {trace, isSpanContextValid} from '@opentelemetry/api';
 
 /** Header that carries span context across Google infrastructure. */
 export const X_CLOUD_TRACE_HEADER = 'x-cloud-trace-context';
@@ -98,7 +99,13 @@ export function getOrInjectContext(
   inject?: boolean
 ): CloudTraceContext {
   const defaultContext = toCloudTraceContext({}, projectId);
+
+  // Get trace context from OpenTelemetry span context.
+  const otelContext = getContextFromOtelContext(projectId);
+  if (otelContext) return otelContext;
+
   const wrapper = makeHeaderWrapper(req);
+
   if (wrapper) {
     // Detect 'traceparent' header.
     const traceContext = getContextFromTraceParent(wrapper, projectId);
@@ -147,6 +154,30 @@ function makeCloudTraceHeader(): string {
   const trace = uuid.v4().replace(/-/g, '');
   const spanId = spanRandomBuffer().toString('hex');
   return `${trace}/${spanId}`;
+}
+
+/**
+ * getContextFromOtelContext looks for the active open telemetry span context
+ * per Open Telemetry specifications for tracing contexts.
+ *
+ * @param projectId
+ */
+export function getContextFromOtelContext(
+  projectId: string
+): CloudTraceContext | null {
+  const spanContext = trace.getActiveSpan()?.spanContext();
+  const FLAG_SAMPLED = 1; // 00000001
+  if (spanContext !== undefined && isSpanContextValid(spanContext)) {
+    const otelSpanContext = {
+      trace: spanContext?.traceId,
+      spanId: spanContext?.spanId,
+      traceSampled: (spanContext.traceFlags & FLAG_SAMPLED) !== 0,
+    };
+
+    return toCloudTraceContext(otelSpanContext, projectId);
+  }
+
+  return null;
 }
 
 /**

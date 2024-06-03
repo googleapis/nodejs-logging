@@ -59,7 +59,8 @@
     "on-finished": "^2.3.0",
     "pumpify": "^2.0.1",
     "stream-events": "^1.0.5",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "@opentelemetry/api": "^1.7.0"
   },
   "devDependencies": {
     "@google-cloud/bigquery": "^7.0.0",
@@ -93,7 +94,14 @@
     "typescript": "^5.1.6",
     "uglify-js": "^3.13.5",
     "webpack": "^5.0.0",
-    "webpack-cli": "^5.0.0"
+    "webpack-cli": "^5.0.0",
+    "@opentelemetry/api": "^1.7.0",
+    "@opentelemetry/sdk-trace-node": "^1.23.0",
+    "@opentelemetry/sdk-node": "^0.50.0",
+    "@opentelemetry/semantic-conventions": "^1.23.0",
+    "@opentelemetry/sdk-trace-base": "^1.23.0",
+    "@opentelemetry/resources": "^1.23.0",
+    "@google-cloud/opentelemetry-cloud-trace-exporter": "^2.1.0"
   },
   "engines": {
     "node": ">=14.0.0"
