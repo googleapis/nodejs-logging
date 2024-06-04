@@ -30,7 +30,11 @@ import {
   RawHttpRequest,
   isRawHttpRequest,
 } from './utils/http-request';
-import {CloudTraceContext, getOrInjectContext} from './utils/context';
+import {
+  CloudTraceContext,
+  getContextFromOtelContext,
+  getOrInjectContext,
+} from './utils/context';
 
 const eventId = new EventId();
 
@@ -229,16 +233,17 @@ class Entry {
     const req = this.metadata.httpRequest;
     if (isRawHttpRequest(req)) {
       entry.httpRequest = makeHttpRequestData(req);
-      // Format trace and span
-      const traceContext = this.extractTraceFromHeaders(projectId);
-      if (traceContext) {
-        if (!this.metadata.trace && traceContext.trace)
-          entry.trace = traceContext.trace;
-        if (!this.metadata.spanId && traceContext.spanId)
-          entry.spanId = traceContext.spanId;
-        if (this.metadata.traceSampled === undefined)
-          entry.traceSampled = traceContext.traceSampled;
-      }
+    }
+
+    // Format trace and span
+    const traceContext = this.extractTraceContext(projectId);
+    if (traceContext) {
+      if (!this.metadata.trace && traceContext.trace)
+        entry.trace = traceContext.trace;
+      if (!this.metadata.spanId && traceContext.spanId)
+        entry.spanId = traceContext.spanId;
+      if (this.metadata.traceSampled === undefined)
+        entry.traceSampled = traceContext.traceSampled;
     }
     return entry;
   }
@@ -308,26 +313,31 @@ class Entry {
     const req = meta.httpRequest;
     if (isRawHttpRequest(req)) {
       entry.httpRequest = makeHttpRequestData(req);
-      // Detected trace context from headers if applicable.
-      const traceContext = this.extractTraceFromHeaders(projectId);
-      if (traceContext) {
-        if (!entry[TRACE_KEY] && traceContext.trace)
-          entry[TRACE_KEY] = traceContext.trace;
-        if (!entry[SPAN_ID_KEY] && traceContext.spanId)
-          entry[SPAN_ID_KEY] = traceContext.spanId;
-        if (entry[TRACE_SAMPLED_KEY] === undefined)
-          entry[TRACE_SAMPLED_KEY] = traceContext.traceSampled;
-      }
+    }
+
+    // Detected trace context from OpenTelemetry context or http headers if applicable.
+    const traceContext = this.extractTraceContext(projectId);
+    if (traceContext) {
+      if (!entry[TRACE_KEY] && traceContext.trace)
+        entry[TRACE_KEY] = traceContext.trace;
+      if (!entry[SPAN_ID_KEY] && traceContext.spanId)
+        entry[SPAN_ID_KEY] = traceContext.spanId;
+      if (entry[TRACE_SAMPLED_KEY] === undefined)
+        entry[TRACE_SAMPLED_KEY] = traceContext.traceSampled;
     }
     return entry;
   }
 
   /**
-   * extractTraceFromHeaders extracts trace and span information from raw HTTP
-   * request headers only.
+   * extractTraceContext extracts trace and span information from OpenTelemetry
+   * span context or raw HTTP request headers.
    * @private
    */
-  private extractTraceFromHeaders(projectId: string): CloudTraceContext | null {
+  private extractTraceContext(projectId: string): CloudTraceContext | null {
+    // Extract trace context from OpenTelemetry span context.
+    const otelContext = getContextFromOtelContext(projectId);
+    if (otelContext) return otelContext;
+    // Extract trace context from http request headers.
     const rawReq = this.metadata.httpRequest;
     if (rawReq && 'headers' in rawReq) {
       return getOrInjectContext(rawReq, projectId, false);

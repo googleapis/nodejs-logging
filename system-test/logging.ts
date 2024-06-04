@@ -29,8 +29,11 @@ const http2spy = require('http2spy');
 import {Logging, Sink, Log, Entry, TailEntriesResponse} from '../src';
 import * as http from 'http';
 import * as instrumentation from '../src/utils/instrumentation';
-
-// block all attempts to chat with the metadata server (kokoro runs on GCE)
+import {trace} from '@opentelemetry/api';
+import {Resource} from '@opentelemetry/resources';
+import {SEMRESATTRS_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
+import {TraceExporter} from '@google-cloud/opentelemetry-cloud-trace-exporter';
+import {NodeSDK} from '@opentelemetry/sdk-node';
 nock(HOST_ADDRESS)
   .get(() => true)
   .replyWithError({code: 'ENOTFOUND'})
@@ -270,8 +273,8 @@ describe('Logging', () => {
   });
 
   describe('logs', () => {
-    function getTestLog(loggingInstnce = null) {
-      const log = (loggingInstnce || logging).log(generateName());
+    function getTestLog(loggingInstance = null) {
+      const log = (loggingInstance || logging).log(generateName());
 
       const logEntries = [
         // string data
@@ -733,15 +736,185 @@ describe('Logging', () => {
       });
     });
 
+    describe('logs with open telemetry context', () => {
+      let sdk: NodeSDK;
+      before(() => {
+        // initialize the SDK and register with the OpenTelemetry API
+        // this enables the API to record telemetry
+        sdk = new NodeSDK({
+          resource: new Resource({
+            [SEMRESATTRS_SERVICE_NAME]: TESTS_PREFIX,
+          }),
+          // Add cloud trace exporter as SDK trace exporter
+          traceExporter: new TraceExporter(),
+        });
+        sdk.start();
+      });
+
+      after(() => {
+        sdk.shutdown();
+      });
+
+      it('should not overwrite user defined trace and spans with OpenTelemetry context', done => {
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', span => {
+          const {log} = getTestLog();
+          const spanTestMessage = 'span test log message';
+          const metadata = {
+            trace: '1',
+            spanId: '1',
+            traceSampled: false,
+          };
+          const logEntry = log.entry(metadata, spanTestMessage);
+          log.write(logEntry, err => {
+            assert.ifError(err);
+            getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+              assert.ifError(err);
+              const entry = entries![0];
+              assert.strictEqual(entry.data, spanTestMessage);
+              assert.strictEqual(entry.metadata.trace, metadata.trace);
+              assert.strictEqual(entry.metadata.spanId, metadata.spanId);
+              assert.strictEqual(
+                entry.metadata.traceSampled,
+                metadata.traceSampled
+              );
+            });
+          });
+          span.end();
+        });
+        done();
+      });
+
+      it('should write a log with trace and spans from OpenTelemetry context', done => {
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', span => {
+          const traceId = span.spanContext().traceId;
+          const spanId = span.spanContext().spanId;
+          const traceSampled = (span.spanContext().traceFlags & 1) !== 0;
+          const {log} = getTestLog();
+          const spanTestMessage = 'span test log message';
+          const logEntry = log.entry(spanTestMessage);
+          log.write(logEntry, err => {
+            assert.ifError(err);
+            getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
+              assert.ifError(err);
+              const entry = entries![0];
+              assert.strictEqual(entry.data, spanTestMessage);
+              assert.strictEqual(
+                entry.metadata.trace,
+                `projects/${PROJECT_ID}/traces/${traceId}`
+              );
+              assert.strictEqual(entry.metadata.spanId, spanId);
+              assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+            });
+          });
+          span.end();
+        });
+        done();
+      });
+
+      it('should write a log with OpenTelemetry trace and spans and ignore http requests traceparent header', done => {
+        const {log} = getTestLog();
+        const URL = 'http://www.google.com';
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', span => {
+          // Use the response of a http request as the incomingmessage request obj.
+          http.get(URL, res => {
+            res.url = URL;
+            res.headers = {
+              traceparent:
+                '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01',
+            };
+            const metadata = {httpRequest: res};
+            const logEntry = log.entry(metadata, 'some log message');
+
+            const traceId = span.spanContext().traceId;
+            const spanId = span.spanContext().spanId;
+            const traceSampled = (span.spanContext().traceFlags & 1) !== 0;
+
+            log.write(logEntry, err => {
+              assert.ifError(err);
+              getEntriesFromLog(
+                log,
+                {numExpectedMessages: 1},
+                (err, entries) => {
+                  assert.ifError(err);
+                  const entry = entries![0];
+                  assert.strictEqual(entry.data, 'some log message');
+                  assert.strictEqual(
+                    entry.metadata.httpRequest?.requestUrl,
+                    URL
+                  );
+                  assert.strictEqual(
+                    entry.metadata.httpRequest?.protocol,
+                    'http:'
+                  );
+                  assert.strictEqual(
+                    entry.metadata.trace,
+                    `projects/${PROJECT_ID}/traces/${traceId}`
+                  );
+                  assert.strictEqual(entry.metadata.spanId, spanId);
+                  assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+                }
+              );
+            });
+          });
+          span.end();
+        });
+        done();
+      });
+
+      it('should write a log with OpenTelemetry trace and spans and ignore http requests x-cloud-trace-context header', done => {
+        const {log} = getTestLog();
+        const URL = 'http://www.google.com';
+        trace.getTracer(TESTS_PREFIX).startActiveSpan('foo', span => {
+          // Use the response of a http request as the incomingmessage request obj.
+          http.get(URL, res => {
+            res.url = URL;
+            res.headers = {
+              'x-cloud-trace-context': '1/2;o=1',
+            };
+            const metadata = {httpRequest: res};
+            const logEntry = log.entry(metadata, 'some log message');
+            const traceId = span.spanContext().traceId;
+            const spanId = span.spanContext().spanId;
+            const traceSampled = (span.spanContext().traceFlags & 1) !== 0;
+            log.write(logEntry, err => {
+              assert.ifError(err);
+              getEntriesFromLog(
+                log,
+                {numExpectedMessages: 1},
+                (err, entries) => {
+                  assert.ifError(err);
+                  const entry = entries![0];
+                  assert.strictEqual(entry.data, 'some log message');
+                  assert.strictEqual(
+                    entry.metadata.httpRequest?.requestUrl,
+                    URL
+                  );
+                  assert.strictEqual(
+                    entry.metadata.httpRequest?.protocol,
+                    'http:'
+                  );
+                  assert.strictEqual(
+                    entry.metadata.trace,
+                    `projects/${PROJECT_ID}/traces/${traceId}`
+                  );
+                  assert.strictEqual(entry.metadata.spanId, spanId);
+                  assert.strictEqual(entry.metadata.traceSampled, traceSampled);
+                }
+              );
+            });
+          });
+          span.end();
+        });
+        done();
+      });
+    });
+
     it('should set the default resource', done => {
       const {log} = getTestLog();
-
       const text = 'entry-text';
       const entry = log.entry(text);
-
       log.write(entry, err => {
         assert.ifError(err);
-
         getEntriesFromLog(log, {numExpectedMessages: 1}, (err, entries) => {
           assert.ifError(err);
           const entry = entries![0];
