@@ -5,6 +5,13 @@
 [1]: https://www.npmjs.com/package/nodejs-logging?activeTab=versions
 
 
+## [11.2.0](https://github.com/googleapis/nodejs-logging/compare/v11.1.0...v11.2.0) (2024-06-18)
+
+
+### Features
+
+* Open telemetry integration and span Id fix for nodejs logging library ([#1497](https://github.com/googleapis/nodejs-logging/issues/1497)) ([91577e0](https://github.com/googleapis/nodejs-logging/commit/91577e0c46cefd1333bb3a69e62a50e0aab74615))
+
 ## [11.1.0](https://github.com/googleapis/nodejs-logging/compare/v11.0.0...v11.1.0) (2024-05-29)
 
 
