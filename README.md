@@ -170,6 +170,21 @@ how to populate the Http request metadata for log entries.
 If you already have a "raw" Http `request` object you can assign it to `entry.metadata.httpRequest` directly. More information about
 how the `request` is interpreted as raw can be found in the [code](https://github.com/googleapis/nodejs-logging/blob/15849160116a814ab71113138cb211c2e0c2d4b4/src/entry.ts#L224-L238).
 
+## Automatic Trace/Span Id Extraction
+Cloud Logging libraries use [trace fields within LogEntry](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.trace) to capture trace contexts, which enables the [correlation of logs and traces](https://cloud.google.com/logging/docs/view/correlate-logs), and supporting distributed tracing. 
+These trace fields, including [trace](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.trace), [spanId](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.span_id), and [traceSampled](https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.trace_sampled) define the trace context for the log entry.
+
+If not provided explicitly, Google Cloud Logging library will automatically populate `LogEntry fields`_
+`trace`, `span_id`, and `trace_sampled` from detected OpenTelemetry span context, or HTTP request headers.
+
+### Extracting from OpenTelemetry Context
+If you are using OpenTelemetry and there is an active span in the OpenTelemetry Context, that log entry will automatically have the `trace`, `span_id`, and `trace_sampled` fields populated from that span. More information about OpenTelemetry can be found [here](https://opentelemetry.io/docs/languages/js/).
+
+### Extracting from HTTP headers
+If tracing fields are not provided explicitly and no OpenTelemetry context were detected, `trace` / `span_id` fields will be extracted automatically from HTTP headers. 
+Trace information is automatically populated from either the `[W3C Traceparent](https://www.w3.org/TR/trace-context)` or `[X-Cloud-Trace-Context](https://cloud.google.com/trace/docs/trace-context#legacy-http-header)` headers.
+Populating trace information this way also automatically populates the `http_request` field in the `LogEntry` as well.
+
 ## Error handling with logs written or deleted asynchronously
 
 The `Log` class provide users the ability to write and delete logs asynchronously. However, there are cases when log entries
