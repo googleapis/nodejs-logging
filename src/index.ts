@@ -593,7 +593,7 @@ class Logging {
     reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
     this.projectId = await this.auth.getProjectId();
     const resourceName = 'projects/' + this.projectId;
-    if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
+    if (reqOpts.resourceNames.length < 1) {
       reqOpts.resourceNames.push(resourceName);
     }
     delete reqOpts.autoPaginate;
@@ -692,7 +692,9 @@ class Logging {
           options
         );
         reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
-        reqOpts.resourceNames.push(`projects/${this.projectId}`);
+        if (reqOpts.resourceNames.length < 1) {
+          reqOpts.resourceNames.push(`projects/${this.projectId}`);
+        }
         delete reqOpts.autoPaginate;
         delete reqOpts.gaxOptions;
         const gaxOptions = extend(
