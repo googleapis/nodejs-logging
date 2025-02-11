@@ -21,7 +21,7 @@ import {callbackifyAll} from '@google-cloud/promisify';
 import arrify = require('arrify');
 import * as extend from 'extend';
 import * as gax from 'google-gax';
-// eslint-disable-next-line node/no-extraneous-import
+// eslint-disable-next-line n/no-extraneous-import
 import {ClientReadableStream, ClientDuplexStream} from '@grpc/grpc-js';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pumpify = require('pumpify');
@@ -1605,3 +1605,4 @@ module.exports.v2 = v2;
 import * as protos from '../protos/protos';
 export {protos};
 export {v2};
+export * from '@opentelemetry/api';

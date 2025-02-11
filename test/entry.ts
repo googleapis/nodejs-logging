@@ -19,6 +19,11 @@ import * as proxyquire from 'proxyquire';
 import * as entryTypes from '../src/entry';
 import * as common from '../src/utils/common';
 import * as http from 'http';
+import {InMemorySpanExporter} from '@opentelemetry/sdk-trace-base';
+import {trace} from '@opentelemetry/api';
+import {Resource} from '@opentelemetry/resources';
+import {SEMRESATTRS_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
+import {NodeSDK} from '@opentelemetry/sdk-node';
 
 let fakeEventIdNewOverride: Function | null;
 
@@ -305,6 +310,86 @@ describe('Entry', () => {
       assert.strictEqual(json.spanId, expected.spanId);
       assert.strictEqual(json.traceSampled, expected.traceSampled);
     });
+
+    describe('toJSONWithOtel', () => {
+      let sdk: NodeSDK;
+      before(() => {
+        sdk = new NodeSDK({
+          resource: new Resource({
+            [SEMRESATTRS_SERVICE_NAME]: 'nodejs-logging-entry-test',
+          }),
+          traceExporter: new InMemorySpanExporter(),
+        });
+
+        sdk.start();
+      });
+
+      after(() => {
+        sdk.shutdown();
+      });
+
+      it('should detect open telemetry trace and span if open telemetry context present', () => {
+        trace
+          .getTracer('nodejs-logging-context-test')
+          .startActiveSpan('foo', span => {
+            const json = entry.toJSON();
+            assert.strictEqual(
+              json.trace,
+              `projects//traces/${span.spanContext().traceId}`
+            );
+            assert.strictEqual(json.spanId, span.spanContext().spanId);
+            assert.strictEqual(
+              json.traceSampled,
+              (span.spanContext().traceFlags & 1) !== 0
+            );
+          });
+      });
+
+      it('should  detect open telemetry trace and span if open telemetry context and headers present', () => {
+        trace
+          .getTracer('nodejs-logging-context-test')
+          .startActiveSpan('foo', span => {
+            const req = {
+              method: 'GET',
+            } as unknown as http.IncomingMessage;
+            // To mock http message.headers, we must use lowercased keys.
+            req.headers = {
+              'x-cloud-trace-context': '0000/1111;o=1',
+            };
+            entry.metadata.httpRequest = req;
+            const json = entry.toJSON();
+            assert.strictEqual(
+              json.trace,
+              `projects//traces/${span.spanContext().traceId}`
+            );
+            assert.strictEqual(json.spanId, span.spanContext().spanId);
+            assert.strictEqual(
+              json.traceSampled,
+              (span.spanContext().traceFlags & 1) !== 0
+            );
+          });
+      });
+
+      it('should not overwrite user defined trace and span when open telemetry context detected', () => {
+        trace
+          .getTracer('nodejs-logging-context-test')
+          .startActiveSpan('foo', span => {
+            entry.metadata.spanId = '1';
+            entry.metadata.trace = '1';
+            entry.metadata.traceSampled = false;
+            const expected = {
+              trace: '1',
+              spanId: '1',
+              traceSampled: false,
+            };
+
+            const json = entry.toJSON();
+            assert.strictEqual(json.trace, expected.trace);
+            assert.strictEqual(json.spanId, expected.spanId);
+            assert.strictEqual(json.traceSampled, expected.traceSampled);
+          });
+      });
+    });
   });
 
   describe('toStructuredJSON', () => {
@@ -402,6 +487,94 @@ describe('Entry', () => {
       entry.data = 'test';
       json = entry.toStructuredJSON(undefined, false);
       assert((json.message = 'test'));
+    });
+
+    describe('toStructuredJSONWithOtel', () => {
+      let sdk: NodeSDK;
+      before(() => {
+        sdk = new NodeSDK({
+          resource: new Resource({
+            [SEMRESATTRS_SERVICE_NAME]: 'nodejs-logging-entry-test',
+          }),
+          traceExporter: new InMemorySpanExporter(),
+        });
+
+        sdk.start();
+      });
+
+      after(() => {
+        sdk.shutdown();
+      });
+
+      it('should detect open telemetry trace and span if open telemetry context present', () => {
+        trace
+          .getTracer('nodejs-logging-context-test')
+          .startActiveSpan('foo', span => {
+            const json = entry.toStructuredJSON();
+            assert.strictEqual(
+              json[entryTypes.TRACE_KEY],
+              `projects//traces/${span.spanContext().traceId}`
+            );
+            assert.strictEqual(
+              json[entryTypes.SPAN_ID_KEY],
+              span.spanContext().spanId
+            );
+            assert.strictEqual(
+              json[entryTypes.TRACE_SAMPLED_KEY],
+              (span.spanContext().traceFlags & 1) !== 0
+            );
+          });
+      });
+
+      it('should  detect open telemetry trace and span if open telemetry context and headers present', () => {
+        trace
+          .getTracer('nodejs-logging-context-test')
+          .startActiveSpan('foo', span => {
+            const req = {
+              method: 'GET',
+            } as unknown as http.IncomingMessage;
+            // To mock http message.headers, we must use lowercased keys.
+            req.headers = {
+              'x-cloud-trace-context': '0000/1111;o=1',
+            };
+            entry.metadata.httpRequest = req;
+            const json = entry.toStructuredJSON();
+            assert.strictEqual(
+              json[entryTypes.TRACE_KEY],
+              `projects//traces/${span.spanContext().traceId}`
+            );
+            assert.strictEqual(
+              json[entryTypes.SPAN_ID_KEY],
+              span.spanContext().spanId
+            );
+            assert.strictEqual(
+              json[entryTypes.TRACE_SAMPLED_KEY],
+              (span.spanContext().traceFlags & 1) !== 0
+            );
+          });
+      });
+
+      it('should not overwrite user defined trace and span when open telemetry context detected', () => {
+        trace
+          .getTracer('nodejs-logging-context-test')
+          .startActiveSpan('foo', span => {
+            entry.metadata.spanId = '1';
+            entry.metadata.trace = '1';
+            entry.metadata.traceSampled = false;
+            const expected = {
+              trace: '1',
+              spanId: '1',
+              traceSampled: false,
+            };
+            const json = entry.toStructuredJSON();
+            assert.strictEqual(json[entryTypes.TRACE_KEY], expected.trace);
+            assert.strictEqual(json[entryTypes.SPAN_ID_KEY], expected.spanId);
+            assert.strictEqual(
+              json[entryTypes.TRACE_SAMPLED_KEY],
+              expected.traceSampled
+            );
+          });
+      });
     });
   });
 });
