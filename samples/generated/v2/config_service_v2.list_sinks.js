@@ -61,7 +61,7 @@ function main(parent) {
     };
 
     // Run request
-    const iterable = await loggingClient.listSinksAsync(request);
+    const iterable = loggingClient.listSinksAsync(request);
     for await (const response of iterable) {
       console.log(response);
     }

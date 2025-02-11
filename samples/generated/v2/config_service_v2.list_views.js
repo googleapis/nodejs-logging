@@ -58,7 +58,7 @@ function main(parent) {
     };
 
     // Run request
-    const iterable = await loggingClient.listViewsAsync(request);
+    const iterable = loggingClient.listViewsAsync(request);
     for await (const response of iterable) {
       console.log(response);
     }

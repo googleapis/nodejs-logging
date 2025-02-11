@@ -61,7 +61,7 @@ function main(parent) {
     };
 
     // Run request
-    const iterable = await loggingClient.listExclusionsAsync(request);
+    const iterable = loggingClient.listExclusionsAsync(request);
     for await (const response of iterable) {
       console.log(response);
     }

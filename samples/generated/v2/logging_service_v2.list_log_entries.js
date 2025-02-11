@@ -87,7 +87,7 @@ function main(resourceNames) {
     };
 
     // Run request
-    const iterable = await loggingClient.listLogEntriesAsync(request);
+    const iterable = loggingClient.listLogEntriesAsync(request);
     for await (const response of iterable) {
       console.log(response);
     }
