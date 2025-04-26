@@ -288,9 +288,14 @@ describe('v2.ConfigServiceV2Client', () => {
         throw err;
       });
       assert(client.configServiceV2Stub);
-      client.close().then(() => {
-        done();
-      });
+      client
+        .close()
+        .then(() => {
+          done();
+        })
+        .catch(err => {
+          throw err;
+        });
     });
 
     it('has close method for the non-initialized client', done => {
@@ -299,9 +304,14 @@ describe('v2.ConfigServiceV2Client', () => {
         projectId: 'bogus',
       });
       assert.strictEqual(client.configServiceV2Stub, undefined);
-      client.close().then(() => {
-        done();
-      });
+      client
+        .close()
+        .then(() => {
+          done();
+        })
+        .catch(err => {
+          throw err;
+        });
     });
 
     it('has getProjectId method', async () => {
@@ -461,7 +471,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getBucket(request), expectedError);
     });
   });
@@ -591,7 +603,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.createBucket(request), expectedError);
     });
   });
@@ -721,7 +735,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.updateBucket(request), expectedError);
     });
   });
@@ -851,7 +867,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.deleteBucket(request), expectedError);
     });
   });
@@ -981,7 +999,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.undeleteBucket(request), expectedError);
     });
   });
@@ -1108,7 +1128,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getView(request), expectedError);
     });
   });
@@ -1238,7 +1260,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.createView(request), expectedError);
     });
   });
@@ -1368,7 +1392,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.updateView(request), expectedError);
     });
   });
@@ -1498,7 +1524,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.deleteView(request), expectedError);
     });
   });
@@ -1625,7 +1653,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.sinkName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getSink(request), expectedError);
     });
   });
@@ -1755,7 +1785,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.createSink(request), expectedError);
     });
   });
@@ -1885,7 +1917,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.sinkName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.updateSink(request), expectedError);
     });
   });
@@ -2015,7 +2049,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.sinkName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.deleteSink(request), expectedError);
     });
   });
@@ -2142,7 +2178,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getLink(request), expectedError);
     });
   });
@@ -2272,7 +2310,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getExclusion(request), expectedError);
     });
   });
@@ -2402,7 +2442,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.createExclusion(request), expectedError);
     });
   });
@@ -2532,7 +2574,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.updateExclusion(request), expectedError);
     });
   });
@@ -2662,7 +2706,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.deleteExclusion(request), expectedError);
     });
   });
@@ -2792,7 +2838,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getCmekSettings(request), expectedError);
     });
   });
@@ -2923,7 +2971,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.updateCmekSettings(request), expectedError);
     });
   });
@@ -3053,7 +3103,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.getSettings(request), expectedError);
     });
   });
@@ -3183,7 +3235,9 @@ describe('v2.ConfigServiceV2Client', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.updateSettings(request), expectedError);
     });
   });
@@ -5606,20 +5660,24 @@ describe('v2.ConfigServiceV2Client', () => {
         .stub()
         .callsArgWith(2, null, expectedResponse);
       const promise = new Promise((resolve, reject) => {
-        client.operationsClient.getOperation(
-          request,
-          undefined,
-          (
-            err?: Error | null,
-            result?: operationsProtos.google.longrunning.Operation | null
-          ) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
+        client.operationsClient
+          .getOperation(
+            request,
+            undefined,
+            (
+              err?: Error | null,
+              result?: operationsProtos.google.longrunning.Operation | null
+            ) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
             }
-          }
-        );
+          )
+          .catch(err => {
+            throw err;
+          });
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
@@ -5686,20 +5744,24 @@ describe('v2.ConfigServiceV2Client', () => {
         .stub()
         .callsArgWith(2, null, expectedResponse);
       const promise = new Promise((resolve, reject) => {
-        client.operationsClient.cancelOperation(
-          request,
-          undefined,
-          (
-            err?: Error | null,
-            result?: protos.google.protobuf.Empty | null
-          ) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
+        client.operationsClient
+          .cancelOperation(
+            request,
+            undefined,
+            (
+              err?: Error | null,
+              result?: protos.google.protobuf.Empty | null
+            ) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
             }
-          }
-        );
+          )
+          .catch(err => {
+            throw err;
+          });
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);
@@ -5766,20 +5828,24 @@ describe('v2.ConfigServiceV2Client', () => {
         .stub()
         .callsArgWith(2, null, expectedResponse);
       const promise = new Promise((resolve, reject) => {
-        client.operationsClient.deleteOperation(
-          request,
-          undefined,
-          (
-            err?: Error | null,
-            result?: protos.google.protobuf.Empty | null
-          ) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
+        client.operationsClient
+          .deleteOperation(
+            request,
+            undefined,
+            (
+              err?: Error | null,
+              result?: protos.google.protobuf.Empty | null
+            ) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
             }
-          }
-        );
+          )
+          .catch(err => {
+            throw err;
+          });
       });
       const response = await promise;
       assert.deepStrictEqual(response, expectedResponse);

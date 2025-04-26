@@ -270,9 +270,14 @@ describe('v2.LoggingServiceV2Client', () => {
         throw err;
       });
       assert(client.loggingServiceV2Stub);
-      client.close().then(() => {
-        done();
-      });
+      client
+        .close()
+        .then(() => {
+          done();
+        })
+        .catch(err => {
+          throw err;
+        });
     });
 
     it('has close method for the non-initialized client', done => {
@@ -281,9 +286,14 @@ describe('v2.LoggingServiceV2Client', () => {
         projectId: 'bogus',
       });
       assert.strictEqual(client.loggingServiceV2Stub, undefined);
-      client.close().then(() => {
-        done();
-      });
+      client
+        .close()
+        .then(() => {
+          done();
+        })
+        .catch(err => {
+          throw err;
+        });
     });
 
     it('has getProjectId method', async () => {
@@ -443,7 +453,9 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.logName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.deleteLog(request), expectedError);
     });
   });
@@ -526,7 +538,9 @@ describe('v2.LoggingServiceV2Client', () => {
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.writeLogEntries(request), expectedError);
     });
   });
