@@ -29,7 +29,7 @@ import type {
 import {Transform} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
-import {loggingUtils as logging} from 'google-gax';
+import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
@@ -605,7 +605,23 @@ export class MetricsServiceV2Client {
           this._log.info('getLogMetric response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates a logs-based metric.
@@ -720,7 +736,23 @@ export class MetricsServiceV2Client {
           this._log.info('createLogMetric response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates or updates a logs-based metric.
@@ -836,7 +868,23 @@ export class MetricsServiceV2Client {
           this._log.info('updateLogMetric response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a logs-based metric.
@@ -946,7 +994,23 @@ export class MetricsServiceV2Client {
           this._log.info('deleteLogMetric response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
 
   /**

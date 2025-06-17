@@ -31,7 +31,7 @@ import type {
 import {Transform} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
-import {loggingUtils as logging} from 'google-gax';
+import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
@@ -348,7 +348,7 @@ export class ConfigServiceV2Client {
       ),
     };
 
-    const protoFilesRoot = this._gaxModule.protobuf.Root.fromJSON(jsonProtos);
+    const protoFilesRoot = this._gaxModule.protobufFromJSON(jsonProtos);
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
@@ -785,7 +785,23 @@ export class ConfigServiceV2Client {
           this._log.info('getBucket response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates a log bucket that can be used to store log entries. After a bucket
@@ -908,7 +924,23 @@ export class ConfigServiceV2Client {
           this._log.info('createBucket response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates a log bucket.
@@ -1041,7 +1073,23 @@ export class ConfigServiceV2Client {
           this._log.info('updateBucket response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a log bucket.
@@ -1162,7 +1210,23 @@ export class ConfigServiceV2Client {
           this._log.info('deleteBucket response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Undeletes a log bucket. A bucket that has been deleted can be undeleted
@@ -1280,7 +1344,23 @@ export class ConfigServiceV2Client {
           this._log.info('undeleteBucket response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets a view on a log bucket..
@@ -1394,7 +1474,23 @@ export class ConfigServiceV2Client {
           this._log.info('getView response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates a view over log entries in a log bucket. A bucket may contain a
@@ -1515,7 +1611,23 @@ export class ConfigServiceV2Client {
           this._log.info('createView response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates a view on a log bucket. This method replaces the following fields
@@ -1644,7 +1756,23 @@ export class ConfigServiceV2Client {
           this._log.info('updateView response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a view on a log bucket.
@@ -1761,7 +1889,23 @@ export class ConfigServiceV2Client {
           this._log.info('deleteView response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets a sink.
@@ -1878,7 +2022,23 @@ export class ConfigServiceV2Client {
           this._log.info('getSink response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates a sink that exports specified log entries to a destination. The
@@ -2015,7 +2175,23 @@ export class ConfigServiceV2Client {
           this._log.info('createSink response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates a sink. This method replaces the following fields in the existing
@@ -2169,7 +2345,23 @@ export class ConfigServiceV2Client {
           this._log.info('updateSink response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a sink. If the sink has a unique `writer_identity`, then that
@@ -2288,7 +2480,23 @@ export class ConfigServiceV2Client {
           this._log.info('deleteSink response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets a link.
@@ -2401,7 +2609,23 @@ export class ConfigServiceV2Client {
           this._log.info('getLink response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets the description of an exclusion in the _Default sink.
@@ -2518,7 +2742,23 @@ export class ConfigServiceV2Client {
           this._log.info('getExclusion response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates a new exclusion in the _Default sink in a specified parent
@@ -2641,7 +2881,23 @@ export class ConfigServiceV2Client {
           this._log.info('createExclusion response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Changes one or more properties of an existing exclusion in the _Default
@@ -2771,7 +3027,23 @@ export class ConfigServiceV2Client {
           this._log.info('updateExclusion response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes an exclusion in the _Default sink.
@@ -2888,7 +3160,23 @@ export class ConfigServiceV2Client {
           this._log.info('deleteExclusion response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets the Logging CMEK settings for the given resource.
@@ -3019,7 +3307,23 @@ export class ConfigServiceV2Client {
           this._log.info('getCmekSettings response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates the Log Router CMEK settings for the given resource.
@@ -3172,7 +3476,23 @@ export class ConfigServiceV2Client {
           this._log.info('updateCmekSettings response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets the Log Router settings for the given resource.
@@ -3303,7 +3623,23 @@ export class ConfigServiceV2Client {
           this._log.info('getSettings response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates the Log Router settings for the given resource.
@@ -3450,7 +3786,23 @@ export class ConfigServiceV2Client {
           this._log.info('updateSettings response %j', response);
           return [response, options, rawResponse];
         }
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos
+          );
+        }
+        throw error;
+      });
   }
 
   /**
