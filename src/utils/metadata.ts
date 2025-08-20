@@ -88,6 +88,23 @@ export async function getCloudRunDescriptor() {
 }
 
 /**
+ * Create a descriptor for Cloud Run Jpbs.
+ *
+ * @returns {object}
+ */
+export async function getCloudRunJobsDescriptor() {
+  const qualifiedZone = await gcpMetadata.instance('zone');
+  const location = regionFromQualifiedZone(qualifiedZone);
+  return {
+    type: 'cloud_run_job',
+    labels: {
+      location,
+      job_name: process.env.CLOUD_RUN_JOB,
+    },
+  };
+}
+
+/**
  * Create a descriptor for Google App Engine.
  *
  * @returns {object}
@@ -196,7 +213,14 @@ export async function getDefaultResource(auth: GoogleAuth) {
     case GCPEnv.CLOUD_RUN:
       return getCloudRunDescriptor().catch(() => getGlobalDescriptor());
     case GCPEnv.COMPUTE_ENGINE:
-      return getGCEDescriptor().catch(() => getGlobalDescriptor());
+      // Note: GCPEnv.COMPUTE_ENGINE returns `true` for Google Cloud Run Jobs
+      // should use case when available
+      // case GCPEnv.CLOUD_RUN_JOBS:
+      if (process.env.CLOUD_RUN_JOB) {
+        return getCloudRunJobsDescriptor().catch(() => getGlobalDescriptor());
+      } else {
+        return getGCEDescriptor().catch(() => getGlobalDescriptor());
+      }
     default:
       return getGlobalDescriptor();
   }
@@ -235,7 +259,16 @@ export async function detectServiceContext(
         service: process.env.K_SERVICE,
       };
     case GCPEnv.COMPUTE_ENGINE:
-      return null;
+      // Note: GCPEnv.COMPUTE_ENGINE returns `true` for Google Cloud Run Jobs
+      // should use case when available
+      // case GCPEnv.CLOUD_RUN_JOBS:
+      if (process.env.CLOUD_RUN_JOB) {
+        return {
+          service: process.env.CLOUD_RUN_JOB,
+        };
+      } else {
+        return null;
+      }
     default:
       return null;
   }

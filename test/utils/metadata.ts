@@ -218,6 +218,50 @@ describe('metadata', () => {
     });
   });
 
+  describe('getCloudRunJobsDescriptor', () => {
+    const CLOUD_RUN_JOB = 'hello-world';
+
+    const TARGET_KEYS = ['CLOUD_RUN_JOB'];
+
+    before(() => {
+      for (const key of TARGET_KEYS) {
+        INITIAL_ENV[key] = process.env[key];
+      }
+    });
+
+    after(() => {
+      for (const key of TARGET_KEYS) {
+        const val = INITIAL_ENV[key];
+        if (val === undefined) {
+          delete process.env[key];
+        } else {
+          process.env[key] = val;
+        }
+      }
+    });
+
+    beforeEach(() => {
+      for (const key of TARGET_KEYS) {
+        delete process.env[key];
+      }
+      process.env.CLOUD_RUN_JOB = CLOUD_RUN_JOB;
+    });
+
+    it('should return the correct descriptor', async () => {
+      const ZONE_ID = 'cyrodiil-anvil-2';
+      const ZONE_FULL = `projects/fake-project/zones/${ZONE_ID}`;
+      instanceOverride = {path: 'zone', successArg: ZONE_FULL};
+      const descriptor = await metadata.getCloudRunJobsDescriptor();
+      assert.deepStrictEqual(descriptor, {
+        type: 'cloud_run_job',
+        labels: {
+          job_name: CLOUD_RUN_JOB,
+          location: 'cyrodiil-anvil',
+        },
+      });
+    });
+  });
+
   describe('getGAEDescriptor', () => {
     const GAE_MODULE_NAME = 'gae-module-name';
     const GAE_SERVICE = 'gae-service';
