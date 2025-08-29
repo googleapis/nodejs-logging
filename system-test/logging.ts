@@ -423,6 +423,17 @@ describe('Logging', () => {
       });
     });
 
+    it('should not add projectId if resourceNames is provided', async () => {
+      const {log, logEntries} = getTestLog();
+      await log.write(logEntries, options);
+      const resourceNames = [`projects/${PROJECT_ID}`];
+      const getEntriesOptions = {
+        resourceNames: resourceNames,
+      };
+      const [entries] = await logging.getEntries(getEntriesOptions);
+      assert(entries.length > 0);
+    });
+
     it('should tail log entries as a stream', done => {
       const {log, logEntries} = getTestLog();
 
