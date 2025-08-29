@@ -590,10 +590,11 @@ class Logging {
       reqOpts.filter += ` AND ${timeFilter}`;
     }
 
+    this.projectId = await this.auth.getProjectId();
+    const resourceName = 'projects/' + this.projectId;
     reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
     if (reqOpts.resourceNames.length === 0) {
-      this.projectId = await this.auth.getProjectId();
-      const resourceName = 'projects/' + this.projectId;
+      // If no resource names are provided, default to the current project.
       reqOpts.resourceNames.push(resourceName);
     }
     delete reqOpts.autoPaginate;
