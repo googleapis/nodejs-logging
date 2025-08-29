@@ -389,6 +389,23 @@ describe('Logging', () => {
         await logging.createSink(SINK_NAME, config);
       });
 
+      it('should not add projectId if resourceNames is provided', async () => {
+        const resourceNames = ['projects/other-project/buckets/my-bucket'];
+        const options = {
+          resourceNames: resourceNames,
+        };
+
+        logging.loggingService.listLogEntries = async (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          reqOpts: any
+        ) => {
+          assert.deepStrictEqual(reqOpts.resourceNames, resourceNames);
+          return [[]];
+        };
+
+        await logging.getEntries(options);
+      });
+
       it('should accept GAX options', async () => {
         const config = {
           a: 'b',

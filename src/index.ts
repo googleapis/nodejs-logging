@@ -591,9 +591,9 @@ class Logging {
     }
 
     reqOpts.resourceNames = arrify(reqOpts.resourceNames!);
-    this.projectId = await this.auth.getProjectId();
-    const resourceName = 'projects/' + this.projectId;
-    if (reqOpts.resourceNames.indexOf(resourceName) === -1) {
+    if (reqOpts.resourceNames.length === 0) {
+      this.projectId = await this.auth.getProjectId();
+      const resourceName = 'projects/' + this.projectId;
       reqOpts.resourceNames.push(resourceName);
     }
     delete reqOpts.autoPaginate;
