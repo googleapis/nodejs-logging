@@ -39,8 +39,9 @@ accept your pull requests.
 
 ### Before you begin
 
-1.  [Select or create a Cloud Platform project][projects]. 
-1.  [Enable the Cloud Logging API][enable_api]. 
+1.  [Select or create a Cloud Platform project][projects].
+1.  [Enable billing for your project][billing].
+1.  [Enable the Logging API][enable_api].
 1.  [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.
 
@@ -68,22 +69,8 @@ accept your pull requests.
 
         npm run fix
 
-## Running the tests in GCP services
-
-It is possible to end-to-end test this library within specific Google Cloud
-Platform environments. The [env-tests-logging](https://github.com/googleapis/env-tests-logging)
-submodule contains common tests to ensure correct logging behavior across Google 
-Cloud Platforms.
-
-Currently, the following environments are supported:
-
-| Platform        | Runtime        | Try it                         |
-| --------------- | -------------- | ------------------------------ |
-| Cloud Functions | Nodejs12       | `nox --session "tests(language='nodejs', platform='functions')"` |
-| Cloud Run       | COMING SOON    | `nox --session "tests(language='nodejs', platform='cloudrun')"` |
-
 [setup]: https://cloud.google.com/nodejs/docs/setup
 [projects]: https://console.cloud.google.com/project
 [billing]: https://support.google.com/cloud/answer/6293499#enable-billing
-[enable_api]: https://console.cloud.google.com/flows/enableapi?apiid=logging.googleapis.com
+enable_api]: https://console.cloud.google.com/flows/enableapi?apiid=logging.googleapis.com
 [auth]: https://cloud.google.com/docs/authentication/getting-started
