@@ -236,12 +236,12 @@ way you can define a global callback once for all `log.write` and `log.delete` c
 
   const log = logging.log('my-log', options);
 ``` 
-See the full sample in `writeLogWithCallback` function [here](../samples/logs.js).
+See the full sample in `writeLogWithCallback` function [here](https://github.com/googleapis/nodejs-logging/blob/master/samples/logs.js).
 
 
 ## Samples
 
-Samples are in the [`samples/`](../samples) directory. Each sample's `README.md` has instructions for running its sample.
+Samples are in the [`samples/`](https://github.com/googleapis/nodejs-logging/tree/main/samples) directory. Each sample's `README.md` has instructions for running its sample.
 
 | Sample                      | Source Code                       | Try it |
 | --------------------------- | --------------------------------- | ------ |
