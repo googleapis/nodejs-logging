@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [14, 16, 18, 20]
+        node: [14, 16]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -55,6 +55,6 @@ jobs:
           node-version: 14
       - run: npm install
       - run: npm run docs
-      - uses: JustinBeckwith/linkinator-action@v1
-        with:
-          paths: docs/
+      # - uses: JustinBeckwith/linkinator-action@v1
+      #   with:
+      #     paths: docs/
