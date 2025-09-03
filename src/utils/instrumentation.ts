@@ -39,7 +39,7 @@ export const NODEJS_LIBRARY_NAME_PREFIX = 'nodejs';
  * Using release-please annotations to update DEFAULT_INSTRUMENTATION_VERSION with latest version.
  * See https://github.com/googleapis/release-please/blob/main/docs/customizing.md#updating-arbitrary-files
  */
-export const NODEJS_DEFAULT_LIBRARY_VERSION = '11.2.0'; // {x-release-please-version}
+export const NODEJS_DEFAULT_LIBRARY_VERSION = '11.2.1'; // {x-release-please-version}
 export const MAX_INSTRUMENTATION_COUNT = 3;
 export type InstrumentationInfo = {name: string; version: string};
 
