@@ -48,7 +48,7 @@
     "@google-cloud/common": "^5.0.0",
     "@google-cloud/paginator": "^5.0.0",
     "@google-cloud/projectify": "^4.0.0",
-    "@google-cloud/promisify": "4.0.0",
+    "@google-cloud/promisify": "4.1.0",
     "arrify": "^2.0.1",
     "dot-prop": "^6.0.0",
     "eventid": "^2.0.0",
