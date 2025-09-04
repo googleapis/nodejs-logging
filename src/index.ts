@@ -1523,6 +1523,7 @@ export {Log};
  */
 export {Severity};
 export {SeverityNames};
+export type LogSeverity = google.logging.type.LogSeverity;
 
 export {assignSeverityToEntries};
 export {formatLogName};
