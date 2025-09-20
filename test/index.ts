@@ -504,6 +504,23 @@ describe('Logging', () => {
       await logging.getEntries();
     });
 
+    it('should not add projectId if resourceNames is provided', async () => {
+      const resourceNames = ['projects/other-project/buckets/my-bucket'];
+      const options = {
+        resourceNames: resourceNames,
+      };
+
+      logging.loggingService.listLogEntries = async (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        reqOpts: any
+      ) => {
+        assert.deepStrictEqual(reqOpts.resourceNames, resourceNames);
+        return [[]];
+      };
+
+      await logging.getEntries(options);
+    });
+
     it('should accept options (and not overwrite timestamp)', async () => {
       const options = {filter: 'timestamp > "2020-11-11T15:01:23.045123456Z"'};
 
