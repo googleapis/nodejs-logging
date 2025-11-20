@@ -47,6 +47,10 @@ jobs:
       - run: npm install
       - run: npm run lint
   # TODO(https://github.com/googleapis/nodejs-logging/issues/1609)
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Docs are disabled for now"
   # docs:
   #   runs-on: ubuntu-latest
   #   steps:
