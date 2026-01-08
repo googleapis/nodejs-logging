@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -266,11 +266,18 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
-      assert(client.loggingServiceV2Stub);
-      client.close().then(() => {
-        done();
+      client.initialize().catch(err => {
+        throw err;
       });
+      assert(client.loggingServiceV2Stub);
+      client
+        .close()
+        .then(() => {
+          done();
+        })
+        .catch(err => {
+          throw err;
+        });
     });
 
     it('has close method for the non-initialized client', done => {
@@ -279,9 +286,14 @@ describe('v2.LoggingServiceV2Client', () => {
         projectId: 'bogus',
       });
       assert.strictEqual(client.loggingServiceV2Stub, undefined);
-      client.close().then(() => {
-        done();
-      });
+      client
+        .close()
+        .then(() => {
+          done();
+        })
+        .catch(err => {
+          throw err;
+        });
     });
 
     it('has getProjectId method', async () => {
@@ -325,7 +337,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
@@ -334,7 +346,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['logName']
       );
       request.logName = defaultValue1;
-      const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
+      const expectedHeaderRequestParams = `log_name=${defaultValue1 ?? ''}`;
       const expectedResponse = generateSampleMessage(
         new protos.google.protobuf.Empty()
       );
@@ -356,7 +368,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
@@ -365,7 +377,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['logName']
       );
       request.logName = defaultValue1;
-      const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
+      const expectedHeaderRequestParams = `log_name=${defaultValue1 ?? ''}`;
       const expectedResponse = generateSampleMessage(
         new protos.google.protobuf.Empty()
       );
@@ -403,7 +415,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
@@ -412,7 +424,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['logName']
       );
       request.logName = defaultValue1;
-      const expectedHeaderRequestParams = `log_name=${defaultValue1}`;
+      const expectedHeaderRequestParams = `log_name=${defaultValue1 ?? ''}`;
       const expectedError = new Error('expected');
       client.innerApiCalls.deleteLog = stubSimpleCall(undefined, expectedError);
       await assert.rejects(client.deleteLog(request), expectedError);
@@ -431,7 +443,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.DeleteLogRequest()
       );
@@ -441,7 +453,9 @@ describe('v2.LoggingServiceV2Client', () => {
       );
       request.logName = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.deleteLog(request), expectedError);
     });
   });
@@ -452,7 +466,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
@@ -469,7 +483,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
@@ -502,7 +516,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
@@ -519,12 +533,14 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.WriteLogEntriesRequest()
       );
       const expectedError = new Error('The client has already been closed.');
-      client.close();
+      client.close().catch(err => {
+        throw err;
+      });
       await assert.rejects(client.writeLogEntries(request), expectedError);
     });
   });
@@ -535,7 +551,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.TailLogEntriesRequest()
       );
@@ -578,7 +594,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.TailLogEntriesRequest()
       );
@@ -621,7 +637,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -640,7 +656,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -675,7 +691,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -692,7 +708,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -730,7 +746,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -763,7 +779,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -793,7 +809,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogEntriesRequest()
       );
@@ -822,7 +838,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -848,7 +864,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -889,7 +905,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -909,7 +925,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -962,7 +978,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -1004,7 +1020,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -1041,7 +1057,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListMonitoredResourceDescriptorsRequest()
       );
@@ -1071,7 +1087,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1080,7 +1096,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.innerApiCalls.listLogs = stubSimpleCall(expectedResponse);
       const [response] = await client.listLogs(request);
@@ -1100,7 +1116,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1109,7 +1125,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.innerApiCalls.listLogs =
         stubSimpleCallWithCallback(expectedResponse);
@@ -1142,7 +1158,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1151,7 +1167,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedError = new Error('expected');
       client.innerApiCalls.listLogs = stubSimpleCall(undefined, expectedError);
       await assert.rejects(client.listLogs(request), expectedError);
@@ -1170,7 +1186,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1179,7 +1195,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.descriptors.page.listLogs.createStream =
         stubPageStreamingCall(expectedResponse);
@@ -1217,7 +1233,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1226,7 +1242,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedError = new Error('expected');
       client.descriptors.page.listLogs.createStream = stubPageStreamingCall(
         undefined,
@@ -1265,7 +1281,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1274,7 +1290,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedResponse = [new String(), new String(), new String()];
       client.descriptors.page.listLogs.asyncIterate =
         stubAsyncIterationCall(expectedResponse);
@@ -1303,7 +1319,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       const request = generateSampleMessage(
         new protos.google.logging.v2.ListLogsRequest()
       );
@@ -1312,7 +1328,7 @@ describe('v2.LoggingServiceV2Client', () => {
         ['parent']
       );
       request.parent = defaultValue1;
-      const expectedHeaderRequestParams = `parent=${defaultValue1}`;
+      const expectedHeaderRequestParams = `parent=${defaultValue1 ?? ''}`;
       const expectedError = new Error('expected');
       client.descriptors.page.listLogs.asyncIterate = stubAsyncIterationCall(
         undefined,
@@ -1341,7 +1357,7 @@ describe('v2.LoggingServiceV2Client', () => {
   });
 
   describe('Path templates', () => {
-    describe('billingAccountCmekSettings', () => {
+    describe('billingAccountCmekSettings', async () => {
       const fakePath = '/rendered/path/billingAccountCmekSettings';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1350,7 +1366,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountCmekSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1390,7 +1406,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountExclusion', () => {
+    describe('billingAccountExclusion', async () => {
       const fakePath = '/rendered/path/billingAccountExclusion';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1400,7 +1416,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountExclusionPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1453,7 +1469,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountLocationBucket', () => {
+    describe('billingAccountLocationBucket', async () => {
       const fakePath = '/rendered/path/billingAccountLocationBucket';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1464,7 +1480,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountLocationBucketPathTemplate.render =
         sinon.stub().returns(fakePath);
       client.pathTemplates.billingAccountLocationBucketPathTemplate.match =
@@ -1532,7 +1548,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountLocationBucketLink', () => {
+    describe('billingAccountLocationBucketLink', async () => {
       const fakePath = '/rendered/path/billingAccountLocationBucketLink';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1544,7 +1560,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountLocationBucketLinkPathTemplate.render =
         sinon.stub().returns(fakePath);
       client.pathTemplates.billingAccountLocationBucketLinkPathTemplate.match =
@@ -1629,7 +1645,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountLocationBucketView', () => {
+    describe('billingAccountLocationBucketView', async () => {
       const fakePath = '/rendered/path/billingAccountLocationBucketView';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1641,7 +1657,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountLocationBucketViewPathTemplate.render =
         sinon.stub().returns(fakePath);
       client.pathTemplates.billingAccountLocationBucketViewPathTemplate.match =
@@ -1726,7 +1742,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountLog', () => {
+    describe('billingAccountLog', async () => {
       const fakePath = '/rendered/path/billingAccountLog';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1736,7 +1752,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountLogPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1788,7 +1804,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountSettings', () => {
+    describe('billingAccountSettings', async () => {
       const fakePath = '/rendered/path/billingAccountSettings';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1797,7 +1813,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1833,7 +1849,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('billingAccountSink', () => {
+    describe('billingAccountSink', async () => {
       const fakePath = '/rendered/path/billingAccountSink';
       const expectedParameters = {
         billing_account: 'billingAccountValue',
@@ -1843,7 +1859,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.billingAccountSinkPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1895,7 +1911,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderCmekSettings', () => {
+    describe('folderCmekSettings', async () => {
       const fakePath = '/rendered/path/folderCmekSettings';
       const expectedParameters = {
         folder: 'folderValue',
@@ -1904,7 +1920,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderCmekSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1939,7 +1955,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderExclusion', () => {
+    describe('folderExclusion', async () => {
       const fakePath = '/rendered/path/folderExclusion';
       const expectedParameters = {
         folder: 'folderValue',
@@ -1949,7 +1965,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderExclusionPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -1991,7 +2007,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderLocationBucket', () => {
+    describe('folderLocationBucket', async () => {
       const fakePath = '/rendered/path/folderLocationBucket';
       const expectedParameters = {
         folder: 'folderValue',
@@ -2002,7 +2018,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderLocationBucketPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2068,7 +2084,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderLocationBucketLink', () => {
+    describe('folderLocationBucketLink', async () => {
       const fakePath = '/rendered/path/folderLocationBucketLink';
       const expectedParameters = {
         folder: 'folderValue',
@@ -2080,7 +2096,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderLocationBucketLinkPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2163,7 +2179,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderLocationBucketView', () => {
+    describe('folderLocationBucketView', async () => {
       const fakePath = '/rendered/path/folderLocationBucketView';
       const expectedParameters = {
         folder: 'folderValue',
@@ -2175,7 +2191,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderLocationBucketViewPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2258,7 +2274,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderLog', () => {
+    describe('folderLog', async () => {
       const fakePath = '/rendered/path/folderLog';
       const expectedParameters = {
         folder: 'folderValue',
@@ -2268,7 +2284,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderLogPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2307,7 +2323,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderSettings', () => {
+    describe('folderSettings', async () => {
       const fakePath = '/rendered/path/folderSettings';
       const expectedParameters = {
         folder: 'folderValue',
@@ -2316,7 +2332,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2345,7 +2361,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('folderSink', () => {
+    describe('folderSink', async () => {
       const fakePath = '/rendered/path/folderSink';
       const expectedParameters = {
         folder: 'folderValue',
@@ -2355,7 +2371,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.folderSinkPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2394,7 +2410,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('logMetric', () => {
+    describe('logMetric', async () => {
       const fakePath = '/rendered/path/logMetric';
       const expectedParameters = {
         project: 'projectValue',
@@ -2404,7 +2420,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.logMetricPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2443,7 +2459,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationCmekSettings', () => {
+    describe('organizationCmekSettings', async () => {
       const fakePath = '/rendered/path/organizationCmekSettings';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2452,7 +2468,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationCmekSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2488,7 +2504,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationExclusion', () => {
+    describe('organizationExclusion', async () => {
       const fakePath = '/rendered/path/organizationExclusion';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2498,7 +2514,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationExclusionPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2551,7 +2567,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationLocationBucket', () => {
+    describe('organizationLocationBucket', async () => {
       const fakePath = '/rendered/path/organizationLocationBucket';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2562,7 +2578,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationLocationBucketPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2630,7 +2646,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationLocationBucketLink', () => {
+    describe('organizationLocationBucketLink', async () => {
       const fakePath = '/rendered/path/organizationLocationBucketLink';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2642,7 +2658,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationLocationBucketLinkPathTemplate.render =
         sinon.stub().returns(fakePath);
       client.pathTemplates.organizationLocationBucketLinkPathTemplate.match =
@@ -2725,7 +2741,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationLocationBucketView', () => {
+    describe('organizationLocationBucketView', async () => {
       const fakePath = '/rendered/path/organizationLocationBucketView';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2737,7 +2753,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationLocationBucketViewPathTemplate.render =
         sinon.stub().returns(fakePath);
       client.pathTemplates.organizationLocationBucketViewPathTemplate.match =
@@ -2820,7 +2836,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationLog', () => {
+    describe('organizationLog', async () => {
       const fakePath = '/rendered/path/organizationLog';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2830,7 +2846,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationLogPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2873,7 +2889,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationSettings', () => {
+    describe('organizationSettings', async () => {
       const fakePath = '/rendered/path/organizationSettings';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2882,7 +2898,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2918,7 +2934,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('organizationSink', () => {
+    describe('organizationSink', async () => {
       const fakePath = '/rendered/path/organizationSink';
       const expectedParameters = {
         organization: 'organizationValue',
@@ -2928,7 +2944,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.organizationSinkPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -2974,7 +2990,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('project', () => {
+    describe('project', async () => {
       const fakePath = '/rendered/path/project';
       const expectedParameters = {
         project: 'projectValue',
@@ -2983,7 +2999,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3012,7 +3028,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectCmekSettings', () => {
+    describe('projectCmekSettings', async () => {
       const fakePath = '/rendered/path/projectCmekSettings';
       const expectedParameters = {
         project: 'projectValue',
@@ -3021,7 +3037,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectCmekSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3056,7 +3072,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectExclusion', () => {
+    describe('projectExclusion', async () => {
       const fakePath = '/rendered/path/projectExclusion';
       const expectedParameters = {
         project: 'projectValue',
@@ -3066,7 +3082,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectExclusionPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3111,7 +3127,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectLocationBucket', () => {
+    describe('projectLocationBucket', async () => {
       const fakePath = '/rendered/path/projectLocationBucket';
       const expectedParameters = {
         project: 'projectValue',
@@ -3122,7 +3138,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectLocationBucketPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3190,7 +3206,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectLocationBucketLink', () => {
+    describe('projectLocationBucketLink', async () => {
       const fakePath = '/rendered/path/projectLocationBucketLink';
       const expectedParameters = {
         project: 'projectValue',
@@ -3202,7 +3218,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectLocationBucketLinkPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3285,7 +3301,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectLocationBucketView', () => {
+    describe('projectLocationBucketView', async () => {
       const fakePath = '/rendered/path/projectLocationBucketView';
       const expectedParameters = {
         project: 'projectValue',
@@ -3297,7 +3313,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectLocationBucketViewPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3380,7 +3396,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectLog', () => {
+    describe('projectLog', async () => {
       const fakePath = '/rendered/path/projectLog';
       const expectedParameters = {
         project: 'projectValue',
@@ -3390,7 +3406,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectLogPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3429,7 +3445,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectSettings', () => {
+    describe('projectSettings', async () => {
       const fakePath = '/rendered/path/projectSettings';
       const expectedParameters = {
         project: 'projectValue',
@@ -3438,7 +3454,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectSettingsPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
@@ -3467,7 +3483,7 @@ describe('v2.LoggingServiceV2Client', () => {
       });
     });
 
-    describe('projectSink', () => {
+    describe('projectSink', async () => {
       const fakePath = '/rendered/path/projectSink';
       const expectedParameters = {
         project: 'projectValue',
@@ -3477,7 +3493,7 @@ describe('v2.LoggingServiceV2Client', () => {
         credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
-      client.initialize();
+      await client.initialize();
       client.pathTemplates.projectSinkPathTemplate.render = sinon
         .stub()
         .returns(fakePath);
