@@ -1,4 +1,4 @@
 assign_issues:
-  - googleapis/yoshi-nodejs
+  - googleapis/cloud-sdk-nodejs-team
 assign_prs:
-  - googleapis/yoshi-nodejs
+  - googleapis/cloud-sdk-nodejs-team
