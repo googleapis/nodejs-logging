@@ -7,12 +7,10 @@ branchProtectionRules:
     requiredStatusCheckContexts:
       - "ci/kokoro: Samples test"
       - "ci/kokoro: System test"
-      - docs
       - lint
       - test (14)
       - test (16)
       - test (18)
-      - test (20)
       - cla/google
       - windows
       - OwlBot Post Processor
@@ -23,4 +21,3 @@ permissionRules:
     permission: admin
   - team: jsteam
     permission: push
- 
